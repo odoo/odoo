@@ -1,26 +1,33 @@
-# Serbian latin translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Serbian Latin translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-11-02 15:57+0000\n"
-"Last-Translator: Milan Milosevic <Unknown>\n"
-"Language-Team: Serbian latin <sr@latin@li.org>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:23+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Kategorija Proizvoda"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Faktura"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +35,14 @@ msgid "Invoice Line"
 msgstr "Red računa"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Narudžbenica"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Šablon proizvoda"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Lista ponuda"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +51,19 @@ msgid "Price Difference Account"
 msgstr "Odnos u razlici cena"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Faktura"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Kategorija Proizvoda"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Lista ponuda"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Šablon proizvoda"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Narudžbenica"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,52 +74,3 @@ msgid ""
 msgstr ""
 "Ovaj nalog biće upotrebljen u svrhu određivanja vrednosti razlike između "
 "nabavne i prodajne cene."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referenca narudžbine mora biti jedinstvena !"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Greška: Podrazumevana JM i kupljena JM moraju da budu u istoj kategoriji."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Greška! Ne možete da napravite rekurzivne kategorije."
-
-#~ msgid " Accounting Property"
-#~ msgstr " Vlasništvo naloga"
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "Lager koji važi za anglosaksonske zemlje"
-
-#~ msgid ""
-#~ "This module will support the Anglo-Saxons accounting methodology by\n"
-#~ "    changing the accounting logic with stock transactions. The difference "
-#~ "between the Anglo-Saxon accounting countries\n"
-#~ "    and the Rhine or also called Continental accounting countries is the "
-#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
-#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
-#~ "created, Continental accounting will take the cost at the moment the goods "
-#~ "are shipped.\n"
-#~ "    This module will add this functionality by using a interim account, to "
-#~ "store the value of shipped goods and will contra book this interim account\n"
-#~ "    when the invoice is created to transfer this amount to the debtor or "
-#~ "creditor account.\n"
-#~ "    Secondly, price differences between actual purchase price and fixed "
-#~ "product standard price are booked on a separate account"
-#~ msgstr ""
-#~ "Ovaj će modul podržati anglo-saksonsku obračunsku metodologiju\n"
-#~ "    menjajući obračunsku logiku sa transakcijama lagera. Razlika između "
-#~ "anglo-saksonskih\n"
-#~ "država\n"
-#~ "    i Rajne ili takozvanih država kontinentalnog obračunavanja je momenat "
-#~ "uzimanja troška prodatih dobara\n"
-#~ "naspram troška prodaja.\n"
-#~ "    Anglo-saksonsko obračunavanje uzima u obzir cenu kad se fakture prodaje "
-#~ "pravi, dok kontinentalno obračunavanje uzima cenu u obzir pri prispeću "
-#~ "dobara.\n"
-#~ "    Ovaj modul dodaće ovu funkcije posredstvom međuračuna, da bi se vrednost "
-#~ "prispelih dobara sačuvala i da bi se prenela ta vrednost sa tog međuračuna\n"
-#~ "    kad faktura bude napravljena na račune dužnika ili poverioca.\n"
-#~ "    Drugo, razlike u ceni između stvarne kupovne cene i fiksnog standarda "
-#~ "dobra označene su na odvojenom nalogu."

@@ -1,26 +1,36 @@
 # Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-01-12 15:20+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Sunca"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Data alertei"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "A se consuma inainte de"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Paine"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_lait_product_template
@@ -28,51 +38,66 @@ msgid "Cow milk"
 msgstr "Lapte de vaca"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
+msgid "Dates"
+msgstr "Date"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Data expirarii"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camembert"
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Sunca"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr "Durata alertei produsului"
+
+#. module: product_expiry
+#: field:product.template,life_time:0
 msgid "Product Life Time"
 msgstr "Durata de valabilitate a produsului"
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-"Aceasta este data la care marfa cu acest Numar de Serie ar trebui scoasa din "
-"stoc."
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr "Timpul de inlaturare a produsului"
 
 #. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
 msgstr ""
-"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
-"inainte ca marfa sa trebuiasca sa fie scoasa din stoc."
 
 #. module: product_expiry
-#: field:product.product,use_time:0
+#: field:product.template,use_time:0
 msgid "Product Use Time"
 msgstr "Durata de folosire a produsului"
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Produs"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
 msgstr ""
-"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
-"inainte ca marfa sa inceapa sa se deterioreze, fara a fi periculoasa inca."
 
 #. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Timpul de inlaturare a produsului"
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "Data inlaturarii"
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
@@ -84,62 +109,22 @@ msgstr ""
 "acest Numar de Serie."
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "Numar de Serie"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
+#: help:stock.production.lot,life_date:0
 msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
 msgstr ""
-"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
-"inainte ca o alerta sa fie setata."
+"Aceasta este data la care marfa cu acest Numar de Serie poate deveni "
+"periculoasa si nu trebuie consumata."
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Data inlaturarii"
-
-#. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "Paine"
-
-#. module: product_expiry
-#: view:product.product:0
-msgid "Dates"
-msgstr "Date"
-
-#. module: product_expiry
-#: field:stock.production.lot,life_date:0
-msgid "End of Life Date"
-msgstr "Data expirarii"
-
-#. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "A se consuma inainte de"
-
-#. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Branza frantuzeasca Camenbert"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
+#: help:stock.production.lot,removal_date:0
 msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
 msgstr ""
-"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
-"inainte ca marfa sa devina periculoasa si nu trebuie consumata."
-
-#. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Data alertei"
+"Aceasta este data la care marfa cu acest Numar de Serie ar trebui scoasa din "
+"stoc."
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
@@ -151,90 +136,37 @@ msgstr ""
 "deterioreze, fara a fi periculoasa inca."
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: help:product.template,alert_time:0
 msgid ""
-"This is the date on which the goods with this Serial Number may become "
-"dangerous and must not be consumed."
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
 msgstr ""
-"Aceasta este data la care marfa cu acest Numar de Serie poate deveni "
-"periculoasa si nu trebuie consumata."
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca o alerta sa fie setata."
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "Durata alertei produsului"
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa devina periculoasa si nu trebuie consumata."
 
-#~ msgid "Products date of expiry"
-#~ msgstr "Termenul de expirare a produselor"
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa trebuiasca sa fie scoasa din stoc."
 
-#~ msgid "LTR"
-#~ msgstr "LTR"
-
-#~ msgid ""
-#~ "Track different dates on products and production lots:\n"
-#~ " - end of life\n"
-#~ " - best before date\n"
-#~ " - removal date\n"
-#~ " - alert date\n"
-#~ "Used, for example, in food industries."
-#~ msgstr ""
-#~ "Tine evidenta diferitelor date de pe produse si loturi de productie:\n"
-#~ " - sfarsitul valabilitătii\n"
-#~ " - a se consuma inainte de data\n"
-#~ " - data indepărtării\n"
-#~ " - data alertei\n"
-#~ " Folosit, de exemplu, in industria alimentară."
-
-#~ msgid ""
-#~ "The date on which the lot may become dangerous and should not be consumed."
-#~ msgstr "Data la care lotul poate deveni periculos si nu ar trebui consumat."
-
-#~ msgid "Production lot"
-#~ msgstr "Lot de productie"
-
-#~ msgid ""
-#~ "The number of days after which an alert should be notified about the "
-#~ "production lot."
-#~ msgstr ""
-#~ "Numarul de zile dupa care o alerta trebuie sa atentioneze in legatura cu "
-#~ "lotul de productie."
-
-#~ msgid ""
-#~ "The date on which the lot starts deteriorating without becoming dangerous."
-#~ msgstr ""
-#~ "Data la care loturile au inceput sa se deterioreze fara a deveni periculoase."
-
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "Data la care lotul trebuie indepartat."
-
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr ""
-#~ "Combinatia dintre numarul de serie si referinta interna trebuie sa fie unica "
-#~ "!"
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "Numarul de zile inainte ca un lot de productie sa fie indepărat."
-
-#~ msgid ""
-#~ "The number of days before a production lot may become dangerous and should "
-#~ "not be consumed."
-#~ msgstr ""
-#~ "Numarul de zile inainte ca un lot de productie sa devina periculos si nu ar "
-#~ "mai trebui consumat."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Eroare: Cod ean invalid"
-
-#~ msgid ""
-#~ "The number of days before a production lot starts deteriorating without "
-#~ "becoming dangerous."
-#~ msgstr ""
-#~ "Numarul de zile inainte ca un lot de productie sa inceapa sa se deterioreze "
-#~ "fara a deveni periculos."
-
-#~ msgid ""
-#~ "The date on which an alert should be notified about the production lot."
-#~ msgstr ""
-#~ "Data la care o alerta ar trebui sa ne instiinteze cu privire la lotul de "
-#~ "productie."
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa inceapa sa se deterioreze, fara a fi periculoasa inca."

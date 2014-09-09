@@ -1,42 +1,27 @@
 # Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-01 18:47+0000\n"
-"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:46+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "السبب:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "قد تم استيراد المستند بنجاح!"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "نأسف، لم نتمكن من استيراد المستند."
+msgid "'%s' is an invalid external ID"
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,30 +35,25 @@ msgstr "العملة"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
 msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
+#: field:edi.edi,id:0
+msgid "ID"
 msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
+msgid "Missing Application."
 msgstr ""
 
 #. module: edi
@@ -82,141 +62,31 @@ msgid "Partner"
 msgstr "الشريك"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr ""
-
-#~ msgid "Partner Addresses"
-#~ msgstr "عناوين الشريك"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "خطأ! لا يمكنك إنشاء شركات متداخلة (شركات تستخدم نفسها)."
-
-#~ msgid "Document"
-#~ msgstr "مستند"
-
-#~ msgid "Import"
-#~ msgstr "إستيراد"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "للبدء خالاً"
-
-#~ msgid "Description"
-#~ msgstr "الوصف"
-
-#~ msgid "Invoice"
-#~ msgstr "فاتورة"
-
-#~ msgid "Your Reference"
-#~ msgstr "مرجعك"
-
-#~ msgid "Date"
-#~ msgstr "التاريخ"
-
-#~ msgid "Product Description"
-#~ msgstr "وصف المنتج"
-
-#~ msgid "Download"
-#~ msgstr "تحميل"
-
-#~ msgid "Quantity"
-#~ msgstr "الكمية"
-
-#~ msgid "Discount"
-#~ msgstr "الخصم"
-
-#~ msgid "Unit Price"
-#~ msgstr "سعر الوحدة"
-
-#~ msgid "Net Total:"
-#~ msgstr "صافي الإجمالي:"
-
-#~ msgid "Price"
-#~ msgstr "السعر"
-
-#~ msgid "Total:"
-#~ msgstr "الإجمالي:"
-
-#~ msgid "Taxes:"
-#~ msgstr "ضرائب:"
-
-#~ msgid "Amount"
-#~ msgstr "المقدار"
-
-#~ msgid "Tax"
-#~ msgstr "ضريبة"
-
-#~ msgid "Base Amount"
-#~ msgstr "المبلغ الأساسي"
-
-#~ msgid "to"
-#~ msgstr "إلى"
-
-#~ msgid "Order"
-#~ msgstr "الترتيب"
-
-#~ msgid "Pay Online"
-#~ msgstr "الدفع أونلاين"
-
-#~ msgid "Paypal"
-#~ msgstr "باي بال (Paypal)"
-
-#~ msgid "Notes:"
-#~ msgstr "ملاحظات:"
-
-#~ msgid "Salesman"
-#~ msgstr "مندوب المبيعات"
-
-#~ msgid "Discount(%)"
-#~ msgstr "الخصم (%)"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
-
-#~ msgid "View/Print"
-#~ msgstr "عرض/طباعة"
-
-#~ msgid "Import this document"
-#~ msgstr "إستيراد هذه الوثيقة"
-
-#~ msgid "Powered by"
-#~ msgstr "يتم تشغيل هذا التطبيق بواسطة"
-
-#~ msgid "OpenERP"
-#~ msgstr "أوبن إي آر بي"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "يجب  أن يكون رمز العملة فريداً للشركة!"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "يجب أن يكون اسم الشركة فريداً !"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "عنوان نسخة أوبن إي آر بي:"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "توثيق أوبن إي آر بي"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "تطبيق مفقود"
+msgid "Reason:"
+msgstr "السبب:"
 
-#~ msgid "Please transfer"
-#~ msgstr "رجاء قم بالتحويل"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "نأسف، لم نتمكن من استيراد المستند."
 
-#~ msgid "Import into another application"
-#~ msgstr "جلبها لتطبيق آخر"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "قد تم استيراد المستند بنجاح!"
 
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "حوالة مصرفية بنكية"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "قد تدفع مباشرة عبر الإنترنت من خلال هذا النظام باي بال بوابة الدفع الآمن:"
-
-#~ msgid "Payment terms"
-#~ msgstr "شروط الدفع"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

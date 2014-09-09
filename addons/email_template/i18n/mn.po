@@ -1,65 +1,230 @@
 # Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-12-21 14:03+0000\n"
-"Last-Translator: soyoko <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Хаанаас"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (хуулбар)"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Үлгэр"
-
-#. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Хажуугийн зурвасын үйлдлийг нээх даруул"
-
-#. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "Хүлээж авахгүй"
-
-#. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Хэнд (Имэйлүүд)"
-
-#. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Гарах Мэйл Сервер"
-
-#. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
-msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
 msgstr ""
-"Холбогдох баримтын моделийн бичлэгүүдэд энэ үлгэрийг бэлэн болгох хажуугийн "
-"зурвасын үйлдэл"
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Гарын үсэг нэмэх"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Дараахад хэрэгжинэ"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Хавсралтууд"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Автоматаар устгах"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Масс мэйл илгээж болно"
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Их бие"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Хуулбар хүлээн авагчид (энд хувьсагч хэрэглэгдэж болно)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr ""
+"Хүлээн авагч харилцагчдын таслалаар тусгаарлагдсан хувийн дугаарууд (байрлал "
+"тогтоогч энд хэрэглэгдэж болно)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr ""
+"Таслалаар тусгаарлагдсан хүлээн авагчдын хаягууд (энд хувьсагч хэрэглэж "
+"болно)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Анхны утга"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Үйлдлийн бичлэгийг устгах үйлдэл бүтсэнгүй."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+"Холбогдох баримт дээр энэ үлгэрээр үүсгэх харилцах цонхын харуулах цонхын "
+"сонголтууд"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Email Preview"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "Э-мэйл загвар"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Имэйл Үлгэрийн Урьдчилсан Харагдац"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Имэйл Үлгэрүүд"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Имэйл үүсгэх харилцах цонх"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -68,59 +233,31 @@ msgid "Field"
 msgstr "Талбар"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Илгээгчийн хаяг (энд хувьсагч ашиглаж болно)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr "Контекстийн үйлдлийг арилгах"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Гарах имэйлд хэрэглэх зөвлөмжит заавал биш сервер. Хэрэв тохируулагдаагүй "
-"бол хамгийн өндөр урьтамжтай нь хэрэглэгдэнэ."
+"Үлгэрийн хүссэн талбартаа copy-paste хийх эцсийн хувьсагчийн илэрхийлэл."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Файлын нэр"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Хаанаас"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "Урьдчилан харах"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Бүлэглэх..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Хариулах"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Үлгэрийг хэрэглэх"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Их бие"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (хуулбар)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -133,29 +270,44 @@ msgstr ""
 "нэмэгдэнэ."
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "SMTP сервер"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Шинэ үлгэр болгож хадгалах"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"Хэрэв холбогч талбар анхны талбараар сонгогдсон бол энэ талбар нь холбогдож "
-"байгаа баримтын загварын үзүүлдэг."
+"Хэрэв сонголтоос гадуур гэж тэмдэглэгдсэн бол энэ холбогч нь маркетингийн "
+"компанит ажлын эмэйл хүлээж авахаас татгалзсан. 'Масс мэйл илгээж болно' "
+"шүүлтүүрийг ашиглан масс мэйл илгээх харилцагчдыг сонгож болно."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "Имэйл Үлгэрүүд"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Хэл"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Нэр"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -168,10 +320,25 @@ msgstr ""
 "Өргөтгөлийг орхиж болох бөгөөд тайлангийн төрлөөс өргөтгөл нь ирнэ."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Хажуугийн багажийн үйлдэл"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Хүлээж авахгүй"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Гарах имэйлд хэрэглэх зөвлөмжит заавал биш сервер. Хэрэв тохируулагдаагүй "
+"бол хамгийн өндөр урьтамжтай нь хэрэглэгдэнэ."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Хэвлэх болон хавсаргах заавал биш тайлан"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -179,17 +346,138 @@ msgstr "Хажуугийн багажийн үйлдэл"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Имэйл илгээхэд сонгох орчуулах хэл (ISO код). Хэрэв тохируулаагүй бол Англи "
-"хэрэглэгдэнэ. Энэ нь ихэвчлэн тохирох хэлийг илэрхийлэх хувьсагч байдаг, "
-"ө.х. ${object.partner_id.lang.code}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Зорилтот талбар хоосон бол хэрэглэх заавал биш утга"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Гарах Мэйл Сервер"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+"Масс мэйлийн компанит ажилд оруулахгүй байх эсэхийг асуугаагүй харилцагчид"
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Зай хэмнэхийн тулд энэ имэйлийг илгээсэн дараагаараа бүр мөсөн устгах"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Байрлал тогтоогчийн Илэрхийллийг"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Хариулах зөвлөмжит хаяг (энд хувьсагч хэрэглэж болно)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Урьдчилан харах"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Дараахыг урьдчилан харах"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Холбогдох Баримтын Модель"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+"Холбогдох баримт дээр энэ үлгэрийг хэрэглэхдээ контектсийн үйлдлийг хасах"
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Хариулах"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Файлын нэр"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "Зурвасын Rich-text/HTML хувилбар (энд хувьсагч хэрэглэж болно)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP сервер"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Жишээ Баримт"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Шинэ үлгэрээр хадгалах"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Шинэ үлгэр болгож хадгалах"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -204,117 +492,28 @@ msgstr ""
 "талбараар сонгох боломжтой."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "Динамик Утгын Байгуулагч"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Мэйл илгээх (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Үлгэрийг урьдчилан харах"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Шинэ үлгэрээр хадгалах"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
-"Холбогдох баримт дээр энэ үлгэрээр үүсгэх харилцах цонхын харуулах цонхын "
-"сонголтууд"
+"Илгээгчийн хаяг (хувисагчид ашиглаж болно). Хэрэв тохируулаагүй бол анхны "
+"утга нь зохиогчийн хуурмаг эмэйл эсвэл жинхэнэ эмэйл хаяг байна."
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Хуулбар хүлээн авагчид (энд хувьсагч хэрэглэгдэж болно)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr ""
-"Таслалаар тусгаарлагдсан хүлээн авагчдын хаягууд (энд хувьсагч хэрэглэж "
-"болно)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Урьдчилсан"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Дараахыг урьдчилан харах"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Жишээ баримт хэрэглэж"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Үлгэрүүд"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Нэр"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Хэл"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Имэйл Үлгэрийн Урьдчилсан Харагдац"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Email Preview"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-"Холбогдох баримт дээр энэ үлгэрийг хэрэглэхдээ контектсийн үйлдлийг хасах"
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "Байрлал тогтоогчийн Илэрхийллийг"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Дэд-модел"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Гарчиг (энд хувьсагч хэрэглэгдэж болно)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Хариулах зөвлөмжит хаяг (энд хувьсагч хэрэглэж болно)"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -323,102 +522,26 @@ msgid "Sidebar Button"
 msgstr "Хажуугийн Даруул"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Хэвлэх болон хавсаргах заавал биш тайлан"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Хажуугийн багажийн үйлдэл"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "Зорилтот талбар хоосон бол хэрэглэх заавал биш утга"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Model"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Имэйл үүсгэх харилцах цонх"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "Контекст үйлдлийг нэмэх"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Энэ үлгэртэй хэрэглэгдэж болох баримтуудын төрөл"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "Хэнд (Харилцагчид)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Автоматаар устгах"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Үлгэрийн хүссэн талбартаа copy-paste хийх эцсийн хувьсагчийн илэрхийлэл."
+"Холбогдох баримтын моделийн бичлэгүүдэд энэ үлгэрийг бэлэн болгох хажуугийн "
+"зурвасын үйлдэл"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "Холбогдох Баримтын Модель"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "Хаяглалт"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Хүлээн авагч харилцагчдын таслалаар тусгаарлагдсан хувийн дугаарууд (байрлал "
-"тогтоогч энд хэрэглэгдэж болно)"
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Хавсралтууд"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Үйлдлийн бичлэгийг устгах үйлдэл бүтсэнгүй."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Cc"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "Дараахад хэрэгжинэ"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Хажуугийн зурвасын үйлдлийг нээх даруул"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -427,36 +550,89 @@ msgid "Sub-field"
 msgstr "Дэд-талбар"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Имэйл Дэлгэрэнгүй"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Дэд-модел"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Мэйл илгээх (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Гарчиг"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Гарчиг (энд хувьсагч хэрэглэгдэж болно)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Нийлүүлэгчид"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Үлгэрийг урьдчилан харах"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Үлгэрүүд"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Энэ үлгэртэй хэрэглэгдэж болох баримтуудын төрөл"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
-"Хэрэв тэмдэглэгдсэн бол энэ харилцагч нь нэхэмжлэл үүсгэгдсэн гэх мэт янз "
-"бүрийн автомат имэйл мэдэгдлийг хүлээж авахгүй."
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-"Зай хэмнэхийн тулд энэ имэйлийг илгээсэн дараагаараа бүр мөсөн устгах"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Хэнд (Имэйлүүд)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Бүлэглэх..."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Хэнд (Харилцагчид)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Үлгэрийг хэрэглэх"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Анхааруулга"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -469,27 +645,14 @@ msgstr ""
 "баримтын моделийн зорилто талбарыг сонгох боломжтой."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Анхааруулга"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Гарын үсэг нэмэх"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Харилцагч"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "Анхны утга"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Хэрэв холбогч талбар анхны талбараар сонгогдсон бол энэ талбар нь холбогдож "
+"байгаа баримтын загварын үзүүлдэг."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -500,757 +663,12 @@ msgid ""
 msgstr "Энэ имэйл үлгэрээр үүсгэгдэх бүх имэйлүүдэд файл хавсаргаж болно"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr "Зурвасын Rich-text/HTML хувилбар (энд хувьсагч хэрэглэж болно)"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "Агуулга"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Гарчиг"
-
-#~ msgid "Personal Emails"
-#~ msgstr "Хувийн Э-мэйл"
-
-#~ msgid "Email Content  "
-#~ msgstr "Эмэйлийн агуулга  "
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Эмэйл илгээх визард"
-
-#~ msgid "Send now"
-#~ msgstr "Одоо илгээх"
-
-#~ msgid "Email Accounts"
-#~ msgstr "Эмэйл бүртгэл"
-
-#~ msgid "Send all mails"
-#~ msgstr "Бүх э-мэйлийг илгээх"
-
-#~ msgid "Server Reference of mail"
-#~ msgstr "Мэйлийн серверийн дугаар"
-
-#~ msgid "Approved"
-#~ msgstr "Зөвшөөрсөн"
-
-#~ msgid "Account"
-#~ msgstr "Бүртгэл"
-
-#~ msgid "HTML code"
-#~ msgstr "HTML код"
-
-#~ msgid "Email Account"
-#~ msgstr "Э-мэйл бүртгэх"
-
-#~ msgid "Delete Action"
-#~ msgstr "Устгах"
-
-#~ msgid "Approve Account"
-#~ msgstr "Зөвшөөрсөн бүртгэл"
-
-#~ msgid "Complete Success"
-#~ msgstr "Амжилттай дууссан"
-
-#~ msgid "OK"
-#~ msgstr "Тийм"
-
-#~ msgid "Standard Body (Text)"
-#~ msgstr "Стандарт (Текст)"
-
-#~ msgid "Attached Files"
-#~ msgstr "Хавсаргасан файл"
-
-#~ msgid "SSL/TLS (only in python 2.6)"
-#~ msgstr "SSL/TLS (зөвхөн python 2.6)"
-
-#~ msgid "From Email"
-#~ msgstr "Э-мэйлээс"
-
-#~ msgid "Accounts"
-#~ msgstr "Э-мэйл бүртгэл"
-
-#~ msgid "Body(Text)"
-#~ msgstr "Бие(Текст)"
-
-#~ msgid "Company Emails"
-#~ msgstr "Компаний э-мэйл"
-
-#~ msgid "My Emails"
-#~ msgstr "Миний Э-мэйлүүд"
-
-#~ msgid "Sending"
-#~ msgstr "Илгээх"
-
-#~ msgid "Insert Simple Field"
-#~ msgstr "Талбар оруулах"
-
-#~ msgid "Body(Html)"
-#~ msgstr "Бие(Html)"
-
-#~ msgid "Body (Text-Web Client Only)"
-#~ msgstr "Бие (Text-Web Client Only)"
-
-#~ msgid "State"
-#~ msgstr "Төлөв"
-
-#~ msgid "Wizard Button"
-#~ msgstr "Визард товч"
-
-#~ msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-#~ msgstr "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-
-#~ msgid "Resource"
-#~ msgstr "Нөөц"
-
-#, python-format
-#~ msgid "Mail from Account %s successfully Sent."
-#~ msgstr "Бүртгэлийн э-мэйл %s амжилттай илгээгдлээ."
-
-#~ msgid "Standard Body"
-#~ msgstr "Стандарт"
-
-#~ msgid "Mako Templates"
-#~ msgstr "Mako Загвар"
-
-#, python-format
-#~ msgid " (Email Attachment)"
-#~ msgstr " (Э-мэйл хавсралт)"
-
-#~ msgid "Sent Items"
-#~ msgstr "Илгээсэн зүйл"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Гаралтын холболт"
-
-#~ msgid "The text version of the mail"
-#~ msgstr "The text version of the mail"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-#~ msgstr ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-
-#~ msgid ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-#~ msgstr ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-
-#~ msgid "User account"
-#~ msgstr "Хэрэглэгчийн бүртгэл"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "Attach my signature to mail"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Тайлагнал"
-
-#~ msgid ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-#~ msgstr ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-
-#~ msgid "Expression Builder"
-#~ msgstr "Expression Builder"
-
-#~ msgid "HTML Body"
-#~ msgstr "HTML Бие"
-
-#~ msgid "Suspend Account"
-#~ msgstr "Suspend Account"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "This Value is used if the field is empty"
-
-#~ msgid "Preview Template"
-#~ msgstr "Урьдчилж харах"
-
-#~ msgid "Server"
-#~ msgstr "Сервер"
-
-#~ msgid ""
-#~ "Copy and paste the value in the location you want to use a system value."
-#~ msgstr ""
-#~ "Copy and paste the value in the location you want to use a system value."
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-
-#~ msgid ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-#~ msgstr ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "Body (Raw HTML)"
-
-#~ msgid "Signature"
-#~ msgstr "Баталгаа"
-
-#~ msgid "Options"
-#~ msgstr "Сонгох"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Body (Plain Text)"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Body (Text)"
-
-#~ msgid "Rec/Sent Date"
-#~ msgstr "Илгээсэн огноо"
-
-#~ msgid "Report to send"
-#~ msgstr "Мэдээ илгээх"
-
-#~ msgid "Server Information"
-#~ msgstr "Үйлчилгээний мэдээлэл"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "No of generated Mails"
-
-#~ msgid "Mail Details"
-#~ msgstr "Мэйлийн дэлгэрэнгүй"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SMTP SERVER or PORT not specified"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Note: This is Raw HTML."
-
-#~ msgid "Multiple Mail Wizard Step 1"
-#~ msgstr "Multiple Mail Wizard Step 1"
-
-#~ msgid "Related User"
-#~ msgstr "Холбоотой хэрэглэгч"
-
-#~ msgid "Body (Rich Text Clients Only)"
-#~ msgstr "Body (Rich Text Clients Only)"
-
-#~ msgid "Yes"
-#~ msgstr "Yes"
-
-#~ msgid "Window Action"
-#~ msgstr "Цонхны үйлдэл"
-
-#~ msgid "HTML, otherwise Text"
-#~ msgstr "HTML, otherwise Text"
-
-#~ msgid "Drafts"
-#~ msgstr "Ноороглосон"
-
-#~ msgid "No"
-#~ msgstr "No"
-
-#~ msgid "SMTP Port"
-#~ msgstr "SMTP Порт"
-
-#~ msgid "Mail Contents"
-#~ msgstr "Мэйлийн агуулга"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "The template name must be unique !"
-
-#~ msgid "BCC"
-#~ msgstr "BCC"
-
-#~ msgid "Plain Text"
-#~ msgstr "Plain Text"
-
-#~ msgid "Draft"
-#~ msgstr "Ноорог"
-
-#~ msgid "Model Internal Name"
-#~ msgstr "Model Internal Name"
-
-#~ msgid "Message-ID"
-#~ msgstr "Мэссэж-ID"
-
-#~ msgid "Applicable for inward items only"
-#~ msgstr "Applicable for inward items only"
-
-#~ msgid ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-#~ msgstr ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Outgoing"
-#~ msgstr "Гаралт"
-
-#~ msgid "Initiated"
-#~ msgstr "Initiated"
-
-#~ msgid "the signature from the User details will be appended to the mail"
-#~ msgstr "the signature from the User details will be appended to the mail"
-
-#~ msgid "From Account"
-#~ msgstr "From Account"
-
-#~ msgid "Intermixed content"
-#~ msgstr "Intermixed content"
-
-#~ msgid "Request Re-activation"
-#~ msgstr "Request Re-activation"
-
-#~ msgid "User Name"
-#~ msgstr "Хэрэглэгчийн нэр"
-
-#~ msgid "Sub Field"
-#~ msgstr "Дэд талбар"
-
-#~ msgid "User"
-#~ msgstr "Хэрэглэгч"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Advanced Options"
-
-#~ msgid "Outbox"
-#~ msgstr "Outbox"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Save in Drafts"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "Э-мэйл загвар"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Илгээх/Хүлээн авах"
-
-#~ msgid "Send Mail"
-#~ msgstr "Мэйл илгээх"
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-
-#~ msgid "The subject of email. Placeholders can be used here."
-#~ msgstr "The subject of email. Placeholders can be used here."
-
-#~ msgid "Report File Name"
-#~ msgstr "Мэдээллийн файлын нэр"
-
-#~ msgid "Expression"
-#~ msgstr "Илэрхийлэл"
-
-#~ msgid "History"
-#~ msgstr "Түүх"
-
-#~ msgid "To"
-#~ msgstr "To"
-
-#~ msgid "Text, otherwise HTML"
-#~ msgstr "Text, otherwise HTML"
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Хуулбарлах "
-
-#~ msgid "Discard Mail"
-#~ msgstr "Хаях"
-
-#~ msgid "Email Templates for Models"
-#~ msgstr "Email Templates for Models"
-
-#~ msgid "Close"
-#~ msgstr "Хаах"
-
-#~ msgid "Body (HTML-Web Client Only)"
-#~ msgstr "Body (HTML-Web Client Only)"
-
-#, python-format
-#~ msgid "%s (Email Attachment)"
-#~ msgstr "%s (Э-мэйл хавсралт)"
-
-#, python-format
-#~ msgid ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-#~ msgstr ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-
-#~ msgid "Allowed User Groups"
-#~ msgstr "Allowed User Groups"
-
-#~ msgid "User Information"
-#~ msgstr "Хэрэглэгчийн мэдээлэл"
-
-#~ msgid "Suspended"
-#~ msgstr "Зогссон"
-
-#~ msgid ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-
-#~ msgid "Folder"
-#~ msgstr "Хавтас"
-
-#~ msgid "Trash"
-#~ msgstr "Устгасан"
-
-#~ msgid "Date on which Email Sent or Received"
-#~ msgstr "Date on which Email Sent or Received"
-
-#~ msgid ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-#~ msgstr ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Дутуу бүртгэл"
-
-#, python-format
-#~ msgid "SMTP Test Connection Was Successful"
-#~ msgstr "SMTP Test Connection Was Successful"
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "OpenERP-ийн э-мэйл загвар"
-
-#~ msgid "Description"
-#~ msgstr "Тайлбар"
-
-#~ msgid "Create Action"
-#~ msgstr "Үйлдэл үүсгэх"
-
-#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-#~ msgstr "Enter name of outgoing server, eg: smtp.yourdomain.com"
-
-#~ msgid ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-#~ msgstr ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-
-#~ msgid ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-
-#~ msgid "Recipient (To)"
-#~ msgstr "Хүлээн авагч"
-
-#~ msgid "Null Value"
-#~ msgstr "Хоосон утга"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "Шуудангийн хайрцаг"
-
-#~ msgid "Templating Language"
-#~ msgstr "Загвар"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Sent"
-#~ msgstr "Илгээсэн"
-
-#~ msgid "Action that will open this email template on Resource records"
-#~ msgstr "Action that will open this email template on Resource records"
-
-#~ msgid "Password"
-#~ msgstr "Нууц үг"
-
-#~ msgid ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-#~ msgstr ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-
-#~ msgid "Emails"
-#~ msgstr "Э-мэйлүүд"
-
-#~ msgid "Report Name"
-#~ msgstr "Мэдээллийн нэр"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Resource Tracking"
-
-#~ msgid ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-#~ msgstr ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-
-#~ msgid "Existing files"
-#~ msgstr "Байгаа файлууд"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Email Template is extraction of Power Email basically just to send the "
-#~ "emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Email Template is extraction of Power Email basically just to send the "
-#~ "emails.\n"
-#~ "    "
-
-#~ msgid "Body (HTML)"
-#~ msgstr "Body (HTML)"
-
-#~ msgid ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-#~ msgstr ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-
-#~ msgid "email_template.account"
-#~ msgstr "email_template.account"
-
-#, python-format
-#~ msgid "Core connection for the given ID does not exist"
-#~ msgstr "Core connection for the given ID does not exist"
-
-#~ msgid "Corporate"
-#~ msgstr "Корпораци"
-
-#~ msgid "This is the wizard for sending mail"
-#~ msgstr "This is the wizard for sending mail"
-
-#~ msgid "Addresses"
-#~ msgstr "Хаягууд"
-
-#~ msgid "Emails will be sent from this approved account."
-#~ msgstr "Emails will be sent from this approved account."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-
-#~ msgid "Mail Format"
-#~ msgstr "Мэйлийн формат"
-
-#~ msgid "Actions"
-#~ msgstr "Үйл ажиллагаа"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Компаний бүртгэл"
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Enter port number, eg: 25 or 587"
-
-#, python-format
-#~ msgid "email-template"
-#~ msgstr "email-template"
-
-#, python-format
-#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
-#~ msgstr "Mail from Account %s failed. Probable Reason:Account not approved"
-
-#~ msgid "Simple Mail Wizard Step 1"
-#~ msgstr "Simple Mail Wizard Step 1"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Has Attachments"
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Тайлбаргүй"
-
-#~ msgid "Message type"
-#~ msgstr "Зурвасын төрөл"
-
-#~ msgid "Sidebar button"
-#~ msgstr "Хажуугийн даруул"
-
-#~ msgid "Received"
-#~ msgstr "Хүлээн авсан"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr "Холбогдох баримтын одоо харгадаж байгаа хажуугийн багажуудыг арилгах"
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr ""
-#~ "Энэ үлгэрээр үүсгэх даруулыг холбогдох баримтын хажуугийн зурвасд харуулах"
-
-#~ msgid "Email Content"
-#~ msgstr "Имэйлийн агуулга"
-
-#~ msgid "Cancelled"
-#~ msgstr "Цуцлагдсан"
-
-#~ msgid "Related partner"
-#~ msgstr "Холбогдох харилцагч"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Байгаа файлыг хавсаргах"
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "Динамик Утгуудын Байгуулагч"
-
-#~ msgid "Related Document ID"
-#~ msgstr "Холбогдох Баримтын ID"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Зурвасын төрөл, ихэнхдээ 'html' эсвэл 'хавтгай', хэрэглэгддэг бөгөөд "
-#~ "форматтай текст эсвэл цэвэр хавтгай текстийг илэрхийлнэ"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "И-мэйл үүсгэх харилцах цонх"
-
-#~ msgid "Files to attach"
-#~ msgstr "Хавсаргах файлууд"
-
-#~ msgid "Use Template"
-#~ msgstr "Үлгэрийг Хэрэглэх"
-
-#~ msgid "Related Document model"
-#~ msgstr "Холбогдох Баримтын Модель"
-
-#~ msgid "Language Selection"
-#~ msgstr "Хэл сонголт"
-
-#~ msgid "Null value"
-#~ msgstr "Тэг утга"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(хуулбар)"
-
-#~ msgid "Use a message template"
-#~ msgstr "Зурвасын үлгэрийг хэрэглэх"
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Зурвасын цэвэр текст хувилбар (энд хувьсагч хэрэглэж болно)"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "Сүлжээгээр илгээгдсэн зурвасын оригиналь хувилбар"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Бие (Rich/HTML)"
-
-#~ msgid "Related document model"
-#~ msgstr "Холбогдох баримтын модель"
-
-#~ msgid "Message-Id"
-#~ msgstr "Зурвас-Id"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "Хажуугийн зурвасын даруул нэмэх"
-
-#~ msgid "Date"
-#~ msgstr "Огноо"
-
-#~ msgid "Original"
-#~ msgstr "Оригиналь"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Rich-text агуулгууд"
-
-#~ msgid "Text contents"
-#~ msgstr "Текст агуулга"
-
-#~ msgid "References"
-#~ msgstr "Сурвалж"
-
-#~ msgid "Display Text"
-#~ msgstr "Текст Харуулах"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Зурвасын бүрэн толгой, ө.х. SMTP толгойнууд (ихэнхдээ ирж байгаа зурвасуудад "
-#~ "байдаг)"
-
-#~ msgid "Related user"
-#~ msgstr "Хамааралтай хэрэглэгч"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "Нууц хуулбар хүлээн авагчид (энд хувьсагч хэрэглэж болно)"
-
-#~ msgid "Bcc"
-#~ msgstr "Bcc"
-
-#~ msgid "Message headers"
-#~ msgstr "Зурвасын толгойнууд"
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "Хажуугийн зурвас дахь даруулыг арилгах"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Зурвасын сурвалжууд, тухайлбал өмнөх зурвасуудыг хувийн дугаарууд"
-
-#~ msgid "Attach Report"
-#~ msgstr "Тайлан Хавсрах"
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Хүргэлт Бүтсэнгүй"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "Энэ үлгэр дээр суурилсан зурваст хэрэглэдэх Message-ID SMTP толгой. Энэ нь "
-#~ "'Нөөцийн мөр хөөх' сонголтыг дардаг. Иймээс гарах имэйлийн хариуг хянахыг "
-#~ "хүсвэл оронд нь тэр сонголтыг хэрэглэнэ үү. \n"
-#~ "Энэ утга нь үл давтагдах байхын тулд энд заавал хувьсагчийг ашиглах ёстой."
-
-#~ msgid "Opt-out"
-#~ msgstr "Хэрэгсэхгүй хаях"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""
