@@ -90,7 +90,8 @@ class website_sale_digital(website_sale):
             template = p_obj.product_tmpl_id
             att = A.search_read(
                 domain=['|', '&', ('res_model', '=', p_obj._name), ('res_id', '=', p_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
-                fields=['name'],
+                fields=['name', 'write_date'],
+                order='write_date desc',
             )
 
             # Ignore products with no attachments
