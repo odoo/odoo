@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from openerp.addons.web.http import request
 
+
 def get_digital_purchases(uid, confirmed=True):
     user = request.env['res.users'].browse(uid)
     partner = user.partner_id
@@ -21,4 +22,6 @@ def get_digital_purchases(uid, confirmed=True):
         )
         purchases = purchases + last_purchase
 
-    return purchases
+    # I only want product_ids, but search_read insists in giving me a list of
+    # {product_id: <id>, name: <product code> <template_name> <attributes>}
+    return map(lambda x: x['product_id'][0], purchases)

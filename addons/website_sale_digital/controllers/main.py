@@ -42,16 +42,15 @@ class website_sale_digital(website_sale):
         res_model = attachment['res_model']
         res_id = attachment['res_id']
         purchased_products = util.get_digital_purchases(request.uid)
-        product_ids = map(lambda x: x['product_id'][0], purchased_products)
 
         if res_model == 'product.template':
             P = request.env['product.product']
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, product_ids)
+            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
             if res_id not in template_ids:
                 return redirect(self.downloads_page)
 
         elif res_model == 'product.product':
-            if res_id not in product_ids:
+            if res_id not in purchased_products:
                 return redirect(self.downloads_page)
 
         else:
@@ -79,9 +78,8 @@ class website_sale_digital(website_sale):
         products = []
         names = {}
         attachments = {}
-        for product in purchased_products:
+        for p_id in purchased_products:
             # Ignore duplicate products
-            p_id = product['product_id'][0]
             p_obj = P.browse(p_id)
             if p_obj in products:
                 continue
@@ -127,8 +125,7 @@ class Website_Unpublished_Images_Server(Website):
         if model in ['product.product', 'product.template']:
             # Confirm = False to display images in cart
             purchased_products = util.get_digital_purchases(request.uid, confirmed=False)
-            product_ids = map(lambda x: x['product_id'][0], purchased_products)
-            if int(p_id) in product_ids:
+            if int(p_id) in purchased_products:
                 request.uid = SUPERUSER_ID
 
         return super(Website_Unpublished_Images_Server, self).website_image(model, p_id, field, max_width, max_height)
