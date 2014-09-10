@@ -298,7 +298,7 @@ openerp.account = function (instance) {
             var line_ids = [];
             _.each(lines, function(o) {
                 line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids)
+                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
             });
         
             var excluded_ids = this.excluded_move_lines_ids[partner_id];
@@ -341,7 +341,7 @@ openerp.account = function (instance) {
             var line_ids = [];
             _.each(lines, function(o) {
                 line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids)
+                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
             });
 
             var initial_excluded_lines_num = this.excluded_move_lines_ids[partner_id].length;
