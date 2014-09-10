@@ -11,7 +11,7 @@
                     <field name="create_date" interval="month" type="col"/>
                     <field name="stage_id" type="row"/>
                     <field name="nbr_cases" type="measure"/>
-                    <field name="total_revenue" type="measure"/>
+                    <field name="planned_revenue" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -36,7 +36,7 @@
             <field name="model_id">crm.opportunity.report</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['date_deadline:month'], 'measures': ['nbr_cases','probability','total_revenue']}</field>
+            <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['date_deadline:month'], 'measures': ['nbr_cases','probability','planned_revenue']}</field>
         </record>
         <record id="filter_opportunity_salesperson" model="ir.filters">
             <field name="name">By Salespersons</field>
