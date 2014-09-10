@@ -410,6 +410,7 @@ class product_template(osv.osv):
     _name = "product.template"
     _inherit = ['mail.thread']
     _description = "Product Template"
+    _order = "name"
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
