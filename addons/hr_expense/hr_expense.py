@@ -309,16 +309,19 @@ class hr_expense_expense(osv.osv):
                     line.unit_quantity, line.product_id,
                     exp.user_id.partner_id)['taxes']:
                 tax_code_id = tax['base_code_id']
-                tax_amount = line.total_amount * tax['base_sign']
                 if not tax_code_id:
                     continue
                 res[-1]['tax_code_id'] = tax_code_id
-                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
                 ## 
                 is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
                 if is_price_include:
                     ## We need to deduce the price for the tax
                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
+                    # tax amount countains base amount without the tax
+                    tax_amount = (line.total_amount - tax['amount']) * tax['base_sign']
+                else:
+                    tax_amount = line.total_amount * tax['base_sign']
+                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
