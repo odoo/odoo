@@ -1177,7 +1177,7 @@ class Binary(http.Controller):
         '/logo',
         '/logo.png',
     ], type='http', auth="none")
-    def company_logo(self, dbname=None):
+    def company_logo(self, dbname=None, **kw):
         # TODO add etag, refactor to use /image code for etag
         uid = None
         if request.session.db:
