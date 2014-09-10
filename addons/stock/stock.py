@@ -1593,9 +1593,11 @@ class stock_move(osv.osv):
                    (move.product_id.track_production and move.location_id.usage == 'production') or \
                    (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
                    (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
-                   (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
-                   (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
-               )):
+                   (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer')
+               ) and
+               # We still let users correct wrong moves with inventories
+               move.location_id.usage != 'inventory' and \
+               move.location_dest_id.usage != 'inventory'):
                 return False
         return True
 
@@ -2839,7 +2841,7 @@ class stock_inventory(osv.osv):
         # to perform the correct inventory corrections we need analyze stock location by
         # location, never recursively, so we use a special context
         product_context = dict(context, compute_child=False)
-
+        uom_obj = self.pool['product.uom']
         location_obj = self.pool.get('stock.location')
         for inv in self.browse(cr, uid, ids, context=context):
             move_ids = []
@@ -2848,6 +2850,8 @@ class stock_inventory(osv.osv):
                 product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
                 change = line.product_qty - amount
+                if abs(change) < uom_obj.browse(cr, uid, line.product_uom.id).rounding:
+                    continue
                 lot_id = line.prod_lot_id.id
                 if change:
                     location_id = line.product_id.property_stock_inventory.id
