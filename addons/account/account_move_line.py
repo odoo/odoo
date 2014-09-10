@@ -816,6 +816,12 @@ class account_move_line(osv.osv):
                     credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
                     amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
 
+            # Amount residual can be negative
+            if debit < 0:
+                debit, credit = credit, -debit
+            if credit < 0:
+                debit, credit = -credit, debit
+
             ret_line['credit'] = credit
             ret_line['debit'] = debit
             ret_line['amount_str'] = amount_str
