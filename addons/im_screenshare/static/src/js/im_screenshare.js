@@ -43,6 +43,7 @@
         create_cookie: function(extra){
             this.cookie_data = _.extend(extra, this.cookie_data);
             this.cookie_data = _.extend({uuid : this.uuid, record_id : this.record_id, mode : this.mode}, extra || {});
+            console.log("create cOOKIE : ", this.cookie_data);
             this.set_cookie(instance.im_screenshare.COOKIE_NAME, this.cookie_data, 60*60*1000);
         },
         set_cookie: function(name,value,hours) {
@@ -50,8 +51,9 @@
                 var date = new Date();
                 date.setTime(date.getTime()+(hours*60*60*1000));
                 var expires = "; expires="+date.toGMTString();
+            }else{
+                var expires = "";
             }
-            else var expires = "";
             document.cookie = name+"="+JSON.stringify(value)+expires+"; path=/";
         },
         get_cookie: function(name) {
@@ -135,12 +137,6 @@
         start_record: function(mode, extra_cookie_data){
             var self = this;
             this.mode = mode;
-            if(this.is_screen_already_recording()){
-                alert(_t("You are already sharing or recording your screen."));
-                return new $.Deferred().resolve().then(function(){
-                    return false;
-                });
-            }
             return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
                 if(self.mode === 'share'){
                     self.uuid = result;
@@ -209,12 +205,6 @@
             });
         },
         stop_record: function(){
-            // send notification to the player message zone
-            this.send_record([{
-                f: "notificationMessage",
-                args : [_t("The sharing/recording is not now finished.")],
-                timestamp: Date.now()
-            }]);
             // erase cookie
             this.set_cookie(instance.im_screenshare.COOKIE_NAME, "", -1);
             // reset data
@@ -231,15 +221,20 @@
                 openerp.webclient.loading.on_rpc_event = this._on_rpc_function;
                 openerp.webclient.loading.count = 0;
             }
+            // send notification to the player message zone
+            return this.send_record([{
+                f: "notificationMessage",
+                args : [_t("The sharing/recording is not now finished.")],
+                timestamp: Date.now()
+            }]);
         },
         send_record: function(mutations){
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
                 return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
-            }else{
-                return $.Deferred().resolve();
             }
+            return $.Deferred().resolve();
         }
     });
 
@@ -372,62 +367,90 @@
         }
     });
 
-    // Screen recording in the Database
-    // Class recording the summary mutation of the current DOM and save them in the Database
-    instance.im_screenshare.RecordButton = instance.Widget.extend({
+
+    // Class managing the start and stop recording/sharing
+    // The button widget must inherit this class. It restrict the sharing/recording to only on at a time.
+    instance.im_screenshare.AbstractButton = instance.Widget.extend({
         init: function(parent){
             this._super(parent);
+            this.mode = 'record';
+            this.extra_cookie_data = {};
             this.record_handler = instance.im_screenshare.record_handler;
         },
         start: function(){
             this.record_handler.start();
-            // get the data to check if this object start the recording
-            var data = this.record_handler.cookie_data;
-            var is_rec = this.get_initial_state_from_cookie(data);
-            this.$el.html(this.generate_button(is_rec));
-            this.$el.on('click','button',_.bind(this.click, this));
+            // bind events
+            this.on("change:record_state", this, this.change_button);
+            this.$el.on('click', _.bind(this.action_click, this));
+            // set initial state
+            var state = false;
+            if(this.record_handler.is_screen_already_recording()){
+                state = this.already_started_myself();
+            }
+            this.set('record_state', state);
         },
-        get_initial_state_from_cookie: function(vals){
-            return !!(vals["record_id"]);
-        },
-        generate_button: function(is_recording){
-            return (is_recording ? '<button>Stop</button>' : '<button>Record</button>');
-        },
-        click: function(){
+        action_click: function(){
             var self = this;
-            if(this.record_handler.is_recording()){
-                this.record_handler.stop_record();
-                this.$el.html(this.generate_button(false));
+            if(this.record_handler.is_screen_already_recording()){
+                if(this.already_started_myself()){
+                    // stop recording
+                    this.set('record_state', false);
+                    return this.record_handler.stop_record().then(function(){
+                        self.set('record_state', false);
+                        return false;
+                    });
+                }else{
+                    // alert the screen is already used.
+                    alert(_t("You are already sharing or recording your screen. Please stop the current action, or clean your browser cookie."));
+                    return new $.Deferred().resolve();
+                }
             }else{
-                this.record_handler.start_record('record').then(function(res){
-                    self.$el.html(self.generate_button(res));
+                // start recording
+                return this.record_handler.start_record(this.mode, this.extra_cookie_data).then(function(res){
+                    self.set('record_state', !!res);
+                    return res;
                 });
             }
-        }
+        },
+        // function to redefine in the real button implementation
+        already_started_myself: function(){return false;},
+        change_button: function(){},
     });
 
+    // Screen recording in the Database
+    // Implementation of the button to record the summary mutation of the current DOM and save them in the Database
+    instance.im_screenshare.RecordButton = instance.im_screenshare.AbstractButton.extend({
+        already_started_myself: function(){
+            return !!(this.record_handler.cookie_data["record_id"]);
+        },
+        change_button: function(){
+            if(this.get('record_state')){
+                 this.$el.html('<button>Stop</button>');
+            }else{
+                 this.$el.html('<button>Record</button>');
+            }
+        },
+    });
 
     // IM Screenshare with other users, depends on im_chat
-    // This is the button on the header of the conversation : it starts and stops the screensharing.
-    instance.im_screenshare.ShareButton = instance.Widget.extend({
+    // Implementation of the conversation header button : it starts and stops the screensharing.
+    instance.im_screenshare.ShareButton = instance.im_screenshare.AbstractButton.extend({
         init: function(parent){
             this._super(parent);
             this.conv = parent;
-            this.record_handler = instance.im_screenshare.record_handler;
+            this.mode = 'share';
+            this.extra_cookie_data = {conv_uuid: this.conv.get('session').uuid};
         },
         start: function() {
-            this.record_handler.start();
-            var data = this.record_handler.cookie_data;
-            var is_rec = this.get_initial_state_from_cookie(data);
             this.$el.html('<button class="oe_im_screenshare_button"><i class="fa fa-caret-square-o-right"></i></button>');
-            this.color_button(is_rec);
-            this.$el.on('click','button',_.bind(this.click,this));
+            this._super();
         },
-        get_initial_state_from_cookie: function(vals){
+        already_started_myself: function(){
+            var vals = this.record_handler.cookie_data;
             return !!(vals["uuid"] && vals["conv_uuid"] === this.conv.get('session').uuid);
         },
-        color_button: function(is_recording) {
-            if(is_recording){
+        change_button: function() {
+            if(this.get('record_state')){
                 this.$('.oe_im_screenshare_button').css('color','red');
                 this.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
             }else{
@@ -435,21 +458,15 @@
                 this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }
         },
-        click: function(event){
+        action_click: function(e){
             var self = this;
-            event.stopPropagation();
-            if(this.record_handler.is_recording()){
-                this.record_handler.stop_record();
-                this.color_button(false);
-            }else{
-                this.record_handler.start_record('share', {conv_uuid: this.conv.get('session').uuid}).then(function(res){
-                    if(res){
-                        var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + res;
-                        self.conv.send_message(invit, 'meta');
-                    }
-                    self.color_button(res);
-                });
-            }
+            e.stopPropagation();
+            this._super().then(function(res){
+                if(res){
+                    var url = openerp.session.server + '/im_screenshare/player/' + res;
+                    self.conv.send_message(_.str.sprintf(_t("Invitation for screensharing. Click on this link : %s"), url), 'meta');
+                }
+            });
         },
     });
 
@@ -467,7 +484,6 @@
             });
         }
     });
-
 
     return instance.im_screenshare;
 
