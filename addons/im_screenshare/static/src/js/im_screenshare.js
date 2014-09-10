@@ -1,4 +1,6 @@
 (function(){
+
+    "use strict";
     var instance = openerp;
     instance.im_screenshare = {};
     instance.im_screenshare.COOKIE_NAME = 'odoo-screenshare';
