@@ -31,12 +31,28 @@ $aestetic_animation_speed: 300ms;
         }
     }
 
+    h1 input, h2 input {
+       height: auto !important;
+    }
+
     h1 {
         width: 48%;
         padding: 0 0 0 $actionColWidth;
         margin: 0 0 25px 0;
         float: left;
         font-size: 2em;
+    }
+
+    .change_statement_name_container {
+        display: none;
+
+        td:first-child, td:first-child > input {
+            width: 99%;
+        }
+        td:last-child {
+            width: 1%;
+            padding-left: 5px;
+        }
     }
 
     h2 {

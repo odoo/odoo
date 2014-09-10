@@ -9,12 +9,19 @@ openerp.account = function (instance) {
     instance.web.client_actions.add('bank_statement_reconciliation_view', 'instance.web.account.bankStatementReconciliation');
     instance.web.account.bankStatementReconciliation = instance.web.Widget.extend({
         className: 'oe_bank_statement_reconciliation',
+
+        events: {
+            "click .statement_name span": "statementNameClickHandler",
+            "keyup .change_statement_name_field": "changeStatementNameFieldHandler",
+            "click .change_statement_name_button": "changeStatementButtonClickHandler",
+        },
     
         init: function(parent, context) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
             if (context.context.statement_id) this.statement_ids = [context.context.statement_id];
             if (context.context.statement_ids) this.statement_ids = context.context.statement_ids;
+            this.is_single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.title = context.context.title || _t("Reconciliation");
             this.st_lines = [];
             this.last_displayed_reconciliation_index = undefined; // Flow control
@@ -127,8 +134,8 @@ openerp.account = function (instance) {
             if (self.statement_ids && self.statement_ids.length > 0) {
                 lines_filter.push(['statement_id', 'in', self.statement_ids]);
 
-                // If only one statement, retreive its name
-                if (self.statement_ids.length === 1) {
+                // If only one statement, display its name as title and allow to modify it
+                if (self.is_single_statement) {
                     deferred_promises.push(self.model_bank_statement
                         .query(["name"])
                         .filter([['id', '=', self.statement_ids[0]]])
@@ -211,7 +218,11 @@ openerp.account = function (instance) {
                 });
     
                 // Render and display
-                self.$el.prepend(QWeb.render("bank_statement_reconciliation", {title: self.title, total_lines: self.already_reconciled_lines+self.st_lines.length}));
+                self.$el.prepend(QWeb.render("bank_statement_reconciliation", {
+                    title: self.title,
+                    is_single_statement: self.is_single_statement,
+                    total_lines: self.already_reconciled_lines+self.st_lines.length
+                }));
                 self.updateProgressbar();
                 var reconciliations_to_show = self.st_lines.slice(0, self.max_reconciliations_displayed);
                 self.last_displayed_reconciliation_index = reconciliations_to_show.length;
@@ -232,6 +243,34 @@ openerp.account = function (instance) {
                         });
                     });
             });
+        },
+
+        statementNameClickHandler: function() {
+            if (! this.is_single_statement) return;
+            this.$(".statement_name span").hide();
+            this.$(".change_statement_name_field").attr("value", this.title);
+            this.$(".change_statement_name_container").show();
+        },
+
+        changeStatementNameFieldHandler: function(e) {
+            var name = this.$(".change_statement_name_field").val();
+            if (name === "") this.$(".change_statement_name_button").attr("disabled", "disabled");
+            else this.$(".change_statement_name_button").removeAttr("disabled");
+            if (name !== "" && e.which === 13) this.$(".change_statement_name_button").trigger("click");
+        },
+
+        changeStatementButtonClickHandler: function() {
+            var self = this;
+            if (! self.is_single_statement) return;
+            var name = self.$(".change_statement_name_field").val();
+            if (name === "") return;
+            return self.model_bank_statement
+                .call("write", [[self.statement_ids[0]], {'name': name}])
+                .then(function () {
+                    self.title = name;
+                    self.$(".statement_name span").text(name).show();
+                    self.$(".change_statement_name_container").hide();
+                });
         },
     
         keyboardShortcutsHandler: function(e) {
@@ -345,7 +384,6 @@ openerp.account = function (instance) {
         displayDoneMessage: function() {
             var self = this;
     
-            var is_single_statement = self.statement_ids !== undefined && self.statement_ids.length === 1;
             var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
             var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
             var achievements = [];
@@ -381,7 +419,7 @@ openerp.account = function (instance) {
                 transactions_done: self.reconciled_lines,
                 done_with_ctrl_enter: self.lines_reconciled_with_ctrl_enter,
                 achievements: achievements,
-                has_statement_id: is_single_statement,
+                has_statement_id: self.is_single_statement,
             }));
     
             // Animate it
@@ -400,7 +438,7 @@ openerp.account = function (instance) {
                 });
             });
 
-            if (is_single_statement && self.$(".button_close_statement").length !== 0) {
+            if (self.is_single_statement && self.$(".button_close_statement").length !== 0) {
                 self.$(".button_close_statement").hide();
                 self.model_bank_statement
                     .query(["balance_end_real", "balance_end"])
