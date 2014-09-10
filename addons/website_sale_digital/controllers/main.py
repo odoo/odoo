@@ -25,47 +25,6 @@ class website_sale_digital(website_sale):
         return response
 
     @http.route([
-        '/shop/attachment',
-    ], auth='public')
-    def download_attachment(self, attachment_id):
-        # Check if this is a valid attachment id
-        attachment = request.env['ir.attachment'].sudo().search_read(
-            [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id"]
-        )
-        if attachment:
-            attachment = attachment[0]
-        else:
-            redirect(self.downloads_page)
-
-        # Check if the user has bought the associated product
-        res_model = attachment['res_model']
-        res_id = attachment['res_id']
-        purchased_products = util.get_digital_purchases(request.uid)
-
-        if res_model == 'product.template':
-            P = request.env['product.product']
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
-            if res_id not in template_ids:
-                return redirect(self.downloads_page)
-
-        elif res_model == 'product.product':
-            if res_id not in purchased_products:
-                return redirect(self.downloads_page)
-
-        else:
-            return redirect(self.downloads_page)
-
-        # The client has bought the product, otherwise it would have been blocked by now
-        data = base64.standard_b64decode(attachment["datas"])
-        headers = [
-            ('Content-Type', attachment['file_type']),
-            ('Content-Length', len(data)),
-            ('Content-Disposition', 'attachment; filename="' + attachment['name'] + '"')
-        ]
-        return request.make_response(data, headers)
-
-    @http.route([
         downloads_page,
     ], type='http', auth='public', website=True)
     def display_attachments(self):
@@ -111,21 +70,63 @@ class website_sale_digital(website_sale):
             'attachments': attachments,
         })
 
+    @http.route([
+        '/shop/attachment',
+    ], auth='public')
+    def download_attachment(self, attachment_id):
+        # Check if this is a valid attachment id
+        attachment = request.env['ir.attachment'].sudo().search_read(
+            [('id', '=', int(attachment_id))],
+            ["name", "datas", "file_type", "res_model", "res_id"]
+        )
+        if attachment:
+            attachment = attachment[0]
+        else:
+            redirect(self.downloads_page)
 
-class Website_Unpublished_Images_Server(Website):
+        # Check if the user has bought the associated product
+        res_model = attachment['res_model']
+        res_id = attachment['res_id']
+        purchased_products = util.get_digital_purchases(request.uid)
+
+        if res_model == 'product.template':
+            P = request.env['product.product']
+            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
+            if res_id not in template_ids:
+                return redirect(self.downloads_page)
+
+        elif res_model == 'product.product':
+            if res_id not in purchased_products:
+                return redirect(self.downloads_page)
+
+        else:
+            return redirect(self.downloads_page)
+
+        # The client has bought the product, otherwise it would have been blocked by now
+        data = base64.standard_b64decode(attachment["datas"])
+        headers = [
+            ('Content-Type', attachment['file_type']),
+            ('Content-Length', len(data)),
+            ('Content-Disposition', 'attachment; filename="' + attachment['name'] + '"')
+        ]
+        return request.make_response(data, headers)
+
+
+class Website_Unpublished_Purchased_Products_Images(Website):
 
     @http.route([
-        '/website/image/<model>/<p_id>/<field>',
-        '/website/image/<model>/<p_id>/<field>/<int:max_width>x<int:max_height>'
+        '/website/image/',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
     ], auth="public", website=True)
-    def website_image(self, model, p_id, field, max_width=None, max_height=None):
+    def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Allows to display images for products with website_published=False
             Gives admin access to images if the user has bought the product.
         """
         if model in ['product.product', 'product.template']:
             # Confirm = False to display images in cart
             purchased_products = util.get_digital_purchases(request.uid, confirmed=False)
-            if int(p_id) in purchased_products:
+            if int(id) in purchased_products:
                 request.uid = SUPERUSER_ID
 
-        return super(Website_Unpublished_Images_Server, self).website_image(model, p_id, field, max_width, max_height)
+        return super(Website_Unpublished_Purchased_Products_Images, self).website_image(model, id, field, max_width, max_height)

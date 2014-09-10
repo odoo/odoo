@@ -48,7 +48,7 @@
         <div class="media row">
             <div class="col-md-1 mt8" style="text-align:center">
                 <a t-att-href="'/shop/product/' + str(p.product_tmpl_id.id)">
-                    <span t-field="p.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                    <span t-field="p.image_medium" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                     <!-- If we ever want to do a dirty hack to display the image even if website_published is False -->
                     <!-- <img t-att-src="'data:image;base64,' + p.image" style="max-width: 64px; max-height: 64px;"/> -->
                 </a>
