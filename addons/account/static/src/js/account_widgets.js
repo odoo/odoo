@@ -293,8 +293,13 @@ openerp.account = function (instance) {
 
         // Adds move line ids to the list of move lines not to fetch for a given partner
         // This is required because the same move line cannot be selected for multiple reconciliation
-        excludeMoveLines: function(source_child, partner_id, line_ids) {
+        excludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
+            var line_ids = [];
+            _.each(lines, function(o) {
+                line_ids.push(o.id);
+                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids)
+            });
         
             var excluded_ids = this.excluded_move_lines_ids[partner_id];
             var excluded_move_lines_changed = false;
@@ -331,9 +336,14 @@ openerp.account = function (instance) {
             });
         },
         
-        unexcludeMoveLines: function(source_child, partner_id, line_ids) {
+        unexcludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
-        
+            var line_ids = [];
+            _.each(lines, function(o) {
+                line_ids.push(o.id);
+                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids)
+            });
+
             var initial_excluded_lines_num = this.excluded_move_lines_ids[partner_id].length;
             this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
             if (this.excluded_move_lines_ids[partner_id].length === initial_excluded_lines_num)
@@ -530,10 +540,9 @@ openerp.account = function (instance) {
                 this.decorateStatementLine(this.st_line);
     
                 // Exclude selected move lines
-                var selected_line_ids = _(context.reconciliation_proposition).map(function(o){ return o.id });
                 if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
                     this.getParent().excluded_move_lines_ids[this.partner_id] = [];
-                this.getParent().excludeMoveLines(this, this.partner_id, selected_line_ids);
+                this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
             } else {
                 this.set("mv_lines_selected", []);
                 this.st_line = undefined;
@@ -684,7 +693,7 @@ openerp.account = function (instance) {
             _.each(self.getChildren(), function(o){ o.destroy() });
             self.is_consistent = false;
             return $.when(self.$el.animate({opacity: 0}, self.animation_speed)).then(function() {
-                self.getParent().unexcludeMoveLines(self, self.partner_id, _.map(self.get("mv_lines_selected"), function(o){ return o.id }));
+                self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
                 $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                 self.$el.empty();
                 self.$el.removeClass("no_partner");
@@ -1277,11 +1286,11 @@ openerp.account = function (instance) {
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
         
-            var added_lines_ids = _.map(_.difference(val.newValue, val.oldValue), function(o){ return o.id });
-            var removed_lines_ids = _.map(_.difference(val.oldValue, val.newValue), function(o){ return o.id });
+            var added_lines = _.difference(val.newValue, val.oldValue);
+            var removed_lines = _.difference(val.oldValue, val.newValue);
         
-            self.getParent().excludeMoveLines(self, self.partner_id, added_lines_ids);
-            self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines_ids);
+            self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
+            self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
         
             $.when(self.updateMatches()).then(function(){
                 self.updateAccountingViewMatchedLines();
@@ -1459,8 +1468,11 @@ openerp.account = function (instance) {
             if (offset < 0) offset = 0;
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
-            var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){ return o.id });
-            excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
+            var excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            _.each(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){
+                excluded_ids.push(o.id);
+                excluded_ids = excluded_ids.concat(o.partial_reconciliation_siblings_ids);
+            });
             
             var deferred_move_lines;
             var move_lines = [];
@@ -1552,7 +1564,7 @@ openerp.account = function (instance) {
             speed = (isNaN(speed) ? self.animation_speed : speed);
             if (! self.is_consistent) return;
 
-            self.getParent().unexcludeMoveLines(self, self.partner_id, _.map(self.get("mv_lines_selected"), function(o){ return o.id }));
+            self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
             
             // Sliding animation
             var height = self.$el.outerHeight();

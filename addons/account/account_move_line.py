@@ -772,8 +772,10 @@ class account_move_line(osv.osv):
         for line in lines:
             if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
                 continue
+            partial_reconciliation_siblings_ids = []
             if line.reconcile_partial_id:
                 reconcile_partial_ids.append(line.reconcile_partial_id.id)
+                partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
 
             ret_line = {
                 'id': line.id,
@@ -788,6 +790,7 @@ class account_move_line(osv.osv):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
+                'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
             }
 
             # Get right debit / credit:
