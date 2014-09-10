@@ -285,7 +285,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.company_logo.onerror = function(){
                         logo_loaded.reject();
                     };
-                    self.company_logo.src = window.location.origin + '/web/binary/company_logo';
+                    self.company_logo.src = window.location.origin + '/web/binary/company_logo'+'?_'+Math.random();
 
                     return logo_loaded;
                 });
