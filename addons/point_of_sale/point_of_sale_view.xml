@@ -169,6 +169,8 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{}"/>
             <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a new product.
