@@ -82,6 +82,7 @@ var Followers = form_common.AbstractField.extend({
             if(!$list.hasClass('open')) {
                 $list.addClass('open');
             }
+<<<<<<< HEAD
             if(self.$('.oe_subtype_list ul')[0].children.length < 1) {
                 $list.removeClass('open');
             }
@@ -95,6 +96,39 @@ var Followers = form_common.AbstractField.extend({
         this.$el.on('click', '.oe_show_more', self.on_show_more_followers);
         this.$el.on('click', 'a[data-partner]', self.on_follower_clicked);
     },
+=======
+            var id = this.view.datarecord.id;
+            this.ds_model.call('get_subscription_data', [[id], user_pid, new session.web.CompoundContext(this.build_context(), {})])
+                .then(function (data) {self.display_subtypes(data, id, dialog);});
+        },
+
+        /** Display subtypes: {'name': default, followed} */
+        display_subtypes:function (data, id, dialog) {
+            var self = this;
+            if (dialog) {
+                var $list = self.$dialog.$el;
+            }
+            else {
+                var $list = this.$('.oe_subtype_list ul');
+            }
+            var records = data[id];
+            this.records_length = $.map(records, function(value, index) { return index; }).length;
+            if (this.records_length > 1) { self.display_followers(); }
+            var old_model = '';
+            _(records).each(function (record, record_name) {
+                if (old_model != record.parent_model){
+                    if (old_model != ''){
+                        var index = $($list).find('.oe_subtype').length;
+                        $($($list).find('.oe_subtype')[index-1]).addClass('subtype-border');
+                    }
+                    old_model = record.parent_model;
+                }
+                record.name = record_name;
+                record.followed = record.followed || undefined;
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record, 'dialog': dialog})).appendTo($list);
+            });
+        },
+>>>>>>> [WIP] Migrate
 
     on_edit_subtype: function(event) {
         var self = this;

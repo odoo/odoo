@@ -21,12 +21,14 @@
 
 import openerp
 import openerp.tools as tools
+from openerp import api
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -220,25 +222,25 @@ class mail_group(osv.Model):
         else:
             return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
 
-    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
-        res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
-        group = self.browse(cr, uid, id, context=context)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(eval(res['headers']))
-            except Exception:
-                pass
-        headers['Precedence'] = 'list'
-        # avoid out-of-office replies from MS Exchange
-        # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
-        headers['X-Auto-Response-Suppress'] = 'OOF'
-        if group.alias_domain and group.alias_name:
-            headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
-            headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
-            # Avoid users thinking it was a personal message
-            # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
-            list_to = '"%s" <%s@%s>' % (group.name, group.alias_name, group.alias_domain)
-            headers['X-Forge-To'] = list_to
-        res['headers'] = repr(headers)
-        return res
+    # def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+    #     res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
+    #     group = self.browse(cr, uid, id, context=context)
+    #     headers = {}
+    #     if res.get('headers'):
+    #         try:
+    #             headers.update(eval(res['headers']))
+    #         except Exception:
+    #             pass
+    #     headers['Precedence'] = 'list'
+    #     # avoid out-of-office replies from MS Exchange
+    #     # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
+    #     headers['X-Auto-Response-Suppress'] = 'OOF'
+    #     if group.alias_domain and group.alias_name:
+    #         headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+    #         headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+    #         # Avoid users thinking it was a personal message
+    #         # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
+    #         list_to = '"%s" <%s@%s>' % (group.name, group.alias_name, group.alias_domain)
+    #         headers['X-Forge-To'] = list_to
+    #     res['headers'] = repr(headers)
+    #     return res

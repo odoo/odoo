@@ -204,7 +204,7 @@ class mail_notification(osv.Model):
         # custom values
         custom_values = dict()
         if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
-            custom_values = self.pool[message.model].message_get_email_values(cr, uid, message.res_id, message, context=context)
+            custom_values = self.pool[message.model].message_get_email_values(cr, uid, [message.res_id], [message], context=context)[message.res_id]
 
         # create email values
         max_recipients = 50

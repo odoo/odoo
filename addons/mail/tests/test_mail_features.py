@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp.addons.mail.tests.common import TestMail
+<<<<<<< HEAD
 from openerp.tools import mute_logger
 
 
@@ -40,6 +41,226 @@ class TestMailFeatures(TestMail):
         url = self.env['mail.mail']._get_partner_access_link(mail, self.user_employee.partner_id)
         self.assertIn(base_url, url)
         self.assertIn('db=%s' % self.env.cr.dbname, url,
+=======
+from openerp.tools import mute_logger, email_split, html2plaintext
+from openerp.tools.mail import html_sanitize
+
+class test_mail(TestMail):
+
+    def test_000_alias_setup(self):
+        """ Test basic mail.alias setup works, before trying to use them for routing """
+        cr, uid = self.cr, self.uid
+        self.user_valentin_id = self.res_users.create(cr, uid,
+            {'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com', 'login': 'valentin.cognito', 'alias_name': 'valentin.cognito'})
+        self.user_valentin = self.res_users.browse(cr, uid, self.user_valentin_id)
+        self.assertEquals(self.user_valentin.alias_name, self.user_valentin.login, "Login should be used as alias")
+
+        self.user_pagan_id = self.res_users.create(cr, uid,
+            {'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com', 'login': 'plmarchant@gmail.com', 'alias_name': 'plmarchant@gmail.com'})
+        self.user_pagan = self.res_users.browse(cr, uid, self.user_pagan_id)
+        self.assertEquals(self.user_pagan.alias_name, 'plmarchant', "If login is an email, the alias should keep only the local part")
+
+        self.user_barty_id = self.res_users.create(cr, uid,
+            {'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com', 'login': 'b4r+_#_R3wl$$', 'alias_name': 'b4r+_#_R3wl$$'})
+        self.user_barty = self.res_users.browse(cr, uid, self.user_barty_id)
+        self.assertEquals(self.user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
+    def test_00_followers_function_field(self):
+        """ Tests designed for the many2many function field 'follower_ids'.
+            We will test to perform writes using the many2many commands 0, 3, 4,
+            5 and 6. """
+        cr, uid, user_admin, partner_bert_id, group_pigs = self.cr, self.uid, self.user_admin, self.partner_bert_id, self.group_pigs
+
+        # Data: create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
+        group_dummy_id = self.mail_group.create(cr, uid,
+            {'name': 'Dummy group'}, {'mail_create_nolog': True})
+        self.mail_followers.create(cr, uid,
+            {'res_model': 'mail.thread', 'res_id': self.group_pigs_id, 'partner_id': partner_bert_id})
+        self.mail_followers.create(cr, uid,
+            {'res_model': 'mail.group', 'res_id': group_dummy_id, 'partner_id': partner_bert_id})
+
+        # Pigs just created: should be only Admin as follower
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertEqual(follower_ids, set([user_admin.partner_id.id]), 'Admin should be the only Pigs fan')
+
+        # Subscribe Bert through a '4' command
+        print '------------------'
+        group_pigs.write({'message_follower_ids': [(4, partner_bert_id)]})
+        group_pigs.refresh()
+        print '------------------'
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the only Pigs fans')
+
+        # Unsubscribe Bert through a '3' command
+        group_pigs.write({'message_follower_ids': [(3, partner_bert_id)]})
+        group_pigs.refresh()
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertEqual(follower_ids, set([user_admin.partner_id.id]), 'Admin should be the only Pigs fan')
+
+        # Set followers through a '6' command
+        group_pigs.write({'message_follower_ids': [(6, 0, [partner_bert_id])]})
+        group_pigs.refresh()
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertEqual(follower_ids, set([partner_bert_id]), 'Bert should be the only Pigs fan')
+
+        # Add a follower created on the fly through a '0' command
+        group_pigs.write({'message_follower_ids': [(0, 0, {'name': 'Patrick Fiori'})]})
+        partner_patrick_id = self.res_partner.search(cr, uid, [('name', '=', 'Patrick Fiori')])[0]
+        group_pigs.refresh()
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertEqual(follower_ids, set([partner_bert_id, partner_patrick_id]), 'Bert and Patrick should be the only Pigs fans')
+
+        # Finally, unlink through a '5' command
+        group_pigs.write({'message_follower_ids': [(5, 0)]})
+        group_pigs.refresh()
+        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
+        self.assertFalse(follower_ids, 'Pigs group should not have fans anymore')
+
+        # Test dummy data has not been altered
+        fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.thread'), ('res_id', '=', self.group_pigs_id)])
+        follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
+        self.assertEqual(follower_ids, set([partner_bert_id]), 'Bert should be the follower of dummy mail.thread data')
+        fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', group_dummy_id)])
+        follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
+        self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the followers of dummy mail.group data')
+
+    def test_05_message_followers_and_subtypes(self):
+        """ Tests designed for the subscriber API as well as message subtypes """
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        # Data: message subtypes
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.group'})
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_other_def', 'default': True, 'res_model': 'crm.lead'})
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_all_def', 'default': True, 'res_model': False})
+        mt_mg_nodef = self.mail_message_subtype.create(cr, uid, {'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.group'})
+        mt_all_nodef = self.mail_message_subtype.create(cr, uid, {'name': 'mt_all_nodef', 'default': False, 'res_model': False})
+        default_group_subtypes = self.mail_message_subtype.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', 'mail.group'), ('res_model', '=', False)])
+
+        # ----------------------------------------
+        # CASE1: test subscriptions with subtypes
+        # ----------------------------------------
+
+        # Do: subscribe Raoul, should have default subtypes
+        group_pigs.message_subscribe_users([user_raoul.id])
+        group_pigs.refresh()
+        # Test: 2 followers (Admin and Raoul)
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+                        'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
+        # Raoul follows default subtypes
+        fol_ids = self.mail_followers.search(cr, uid, [
+                        ('res_model', '=', 'mail.group'),
+                        ('res_id', '=', self.group_pigs_id),
+                        ('partner_id', '=', user_raoul.partner_id.id)
+                    ])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set(default_group_subtypes),
+                        'message_subscribe: Raoul subscription subtypes are incorrect, should be all default ones')
+
+        # Do: subscribe Raoul with specified new subtypes
+        group_pigs.message_subscribe_users([user_raoul.id], subtype_ids=[mt_mg_nodef])
+        # Test: 2 followers (Admin and Raoul)
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+                        'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
+        # Test: 2 lines in mail.followers (no duplicate for Raoul)
+        fol_ids = self.mail_followers.search(cr, uid, [
+                        ('res_model', '=', 'mail.group'),
+                        ('res_id', '=', self.group_pigs_id),
+                    ])
+        self.assertEqual(len(fol_ids), 2,
+                        'message_subscribe: subscribing an already-existing follower should not create new entries in mail.followers')
+        # Test: Raoul follows only specified subtypes
+        fol_ids = self.mail_followers.search(cr, uid, [
+                        ('res_model', '=', 'mail.group'),
+                        ('res_id', '=', self.group_pigs_id),
+                        ('partner_id', '=', user_raoul.partner_id.id)
+                    ])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
+                        'message_subscribe: Raoul subscription subtypes are incorrect, should be only specified')
+
+        # Do: Subscribe Raoul without specified subtypes: should not erase existing subscription subtypes
+        group_pigs.message_subscribe_users([user_raoul.id, user_raoul.id])
+        group_pigs.message_subscribe_users([user_raoul.id])
+        group_pigs.refresh()
+        # Test: 2 followers (Admin and Raoul)
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]),
+                        'message_subscribe: Admin and Raoul should be the only 2 Pigs fans')
+        # Test: Raoul follows default subtypes
+        fol_ids = self.mail_followers.search(cr, uid, [
+                        ('res_model', '=', 'mail.group'),
+                        ('res_id', '=', self.group_pigs_id),
+                        ('partner_id', '=', user_raoul.partner_id.id)
+                    ])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef]),
+                        'message_subscribe: Raoul subscription subtypes are incorrect, should be only specified')
+
+        # Do: Unsubscribe Raoul twice through message_unsubscribe_users
+        group_pigs.message_unsubscribe_users([user_raoul.id, user_raoul.id])
+        group_pigs.refresh()
+        # Test: 1 follower (Admin)
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
+        # Test: 1 lines in mail.followers (no duplicate for Raoul)
+        fol_ids = self.mail_followers.search(cr, uid, [
+                        ('res_model', '=', 'mail.group'),
+                        ('res_id', '=', self.group_pigs_id)
+                    ])
+        self.assertEqual(len(fol_ids), 1,
+                        'message_subscribe: group should have only 1 entry in mail.follower for 1 follower')
+
+        # Do: subscribe Admin with subtype_ids
+        group_pigs.message_subscribe_users([uid], [mt_mg_nodef, mt_all_nodef])
+        fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_admin.partner_id.id)])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef, mt_all_nodef]), 'subscription subtypes are incorrect')
+
+        # ----------------------------------------
+        # CASE2: test mail_thread fields
+        # ----------------------------------------
+
+        subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
+        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
+        self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
+        self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
+
+    def test_11_notification_url(self):
+        """ Tests designed to test the URL added in notification emails. """
+        cr, uid, group_pigs = self.cr, self.uid, self.group_pigs
+        # Test URL formatting
+        base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+
+        # Partner data
+        partner_raoul = self.res_partner.browse(cr, uid, self.partner_raoul_id)
+        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'bert'})
+        partner_bert = self.res_partner.browse(cr, uid, partner_bert_id)
+        # Mail data
+        mail_mail_id = self.mail_mail.create(cr, uid, {'state': 'exception'})
+        mail = self.mail_mail.browse(cr, uid, mail_mail_id)
+
+        # Test: link for nobody -> None
+        url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail)
+        self.assertEqual(url, None,
+                         'notification email: mails not send to a specific partner should not have any URL')
+
+        # Test: link for partner -> None
+        url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_bert)
+        self.assertEqual(url, None,
+                         'notification email: mails send to a not-user partner should not have any URL')
+
+        # Test: link for user -> signin
+        url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_raoul)
+        self.assertIn(base_url, url,
+                      'notification email: link should contain web.base.url')
+        self.assertIn('db=%s' % cr.dbname, url,
+>>>>>>> [WIP] Migrate
                       'notification email: link should contain database name')
         self.assertIn('action=mail.action_mail_redirect', url,
                       'notification email: link should contain the redirect action')

@@ -97,8 +97,9 @@ class res_users(osv.Model):
         company_name = user.company_id.name if user.company_id else ''
         body = _('%s has joined the %s network.') % (user.name, company_name)
         # TODO change SUPERUSER_ID into user.id but catch errors
-        return self.pool.get('res.partner').message_post(cr, SUPERUSER_ID, [user.partner_id.id],
-            body=body, context=context)
+        return True
+        # return self.pool.get('res.partner').message_post(cr, SUPERUSER_ID, [user.partner_id.id],
+        #     body=body, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the user.
