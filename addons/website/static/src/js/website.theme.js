@@ -73,7 +73,8 @@
             return openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': this.get_xml_ids(this.$inputs)
                 }).done(function (data) {
-                    self.$inputs.filter('[data-xmlid]').each(function () {
+                    self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
+                    self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
                             $(this).prop("checked", false).change();
                         }
