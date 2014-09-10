@@ -345,6 +345,7 @@ $aestetic_animation_speed: 300ms;
 
         /* Partie infos */
         .accounting_view {
+            border-collapse: separate;
 
             .initial_line > td {
                 border-top: $lightBorder;
@@ -452,8 +453,8 @@ $aestetic_animation_speed: 300ms;
                 width: 49%;
                 height: 26px;
                 
-                &:nth-child(2n+1) { float: left; }
-                &:nth-child(2n) { float: right; }
+                &:nth-child(2n+1) { float: left; clear: left; }
+                &:nth-child(2n) { float: right; clear: right; }
 
                 th {
                     font-weight: bold;
