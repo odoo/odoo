@@ -1029,10 +1029,12 @@ openerp.account = function (instance) {
         partnerNameClickHandler: function() {
             var self = this;
             // Delete statement line's partner
-            return self.changePartner('', function() {
-                self.$(".partner_name").hide();
-                self.$(".change_partner_container").show();
-            });
+            if (window.confirm(_t("Reset the statement line's partner ?"))) {
+                return self.changePartner('', function() {
+                    self.$(".partner_name").hide();
+                    self.$(".change_partner_container").show();
+                });
+            }
         },
     
     
@@ -1374,10 +1376,9 @@ openerp.account = function (instance) {
             var self = this;
             var mv_lines_selected = self.get("mv_lines_selected");
             var lines_selected_num = mv_lines_selected.length;
-            var lines_created_num = self.getCreatedLines().length;
 
             // Undo partial reconciliation if necessary
-            if (lines_selected_num !== 1 || lines_created_num !== 0) {
+            if (lines_selected_num !== 1) {
                 _.each(mv_lines_selected, function(line) {
                     if (line.partial_reconcile === true) self.unpartialReconcileLine(line);
                     if (line.propose_partial_reconcile === true) line.propose_partial_reconcile = false;
@@ -1394,12 +1395,12 @@ openerp.account = function (instance) {
             _.each(self.getCreatedLines(), function(o) {
                 balance += o.amount;
             });
-            // Should work as long as currency's rounding factor is > 0.001 (ie: don't use gold kilos as a currency)
+            // Dealing with floating-point
             balance = Math.round(balance*1000)/1000;
             self.set("balance", balance);
     
             // Propose partial reconciliation if necessary
-            if (lines_selected_num === 1 && lines_created_num === 0 && self.st_line.amount * balance > 0) {
+            if (lines_selected_num === 1 && self.st_line.amount * balance > 0 && ! mv_lines_selected[0].partial_reconcile) {
                 mv_lines_selected[0].propose_partial_reconcile = true;
                 self.updateAccountingViewMatchedLines();
             }
