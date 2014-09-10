@@ -1269,6 +1269,12 @@ class stock_picking(osv.osv):
             move_obj.action_confirm(cr, uid, moves, context=context)
         return moves
 
+    def rereserve_pick(self, cr, uid, ids, context=None):
+        """
+        This can be used to provide a button that rereserves taking into account the existing pack operations
+        """
+        for pick in self.browse(cr, uid, ids, context=context):
+            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
@@ -2140,6 +2146,8 @@ class stock_move(osv.osv):
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
         for move in todo_moves:
+            if move.linked_move_operation_ids:
+                continue
             move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
