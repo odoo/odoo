@@ -5694,8 +5694,9 @@ class BaseModel(object):
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
                     newval = record[name]
-                    if newval != oldval or getattr(newval, '_dirty', False):
-                        field = self._fields[name]
+                    field = self._fields[name]
+                    if newval != oldval or \
+                            field.type in ('one2many', 'many2many') and newval._dirty:
                         result['value'][name] = field.convert_to_write(
                             newval, record._origin, subfields.get(name),
                         )
