@@ -64,7 +64,10 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok"></button>
-                            <span t-if="! line.has_no_partner" class="partner_name"><t t-esc="line.partner_name"/></span>
+                            <span t-if="! line.has_no_partner" class="partner_name">
+                                <t t-esc="line.partner_name"/>
+                                <span class="remove_partner"><span class="glyphicon glyphicon-remove"></span></span>
+                            </span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
                         <tbody class="tbody_initial_line">

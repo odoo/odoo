@@ -25,19 +25,24 @@
     padding: 0 0 0 15px;
     margin: 0 0 25px 0;
     float: left;
-    font-size: 2em; }
+    font-size: 2em;
+    height: 1.5em; }
+  .openerp .oe_bank_statement_reconciliation .statement_name span {
+    line-height: 1.5em;
+    cursor: pointer; }
   .openerp .oe_bank_statement_reconciliation .change_statement_name_container {
-    display: none; }
+    display: none;
+    width: 95%; }
     .openerp .oe_bank_statement_reconciliation .change_statement_name_container td:first-child, .openerp .oe_bank_statement_reconciliation .change_statement_name_container td:first-child > input {
       width: 99%; }
     .openerp .oe_bank_statement_reconciliation .change_statement_name_container td:last-child {
       width: 1%;
-      padding-left: 5px; }
+      padding-left: 3px; }
   .openerp .oe_bank_statement_reconciliation h2 {
     font-size: 1.8em; }
   .openerp .oe_bank_statement_reconciliation .progress {
     width: 49%;
-    margin: 4px 15px 0 0;
+    margin: 10px 15px 0 0;
     float: right;
     position: relative;
     display: inline-block; }
@@ -130,6 +135,13 @@
       -ms-transform: rotate(90deg);
       -o-transform: rotate(90deg);
       transform: rotate(90deg); }
+    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .partner_name .remove_partner {
+      display: none;
+      cursor: pointer; }
+      .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .partner_name .remove_partner .glyphicon {
+        margin: 0 5px; }
+    .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .partner_name:hover .remove_partner {
+      display: inline; }
     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .change_partner_container {
       width: 200px;
       display: none;
@@ -223,8 +235,7 @@
         position: relative;
         top: 7px;
         /* meh */
-        font-weight: bold;
-        cursor: pointer; }
+        font-weight: bold; }
     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .accounting_view td.cell_credit {
       border-left: 1px solid #000; }
     .openerp .oe_bank_statement_reconciliation .oe_bank_statement_reconciliation_line .match .match_controls {

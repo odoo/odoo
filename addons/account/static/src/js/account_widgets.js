@@ -250,13 +250,20 @@ openerp.account = function (instance) {
             this.$(".statement_name span").hide();
             this.$(".change_statement_name_field").attr("value", this.title);
             this.$(".change_statement_name_container").show();
+            this.$(".change_statement_name_field").focus();
         },
 
         changeStatementNameFieldHandler: function(e) {
             var name = this.$(".change_statement_name_field").val();
             if (name === "") this.$(".change_statement_name_button").attr("disabled", "disabled");
             else this.$(".change_statement_name_button").removeAttr("disabled");
-            if (name !== "" && e.which === 13) this.$(".change_statement_name_button").trigger("click");
+            
+            if (name !== "" && e.which === 13) // Enter
+                this.$(".change_statement_name_button").trigger("click");
+            if (e.which === 27) { // Escape
+                this.$(".statement_name span").show();
+                this.$(".change_statement_name_container").hide();
+            }
         },
 
         changeStatementButtonClickHandler: function() {
@@ -493,7 +500,7 @@ openerp.account = function (instance) {
         className: 'oe_bank_statement_reconciliation_line',
     
         events: {
-            "click .partner_name": "partnerNameClickHandler",
+            "click .remove_partner": "removePartnerClickHandler",
             "click .button_ok": "persistAndDestroy",
             "click .mv_line": "moveLineClickHandler",
             "click .initial_line": "initialLineClickHandler",
@@ -1064,15 +1071,13 @@ openerp.account = function (instance) {
             }
         },
     
-        partnerNameClickHandler: function() {
+        removePartnerClickHandler: function() {
             var self = this;
             // Delete statement line's partner
-            if (window.confirm(_t("Reset the statement line's partner ?"))) {
-                return self.changePartner('', function() {
-                    self.$(".partner_name").hide();
-                    self.$(".change_partner_container").show();
-                });
-            }
+            return self.changePartner('', function() {
+                self.$(".partner_name").hide();
+                self.$(".change_partner_container").show();
+            });
         },
     
     

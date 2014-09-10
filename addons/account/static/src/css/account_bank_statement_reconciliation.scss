@@ -41,17 +41,24 @@ $aestetic_animation_speed: 300ms;
         margin: 0 0 25px 0;
         float: left;
         font-size: 2em;
+        height: 1.5em;
+    }
+
+    .statement_name span {
+        line-height: 1.5em;
+        cursor: pointer;
     }
 
     .change_statement_name_container {
         display: none;
+        width: 95%;
 
         td:first-child, td:first-child > input {
             width: 99%;
         }
         td:last-child {
             width: 1%;
-            padding-left: 5px;
+            padding-left: 3px;
         }
     }
 
@@ -61,7 +68,7 @@ $aestetic_animation_speed: 300ms;
 
     .progress {
         width: 49%;
-        margin: 4px $actionColWidth 0 0;
+        margin: 10px $actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -187,6 +194,20 @@ $aestetic_animation_speed: 300ms;
             -ms-transform: rotate(90deg);
             -o-transform: rotate(90deg);
             transform: rotate(90deg);
+        }
+
+        .partner_name {
+            .remove_partner {
+                display: none;
+                cursor: pointer;
+
+                .glyphicon {
+                    margin: 0 5px;
+                }
+            }
+            &:hover .remove_partner {
+                display: inline;
+            }
         }
 
         .change_partner_container {
@@ -367,7 +388,6 @@ $aestetic_animation_speed: 300ms;
                 > span, > input {
                     position: relative; top: 7px; /* meh */
                     font-weight: bold;
-                    cursor: pointer;
                 }
             }
 
