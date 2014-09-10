@@ -366,13 +366,13 @@
 <t t-name="UserMenu.about">
 
     <div class="oe_about">
-      <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
 
-
-
-        <div class="container">
-            <div class="">
-                <div class="col-sm-6 col-md-6 user-details">
+        <div class="container-fluid">
+            <div class="row">
+                <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
                     <div class="user-image">
                         <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
                     </div>
@@ -382,7 +382,7 @@
                             <h3>Version <t t-esc="version_info.server_version"/></h3>
                         </div>
 
-                        <ul class="navigation">
+                        <ul class="list-inline text-center navigation">
                             <li class="active">
                                 <a data-toggle="tab" href="#settings">
                                     <span class="glyphicon glyphicon-cog"></span>
@@ -440,7 +440,6 @@
             </div>
         </div>
     </div>
-
 </t>
 
 <t t-name="WebClient.timezone_notification">
