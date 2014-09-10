@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
-"PO-Revision-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgid "Rule Name"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr ""
@@ -182,7 +182,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -210,7 +210,7 @@ msgid "Schedule Other Call"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -244,6 +244,11 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
 msgstr ""
 
 #. module: crm
@@ -288,7 +293,7 @@ msgid "Prospect Partner"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -379,6 +384,7 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -501,7 +507,7 @@ msgid "Planned Revenue"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -519,8 +525,8 @@ msgid "October"
 msgstr ""
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
 msgstr ""
 
 #. module: crm
@@ -559,6 +565,11 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:759
 #, python-format
 msgid "No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email (\"Name <email@address>\")"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
 msgstr ""
 
 #. module: crm
@@ -633,7 +644,7 @@ msgid "Partner Segmentation"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
@@ -1196,7 +1207,7 @@ msgid "Days to Close"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1262,6 +1273,11 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Phone Calls Assigned to the current user or with a team having the current user as team leader"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
 msgstr ""
 
 #. module: crm
@@ -1545,7 +1561,7 @@ msgid "Describe the lead..."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr ""
@@ -1760,7 +1776,7 @@ msgid "Support Department"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -2740,7 +2756,6 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr ""
@@ -2812,7 +2827,12 @@ msgid "Referred By"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -2823,7 +2843,7 @@ msgid "Working Hours"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -2887,6 +2907,11 @@ msgstr ""
 #. module: crm
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
+msgstr ""
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
 msgstr ""
 
 #. module: crm

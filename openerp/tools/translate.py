@@ -832,18 +832,20 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-    def get_module_from_path(path, mod_paths=None):
-        if not mod_paths:
-            # First, construct a list of possible paths
-            def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))     # default addons path (base)
-            ad_paths= map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
-            mod_paths=[def_path]
-            for adp in ad_paths:
-                mod_paths.append(adp)
-                if not os.path.isabs(adp):
-                    mod_paths.append(adp)
-                elif adp.startswith(def_path):
-                    mod_paths.append(adp[len(def_path)+1:])
+    def get_module_paths():
+        # default addons path (base)
+        def_path = os.path.abspath(os.path.join(config.config['root_path'], 'addons'))
+        mod_paths = set([ def_path ])
+        ad_paths = map(lambda m: os.path.abspath(m.strip()),config.config['addons_path'].split(','))
+        for adp in ad_paths:
+            mod_paths.add(adp)
+            if not os.path.isabs(adp):
+                mod_paths.add(adp)
+            elif adp != def_path and adp.startswith(def_path):
+                mod_paths.add(adp[len(def_path)+1:])
+        return list(mod_paths)
+
+    def get_module_from_path(path, mod_paths):
         for mp in mod_paths:
             if path.startswith(mp) and (os.path.dirname(path) != mp):
                 path = path[len(mp)+1:]
@@ -866,9 +868,9 @@ def trans_generate(lang, modules, cr):
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
-    _logger.debug("Scanning modules at paths: ", path_list)
+    _logger.debug("Scanning modules at paths: %s", path_list)
 
-    mod_paths = []
+    mod_paths = get_module_paths()
 
     def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
@@ -959,7 +961,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         # Parse also the POT: it will possibly provide additional targets.
         # (Because the POT comments are correct on Launchpad but not the
-        # PO comments due to a Launchpad limitation.)
+        # PO comments due to a Launchpad limitation. See LP bug 933496.)
         pot_reader = []
 
         # now, the serious things: we read the language file
@@ -974,15 +976,15 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value', 'comments']
 
-            # Make a reade for the POT file and be somewhat defensive for the
+            # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
             if fileobj.name.endswith('.po'):
                 try:
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
-                    head, tail = os.path.split(fileobj.name)
-                    head2, tail2 = os.path.split(head)
+                    head, _ = os.path.split(fileobj.name)
+                    head2, _ = os.path.split(head)
                     head3, tail3 = os.path.split(head2)
                     pot_handle = misc.file_open(os.path.join(head3, tail3, 'i18n', tail3 + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
@@ -1049,7 +1051,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             irt_cursor.push(dic)
 
-        # First process the entries from the PO file (doing so also fill/remove
+        # First process the entries from the PO file (doing so also fills/removes
         # the entries from the POT file).
         for row in reader:
             process_row(row)

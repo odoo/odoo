@@ -135,9 +135,9 @@ class email_template(osv.osv):
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
                                  "This should usually be a placeholder expression "
-                                 "that provides the appropriate language code, e.g. "
-                                 "${object.partner_id.lang.code}.",
-                            placeholder="${object.partner_id.lang.code}"),
+                                 "that provides the appropriate language, e.g. "
+                                 "${object.partner_id.lang}.",
+                            placeholder="${object.partner_id.lang}"),
         'user_signature': fields.boolean('Add Signature',
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),

@@ -156,6 +156,8 @@ class stock_partial_picking(osv.osv_memory):
         return partial_move
 
     def do_partial(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         assert len(ids) == 1, 'Partial picking processing may only be done one at a time.'
         stock_picking = self.pool.get('stock.picking')
         stock_move = self.pool.get('stock.move')
@@ -211,7 +213,21 @@ class stock_partial_picking(osv.osv_memory):
             if (picking_type == 'in') and (wizard_line.product_id.cost_method == 'average'):
                 partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,
                                                                   product_currency=wizard_line.currency.id)
-        stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        
+        # Do the partial delivery and open the picking that was delivered
+        # We don't need to find which view is required, stock.picking does it.
+        done = stock_picking.do_partial(
+            cr, uid, [partial.picking_id.id], partial_data, context=context)
+        if done[partial.picking_id.id]['delivered_picking'] == partial.picking_id.id:
+            return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': context.get('active_model', 'stock.picking'),
+            'name': _('Partial Delivery'),
+            'res_id': done[partial.picking_id.id]['delivered_picking'],
+            'view_type': 'form',
+            'view_mode': 'form,tree,calendar',
+            'context': context,
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

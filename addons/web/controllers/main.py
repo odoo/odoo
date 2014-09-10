@@ -101,12 +101,12 @@ def db_redirect(req, match_first_only_if_unique):
     db = False
     redirect = False
 
+    dbs = db_list(req, True)
+
     # 1 try the db in the url
     db_url = req.params.get('db')
-    if db_url:
+    if db_url and db_url in dbs:
         return (db_url, False)
-
-    dbs = db_list(req, True)
 
     # 2 use the database from the cookie if it's listable and still listed
     cookie_db = req.httprequest.cookies.get('last_used_database')
@@ -584,6 +584,8 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def login(self, req, db, login, key):
+        if db not in db_list(req, True):
+            return werkzeug.utils.redirect('/', 303)
         return login_and_redirect(req, db, login, key)
 
 class WebClient(openerpweb.Controller):
@@ -1606,16 +1608,18 @@ class ExportFormat(object):
 
     @openerpweb.httprequest
     def index(self, req, data, token):
+        params = simplejson.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
-                simplejson.loads(data))
+                params)
 
         Model = req.session.model(model)
-        ids = ids or Model.search(domain, 0, False, False, req.context)
+        context = dict(req.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, req.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names

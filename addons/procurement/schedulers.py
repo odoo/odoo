@@ -28,6 +28,7 @@ from openerp.osv import fields
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import tools
+from psycopg2 import OperationalError
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -70,56 +71,45 @@ class procurement_order(osv.osv):
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            start_date = fields.datetime.now()
-            offset = 0
-            report = []
-            report_total = 0
-            report_except = 0
-            report_later = 0
+            prev_ids = []
             while True:
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order'), ('date_planned', '<', maxdate)], limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
-                    if maxdate >= proc.date_planned:
+                    try:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-                    else:
-                        offset += 1
-                        report_later += 1
 
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name))
-                        report_except += 1
-                    report_total += 1
-                if use_new_cursor:
-                    cr.commit()
-                if not ids:
+                        if use_new_cursor:
+                            cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+                if not ids or prev_ids == ids:
                     break
-            offset = 0
+                else:
+                    prev_ids = ids
             ids = []
+            prev_ids = []
             while True:
-                report_ids = []
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock'), ('date_planned', '<', maxdate)], limit=500)
                 for proc in procurement_obj.browse(cr, uid, ids):
-                    if maxdate >= proc.date_planned:
+                    try:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
-                        report_ids.append(proc.id)
-                    else:
-                        report_later += 1
-                    report_total += 1
 
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name,))
-                        report_except += 1
-
-
-                if use_new_cursor:
-                    cr.commit()
-                offset += len(ids)
-                if not ids: break
-            end_date = fields.datetime.now()
+                        if use_new_cursor:
+                            cr.commit()
+                    except OperationalError:
+                        if use_new_cursor:
+                            cr.rollback()
+                            continue
+                        else:
+                            raise
+                if not ids or prev_ids == ids:
+                    break
+                else:
+                    prev_ids = ids
 
             if use_new_cursor:
                 cr.commit()
@@ -228,54 +218,68 @@ class procurement_order(osv.osv):
         
         procurement_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
-        offset = 0
         ids = [1]
+        prev_ids = []
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
-        while ids:
-            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
+        orderpoint_ids = orderpoint_obj.search(cr, uid, [])
+        while orderpoint_ids:
+            ids = orderpoint_ids[:100]
+            del orderpoint_ids[:100]
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                prods = self._product_virtual_get(cr, uid, op)
-                if prods is None:
-                    continue
-                if prods < op.product_min_qty:
-                    qty = max(op.product_min_qty, op.product_max_qty)-prods
-
-                    reste = qty % op.qty_multiple
-                    if reste > 0:
-                        qty += op.qty_multiple - reste
-
-                    if qty <= 0:
+                try:
+                    prods = self._product_virtual_get(cr, uid, op)
+                    if prods is None:
                         continue
-                    if op.product_id.type not in ('consu'):
-                        if op.procurement_draft_ids:
-                        # Check draft procurement related to this order point
-                            pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(
-                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
-                            to_generate = qty
-                            for proc_data in procure_datas:
-                                if to_generate >= proc_data['product_qty']:
-                                    wf_service.trg_validate(uid, 'procurement.order', proc_data['id'], 'button_confirm', cr)
-                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
-                                    to_generate -= proc_data['product_qty']
-                                if not to_generate:
-                                    break
-                            qty = to_generate
+                    if prods < op.product_min_qty:
+                        qty = max(op.product_min_qty, op.product_max_qty)-prods
 
-                    if qty:
-                        proc_id = procurement_obj.create(cr, uid,
-                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
-                                                         context=context)
-                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
-                                'button_confirm', cr)
-                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
-                                'button_check', cr)
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
-            offset += len(ids)
-            if use_new_cursor:
-                cr.commit()
+                        reste = qty % op.qty_multiple
+                        if reste > 0:
+                            qty += op.qty_multiple - reste
+
+                        if qty <= 0:
+                            continue
+                        if op.product_id.type not in ('consu'):
+                            if op.procurement_draft_ids:
+                            # Check draft procurement related to this order point
+                                pro_ids = [x.id for x in op.procurement_draft_ids]
+                                procure_datas = procurement_obj.read(
+                                    cr, uid, pro_ids, ['id', 'product_qty'], context=context)
+                                to_generate = qty
+                                for proc_data in procure_datas:
+                                    if to_generate >= proc_data['product_qty']:
+                                        wf_service.trg_validate(uid, 'procurement.order', proc_data['id'], 'button_confirm', cr)
+                                        procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
+                                        to_generate -= proc_data['product_qty']
+                                    if not to_generate:
+                                        break
+                                qty = to_generate
+
+                        if qty:
+                            proc_id = procurement_obj.create(cr, uid,
+                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                             context=context)
+                            wf_service.trg_validate(uid, 'procurement.order', proc_id,
+                                    'button_confirm', cr)
+                            wf_service.trg_validate(uid, 'procurement.order', proc_id,
+                                    'button_check', cr)
+                            orderpoint_obj.write(cr, uid, [op.id],
+                                    {'procurement_id': proc_id}, context=context)
+                    if use_new_cursor:
+                        cr.commit()
+                except OperationalError:
+                    if use_new_cursor:
+                        orderpoint_ids.append(op.id)
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
+            if prev_ids == ids:
+                break
+            else:
+                prev_ids = ids
+
         if use_new_cursor:
             cr.commit()
             cr.close()

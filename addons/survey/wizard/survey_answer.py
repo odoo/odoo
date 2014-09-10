@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+import pytz
 import datetime
 from lxml import etree
 import os
@@ -171,7 +172,10 @@ class survey_question_wiz(osv.osv_memory):
                         # TODO: l10n, cleanup this code to make it readable. Or template?
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_('Answer Of :- ') + record.user_id.name + _(',  Date :- ') + record.date_create.split('.')[0]  )), 'align':"0.0"})
+                        timezone = pytz.timezone(context.get('tz') or 'UTC')
+                        response_date = pytz.UTC.localize(datetime.datetime.strptime(record['date_create'].split('.')[0], tools.DEFAULT_SERVER_DATETIME_FORMAT))
+                        localized_response_date = response_date.astimezone(timezone)
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_('Answer Of :- ') + record.user_id.name + _(',  Date :- ') + localized_response_date.strftime("%Y-%m-%d %H:%M:%S")  )), 'align':"0.0"})
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_(" Answer :- ") + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
                         if context.get('response_no',0) > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})

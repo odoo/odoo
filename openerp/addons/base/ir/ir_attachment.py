@@ -121,7 +121,7 @@ class ir_attachment(osv.osv):
         if context is None:
             context = {}
         result = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         bin_size = context.get('bin_size')
         for attach in self.browse(cr, uid, ids, context=context):
             if location and attach.store_fname:
@@ -136,7 +136,7 @@ class ir_attachment(osv.osv):
             return True
         if context is None:
             context = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         file_size = len(value.decode('base64'))
         if location:
             attach = self.browse(cr, uid, id, context=context)
@@ -206,6 +206,8 @@ class ir_attachment(osv.osv):
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
+            if not self.pool.get(model):
+                continue
             mids = self.pool.get(model).exists(cr, uid, mids)
             ima.check(cr, uid, model, mode)
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
@@ -285,7 +287,7 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         if location:
             for attach in self.browse(cr, uid, ids, context=context):
                 if attach.store_fname:

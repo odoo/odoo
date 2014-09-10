@@ -42,6 +42,8 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
+mail_header_msgid_re = re.compile('<[^<>]+>')
+
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
@@ -253,7 +255,10 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('%s created') % (_(self._description)), context=context)
+            ir_model_pool = self.pool['ir.model']
+            ids = ir_model_pool.search(cr, uid, [('model', '=', self._name)], context=context)
+            name = ir_model_pool.read(cr, uid, ids, ['name'], context=context)[0]['name']
+            self.message_post(cr, uid, thread_id, body=_('%s created') % name, context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
@@ -294,7 +299,7 @@ class mail_thread(osv.AbstractModel):
 
         if not context.get('mail_notrack'):
             # Perform the tracking
-            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         else:
             tracked_fields = None
         if tracked_fields:
@@ -913,13 +918,13 @@ class mail_thread(osv.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if message.get('In-Reply-To'):
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To'].strip()))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
-                                                                         [x.strip() for x in decode(message['References']).split()])])
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
@@ -951,7 +956,7 @@ class mail_thread(osv.AbstractModel):
             return result
         if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
+        if partner and partner.id in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))

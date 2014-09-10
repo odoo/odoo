@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,19 @@ msgid "Tasks by User"
 msgstr ""
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr ""
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
 
 #. module: project_timesheet
@@ -36,7 +47,7 @@ msgid "Related Timeline Id"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "You cannot delete a partner which is assigned to project, but you can uncheck the active box."
 msgstr ""
@@ -47,9 +58,9 @@ msgid "Project Task Work"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid "You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
 
 #. module: project_timesheet
@@ -211,8 +222,8 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
 msgstr ""
 
 #. module: project_timesheet
@@ -236,13 +247,8 @@ msgid "Trigger Invoice"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -277,23 +283,13 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
 msgstr ""
 
 #. module: project_timesheet
@@ -353,7 +349,7 @@ msgid "After task is completed, Create its invoice."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -371,8 +367,12 @@ msgid "<p class=\"oe_view_nocontent_create\">Record your timesheets for the proj
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
 msgstr ""
 
 #. module: project_timesheet

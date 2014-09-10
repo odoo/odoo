@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
+"PO-Revision-Date: 2014-08-14 00:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -215,6 +215,11 @@ msgid "Configuration"
 msgstr ""
 
 #. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr ""
+
+#. module: share
 #: view:share.wizard:0
 msgid "Please select the action that opens the screen containing the data you want to share."
 msgstr ""
@@ -222,13 +227,6 @@ msgstr ""
 #. module: share
 #: field:res.groups,share:0
 msgid "Share Group"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:835
-#: code:addons/share/wizard/share_wizard.py:866
-#, python-format
-msgid "Email required"
 msgstr ""
 
 #. module: share
@@ -449,8 +447,10 @@ msgid "Current View Type"
 msgstr ""
 
 #. module: share
-#: selection:share.wizard,access_mode:0
-msgid "Can view"
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
+#, python-format
+msgid "Email Required"
 msgstr ""
 
 #. module: share

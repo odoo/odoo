@@ -122,10 +122,6 @@ class crossovered_budget_lines(osv.osv):
             acc_ids = account_obj._get_children_and_consol(cr, uid, acc_ids, context=context)
             date_to = line.date_to
             date_from = line.date_from
-            if context.has_key('wizard_date_from'):
-                date_from = context['wizard_date_from']
-            if context.has_key('wizard_date_to'):
-                date_to = context['wizard_date_to']
             if line.analytic_account_id.id:
                 cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id in "
                        """(with recursive account_analytic_account_hierarchy(id)

@@ -231,7 +231,7 @@ class test_message_compose(TestMailBase):
         # force send: take email_recipients into account
         email_template.send_mail(cr, uid, email_template_id, self.group_pigs_id, force_send=True, context=context)
         sent_emails = self._build_email_kwargs_list
-        email_to_lst = ['"Followers of Pigs" <admin@example.com>', '"Followers of Pigs" <raoul@raoul.fr>', '"Followers of Pigs" <bert@bert.fr>']
+        email_to_lst = ['Followers of Pigs <admin@example.com>', 'Followers of Pigs <raoul@raoul.fr>', 'Followers of Pigs <bert@bert.fr>']
         self.assertEqual(len(sent_emails), 3, 'email_template: send_mail: 3 valid email recipients -> should send 3 emails')
         for email in sent_emails:
             self.assertEqual(len(email['email_to']), 1, 'email_template: send_mail: email_recipient should send email to one recipient at a time')

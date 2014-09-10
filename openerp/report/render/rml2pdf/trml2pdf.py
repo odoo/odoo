@@ -376,7 +376,7 @@ class _rml_canvas(object):
         try:
             self.canvas.drawString(text=text, **v)
         except TypeError as e:
-            _logger.error("Bad RML: <drawReport> tag requires attributes 'x' and 'y'!")
+            _logger.error("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
             raise e
 
     def _drawCenteredString(self, node):

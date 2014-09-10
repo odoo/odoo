@@ -157,8 +157,8 @@
                             <div>
                                 <field name="use_parent_address" class="oe_edit_only oe_inline"
                                        on_change="onchange_address(use_parent_address, parent_id)"
-                                       attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
-                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                       attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}"/>
+                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': ['|', ('is_company', '=', True), ('parent_id', '=', False)]}"/>
                                 <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
                                         attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
                                 <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
@@ -179,14 +179,13 @@
                             <field name="mobile"/>
                             <field name="fax"/>
                             <field name="email" widget="email"/>
-                            <field name="title" domain="[('domain', '=', 'contact')]"
-                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
+                            <field name="title" options='{"no_open": True}'/>
                         </group>
                     </group>
 
                     <notebook colspan="4">
                         <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>

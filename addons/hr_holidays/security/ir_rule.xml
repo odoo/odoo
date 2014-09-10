@@ -5,6 +5,17 @@
         <field name="name">Employee Holidays</field>
         <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_rule_holidays_employee_write" model="ir.rule">
+        <field name="name">Employee Holidays Create, Write, Unlink</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel'])]</field>
+        <field name="perm_read" eval="False"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
     

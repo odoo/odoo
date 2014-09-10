@@ -22,6 +22,7 @@
 ##############################################################################
 
 from openerp.osv import osv
+from openerp.tools.float_utils import float_round as round
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -32,11 +33,12 @@ class account_invoice_line(osv.osv):
         company_currency = inv.company_id.currency_id.id
         def get_price(cr, uid, inv, company_currency,i_line):
             cur_obj = self.pool.get('res.currency')
+            decimal_precision = self.pool.get('decimal.precision')
             if inv.currency_id.id != company_currency:
                 price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, i_line.product_id.standard_price * i_line.quantity, context={'date': inv.date_invoice})
             else:
                 price = i_line.product_id.standard_price * i_line.quantity
-            return price
+            return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
 
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
@@ -113,22 +115,24 @@ class account_invoice_line(osv.osv):
                             fpos = i_line.invoice_id.fiscal_position or False
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                         diff_res = []
+                        decimal_precision = self.pool.get('decimal.precision')
+                        account_prec = decimal_precision.precision_get(cr, uid, 'Account')
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
-                            if a == line['account_id'] and i_line.product_id.id == line['product_id']:
+                            if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 standard_price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
                                 if inv.currency_id.id != company_currency:
                                     standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
                                 if standard_price != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
-                                    price_diff = i_line.price_unit - standard_price
-                                    line.update({'price':standard_price * line['quantity']})
+                                    price_diff = round(i_line.price_unit - standard_price, account_prec)
+                                    line.update({'price': round(standard_price * line['quantity'], account_prec)})
                                     diff_res.append({
                                         'type':'src',
                                         'name': i_line.name[:64],
                                         'price_unit':price_diff,
                                         'quantity':line['quantity'],
-                                        'price': price_diff * line['quantity'],
+                                        'price': round(price_diff * line['quantity'], account_prec),
                                         'account_id':acc,
                                         'product_id':line['product_id'],
                                         'uos_id':line['uos_id'],
