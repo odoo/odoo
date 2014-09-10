@@ -1298,10 +1298,10 @@
                     <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                     <b>Uploading ...</b>
                 </div>
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                </t>
             </div>
-          <t t-call="HiddenInputFile">
-            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-          </t>
         </t>
     </span>
 </t>
