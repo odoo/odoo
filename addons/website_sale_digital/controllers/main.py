@@ -27,7 +27,7 @@ class website_sale_digital(website_sale):
     @http.route([
         downloads_page,
     ], type='http', auth='public', website=True)
-    def display_attachments(self):
+    def display_attachments(self, **post):
         purchased_products = util.get_digital_purchases(request.uid)
 
         # Superuser to be able to see product that are not published anymore, I bought the
@@ -89,14 +89,15 @@ class website_sale_digital(website_sale):
         res_id = attachment['res_id']
         purchased_products = util.get_digital_purchases(request.uid)
 
-        if res_model == 'product.template':
+        if res_model == 'product.product':
+            if res_id not in purchased_products:
+                return redirect(self.downloads_page)
+
+        # Also check for attachments in the product templates
+        elif res_model == 'product.template':
             P = request.env['product.product']
             template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
             if res_id not in template_ids:
-                return redirect(self.downloads_page)
-
-        elif res_model == 'product.product':
-            if res_id not in purchased_products:
                 return redirect(self.downloads_page)
 
         else:
@@ -121,7 +122,7 @@ class Website_Unpublished_Purchased_Products_Images(Website):
     ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Allows to display images for products with website_published=False
-            Gives admin access to images if the user has bought the product.
+            if the requesting user already has them in his sale orders.
         """
         if model in ['product.product', 'product.template']:
             # Confirm = False to display images in cart
