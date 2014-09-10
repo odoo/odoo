@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+        Resource: ir.sequence
+        Add NCF sequence
+        -->
+        <record id="ir_sequence_cf_credito_fiscal" model="ir.sequence">
+            <field name="name">Facturas que Genera Crédito Fiscal y/o Sustenta Costos y Gastos</field>
+            <field name="code">cf.credito.fiscal</field>
+            <field name="prefix">A0100100101</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_consumidor_final" model="ir.sequence">
+            <field name="name">Factura a Consumidor Final (Sin Valor de Crédito Fiscal)</field>
+            <field name="code">cf.consumidor.final</field>
+            <field name="prefix">A0100100102</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_nota_debito" model="ir.sequence">
+            <field name="name">Nota de Débito</field>
+
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100103</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_nota_credito" model="ir.sequence">
+            <field name="name">Nota de Crédito</field>
+
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100104</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_proveedores_informales" model="ir.sequence">
+            <field name="name">Registro de Proveedores Informales</field>
+
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100111</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_ingreso_unico" model="ir.sequence">
+            <field name="name">Registro único de ingresos</field>
+
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100112</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_gastos_menores" model="ir.sequence">
+            <field name="name">Registro de Gastos Menores</field>
+
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100113</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_regimenes_especiales" model="ir.sequence">
+            <field name="name">Registro regimenes especiales de tributación</field>
+            <field name="code">cf.regimenes.especiales</field>
+            <field name="prefix">A0100100114</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_gubernamentales" model="ir.sequence">
+            <field name="name">Gubernamentales</field>
+            <field name="code">cf.regimenes.gubernamentales</field>
+            <field name="prefix">A0100100115</field>
+            <field name="padding">8</field>
+        </record>
+    </data>
+</openerp>

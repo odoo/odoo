@@ -671,29 +671,20 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
+        # retrieve the records in the comodel
         comodel = obj.pool[self._obj].browse(cr, user, [], context)
         inverse = self._fields_id
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
-
         records = comodel.search(domain, limit=self._limit)
-        record_ids = map(int, records)
 
-        res = dict((id, []) for id in ids)
-        if record_ids:
-            cr.execute('SELECT id, %(inverse)s \
-                       FROM %(rel)s \
-                       WHERE id in %%s ' % {
-                        'inverse': inverse,
-                        'rel': comodel._table,
-                    }, (tuple(record_ids),))
-            record_value_id = dict(cr.fetchall())
-            # match the result per id, preserving the order
-            for record in records:
-                key = record_value_id[record.id]
-                res[key].append(record.id)
+        result = {id: [] for id in ids}
+        # read the inverse of records without prefetching other fields on them
+        for record in records.with_context(prefetch_fields=False):
+            # record[inverse] may be a record or an integer
+            result[int(record[inverse])].append(record.id)
 
-        return res
+        return result
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
