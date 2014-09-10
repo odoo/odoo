@@ -403,10 +403,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         view = pool["ir.ui.view"]
+        context = dict(request.context or {}, active_test=True)
 
         def set_active(ids, active):
             if ids:
-                view.write(cr, uid, ids, {'active': active}, context=dict(request.context or {}, active_test=True))
+                view.write(cr, uid, self.get_view_ids(ids), {'active': active}, context=context)
 
         set_active(disable, False)
         set_active(enable, True)
