@@ -137,7 +137,7 @@
         start_record: function(mode, extra_cookie_data){
             var self = this;
             this.mode = mode;
-            return openerp.session.rpc("/im_screenshare/start", {mode : this.mode}).then(function(result){
+            return openerp.jsonRpc("/im_screenshare/start", 'call', {mode : this.mode}).then(function(result){
                 if(self.mode === 'share'){
                     self.uuid = result;
                 }else{
@@ -232,7 +232,7 @@
             // remove the empty mutations
             mutations = this._remove_empty_mutations(mutations);
             if(mutations.length !== 0){
-                return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
+                return openerp.jsonRpc("/im_screenshare/share", 'call', {uuid: this.uuid, record_id : this.record_id, mutations : mutations});
             }
             return $.Deferred().resolve();
         }
