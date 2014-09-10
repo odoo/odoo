@@ -43,7 +43,6 @@
         create_cookie: function(extra){
             this.cookie_data = _.extend(extra, this.cookie_data);
             this.cookie_data = _.extend({uuid : this.uuid, record_id : this.record_id, mode : this.mode}, extra || {});
-            console.log("create cOOKIE : ", this.cookie_data);
             this.set_cookie(instance.im_screenshare.COOKIE_NAME, this.cookie_data, 60*60*1000);
         },
         set_cookie: function(name,value,hours) {

@@ -2,17 +2,12 @@
 <openerp>
     <data>
 
-        <menuitem id="screen_record_menu_main" name="Screen record"/>
-        <menuitem id="screen_record_menu" parent="screen_record_menu_main" name="Screen Records" sequence="19" />
-
-
-         <!-- Screen Record Action -->
+        <!-- Screen Record Actions -->
         <record model="ir.actions.act_window" id="action_screen_record_form">
                 <field name="name">Screen Records</field>
                 <field name="res_model">im_screenshare.record</field>
                 <field name="view_mode">tree,form</field>
         </record>
-
 
         <record model="ir.actions.act_window" id="action_screen_record_event_list">
             <field name="name">Screen Record Events</field>
@@ -20,6 +15,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+        <!-- Menu items -->
+        <menuitem id="screen_record_menu" name="Screen Record" parent="mail.mail_feeds_main" sequence="22"/>
         <menuitem name="Recordings" parent="screen_record_menu" id="screen_record_form" action="action_screen_record_form" />
         <menuitem name="Record Events" parent="screen_record_menu" id="screen_record_event_list" action="action_screen_record_event_list" />
 
