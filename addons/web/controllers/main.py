@@ -18,7 +18,7 @@ import sys
 import time
 import urllib2
 import zlib
-import lxml.etree as Etree
+from lxml import etree
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -35,7 +35,7 @@ import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
-from openerp.models import fix_import_export_id_paths, itemgetter_tuple
+from openerp.models import fix_import_export_id_paths
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
@@ -1574,56 +1574,53 @@ class XMLExport(ExportFormat, http.Controller):
 
     @property
     def content_type(self):
-        return 'text/xml;charset=utf8'
+        return 'text/xml'
 
     def filename(self, base):
         return base + '.xml'
 
+    def _generate_xml_record(self, model, root, record, rel_field=None):
+        """Generate new Odoo compitable xml records"""
+        new_record = etree.SubElement(root, "record", model=model)
+        #new_record.set("model", model)
+        field_details = request.session.model(model).fields_get(record.keys())
+        for field, value in record.iteritems():
+            # Only fileds which contain data should be exported
+            if not value:
+                continue
+            if field == 'id':
+                new_record.set("id", value)
+                continue
+            elif field_details[field]['type'] == 'one2many':
+                for child_record in value:
+                    child_record.update({field_details[field]['relation_field']: [{'id': record['id']}]})
+                    self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
+                continue
+            new_record_element = etree.SubElement(new_record, "field", name=field)
+            #new_record_element.set("name", field)
+            # Note: For Special case where relational filed is integer instead of regular m2o. 
+            # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
+            # To handle this special case 'or' condition is added here.
+            if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
+                new_record_element.set("ref", value[0]['id'])
+            elif field_details[field]['type'] == 'many2many':
+                eval = '[' + ', '.join(["(4, ref('%s'))" % m2m_id for m2m_id in value[0]['id'].split(',')]) +']'
+                new_record_element.set("eval", eval)
+            elif field_details[field]['type'] == 'selection':
+                new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
+                new_record_element.text = new_value and new_value[0] or value
+            else:
+                new_record_element.text = value
+        return True
+
     def from_data(self, fields, rows, model):
         fp = StringIO()
-        root = Etree.Element("openerp")
-        data_root = Etree.SubElement(root, "data")
-
-        def _generate_xml_record(model, record, rel_field=None):
-            """Generate new Odoo compitable xml records"""
-            new_record = Etree.SubElement(data_root, "record")
-            new_record.set("model", model)
-            field_details = request.session.model(model).fields_get(record.keys())
-            for field, value in record.iteritems():
-                # Only fileds which contain data should be exported
-                if value:
-                    if field == 'id':
-                        new_record.set("id", value)
-                        continue
-                    elif field_details[field]['type'] == 'one2many':
-                        for child_record in value:
-                            child_record.update({field_details[field]['relation_field']: [{'id': record['id']}]})
-                            _generate_xml_record(field_details[field]['relation'], child_record, field_details[field]['relation_field'])
-                        continue
-                    new_record_element = Etree.SubElement(new_record, "field")
-                    new_record_element.set("name", field)
-                    # Note: For Special case where relational filed is integer instead of regular m2o. 
-                    # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
-                    # To handle this special case 'or' condition is added here.
-                    if field_details[field]['type'] == 'many2one' or (rel_field == field and field_details[field]['type'] == 'integer'):
-                        new_record_element.set("ref", value[0]['id'])
-                    elif field_details[field]['type'] == 'many2many':
-                        eval = '[]'
-                        for m2m_id in value[0]['id'].split(','):
-                            eval = eval[:-1] + "(4, ref('%s')), ]" % m2m_id
-                        new_record_element.set("eval", eval)
-                    elif field_details[field]['type'] == 'selection':
-                        new_value = [selection[0] for selection in field_details[field]['selection'] if selection[1] == value]
-                        new_record_element.text = new_value and new_value[0] or value
-                    else:
-                        new_record_element.text = value
-            return True
-
+        root = etree.Element("openerp")
+        data_root = etree.SubElement(root, "data")
         fields = map(fix_import_export_id_paths, fields)
-        records = [subrecord for subrecord, _subinfo in request.session.model(model).extract_records(fields, rows)]
-        for record in records:
-            _generate_xml_record(model, record)
-        xml = Etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+        for record, _subinfo in request.session.model(model).extract_records(fields, rows):
+            self._generate_xml_record(model, data_root, record)
+        xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
         fp.write(xml)
         fp.seek(0)
         data = fp.read()
