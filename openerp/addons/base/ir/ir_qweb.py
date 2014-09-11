@@ -265,8 +265,12 @@ class QWeb(orm.AbstractModel):
             if attribute_name.startswith("t-"):
                 for attribute in self._render_att:
                     if attribute_name[2:].startswith(attribute):
-                        att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                        if val:
+                        attrs = self._render_att[attribute](
+                            self, element, attribute_name, attribute_value, qwebcontext)
+                        for att, val in attrs:
+                            if not val: continue
+                            if not isinstance(val, str):
+                                val = unicode(val).encode('utf-8')
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
@@ -336,14 +340,16 @@ class QWeb(orm.AbstractModel):
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
         if attribute_name.startswith("t-attf-"):
-            att, val = attribute_name[7:], self.eval_format(attribute_value, qwebcontext)
-        elif attribute_name.startswith("t-att-"):
-            att, val = attribute_name[6:], self.eval(attribute_value, qwebcontext)
-        else:
-            att, val = self.eval_object(attribute_value, qwebcontext)
-        if val and not isinstance(val, str):
-            val = unicode(val).encode("utf8")
-        return att, val
+            return [(attribute_name[7:], self.eval_format(attribute_value, qwebcontext))]
+
+        if attribute_name.startswith("t-att-"):
+            return [(attribute_name[6:], self.eval(attribute_value, qwebcontext))]
+
+        result = self.eval_object(attribute_value, qwebcontext)
+        if isinstance(result, collections.Mapping):
+            return result.iteritems()
+        # assume tuple
+        return [result]
 
     # Tags
     def render_tag_raw(self, element, template_attributes, generated_attributes, qwebcontext):

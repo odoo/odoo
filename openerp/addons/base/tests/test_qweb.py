@@ -4,6 +4,7 @@ import json
 import os.path
 import glob
 import re
+import collections
 
 from lxml import etree
 import openerp.addons.base.ir.ir_qweb
@@ -118,7 +119,9 @@ class TestQWeb(common.TransactionCase):
         for template in context.templates:
             if template.startswith('_'): continue
             param = doc.find('params[@id="{}"]'.format(template))
-            params = {} if param is None else json.loads(param.text)
+            # OrderedDict to ensure JSON mappings are iterated in source order
+            # so output is predictable & repeatable
+            params = {} if param is None else json.loads(param.text, object_pairs_hook=collections.OrderedDict)
 
             ctx = context.copy()
             ctx.update(params)
