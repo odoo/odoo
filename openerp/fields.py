@@ -67,6 +67,10 @@ def resolve_all_mro(cls, name, reverse=False):
     for klass in klasses:
         if name in klass.__dict__:
             yield klass.__dict__[name]
+        elif '_columns' in klass.__dict__:
+            # Maybe it's an old API class so we check _columns
+            if name in klass._columns:
+                yield klass._columns[name]
 
 
 def default_compute(field, value):
@@ -1170,19 +1174,22 @@ class Selection(Field):
 
     def _setup_regular(self, env):
         super(Selection, self)._setup_regular(env)
+
+        from openerp.osv.fields import selection as old_api_selection
         # determine selection (applying extensions)
         cls = type(env[self.model_name])
         selection = None
         for field in resolve_all_mro(cls, self.name, reverse=True):
+            if isinstance(field, old_api_selection):
+                # Old api could not extend, so we overwrite always
+                selection = field.selection
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
                 if 'selection' in field._attrs:
                     selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
-                    selection = selection + field._attrs['selection_add']
-            else:
-                selection = None
+                    selection += field._attrs['selection_add']
         self.selection = selection
 
     def _description_selection(self, env):
