@@ -207,22 +207,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')
-        modules_to_update = []
-        for temp_id in templates:
-            view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
-            if view.page:
-                continue
-            view.model_data_id.write({
-                'noupdate': False
-            })
-            if view.model_data_id.module not in modules_to_update:
-                modules_to_update.append(view.model_data_id.module)
+        view_ids = map(int, templates)
+        request.registry['ir.ui.view'].restore(request.cr, request.uid, view_ids, context=request.context)
 
-        if modules_to_update:
-            module_obj = request.registry['ir.module.module']
-            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-            if module_ids:
-                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+        # TODO show warning if any not restored
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
