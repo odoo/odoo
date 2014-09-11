@@ -22,7 +22,10 @@
 import logging
 from openerp import tools
 
-from email.header import decode_header
+try:
+    from future.backports.email.header import decode_header
+except ImportError:
+    from email.header import decode_header
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
@@ -275,7 +278,7 @@ class mail_message(osv.Model):
         }
         if starred:
             values['read'] = False
- 
+
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
