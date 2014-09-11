@@ -10,11 +10,6 @@ class ViewVersion(osv.Model):
         'snapshot_id' : fields.many2one('website_version.snapshot',ondelete='cascade', string="Snapshot_id"),
     }
 
-    _sql_constraints = [
-        ('key_website_id_uniq', 'unique(key, snapshot_id, website_id)',
-            'Key must be unique per snapshot.'),
-    ]
-
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
