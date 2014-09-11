@@ -1459,7 +1459,11 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_read(self, value, use_name_get=True):
-        return value.ids
+        if all(value._ids):
+            return value.ids
+        else:
+            # this is useful for computed fields that use new records as values
+            return self.convert_to_write(value)
 
     def convert_to_write(self, value, target=None, fnames=None):
         # remove/delete former records
