@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #. module: stock
-#: help:stock.picking,state:0
+#: help:stock.picking,state:0o
 msgid ""
 "\n"
 "                * Draft: not confirmed yet and will not be scheduled until "
@@ -198,7 +198,7 @@ msgid ""
 "companies or inter-warehouses operations\n"
 "                      "
 msgstr ""
-"* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho một vị trí nguồn của sản "
+"* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho một địa điểm nguồn của sản "
 "phẩm nhận được từ nhà cung cấp\n"
 "                       \n"
 "* View: Địa điểm ảo được sử dụng để tạo một cấu trúc phả hệ cho kho hàng của "
@@ -365,13 +365,12 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a reordering rule.\n"
-"              </p><p>You can define your minimum stock rules, so that "
-"OpenERP will automatically create draft manufacturing orders or request for "
-"quotations according to the stock level. Once the virtual stock of a product "
-"(= stock on hand minus all confirmed orders and reservations) is below the "
-"minimum quantity, OpenERP will generate a procurement request to increase "
-"the stock up to the maximum quantity.</p>\n"
+"                Nhấp chuột để thêm một quy tắc tồn kho.\n"
+"              </p><p>Bạn có thể định nghĩa quy tắc tồn kho tối thiểu của mình, từ đó "
+"Hệ thống sẽ tự động tạo ra lệnh sản xuất dự thảo hoặc yêu cầu cháo giá tùy theo mức độ tồn kho "
+"Sau khi tồn kho ảo của một sản phẩm (=tồn kho thực tế trừ đi tất cả đơn hàng đã xác nhận) "
+"thấp hơn số lượng tối thiểu, hệ thống sẽ tạo một yêu cầu mua sắm để tăng "
+"số lượng tồn kho bằng đúng với số lượng tối đa.</p>\n"
 "            "
 
 #. module: stock
@@ -455,7 +454,7 @@ msgstr ""
 "                các hoạt động hàng tồn kho trên một sản phẩm cụ thể. Bạn có "
 "thể \n"
 "                lọc trên sản phẩm để xem tất cả các dịch chuyển trong quá "
-"khứ hoặc tương lại của sản phẩm.\n"
+"khứ hoặc tương lai của sản phẩm.\n"
 "              </p>\n"
 "            "
 
@@ -571,10 +570,10 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Nhấp chuột để bắt đầu một kiểm kho. \n"
+"                Nhấp chuột để bắt đầu kiểm kho. \n"
 "              </p><p>\n"
 "                Kiểm kho định kỳ được sử dụng để đếm số sản phẩm\n"
-"                có sẵn trên từng vị trí. Bạn có thể sử dụng nó mỗi năm 1 "
+"                có sẵn trên từng địa điểm. Bạn có thể sử dụng nó mỗi năm 1 "
 "lần\n"
 "                khi bạn thực hiện tổng kiểm kê hoặc bất cứ khi nào bạn cần,\n"
 "                để phù hợp với mức tồn kho hiện tại của một sản phẩm.\n"
@@ -853,7 +852,7 @@ msgstr "Best price (not yet active!)"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "Mang hàng hóa ra khỏi vị trí kho trước khi vận chuyển (Pick + Ship)"
+msgstr "Mang hàng hóa ra khỏi địa điểm kho trước khi vận chuyển (Pick + Ship)"
 
 #. module: stock
 #: view:stock.quant.package:0 field:stock.quant.package,quant_ids:0
@@ -938,7 +937,7 @@ msgstr "Hủy bỏ tồn kho"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Move"
-msgstr "Hủy bỏ di chuyển"
+msgstr "Hủy bỏ dịch chuyển"
 
 #. module: stock
 #: view:stock.picking:0
@@ -972,7 +971,7 @@ msgstr "Chained Move Exists"
 #: code:addons/stock/static/src/xml/picking.xml:24
 #, python-format
 msgid "Change Location"
-msgstr "Thay đổi vị trí"
+msgstr "Thay đổi địa điểm"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -1067,13 +1066,13 @@ msgstr "Công ty"
 #. module: stock
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr "Compute Stock"
+msgstr "Tính toán tồn kho"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr "Compute Stock Minimum Rules Only"
+msgstr "Tính toán tồn kho tối thiểu"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -1384,7 +1383,7 @@ msgid ""
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
 msgstr ""
-"Xác định phương thức mặc định được sử dụng để cho thấy vị trí lưu trữ chính "
+"Xác định phương thức mặc định được sử dụng để cho thấy địa  lưu trữ chính "
 "xác của sản phẩm. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có "
 "thể áp dụng trên địa điểm cha nếu không được thiết lập ở đây."
 
@@ -1650,8 +1649,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
-"Forces to specify a Serial Number for all moves containing this product and "
-"coming from a Supplier Location"
+"Cưỡng bức để chỉ ra một số sê-ri cho tất cả dịch chuyển kho đến từ một "
+"địa điểm nhà cung cấp"
 
 #. module: stock
 #: help:product.template,track_outgoing:0
@@ -1659,8 +1658,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
-"Forces to specify a Serial Number for all moves containing this product and "
-"going to a Customer Location"
+"Cưỡng bức để chỉ ra một số sê-ri cho tất cả dịch chuyển kho đi đến "
+"một địa điểm khách hàng"
 
 #. module: stock
 #: help:product.template,track_all:0
@@ -1668,8 +1667,8 @@ msgid ""
 "Forces to specify a Serial Number on each and every operation related to "
 "this product"
 msgstr ""
-"Forces to specify a Serial Number on each and every operation related to "
-"this product"
+"Cưỡng bức để chỉ ra một số sê-ri trên mỗi hoạt động hoặc tất cả hoạt động "
+"liên quan tới sản phẩm này"
 
 #. module: stock
 #: view:product.template:0
@@ -2069,7 +2068,7 @@ msgstr "Tham chiếu nội bộ"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Di chuyển nội bộ"
+msgstr "Dịch chuyển nội bộ"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
@@ -2092,7 +2091,7 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,location_id:0
 msgid "Inventoried Location"
-msgstr "Địa điểm đã kiểm kho"
+msgstr "Địa điểm"
 
 #. module: stock
 #: field:stock.inventory,lot_id:0
@@ -2192,7 +2191,7 @@ msgstr "Inventory Name."
 #. module: stock
 #: view:stock.inventory:0 field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr "Tham chiếu tồn kho"
+msgstr "Tham chiếu"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -2226,7 +2225,7 @@ msgstr "Inventory loss"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Inventory of"
-msgstr "Inventory of"
+msgstr "Kiểm kho"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
@@ -2354,12 +2353,12 @@ msgstr "Kho & Địa điểm"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr "Location BarCode"
+msgstr "Mã vạch"
 
 #. module: stock
 #: field:stock.location,loc_barcode:0
 msgid "Location Barcode"
-msgstr "Location Barcode"
+msgstr "Mã vạch"
 
 #. module: stock
 #: field:stock.pack.operation,location_id:0
@@ -2454,7 +2453,7 @@ msgstr "Lot/Serial Number"
 #. module: stock
 #: view:product.product:0 field:stock.move,lot_ids:0
 msgid "Lots"
-msgstr "Lots"
+msgstr "Lô hàng"
 
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
@@ -3203,7 +3202,7 @@ msgstr "Bảng kế hàng xuất kho"
 #: view:stock.picking:0 field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:0
 msgid "Picking Type"
-msgstr "Picking Type"
+msgstr "Loại hoạt động"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
@@ -3213,7 +3212,7 @@ msgstr "Picking Type Code"
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr "Picking Type Name"
+msgstr "Tên"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
@@ -3227,7 +3226,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
 msgid "Picking Type for Returns"
-msgstr "Picking Type for Returns"
+msgstr "Hoạt động trả lại hàng"
 
 #. module: stock
 #: view:stock.picking.type:0 view:stock.warehouse:0
@@ -3262,7 +3261,7 @@ msgstr "Pickings that are late on scheduled time"
 #. module: stock
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr "Ngày dự kiến"
+msgstr "Ngày lên kế hoạch"
 
 #. module: stock
 #: code:addons/stock/stock.py:2319
@@ -3548,7 +3547,7 @@ msgstr "Cung cấp số lương của sản phẩm cần trả lại."
 #: model:ir.actions.act_window,name:stock.procrules
 #: view:stock.location.route:0 field:stock.location.route,pull_ids:0
 msgid "Pull Rules"
-msgstr "Pull Rules"
+msgstr "Quy tắc Pull"
 
 #. module: stock
 #: field:stock.move,push_rule_id:0
@@ -3558,7 +3557,7 @@ msgstr "Push Rule"
 #. module: stock
 #: view:stock.location.route:0 field:stock.location.route,push_ids:0
 msgid "Push Rules"
-msgstr "Push Rules"
+msgstr "Quy tắc Push"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
@@ -3931,7 +3930,7 @@ msgstr "Reordering Mode"
 #: model:ir.ui.menu,name:stock.menu_stock_order_points view:product.product:0
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr "Reordering Rules"
+msgstr "Quy tắc tồn kho"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:0
@@ -4178,7 +4177,7 @@ msgstr "Kết quả tìm kiếm"
 #. module: stock
 #: view:stock.location.route:0
 msgid "Select the places where this route can be selected"
-msgstr "Select the places where this route can be selected"
+msgstr "Đánh dấu những nơi mà tuyến đường này có thể được chọn"
 
 #. module: stock
 #. openerp-web
@@ -4196,7 +4195,7 @@ msgstr "Selection Filter"
 #: field:stock.location.path,sequence:0 view:stock.location.route:0
 #: field:stock.location.route,sequence:0 field:stock.picking.type,sequence:0
 msgid "Sequence"
-msgstr "Sequence"
+msgstr "Trình tự"
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
@@ -4247,7 +4246,7 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Thiết lập một địa điểm nếu bnaj sản xuất tại một địa điểm cố định. Nó có thể "
+"Thiết lập một địa điểm nếu bạn sản xuất tại một địa điểm cố định. Nó có thể "
 "là một địa điểm đối tác nếu bạn thuê thầu phụ cho các hoạt động sản xuất."
 
 #. module: stock
@@ -4269,12 +4268,12 @@ msgstr "Ship directly from stock (Ship only)"
 #. module: stock
 #: field:stock.warehouse,code:0
 msgid "Short Name"
-msgstr "Short Name"
+msgstr "Tên viêt tắt"
 
 #. module: stock
 #: help:stock.warehouse,code:0
 msgid "Short name used to identify your warehouse"
-msgstr "Short name used to identify your warehouse"
+msgstr "Tên viết tắt được sử dụng để xác định kho hàng"
 
 #. module: stock
 #: help:stock.move,string_availability_info:0
@@ -4417,7 +4416,7 @@ msgstr "Stock Picking"
 #. module: stock
 #: view:product.template:0
 msgid "Stock and Expected Variations"
-msgstr "Stock and Expected Variations"
+msgstr "Tồn kho và Dự báo"
 
 #. module: stock
 #: view:stock.move:0
@@ -4814,8 +4813,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their today's inventory value."
 msgstr ""
-"This analysis gives you a fast overview on the current stock level of your "
-"products and their today's inventory value."
+"Phân tích này cho bạn một cái nhìn nhanh trên mức tồn kho hiện tại của các sản phẩm "
+"và giá trị tồn kho của ngày hôm nay."
 
 #. module: stock
 #: help:stock.quant.package,packaging_id:0
@@ -4994,7 +4993,7 @@ msgstr "Total routes"
 #: view:stock.production.lot:0
 #, python-format
 msgid "Traceability"
-msgstr "Tuy suất nguồn gốc"
+msgstr "Truy suất nguồn gốc"
 
 #. module: stock
 #: field:product.template,track_incoming:0
@@ -5062,7 +5061,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking.type,code:0
 msgid "Type of Operation"
-msgstr "Type of Operation"
+msgstr "Loại hoạt động"
 
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
@@ -5077,7 +5076,7 @@ msgstr "Type of the new Operation"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Types of Operation"
-msgstr "Types of Operation"
+msgstr "Hoạt động"
 
 #. module: stock
 #: help:stock.production.lot,name:0
@@ -5275,7 +5274,7 @@ msgstr "Chờ hoạt động khác"
 #: selection:stock.move,state:0 view:stock.picking:0
 #: selection:stock.picking,state:0 view:stock.picking.type:0
 msgid "Waiting Availability"
-msgstr "Waiting Availability"
+msgstr "Chờ có sẵn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
