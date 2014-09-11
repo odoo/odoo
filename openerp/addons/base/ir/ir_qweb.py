@@ -163,12 +163,13 @@ class QWeb(orm.AbstractModel):
         """
         Loads an XML document and installs any contained template in the engine
         """
-        if hasattr(document, 'documentElement'):
+        if not isinstance(document, basestring):
+            # assume lxml.etree.Element
             dom = document
         elif document.startswith("<?xml"):
             dom = etree.fromstring(document)
         else:
-            dom = etree.parse(document)
+            dom = etree.parse(document).getroot()
 
         for node in dom:
             if node.get('t-name'):
