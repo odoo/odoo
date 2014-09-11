@@ -26,7 +26,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // TODO: templates orverwritten could be called by t-call="__super__" ?
 // TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
-    expressions_cache: {},
+    expressions_cache: {
+        // special case for template bodies, __content__ doesn't work in
+        // Python impl because safe_eval -> assert_no_dunder_name so use
+        // Python impl's magical 0 variable instead
+        '0': 'dict[0]',
+    },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
     ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
@@ -137,7 +142,7 @@ var QWeb2 = {
             var new_dict = this.extend({}, old_dict);
             new_dict['__caller__'] = old_dict['__template__'];
             if (callback) {
-                new_dict['__content__'] = callback(context, new_dict);
+                new_dict[0] = callback(context, new_dict);
             }
             return context.engine._render(template, new_dict);
         },
@@ -551,7 +556,7 @@ QWeb2.Element = (function() {
         format_expression : function(e) {
             /* Naive format expression builder. Replace reserved words and variables to dict[variable]
              * Does not handle spaces before dot yet, and causes problems for anonymous functions. Use t-js="" for that */
-            if (QWeb2.expressions_cache[e]) {
+             if (QWeb2.expressions_cache[e]) {
               return QWeb2.expressions_cache[e];
             }
             var chars = e.split(''),

@@ -269,6 +269,28 @@ evaluated *before* calling the sub-template, and can alter a local context::
     </t>
     <!-- "var" does not exist here -->
 
+The body of the ``call`` directive can be arbitrarily complex (not just
+``set`` directives), and its rendered form will be available within the called
+template as a magical ``0`` variable::
+
+    <div>
+        This template was called with content:
+        <t t-raw="0"/>
+    </div>
+
+being called thus::
+
+    <t t-call="other-template">
+        <em>content</em>
+    </t>
+
+will result in::
+
+    <div>
+        This template was called with content:
+        <em>content</em>
+    </div>
+
 Python
 ======
 
