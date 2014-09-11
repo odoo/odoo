@@ -604,6 +604,9 @@ class HttpRequest(WebRequest):
         :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
         """
         response = Response(template=template, qcontext=qcontext, **kw)
+        if not 'RNG_exp' in request.httprequest.cookies and 'RNG_exp' in request.context:
+            response.set_cookie('RNG_exp', request.context['RNG_exp'])
+
         if not lazy:
             return response.render()
         return response

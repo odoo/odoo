@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_website_config_settings_extend" model="ir.ui.view">
+            <field name="name">Website settings</field>
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <field name="website_id" position="replace">
+                    <field name="website_id" invisible="False" on_change="on_change_website_id(website_id)"/>
+                </field>
+
+            </field>
+        </record>
+    </data>
+</openerp>

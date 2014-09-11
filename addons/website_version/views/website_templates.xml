@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Front-end/Back-end integration -->
+        <template id="user_navbar_version" inherit_id="website.layout" groups="base.group_user">
+            <xpath expr="//li['class=dropdown']" position="after">
+                    <li class="dropdown" id="version-menu" groups="base.group_website_designer">
+                        <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">
+                            Version (
+                                        <span><t t-esc="website.get_current_snapshot(context=context)[1]"></t></span>
+                                    )<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu version_menu" role="menu">
+                            <li><a href="#" data-action="master">Master</a></li>
+                            <li class="divider"> </li>
+                            <li><a href="#" data-action="create_snapshot">Create a new snapshot</a></li>
+                            <li class="divider"> </li>
+                            <li><a href="#" data-action="delete_snapshot">Delete snapshot</a></li>
+                            <li class="divider"> </li>
+                            <li class="dropdown-header" style="text-transform: uppercase;">All snapshots</li>
+                        </ul>
+                    </li>
+            </xpath>
+        </template>
+
+        <!-- <template id="user_navbar_content" inherit_id="website.user_navbar" groups="base.group_user">
+            <xpath expr="//nav/ul/li/a['id=content-menu-button']" position="after">
+                    <li class="divider" groups="base.group_website_designer"> </li>
+                    <li groups="base.group_website_designer"><a href="#" data-action="AB_testing">AB Testing</a></li>
+            </xpath>
+        </template> -->
+
+        <template id="assets_frontend_menu_version" name="website_menu_version assets" inherit_id="website.assets_editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_version/static/src/js/menu_version.js"></script>
+                <script type="text/javascript" src="/website_version/static/src/js/AB_testing.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

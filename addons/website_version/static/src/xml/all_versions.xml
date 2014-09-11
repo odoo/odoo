@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="all_versions">
+        <t t-foreach="snapshots" t-as="item">
+            <li class="snapshot">
+                <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id" ><t t-esc="item.name"></t> </a>
+            </li>
+        </t>
+    </t>
+
+</templates>

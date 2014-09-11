@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="action_experiment" model="ir.actions.act_window">
+            <field name="name">Experiment</field>
+            <field name="res_model">website_version.experiment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+           
+        
+        <record model="ir.ui.view" id="experiment_form_view">
+            <field name="name">experiment.form</field>
+            <field name="model">website_version.experiment</field> 
+            <field name="arch" type="xml">
+                <form string="Experiment Form">
+                    <field name="name" colspan="4" />
+                    <field name="website_id" colspan="4"/>
+                    <!-- <field name="active" colspan="4"/> -->
+                    <field name="active_exp" colspan="4"/>
+                    <notebook colspan="4">
+                        <page string="Pages in experiment" colspan="4" >
+                            <field name="experiment_page_ids" colspan="4" context="{'website_id': website_id}">
+                                <tree string="PPP" editable="bottom">
+                                    <field name="view_id" domain="[('type','=','qweb'),('snapshot_id','=',False)]" on_change="onchange_get_key(view_id,context)" colspan="4"/>
+                                    <field name="key" invisible='True'/>
+                                    <field name="snapshot_id" domain="[('view_ids.key','=',key),('website_id','=',context.get('website_id'))]" colspan="4"/>
+                                    <field name="ponderation"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="experiment_tree_view">
+            <field name="name">experiment.tree</field>
+            <field name="model">website_version.experiment</field> 
+            <field name="arch" type="xml">
+                <tree string="Experiment tree">
+                    <field name="name" />
+                    <!-- <field name="active" /> -->
+                    <field name="active_exp" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="experiment_page_form_view">
+            <field name="name">experiment_page.form</field>
+            <field name="model">website_version.experiment_page</field> 
+            <field name="arch" type="xml">
+                <form string="Experiment_page Form">
+                    <notebook colspan="4">
+                        <page string="Features" colspan="4" >
+                            <field name="view_id" domain="[('type','=','qweb'),('snapshot_id','=',False)]" on_change="onchange_get_key(view_id,context)" colspan="4"/>
+                            <field name="key" invisible='True'/>
+                            <field name="snapshot_id" domain="[('view_ids.key','=',key),('website_id','=',context.get('website_id'))]" 
+                            colspan="4"/>
+                            <field name="ponderation"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+            
+        <record id="action_snapshot" model="ir.actions.act_window">
+            <field name="name">Snapshot</field>
+            <field name="res_model">website_version.snapshot</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="snapshot_form_view">
+            <field name="name">snapshot.form</field>
+            <field name="model">website_version.snapshot</field> 
+            <field name="arch" type="xml">
+                <form string="Snapshot Form">
+                    <group colspan="4">
+                        <field name="name" colspan="4" />
+                        <field name="website_id" colspan="4" />
+                        <field name="create_date" colspan="4"/>
+                    </group>
+                    <group colspan="4">
+                        <field name="view_ids" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="snapshot_tree_view">
+            <field name="name">snapshot.tree</field>
+            <field name="model">website_version.snapshot</field> 
+            <field name="arch" type="xml">
+                <tree string="Snapshot tree">
+                    <field name="name" />
+                    <field name="create_date" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_website_view" model="ir.actions.act_window">
+            <field name="name">Website Domain</field>
+            <field name="res_model">website</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="website" id="website_menu" sequence="10" parent="base.marketing_menu" />
+        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
+        <menuitem action="action_snapshot" id="menu_action_snapshot" parent="website_menu"/>
+        <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
+
+    </data>
+</openerp>

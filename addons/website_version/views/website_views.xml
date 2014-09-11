@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_website_form_extend"> 
+            <field name="name">website.form</field>
+            <field name="model">website</field> 
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="arch" type="xml">
+                <!-- find field name, and insert field name before it -->
+                <field name="company_id" position="after">
+                    <field name="company_id"/>
+                    <field name="user_id" context="{'active_test': False}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_website_view" model="ir.actions.act_window">
+            <field name="name">Website Domain</field>
+            <field name="res_model">website</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="website" id="website_menu" sequence="10"
+            parent="base.marketing_menu" />
+        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
+
+        <record model="ir.ui.view" id="view_view_form_extend"> 
+            <field name="model">ir.ui.view</field>
+
+            <field name="inherit_id" ref="base.view_view_form"/>
+            <field name="arch" type="xml">
+
+                 <field name="name" position="after">
+                    <!-- <field name="snapshot_id" attrs="{'invisible': [('master_id', '!=', True)]}"/> -->
+                    <field name="snapshot_id"/> 
+                </field>
+
+                <group position="before">
+                    <button icon="gtk-ok" name="action_publish" string="Publish" type="object" class="oe_highlight"  
+                        context="{'active_id': active_id}" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
+                </group>
+
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
