@@ -17,25 +17,20 @@ class QWeb(orm.AbstractModel):
     _inherit = 'website.qweb'
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
-        #from pudb import set_trace; set_trace()
         if qwebcontext is None:
             qwebcontext = {}
-        #print qwebcontext
 
         if not isinstance(qwebcontext, QWebContext):
             qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
 
 
-        context = context or qwebcontext.context 
-        print context          
+        context = context or qwebcontext.context          
         website_id=context.get('website_id')
 
         if website_id:
-            #from pudb import set_trace; set_trace()
             if 'experiment_id' in context:
                 page_id = self.pool["website_version.experiment_page"].search(cr, uid, [('key', '=', id_or_xml_id),('experiment_id.active_exp','!=',False),('experiment_id.website_id.id','=',website_id)], context=context)
                 if page_id:
-                    #from pudb import set_trace; set_trace()
                     RNG_exp = int(context.get('RNG_exp'))
                     number_id = int(''.join(str(ord(c)) for c in id_or_xml_id))
 
