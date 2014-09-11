@@ -1241,23 +1241,6 @@ openerp.account = function (instance) {
     
             self.$(".action_pane.active").removeClass("active");
     
-            // Special case hack : if no_partner, either inactive or create
-            if (self.st_line.has_no_partner) {
-                if (self.get("mode") === "inactive") {
-                    self.$(".match").slideUp(self.animation_speed);
-                    self.$(".create").slideUp(self.animation_speed);
-                    self.$(".toggle_match").removeClass("visible_toggle");
-                    self.el.dataset.mode = "inactive";
-                } else {
-                    self.initializeCreateForm();
-                    self.$(".match").slideUp(self.animation_speed);
-                    self.$(".create").slideDown(self.animation_speed);
-                    self.$(".toggle_match").addClass("visible_toggle");
-                    self.el.dataset.mode = "create";
-                }
-                return;
-            }
-    
             if (self.get("mode") === "inactive") {
                 self.$(".match").slideUp(self.animation_speed);
                 self.$(".create").slideUp(self.animation_speed);
@@ -1497,7 +1480,6 @@ openerp.account = function (instance) {
 
         // Loads move lines according to the widget's state
         updateMatches: function() {
-            if (this.st_line.has_no_partner) return;
             var self = this;
             var deselected_lines_num = self.mv_lines_deselected.length;
             var move_lines_num = 0;
@@ -1505,7 +1487,8 @@ openerp.account = function (instance) {
             if (offset < 0) offset = 0;
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
-            var excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            if (self.st_line.has_no_partner)
+                var excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
             _.each(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){
                 excluded_ids.push(o.id);
                 excluded_ids = excluded_ids.concat(o.partial_reconciliation_siblings_ids);
