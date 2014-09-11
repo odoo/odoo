@@ -12,14 +12,14 @@ class TestWebsiteVersionBase(common.TransactionCase):
         self.website = self.registry('website')
 
         #Usefull objects
-        master_view_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'homepage_0_0_0_0')
+        master_view_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'website2_homepage')
         self.master_view_id = master_view_ref and master_view_ref[1] or False
         self.arch_master=self.ir_ui_view.browse(cr, uid, [self.master_view_id], context=None)[0].arch
         snapshot_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website_version', 'snapshot_0_0_0_0')
         self.snapshot_id = snapshot_ref and snapshot_ref[1] or False
-        website_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'second_website')
+        website_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'website2')
         self.website_id = website_ref and website_ref[1] or False
-        view_0_0_0_0_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website_version', 'homepage_0_0_0_0_other')
+        view_0_0_0_0_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website_version', 'website2_homepage_other')
         self.view_0_0_0_0_id = view_0_0_0_0_ref and view_0_0_0_0_ref[1] or False
         self.arch_0_0_0_0 = self.ir_ui_view.browse(cr, uid, [self.view_0_0_0_0_id], context=None)[0].arch
         self.vals = {'arch':
