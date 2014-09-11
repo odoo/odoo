@@ -87,7 +87,7 @@ $(document).ready(function () {
         });
         var available = false;
         for (var k in variant_ids) {
-            if (_.isEqual(variant_ids[k][1], values)) {
+            if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                 var dec = variant_ids[k][2] % 1;
                 $('input[name="product_id"]').val(variant_ids[k][0]);
                 $price.html(variant_ids[k][2] + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
