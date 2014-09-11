@@ -17,13 +17,12 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var MutationObserverCtor = window.MutationObserver || window.WebkitMutationObserver;
-/*
+
 if (typeof WebKitMutationObserver !== 'undefined')
     MutationObserverCtor = WebKitMutationObserver;
 else
     MutationObserverCtor = MutationObserver;
-*/
+
 if (MutationObserverCtor === undefined) {
     console.error('DOM Mutation Observers are required.');
     console.error('https://developer.mozilla.org/en-US/docs/DOM/MutationObserver');
