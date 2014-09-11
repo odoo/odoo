@@ -47,8 +47,16 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
-               val1 += line.price_subtotal
-               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, line.product_id, order.partner_id)['taxes']:
+                val1 += line.price_subtotal
+
+                try:
+                    price = line.price_unit * (1-(line.discount or 0.0)/100.0)
+                except:
+                    price = line.price_unit               
+
+
+
+                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, price, line.product_qty, line.product_id, order.partner_id)['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
