@@ -52,13 +52,15 @@
                         options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
-                    <div class="oe_right">
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
-                    </div>
                     <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
+                    <div class="row">
+                        <h1 class="col-xs-11">
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <div class="col-xs-1 text-right">
+                            <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                        </div>
+                    </div>
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                     <group>
