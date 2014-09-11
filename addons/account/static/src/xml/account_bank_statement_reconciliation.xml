@@ -13,7 +13,7 @@
 
     <t t-name="bank_statement_reconciliation">
         <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
-            <t t-if="is_single_statement">
+            <t t-if="single_statement">
                 <h1 class="statement_name">
                     <span><t t-esc="title"/></span>
                     <table class="change_statement_name_container oe_form"><tr>
@@ -22,7 +22,7 @@
                     </tr></table>
                 </h1>
             </t>
-            <t t-if="!is_single_statement">
+            <t t-if="!single_statement">
                 <h1><t t-esc="title"/></h1>
             </t>
             <div class="progress progress-striped">
