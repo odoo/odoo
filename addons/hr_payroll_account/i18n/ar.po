@@ -1,39 +1,27 @@
 # Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-01 17:44+0000\n"
-"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "حساب دائن"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "قسيمة دفع مرتب لـ %s"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr "يومية النفقات \"%s\" لم يتم إعدادها بشكل صحيح لحساب الخصم الائتمان!"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "المحاسبة"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -41,31 +29,11 @@ msgid "Accounting Entry"
 msgstr "قيد محاسبي"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr "يومية النفقات \"%s\" لم يتم إعدادها بشكل صحيح لحساب الخصم!"
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "رمز الضرائب"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "قوة الفترة"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "اتركها فارغة لاستخدامها في الفترة من تاريخ التحقق لظرف المرتب."
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr "عقد"
+msgid "Adjustment Entry"
+msgstr "تعديل القيد"
 
 #. module: hr_payroll_account
 #: field:hr.contract,analytic_account_id:0
@@ -74,14 +42,31 @@ msgid "Analytic Account"
 msgstr "حساب تحليلي"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr "خطأ في الإعدادات!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "عقد"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "حساب دائن"
+
+#. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
 msgstr "حساب مدين"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "دفعات ظرف المرتب"
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "قوة الفترة"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -89,22 +74,9 @@ msgid "Generate payslips for all selected employees"
 msgstr "إنشاء قسائم دفع الرواتب لجميع الموظفين الذين تم تحديدهم"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr "خطأ في الإعدادات!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "المحاسبة"
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "اتركها فارغة لاستخدامها في الفترة من تاريخ التحقق لظرف المرتب."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -112,11 +84,15 @@ msgid "Pay Slip"
 msgstr "ظرف المرتب"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "دفعات ظرف المرتب"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Adjustment Entry"
-msgstr "تعديل القيد"
+msgid "Payslip of %s"
+msgstr "قسيمة دفع مرتب لـ %s"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
@@ -125,164 +101,21 @@ msgstr "تعديل القيد"
 msgid "Salary Journal"
 msgstr "يومية الرواتب"
 
-#~ msgid "Period"
-#~ msgstr "فترة"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "رمز الضرائب"
 
-#~ msgid "Employee"
-#~ msgstr "موظف"
-
-#~ msgid "Bank Journal"
-#~ msgstr "سجل البنك"
-
-#~ msgid "Description"
-#~ msgstr "الوصف"
-
-#~ msgid "Account"
-#~ msgstr "حساب"
-
-#~ msgid "Name"
-#~ msgstr "الاسم"
-
-#~ msgid "Bank Account"
-#~ msgstr "حساب البنك"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "تحذير !"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "يومية النفقات \"%s\" لم يتم إعدادها بشكل صحيح لحساب الخصم الائتمان!"
 
-#~ msgid "Sequence"
-#~ msgstr "مسلسل"
-
-#~ msgid "General Account"
-#~ msgstr "الحساب العام"
-
-#~ msgid "Year"
-#~ msgstr "سنة"
-
-#~ msgid "Expense Journal"
-#~ msgstr "يومية المصروفات"
-
-#~ msgid "Payslip 'Date From' must be before 'Date To'."
-#~ msgstr "ظرف المرتب \"بداية التاريخ\" يجب ان تكون قبل \"نهاية التاريخ\""
-
-#~ msgid "Account Move Link to Pay Slip"
-#~ msgstr "تحرك الحساب مرتبط بقسيمة الدفع"
-
-#~ msgid "Other Informations"
-#~ msgstr "معلومات اخرى"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "خط تسجيل المساهمة"
-
-#~ msgid "Contribution Register"
-#~ msgstr "تسجيل المساهمة"
-
-#~ msgid "Salary Account"
-#~ msgstr "حساب المرتب"
-
-#~ msgid "Payroll Register"
-#~ msgstr "تسجيل الرواتب"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "الخطوط المحاسبية"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr "حساب المنفق عندما سيتم تسجيل المرتب المصروف"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "معلومات المحاسبية"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "محاسبة رواتب الموراد البشرية"
-
-#~ msgid "Payment Lines"
-#~ msgstr "خطوط الدفع"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
 #, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "من فضلك حدد السنة المالية لعقد مخصص"
-
-#, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr "من فضلك تأكد ان فاتورة المصروفات ظهرت للسداد"
-
-#~ msgid "Account Lines"
-#~ msgstr "خطوط الحساب"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "قسائم المحاسبة"
-
-#~ msgid "Payslip Line"
-#~ msgstr "خط قسيمة الدفع"
-
-#~ msgid "Expense Entries"
-#~ msgstr "مدخلات الانفاق"
-
-#~ msgid "Employee Account"
-#~ msgstr "حساب الموظف"
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "قسائم المحاسبة"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "مذكرة النصيحة للبنك"
-
-#~ msgid "Total By Employee"
-#~ msgstr "المجموع الكلي للموظفين"
-
-#, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "الرجاء تكوين حساب قبض للشركاء!!"
-
-#~ msgid "Accounting Details"
-#~ msgstr "تفاصيل المحاسبة"
-
-#, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "الرجاء تكوين حساب دفع للشركاء"
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "الحساب المستحق للموظف"
-
-#~ msgid "Total By Company"
-#~ msgstr "المجموع الكلي للشركة"
-
-#~ msgid "Salary Structure"
-#~ msgstr "هيكل المرتب"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "الفترة غير محددة لتاريخ القسيمة %s"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "السنة المالية غير معرّفة لتاريخ القسيمة %s"
-
-#~ msgid "Leave Type"
-#~ msgstr "نوع الاجازة"
-
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "حساب تحليلي لتحليل الراتب"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
-
-#~ msgid ""
-#~ "Generic Payroll system Integrated with Accountings\n"
-#~ "    * Expense Encoding\n"
-#~ "    * Payment Encoding\n"
-#~ "    * Company Contribution Management\n"
-#~ "    "
-#~ msgstr ""
-#~ "نظام الرواتب العام مدمج مع المحاسبة\n"
-#~ "*ترميز النفقات \n"
-#~ "*ترميز الدفع\n"
-#~ "* إدارة شركة مساهمة\n"
-#~ "    "
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "خطأ ! يجب ان يكون تاريخ بدء العقد قبل من تاريخ انتهاء العقد."
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "يومية النفقات \"%s\" لم يتم إعدادها بشكل صحيح لحساب الخصم!"

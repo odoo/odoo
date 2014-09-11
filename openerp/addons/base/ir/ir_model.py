@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from collections import defaultdict
 import logging
 import re
 import time
@@ -815,23 +816,26 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
-    def name_get(self, cr, uid, ids, context=None):
-        result = {}
-        result2 = []
-        for res in self.browse(cr, uid, ids, context=context):
-            if res.id:
-                result.setdefault(res.model, {})
-                result[res.model][res.res_id] = res.id
 
-        for model in result:
+    def name_get(self, cr, uid, ids, context=None):
+        bymodel = defaultdict(dict)
+        names = {}
+
+        for res in self.browse(cr, uid, ids, context=context):
+            bymodel[res.model][res.res_id] = res
+            names[res.id] = res.complete_name
+            #result[res.model][res.res_id] = res.id
+
+        for model, id_map in bymodel.iteritems():
             try:
-                r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
-                for key,val in result[model].items():
-                    result2.append((val, r.get(key, False)))
-            except:
-                # some object have no valid name_get implemented, we accept this
+                ng = dict(self.pool[model].name_get(cr, uid, id_map.keys(), context=context))
+            except Exception:
                 pass
-        return result2
+            else:
+                for r in id_map.itervalues():
+                    names[r.id] = ng.get(r.res_id, r.complete_name)
+
+        return [(i, names[i]) for i in ids]
 
     def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}

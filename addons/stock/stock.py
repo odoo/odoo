@@ -1269,6 +1269,12 @@ class stock_picking(osv.osv):
             move_obj.action_confirm(cr, uid, moves, context=context)
         return moves
 
+    def rereserve_pick(self, cr, uid, ids, context=None):
+        """
+        This can be used to provide a button that rereserves taking into account the existing pack operations
+        """
+        for pick in self.browse(cr, uid, ids, context=context):
+            self.rereserve_quants(cr, uid, pick, move_ids = [x.id for x in pick.move_lines], context=context)
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
@@ -2140,6 +2146,8 @@ class stock_move(osv.osv):
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
         for move in todo_moves:
+            if move.linked_move_operation_ids:
+                continue
             move.refresh()
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
@@ -3221,11 +3229,14 @@ class stock_warehouse(osv.osv):
         location_obj = self.pool.get('stock.location')
 
         #create view location for warehouse
-        wh_loc_id = location_obj.create(cr, uid, {
+        loc_vals = {
                 'name': _(vals.get('code')),
                 'usage': 'view',
-                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
-            }, context=context)
+                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
+        }
+        if vals.get('company_id'):
+            loc_vals['company_id'] = vals.get('company_id')
+        wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
         vals['view_location_id'] = wh_loc_id
         #create all location
         def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
@@ -3241,12 +3252,15 @@ class stock_warehouse(osv.osv):
             {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
         ]
         for values in sub_locations:
-            location_id = location_obj.create(cr, uid, {
+            loc_vals = {
                 'name': values['name'],
                 'usage': 'internal',
                 'location_id': wh_loc_id,
                 'active': values['active'],
-            }, context=context_with_inactive)
+            }
+            if vals.get('company_id'):
+                loc_vals['company_id'] = vals.get('company_id')
+            location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
             vals[values['field']] = location_id
 
         #create WH

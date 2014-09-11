@@ -1,50 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* analytic_user_function
+# Romanian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-03 02:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Linie Analitica"
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid "Invoice Price Rate per User"
-msgstr "Facturati Rata de Pret per Utilizator"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,product_id:0
-msgid "Service"
-msgstr "Service"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Price per User"
-msgstr "Pret per Utilizator"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,price:0
-msgid "Price"
-msgstr "Pret"
-
-#. module: analytic_user_function
-#: help:analytic.user.funct.grid,price:0
-msgid "Price per hour for this user."
-msgstr "Pretul pe ora pentru acest utilizator"
+"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -53,24 +24,22 @@ msgid "Analytic Account"
 msgstr "Cont Analitic"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:106
-#: code:addons/analytic_user_function/analytic_user_function.py:135
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linie Analitica"
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "Invoicing Data"
-msgstr "Date pentru facturare"
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: analytic_user_function
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr "Rel. Utilizatori/Produse"
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
 "Define a specific service (e.g. Senior Consultant)\n"
 "                            and price for some users to use these data "
@@ -85,17 +54,74 @@ msgstr ""
 "clientul."
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,uom_id:0
-msgid "Unit of Measure"
-msgstr "Unitatea de Masura"
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
+msgstr "Eroare!"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:107
-#: code:addons/analytic_user_function/analytic_user_function.py:136
-#, python-format
-msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
 msgstr ""
-"Nu exista un cont de cheltuieli definit pentru acest produs: \"%s\" (id:%d)"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr "Facturati Rata de Pret per Utilizator"
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr "Date pentru facturare"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for "
+"a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr "Pret"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr "Pret per Utilizator"
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr "Pretul pe ora pentru acest utilizator"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr "Service"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -103,90 +129,16 @@ msgid "Timesheet Line"
 msgstr "Linie Fisa de pontaj"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"OpenERP will recursively search on parent accounts\n"
-"                            to check if specific conditions are defined for "
-"a\n"
-"                            specific user. This allows to set invoicing\n"
-"                            conditions for a group of contracts."
-msgstr ""
-"OpenERP va cauta in mod recursiv in conturile principale\n"
-"                            pentru a verifica daca anumite conditii sunt "
-"definite pentru un\n"
-"                            anumit utilizator. Acest lucru permite setarea "
-"conditiilor\n"
-"                            de facturare pentru un grup de contracte."
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr "Unitatea de Masura"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,user_id:0
 msgid "User"
 msgstr "Utilizator"
 
-#~ msgid "Product"
-#~ msgstr "Produs"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
-
-#~ msgid "Analytic User Function"
-#~ msgstr "Funcţie analitică de utilizator"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-#~ "special !"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Eroare !"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "    This module allows you to define what is the default function of a "
-#~ "specific user on a given account. This is mostly used when a user encodes "
-#~ "his timesheet: the values are retrieved and the fields are auto-filled... "
-#~ "but the possibility to change these values is still available.\n"
-#~ "\n"
-#~ "    Obviously if no data has been recorded for the current account, the "
-#~ "default value is given as usual by the employee data so that this module is "
-#~ "perfectly compatible with older configurations.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "    Acest modul va permite sa definiti care este functia predefinita pentru "
-#~ "un anumit utilizator intr-un cont dat. Acesta este folosit mai ales atunci "
-#~ "cand un utilizator isi codeaza propria foaie de pontaj: valorile sunt "
-#~ "recuperate, iar campurile sunt completate automat... dar aveti inca "
-#~ "posibilitatea de a modifica aceste valori. \n"
-#~ "\n"
-#~ "Este evident faptul ca, daca datele pentru contul curent nu au fost "
-#~ "inregistrate, valoarea default este data de obicei de datele angajatului, "
-#~ "astfel ca acest modul este perfect compatibil cu configurari mai vechi.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Eroare! Nu puteti crea conturi analitice recursive."
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Eroare! Moneda trebuie sa fie aceeasi ca si moneda companiei selectate"
-
-#~ msgid "Relation table between users and products on a analytic account"
-#~ msgstr ""
-#~ "Tabel de relatii intre utilizatori si produsele dintr-un cont analitic"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr ""
-#~ "Nu puteti modifica o inregistrare dintr-o fisa de pontaj "
-#~ "Confirmata/Efectuata !."
-
-#~ msgid "User's Product for this Analytic Account"
-#~ msgstr "Produsul Utilizatorului pentru acest Cont Analitic"
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Rel. Utilizatori/Produse"

@@ -260,8 +260,9 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
+        return res
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''

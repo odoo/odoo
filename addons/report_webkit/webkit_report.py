@@ -368,6 +368,9 @@ class WebKitParser(report_sxw):
             report_xml = ir_obj.browse(cursor, uid, report_xml_ids[0], context=context)
         else:
             return super(WebKitParser, self).create(cursor, uid, ids, data, context)
+
+        setattr(report_xml, 'use_global_header', self.header if report_xml.header else False)
+
         if report_xml.report_type != 'webkit':
             return super(WebKitParser, self).create(cursor, uid, ids, data, context)
         result = self.create_source_pdf(cursor, uid, ids, data, report_xml, context)

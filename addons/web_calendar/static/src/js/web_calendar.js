@@ -21,6 +21,7 @@ openerp.web_calendar = function(instance) {
 
     function get_fc_defaultOptions() {
         shortTimeformat = Date.CultureInfo.formatPatterns.shortTime;
+        var dateFormat = Date.normalizeFormat(instance.web.strip_raw_chars(_t.database.parameters.date_format));
         return {
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
@@ -42,6 +43,16 @@ openerp.web_calendar = function(instance) {
                agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
                 // for all other views
                 '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
+            },
+            titleFormat: {
+                month: 'MMMM yyyy',
+                week: dateFormat + "{ '&#8212;'"+ dateFormat,
+                day: dateFormat,
+            },
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd ' + dateFormat,
+                day: 'dddd ' + dateFormat,
             },
             weekMode : 'liquid',
             aspectRatio: 1.8,

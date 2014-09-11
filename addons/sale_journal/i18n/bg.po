@@ -1,50 +1,50 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Bulgarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-08-03 06:05+0000\n"
-"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Бележка"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Активен"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Продажби и Покупки"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Фактуриране"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Групиран"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_journal
@@ -57,19 +57,15 @@ msgstr ""
 "фактура, без да се маха."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Бележки"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Метод на фактуриране"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Списък за товарене"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Тип на фактурата"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -77,16 +73,6 @@ msgstr "Списък за товарене"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Видове фактури"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Негрупирани"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Групиран"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -101,28 +87,44 @@ msgstr ""
 "месечни и т.н."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Фактуриране"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Тип на фактурата"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Метод на фактуриране"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Активен"
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Негрупирани"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Бележка"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Бележки"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -130,324 +132,22 @@ msgid "Partner"
 msgstr "Партньор"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Списък за товарене"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Продажби и Покупки"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Поръчка за продажба"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-
-#~ msgid "Journal date"
-#~ msgstr "Дата от дневник"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Дневник продажби"
-
-#~ msgid "to be invoiced"
-#~ msgstr "за фактуриране"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Очакващ график"
-
-#~ msgid "assigned"
-#~ msgstr "назначен"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Месечни продажби"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Състояние на продажба"
-
-#~ msgid "waiting"
-#~ msgstr "чакащ"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Назначени пакетирания"
-
-#~ msgid "My open journals"
-#~ msgstr "Моите отворени дневници"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Всички отворени дневници"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Дневници на пакетиране"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Пакетиране според метода на фактуриране"
-
-#~ msgid "State"
-#~ msgstr "Състояние"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Продажби по дневник (този месец)"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "Вида дневник използван при продажби и пакетиране"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Пакетиране по дневник"
-
-#~ msgid "done"
-#~ msgstr "готов"
-
-#~ msgid "Average Price"
-#~ msgstr "Средна цена"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Поръчки за продажби по дневник"
-
-#~ msgid "Open journals"
-#~ msgstr "Отваряне на дневници"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Управление на продажби и доставки по дневник"
-
-#~ msgid "Order State"
-#~ msgstr "Състояние на поръчка"
-
-#~ msgid "Draft"
-#~ msgstr "Проект"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Грешка при доставка"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Опаковане по дневник"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Опаковане според метод на фактуриране"
-
-#~ msgid "Month"
-#~ msgstr "Месец"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Потвърдени опакования"
-
-#~ msgid "Packing journals"
-#~ msgstr "Дневник на опаковане"
-
-#~ msgid "cancel"
-#~ msgstr "отказан"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Моите отворени дневници на опаковане"
-
-#~ msgid "Validation date"
-#~ msgstr "Дата на проверка"
-
-#~ msgid "draft"
-#~ msgstr "проект"
-
-#~ msgid "Draft sales"
-#~ msgstr "Продажби в проект"
-
-#~ msgid "Quotation"
-#~ msgstr "Запитване"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "sale_journal.invoice.type.tree"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Дневници за продажби"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Грешла при фактура"
-
-#~ msgid "Creation date"
-#~ msgstr "Дата на създаване"
-
-#~ msgid "Sales"
-#~ msgstr "Продажби"
-
-#~ msgid "Open Journal"
-#~ msgstr "Отваряне на дневник"
-
-#~ msgid "Code"
-#~ msgstr "Код"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Метод на фактуриране"
-
-#~ msgid "Cancel"
-#~ msgstr "Отказ"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Моите отворени дневници"
-
-#~ msgid "Journal"
-#~ msgstr "Дневник"
-
-#~ msgid "Quantities"
-#~ msgstr "Количества"
-
-#~ msgid "Close Journal"
-#~ msgstr "Затваряне на дневник"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Методи на фактуриране"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Пакетиране към фактура"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Пакетиране по дневник"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Продажби по дневник"
-
-#~ msgid "Journal Information"
-#~ msgstr "Информация за дневник"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Пакетиране към фактура"
-
-#~ msgid "Approved sales"
-#~ msgstr "Одобрени продажби"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Невалиден XML за преглед на архитектурата"
-
-#~ msgid "All Months"
-#~ msgstr "Всички месеци"
-
-#~ msgid "Reporting"
-#~ msgstr "Справки"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-#~ "символи!"
-
-#~ msgid "This Month"
-#~ msgstr "Този месец"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Пращане в проект"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Невалидно име на модел при задаване на действие"
-
-#~ msgid "# of Lines"
-#~ msgstr "# от редове"
-
-#~ msgid "Total Price"
-#~ msgstr "Обща цена"
-
-#~ msgid "None"
-#~ msgstr "Няма"
-
-#~ msgid "In progress"
-#~ msgstr "В развитие"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Ръчно в изпълнение"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Прекратяване на пакетиране"
-
-#~ msgid "Packing"
-#~ msgstr "Опаковане"
-
-#~ msgid "Invoice state"
-#~ msgstr "Състояние на фактура"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Потвърждаване на продажби"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Статистика по \"пакетиране към фактура\""
-
-#~ msgid "Responsible"
-#~ msgstr "Отговорник"
-
-#~ msgid "Open"
-#~ msgstr "Отвoри"
-
-#~ msgid "Done"
-#~ msgstr "Готово"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Дневник Опаковане"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Статистика на дневник"
-
-#~ msgid "invoiced"
-#~ msgstr "фактурирано"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Сторниране на продажби"
-
-#~ msgid "confirmed"
-#~ msgstr "потвърдено"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Опаковъчни списъци по дневник"
-
-#~ msgid "States"
-#~ msgstr "Състояния"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "Статистика за пакетиране според начина на фактуруране"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Препратката на поръчката трябва да бъде уникална!"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "Видът на дневника използван за продажби и събиране."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Модула за дневник на продажбите дава възможност за категоризиране\n"
-#~ "на продажби и доставки (събиране на списъци) между различни дневници.\n"
-#~ "Този модул е много полезен за големи предприятия, които\n"
-#~ "работят по отдели.\n"
-#~ "\n"
-#~ "Можете да използвате дневника за различни цели, няколко примера:\n"
-#~ "* изолиране на продажбите на различните отдели\n"
-#~ "* дневници за доставки с камион или чрез UPS\n"
-#~ "Дневника е отворен и се развива в различните състояния:\n"
-#~ "* проект, отворен, отказан,  направен.\n"
-#~ "Група операции могат да бъдат преработени в различни дневници\n"
-#~ "потвърдени всички продажби наведнъж, за валидиране или фактура за опаковане, "
-#~ "...\n"
-#~ "\n"
-#~ "Също така подкрепя методи за партидно фактуриране, които могат да се "
-#~ "конфигурират от\n"
-#~ "партньори и поръчки за продажба, примери:\n"
-#~ "* ежедневно фактуриране\n"
-#~ "* месечно фактуриране, ...\n"
-#~ "\n"
-#~ "Някои статистики от дневниците са предвидени.\n"
-#~ "    "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
