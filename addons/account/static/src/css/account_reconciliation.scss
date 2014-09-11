@@ -54,11 +54,11 @@ $aestetic_animation_speed: 300ms;
         line-height: 1.5em;
         cursor: pointer;
     }
-
+    
     .change_statement_name_container {
         display: none;
         width: 95%;
-
+    
         td:first-child, td:first-child > input {
             width: 99%;
         }
@@ -284,7 +284,7 @@ $aestetic_animation_speed: 300ms;
         .accounting_view, .match table {
             width: 100%;
 
-            tr {
+            tbody tr {
                 cursor: pointer;
 
                 &.created_line {
@@ -519,13 +519,14 @@ $aestetic_animation_speed: 300ms;
     .oe_manual_reconciliation_line {
         .button_reconcile {
             float: right;
-            margin-right: $actionColWidth;
+            position: relative;
+            top: 1.1em;
+            //margin-right: $actionColWidth;
         }
 
         .accounting_view {
             thead {
                 background: none;
-                cursor: pointer;
 
                 td {
                     vertical-align: bottom !important;
@@ -558,7 +559,7 @@ $aestetic_animation_speed: 300ms;
             }
             
             .filler_line td {
-                height: 23px;
+                height: 22px;
                 cursor: default !important;
             }
             

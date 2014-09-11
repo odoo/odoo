@@ -952,11 +952,12 @@ class account_move_line(osv.osv):
         else:
             return lines
 
-    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
+    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, skip_partial_reconciliation_siblings=False, context=None):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
+            :param skip_partial_reconciliation_siblings: do not construct the list of partial_reconciliation_siblings
         """
         if not lines:
             return []
@@ -969,9 +970,16 @@ class account_move_line(osv.osv):
         ret = []
 
         for line in lines:
+            partial_reconciliation_siblings = []
+            if line.reconcile_partial_id.id and not skip_partial_reconciliation_siblings:
+                prs_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
+                prs_ids.remove(line.id)
+                prs_br = self.browse(cr, uid, prs_ids)
+                partial_reconciliation_siblings = self.prepare_move_lines_for_reconciliation_widget(cr, uid, prs_br, target_currency=target_currency, target_date=target_date, skip_partial_reconciliation_siblings=True)
+
             ret_line = {
                 'id': line.id,
-                'name': line.move_id.name,
+                'name': line.name if line.name != '/' else line.move_id.name,
                 'ref': line.move_id.ref,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
@@ -982,7 +990,21 @@ class account_move_line(osv.osv):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
+                'partial_reconciliation_siblings': partial_reconciliation_siblings,
             }
+
+            # DEBUG
+            ret_line['reconcile_partial_id'] = line.reconcile_partial_id.id
+
+            # Amount residual can be negative
+            debit = line.debit
+            credit = line.credit
+            amount_residual = line.amount_residual
+            amount_residual_currency = line.amount_residual_currency
+            if line.amount_residual < 0:
+                debit, credit = credit, debit
+                amount_residual = -amount_residual
+                amount_residual_currency = -amount_residual_currency
 
             # Get right debit / credit:
             line_currency = line.currency_id or company_currency
@@ -990,13 +1012,13 @@ class account_move_line(osv.osv):
             if line.currency_id and line.amount_currency:
                 amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
             if target_currency and line_currency == target_currency and target_currency != company_currency:
-                debit = line.debit > 0 and line.amount_residual_currency or 0.0
-                credit = line.credit > 0 and line.amount_residual_currency or 0.0
-                amount_currency_str = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
+                debit = debit > 0 and amount_residual_currency or 0.0
+                credit = credit > 0 and amount_residual_currency or 0.0
+                amount_currency_str = amount_residual_currency(amount_residual, currency_obj=company_currency)
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
             else:
-                debit = line.debit > 0 and line.amount_residual or 0.0
-                credit = line.credit > 0 and line.amount_residual or 0.0
+                debit = debit > 0 and amount_residual or 0.0
+                credit = credit > 0 and amount_residual or 0.0
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
                 if target_currency and target_currency != company_currency:
                     amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
