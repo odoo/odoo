@@ -265,14 +265,15 @@ class QWeb(orm.AbstractModel):
                 for attribute in self._render_att:
                     if attribute_name[2:].startswith(attribute):
                         att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                        generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
+                        if val:
+                            generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
                     if attribute_name[2:] in self._render_tag:
                         t_render = attribute_name[2:]
                     template_attributes[attribute_name[2:]] = attribute_value
             else:
-                generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
+                generated_attributes += self.render_attribute(element, attribute_name, escape(attribute_value), qwebcontext)
 
         if 'debug' in template_attributes:
             debugger = template_attributes.get('debug', 'pdb')
@@ -327,6 +328,9 @@ class QWeb(orm.AbstractModel):
             )
         else:
             return "<%s%s/>" % (name, generated_attributes)
+
+    def render_attribute(self, element, name, value, qwebcontext):
+        return ' %s="%s"' % (name, escape(value))
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
