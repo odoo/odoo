@@ -327,6 +327,15 @@
             this._go_bottom();
         },
         keydown: function(e) {
+            if(e && e.which == 27) {
+                if(this.$el.prev().find('.oe_im_chatview_input').length > 0){
+                    this.$el.prev().find('.oe_im_chatview_input').focus();
+                }else{
+                    this.$el.next().find('.oe_im_chatview_input').focus();
+                }
+                e.stopPropagation();
+                this.update_fold_state('closed');
+            }
             if(e && e.which !== 13) {
                 return;
             }
