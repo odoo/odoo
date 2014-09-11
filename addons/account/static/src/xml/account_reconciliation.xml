@@ -75,7 +75,6 @@
         </tr></table>
     </t>
 
-
     <t t-name="filter_no_match">
         <tr><td style='text-align: center;'>No result matching '<t t-esc="filter_str" />'</td></tr>
     </t>
@@ -134,6 +133,23 @@
 
     <!-- bank statement reconciliation -->
     
+    <t t-name="bank_statement_reconciliation" t-extend="reconciliation">
+        <t t-jquery="h1" t-operation="replace">
+            <t t-if="single_statement">
+                <h1 class="statement_name">
+                    <span><t t-esc="title"/></span>
+                    <table class="change_statement_name_container oe_form"><tr>
+                        <td><input class="change_statement_name_field" type="text"/></td>
+                        <td><button class="change_statement_name_button oe_highlight">OK</button></td>
+                    </tr></table>
+                </h1>
+            </t>
+            <t t-if="!single_statement">
+                <h1><t t-esc="title"/></h1>
+            </t>
+        </t>
+    </t>
+
     <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
         <t t-jquery=".oe_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
@@ -154,9 +170,9 @@
             </p>
         </t>
         <t t-jquery=".action_buttons" t-operation="inner">
-            <t t-if="has_statement_id">
-                <button class="button_back_to_statement">Back to statement</button>
-                <button class="button_close_statement">Close the statement</button>
+            <t t-if="single_statement or multiple_statements">
+                <button class="button_back_to_statement">Back to statements list</button>
+                <button class="button_close_statement">Close the statement<t t-if="multiple_statements">s</t></button>
             </t>
         </t>
     </t>
@@ -164,7 +180,10 @@
     <t t-name="bank_statement_reconciliation_line" t-extend="reconciliation_line">
         <t t-jquery=".accounting_view caption" t-operation="inner">
             <button class="button_ok"></button>
-            <span t-if="! line.has_no_partner" class="partner_name" tabindex="0"><t t-esc="line.partner_name"/></span>
+            <span t-if="! line.has_no_partner" class="partner_name">
+                <t t-esc="line.partner_name"/>
+                <span class="remove_partner"><span class="glyphicon glyphicon-remove"></span></span>
+            </span>
             <div class="change_partner_container oe_form"></div>
         </t>
         <t t-jquery=".accounting_view caption" t-operation="after">

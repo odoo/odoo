@@ -964,9 +964,12 @@ class account_move_line(osv.osv):
         ret = []
 
         for line in lines:
+            partial_reconciliation_siblings_ids = []
+            if line.reconcile_partial_id:
+                partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
             ret_line = {
                 'id': line.id,
-                'name': line.move_id.name,
+                'name': line.name if line.name != '/' else line.move_id.name,
                 'ref': line.move_id.ref,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
@@ -977,6 +980,7 @@ class account_move_line(osv.osv):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
+                'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
             }
 
             # Get right debit / credit:
@@ -1001,6 +1005,12 @@ class account_move_line(osv.osv):
                     debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
                     credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
                     amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
+
+            # Amount residual can be negative
+            if debit < 0:
+                debit, credit = credit, -debit
+            if credit < 0:
+                debit, credit = -credit, debit
 
             ret_line['credit'] = credit
             ret_line['debit'] = debit
