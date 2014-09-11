@@ -531,6 +531,7 @@
             this.calc_box();
             var fct =  _.bind(function(place) {
                 this.set("right_offset", place + this.$el.outerWidth());
+                this.$(".oe_im_searchbox").focus();
             }, this);
             var opt = {
                 step: fct,

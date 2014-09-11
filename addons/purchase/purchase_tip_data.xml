@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="purchase_tip_1">
+            <field name="description">Click here to process the reception of the purchase by product.</field>
+            <field name="model">stock.move</field>
+            <field name="mode">list</field>
+            <field name="action_id" ref="stock.action_receipt_picking_move"/>
+            <field name="trigger_selector">.oe_list:visible</field>
+            <field name="highlight_selector">td.oe_list_field_cell.oe_list_field_object.oe-button:visible > button:nth-child(1)</field>
+            <field name="placement">left</field>
+        </record>
+    </data>
+</openerp>

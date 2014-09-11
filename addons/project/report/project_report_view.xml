@@ -4,7 +4,7 @@
 
         <menuitem id="base.menu_project_report" name="Project"
             groups="project.group_project_manager"
-            parent="base.menu_reporting" sequence="25"/>
+            parent="base.menu_reporting" sequence="5"/>
 
         <record id="view_task_project_user_graph" model="ir.ui.view">
             <field name="name">report.project.task.user.graph</field>
@@ -35,12 +35,6 @@
             <field name="model_id">report.project.task.user</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['project_id', 'user_id']}</field>
-        </record>
-        <record id="filter_task_report_reviewer" model="ir.filters">
-            <field name="name">By Reviewer</field>
-            <field name="model_id">report.project.task.user</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id', 'reviewer_id']}</field>
         </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">

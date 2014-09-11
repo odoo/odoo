@@ -590,6 +590,12 @@ class HttpRequest(WebRequest):
            be used as response."""
         try:
             return super(HttpRequest, self)._handle_exception(exception)
+        except SessionExpiredException:
+            if not request.params.get('noredirect'):
+                query = werkzeug.urls.url_encode({
+                    'redirect': request.httprequest.url,
+                })
+                return werkzeug.utils.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException, e:
             return e
 
@@ -1096,15 +1102,6 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
-class Retry(RuntimeError):
-    """ Exception raised during QWeb rendering to signal that the rendering
-    should be retried with the provided ``render_updates`` dict merged into
-    the previous rendering context
-    """
-    def __init__(self, name, render_updates=None):
-        super(Retry, self).__init__(name)
-        self.updates = render_updates or {}
-
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1154,13 +1151,9 @@ class Response(werkzeug.wrappers.Response):
         """
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        while True:
-            try:
-                return view_obj.render(
-                    request.cr, uid, self.template, self.qcontext,
-                    context=request.context)
-            except Retry, e:
-                self.qcontext.update(e.updates)
+        return view_obj.render(
+            request.cr, uid, self.template, self.qcontext,
+            context=request.context)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result

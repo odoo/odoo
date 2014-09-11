@@ -10,7 +10,7 @@
 
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Contacts" sequence="4" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -47,7 +47,7 @@
         -->
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Titles</field>
+            <field name="name">Company Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -592,7 +592,7 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>

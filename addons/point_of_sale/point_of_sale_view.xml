@@ -186,7 +186,7 @@
         <menuitem
             action="product_template_action"
             id="menu_pos_products"
-            parent="menu_point_of_sale_product" sequence="2"/>
+            parent="menu_point_of_sale_product" sequence="0"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -519,7 +519,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="2" />
         <!-- END -->
 
         <record id="action_edit_ean" model="ir.actions.act_window">
@@ -600,7 +600,7 @@
         </record>
 
         <!--  Miscellaneous Operations/Reporting -->
-        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
+        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="4" groups="group_pos_manager"/>
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">

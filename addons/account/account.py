@@ -944,8 +944,8 @@ class account_fiscalyear(osv.osv):
         if not ids:
             if exception:
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
-                msg = _('There is no period defined for this date: %s.\nPlease go to Configuration/Periods and configure a fiscal year.') % dt
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                msg = _('No accounting period is covering this date: %s.') % dt
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _(' Configure Fiscal Year Now'))
             else:
                 return []
         return ids
@@ -1037,8 +1037,8 @@ class account_period(osv.osv):
             result = self.search(cr, uid, args, context=context)
         if not result:
             model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_period')
-            msg = _('There is no period defined for this date: %s.\nPlease go to Configuration/Periods.') % dt
-            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+            msg = _('No accounting period is covering this date: %s.') % dt
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Configure Periods Now'))
         return result
 
     def action_draft(self, cr, uid, ids, context=None):

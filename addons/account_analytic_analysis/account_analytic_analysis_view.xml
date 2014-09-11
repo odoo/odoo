@@ -85,9 +85,8 @@
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
-                                <label for="invoice_on_timesheets"/>
+                                <label string="On Timesheets"/>
                             </td><td class="oe_timesheet_grey">
-                                <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
@@ -140,7 +139,8 @@
                             <field name="pricelist_id"
                                 class="oe_inline"
                                 attrs="{'required': [('invoice_on_timesheets', '=', True)]}"
-                                domain="[('type', '=', 'sale')]"/>
+                                domain="[('type', '=', 'sale')]"
+                                groups="product.group_sale_pricelist"/>
                             <field name="to_invoice"
                                 class="oe_inline"
                                 widget="selection"
@@ -337,7 +337,15 @@
                 </p>
             </field>
         </record>
-        <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config"/>
+
+        <menuitem
+            id= "base.menu_sales_config"
+            parent= "base.menu_base_config"
+            sequence= "1"
+            name= "Sales"
+        />
+
+        <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_sales_config" sequence="3"/>
         
         <record id="account_analytic_analysis_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>

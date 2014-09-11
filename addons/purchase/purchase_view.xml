@@ -65,19 +65,11 @@
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_product_in_config_purchase" sequence="5" />
+             parent="purchase.menu_product_in_config_purchase" sequence="10" />
 
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_product_in_config_purchase" sequence="10"/>
-
-        <menuitem
-            id="menu_purchase_partner_cat" name="Address Book"
-            parent="menu_purchase_config_purchase"/>
-
-        <menuitem
-            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Tags"
-            parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
+              parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
     <!--Supplier menu-->
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
@@ -152,10 +144,10 @@
           parent="base.menu_purchase_root" sequence="8"/>
 
       <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
-           parent="menu_procurement_management_product" sequence="10"/>
+           parent="menu_procurement_management_product" sequence="2"/>
 
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
-          parent="menu_procurement_management_product"/>
+          parent="menu_procurement_management_product" sequence="1"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
