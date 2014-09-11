@@ -37,12 +37,35 @@ $aestetic_animation_speed: 300ms;
         }
     }
 
+    h1 input, h2 input {
+       height: auto !important;
+    }
+    
     h1 {
         width: 48%;
         padding: 0 0 0 $actionColWidth;
         margin: 0 0 25px 0;
         float: left;
         font-size: 2em;
+        height: 1.5em;
+    }
+    
+    .statement_name span {
+        line-height: 1.5em;
+        cursor: pointer;
+    }
+    
+    .change_statement_name_container {
+        display: none;
+        width: 95%;
+    
+        td:first-child, td:first-child > input {
+            width: 99%;
+        }
+        td:last-child {
+            width: 1%;
+            padding-left: 3px;
+        }
     }
 
     h2 {
@@ -51,7 +74,7 @@ $aestetic_animation_speed: 300ms;
 
     .progress {
         width: 49%;
-        margin: 4px $actionColWidth 0 0;
+        margin: 10px $actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -188,6 +211,21 @@ $aestetic_animation_speed: 300ms;
             -o-transform: rotate(90deg);
             transform: rotate(90deg);
         }
+
+        .partner_name {
+            .remove_partner {
+                display: none;
+                cursor: pointer;
+        
+                .glyphicon {
+                    margin: 0 5px;
+                }
+            }
+            &:hover .remove_partner {
+                display: inline;
+            }
+        }
+
 
         .change_partner_container {
             width: 200px;
@@ -330,6 +368,7 @@ $aestetic_animation_speed: 300ms;
 
         /* Partie infos */
         .accounting_view {
+            border-collapse: separate;
 
             .initial_line > td {
                 border-top: $lightBorder;
@@ -373,7 +412,6 @@ $aestetic_animation_speed: 300ms;
                 > span, > input {
                     position: relative; top: 7px; /* meh */
                     font-weight: bold;
-                    cursor: pointer;
                 }
             }
 
@@ -439,8 +477,8 @@ $aestetic_animation_speed: 300ms;
                 width: 49%;
                 height: 26px;
                 
-                &:nth-child(2n+1) { float: left; }
-                &:nth-child(2n) { float: right; }
+                &:nth-child(2n+1) { float: left; clear: left; }
+                &:nth-child(2n) { float: right; clear: right; }
 
                 th {
                     font-weight: bold;
