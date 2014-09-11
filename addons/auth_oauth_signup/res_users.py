@@ -31,6 +31,20 @@ _logger = logging.getLogger(__name__)
 class res_users(osv.Model):
     _inherit = 'res.users'
 
+    def _generate_signup_values(self, cr, uid, provider, validation, params, context=None):
+        oauth_uid = validation['user_id']
+        email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
+        name = validation.get('name', email)
+        return {
+            'name': name,
+            'login': email,
+            'email': email,
+            'oauth_provider_id': provider,
+            'oauth_uid': oauth_uid,
+            'oauth_access_token': params['access_token'],
+            'active': True,
+        }
+
     def _auth_oauth_signin(self, cr, uid, provider, validation, params, context=None):
         # overridden to use signup method if regular oauth signin fails
         try:
@@ -41,18 +55,7 @@ class res_users(osv.Model):
                 return None
             state = simplejson.loads(params['state'])
             token = state.get('t')
-            oauth_uid = validation['user_id']
-            email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
-            name = validation.get('name', email)
-            values = {
-                'name': name,
-                'login': email,
-                'email': email,
-                'oauth_provider_id': provider,
-                'oauth_uid': oauth_uid,
-                'oauth_access_token': params['access_token'],
-                'active': True,
-            }
+            values = self._generate_signup_values(cr, uid, provider, validation, params, context=context)
             try:
                 _, login, _ = self.signup(cr, uid, values, token, context=context)       
             except SignupError:
