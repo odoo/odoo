@@ -21,7 +21,8 @@ openerp.account = function (instance) {
             this.max_reconciliations_displayed = 10;
             if (context.context.statement_id) this.statement_ids = [context.context.statement_id];
             if (context.context.statement_ids) this.statement_ids = context.context.statement_ids;
-            this.is_single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
+            this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
+            this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
             this.st_lines = [];
             this.last_displayed_reconciliation_index = undefined; // Flow control
@@ -135,7 +136,7 @@ openerp.account = function (instance) {
                 lines_filter.push(['statement_id', 'in', self.statement_ids]);
 
                 // If only one statement, display its name as title and allow to modify it
-                if (self.is_single_statement) {
+                if (self.single_statement) {
                     deferred_promises.push(self.model_bank_statement
                         .query(["name"])
                         .filter([['id', '=', self.statement_ids[0]]])
@@ -220,7 +221,7 @@ openerp.account = function (instance) {
                 // Render and display
                 self.$el.prepend(QWeb.render("bank_statement_reconciliation", {
                     title: self.title,
-                    is_single_statement: self.is_single_statement,
+                    single_statement: self.single_statement,
                     total_lines: self.already_reconciled_lines+self.st_lines.length
                 }));
                 self.updateProgressbar();
@@ -246,7 +247,7 @@ openerp.account = function (instance) {
         },
 
         statementNameClickHandler: function() {
-            if (! this.is_single_statement) return;
+            if (! this.single_statement) return;
             this.$(".statement_name span").hide();
             this.$(".change_statement_name_field").attr("value", this.title);
             this.$(".change_statement_name_container").show();
@@ -268,7 +269,7 @@ openerp.account = function (instance) {
 
         changeStatementButtonClickHandler: function() {
             var self = this;
-            if (! self.is_single_statement) return;
+            if (! self.single_statement) return;
             var name = self.$(".change_statement_name_field").val();
             if (name === "") return;
             return self.model_bank_statement
@@ -397,6 +398,32 @@ openerp.account = function (instance) {
                 }
             }
         },
+
+        goBackToStatementsTreeView: function() {
+            var self = this;
+            new instance.web.Model("ir.model.data")
+                .call("get_object_reference", ['account', 'action_bank_statement_tree'])
+                .then(function (result) {
+                    var action_id = result[1];
+                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
+                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
+                    // var action_manager = self;
+                    // while (! action_manager instanceof ActionManager)
+                    //    action_manager = action_manager.getParent();
+                    var action_manager = self.getParent();
+                    var breadcrumbs = action_manager.breadcrumbs;
+                    var found = false;
+                    for (var i=breadcrumbs.length-1; i>=0; i--) {
+                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
+                            var title = breadcrumbs[i].get_title();
+                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                        instance.web.Home(self);
+                });
+        },
     
         displayDoneMessage: function() {
             var self = this;
@@ -436,7 +463,8 @@ openerp.account = function (instance) {
                 transactions_done: self.reconciled_lines,
                 done_with_ctrl_enter: self.lines_reconciled_with_ctrl_enter,
                 achievements: achievements,
-                has_statement_id: self.is_single_statement,
+                single_statement: self.single_statement,
+                multiple_statements: self.multiple_statements,
             }));
     
             // Animate it
@@ -447,32 +475,28 @@ openerp.account = function (instance) {
     
             // Make it interactive
             self.$(".achievement").popover({'placement': 'top', 'container': self.el, 'trigger': 'hover'});
-            
-            self.$(".button_back_to_statement").click(function() {
-                self.do_action({
-                    type: 'ir.actions.client',
-                    tag: 'history_back',
-                });
-            });
 
-            if (self.is_single_statement && self.$(".button_close_statement").length !== 0) {
+            if (self.$(".button_back_to_statement").length !== 0) {
+                self.$(".button_back_to_statement").click(function() {
+                    self.goBackToStatementsTreeView();
+                });
+            }
+
+            if (self.$(".button_close_statement").length !== 0) {
                 self.$(".button_close_statement").hide();
                 self.model_bank_statement
                     .query(["balance_end_real", "balance_end"])
-                    .filter([['id', '=', self.statement_ids[0]]])
-                    .first()
+                    .filter([['id', 'in', self.statement_ids]])
+                    .all()
                     .then(function(data){
-                        if (data.balance_end_real === data.balance_end) {
+                        if (_.all(data, function(o) { return o.balance_end_real === o.balance_end })) {
                             self.$(".button_close_statement").show();
                             self.$(".button_close_statement").click(function() {
                                 self.$(".button_close_statement").attr("disabled", "disabled");
                                 self.model_bank_statement
-                                    .call("button_confirm_bank", [[self.statement_ids[0]]])
+                                    .call("button_confirm_bank", [self.statement_ids])
                                     .then(function () {
-                                        self.do_action({
-                                            type: 'ir.actions.client',
-                                            tag: 'history_back',
-                                        });
+                                        self.goBackToStatementsTreeView();
                                     }, function() {
                                         self.$(".button_close_statement").removeAttr("disabled");
                                     });
