@@ -277,6 +277,7 @@ class mrp_bom(osv.osv):
         @return: result: List of dictionaries containing product details.
                  result2: List of dictionaries containing Work Center details.
         """
+        uom_obj = self.pool.get("product.uom")
         routing_obj = self.pool.get('mrp.routing')
         all_prod = [] + (previous_products or [])
         master_bom = master_bom or bom
@@ -319,7 +320,6 @@ class mrp_bom(osv.osv):
 
             if bom_line_id.product_id.id in all_prod:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
-            all_prod.append(bom_line_id.product_id.id)
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
             bom_id = self._bom_find(cr, uid, bom_line_id.product_uom.id, product_id=bom_line_id.product_id.id, properties=properties, context=context)
@@ -331,12 +331,16 @@ class mrp_bom(osv.osv):
                     'product_id': bom_line_id.product_id.id,
                     'product_qty': quantity,
                     'product_uom': bom_line_id.product_uom.id,
-                    'product_uos_qty': bom_line_id.product_uos and bom_line_id.product_uos_qty * factor or False,
+                    'product_uos_qty': bom_line_id.product_uos and _factor(bom_line_id.product_uos_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding) or False,
                     'product_uos': bom_line_id.product_uos and bom_line_id.product_uos.id or False,
                 })
             elif bom_id:
+                all_prod.append(bom_line_id.product_id.id)
                 bom2 = self.browse(cr, uid, bom_id, context=context)
-                res = self._bom_explode(cr, uid, bom2, bom_line_id.product_id, quantity,
+                # We need to convert to units/UoM of chosen BoM
+                factor2 = uom_obj._compute_qty(cr, uid, bom_line_id.product_uom.id, quantity, bom2.product_uom.id)
+                quantity2 = factor2 / bom2.product_qty
+                res = self._bom_explode(cr, uid, bom2, bom_line_id.product_id, quantity2,
                     properties=properties, level=level + 10, previous_products=all_prod, master_bom=master_bom, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]

@@ -67,12 +67,13 @@ class StockMove(osv.osv):
         move_obj = self.pool.get('stock.move')
         prod_obj = self.pool.get("product.product")
         proc_obj = self.pool.get("procurement.order")
+        uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
         processed_ids = []
         bis = self._check_phantom_bom(cr, uid, move, context=context)
         if bis:
-            factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
+            factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
             
             state = 'confirmed'
@@ -91,7 +92,7 @@ class StockMove(osv.osv):
                         'state': state,
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
-                        'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
+                        'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
