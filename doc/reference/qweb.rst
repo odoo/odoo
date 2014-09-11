@@ -294,19 +294,96 @@ will result in::
 Python
 ======
 
-Bundles
+Exclusive directives
+--------------------
+
+asset bundles
+'''''''''''''
+
+.. todo:: have fme write these up because I've no idea how they work
+
+"smart records" fields formatting
+'''''''''''''''''''''''''''''''''
+
+The ``t-field`` directive can only be used when performing field access
+(``a.b``) on a "smart" record (result of the ``browse`` method). It is able
+to automatically format based on field type, and is integrated in the
+website's rich text edition.
+
+``t-field-options`` can be used to customize fields, the most common option
+is ``widget``, other options are field- or widget-dependent.
+
+Helpers
 -------
 
+Request-based
+'''''''''''''
+
+Most Python-side uses of QWeb are in controllers (and during HTTP requests),
+in which case templates stored in the database (as
+:ref:`views <reference/views/qweb>`) can be trivially rendered by calling
+:meth:`openerp.http.HttpRequest.render`:
+
+.. code-block:: python
+
+    response = http.request.render('my-template', {
+        'context_value': 42
+    })
+
+This automatically creates a :class:`~openerp.http.Response` object which can
+be returned from the controller (or further customized to suit).
+
+View-based
+''''''''''
+
+At a deeper level than the previous helper is the ``render`` method on
+``ir.ui.view``:
+
+.. py:method:: render(cr, uid, id[, values][, engine='ir.qweb][, context])
+
+    Renders a QWeb view/template by database id or :term:`external id`.
+    Templates are automatically loaded from ``ir.ui.view`` records.
+
+    Sets up a number of default values in the rendering context:
+
+    ``request``
+        the current :class:`~openerp.http.WebRequest` object, if any
+    ``debug``
+        whether the current request (if any) is in ``debug`` mode
+    :func:`quote_plus <werkzeug.urls.url_quote_plus>`
+        url-encoding utility function
+    :mod:`json`
+        the corresponding standard library module
+    :mod:`time`
+        the corresponding standard library module
+    :mod:`datetime`
+        the corresponding standard library module
+    `relativedelta <https://labix.org/python-dateutil#head-ba5ffd4df8111d1b83fc194b97ebecf837add454>`_
+        see module
+    ``keep_query``
+        the ``keep_query`` helper function
+
+    :param values: context values to pass to QWeb for rendering
+    :param str engine: name of the Odoo model to use for rendering, can be
+                       used to expand or customize QWeb locally (by creating
+                       a "new" qweb based on ``ir.qweb`` with alterations)
+
 .. _reference/qweb/javascript:
+
+API
+---
+
+It is also possible to use the ``ir.qweb`` model directly (and extend it, and
+inherit from it):
+
+.. automodule:: openerp.addons.base.ir.ir_qweb
+    :members: QWeb, QWebContext, FieldConverter, QwebWidget
 
 Javascript
 ==========
 
 Exclusive directives
 --------------------
-
-The Javascript qweb implementation provides specific directives to handle
-defining and overloading/altering templates:
 
 defining templates
 ''''''''''''''''''
@@ -466,9 +543,8 @@ API
 
     .. js:attribute:: QWeb2.Engine.jQuery
 
-        The jQuery instance used during :ref:`template inheritance
-        <qweb-directives-inheritance>` processing. Defaults to
-        ``window.jQuery``.
+        The jQuery instance used during template inheritance processing.
+        Defaults to ``window.jQuery``.
 
     .. js:attribute:: QWeb2.Engine.preprocess_node
 

@@ -80,6 +80,9 @@ class QWebContext(dict):
         return eval(expr, None, locals_dict, nocopy=True, locals_builtins=True)
 
     def copy(self):
+        """ Clones the current context, conserving all data and metadata
+        (loader, template cache, ...)
+        """
         return QWebContext(self.cr, self.uid, dict.copy(self),
                            loader=self.loader,
                            templates=self.templates,
@@ -89,28 +92,12 @@ class QWebContext(dict):
         return self.copy()
 
 class QWeb(orm.AbstractModel):
-    """QWeb Xml templating engine
+    """ Base QWeb rendering engine
 
-    The templating engine use a very simple syntax based "magic" xml
-    attributes, to produce textual output (even non-xml).
-
-    The core magic attributes are:
-
-    flow attributes:
-        t-if t-foreach t-call
-
-    output attributes:
-        t-att t-raw t-esc t-trim
-
-    assignation attribute:
-        t-set
-
-    QWeb can be extended like any OpenERP model and new attributes can be
-    added.
-
-    If you need to customize t-fields rendering, subclass the ir.qweb.field
-    model (and its sub-models) then override :meth:`~.get_converter_for` to
-    fetch the right field converters for your qweb model.
+    * to customize ``t-field`` rendering, subclass ``ir.qweb.field`` and
+      create new models called :samp:`ir.qweb.field.{widget}`
+    * alternatively, override :meth:`~.get_converter_for` and return an
+      arbitrary model to use as field converter
 
     Beware that if you need extensions or alterations which could be
     incompatible with other subsystems, you should create a local object
@@ -162,6 +149,9 @@ class QWeb(orm.AbstractModel):
     def load_document(self, document, res_id, qwebcontext):
         """
         Loads an XML document and installs any contained template in the engine
+
+        :type document: a parsed lxml.etree element, an unparsed XML document
+                        (as a string) or the path of an XML file to load
         """
         if not isinstance(document, basestring):
             # assume lxml.etree.Element
@@ -180,6 +170,12 @@ class QWeb(orm.AbstractModel):
                 res_id = None
 
     def get_template(self, name, qwebcontext):
+        """ Tries to fetch the template ``name``, either gets it from the
+        context's template cache or loads one with the context's loader (if
+        any).
+
+        :raises QWebTemplateNotFound: if the template can not be found or loaded
+        """
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
         if qwebcontext.loader and name not in qwebcontext.templates:
             try:
@@ -232,6 +228,15 @@ class QWeb(orm.AbstractModel):
         return int(bool(self.eval(expr, qwebcontext)))
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
+        """ render(cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None)
+
+        Renders the template specified by the provided template name
+
+        :param qwebcontext: context for rendering the template
+        :type qwebcontext: dict or :class:`QWebContext` instance
+        :param loader: if ``qwebcontext`` is a dict, loader set into the
+                       context instantiated for rendering
+        """
         if qwebcontext is None:
             qwebcontext = {}
 
@@ -475,9 +480,22 @@ class QWeb(orm.AbstractModel):
                                  element, template_attributes, generated_attributes, qwebcontext, context=qwebcontext.context)
 
     def get_converter_for(self, field_type):
+        """ returns a :class:`~openerp.models.Model` used to render a
+        ``t-field``.
+
+        By default, tries to get the model named
+        :samp:`ir.qweb.field.{field_type}`, falling back on ``ir.qweb.field``.
+
+        :param str field_type: type or widget of field to render
+        """
         return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
 
     def get_widget_for(self, widget):
+        """ returns a :class:`~openerp.models.Model` used to render a
+        ``t-esc``
+
+        :param str widget: name of the widget to use, or ``None``
+        """
         widget_model = ('ir.qweb.widget.' + widget) if widget else 'ir.qweb.widget'
         return self.pool.get(widget_model) or self.pool['ir.qweb.widget']
 
@@ -509,7 +527,8 @@ class FieldConverter(osv.AbstractModel):
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context,
                    context=None):
-        """
+        """ attributes(cr, uid, field_name, record, options, source_element, g_att, t_att, qweb_context, context=None)
+
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
         parent.
@@ -538,21 +557,26 @@ class FieldConverter(osv.AbstractModel):
         ]
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        """ Converts a single value to its HTML version/output
+        """ value_to_html(cr, uid, value, column, options=None, context=None)
+
+        Converts a single value to its HTML version/output
         """
         if not value: return ''
         return value
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
-        """ Converts the specified field of the browse_record ``record`` to
-        HTML
+        """ record_to_html(cr, uid, field_name, record, column, options=None, context=None)
+
+        Converts the specified field of the browse_record ``record`` to HTML
         """
         return self.value_to_html(
             cr, uid, record[field_name], column, options=options, context=context)
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
-        """ Converts a ``t-field`` to its HTML output. A ``t-field`` may be
+        """ to_html(cr, uid, field_name, record, options, source_element, t_att, g_att, qweb_context, context=None)
+
+        Converts a ``t-field`` to its HTML output. A ``t-field`` may be
         extended by a ``t-field-options``, which is a JSON-serialized mapping
         of configuration values.
 
@@ -594,13 +618,16 @@ class FieldConverter(osv.AbstractModel):
 
     def render_element(self, cr, uid, source_element, t_att, g_att,
                        qweb_context, content):
-        """ Final rendering hook, by default just calls ir.qweb's ``render_element``
+        """ render_element(cr, uid, source_element, t_att, g_att, qweb_context, content)
+
+        Final rendering hook, by default just calls ir.qweb's ``render_element``
         """
         return self.qweb_object().render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
     def user_lang(self, cr, uid, context):
-        """
+        """ user_lang(cr, uid, context)
+
         Fetches the res.lang object corresponding to the language code stored
         in the user's context. Fallbacks to en_US if no lang is present in the
         context *or the language code is not valid*.
