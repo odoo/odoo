@@ -4,17 +4,17 @@ openerp.testing.section('web-formats', {
     test("format_datetime", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"datetime"});
-        equal(str, new moment(date).format("MM/DD/YYYY HH:mm:ss"));
+        equal(str, (new moment(date)).format("MM/DD/YYYY HH:mm:ss"));
     });
     test("format_date", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"date"});
-        equal(str, new moment(date).format("MM/DD/YYYY"));
+        equal(str, (new moment(date)).format("MM/DD/YYYY"));
     });
     test("format_time", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"time"});
-        equal(str, new moment(date).format("HH:mm:ss"));
+        equal(str, (new moment(date)).format("HH:mm:ss"));
     });
     test("format_float_time", function (instance) {
         strictEqual(
@@ -173,14 +173,16 @@ openerp.testing.section('web-formats', {
                     'Mon, 2009 May 04');
         strictEqual(instance.web.parse_value('Mon, 2009 May 04', {type: 'date'}),
                     '2009-05-04');
+        instance.web._t.database.parameters.date_format = '%m/%d/%Y';
     });
     test('extended ES date format', function (instance) {
-            instance.web._t.database.parameters.date_format = '%a, %Y.eko %bren %da';
-            var date = instance.web.str_to_date("2009-05-04");
-            strictEqual(instance.web.format_value(date, {type:"date"}),
-                        'Mon, 2009. May 04');
-            strictEqual(instance.web.parse_value('Mon, 2009. May 04', {type: 'date'}),
-                        '2009-05-04');
-        });
+        instance.web._t.database.parameters.date_format = '%a, %Y.eko %b ren %da';
+        var date = instance.web.str_to_date("2009-05-04");
+        strictEqual(instance.web.format_value(date, {type:"date"}),
+                    'Mon, 2009.eko May ren 04');
+        strictEqual(instance.web.parse_value('Mon, 2009.eko May ren 04', {type: 'date'}),
+                    '2009-05-04');
+        instance.web._t.database.parameters.date_format = '%m/%d/%Y';
+    });
 
 });

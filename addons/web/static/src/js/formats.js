@@ -171,15 +171,23 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
         case 'datetime':
             if (typeof(value) == "string")
                 value = new moment(instance.web.auto_str_to_date(value));
-
+            else {
+                value = new moment(value);
+            }
             return value.format(date_format + ' ' + time_format);
         case 'date':
             if (typeof(value) == "string")
                 value = new moment(instance.web.str_to_date(value.substring(0,10)));
+            else {
+                value = new moment(value);
+            }
             return value.format(date_format);
         case 'time':
             if (typeof(value) == "string")
                 value = new moment(instance.web.auto_str_to_date(value));
+            else {
+                value = new moment(value);
+            }
             return value.format(time_format);
         case 'selection': case 'statusbar':
             // Each choice is [value, label]
