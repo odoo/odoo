@@ -362,29 +362,40 @@ class QWeb(orm.AbstractModel):
         inner = widget.format(template_attributes['esc'], options, qwebcontext)
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
+    def _iterate(self, iterable):
+        if isinstance (iterable, collections.Mapping):
+            return iterable.iteritems()
+
+        return itertools.izip(*itertools.tee(iterable))
+
     def render_tag_foreach(self, element, template_attributes, generated_attributes, qwebcontext):
         expr = template_attributes["foreach"]
         enum = self.eval_object(expr, qwebcontext)
         if enum is None:
             template = qwebcontext.get('__template__')
             raise QWebException("foreach enumerator %r is not defined while rendering template %r" % (expr, template), template=template)
+        if isinstance(enum, int):
+            enum = range(enum)
 
         varname = template_attributes['as'].replace('.', '_')
         copy_qwebcontext = qwebcontext.copy()
-        size = -1
+
+        size = None
         if isinstance(enum, collections.Sized):
             size = len(enum)
-        copy_qwebcontext["%s_size" % varname] = size
+            copy_qwebcontext["%s_size" % varname] = size
+
         copy_qwebcontext["%s_all" % varname] = enum
         ru = []
-        for index, item in enumerate(enum):
+        for index, (item, value) in enumerate(self._iterate(enum)):
             copy_qwebcontext.update({
                 varname: item,
-                '%s_value' % varname: item,
+                '%s_value' % varname: value,
                 '%s_index' % varname: index,
                 '%s_first' % varname: index == 0,
-                '%s_last' % varname: index + 1 == size,
             })
+            if size is not None:
+                copy_qwebcontext['%s_last' % varname] = index + 1 == size
             if index % 2:
                 copy_qwebcontext.update({
                     '%s_parity' % varname: 'odd',
