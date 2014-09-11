@@ -234,12 +234,11 @@ openerp.account = function (instance) {
                     .call("get_data_for_reconciliations", [reconciliations_to_show])
                     .then(function (data) {
                         var child_promises = [];
-                        _.each(reconciliations_to_show, function(st_line_id){
-                            var datum = data.shift();
-                            child_promises.push(self.displayReconciliation(st_line_id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
-                        });
+                        var datum = data.shift();
+                        child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
+                        while ((datum = data.shift()) !== undefined)
+                            child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
                         $.when.apply($, child_promises).then(function(){
-                            self.getChildren()[0].set("mode", "match");
                             self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                         });
                     });
@@ -712,6 +711,7 @@ openerp.account = function (instance) {
         restart: function(mode) {
             var self = this;
             mode = (mode === undefined ? 'inactive' : mode);
+            self.context.animate_entrance = false;
             self.$el.css("height", self.$el.outerHeight());
             // Destroy everything
             _.each(self.getChildren(), function(o){ o.destroy() });
@@ -1264,14 +1264,20 @@ openerp.account = function (instance) {
                 self.el.dataset.mode = "inactive";
     
             } else if (self.get("mode") === "match") {
+                // TODO : remove this old_animation_speed / new_animation_speed hack
+                // when .on handler's returned deferred's no longer lost
+                var old_animation_speed = self.animation_speed;
                 return $.when(self.updateMatches()).then(function() {
-                    if (self.$el.hasClass("no_match")) {
-                        self.set("mode", "inactive");
+                    var new_animation_speed = self.animation_speed;
+                    self.animation_speed = old_animation_speed;
+                    if (self.$el.hasClass("no_match")) { // TODO : not for manual reconciliation
+                        self.set("mode", "create");
                         return;
                     }
                     self.$(".match").slideDown(self.animation_speed);
                     self.$(".create").slideUp(self.animation_speed);
                     self.el.dataset.mode = "match";
+                    self.animation_speed = new_animation_speed;
                 });
     
             } else if (self.get("mode") === "create") {
