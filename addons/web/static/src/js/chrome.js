@@ -1129,7 +1129,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         this.update_promise = this.update_promise.then(fct, fct);
     },
     on_menu_help: function() {
-        window.open('http://help.openerp.com', '_blank');
+        window.open('http://help.odoo.com', '_blank');
     },
     on_menu_logout: function() {
         this.trigger('user_logout');
@@ -1158,10 +1158,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                     state: JSON.stringify(state),
                     scope: 'userinfo',
                 };
-                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+                instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
             }).fail(function(result, ev){
                 ev.preventDefault();
-                instance.web.redirect('https://accounts.openerp.com/web');
+                instance.web.redirect('https://accounts.odoo.com/web');
             });
         }
     },
