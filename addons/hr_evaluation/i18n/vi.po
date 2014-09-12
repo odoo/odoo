@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.saas~5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-12 08:59+0000\n"
-"PO-Revision-Date: 2014-09-12 15:59+0700\n"
+"PO-Revision-Date: 2014-09-12 16:47+0700\n"
 "Last-Translator: Leo Tran <leo.tran@ma.tvtmarine.com>\n"
 "Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
 "com>\n"
@@ -38,16 +38,16 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Date: %(date)s\n"
+"Ngày: %(date)s\n"
 "\n"
-"Dear %(employee_name)s,\n"
+"Gửi %(employee_name)s,\n"
 "\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
+"Tôi đang làm một cuộc đánh giá về %(eval_name)s.\n"
 "\n"
-"Kindly submit your response.\n"
+"Vui lòng gửi phản hồi của bạn.\n"
 "\n"
 "\n"
-"Thanks,\n"
+"Trân trọng,\n"
 "--\n"
 "%(user_signature)s\n"
 "\n"
@@ -56,27 +56,27 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid " (employee_name)s: Partner name"
-msgstr " (employee_name)s: Partner name"
+msgstr " (employee_name)s: Tên đối tác"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
-msgstr "# of Requests"
+msgstr "# Phản hồi"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
-msgstr "(date)s: Current Date"
+msgstr "(date)s: Ngày hiện tạo"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr "(eval_name)s:Appraisal Name"
+msgstr "(eval_name)s:Tên"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
-msgstr "(user_signature)s: User name"
+msgstr "(user_signature)s: Người dùng"
 
 #. module: hr_evaluation
 #: model:survey.page,description:hr_evaluation.opinion_1
@@ -210,16 +210,17 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new appraisal.\n"
+"                Nhấp chuột để tạo mới một đánh giá.\n"
 "              </p><p>\n"
-"                Each employee may be assigned an Appraisal Plan. Such a "
-"plan\n"
-"                defines the frequency and the way you manage your periodic\n"
-"                personnel evaluation. You will be able to define steps and\n"
-"                attach interviews to each step. OpenERP manages all kinds "
-"of\n"
-"                evaluations: bottom-up, top-down, self-evaluation and final\n"
-"                evaluation by the manager.\n"
+"                Mỗi nhân viên có thể được gán tới một Kế hoạch đánh giá. Như "
+"là một\n"
+"                kế hoạch xác định tần xuất và cách mà bạn quản lý đánh giá "
+"nhân viên định kỳ\n"
+"                Bạn có thể xác định các bước và đính kèm các cuộc phỏng vấn "
+"cho từng bước\n"
+"                Hệ thống quản lý tất cả các loại đánh giá: Từ dưới lên trên, "
+"từ trên xuống dưới,\n"
+"                tự đánh giá và đánh giá cuối cùng bởi người quản lý.\n"
 "              </p>\n"
 "            "
 
@@ -239,14 +240,14 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new interview request related to a "
-"personal evaluation.\n"
+"                Nhấp chuột để tạo mới một yêu cầu phỏng vấn liên quan tới "
+"một đánh giá nhân viên.\n"
 "              </p><p>\n"
-"                Interview requests are usually generated automatically by\n"
-"                OpenERP according to an employee's appraisal plan. Each "
-"user\n"
-"                receives automatic emails and requests to evaluate their\n"
-"                colleagues periodically.\n"
+"                Yêu cầu phỏng vấn thường được tạo tự động bởi hệ thống tùy "
+"thuộc\n"
+"                vào kế hoạch đánh giá nhân viên. Mỗi người dùng tự động nhận "
+"được email và yêu cầu\n"
+"                để đánh giá các đồng nghiệp của họ một cách định kỳ.\n"
 "              </p>\n"
 "            "
 
@@ -266,14 +267,16 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new appraisal plan.\n"
+"                Nhấp chuột để định nghĩa một kế hoạch đánh giá mới.\n"
 "              </p><p>\n"
-"                You can define appraisal plans (ex: first interview after 6\n"
-"                months, then every year). Then, each employee can be linked "
-"to\n"
-"                an appraisal plan so that OpenERP can automatically "
-"generate\n"
-"                interview requests to managers and/or subordinates.\n"
+"                Bạn có thể định nghĩa kế hoạch đánh giá (ví dụ: phỏng vấn "
+"lần đầu\n"
+"                sau 6 tháng, sau đó là phỏng vấn hàng năm). Sau đó, mỗi nhân "
+"viên\n"
+"                có thể được liên kết tới một kế hoạch đánh giá. Do đó hệ "
+"thống\n"
+"                có thể tự động tạo yêu cầu phỏng vấn tới người quản lý và/"
+"hoặc cấp dưới.\n"
 "              </p>\n"
 "            "
 
@@ -316,15 +319,14 @@ msgid ""
 "</li><li> Did not meet standards and expectations\n"
 "</li><li> Significantly below standards and expectations</li></ol>"
 msgstr ""
-"<p>The appraiser should rate the employee’s major work accomplishments and "
-"performance according to the metric provided\n"
-"below:</p><ol>\n"
-"<li> Significantly exceeds standards and expectations required of the "
-"position\n"
-"</li><li> Exceeds standards and expectations\n"
-"</li><li> Meet standards and expectations\n"
-"</li><li> Did not meet standards and expectations\n"
-"</li><li> Significantly below standards and expectations</li></ol>"
+"<p>Người đánh giá phải đánh giá hiệu quả và thành tích công việc chính của "
+"nhân viên theo các số liệu được cung cấp\n"
+"sau:</p><ol>\n"
+"<li> Vượt tiêu chuẩn mong đợi được yêu cầu cho một vị trí\n"
+"</li><li> Vượt tiêu chuẩn mong đợi\n"
+"</li><li> Đáp ứng tiêu chuẩn và mong đợi\n"
+"</li><li> Không đáp ứng tiêu chuẩn và mong đợi\n"
+"</li><li> Thấp hơn mức tiêu chuẩn và mong đợi</li></ol>"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_1
@@ -334,32 +336,33 @@ msgstr "Ability to cope with multidisciplinarity of team"
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_6
 msgid "Ability to follow and complete work as instructed"
-msgstr "Ability to follow and complete work as instructed"
+msgstr "Có khả năng theo dõi và hoàn thành công việc theo hướng dẫn"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_5
 msgid "Ability to manage planning resources, risks, budgets and deadlines"
-msgstr "Ability to manage planning resources, risks, budgets and deadlines"
+msgstr ""
+"Có khả năng lập kế hoạch quản lý tài nguyên, rủi ro, ngân sách và thời hạn"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
 msgid "Action"
-msgstr "Action"
+msgstr "Hành động"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_action:0
 msgid "Action Plan"
-msgstr "Action Plan"
+msgstr "Thực hiện kế hoạch"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Action Plan..."
-msgstr "Action Plan..."
+msgstr "Thực hiện kế hoạch..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Action to Perform"
-msgstr "Action to Perform"
+msgstr "Hành động cần thực hiện"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_1
@@ -373,7 +376,7 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
 msgid "Active"
-msgstr "Active"
+msgstr "Hiệu lực"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_13
@@ -381,24 +384,24 @@ msgid ""
 "Adaptability: Ability to adapt oneself to organizational changes while "
 "keeping efficiency"
 msgstr ""
-"Adaptability: Ability to adapt oneself to organizational changes while "
-"keeping efficiency"
+"Khả năng thích ứng: Khả năng tự thích ứng với những thay đổi tổi chức mà vẫn "
+"giữ đc hiệu quả"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_3
 msgid "Additional Comments"
-msgstr "Additional Comments"
+msgstr "Bình luận thêm"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_7
 msgid "Additional comments"
-msgstr "Additional comments"
+msgstr "Bình luận thêm"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
 #: field:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "All Answers"
-msgstr "All Answers"
+msgstr "Tất cả câu trả lời"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_11
@@ -414,58 +417,58 @@ msgstr "Anonymous Summary"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Answer Survey"
-msgstr "Answer Survey"
+msgstr "Trả lời Khảo sát"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
 msgid "Appraisal"
-msgstr "Appraisal"
+msgstr "Đánh giá"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
 #: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
 msgid "Appraisal Analysis"
-msgstr "Appraisal Analysis"
+msgstr "Phân tích Đánh giá"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr "Appraisal Deadline"
+msgstr "Họn chót đánh giá"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,survey_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
-msgstr "Appraisal Form"
+msgstr "Form Đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr "Appraisal Forms"
+msgstr "Form Đánh giá"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
-msgstr "Appraisal Interview"
+msgstr "Phỏng vấn Đánh giá"
 
 #. module: hr_evaluation
 #: field:hr.employee,appraisal_count:0
 msgid "Appraisal Interviews"
-msgstr "Appraisal Interviews"
+msgstr "Phỏng vấn Đánh giá"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,phase_id:0
 msgid "Appraisal Phase"
-msgstr "Appraisal Phase"
+msgstr "Giai đoạn đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
-msgstr "Appraisal Phases"
+msgstr "Giai đoạn đánh giá"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_plan_id:0
@@ -473,54 +476,54 @@ msgstr "Appraisal Phases"
 #: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
-msgstr "Appraisal Plan"
+msgstr "Kế hoạch đánh giá"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
 msgid "Appraisal Plan Phase"
-msgstr "Appraisal Plan Phase"
+msgstr "Giai đoạn kê hoạch đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr "Appraisal Plan Phases"
+msgstr "Giai đoạn kê hoạch đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
 msgid "Appraisal Plans"
-msgstr "Appraisal Plans"
+msgstr "Kế hoạch đánh giá"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_1
 msgid "Appraisal Process"
-msgstr "Appraisal Process"
+msgstr "Quy trình đánh giá"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
 msgid "Appraisal Reminders"
-msgstr "Appraisal Reminders"
+msgstr "Nhắc nhở đánh giá"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_summary:0
 msgid "Appraisal Summary"
-msgstr "Appraisal Summary"
+msgstr "Tóm tắt đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal Summary..."
-msgstr "Appraisal Summary..."
+msgstr "Tóm tắt đánh giá..."
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_3
 msgid "Appraisal for Period"
-msgstr "Appraisal for Period"
+msgstr "Đánh giá cho kỳ"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in Plan In Progress state"
-msgstr "Appraisal that are in Plan In Progress state"
+msgstr "Đánh giá có trong một kế hoạch trong trạng thái Tiến trình"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -531,22 +534,22 @@ msgstr "Appraisal that are in waiting appreciation state"
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr "Appraisals"
+msgstr "Đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisals Month"
-msgstr "Appraisals Month"
+msgstr "Tháng đánh giá"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisals by Month"
-msgstr "Appraisals by Month"
+msgstr "Đánh giá theo tháng"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_5
 msgid "Appraiser"
-msgstr "Appraiser"
+msgstr "Người đánh giá"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
@@ -556,41 +559,40 @@ msgstr "Appreciation"
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "April"
-msgstr "April"
+msgstr "Tháng 4"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "August"
-msgstr "August"
+msgstr "Tháng 8"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Bottom-Up Appraisal Requests"
-msgstr "Bottom-Up Appraisal Requests"
+msgstr "Yêu cầu đánh giá từ dưới lên trên"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel Appraisal"
-msgstr "Cancel Appraisal"
+msgstr "Hủy đánh giá"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Cancel Survey"
-msgstr "Cancel Survey"
+msgstr "Hủy khảo sát"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.interview,state:0
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Cancelled"
-msgstr "Cancelled"
+msgstr "Đã hủy"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,mail_feature:0
 msgid ""
 "Check this box if you want to send mail to employees coming under this phase"
-msgstr ""
-"Check this box if you want to send mail to employees coming under this phase"
+msgstr "Đánh dấu nếu bạn muốn gửi email cho nhân viên đến dưới giai đoạn này"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
@@ -598,21 +600,21 @@ msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
 msgstr ""
-"Check this box if you want to wait that all preceding phases are finished "
-"before launching this phase."
+"Đánh dấu nếu bạn muốn tất cả giai đoạn trước phải kết thúc trước khi khởi "
+"chạy giai đoạn này."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_9
 msgid ""
 "Communication skills (written & verbally): clearness, concision, exactitude"
 msgstr ""
-"Communication skills (written & verbally): clearness, concision, exactitude"
+"Kỹ năng giao tiếp (bằng văn bản & lời nói): rõ ràng, súc tích, chính xác"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
-msgstr "Company"
+msgstr "Công ty"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_6_3
@@ -620,87 +622,86 @@ msgid ""
 "Compared to similar jobs in other companies where I could work, my total "
 "compensation..."
 msgstr ""
-"Compared to similar jobs in other companies where I could work, my total "
-"compensation..."
+"So với công việc tương tự tại công ty khác, nơi tôi đã làm việc, tổng số bồi "
+"thường của tôi..."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_3
 msgid ""
 "Compliance to internal rules and processes (timesheets completion, etc.)"
-msgstr ""
-"Compliance to internal rules and processes (timesheets completion, etc.)"
+msgstr "Tuân thủ các quy trình và quy định nội bộ."
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_4
 msgid "Continuous Improvement"
-msgstr "Continuous Improvement"
+msgstr "Hoàn thiện liên tục"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
 msgid "Create Date"
-msgstr "Create Date"
+msgstr "Tạo ngày"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Creation Date"
-msgstr "Creation Date"
+msgstr "Ngày tạo"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_14
 msgid "Creativity and forward looking aptitude"
-msgstr "Creativity and forward looking aptitude"
+msgstr "Sáng tạo và nhìn xa"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_8
 msgid "Customer commitment"
-msgstr "Customer commitment"
+msgstr "Cam kết khách hàng"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_2
 msgid "Date"
-msgstr "Date"
+msgstr "Ngày tháng"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_4
 msgid "Date of review"
-msgstr "Date of review"
+msgstr "Ngày xem xét"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_last_post:0
 #: help:hr_evaluation.evaluation,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Date of the last message posted on the record."
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi."
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
 msgid "Day"
-msgstr "Day"
+msgstr "Ngày"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,deadline:0
 #: field:hr.evaluation.report,deadline:0
 msgid "Deadline"
-msgstr "Deadline"
+msgstr "Hạn chót"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Deadline Date"
-msgstr "Deadline Date"
+msgstr "Hạn chót"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "December"
-msgstr "December"
+msgstr "Tháng 12"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_7
 msgid "Decision making"
-msgstr "Decision making"
+msgstr "Ra quyết định"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,delay_date:0
 msgid "Delay to Start"
-msgstr "Delay to Start"
+msgstr "Trì hoãn bắt đầu"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_2
@@ -715,30 +716,30 @@ msgstr "Demonstrates genuine concern for me as a person"
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 msgid "Did not meet expectations"
-msgstr "Did not meet expectations"
+msgstr "Không đáp ứng mong đợi"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Do not meet expectations"
-msgstr "Do not meet expectations"
+msgstr "Không đáp ứng mong đợi"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 selection:hr.evaluation.interview,state:0
 #: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 #: view:hr_evaluation.evaluation:0 selection:hr_evaluation.evaluation,state:0
 msgid "Done"
-msgstr "Done"
+msgstr "Hoàn thành"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.interview,state:0
 #: selection:hr.evaluation.report,state:0
 msgid "Draft"
-msgstr "Draft"
+msgstr "Dự thảo"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_3
 msgid "Effectiveness"
-msgstr "Effectiveness"
+msgstr "Hiệu quả"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -751,43 +752,43 @@ msgstr "Email"
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
 msgid "Employee"
-msgstr "Người lao động"
+msgstr "Nhân viên"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
 msgid "Employee Appraisal"
-msgstr "Employee Appraisal"
+msgstr "Đánh giá Nhân viên"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_1
 #: model:survey.survey,title:hr_evaluation.appraisal_form
 msgid "Employee Appraisal Form"
-msgstr "Employee Appraisal Form"
+msgstr "Form đánh giá Nhân viên"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_5
 msgid "Employee Comments"
-msgstr "Employee Comments"
+msgstr "Bình luận của nhân viên"
 
 #. module: hr_evaluation
 #: model:survey.survey,title:hr_evaluation.opinion_form
 msgid "Employee Opinion Form"
-msgstr "Employee Opinion Form"
+msgstr "Form ý kiến của nhân viên"
 
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_3
 msgid "Employee Performance in Key Areas"
-msgstr "Employee Performance in Key Areas"
+msgstr "Hiệu suất lao động trong lĩnh vực chính"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to evaluate"
-msgstr "Employee to evaluate"
+msgstr "Nhân viên cần đánh giá"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
 msgid "Ending Date"
-msgstr "Ending Date"
+msgstr "Ngày kết thúc"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_1
@@ -802,70 +803,70 @@ msgstr "Enthusiasm & implication toward projects/assignments"
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.opinion_2
 msgid "Evaluation"
-msgstr "Evaluation"
+msgstr "Đánh giá"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
 msgid "Evaluations Statistics"
-msgstr "Evaluations Statistics"
+msgstr "Thống kê đánh giá"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Exceeds expectations"
-msgstr "Exceeds expectations"
+msgstr "Vượt quá mong đợi"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
-msgstr "Extended Filters..."
+msgstr "Bộ lọc mở rộng..."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
-msgstr "February"
+msgstr "Tháng 2"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
-msgstr "Final Interview"
+msgstr "Phỏng vấn lần cuối"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
 msgid "Final Validation"
-msgstr "Final Validation"
+msgstr "Thẩm định lần cuối"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Final Validation Evaluations"
-msgstr "Final Validation Evaluations"
+msgstr "Thẩm định đánh giá lần cuối"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Appraisal in (months)"
-msgstr "First Appraisal in (months)"
+msgstr "Đánh giá lần đầu (tháng)"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_follower_ids:0
 #: field:hr_evaluation.evaluation,message_follower_ids:0
 msgid "Followers"
-msgstr "Followers"
+msgstr "Người theo dõi"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "General"
-msgstr "General"
+msgstr "Tổng quát"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr "Group By..."
+msgstr "Nhóm theo..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Group by..."
-msgstr "Group by..."
+msgstr "Nhóm theo..."
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_summary:0
@@ -991,23 +992,23 @@ msgid ""
 "If the evaluation does not meet the expectations, you can propose an action "
 "plan"
 msgstr ""
-"If the evaluation does not meet the expectations, you can propose an action "
-"plan"
+"Nếu đánh giá không đáp ứng mong đợi, bạn có thể đề xuất một kế hoạch thực "
+"hiện"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
-msgstr "In Progress"
+msgstr "Đang xử lý"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.interview,state:0 view:hr_evaluation.evaluation:0
 msgid "In progress"
-msgstr "In progress"
+msgstr "Đang xử lý"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In progress Evaluations"
-msgstr "In progress Evaluations"
+msgstr "Đánh giá đang xử lý"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_5
@@ -1017,7 +1018,7 @@ msgstr "Initiative and self autonomy"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Internal Notes"
-msgstr "Internal Notes"
+msgstr "Ghi chú nội bộ"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -1027,55 +1028,55 @@ msgstr "Interview Appraisal"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
-msgstr "Interview Request"
+msgstr "Yêu cầu phỏng vấn"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
-msgstr "Interview Requests"
+msgstr "Yêu cầu phỏng vấn"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 field:hr.evaluation.interview,user_id:0
 msgid "Interviewer"
-msgstr "Interviewer"
+msgstr "Phỏng vấn"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Interviews"
-msgstr "Interviews"
+msgstr "Phỏng vấn"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_is_follower:0
 #: field:hr_evaluation.evaluation,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Is a Follower"
+msgstr "Là một người theo dõi"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "January"
-msgstr "January"
+msgstr "Tháng 1"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "July"
-msgstr "July"
+msgstr "Tháng 7"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "June"
-msgstr "June"
+msgstr "Tháng 6"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_last_post:0
 #: field:hr_evaluation.evaluation,message_last_post:0
 msgid "Last Message Date"
-msgstr "Last Message Date"
+msgstr "Ngày thông điệp gần nhất"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_2
 msgid "Leadership"
-msgstr "Leadership"
+msgstr "Lãnh đạo"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_3
@@ -1083,8 +1084,8 @@ msgid ""
 "Leadership: create a challenging and motivating work environment aligned "
 "with the company's strategy"
 msgstr ""
-"Leadership: create a challenging and motivating work environment aligned "
-"with the company's strategy"
+"Lãnh đạo: Tạo ra một môi trường làm việc đầy thách thức và phù hợp với chiến "
+"lược của công ty"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_4
@@ -1108,50 +1109,50 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
-msgstr "Mail Body"
+msgstr "Nội dung thư"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Settings"
-msgstr "Mail Settings"
+msgstr "Thiết lập thư"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "March"
-msgstr "March"
+msgstr "Tháng 4"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "May"
-msgstr "May"
+msgstr "Tháng 5"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Meet expectations"
-msgstr "Meet expectations"
+msgstr "Đáp ứng mong đợi"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_ids:0
 #: field:hr_evaluation.evaluation,message_ids:0
 msgid "Messages"
-msgstr "Messages"
+msgstr "Thông điệp"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
 #: help:hr_evaluation.evaluation,message_ids:0
 msgid "Messages and communication history"
-msgstr "Messages and communication history"
+msgstr "Lịch sử thông điệp và liên lạc"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_6
 msgid "Miscellaneous"
-msgstr "Miscellaneous"
+msgstr "Khác"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
 msgid "Month"
-msgstr "Month"
+msgstr "Tháng"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_5_2
@@ -1159,8 +1160,8 @@ msgid ""
 "My best achievements have been communicated to the community, internally or "
 "to customers"
 msgstr ""
-"My best achievements have been communicated to the community, internally or "
-"to customers"
+"Thành tựu tốt nhất của tôi được thông báo cho cộng đồng, nội bộ hoặc khách "
+"hàng"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_2
@@ -1179,42 +1180,42 @@ msgstr ""
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_1
 msgid "Name"
-msgstr "Name"
+msgstr "Tên"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_1_1
 msgid "Name of your direct supervisor"
-msgstr "Name of your direct supervisor"
+msgstr "Tên người giám sát trực tiếp"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "New"
-msgstr "New"
+msgstr "Mới"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
-msgstr "Next Appraisal Date"
+msgstr "Ngày đánh giá tiếp theo"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "November"
-msgstr "November"
+msgstr "Tháng 11"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_1
 msgid "Objectives"
-msgstr "Objectives"
+msgstr "Mục tiêu"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
-msgstr "October"
+msgstr "Tháng 10"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.opinion_2_5
 msgid "Openness"
-msgstr "Openness"
+msgstr "Cởi mở"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_4
@@ -1228,7 +1229,7 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
 msgid "Overall Rating"
-msgstr "Overall Rating"
+msgstr "Xếp hạng tổng thể"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_4_3
@@ -1242,22 +1243,22 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
 msgid "Overpassed Deadline"
-msgstr "Overpassed Deadline"
+msgstr "Vượt quá hạn chót"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Pending"
-msgstr "Pending"
+msgstr "Đang chờ"
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Appraisal"
-msgstr "Periodic Appraisal"
+msgstr "Đánh giá định kỳ"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Appraisal (months)"
-msgstr "Periodicity of Appraisal (months)"
+msgstr "Đánh giá định kỳ (theo tháng)"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_2
@@ -1267,29 +1268,29 @@ msgstr "Personal Performance Objectives"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
 msgid "Phase"
-msgstr "Phase"
+msgstr "Giai đoạn"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
 #: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
-msgstr "Plan"
+msgstr "Kế hoạch"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Plan In Progress"
-msgstr "Plan In Progress"
+msgstr "Kế hoạch đang thực hiện"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_1_2
 msgid "Position Title"
-msgstr "Position Title"
+msgstr "Chức danh"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Print Survey"
-msgstr "Print Survey"
+msgstr "In khảo sát"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_4_1
@@ -1314,7 +1315,7 @@ msgstr "Promptness and attendance record"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Public Notes"
-msgstr "Public Notes"
+msgstr "Ghi chú công khai"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:83
@@ -1330,12 +1331,12 @@ msgstr "Request_id"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Reset to Draft"
-msgstr "Reset to Draft"
+msgstr "Thiêt lại lại về Dự thảo"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_2_2
 msgid "Results"
-msgstr "Results"
+msgstr "Kết quả"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_2_1
@@ -1349,37 +1350,37 @@ msgstr ""
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
 msgid "Review Appraisal Plans"
-msgstr "Review Appraisal Plans"
+msgstr "Xem xét kế hoạch đánh giá"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
-msgstr "Search Appraisal"
+msgstr "Tìm kiếm đánh giá"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr "Self Appraisal Requests"
+msgstr "Yêu cầu tự đánh giá"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Reminder Email"
-msgstr "Send Reminder Email"
+msgstr "Gửi email nhắc nhở"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Request"
-msgstr "Send Request"
+msgstr "Gửi yêu cầu"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_employee:0
 msgid "Send all answers to the employee"
-msgstr "Send all answers to the employee"
+msgstr "Gửi tất cả câu trả lời tới nhân viên"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "Send all answers to the manager"
-msgstr "Send all answers to the manager"
+msgstr "Gửi tất cả câu trả lời tới người quản lý"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -1394,27 +1395,27 @@ msgstr "Send an anonymous summary to the manager"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_feature:0
 msgid "Send mail for this phase"
-msgstr "Send mail for this phase"
+msgstr "Gửi email cho giai đoạn này"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
-msgstr "Send to Employees"
+msgstr "Gửi tới Nhân viên"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Managers"
-msgstr "Send to Managers"
+msgstr "Gửi tới Quản lý"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "September"
-msgstr "September"
+msgstr "Tháng 9"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
-msgstr "Sequence"
+msgstr "Trình tự"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -1435,7 +1436,7 @@ msgstr "Significantly exceeds expectations"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Start Appraisal"
-msgstr "Start Appraisal"
+msgstr "Bắt đầu đánh giá"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,state:0
@@ -1447,34 +1448,34 @@ msgstr "State"
 #: field:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,state:0
 msgid "Status"
-msgstr "Status"
+msgstr "Trạng thái"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,email_subject:0
 #: model:survey.question,question:hr_evaluation.appraisal_3_1
 msgid "Subject"
-msgstr "Subject"
+msgstr "Chủ đề"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_summary:0
 #: field:hr_evaluation.evaluation,message_summary:0
 msgid "Summary"
-msgstr "Summary"
+msgstr "Tóm tắt"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_3_2
 msgid "Supervisors only"
-msgstr "Supervisors only"
+msgstr "Chỉ dành cho Giám sát"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Survey"
-msgstr "Survey"
+msgstr "Khảo sát"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
 msgid "Survey Request"
-msgstr "Survey Request"
+msgstr "Yêu cầu Khảo sát"
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.oprow_2_1_4
@@ -1522,7 +1523,7 @@ msgstr "Technical skills regarding to the job requirements"
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
 msgid "The answer you entered has an invalid format."
-msgstr "The answer you entered has an invalid format."
+msgstr "Câu trả lời mà bạn nhập không đúng định dạng."
 
 #. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
@@ -1530,8 +1531,8 @@ msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
 msgstr ""
-"The date of the next appraisal is computed by the appraisal plan's dates "
-"(first appraisal + periodicity)."
+"Ngày đánh giá tiếp theo được tính bằng ngày của kế hoạch đánh giá (lần đánh "
+"giá đầu tiên + chu kỳ)."
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_next:0
@@ -1553,8 +1554,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
-"This number of months will be used to schedule the first evaluation date of "
-"the employee when selecting an evaluation plan. "
+"Số tháng sẽ được sử dụng để lên kế hoạch cho ngày đánh giá đầu tiên của nhân "
+"viên khi lựa chọn một kế hoạch đánh giá. "
 
 #. module: hr_evaluation
 #: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_1
@@ -1581,7 +1582,7 @@ msgstr ""
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_6
 #: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_7
 msgid "This question requires an answer."
-msgstr "This question requires an answer."
+msgstr "Câu hỏi này yêu cầu một câu trả lời."
 
 #. module: hr_evaluation
 #: model:survey.label,value:hr_evaluation.arow_3_1_15
@@ -1591,18 +1592,18 @@ msgstr "Time management: projects/tasks are completed on time"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "To Do"
-msgstr "To Do"
+msgstr "Cần làm"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
-msgstr "Top-Down Appraisal Requests"
+msgstr "Yêu cầu đánh giá từ trên xuống"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_unread:0
 #: field:hr_evaluation.evaluation,message_unread:0
 msgid "Unread Messages"
-msgstr "Unread Messages"
+msgstr "Thông điệp chưa đọc"
 
 #. module: hr_evaluation
 #: model:survey.question,question:hr_evaluation.appraisal_5_1
@@ -1616,12 +1617,12 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Validate Appraisal"
-msgstr "Validate Appraisal"
+msgstr "Xác nhận đánh giá"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr "Wait Previous Phases"
+msgstr "Chờ giai đoạn trước"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
@@ -1633,7 +1634,7 @@ msgstr "Waiting Appreciation"
 #: code:addons/hr_evaluation/hr_evaluation.py:347
 #, python-format
 msgid "Warning!"
-msgstr "Warning!"
+msgstr "Cảnh báo!"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,website_message_ids:0
@@ -1659,12 +1660,12 @@ msgstr ""
 #. module: hr_evaluation
 #: model:survey.page,title:hr_evaluation.appraisal_2
 msgid "Work Plan"
-msgstr "Work Plan"
+msgstr "Kế hoạch làm việc"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
 msgid "Year"
-msgstr "Year"
+msgstr "Năm"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:239
@@ -1673,8 +1674,8 @@ msgid ""
 "You cannot change state, because some appraisal forms have not been "
 "completed."
 msgstr ""
-"You cannot change state, because some appraisal forms have not been "
-"completed."
+"Bạn không thể thay đổi trạng thái bởi vì một vài form đánh giá vẫn chưa được "
+"hoàn thành."
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:347
@@ -1685,4 +1686,4 @@ msgstr "You cannot start evaluation without Appraisal."
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
 msgid "closed"
-msgstr "closed"
+msgstr "đã đóng"
