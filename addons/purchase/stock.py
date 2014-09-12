@@ -53,7 +53,6 @@ class stock_move(osv.osv):
             default['purchase_line_id'] = False
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
@@ -69,8 +68,15 @@ class stock_move(osv.osv):
     def _get_master_data(self, cr, uid, move, company, context=None):
         if move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
-            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.pricelist_id.currency_id.id
+            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
+        else:
+            partner = move.picking_id and move.picking_id.partner_id or False
+            code = self.get_code_from_locs(cr, uid, move, context=context)
+            if partner and partner.property_product_pricelist_purchase and code == 'incoming':
+                currency = partner.property_product_pricelist_purchase.currency_id.id
+                return partner, uid, currency
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
+
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
@@ -79,6 +85,29 @@ class stock_move(osv.osv):
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
         return res
+
+
+    def attribute_price(self, cr, uid, move, context=None):
+        """
+            Attribute price to move, important in inter-company moves or receipts with only one partner
+        """
+        code = self.get_code_from_locs(cr, uid, move, context=context)
+        if not move.purchase_line_id and code == 'incoming' and not move.price_unit:
+            partner = move.picking_id and move.picking_id.partner_id or False
+            price = False
+            # If partner given, search price in its purchase pricelist
+            if partner and partner.property_product_pricelist_purchase:
+                pricelist_obj = self.pool.get("product.pricelist")
+                pricelist = partner.property_product_pricelist.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist],
+                                    move.product_id.id, move.product_uom_qty, partner, {
+                                                                                'uom': move.product_uom.id,
+                                                                                'date': move.date,
+                                                                                })[pricelist]
+                if price:
+                    return self.write(cr, uid, [move.id], {'price_unit': price}, context=context)
+        super(stock_move, self).attribute_price(cr, uid, move, context=context)
+
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -137,7 +166,6 @@ class stock_warehouse(osv.osv):
             'route_id': buy_route_id,
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
-            'propagate': False, 
             'warehouse_id': warehouse.id,
         }
 

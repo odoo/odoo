@@ -10,9 +10,10 @@
                 <tree position="attributes">
                     <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
                 </tree>
-                <tree position="inside">
-                    <field name="virtual_available" invisible="1"/>
-                </tree>
+                <field name="price" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
             </field>
         </record>
 
@@ -24,9 +25,10 @@
                 <tree position="attributes">
                     <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
                 </tree>
-                <tree position="inside">
-                    <field name="virtual_available" invisible="1"/>
-                </tree>
+                <field name="uom_id" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
             </field>
         </record>
 
@@ -82,8 +84,10 @@
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
                     <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
-                    <filter name="virtual_stock_negative" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
+                    <filter name="virtual_stock_exhausted" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
+                    <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
                 </field>
                 <filter name="consumable" position="before">
                    <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
