@@ -28,17 +28,13 @@
             <field name="state">running</field>
         </record>
 
-        <record id="page_experiment_default_1" model="website_version.experiment_page">
-            <field name="view_id" ref="website.homepage"/>
-            <field name="key">website.homepage</field>
+        <record id="snap_experiment_default_1" model="website_version.experiment_snapshot">
             <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
             <field name="experiment_id" ref="experiment_default"/>
             <field name="ponderation">50</field>
         </record>
 
-        <record id="page_experiment_default_2" model="website_version.experiment_page">
-            <field name="view_id" ref="website.homepage"/>
-            <field name="key">website.homepage</field>
+        <record id="snap_experiment_default_2" model="website_version.experiment_snapshot">
             <field name="snapshot_id" ref="default_2"/>
             <field name="experiment_id" ref="experiment_default"/>
             <field name="ponderation">50</field>

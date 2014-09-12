@@ -29,19 +29,18 @@ class QWeb(orm.AbstractModel):
 
         if website_id:
             if 'experiment_id' in context:
-                page_id = self.pool["website_version.experiment_page"].search(cr, uid, [('key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
-                if page_id:
+                exp_snap_id = self.pool["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
+                if exp_snap_id:
                     RNG_exp = int(context.get('RNG_exp'))
                     number_id = int(''.join(str(ord(c)) for c in id_or_xml_id))
 
-                    page = self.pool["website_version.experiment_page"].browse(cr, uid, [page_id[0]], context=context)
-                    exp = page.experiment_id
+                    exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [snapshot_id[0]], context=context)
+                    exp = exp_snapshot.experiment_id
                     result=[]
                     pond_sum=0
-                    for page in exp.experiment_page_ids:
-                        if page.key == id_or_xml_id:
-                            result.append([page.ponderation+pond_sum, page.snapshot_id.id])
-                            pond_sum+=page.ponderation
+                    for exp_snap in exp.experiment_snapshot_ids:
+                        result.append([exp_snap.ponderation+pond_sum, exp_snap.snapshot_id.id])
+                        pond_sum+=page.ponderation
                     if pond_sum:
                         #RANDOM
                         x = (RNG_exp+number_id)*179426549%pond_sum

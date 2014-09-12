@@ -17,7 +17,7 @@
                 <kanban default_group_by="state" string="Experiments" class="oe_background_grey">
                     <field name="name"/>
                     <field name="website_id"/>
-                    <field name="experiment_page_ids"/>
+                    <field name="experiment_snapshot_ids"/>
                     <templates>
                         <t t-name="kanban-box">
                           <div class="oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
@@ -38,7 +38,7 @@
                               <field name="name"/>
                             </div>
                             <div class="oe_clear"></div>
-                            <field name="experiment_page_ids"/>
+                            <field name="experiment_snapshot_ids"/>
                             <div class="oe_clear"></div>
                           </div>
                         </t> 
@@ -58,12 +58,10 @@
                         <field name="state" colspan="4"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Pages in experiment" colspan="4" >
-                            <field name="experiment_page_ids" colspan="4" context="{'website_id': website_id}">
-                                <tree string="PPP" editable="bottom">
-                                    <field name="view_id" domain="[('type','=','qweb'),('snapshot_id','=',False)]" on_change="onchange_get_key(view_id,context)" colspan="4"/>
-                                    <field name="key" invisible='True'/>
-                                    <field name="snapshot_id" domain="[('view_ids.key','=',key),('website_id','=',context.get('website_id'))]" colspan="4"/>
+                        <page string="Snapshots in experiment" colspan="4" >
+                            <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
+                                <tree string="PPP" editable="bottom">    
+                                    <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                                     <field name="ponderation"/>
                                 </tree>
                             </field>
@@ -84,17 +82,14 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="experiment_page_form_view">
-            <field name="name">experiment_page.form</field>
-            <field name="model">website_version.experiment_page</field> 
+        <record model="ir.ui.view" id="experiment_snapshot_form_view">
+            <field name="name">experiment_snapshot.form</field>
+            <field name="model">website_version.experiment_snapshot</field> 
             <field name="arch" type="xml">
                 <form string="Experiment_page Form">
                     <notebook colspan="4">
                         <page string="Features" colspan="4" >
-                            <field name="view_id" domain="[('type','=','qweb'),('snapshot_id','=',False)]" on_change="onchange_get_key(view_id,context)" colspan="4"/>
-                            <field name="key" invisible='True'/>
-                            <field name="snapshot_id" domain="[('view_ids.key','=',key),('website_id','=',context.get('website_id'))]" 
-                            colspan="4"/>
+                            <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                             <field name="ponderation"/>
                         </page>
                     </notebook>
