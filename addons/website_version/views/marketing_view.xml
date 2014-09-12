@@ -55,8 +55,6 @@
                     <group>
                         <field name="name" colspan="4" />
                         <field name="website_id" colspan="4"/>
-                        <!-- <field name="active" colspan="4"/> -->
-                        <field name="active_exp" colspan="4"/>
                         <field name="state" colspan="4"/>
                     </group>
                     <notebook colspan="4">
@@ -81,8 +79,7 @@
             <field name="arch" type="xml">
                 <tree string="Experiment tree">
                     <field name="name" />
-                    <!-- <field name="active" /> -->
-                    <field name="active_exp" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>

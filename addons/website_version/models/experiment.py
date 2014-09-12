@@ -52,8 +52,6 @@ class Experiment(osv.Model):
         'experiment_page_ids': fields.one2many('website_version.experiment_page', 'experiment_id',string="page_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False),
-        'active_exp': fields.boolean(string='on/off'),
-        # 'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the experience without removing it."),
     }
 
     _defaults = {
