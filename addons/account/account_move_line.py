@@ -983,6 +983,9 @@ class account_move_line(osv.osv):
                 'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
             }
 
+            # DEBUG
+            ret_line['reconcile_partial_id'] = line.reconcile_partial_id.id
+
             # Get right debit / credit:
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
