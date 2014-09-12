@@ -38,6 +38,8 @@ import logging
 from .misc import ustr
 
 import openerp
+from openerp.tools.config import config
+import tempfile
 
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
@@ -148,7 +150,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
-def test_expr(expr, allowed_codes, mode="eval"):
+def test_expr(expr, allowed_codes, mode="eval", debug_fd=None):
     """test_expr(expression, allowed_codes[, mode]) -> code_object
 
     Test that the expression contains only the allowed opcodes.
@@ -160,7 +162,12 @@ def test_expr(expr, allowed_codes, mode="eval"):
         if mode == 'eval':
             # eval() does not like leading/trailing whitespace
             expr = expr.strip()
-        code_obj = compile(expr, "", mode)
+        if debug_fd:
+            debug_fd.write(expr)
+            debug_fd.flush()
+            code_obj = compile(expr, debug_fd.name, mode)
+        else:
+            code_obj = compile(expr, '', mode)
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception, e:
@@ -224,7 +231,7 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
         return __import__(name, globals, locals, level)
     raise ImportError(name)
 
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False, debug=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
@@ -307,9 +314,18 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         if locals_dict is None:
             locals_dict = {}
         locals_dict.update(globals_dict.get('__builtins__'))
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
-        return eval(c, globals_dict, locals_dict)
+        # Don't debug if debug_server_actions is false.
+        if config.get('debug_server_actions') and debug:
+            # Must be here because conditional import at top doesn't work since
+            # the config module is loaded, but not initialised there yet.
+            import pdb
+            with tempfile.NamedTemporaryFile(dir='/tmp', suffix='.py') as debug_fd:
+                c = test_expr(expr, _SAFE_OPCODES, mode=mode, debug_fd=debug_fd)
+                return pdb.runeval(c, globals=globals_dict, locals=locals_dict)
+        else:
+            c = test_expr(expr, _SAFE_OPCODES, mode=mode)
+            return eval(c, globals_dict, locals_dict)
     except openerp.osv.orm.except_orm:
         raise
     except openerp.exceptions.Warning:

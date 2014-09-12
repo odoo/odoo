@@ -568,6 +568,10 @@ class ir_actions_server(osv.osv):
         # Fake fields used to implement the ID finding assistant
         'id_object': fields.reference('Record', selection=_select_objects, size=128),
         'id_value': fields.char('Record ID'),
+        'debug': fields.boolean('Debug',
+                                help="Run this server action through the Python debugger.\n"
+                                "This only works if the server has been launched with the --debug_server_actions flag, "
+                                "and aids in local development of new server actions."),
     }
 
     _defaults = {
@@ -845,7 +849,7 @@ class ir_actions_server(osv.osv):
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
-        eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        eval(action.code.strip(), eval_context, mode="exec", nocopy=True, debug=action.debug)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
