@@ -794,19 +794,29 @@ class account_move_line(osv.osv):
                 'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
             }
 
+            # Amount residual can be negative
+            debit = line.debit
+            credit = line.credit
+            amount_residual = line.amount_residual
+            amount_residual_currency = line.amount_residual_currency
+            if line.amount_residual < 0:
+                debit, credit = credit, debit
+                amount_residual = -amount_residual
+                amount_residual_currency = -amount_residual_currency
+
             # Get right debit / credit:
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
             if line.currency_id and line.amount_currency:
                 amount_currency_str = rml_parser.formatLang(line.amount_currency, currency_obj=line.currency_id)
             if target_currency and line_currency == target_currency and target_currency != company_currency:
-                debit = line.debit > 0 and line.amount_residual_currency or 0.0
-                credit = line.credit > 0 and line.amount_residual_currency or 0.0
-                amount_currency_str = rml_parser.formatLang(line.amount_residual, currency_obj=company_currency)
+                debit = debit > 0 and amount_residual_currency or 0.0
+                credit = credit > 0 and amount_residual_currency or 0.0
+                amount_currency_str = amount_residual_currency(amount_residual, currency_obj=company_currency)
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
             else:
-                debit = line.debit > 0 and line.amount_residual or 0.0
-                credit = line.credit > 0 and line.amount_residual or 0.0
+                debit = debit > 0 and amount_residual or 0.0
+                credit = credit > 0 and amount_residual or 0.0
                 amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
                 if target_currency and target_currency != company_currency:
                     amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
@@ -816,12 +826,6 @@ class account_move_line(osv.osv):
                     debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
                     credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
                     amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-
-            # Amount residual can be negative
-            if debit < 0:
-                debit, credit = credit, -debit
-            if credit < 0:
-                debit, credit = -credit, debit
 
             ret_line['credit'] = credit
             ret_line['debit'] = debit
