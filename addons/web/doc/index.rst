@@ -34,7 +34,6 @@ Javascript
     :maxdepth: 1
 
     guidelines
-    widget
     rpc
     async
     client_action
