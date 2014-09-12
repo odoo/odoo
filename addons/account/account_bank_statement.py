@@ -504,7 +504,7 @@ class account_bank_statement_line(osv.osv):
 
         # Look for structured communication
         if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
+            structured_com_match_domain = [('ref', '!=', False),('ref', '!=', ''),('ref', '=', st_line.ref),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
             match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
             if match_id:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
