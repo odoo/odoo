@@ -13,4 +13,4 @@ class TestWebsiteVersionAll(test_website_version_base.TestWebsiteVersionBase):
         view_copy_snapshot=copy_snapshot.view_ids[0]
         view_0_0_0_0 = self.ir_ui_view.browse(cr, uid, [view_0_0_0_0_id], context={'snapshot_id':snapshot_id})[0]
         self.assertEqual(view_copy_snapshot.arch, view_0_0_0_0.arch, 'website_version: copy_snapshot: website_version must have in snpashot_copy the same views then in snapshot_0_0_0_0')
-
+        

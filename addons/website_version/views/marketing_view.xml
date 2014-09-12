@@ -7,9 +7,28 @@
             <field name="res_model">website_version.experiment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
         </record>
-           
+        
+        <record model="ir.ui.view" id="view_experiment_kanban">
+            <field name="name">Experiment Kanban</field>
+            <field name="model">website_version.experiment</field>
+            <field name="arch" type="xml">
+                <kanban string="Experiments" class="oe_background_grey">
+                    <templates>
+                        <t t-name="kanban-box"> 
+                            <div>
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- title -->
+                                    Experiment name: <field name="name"/><br /> 
+                                    Domain: <field name="website_id"/><br /> 
+                                </div> 
+                            </div>
+                        </t>  
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         
         <record model="ir.ui.view" id="experiment_form_view">
             <field name="name">experiment.form</field>
