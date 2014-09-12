@@ -244,7 +244,8 @@ class ir_model_fields(osv.osv):
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
-        'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', help='On delete property for many2one fields'),
+        'on_delete': fields.selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
+                                      'On Delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', help="The optional domain to restrict possible values for relationship fields, "
             "specified as a Python expression defining a list of triplets. "
             "For example: [('color','=','red')]"),
