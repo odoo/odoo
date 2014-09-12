@@ -15,16 +15,33 @@
             <field name="model">website_version.experiment</field>
             <field name="arch" type="xml">
                 <kanban string="Experiments" class="oe_background_grey">
+                    <field name="name"/>
+                    <field name="website_id"/>
+                    <field name="experiment_page_ids"/>
                     <templates>
-                        <t t-name="kanban-box"> 
-                            <div>
-                                <div t-attf-class="oe_kanban_content">
-                                    <!-- title -->
-                                    Experiment name: <field name="name"/><br /> 
-                                    Domain: <field name="website_id"/><br /> 
-                                </div> 
+                        <t t-name="kanban-box">
+                          <div class="oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+                            <div class="oe_dropdown_kanban">
+
+                              <!-- dropdown menu -->
+                              <span class="oe_dropdown_toggle">
+                                <span class="oe_e">í</span>
+                                <ul class="oe_dropdown_menu">
+                                  <li><a type="delete">Delete</a></li>
+                                  <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                              </span>
                             </div>
-                        </t>  
+                            <!-- kanban note -->
+                            <div class="oe_kanban_content">
+                              <!-- title -->
+                              <field name="name"/>
+                            </div>
+                            <div class="oe_clear"></div>
+                            <field name="experiment_page_ids"/>
+                            <div class="oe_clear"></div>
+                          </div>
+                        </t> 
                     </templates>
                 </kanban>
             </field>
