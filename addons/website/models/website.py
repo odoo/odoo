@@ -251,11 +251,19 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
+    @openerp.tools.ormcache(skiparg=4)
+    def _get_current_website_id(self, cr, uid, context=None):
+        website_id = 1
+        if request:
+            domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+            ids = self.search(cr, uid, [('name', '=', domain_name)], context=context)
+            if ids:
+                website_id = ids[0]
+        return website_id
+
     def get_current_website(self, cr, uid, context=None):
-        domain_name=request.httprequest.host.split(":")[0].lower()
-        ids=self.search(cr, uid, [('name', '=', domain_name)], context=context)
-        website = self.browse(cr, uid, ids and ids[0] or 1, context=context)
-        return website
+        website_id = self._get_current_website_id(cr, uid, context=context)
+        return self.browse(cr, uid, website_id, context=context)
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
