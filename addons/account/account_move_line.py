@@ -964,9 +964,13 @@ class account_move_line(osv.osv):
         ret = []
 
         for line in lines:
-            partial_reconciliation_siblings_ids = []
-            if line.reconcile_partial_id:
+            partial_reconciliation_siblings = []
+            if line.reconcile_partial_id.id:
                 partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
+                partial_reconciliation_siblings_ids.remove(line.id)
+                for partial_reconciliation_siblings_id in partial_reconciliation_siblings_ids:
+                    partial_reconciliation_siblings.append({'id': partial_reconciliation_siblings_id}) # TODO : call prepare_move_lines_for_reconciliation_widget and avoid infinite loop ?
+
             ret_line = {
                 'id': line.id,
                 'name': line.name if line.name != '/' else line.move_id.name,
@@ -980,7 +984,7 @@ class account_move_line(osv.osv):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
+                'partial_reconciliation_siblings': partial_reconciliation_siblings,
             }
 
             # DEBUG
