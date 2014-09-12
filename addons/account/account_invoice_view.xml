@@ -324,7 +324,7 @@
                                 context="{'search_default_customer':1, 'show_address': 1}"
                                 options='{"always_reload": True}'
                                 domain="[('customer', '=', True)]"/>
-                            <field name="partner_shipping_id" />
+                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" />
                             <field name="fiscal_position" options="{'no_create': True}" />
                         </group>
                         <group>
