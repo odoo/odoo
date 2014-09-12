@@ -1577,7 +1577,7 @@ $sheet-padding: 16px
                 padding: 0 16px
     // }}}
     // FormView.header {{{
-    .oe_form > :not(.oe_form_nosheet) header
+    .oe_form > :not(.oe_form_nosheet) header, .oe_form > .oe_form_nosheet header
         padding-left: 2px
         ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
             display: inline-block
@@ -2148,7 +2148,8 @@ $sheet-padding: 16px
                 &.oe_readonly
                     padding: 6px 0px 0px
                     text-align: right
-                    max-width: 100px
+                span
+                    padding: 0px 6px
                 input
                     width: 100% !important
                     text-align: right

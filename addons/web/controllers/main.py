@@ -119,7 +119,7 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
-    if not db:
+    if not db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
@@ -545,6 +545,8 @@ class Home(http.Controller):
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
+        if not http.db_filter([db]):
+            return werkzeug.utils.redirect('/', 303)
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
     @http.route('/web/js/<xmlid>', type='http', auth="public")
@@ -1283,7 +1285,7 @@ class Binary(http.Controller):
         '/logo',
         '/logo.png',
     ], type='http', auth="none")
-    def company_logo(self, dbname=None):
+    def company_logo(self, dbname=None, **kw):
         # TODO add etag, refactor to use /image code for etag
         uid = None
         if request.session.db:

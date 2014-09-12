@@ -145,7 +145,7 @@ class email_template(osv.osv):
         # - img src -> check URL
         # - a href -> check URL
         for node in root.iter():
-            if node.tag == 'a':
+            if node.tag == 'a' and node.get('href'):
                 node.set('href', _process_link(node.get('href')))
             elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
                 node.set('src', _process_link(node.get('src')))

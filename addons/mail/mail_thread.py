@@ -110,7 +110,7 @@ class mail_thread(osv.AbstractModel):
         model = context.get('empty_list_help_model')
         res_id = context.get('empty_list_help_id')
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        catchall_domain = ir_config_parameter.get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
         document_name = context.get('empty_list_help_document_name', _('document'))
         alias = None
 

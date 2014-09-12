@@ -1935,17 +1935,17 @@
 .openerp .oe_application .oe_form_sheet .oe_notebook_page {
   padding: 0 16px;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header {
+.openerp .oe_form > :not(.oe_form_nosheet) header, .openerp .oe_form > .oe_form_nosheet header {
   padding-left: 2px;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu) {
+.openerp .oe_form > :not(.oe_form_nosheet) header ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu), .openerp .oe_form > .oe_form_nosheet header ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu) {
   display: inline-block;
   float: right;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header .oe_button {
+.openerp .oe_form > :not(.oe_form_nosheet) header .oe_button, .openerp .oe_form > .oe_form_nosheet header .oe_button {
   margin: 3px 2px 1px;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header .oe_button:first-child {
+.openerp .oe_form > :not(.oe_form_nosheet) header .oe_button:first-child, .openerp .oe_form > .oe_form_nosheet header .oe_button:first-child {
   margin-left: 6px;
 }
 .openerp .oe_form header {
@@ -2666,7 +2666,9 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float.oe_readonly, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer.oe_readonly {
   padding: 6px 0px 0px;
   text-align: right;
-  max-width: 100px;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float span, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer span {
+  padding: 0px 6px;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   width: 100% !important;

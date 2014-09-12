@@ -2181,13 +2181,19 @@ class BaseModel(object):
         # same ordering, and can be merged in one pass.
         result = []
         known_values = {}
+
+        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
+            count_attr = '_'
+        else:
+            count_attr = groupby
+        count_attr += '_count'
+
         def append_left(left_side):
             grouped_value = left_side[groupby] and left_side[groupby][0]
             if not grouped_value in known_values:
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
-                count_attr = groupby + '_count'
                 known_values[grouped_value].update({count_attr: left_side[count_attr]})
         def append_right(right_side):
             grouped_value = right_side[0]
@@ -3730,6 +3736,7 @@ class BaseModel(object):
         self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
+        ir_attachment_obj = self.pool.get('ir.attachment')
 
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
@@ -3767,6 +3774,13 @@ class BaseModel(object):
                     context=context)
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
+
+            # For the same reason, removing the record relevant to ir_attachment
+            # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
+            cr.execute('select id from ir_attachment where res_model = %s and res_id in %s', (self._name, sub_ids))
+            ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
+            if ir_attachment_ids:
+                ir_attachment_obj.unlink(cr, uid, ir_attachment_ids, context=context)
 
         for order, obj_name, store_ids, fields in result_store:
             if obj_name == self._name:

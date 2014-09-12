@@ -236,6 +236,8 @@ class ir_attachment(osv.osv):
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
+            if not self.pool.get(model):
+                continue
             mids = self.pool[model].exists(cr, uid, mids)
             ima.check(cr, uid, model, mode)
             self.pool[model].check_access_rule(cr, uid, mids, mode, context=context)
