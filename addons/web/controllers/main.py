@@ -748,14 +748,17 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, **kwargs):
         try:
+            format = kwargs.get('format')
+            ext = "zip" if format == 'zip' else "dump"
             db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
+                request.session.proxy("db").dump(backup_pwd, backup_db, format))
+            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
                 'db': backup_db,
                 'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
+                    "%Y-%m-%d_%H-%M-%SZ"),
+                'ext': ext
             }
             return request.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
