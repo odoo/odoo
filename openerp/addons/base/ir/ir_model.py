@@ -96,8 +96,9 @@ class ir_model(osv.osv):
         return res
 
     def _inherited_models(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, [])
+        res = {}
         for model in self.browse(cr, uid, ids, context=context):
+            res[model.id] = []
             inherited_models = [model_name for model_name in self.pool[model.model]._inherits]
             if inherited_models:
                 res[model.id] = self.search(cr, uid, [('model', 'in', inherited_models)], context=context)
