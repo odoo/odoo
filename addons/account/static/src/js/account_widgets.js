@@ -737,11 +737,7 @@ openerp.account = function (instance) {
             if (offset < 0) offset = 0;
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
-            var excluded_ids = [];
-            _.each(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){
-                excluded_ids.push(o.id);
-                excluded_ids = excluded_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o) { return o.id; });
             
             // Load move lines
             var deferred_move_lines;
@@ -1087,13 +1083,10 @@ openerp.account = function (instance) {
 
         // Adds move line ids to the list of move lines not to fetch for a given partner
         // This is required because the same move line cannot be selected for multiple reconciliation
+        // and because for a partial reconciliation only one line can be fetched)
         excludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
-            var line_ids = [];
-            _.each(lines, function(o) {
-                line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var line_ids = _.collect(lines, function(o) { return o.id });
         
             var excluded_ids = this.excluded_move_lines_ids[partner_id];
             var excluded_move_lines_changed = false;
@@ -1132,11 +1125,7 @@ openerp.account = function (instance) {
         
         unexcludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
-            var line_ids = [];
-            _.each(lines, function(o) {
-                line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var line_ids = _.collect(lines, function(o) { return o.id });
 
             var initial_excluded_lines_num = this.excluded_move_lines_ids[partner_id].length;
             this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
@@ -1617,7 +1606,17 @@ openerp.account = function (instance) {
                 self.$(".tbody_open_balance").append($line);
             }
         },
-    
+        
+        mvLinesChanged: function(elt, val) {
+            var self = this;
+            this._super(elt, val);
+            _.each(self.get("mv_lines"), function(line) {
+                if (line.partial_reconciliation_siblings) {
+                    self.getParent().excludeMoveLines(self, self.partner_id, line.partial_reconciliation_siblings);
+                }
+            });
+        },
+
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
 
@@ -1628,7 +1627,7 @@ openerp.account = function (instance) {
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
             
             self._super(elt, val);
-        },    
+        },
     
         /** Model */
 
@@ -1729,8 +1728,11 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
             var self = this;
-            if (self.getParent().excluded_move_lines_ids[self.partner_id])
-                excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
+            var globally_excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            if (globally_excluded_ids !== undefined)
+                for (var i=0; i<globally_excluded_ids.length; i++)
+                    if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
+                        excluded_ids.push(globally_excluded_ids[i]);
             return self.model_bank_statement_line
                 .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
                 .then(function (lines) {
@@ -1741,8 +1743,11 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {
             var self = this;
-            if (self.getParent().excluded_move_lines_ids[self.partner_id])
-                excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
+            var globally_excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            if (globally_excluded_ids !== undefined)
+                for (var i=0; i<globally_excluded_ids.length; i++)
+                    if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
+                        excluded_ids.push(globally_excluded_ids[i]);
             return self.model_bank_statement_line
                 .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
                 .then(function(num) {
@@ -2017,6 +2022,11 @@ openerp.account = function (instance) {
         },
     });
     
+    // Warning : if lines of the same partial reconciliation appear on different "pages" (see pager_index and updateMatches)
+    // it will appear as if the same line was present multiple times.
+    // To avoid this, use a mechanism like (un)excludeMoveLines in bank statement reconciliation (altough it doesn't have
+    // to be global since there's no risk of the same move line appearing in several widgets here).
+    // But is it worth it ?
     instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
         className: instance.web.account.abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line',
 
