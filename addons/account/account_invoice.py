@@ -645,10 +645,6 @@ class account_invoice(models.Model):
                 invoice.check_total = invoice.amount_total
         return True
 
-    @staticmethod
-    def _convert_ref(ref):
-        return (ref or '').replace('/','')
-
     @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """

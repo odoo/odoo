@@ -80,7 +80,7 @@
     </t>
 
     <t t-name="reconciliation_move_line">
-        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
+        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected" t-att-style="(line.reconcile_partial_id ? 'background: #fdd' : undefined)">
             <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
@@ -261,7 +261,7 @@
         </t>
         <t t-jquery=".accounting_view caption" t-operation="replace">
             <thead><tr>
-                <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                <td class="cell_action"></td>
                 <td t-if="data.partner_name" class="cell_partner_name"><t t-esc="data.partner_name" /></td>
                 <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
                 <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>

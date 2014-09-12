@@ -672,7 +672,7 @@ openerp.account = function (instance) {
                 return $.when(self.updateMatches()).then(function() {
                     var new_animation_speed = self.animation_speed;
                     self.animation_speed = old_animation_speed;
-                    if (self.$el.hasClass("no_match")) { // TODO : not for manual reconciliation
+                    if (self.$el.hasClass("no_match")) {
                         self.set("mode", "create");
                         return;
                     }
@@ -1544,8 +1544,7 @@ openerp.account = function (instance) {
             if (self.get("mode") !== "inactive") {
                 self.set("mode", "inactive");
             } else {
-                if (self.st_line.has_no_partner) self.set("mode", "create");
-                else self.set("mode", "match");
+                self.set("mode", "match");
             }
         },
     
@@ -1553,8 +1552,7 @@ openerp.account = function (instance) {
             var self = this;
             if (self.get("mode") === "create") {
                 self.addLineBeingEdited();
-                if (self.st_line.has_no_partner) self.set("mode", "inactive");
-                else self.set("mode", "match");
+                self.set("mode", "match");
             } else {
                 self.set("mode", "create");
             }
@@ -1618,16 +1616,6 @@ openerp.account = function (instance) {
                 }));
                 self.$(".tbody_open_balance").append($line);
             }
-        },
-    
-        modeChanged: function() {
-            var self = this;
-            
-            // Note : a line that has no partner can only be in mode inactive or create
-            if (self.st_line.has_no_partner && self.get("mode") !== "inactive")
-                self.set("mode", "create", {silent: true});
-
-            self._super();
         },
     
         mvLinesSelectedChanged: function(elt, val) {
@@ -1828,8 +1816,7 @@ openerp.account = function (instance) {
             this.model_aml = new instance.web.Model("account.move.line");
             this.title = "Journal Items to Reconcile";
             this.max_reconciliations_displayed = 2;
-            this.max_move_lines_displayed = 12;
-            // TODO : use search view and keep only this.accounts_to_reconcile = [];
+            this.max_move_lines_displayed = 30;
             this.show_partner_accounts = true;
             this.show_other_accounts = true;
             this.items_partner_accounts = [];
@@ -2035,7 +2022,6 @@ openerp.account = function (instance) {
 
         events: _.defaults({
             "click .accounting_view thead": "headerClickHandler",
-            "click .filler_line": "fillerLineClickHandler",
             "click .line_open_balance": "lineOpenBalanceClickHandler",
             "click .button_reconcile": "buttonReconcileClickHandler",
         }, instance.web.account.abstractReconciliationLine.prototype.events),
@@ -2076,10 +2062,6 @@ openerp.account = function (instance) {
 
         /* Properties handlers */
 
-        modeChanged: function() {
-            this._super();
-        },
-
         mvLinesChanged: function() {
             var self = this;
             self._super();
@@ -2104,14 +2086,6 @@ openerp.account = function (instance) {
         /* Event handlers */
 
         headerClickHandler: function() {
-            if (this.get("mode") === "match") {
-                this.set("mode", "inactive");
-            } else {
-                this.set("mode", "match");
-            }
-        },
-
-        fillerLineClickHandler: function() {
             if (this.get("mode") !== "match")
                 this.set("mode", "match");
         },
@@ -2152,7 +2126,7 @@ openerp.account = function (instance) {
             self.$(".button_reconcile").text(_t("Reconcile"));
             self.persist_action = "reconcile";
             if (self.get("mv_lines_selected").length < 2) {
-                self.$(".button_reconcile").text(_t("Nothing to do"));
+                self.$(".button_reconcile").text(_t("Done"));
                 self.persist_action = "leave_open";
             } else if (Math.abs(balance).toFixed(3) === "0.000") {
                 self.$(".button_reconcile").addClass("oe_highlight");

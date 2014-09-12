@@ -170,11 +170,11 @@
       font-weight: bold; }
     .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view, .openerp .oe_reconciliation .oe_reconciliation_line .match table {
       width: 100%; }
-      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr {
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tbody tr, .openerp .oe_reconciliation .oe_reconciliation_line .match table tbody tr {
         cursor: pointer; }
-        .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.created_line, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.created_line {
+        .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tbody tr.created_line, .openerp .oe_reconciliation .oe_reconciliation_line .match table tbody tr.created_line {
           cursor: default !important; }
-          .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.created_line .line_remove_button, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.created_line .line_remove_button {
+          .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tbody tr.created_line .line_remove_button, .openerp .oe_reconciliation .oe_reconciliation_line .match table tbody tr.created_line .line_remove_button {
             cursor: pointer; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td, .openerp .oe_reconciliation .oe_reconciliation_line .match table td {
         padding: 1px 8px;
@@ -312,10 +312,10 @@
 
 .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .button_reconcile {
   float: right;
-  margin-right: 15px; }
+  position: relative;
+  top: 1.1em; }
 .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead {
-  background: none;
-  cursor: pointer; }
+  background: none; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead td {
     vertical-align: bottom !important; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead td:nth-child(2) {
