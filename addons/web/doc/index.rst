@@ -34,8 +34,6 @@ Javascript
     :maxdepth: 1
 
     guidelines
-    rpc
-    async
     client_action
     testing
 

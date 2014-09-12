@@ -2,6 +2,8 @@
 Web Controllers
 ===============
 
+.. _reference/http/routing:
+
 Routing
 =======
 

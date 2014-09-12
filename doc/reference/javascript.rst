@@ -11,45 +11,22 @@ Widgets
 
 .. class:: openerp.Widget
 
-This is the base class for all visual components. It corresponds to an MVC
-view. It provides a number of services to handle a section of a page:
+    The base class for all visual components. It corresponds to an MVC
+    view, and provides a number of service to simplify handling of a section
+    of a page:
 
-* Rendering with QWeb
-
-* Parenting-child relations
-
-* Life-cycle management (including facilitating children destruction when a
-  parent object is removed)
-
-* DOM insertion, via jQuery-powered insertion methods. Insertion targets can
-  be anything the corresponding jQuery method accepts (generally selectors,
-  DOM nodes and jQuery objects):
-
-  :func:`~openerp.Widget.appendTo`
-    Renders the widget and inserts it as the last child of the target, uses
-    `.appendTo()`_
-
-  :func:`~openerp.Widget.prependTo`
-    Renders the widget and inserts it as the first child of the target, uses
-    `.prependTo()`_
-
-  :func:`~openerp.Widget.insertAfter`
-    Renders the widget and inserts it as the preceding sibling of the target,
-    uses `.insertAfter()`_
-
-  :func:`~openerp.Widget.insertBefore`
-    Renders the widget and inserts it as the following sibling of the target,
-    uses `.insertBefore()`_
-
-* Backbone-compatible shortcuts
-
-.. _widget-dom_root:
+    * Handles parent/child relationships between widgets
+    * Provides extensive lifecycle management with safety features (e.g.
+      automatically destroying children widgets during the destruction of a
+      parent)
+    * Automatic rendering with :ref:`qweb <reference/qweb>`
+    * Backbone-compatible shortcuts
 
 DOM Root
 --------
 
-A :class:`~openerp.Widget` is responsible for a section of the
-page materialized by the DOM root of the widget.
+A :class:`~openerp.Widget` is responsible for a section of the page
+materialized by the DOM root of the widget.
 
 A widget's DOM root is available via two attributes:
 
@@ -129,8 +106,8 @@ A widget's lifecycle has 3 main phases:
        initialization method of widgets, synchronous, can be overridden to
        take more parameters from the widget's creator/parent
 
-       :param parent: the current widget's parent, used to handle automatic
-                      destruction and even propagation. Can be ``null`` for
+       :param parent: the new widget's parent, used to handle automatic
+                      destruction and event propagation. Can be ``null`` for
                       the widget to have no parent.
        :type parent: :class:`~openerp.Widget`
 
@@ -157,14 +134,14 @@ A widget's lifecycle has 3 main phases:
     uses `.insertBefore()`_
 
   All of these methods accept whatever the corresponding jQuery method accepts
-  (CSS selectors, DOM nodes or jQuery objects). They all return a promise and
-  are charged with three tasks:
+  (CSS selectors, DOM nodes or jQuery objects). They all return a deferred_
+  and are charged with three tasks:
 
-  * render the widget's root element via
+  * rendering the widget's root element via
     :func:`~openerp.Widget.renderElement`
-  * insert the widget's root element in the DOM using whichever jQuery method
-    they match
-  * start the widget, and return the result of starting it
+  * inserting the widget's root element in the DOM using whichever jQuery
+    method they match
+  * starting the widget, and returning the result of starting it
 
     .. function:: openerp.Widget.start()
 
@@ -192,8 +169,7 @@ A widget's lifecycle has 3 main phases:
 
     A widget being destroyed is automatically unlinked from its parent.
 
-Because a widget can be destroyed at any time, widgets also have utility
-methods to handle this case:
+Related to widget destruction is an important utility method:
 
 .. function:: openerp.Widget.alive(deferred[, reject=false])
 
@@ -231,16 +207,13 @@ methods to handle this case:
 Accessing DOM content
 '''''''''''''''''''''
 
-Because a widget is only responsible for the content below its DOM
-root, there is a shortcut for selecting sub-sections of a widget's
-DOM:
+Because a widget is only responsible for the content below its DOM root, there
+ is a shortcut for selecting sub-sections of a widget's DOM:
 
 .. function:: openerp.Widget.$(selector)
 
     Applies the CSS selector specified as parameter to the widget's
-    DOM root.
-
-    ::
+    DOM root::
 
         this.$(selector);
 
@@ -251,8 +224,7 @@ DOM:
     :param String selector: CSS selector
     :returns: jQuery object
 
-    .. note:: this helper method is compatible with
-              ``Backbone.View.$``
+    .. note:: this helper method is similar to ``Backbone.View.$``
 
 Resetting the DOM root
 ''''''''''''''''''''''
@@ -275,11 +247,11 @@ DOM events handling
 A widget will generally need to respond to user action within its
 section of the page. This entails binding events to DOM elements.
 
-To this end, :class:`~openerp.Widget` provides an shortcut:
+To this end, :class:`~openerp.Widget` provides a shortcut:
 
 .. attribute:: openerp.Widget.events
 
-    Events are a mapping of ``event selector`` (an event name and a
+    Events are a mapping of an event selector (an event name and an optional
     CSS selector separated by a space) to a callback. The callback can
     be the name of a widget's method or a function object. In either case, the
     ``this`` will be set to the widget::
@@ -299,21 +271,18 @@ To this end, :class:`~openerp.Widget` provides an shortcut:
 
 .. function:: openerp.Widget.delegateEvents
 
-    This method is in charge of binding
-    :attr:`~openerp.Widget.events` to the DOM. It is
-    automatically called after setting the widget's DOM root.
+    This method is in charge of binding :attr:`~openerp.Widget.events` to the
+    DOM. It is automatically called after setting the widget's DOM root.
 
     It can be overridden to set up more complex events than the
-    :attr:`~openerp.Widget.events` map allows, but the parent
-    should always be called (or :attr:`~openerp.Widget.events`
-    won't be handled correctly).
+    :attr:`~openerp.Widget.events` map allows, but the parent should always be
+    called (or :attr:`~openerp.Widget.events` won't be handled correctly).
 
 .. function:: openerp.Widget.undelegateEvents
 
-    This method is in charge of unbinding
-    :attr:`~openerp.Widget.events` from the DOM root when the
-    widget is destroyed or the DOM root is reset, in order to avoid
-    leaving "phantom" events.
+    This method is in charge of unbinding :attr:`~openerp.Widget.events` from
+    the DOM root when the widget is destroyed or the DOM root is reset, in
+    order to avoid leaving "phantom" events.
 
     It should be overridden to un-set any event set in an override of
     :func:`~openerp.Widget.delegateEvents`.
@@ -407,10 +376,873 @@ destroy all widget data.
 RPC
 ===
 
+To display and interact with data, calls to the Odoo server are necessary.
+This is performed using :abbr:`RPC <Remote Procedure Call>`.
+
+Odoo Web provides two primary APIs to handle this: a low-level
+JSON-RPC based API communicating with the Python section of Odoo
+Web (and of your module, if you have a Python part) and a high-level
+API above that allowing your code to talk directly to high-level Odoo models.
+
+All networking APIs are :ref:`asynchronous <reference/async>`. As a result,
+all of them will return Deferred_ objects (whether they resolve those with
+values or not). Understanding how those work before before moving on is
+probably necessary.
+
+High-level API: calling into Odoo models
+-------------------------------------------
+
+Access to Odoo object methods (made available through XML-RPC from the server)
+is done via :class:`openerp.Model`. It maps onto the Odoo server objects via
+two primary methods, :func:`~openerp.Model.call` and
+:func:`~openerp.Model.query`.
+
+:func:`~openerp.Model.call` is a direct mapping to the corresponding method of
+the Odoo server object. Its usage is similar to that of the Odoo Model API,
+with three differences:
+
+* The interface is :ref:`asynchronous <reference/async>`, so instead of
+  returning results directly RPC method calls will return
+  Deferred_ instances, which will themselves resolve to the
+  result of the matching RPC call.
+
+* Because ECMAScript 3/Javascript 1.5 doesnt feature any equivalent to
+  ``__getattr__`` or ``method_missing``, there needs to be an explicit
+  method to dispatch RPC methods.
+
+* No notion of pooler, the model proxy is instantiated where needed,
+  not fetched from an other (somewhat global) object::
+
+    var Users = new openerp.Model('res.users');
+
+    Users.call('change_password', ['oldpassword', 'newpassword'],
+                      {context: some_context}).then(function (result) {
+        // do something with change_password result
+    });
+
+:func:`~openerp.Model.query` is a shortcut for a builder-style
+interface to searches (``search`` + ``read`` in Odoo RPC terms). It
+returns a :class:`~openerp.web.Query` object which is immutable but
+allows building new :class:`~openerp.web.Query` instances from the
+first one, adding new properties or modifiying the parent object's::
+
+    Users.query(['name', 'login', 'user_email', 'signature'])
+         .filter([['active', '=', true], ['company_id', '=', main_company]])
+         .limit(15)
+         .all().then(function (users) {
+        // do work with users records
+    });
+
+The query is only actually performed when calling one of the query
+serialization methods, :func:`~openerp.web.Query.all` and
+:func:`~openerp.web.Query.first`. These methods will perform a new
+RPC call every time they are called.
+
+For that reason, it's actually possible to keep "intermediate" queries
+around and use them differently/add new specifications on them.
+
+.. class:: openerp.Model(name)
+
+    .. attribute:: openerp.Model.name
+
+        name of the OpenERP model this object is bound to
+
+    .. function:: openerp.Model.call(method[, args][, kwargs])
+
+         Calls the ``method`` method of the current model, with the
+         provided positional and keyword arguments.
+
+         :param String method: method to call over rpc on the
+                               :attr:`~openerp.Model.name`
+         :param Array<> args: positional arguments to pass to the
+                              method, optional
+         :param Object<> kwargs: keyword arguments to pass to the
+                                 method, optional
+         :rtype: Deferred<>
+
+    .. function:: openerp.Model.query(fields)
+
+         :param Array<String> fields: list of fields to fetch during
+                                      the search
+         :returns: a :class:`~openerp.web.Query` object
+                   representing the search to perform
+
+.. class:: openerp.web.Query(fields)
+
+    The first set of methods is the "fetching" methods. They perform
+    RPC queries using the internal data of the object they're called
+    on.
+
+    .. function:: openerp.web.Query.all()
+
+        Fetches the result of the current :class:`~openerp.web.Query` object's
+        search.
+
+        :rtype: Deferred<Array<>>
+
+    .. function:: openerp.web.Query.first()
+
+       Fetches the **first** result of the current
+       :class:`~openerp.web.Query`, or ``null`` if the current
+       :class:`~openerp.web.Query` does have any result.
+
+       :rtype: Deferred<Object | null>
+
+    .. function:: openerp.web.Query.count()
+
+       Fetches the number of records the current
+       :class:`~openerp.web.Query` would retrieve.
+
+       :rtype: Deferred<Number>
+
+    .. function:: openerp.web.Query.group_by(grouping...)
+
+       Fetches the groups for the query, using the first specified
+       grouping parameter
+
+       :param Array<String> grouping: Lists the levels of grouping
+                                      asked of the server. Grouping
+                                      can actually be an array or
+                                      varargs.
+       :rtype: Deferred<Array<openerp.web.QueryGroup>> | null
+
+    The second set of methods is the "mutator" methods, they create a
+    **new** :class:`~openerp.web.Query` object with the relevant
+    (internal) attribute either augmented or replaced.
+
+    .. function:: openerp.web.Query.context(ctx)
+
+       Adds the provided ``ctx`` to the query, on top of any existing
+       context
+
+    .. function:: openerp.web.Query.filter(domain)
+
+       Adds the provided domain to the query, this domain is
+       ``AND``-ed to the existing query domain.
+
+    .. function:: opeenrp.web.Query.offset(offset)
+
+       Sets the provided offset on the query. The new offset
+       *replaces* the old one.
+
+    .. function:: openerp.web.Query.limit(limit)
+
+       Sets the provided limit on the query. The new limit *replaces*
+       the old one.
+
+    .. function:: openerp.web.Query.order_by(fields…)
+
+       Overrides the model's natural order with the provided field
+       specifications. Behaves much like Django's :py:meth:`QuerySet.order_by
+       <django.db.models.query.QuerySet.order_by>`:
+
+       * Takes 1..n field names, in order of most to least importance
+         (the first field is the first sorting key). Fields are
+         provided as strings.
+
+       * A field specifies an ascending order, unless it is prefixed
+         with the minus sign "``-``" in which case the field is used
+         in the descending order
+
+       Divergences from Django's sorting include a lack of random sort
+       (``?`` field) and the inability to "drill down" into relations
+       for sorting.
+
+Aggregation (grouping)
+''''''''''''''''''''''
+
+Odoo has powerful grouping capacities, but they are kind-of strange
+in that they're recursive, and level n+1 relies on data provided
+directly by the grouping at level n. As a result, while
+:py:meth:`openerp.models.Model.read_group` works it's not a very intuitive
+API.
+
+Odoo Web eschews direct calls to :py:meth:`~openerp.models.Model.read_group`
+in favor of calling a method of :class:`~openerp.web.Query`, :py:meth:`much
+in the way it is one in SQLAlchemy <sqlalchemy.orm.query.Query.group_by>`
+[#terminal]_::
+
+    some_query.group_by(['field1', 'field2']).then(function (groups) {
+        // do things with the fetched groups
+    });
+
+This method is asynchronous when provided with 1..n fields (to group
+on) as argument, but it can also be called without any field (empty
+fields collection or nothing at all). In this case, instead of
+returning a Deferred object it will return ``null``.
+
+When grouping criterion come from a third-party and may or may not
+list fields (e.g. could be an empty list), this provides two ways to
+test the presence of actual subgroups (versus the need to perform a
+regular query for records):
+
+* A check on ``group_by``'s result and two completely separate code
+  paths::
+
+      var groups;
+      if (groups = some_query.group_by(gby)) {
+          groups.then(function (gs) {
+              // groups
+          });
+      }
+      // no groups
+
+* Or a more coherent code path using :func:`when`'s ability to
+  coerce values into deferreds::
+
+      $.when(some_query.group_by(gby)).then(function (groups) {
+          if (!groups) {
+              // No grouping
+          } else {
+              // grouping, even if there are no groups (groups
+              // itself could be an empty array)
+          }
+      });
+
+The result of a (successful) :func:`~openerp.web.Query.group_by` is
+an array of :class:`~openerp.web.QueryGroup`:
+
+.. class:: openerp.web.QueryGroup
+
+    .. function:: openerp.web.QueryGroup.get(key)
+
+        returns the group's attribute ``key``. Known attributes are:
+
+        ``grouped_on``
+            which grouping field resulted from this group
+        ``value``
+            ``grouped_on``'s value for this group
+        ``length``
+            the number of records in the group
+        ``aggregates``
+            a {field: value} mapping of aggregations for the group
+
+    .. function:: openerp.web.QueryGroup.query([fields...])
+
+        equivalent to :func:`openerp.web.Model.query` but pre-filtered to
+        only include the records within this group. Returns a
+        :class:`~openerp.web.Query` which can be further manipulated as
+        usual.
+
+    .. function:: openerp.web.QueryGroup.subgroups()
+
+        returns a deferred to an array of :class:`~openerp.web.QueryGroup`
+        below this one
+
+Low-level API: RPC calls to Python side
+---------------------------------------
+
+While the previous section is great for calling core OpenERP code
+(models code), it does not work if you want to call the Python side of
+Odoo Web.
+
+For this, a lower-level API exists on on
+:class:`~openerp.web.Session` objects (usually available through
+``openerp.session``): the ``rpc`` method.
+
+This method simply takes an absolute path (the absolute URL of the JSON
+:ref:`route <reference/http/routing>` to call) and a mapping of attributes to
+values (passed as keyword arguments to the Python method). This function
+fetches the return value of the Python methods, converted to JSON.
+
+For instance, to call the ``resequence`` of the
+:class:`~web.controllers.main.DataSet` controller::
+
+    openerp.session.rpc('/web/dataset/resequence', {
+        model: some_model,
+        ids: array_of_ids,
+        offset: 42
+    }).then(function (result) {
+        // resequence didn't error out
+    }, function () {
+        // an error occured during during call
+    });
+
 .. _reference/javascript/client:
 
 Web Client
 ==========
 
+Testing in Odoo Web Client
+==========================
+
+Javascript Unit Testing
+-----------------------
+
+Odoo Web includes means to unit-test both the core code of
+Odoo Web and your own javascript modules. On the javascript side,
+unit-testing is based on QUnit_ with a number of helpers and
+extensions for better integration with Odoo.
+
+To see what the runner looks like, find (or start) an Odoo server
+with the web client enabled, and navigate to ``/web/tests``
+This will show the runner selector, which lists all modules with javascript
+unit tests, and allows starting any of them (or all javascript tests in all
+modules at once).
+
+.. image:: ./images/runner.png
+    :align: center
+
+Clicking any runner button will launch the corresponding tests in the
+bundled QUnit_ runner:
+
+.. image:: ./images/tests.png
+    :align: center
+
+Writing a test case
+-------------------
+
+The first step is to list the test file(s). This is done through the
+``test`` key of the Odoo manifest, by adding javascript files to it:
+
+.. code-block:: python
+
+    {
+        'name': "Demonstration of web/javascript tests",
+        'category': 'Hidden',
+        'depends': ['web'],
+        'test': ['static/test/demo.js'],
+    }
+
+and to create the corresponding test file(s)
+
+.. note::
+
+    Test files which do not exist will be ignored, if all test files
+    of a module are ignored (can not be found), the test runner will
+    consider that the module has no javascript tests.
+
+After that, refreshing the runner selector will display the new module
+and allow running all of its (0 so far) tests:
+
+.. image:: ./images/runner2.png
+    :align: center
+
+The next step is to create a test case::
+
+    openerp.testing.section('basic section', function (test) {
+        test('my first test', function () {
+            ok(false, "this test has run");
+        });
+    });
+
+All testing helpers and structures live in the ``openerp.testing``
+module. Odoo tests live in a :func:`~openerp.testing.section`,
+which is itself part of a module. The first argument to a section is
+the name of the section, the second one is the section body.
+
+:func:`test <openerp.testing.case>`, provided by the
+:func:`~openerp.testing.section` to the callback, is used to
+register a given test case which will be run whenever the test runner
+actually does its job. Odoo Web test case use standard `QUnit
+assertions`_ within them.
+
+Launching the test runner at this point will run the test and display
+the corresponding assertion message, with red colors indicating the
+test failed:
+
+.. image:: ./images/tests2.png
+    :align: center
+
+Fixing the test (by replacing ``false`` to ``true`` in the assertion)
+will make it pass:
+
+.. image:: ./images/tests3.png
+    :align: center
+
+Assertions
+----------
+
+As noted above, Odoo Web's tests use `qunit assertions`_. They are
+available globally (so they can just be called without references to
+anything). The following list is available:
+
+.. function:: ok(state[, message])
+
+    checks that ``state`` is truthy (in the javascript sense)
+
+.. function:: strictEqual(actual, expected[, message])
+
+    checks that the actual (produced by a method being tested) and
+    expected values are identical (roughly equivalent to ``ok(actual
+    === expected, message)``)
+
+.. function:: notStrictEqual(actual, expected[, message])
+
+    checks that the actual and expected values are *not* identical
+    (roughly equivalent to ``ok(actual !== expected, message)``)
+
+.. function:: deepEqual(actual, expected[, message])
+
+    deep comparison between actual and expected: recurse into
+    containers (objects and arrays) to ensure that they have the same
+    keys/number of elements, and the values match.
+
+.. function:: notDeepEqual(actual, expected[, message])
+
+    inverse operation to :func:`deepEqual`
+
+.. function:: throws(block[, expected][, message])
+
+    checks that, when called, the ``block`` throws an
+    error. Optionally validates that error against ``expected``.
+
+    :param Function block:
+    :param expected: if a regexp, checks that the thrown error's
+                     message matches the regular expression. If an
+                     error type, checks that the thrown error is of
+                     that type.
+    :type expected: Error | RegExp
+
+.. function:: equal(actual, expected[, message])
+
+    checks that ``actual`` and ``expected`` are loosely equal, using
+    the ``==`` operator and its coercion rules.
+
+.. function:: notEqual(actual, expected[, message])
+
+    inverse operation to :func:`equal`
+
+Getting an Odoo instance
+------------------------
+
+The Odoo instance is the base through which most Odoo Web
+modules behaviors (functions, objects, …) are accessed. As a result,
+the test framework automatically builds one, and loads the module
+being tested and all of its dependencies inside it. This new instance
+is provided as the first positional parameter to your test
+cases. Let's observe by adding javascript code (not test code) to the
+test module:
+
+.. code-block:: python
+
+    {
+        'name': "Demonstration of web/javascript tests",
+        'category': 'Hidden',
+        'depends': ['web'],
+        'js': ['static/src/js/demo.js'],
+        'test': ['static/test/demo.js'],
+    }
+
+::
+
+    // src/js/demo.js
+    openerp.web_tests_demo = function (instance) {
+        instance.web_tests_demo = {
+            value_true: true,
+            SomeType: instance.web.Class.extend({
+                init: function (value) {
+                    this.value = value;
+                }
+            })
+        };
+    };
+
+and then adding a new test case, which simply checks that the
+``instance`` contains all the expected stuff we created in the
+module::
+
+    // test/demo.js
+    test('module content', function (instance) {
+        ok(instance.web_tests_demo.value_true, "should have a true value");
+        var type_instance = new instance.web_tests_demo.SomeType(42);
+        strictEqual(type_instance.value, 42, "should have provided value");
+    });
+
+DOM Scratchpad
+--------------
+
+As in the wider client, arbitrarily accessing document content is
+strongly discouraged during tests. But DOM access is still needed to
+e.g. fully initialize :class:`widgets <~openerp.Widget>` before
+testing them.
+
+Thus, a test case gets a DOM scratchpad as its second positional
+parameter, in a jQuery instance. That scratchpad is fully cleaned up
+before each test, and as long as it doesn't do anything outside the
+scratchpad your code can do whatever it wants::
+
+    // test/demo.js
+    test('DOM content', function (instance, $scratchpad) {
+        $scratchpad.html('<div><span class="foo bar">ok</span></div>');
+        ok($scratchpad.find('span').hasClass('foo'),
+           "should have provided class");
+    });
+    test('clean scratchpad', function (instance, $scratchpad) {
+        ok(!$scratchpad.children().length, "should have no content");
+        ok(!$scratchpad.text(), "should have no text");
+    });
+
+.. note::
+
+    The top-level element of the scratchpad is not cleaned up, test
+    cases can add text or DOM children but shoud not alter
+    ``$scratchpad`` itself.
+
+Loading templates
+-----------------
+
+To avoid the corresponding processing costs, by default templates are
+not loaded into QWeb. If you need to render e.g. widgets making use of
+QWeb templates, you can request their loading through the
+:attr:`~TestOptions.templates` option to the :func:`test case
+function <openerp.testing.case>`.
+
+This will automatically load all relevant templates in the instance's
+qweb before running the test case:
+
+.. code-block:: python
+
+    {
+        'name': "Demonstration of web/javascript tests",
+        'category': 'Hidden',
+        'depends': ['web'],
+        'js': ['static/src/js/demo.js'],
+        'test': ['static/test/demo.js'],
+        'qweb': ['static/src/xml/demo.xml'],
+    }
+
+.. code-block:: xml
+
+    <!-- src/xml/demo.xml -->
+    <templates id="template" xml:space="preserve">
+        <t t-name="DemoTemplate">
+            <t t-foreach="5" t-as="value">
+                <p><t t-esc="value"/></p>
+            </t>
+        </t>
+    </templates>
+
+::
+
+    // test/demo.js
+    test('templates', {templates: true}, function (instance) {
+        var s = instance.web.qweb.render('DemoTemplate');
+        var texts = $(s).find('p').map(function () {
+            return $(this).text();
+        }).get();
+
+        deepEqual(texts, ['0', '1', '2', '3', '4']);
+    });
+
+Asynchronous cases
+------------------
+
+The test case examples so far are all synchronous, they execute from
+the first to the last line and once the last line has executed the
+test is done. But the web client is full of :ref:`asynchronous code
+<reference/async>`, and thus test cases need to be async-aware.
+
+This is done by returning a :class:`deferred <Deferred>` from the
+case callback::
+
+    // test/demo.js
+    test('asynchronous', {
+        asserts: 1
+    }, function () {
+        var d = $.Deferred();
+        setTimeout(function () {
+            ok(true);
+            d.resolve();
+        }, 100);
+        return d;
+    });
+
+This example also uses the :class:`options parameter <TestOptions>`
+to specify the number of assertions the case should expect, if less or
+more assertions are specified the case will count as failed.
+
+Asynchronous test cases *must* specify the number of assertions they
+will run. This allows more easily catching situations where e.g. the
+test architecture was not warned about asynchronous operations.
+
+.. note::
+
+    Asynchronous test cases also have a 2 seconds timeout: if the test
+    does not finish within 2 seconds, it will be considered
+    failed. This pretty much always means the test will not
+    resolve. This timeout *only* applies to the test itself, not to
+    the setup and teardown processes.
+
+.. note::
+
+    If the returned deferred is rejected, the test will be failed
+    unless :attr:`~TestOptions.fail_on_rejection` is set to
+    ``false``.
+
+RPC
+---
+
+An important subset of asynchronous test cases is test cases which
+need to perform (and chain, to an extent) RPC calls.
+
+.. note::
+
+    Because they are a subset of asynchronous cases, RPC cases must
+    also provide a valid :attr:`assertions count
+    <TestOptions.asserts>`.
+
+To enable mock RPC, set the :attr:`rpc option <TestOptions.rpc>` to
+``mock``. This will add a third parameter to the test case callback:
+
+.. function:: mock(rpc_spec, handler)
+
+    Can be used in two different ways depending on the shape of the
+    first parameter:
+
+    * If it matches the pattern ``model:method`` (if it contains a
+      colon, essentially) the call will set up the mocking of an RPC
+      call straight to the Odoo server (through XMLRPC) as
+      performed via e.g. :func:`openerp.web.Model.call`.
+
+      In that case, ``handler`` should be a function taking two
+      arguments ``args`` and ``kwargs``, matching the corresponding
+      arguments on the server side and should simply return the value
+      as if it were returned by the Python XMLRPC handler::
+
+          test('XML-RPC', {rpc: 'mock', asserts: 3}, function (instance, $s, mock) {
+              // set up mocking
+              mock('people.famous:name_search', function (args, kwargs) {
+                  strictEqual(kwargs.name, 'bob');
+                  return [
+                      [1, "Microsoft Bob"],
+                      [2, "Bob the Builder"],
+                      [3, "Silent Bob"]
+                  ];
+              });
+
+              // actual test code
+              return new instance.web.Model('people.famous')
+                  .call('name_search', {name: 'bob'}).then(function (result) {
+                      strictEqual(result.length, 3, "shoud return 3 people");
+                      strictEqual(result[0][1], "Microsoft Bob",
+                          "the most famous bob should be Microsoft Bob");
+                  });
+          });
+
+    * Otherwise, if it matches an absolute path (e.g. ``/a/b/c``) it
+      will mock a JSON-RPC call to a web client controller, such as
+      ``/web/webclient/translations``. In that case, the handler takes
+      a single ``params`` argument holding all of the parameters
+      provided over JSON-RPC.
+
+      As previously, the handler should simply return the result value
+      as if returned by the original JSON-RPC handler::
+
+          test('JSON-RPC', {rpc: 'mock', asserts: 3, templates: true}, function (instance, $s, mock) {
+              var fetched_dbs = false, fetched_langs = false;
+              mock('/web/database/get_list', function () {
+                  fetched_dbs = true;
+                  return ['foo', 'bar', 'baz'];
+              });
+              mock('/web/session/get_lang_list', function () {
+                  fetched_langs = true;
+                  return [['vo_IS', 'Hopelandic / Vonlenska']];
+              });
+
+              // widget needs that or it blows up
+              instance.webclient = {toggle_bars: openerp.testing.noop};
+              var dbm = new instance.web.DatabaseManager({});
+              return dbm.appendTo($s).then(function () {
+                  ok(fetched_dbs, "should have fetched databases");
+                  ok(fetched_langs, "should have fetched languages");
+                  deepEqual(dbm.db_list, ['foo', 'bar', 'baz']);
+              });
+          });
+
+.. note::
+
+    Mock handlers can contain assertions, these assertions should be
+    part of the assertions count (and if multiple calls are made to a
+    handler containing assertions, it multiplies the effective number
+    of assertions).
+
+Testing API
+-----------
+
+.. function:: openerp.testing.section(name[, options], body)
+
+    A test section, serves as shared namespace for related tests (for
+    constants or values to only set up once). The ``body`` function
+    should contain the tests themselves.
+
+    Note that the order in which tests are run is essentially
+    undefined, do *not* rely on it.
+
+    :param String name:
+    :param TestOptions options:
+    :param body:
+    :type body: Function<:func:`~openerp.testing.case`, void>
+
+.. function:: openerp.testing.case(name[, options], callback)
+
+    Registers a test case callback in the test runner, the callback
+    will only be run once the runner is started (or maybe not at all,
+    if the test is filtered out).
+
+    :param String name:
+    :param TestOptions options:
+    :param callback:
+    :type callback: Function<instance, $, Function<String, Function, void>>
+
+.. class:: TestOptions
+
+    the various options which can be passed to
+    :func:`~openerp.testing.section` or
+    :func:`~openerp.testing.case`. Except for
+    :attr:`~TestOptions.setup` and
+    :attr:`~TestOptions.teardown`, an option on
+    :func:`~openerp.testing.case` will overwrite the corresponding
+    option on :func:`~openerp.testing.section` so
+    e.g. :attr:`~TestOptions.rpc` can be set for a
+    :func:`~openerp.testing.section` and then differently set for
+    some :func:`~openerp.testing.case` of that
+    :func:`~openerp.testing.section`
+
+    .. attribute:: TestOptions.asserts
+
+        An integer, the number of assertions which should run during a
+        normal execution of the test. Mandatory for asynchronous tests.
+
+    .. attribute:: TestOptions.setup
+
+        Test case setup, run right before each test case. A section's
+        :func:`~TestOptions.setup` is run before the case's own, if
+        both are specified.
+
+    .. attribute:: TestOptions.teardown
+
+        Test case teardown, a case's :func:`~TestOptions.teardown`
+        is run before the corresponding section if both are present.
+
+    .. attribute:: TestOptions.fail_on_rejection
+
+        If the test is asynchronous and its resulting promise is
+        rejected, fail the test. Defaults to ``true``, set to
+        ``false`` to not fail the test in case of rejection::
+
+            // test/demo.js
+            test('unfail rejection', {
+                asserts: 1,
+                fail_on_rejection: false
+            }, function () {
+                var d = $.Deferred();
+                setTimeout(function () {
+                    ok(true);
+                    d.reject();
+                }, 100);
+                return d;
+            });
+
+    .. attribute:: TestOptions.rpc
+
+        RPC method to use during tests, one of ``"mock"`` or
+        ``"rpc"``. Any other value will disable RPC for the test (if
+        they were enabled by the suite for instance).
+
+    .. attribute:: TestOptions.templates
+
+        Whether the current module (and its dependencies)'s templates
+        should be loaded into QWeb before starting the test. A
+        boolean, ``false`` by default.
+
+The test runner can also use two global configuration values set
+directly on the ``window`` object:
+
+* ``oe_all_dependencies`` is an ``Array`` of all modules with a web
+  component, ordered by dependency (for a module ``A`` with
+  dependencies ``A'``, any module of ``A'`` must come before ``A`` in
+  the array)
+
+Running through Python
+----------------------
+
+The web client includes the means to run these tests on the
+command-line (or in a CI system), but while actually running it is
+pretty simple the setup of the pre-requisite parts has some
+complexities.
+
+#. Install unittest2_ in your Python environment. Both
+   can trivially be installed via `pip <http://pip-installer.org>`_ or
+   `easy_install
+   <http://packages.python.org/distribute/easy_install.html>`_.
+
+#. Install PhantomJS_. It is a headless
+   browser which allows automating running and testing web
+   pages. QUnitSuite_ uses it to actually run the qunit_ test suite.
+
+   The PhantomJS_ website provides pre-built binaries for some
+   platforms, and your OS's package management probably provides it as
+   well.
+
+   If you're building PhantomJS_ from source, I recommend preparing
+   for some knitting time as it's not exactly fast (it needs to
+   compile both `Qt <http://qt-project.org/>`_ and `Webkit
+   <http://www.webkit.org/>`_, both being pretty big projects).
+
+   .. note::
+
+       Because PhantomJS_ is webkit-based, it will not be able to test
+       if Firefox, Opera or Internet Explorer can correctly run the
+       test suite (and it is only an approximation for Safari and
+       Chrome). It is therefore recommended to *also* run the test
+       suites in actual browsers once in a while.
+
+   .. note::
+
+       The version of PhantomJS_ this was build through is 1.7,
+       previous versions *should* work but are not actually supported
+       (and tend to just segfault when something goes wrong in
+       PhantomJS_ itself so they're a pain to debug).
+
+#. Install a new database with all relevant modules (all modules with
+   a web component at least), then restart the server
+
+   .. note::
+
+       For some tests, a source database needs to be duplicated. This
+       operation requires that there be no connection to the database
+       being duplicated, but Odoo doesn't currently break
+       existing/outstanding connections, so restarting the server is
+       the simplest way to ensure everything is in the right state.
+
+#. Launch ``oe run-tests -d $DATABASE -mweb`` with the correct
+   addons-path specified (and replacing ``$DATABASE`` by the source
+   database you created above)
+
+   .. note::
+
+       If you leave out ``-mweb``, the runner will attempt to run all
+       the tests in all the modules, which may or may not work.
+
+If everything went correctly, you should now see a list of tests with
+(hopefully) ``ok`` next to their names, closing with a report of the
+number of tests run and the time it took:
+
+.. literalinclude:: test-report.txt
+    :language: text
+
+Congratulation, you have just performed a successful "offline" run of
+the OpenERP Web test suite.
+
+.. note::
+
+    Note that this runs all the Python tests for the ``web`` module,
+    but all the web tests for all of Odoo. This can be surprising.
+
+.. _qunit: http://qunitjs.com/
+
+.. _qunit assertions: http://api.qunitjs.com/category/assert/
+
+.. _unittest2: http://pypi.python.org/pypi/unittest2
+
+.. _QUnitSuite: http://pypi.python.org/pypi/QUnitSuite/
+
+.. _PhantomJS: http://phantomjs.org/
+
 .. [#eventsdelegation] not all DOM events are compatible with events delegation
+
+.. [#terminal]
+    with a small twist: :py:meth:`sqlalchemy.orm.query.Query.group_by` is not
+    terminal, it returns a query which can still be altered.
 
