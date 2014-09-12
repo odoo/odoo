@@ -294,11 +294,52 @@
         </tr>
     </t>
 
+    <t t-name="ClientDetailsEdit">
+        <section class='client-details edit'>
+            <div class='client-picture'>
+                <img t-att-src='widget.partner_icon_url(partner.id)' />
+            </div>
+            <input class='client-name' t-att-value='partner.name' placeholder='Name'></input>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Street</span>
+                        <input class='detail client-address-street'  t-att-value='partner.street' placeholder='Street'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>City</span>
+                        <input class='detail client-address-city'    t-att-value='partner.city' placeholder='City'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>ZIP</span>
+                        <input class='detail client-address-zip'     t-att-value='partner.zip' placeholder='ZIP'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Country</span>
+                        <input class='detail client-address-country' t-att-value='partner.country_id[1]' placeholder='Country'></input>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>email</span>
+                        <input class='detail client-email'  t-att-value='partner.email'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>phone</span>
+                        <input class='detail client-phone'  t-att-value='partner.phone'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>ID</span>
+                        <input class='detail client-id'     t-att-value='partner.ean13'></input>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
                 <img t-att-src='widget.partner_icon_url(partner.id)' />
-                <!--<img src='http://static.fjcdn.com/gifs/Aku_c019d6_2548127.gif' />-->
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='client-details-box clearfix'>

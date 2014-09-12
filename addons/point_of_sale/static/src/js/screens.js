@@ -702,7 +702,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 var old_scroll   = parent.scrollTop();
                 var old_height   = contents.height();
                 contents.empty();
-                contents.append($(QWeb.render('ClientDetails',{widget:this,partner:partner})));
+                contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
                 var new_height   = contents.height();
 
                 if(!this.details_visible){
