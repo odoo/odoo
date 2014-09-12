@@ -203,13 +203,6 @@ class website(osv.osv):
                 'name': page_name,
                 'page': ispage,
             })
-            # imd.create(cr, uid, {
-            #     'name': page_name,
-            #     'module': template_module,
-            #     'model': 'ir.ui.view',
-            #     'res_id': page_id,
-            #     'noupdate': True,
-            # }, context=context)
         return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
