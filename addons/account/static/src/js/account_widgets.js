@@ -293,13 +293,10 @@ openerp.account = function (instance) {
 
         // Adds move line ids to the list of move lines not to fetch for a given partner
         // This is required because the same move line cannot be selected for multiple reconciliation
+        // and because for a partial reconciliation only one line can be fetched)
         excludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
-            var line_ids = [];
-            _.each(lines, function(o) {
-                line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var line_ids = _.collect(lines, function(o) { return o.id });
         
             var excluded_ids = this.excluded_move_lines_ids[partner_id];
             var excluded_move_lines_changed = false;
@@ -338,11 +335,7 @@ openerp.account = function (instance) {
         
         unexcludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
-            var line_ids = [];
-            _.each(lines, function(o) {
-                line_ids.push(o.id);
-                line_ids = line_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var line_ids = _.collect(lines, function(o) { return o.id });
 
             var initial_excluded_lines_num = this.excluded_move_lines_ids[partner_id].length;
             this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
@@ -1291,7 +1284,14 @@ openerp.account = function (instance) {
             } else {
                 self.$el.removeClass("no_match");
             }
-    
+
+            _.each(self.get("mv_lines"), function(line) {
+                if (line.partial_reconciliation_siblings_ids.length > 0) {
+                    var correct_format = _.collect(line.partial_reconciliation_siblings_ids, function(o) { return {'id': o} });
+                    self.getParent().excludeMoveLines(self, self.partner_id, correct_format);
+                }
+            });
+
             self.updateMatchView();
             self.updatePagerControls();
         },
@@ -1487,12 +1487,13 @@ openerp.account = function (instance) {
             if (offset < 0) offset = 0;
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
-            if (self.st_line.has_no_partner)
-                var excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
-            _.each(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o){
-                excluded_ids.push(o.id);
-                excluded_ids = excluded_ids.concat(o.partial_reconciliation_siblings_ids);
-            });
+            var excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o) { return o.id; });
+            var globally_excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
+            if (globally_excluded_ids !== undefined)
+                for (var i=0; i<globally_excluded_ids.length; i++)
+                    if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
+                        excluded_ids.push(globally_excluded_ids[i]);
             
             var deferred_move_lines;
             var move_lines = [];

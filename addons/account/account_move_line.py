@@ -776,6 +776,7 @@ class account_move_line(osv.osv):
             if line.reconcile_partial_id:
                 reconcile_partial_ids.append(line.reconcile_partial_id.id)
                 partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
+                partial_reconciliation_siblings_ids.remove(line.id)
 
             ret_line = {
                 'id': line.id,
