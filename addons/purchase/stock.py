@@ -117,8 +117,21 @@ class stock_picking(osv.osv):
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
         purchase_obj = self.pool.get('purchase.order')
+        purchase_line_obj = self.pool.get('purchase.order.line') 
+        invoice_obj = self.pool.get('account.invoice')
+        invoice_line_obj = self.pool.get('account.invoice.line')
         if picking.purchase_id:
             purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_ids': [(4, invoice_id)]})
+            for purchase_line in picking.purchase_id.order_line:
+                if purchase_line.product_id.type == 'service' and not purchase_line.invoiced:
+                    account_id = purchase_obj._choose_account_from_po_line(cursor, user, purchase_line)
+                    vals = purchase_obj._prepare_inv_line(cursor, user, account_id, purchase_line)
+                    vals['invoice_id'] = invoice_id
+                    invoice_line_id = invoice_line_obj.create(cursor, user, vals)
+                    purchase_line_obj.write(cursor, user, [purchase_line.id], {
+                        'invoice_lines': [(6, 0, [invoice_line_id])],
+                    })
+                    invoice_obj.button_compute(cursor, user, [invoice_id])
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
 
 class stock_partial_picking(osv.osv_memory):
