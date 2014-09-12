@@ -1611,7 +1611,7 @@ openerp.account = function (instance) {
             var self = this;
             this._super(elt, val);
             _.each(self.get("mv_lines"), function(line) {
-                if (line.partial_reconciliation_siblings) {
+                if (line.partial_reconciliation_siblings.length > 0) {
                     self.getParent().excludeMoveLines(self, self.partner_id, line.partial_reconciliation_siblings);
                 }
             });
@@ -2022,11 +2022,6 @@ openerp.account = function (instance) {
         },
     });
     
-    // Warning : if lines of the same partial reconciliation appear on different "pages" (see pager_index and updateMatches)
-    // it will appear as if the same line was present multiple times.
-    // To avoid this, use a mechanism like (un)excludeMoveLines in bank statement reconciliation (altough it doesn't have
-    // to be global since there's no risk of the same move line appearing in several widgets here).
-    // But is it worth it ?
     instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
         className: instance.web.account.abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line',
 
@@ -2043,6 +2038,7 @@ openerp.account = function (instance) {
             this.data = context.data;
             this.currency_id = context.data.currency_id;
             this.presets = this.getParent().presets;
+            this.excluded_move_lines_ids = [];
         },
 
         render: function() {
@@ -2062,6 +2058,7 @@ openerp.account = function (instance) {
             self.updateAccountingViewMatchedLines();
             self.set("mode", "match");
         },
+
 
         /** Utils */
 
@@ -2091,6 +2088,12 @@ openerp.account = function (instance) {
                     self.persistAndDestroy();
                 }
             }
+
+            _.each(self.get("mv_lines"), function(line) {
+                for (var i=0; i<line.partial_reconciliation_siblings.length; i++)
+                    if (self.excluded_move_lines_ids.indexOf(line.partial_reconciliation_siblings[i].id) === -1)
+                        self.excluded_move_lines_ids.push(line.partial_reconciliation_siblings[i].id);
+            });
         },
 
         /* Event handlers */
@@ -2119,13 +2122,22 @@ openerp.account = function (instance) {
 
         /* Views updating */
 
-        updateAccountingViewMatchedLines: function() {
-            this._super();
-            // Make sure there's at least one (empty) line in the accounting view so the T appears
-            // Should be done in CSS with sth like elt:empty:before { content: "HTML"; }
-            // Unfortunately, "Generated content does not alter the document tree"
+        // Make sure there's at least one (empty) line in the accounting view so the T appears
+        // Should be done in CSS with sth like elt:empty:before { content: "HTML"; }
+        // Unfortunately, "Generated content does not alter the document tree"
+        preventAccountingViewCollapse: function() {
             if (this.$(".tbody_matched_lines > *").length + this.$(".tbody_created_lines > *").length === 0)
                 this.$(".tbody_matched_lines").append('<tr class="filler_line"><td class="cell_action"></td><td class="cell_due_date"></td><td class="cell_label"></td><td class="cell_debit"></td><td class="cell_credit"></td><td class="cell_info_popover"></td></tr>');
+        },
+
+        updateAccountingViewMatchedLines: function() {
+            this._super();
+            this.preventAccountingViewCollapse();
+        },
+
+        updateAccountingViewCreatedLines: function() {
+            this._super();
+            this.preventAccountingViewCollapse();
         },
 
         balanceChanged: function() {
@@ -2161,9 +2173,11 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
             var self = this;
+            excluded_ids = excluded_ids.concat(self.excluded_move_lines_ids);
             return self.model_aml
                 .call("get_move_lines_for_manual_reconciliation", [self.data.account_id, self.data.partner_id || undefined, excluded_ids, self.filter, offset, limit])
                 .then(function (lines) {
+                    debugger;
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     callback.call(self, lines);
                 });
@@ -2171,6 +2185,7 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {
             var self = this;
+            excluded_ids = excluded_ids.concat(self.excluded_move_lines_ids);
             return self.model_aml
                 .call("get_move_lines_for_manual_reconciliation", [self.data.account_id, self.data.partner_id || undefined, excluded_ids, self.filter, 0, undefined, true])
                 .then(function(num) {
