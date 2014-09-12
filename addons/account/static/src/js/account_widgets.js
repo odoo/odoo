@@ -1729,7 +1729,7 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
             var self = this;
-            if (self.partner_id && self.getParent().excluded_move_lines_ids[self.partner_id])
+            if (self.getParent().excluded_move_lines_ids[self.partner_id])
                 excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
             return self.model_bank_statement_line
                 .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, offset, limit])
@@ -1741,7 +1741,7 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {
             var self = this;
-            if (self.partner_id && self.getParent().excluded_move_lines_ids[self.partner_id])
+            if (self.getParent().excluded_move_lines_ids[self.partner_id])
                 excluded_ids = excluded_ids.concat(self.getParent().excluded_move_lines_ids[self.partner_id]);
             return self.model_bank_statement_line
                 .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
