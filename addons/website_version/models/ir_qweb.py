@@ -34,13 +34,13 @@ class QWeb(orm.AbstractModel):
                     RNG_exp = int(context.get('RNG_exp'))
                     number_id = int(''.join(str(ord(c)) for c in id_or_xml_id))
 
-                    exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [snapshot_id[0]], context=context)
+                    exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [exp_snap_id[0]], context=context)
                     exp = exp_snapshot.experiment_id
                     result=[]
                     pond_sum=0
                     for exp_snap in exp.experiment_snapshot_ids:
                         result.append([exp_snap.ponderation+pond_sum, exp_snap.snapshot_id.id])
-                        pond_sum+=page.ponderation
+                        pond_sum+=exp_snap.ponderation
                     if pond_sum:
                         #RANDOM
                         x = (RNG_exp+number_id)*179426549%pond_sum
