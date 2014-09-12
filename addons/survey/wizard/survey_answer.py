@@ -159,7 +159,7 @@ class survey_question_wiz(osv.osv_memory):
                         title = sur_rec.title
                     xml_form = etree.Element('form', {'string': tools.ustr(title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
+                        context.update({'page_id' : p_id,'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
                         etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
