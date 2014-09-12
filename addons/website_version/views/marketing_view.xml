@@ -14,7 +14,7 @@
             <field name="name">Experiment Kanban</field>
             <field name="model">website_version.experiment</field>
             <field name="arch" type="xml">
-                <kanban string="Experiments" class="oe_background_grey">
+                <kanban default_group_by="state" string="Experiments" class="oe_background_grey">
                     <field name="name"/>
                     <field name="website_id"/>
                     <field name="experiment_page_ids"/>
@@ -52,10 +52,13 @@
             <field name="model">website_version.experiment</field> 
             <field name="arch" type="xml">
                 <form string="Experiment Form">
-                    <field name="name" colspan="4" />
-                    <field name="website_id" colspan="4"/>
-                    <!-- <field name="active" colspan="4"/> -->
-                    <field name="active_exp" colspan="4"/>
+                    <group>
+                        <field name="name" colspan="4" />
+                        <field name="website_id" colspan="4"/>
+                        <!-- <field name="active" colspan="4"/> -->
+                        <field name="active_exp" colspan="4"/>
+                        <field name="state" colspan="4"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Pages in experiment" colspan="4" >
                             <field name="experiment_page_ids" colspan="4" context="{'website_id': website_id}">
