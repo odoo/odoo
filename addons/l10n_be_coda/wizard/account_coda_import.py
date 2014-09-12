@@ -276,7 +276,7 @@ class account_bank_statement_import(osv.TransientModel):
                     if 'counterpartyAddress' in line and line['counterpartyAddress'] != '':
                         note.append(_('Counter Party Address') + ': ' + line['counterpartyAddress'])
                     line['name'] = "\n".join(filter(None, [line['counterpartyName'], line['communication']]))
-                    structured_com = ""
+                    structured_com = False
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
                     bank_account_id = False
