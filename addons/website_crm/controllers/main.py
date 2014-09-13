@@ -91,7 +91,11 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
+
+
+
         lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
+        values.update(lead_id=lead_id)
         if lead_id:
             for field_value in post_file:
                 attachment_value = {

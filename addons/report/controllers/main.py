@@ -93,7 +93,7 @@ class ReportController(Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @route(['/report/download'], type='http', auth="user", website=True)
+    @route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a pdf/controller report.

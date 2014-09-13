@@ -189,6 +189,16 @@ class stock_location(osv.osv):
         return self._default_removal_strategy(cr, uid, context=context)
 
 
+    def get_warehouse(self, cr, uid, location, context=None):
+        """
+            Returns warehouse id of warehouse that contains location
+            :param location: browse record (stock.location)
+        """
+        wh_obj = self.pool.get("stock.warehouse")
+        whs = wh_obj.search(cr, uid, [('view_location_id.parent_left', '<=', location.parent_left), 
+                                ('view_location_id.parent_right', '>=', location.parent_left)], context=context)
+        return whs and whs[0] or False
+
 #----------------------------------------------------------
 # Routes
 #----------------------------------------------------------
@@ -1525,12 +1535,6 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if vals.get('product_id') and not vals.get('price_unit'):
-            prod_obj = self.pool.get('product.product')
-            vals['price_unit'] = prod_obj.browse(cr, uid, vals['product_id'], context=context).standard_price
-        return super(stock_move, self).create(cr, uid, vals, context=context)
-
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -2020,6 +2024,13 @@ class stock_move(osv.osv):
             date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
+    def attribute_price(self, cr, uid, move, context=None):
+        """
+            Attribute price to move, important in inter-company moves or receipts with only one partner
+        """
+        if not move.price_unit:
+            price = move.product_id.standard_price
+            self.write(cr, uid, [move.id], {'price_unit': price})
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move or put it in waiting if it's linked to another move.
@@ -2033,6 +2044,7 @@ class stock_move(osv.osv):
         }
         to_assign = {}
         for move in self.browse(cr, uid, ids, context=context):
+            self.attribute_price(cr, uid, move, context=context)
             state = 'confirmed'
             #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
@@ -2428,6 +2440,21 @@ class stock_move(osv.osv):
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         #thus the result of action_confirm should always be a list of 1 element length)
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
+
+
+    def get_code_from_locs(self, cr, uid, move, context=None):
+        """
+        Returns the code the picking type should have.  This can easily be used
+        to check if a move is internal or not
+        """
+        code = 'internal'
+        src_loc = move.location_id
+        dest_loc = move.location_dest_id
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        return code
 
 
 class stock_inventory(osv.osv):
@@ -3229,11 +3256,14 @@ class stock_warehouse(osv.osv):
         location_obj = self.pool.get('stock.location')
 
         #create view location for warehouse
-        wh_loc_id = location_obj.create(cr, uid, {
+        loc_vals = {
                 'name': _(vals.get('code')),
                 'usage': 'view',
-                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
-            }, context=context)
+                'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1],
+        }
+        if vals.get('company_id'):
+            loc_vals['company_id'] = vals.get('company_id')
+        wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
         vals['view_location_id'] = wh_loc_id
         #create all location
         def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
@@ -3249,12 +3279,15 @@ class stock_warehouse(osv.osv):
             {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'field': 'wh_pack_stock_loc_id'},
         ]
         for values in sub_locations:
-            location_id = location_obj.create(cr, uid, {
+            loc_vals = {
                 'name': values['name'],
                 'usage': 'internal',
                 'location_id': wh_loc_id,
                 'active': values['active'],
-            }, context=context_with_inactive)
+            }
+            if vals.get('company_id'):
+                loc_vals['company_id'] = vals.get('company_id')
+            location_id = location_obj.create(cr, uid, loc_vals, context=context_with_inactive)
             vals[values['field']] = location_id
 
         #create WH
@@ -3451,6 +3484,7 @@ class stock_warehouse(osv.osv):
             'limit': 20
         }
 
+
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
@@ -3497,6 +3531,21 @@ class stock_location_path(osv.osv):
         'active': True,
     }
 
+    def _prepare_push_apply(self, cr, uid, rule, move, context=None):
+        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return {
+                'location_id': move.location_dest_id.id,
+                'location_dest_id': rule.location_dest_id.id,
+                'date': newdate,
+                'company_id': rule.company_id and rule.company_id.id or False,
+                'date_expected': newdate,
+                'picking_id': False,
+                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
+                'propagate': rule.propagate,
+                'push_rule_id': rule.id,
+                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
+            }
+
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -3513,18 +3562,8 @@ class stock_location_path(osv.osv):
                 #call again push_apply to see if a next step is defined
                 move_obj._push_apply(cr, uid, [move], context=context)
         else:
-            move_id = move_obj.copy(cr, uid, move.id, {
-                'location_id': move.location_dest_id.id,
-                'location_dest_id': rule.location_dest_id.id,
-                'date': newdate,
-                'company_id': rule.company_id and rule.company_id.id or False,
-                'date_expected': newdate,
-                'picking_id': False,
-                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'propagate': rule.propagate,
-                'push_rule_id': rule.id,
-                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
-            })
+            vals = self._prepare_push_apply(cr, uid, rule, move, context=context)
+            move_id = move_obj.copy(cr, uid, move.id, vals, context=context)
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })

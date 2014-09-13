@@ -769,9 +769,13 @@ class Field(object):
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
-            except MissingError:
-                # some record is missing, retry on existing records only
-                self._compute_value(records.exists())
+            except (AccessError, MissingError):
+                # some record is forbidden or missing, retry record by record
+                for record in records:
+                    try:
+                        self._compute_value(record)
+                    except Exception as exc:
+                        record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -1664,6 +1668,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, MissingError
+from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

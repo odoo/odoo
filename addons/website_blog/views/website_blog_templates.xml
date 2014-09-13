@@ -162,7 +162,7 @@
 <!-- Option: Blog Post List: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
         customize_show="True" inherit_id="website_blog.blog_post_short">
-    <xpath expr="//div[@name='blog_post_data']" position="inside">
+    <xpath expr="//*[@name='blog_post_data']" position="inside">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">

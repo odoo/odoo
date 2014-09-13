@@ -5693,14 +5693,28 @@ class BaseModel(object):
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
-                    newval = record[name]
                     field = self._fields[name]
-                    if newval != oldval or \
-                            field.type in ('one2many', 'many2many') and newval._dirty:
-                        result['value'][name] = field.convert_to_write(
-                            newval, record._origin, subfields.get(name),
-                        )
-                        todo.add(name)
+                    newval = record[name]
+                    if field.type in ('one2many', 'many2many'):
+                        if newval != oldval or newval._dirty:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # keep result: newval may have been dirty before
+                            pass
+                    else:
+                        if newval != oldval:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # clean up result to not return another value
+                            result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
