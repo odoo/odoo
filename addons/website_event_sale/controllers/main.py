@@ -43,8 +43,6 @@ class website_event(website_event):
             ticket = ticket_obj.browse(cr, SUPERUSER_ID, ticket_id, context=context)
             request.website.sale_get_order(force_create=1)._cart_update(
                 product_id=ticket.product_id.id, add_qty=quantity, context=dict(context, event_ticket_id=ticket.id))
-            if 'tax_id' in _values:
-                _values['tax_id'] = [(6, 0, _values['tax_id'])]
 
         if not sale:
             return request.redirect("/event/%s" % event_id)
