@@ -606,7 +606,7 @@ class HttpRequest(WebRequest):
         """
         response = Response(template=template, qcontext=qcontext, **kw)
 
-        if request.context['EXP']:
+        if request.context.get('EXP'):
             data=json.dumps(request.context['EXP'], ensure_ascii=False)
             response.set_cookie('EXP', data)
 
