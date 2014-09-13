@@ -33,8 +33,6 @@ class QWeb(orm.AbstractModel):
                 if exp_snap_id:
                     exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [exp_snap_id[0]], context=context)
                     exp = exp_snapshot.experiment_id
-                    print context.get('EXP')
-                    print int(context.get('EXP')[str(exp.id)])
                     context['snapshot_id'] = int(context.get('EXP')[str(exp.id)])
 
             if 'snapshot_id' in context:

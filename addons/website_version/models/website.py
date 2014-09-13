@@ -28,8 +28,10 @@ class NewWebsite(osv.Model):
         exp_ids = self.pool["website_version.experiment"].search(cr, uid, [('state','=','running'),('website_id.id','=',website.id)], context=context)
         exps = self.pool["website_version.experiment"].browse(cr, uid, exp_ids, context=context)
         if not 'EXP' in request.httprequest.cookies:
-            EXP = {}
-            print 'IN'
+            EXP = request.context.get('EXP')
+            if not EXP:
+                EXP = {}
+            
         else:    
             EXP = json.loads(request.httprequest.cookies.get('EXP'))
         for exp in exps:
