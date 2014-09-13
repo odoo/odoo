@@ -193,7 +193,7 @@ class event_sponsors(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
         'url': fields.text('Sponsor Website'),
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
-        'image_medium': fields.related('partner_id', 'image_medium', string='Logo')
+        'image_medium': fields.related('partner_id', 'image_medium', string='Logo', type='binary')
     }
 
     def has_access_to_partner(self, cr, uid, ids, context=None):

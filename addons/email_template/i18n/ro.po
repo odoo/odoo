@@ -1,65 +1,229 @@
 # Romanian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-12 12:56+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-17 11:09+0000\n"
 "Last-Translator: Simonel Criste <simi@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-18 07:24+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "De la"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Sablon"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "Adaugă"
 
 #. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Buton bara laterala pentru a deschide actiunea barei laterale"
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Adauga Semnatura"
 
 #. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "Nu participati"
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "Configurări avansate"
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Destinatar (Email-uri)"
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Se aplică pentru"
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Server Ieșire E-mail-uri"
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Atașamente"
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
-msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "Semnătura Autor"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Sterge Automat"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Disponibil pentru corespondență în masă"
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Conținut"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Destinatari cc (copie carbon) (aici puteti folosi inlocuitori)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "Alegeți un șablon pentru a afișa valorile sale."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "Alegeți un exemplu"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
 msgstr ""
-"Bara laterala de actiune pentru a face ca acest sablon sa fie disponibil in "
-"inregistrarile modelului documentului asociat"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr ""
+"Id-uri despartite prin virgule ale partenerilor destinatari (aici pot fi "
+"folositi substituenti)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr ""
+"Adrese destinatari despartite prin virgula (aici pot fi folositi inlocuitori)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "Continut"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "Acțiune contextuală"
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "Creat la"
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Valoarea Implicita"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Stergerea inregistrarii actiunii a esuat."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+"Afiseaza o optiune in documentele asociate pentru a deschide un wizard de "
+"compoziite cu acest sablon"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "Configurare e-mail"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Previzualizare email"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "Sablon email"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Previzualizare Sablon email"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Sabloane e-mail"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Wizard de compozitie email-uri"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -68,59 +232,31 @@ msgid "Field"
 msgstr "Câmp"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Adresa expeditorului (aici pot fi folositi inlocuitori)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr "Sterge actiunea cadru"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Server optional preferat pentru trimiterea e-mail-urilor. Daca nu este "
-"setat, va fi folosit cel cu prioritatea cea mai mare."
+"Exprsie inlocuitoare finala, care va fi copiata in campul sablon dorit."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Raport nume fisier"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "De la"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "Previzualizare"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Grupeaza dupa..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Raspunde"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Utilizați șablon"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Conţinut"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copie)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -133,29 +269,41 @@ msgstr ""
 "mesajului"
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "Server SMTP"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Salvați ca șablon nou"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"Atunci cand un camp de relatie este selectat ca prim camp, acest camp arata "
-"modelul documentului la care se refera relatia."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "Sabloane e-mail"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Limbă"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Nume"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -169,10 +317,25 @@ msgstr ""
 "Extensia poate sa fie omisa, iar atunci va reiesi din tipul raportului."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Actiune bara laterala"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Nu participati"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Server optional preferat pentru trimiterea e-mail-urilor. Daca nu este "
+"setat, va fi folosit cel cu prioritatea cea mai mare."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Raport optional care va fi printat si atasat"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -180,19 +343,140 @@ msgstr "Actiune bara laterala"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Limba optionala de traducere (cod ISO) care va fi selectata atunci cand "
-"trimiteti un e-mail. Daca nu este setata, va fi folosita versiunea in limba "
-"engleza. Aceasta ar trebui de obicei sa fie o expresie inlocuitoare care "
-"furnizeaza codul limbii corespunzatoare, de exemplu "
-"${object.partner_id.lang.code}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr ""
+"Valoarea optionala care va fi folosita in cazul in care campul tinta este gol"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Server Ieșire E-mail-uri"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Partener"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Sterge definitiv acest mesaj dupa ce il trimite, pentru a economisi spatiu"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Expresie Substituenta"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Adresa de raspuns preferata (aici pot fi folositi inlocuitori)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Previzualizare"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Previzualizare a"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Model Document Asociat"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+"Scoateți acțiunea contextuală pentru a utiliza acest șablon de pe "
+"documentele conexe."
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Raspunde"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Raport nume fisier"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr ""
+"Versiunea rich-text?HTML a mesajului (aici pot fi folositi inlocuitori)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "Server SMTP"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Document esantion"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Salveaza ca sablon nou"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Salvați ca șablon nou"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -207,117 +491,26 @@ msgstr ""
 "destinatia relatiei."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "Creare Valoare Dinamica"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Trimite email (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Previzualizare Sablon"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Salveaza ca sablon nou"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
-"Afiseaza o optiune in documentele asociate pentru a deschide un wizard de "
-"compoziite cu acest sablon"
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Destinatari cc (copie carbon) (aici puteti folosi inlocuitori)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr ""
-"Adrese destinatari despartite prin virgula (aici pot fi folositi inlocuitori)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Avansat"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Previzualizare a"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Utilizare document de probă"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Sabloane"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Nume"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Limbă"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Previzualizare Sablon email"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Previzualizare email"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-"Scoateți acțiunea contextuală pentru a utiliza acest șablon de pe "
-"documentele conexe."
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "Expresie Substituenta"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Submodel"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Subiect (aici puteti folosi inlocuitori)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Adresa de raspuns preferata (aici pot fi folositi inlocuitori)"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -326,103 +519,26 @@ msgid "Sidebar Button"
 msgstr "Buton Bara laterala"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Raport optional care va fi printat si atasat"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Actiune bara laterala"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr ""
-"Valoarea optionala care va fi folosita in cazul in care campul tinta este gol"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Model"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Wizard de compozitie email-uri"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "Adauga contextul actiunii"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Tipul de document cu care poate fi utilizat acest sablon"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "Destinatar (Parteneri)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Sterge Automat"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Exprsie inlocuitoare finala, care va fi copiata in campul sablon dorit."
+"Bara laterala de actiune pentru a face ca acest sablon sa fie disponibil in "
+"inregistrarile modelului documentului asociat"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "Model Document Asociat"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "Adresare"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Id-uri despartite prin virgule ale partenerilor destinatari (aici pot fi "
-"folositi substituenti)"
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Atasamente"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Stergerea inregistrarii actiunii a esuat."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Cc"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "Se aplica pentru"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Buton bara laterala pentru a deschide actiunea barei laterale"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -431,36 +547,89 @@ msgid "Sub-field"
 msgstr "Sub-fisier"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Detalii e-mail"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Submodel"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Trimite email (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Subiect"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Subiect (aici puteti folosi inlocuitori)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Furnizori"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Previzualizare Sablon"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Sabloane"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Tipul de document cu care poate fi utilizat acest sablon"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
-"Daca bifati, acest partener nu va primi nicio notificare automata prin e-"
-"mail, cum ar fi disponibilitatea facturilor."
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-"Sterge definitiv acest mesaj dupa ce il trimite, pentru a economisi spatiu"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Destinatar (Email-uri)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Grupeaza dupa..."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Destinatar (Parteneri)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Utilizați șablon"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Atentionare"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -474,27 +643,14 @@ msgstr ""
 "destinatie (sub-model)."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Atentionare"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Adauga Semnatura"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Partener"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "Valoarea Implicita"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Atunci cand un camp de relatie este selectat ca prim camp, acest camp arata "
+"modelul documentului la care se refera relatia."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -507,940 +663,12 @@ msgstr ""
 "urilor create din acest sablon"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
 msgstr ""
-"Versiunea rich-text?HTML a mesajului (aici pot fi folositi inlocuitori)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "Cuprins"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Subiect"
-
-#~ msgid ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-#~ msgstr ""
-#~ "Selectaţi câmpul din modelul pe care vreţi să-l folosiţi\n"
-#~ "Dacă este un câmp de relaţie veţi putea alege valorile incluse din căsuţa de "
-#~ "mai jos\n"
-#~ "(Observaţie: Dacă nu sunt valori acolo verificaţi dacă aţi ales corect "
-#~ "modelul)"
-
-#~ msgid "Plain Text & HTML with no attachments"
-#~ msgstr "Text simplu şi HTML fără ataşamente"
-
-#~ msgid "Approved"
-#~ msgstr "Aprobat"
-
-#~ msgid "Email Accounts"
-#~ msgstr "Conturi de mail"
-
-#~ msgid "Send all mails"
-#~ msgstr "Trimite toate mesajele"
-
-#~ msgid "Server Reference of mail"
-#~ msgstr "Referinţă server de e-mail"
-
-#~ msgid "Send now"
-#~ msgstr "Trimite acum"
-
-#~ msgid "Not Applicable"
-#~ msgstr "Neaplicabil"
-
-#~ msgid "HTML code"
-#~ msgstr "Cod HTML"
-
-#~ msgid "Email Account"
-#~ msgstr "Cont e-mail"
-
-#~ msgid ""
-#~ "The default language for the email. Placeholders can be used here. eg. "
-#~ "${object.partner_id.lang}"
-#~ msgstr ""
-#~ "Limba implicită pentru mesaje. Aici se pot folosi rezervatoare, ex: "
-#~ "${object.partner_id.lang}"
-
-#~ msgid "Account"
-#~ msgstr "Cont"
-
-#~ msgid "Send Mail"
-#~ msgstr "Trimite e-mail-ul"
-
-#~ msgid ""
-#~ "When you choose relationship fields this field will specify the sub value "
-#~ "you can use."
-#~ msgstr ""
-#~ "Când alegeţi câmpuri de relaţie acest câmp va specifica subvalorile ce pot "
-#~ "fi folosite."
-
-#~ msgid "Delete Action"
-#~ msgstr "Șterge acțiunea"
-
-#~ msgid "Approve Account"
-#~ msgstr "Aprobare cont"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Referred Document"
-#~ msgstr "Document asociat"
-
-#~ msgid "Complete Success"
-#~ msgstr "Succes deplin"
-
-#~ msgid "Wizard Complete"
-#~ msgstr "Asistenţă completă."
-
-#~ msgid "Accounts"
-#~ msgstr "Conturi"
-
-#~ msgid "Attached Files"
-#~ msgstr "Fișiere atașate"
-
-#~ msgid "No of requested Mails"
-#~ msgstr "Număr mesaje solicitate"
-
-#~ msgid "Standard Body (Text)"
-#~ msgstr "Corp standard (text)"
-
-#, python-format
-#~ msgid "Reason: %s"
-#~ msgstr "Motiv: %s"
-
-#~ msgid "Insert Simple Field"
-#~ msgstr "Introducere câmp simplu"
-
-#~ msgid "Standard Body"
-#~ msgstr "Conţinut standard"
-
-#~ msgid "The text version of the mail"
-#~ msgstr "Versiunea text a mesajului"
-
-#~ msgid "Body (Text-Web Client Only)"
-#~ msgstr "Corp (text-numai clientul web)"
-
-#~ msgid "Wizard Button"
-#~ msgstr "Buton asistent"
-
-#~ msgid "State"
-#~ msgstr "Stare"
-
-#~ msgid "Resource"
-#~ msgstr "Resursă"
-
-#~ msgid "Sent Items"
-#~ msgstr "Mesaje trimise"
-
-#~ msgid "Sub Field"
-#~ msgstr "Subcâmp"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Raport"
-
-#~ msgid "User account"
-#~ msgstr "Cont utilizator"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "Ataşare semnătură la mesaj"
-
-#~ msgid ""
-#~ "Copy and paste the value in the location you want to use a system value."
-#~ msgstr "Copiere şi lipire valoare sistem în locaţia dorită."
-
-#~ msgid "Server"
-#~ msgstr "Server"
-
-#~ msgid "Suspend Account"
-#~ msgstr "Suspendare cont"
-
-#~ msgid "HTML Body"
-#~ msgstr "Corp HTML"
-
-#~ msgid "Expression Builder"
-#~ msgstr "Constructor de expresii"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "Această valoare se consideră dacă rămâne gol"
-
-#~ msgid ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-#~ msgstr ""
-#~ "Când se foloseşte un câmp de relaţie, acest câmp va arăta ce tip de câmp aţi "
-#~ "selectat"
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Asistent trimitere e-mail"
-
-#~ msgid "Signature"
-#~ msgstr "Semnătură"
-
-#~ msgid "Mail Details"
-#~ msgstr "Detalii mesaj"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Corp (text simplu)"
-
-#~ msgid "Rec/Sent Date"
-#~ msgstr "Data expediţiei/Primirii"
-
-#~ msgid "Server Information"
-#~ msgstr "Informații server"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "Număr de e-mailuri generate"
-
-#~ msgid "Multiple Mail Wizard Step 1"
-#~ msgstr "Pas 1 asistent mesaj multiplu"
-
-#~ msgid "Window Action"
-#~ msgstr "Acțiune pentru fereastră"
-
-#~ msgid "Related User"
-#~ msgstr "Utilizator asociat"
-
-#~ msgid "Yes"
-#~ msgstr "Da"
-
-#~ msgid "No"
-#~ msgstr "Nu"
-
-#~ msgid "Drafts"
-#~ msgstr "Ciorne"
-
-#~ msgid "Mail Contents"
-#~ msgstr "Conţinut e-mail"
-
-#~ msgid "BCC"
-#~ msgstr "BCC"
-
-#~ msgid "Plain Text"
-#~ msgstr "Text simplu"
-
-#~ msgid "Draft"
-#~ msgstr "Ciornă"
-
-#~ msgid "Model Internal Name"
-#~ msgstr "Nume intern al modelului"
-
-#~ msgid "Message-ID"
-#~ msgstr "ID mesaj"
-
-#~ msgid "Applicable for inward items only"
-#~ msgstr "Aplicabil numai pentru intrări"
-
-#~ msgid ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-#~ msgstr ""
-#~ "După acţiunea Trimitere toate mesajele, mesajele vor fi trimise în Outbox şi "
-#~ "şterse din următoarele acţiuni Primire/Trimitere"
-
-#~ msgid "User Name"
-#~ msgstr "Nume utilizator"
-
-#~ msgid "Request Re-activation"
-#~ msgstr "Cerere reactivare"
-
-#~ msgid "User"
-#~ msgstr "Utilizator"
-
-#~ msgid "Status"
-#~ msgstr "Stare"
-
-#~ msgid "From Account"
-#~ msgstr "Din contul"
-
-#~ msgid "Intermixed content"
-#~ msgstr "Conţinut mixt"
-
-#~ msgid "Suspended"
-#~ msgstr "Suspendat"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Salvare în Ciorne"
-
-#~ msgid "Outbox"
-#~ msgstr "Ieșire"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Trimite/Primeşte"
-
-#~ msgid "Expression"
-#~ msgstr "Expresie"
-
-#~ msgid "Report File Name"
-#~ msgstr "Numele de fişier raport"
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Numai utilizatorii din aceste grupuri pot trimite mesaje din acest şablon"
-
-#~ msgid "History"
-#~ msgstr "Istoric"
-
-#~ msgid "Allowed User Groups"
-#~ msgstr "Grupuri de utilizatori acceptate"
-
-#~ msgid "Body (HTML-Web Client Only)"
-#~ msgstr "Corp (HTML - Exclusiv client web )"
-
-#~ msgid "Discard Mail"
-#~ msgstr "Aruncă corespondenţa"
-
-#~ msgid "Sending"
-#~ msgstr "Trimitere mesaje"
-
-#~ msgid "User Information"
-#~ msgstr "Informații utilizator"
-
-#~ msgid "Actions"
-#~ msgstr "Acţiuni"
-
-#~ msgid "Trash"
-#~ msgstr "Coșul de gunoi"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "Căsuţă de e-mail"
-
-#~ msgid "Null Value"
-#~ msgstr "Valore „Null”"
-
-#~ msgid "Create Action"
-#~ msgstr "Creare acţiune"
-
-#~ msgid "Description"
-#~ msgstr "Descriere"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Emails"
-#~ msgstr "Email-uri"
-
-#~ msgid "Sent"
-#~ msgstr "Trimis"
-
-#~ msgid "Password"
-#~ msgstr "Parolă"
-
-#~ msgid "Report Name"
-#~ msgstr "Nume raport"
-
-#~ msgid ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-#~ msgstr ""
-#~ "Copiere cod în corpul mesajului HTML pentru a se afişa informaţia în mesaje."
-
-#~ msgid "This is the wizard for sending mail"
-#~ msgstr "Acesta este asistentul pentru expediere e-mail"
-
-#~ msgid "Mail Format"
-#~ msgstr "Format corespondență"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Conturi de companie"
-
-#~ msgid "Folder"
-#~ msgstr "Dosar"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Are ataşamente"
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Fără descriere"
-
-#~ msgid "Report to send"
-#~ msgstr "Raport de trimis"
-
-#~ msgid "Simple Mail Wizard Step 1"
-#~ msgstr "Pas 1 asistent mail simplu"
-
-#, python-format
-#~ msgid ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-#~ msgstr ""
-#~ "Nu aveti nici un cont personal de email configurat. \n"
-#~ "Sau ii cereti administratorului sa aplice un cont pentru acest sablon sau va "
-#~ "creati dumneavoastra un cont de email."
-
-#~ msgid "Email Content  "
-#~ msgstr "Continut email  "
-
-#, python-format
-#~ msgid "Deletion of Record failed"
-#~ msgstr "Stergerea inregistrarii a esuat"
-
-#~ msgid ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-#~ msgstr ""
-#~ "Specifica numele de utilizator daca serverul dumneavoastra SMTP necesita "
-#~ "autentificare, in caz contrar lasati necompletat."
-
-#~ msgid "Personal Emails"
-#~ msgstr "Email-uri personale"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Sterge permanent email-urile dupa ce sunt trimise"
-
-#~ msgid ""
-#~ "Select if this mail account does not belong to specific user but to the "
-#~ "organization as a whole. eg: info@companydomain.com"
-#~ msgstr ""
-#~ "Selectati daca acest cont de email nu apartine utilizatorului specific, ci "
-#~ "organizatiei ca intreg. de exemplu: info@companydomain.com"
-
-#, python-format
-#~ msgid "Emails for multiple items saved in outbox."
-#~ msgstr "Email-urile pentru elemente multiple salvate in outbox."
-
-#~ msgid "Email Account Configuration"
-#~ msgstr "Configurare cont email"
-
-#, python-format
-#~ msgid "Email sending failed for one or more objects."
-#~ msgstr "Trimiterea email-ului pentru unul sau mai multe obiecte a esuat."
-
-#~ msgid "From Email"
-#~ msgstr "Email de la"
-
-#~ msgid "Body(Text)"
-#~ msgstr "Corp(Text)"
-
-#~ msgid "SSL/TLS (only in python 2.6)"
-#~ msgstr "SSL/TLS (doar in python versiunea 2.6)"
-
-#~ msgid ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
-#~ "e.g. ${object.email_cc}"
-#~ msgstr ""
-#~ "Adresa (Adresele) CC (copie la indigo), despartita(e) prin virgula. Aici pot "
-#~ "fi folositi substituenti. de exemplu ${object.mail_cc}"
-
-#~ msgid ""
-#~ "The description is used as the Sender name along with the provided From "
-#~ "Email, unless it is already specified in the From Email, e.g: John Doe "
-#~ "<john@doe.com>"
-#~ msgstr ""
-#~ "Descrierea este folosita drept numele Expeditorului impreuna cu email de la, "
-#~ "doar daca nu este deja specificata in Email de la, de exemplu: John Doe "
-#~ "<john@doe.com>"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Adaugati aici toate atasamentele pentru documentul curent daca doriti sa le "
-#~ "includeti in Email."
-
-#~ msgid "Both HTML & Text (Mixed)"
-#~ msgstr "Atat HTML cat si Text (Combinat)"
-
-#~ msgid "Both HTML & Text (Alternative)"
-#~ msgstr "Atat HTML cat si Text (Alternativ)"
-
-#~ msgid ""
-#~ "Tip: Multiple emails are sent in the same language (the first one is "
-#~ "proposed). We suggest you send emails in groups according to language."
-#~ msgstr ""
-#~ "Sfat: Email-uri multiple sunt trimise in aceeasi limba (prima este propusa). "
-#~ "Va sugeram sa trimiteti email-uri in grupuri in functie de limba."
-
-#, python-format
-#~ msgid "Mail from Account %s successfully Sent."
-#~ msgstr "Email-ul din contul %s a fost trimis cu succes."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason: Server Send Error\n"
-#~ " Description: %s"
-#~ msgstr ""
-#~ "Mailul din Contul %s a esuat. Motivul probabil: Eroare Trimitere Server\n"
-#~ " Descriere: %s"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here."
-#~ msgstr ""
-#~ "Adresa la care ar trebui sa raspunda destinatarii, daca este diferita de "
-#~ "adresa De la. Aici pot fi folositi substituenti."
-
-#~ msgid "Mako Templates"
-#~ msgstr "Sabloane Mako"
-
-#~ msgid "Company Emails"
-#~ msgstr "Email-uri companie"
-
-#~ msgid ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here. e.g. ${object.email_bcc}"
-#~ msgstr ""
-#~ "Adresa (adresele) BCC (copie invizibila), despartita(e) de virgule. Aici pot "
-#~ "fi folositi substituenti. de exemplu ${object.email_bcc}"
-
-#~ msgid "Body(Html)"
-#~ msgstr "Corp(Html)"
-
-#, python-format
-#~ msgid "Out going connection test failed"
-#~ msgstr "Testul conectarii de iesire a esuat"
-
-#~ msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-#~ msgstr "de exemplu: 'john@doe.com' sau John Doe <john@doe.com>'"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SERVER SMTP sau PORT nespecificat"
-
-#, python-format
-#~ msgid " (Email Attachment)"
-#~ msgstr " (Atasament la email)"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "Corp (HTML gol)"
-
-#~ msgid "My Emails"
-#~ msgstr "Email-urile mele"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Test Conectare de iesire"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-#~ msgstr ""
-#~ "Adresa la care destinatarii ar trebui sa raspunda, daca este diferita de "
-#~ "adresa De la. Substituentii pot fi folositi aici. de exemplu "
-#~ "${object.email_reply_to}"
-
-#~ msgid ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-#~ msgstr ""
-#~ "Buton in partea laterala a formularului vizualizarii a acestei Resurse care "
-#~ "va apela la Window Action (fereastra actiune)"
-
-#~ msgid "Initiated"
-#~ msgstr "Iniţiat"
-
-#~ msgid "Body (Rich Text Clients Only)"
-#~ msgstr "Corp (Doar clienti rich text)"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "Sablon email"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Email-ul din contul %s a esuat. Motivul probabil: Eroare MIME\n"
-#~ "Descriere: %s"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid "HTML, otherwise Text"
-#~ msgstr "HTML, in caz contrar, Text"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "Numele sablonului trebuie sa fie unic !"
-
-#~ msgid "SMTP Port"
-#~ msgstr "Port SMTP"
-
-#, python-format
-#~ msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
-#~ msgstr "Extragerea datei nu a reusit. Data:%s \t Eroare:%s"
-
-#~ msgid "the signature from the User details will be appended to the mail"
-#~ msgstr "semnatura din detaliile Utilizatorului va fi atasata email-ului"
-
-#, python-format
-#~ msgid ""
-#~ "Server Send Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Eroare trimitere server\n"
-#~ "Descriere: %s"
-
-#, python-format
-#~ msgid "%s (Email Attachment)"
-#~ msgstr "%s (Atasament Email)"
-
-#~ msgid "Error: You are not allowed to have more than 1 account."
-#~ msgstr "Eroare: Nu aveti voie sa aveti decat 1 cont."
-
-#~ msgid "The subject of email. Placeholders can be used here."
-#~ msgstr "Subiectul email-ului. Aici puteti folosi substituenti."
-
-#~ msgid ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Numele fisierului raportului generat. In numele fisierului pot fi folositi "
-#~ "substituenti. de exemplu: 2009_SO003.pdf"
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it according to specific customer "
-#~ "profile fields, so that a partner name or other partner related information "
-#~ "may be inserted automatically."
-#~ msgstr ""
-#~ "Un sablon de email este un document email care va fi trimis ca parte a unei "
-#~ "campanii de marketing. Il puteti personaliza conform campurilor de profil "
-#~ "specifice ale clientilor, astfel ca numele unui partener sau informatiile "
-#~ "referitoare la un alt partener pot fi introduse automat."
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Copia sablonului "
-
-#~ msgid "Text, otherwise HTML"
-#~ msgstr "Text, in caz contrar HTML"
-
-#~ msgid "Email Templates for Models"
-#~ msgstr "Sabloane email pentru modele"
-
-#, python-format
-#~ msgid "Error sending mail: %s"
-#~ msgstr "Eroare la trimiterea email-ului: %s"
-
-#~ msgid "Date on which Email Sent or Received"
-#~ msgstr "Data la care Email-ul a fost trimis sau primit"
-
-#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-#~ msgstr ""
-#~ "Introduceti numele serverului de iesire, de exemplu: smtp.yourdomain.com"
-
-#~ msgid ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Specificati antetul mesajului ID SMTP care va fi folosit in email-urile "
-#~ "trimise. Va rugam sa observati ca astfel anulati optiunea de urmarire a "
-#~ "Resursei! Aici puteti folosi substituenti."
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "Sablon Email pentru OpenERP"
-
-#, python-format
-#~ msgid "SMTP Test Connection Was Successful"
-#~ msgstr "Testul Conectarii SMTP a avut succes"
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Lipsa cont mail"
-
-#~ msgid ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-#~ msgstr ""
-#~ "Puteti atasa fisiere existente la acest sablon, astfel ca ele vor fi "
-#~ "adaugate tuturor mail-urilor create din acest sablon"
-
-#, python-format
-#~ msgid ""
-#~ "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Trimiterea email-ului %s a esuat. Motiv probabil: Nu s-a putut face "
-#~ "conectarea la server\n"
-#~ "Eroare: %s"
-
-#~ msgid "Templating Language"
-#~ msgstr "Sablon Limba"
-
-#~ msgid "Recipient (To)"
-#~ msgstr "Destinatar (Catre)"
-
-#~ msgid "Another setting already exists with this email ID !"
-#~ msgstr "Exista deja o setare cu acest ID de email !"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Urmarire Resursa"
-
-#~ msgid ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-#~ msgstr ""
-#~ "Destinatarul email-ului. Aici puteti folosi substituenti. de exemplu "
-#~ "${object.email_to)"
-
-#~ msgid "Action that will open this email template on Resource records"
-#~ msgstr ""
-#~ "Actiunea care va deschide acest sablon de email in inregistrarile Resursa"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Email Template is extraction of Power Email basically just to send the "
-#~ "emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Sablonul email-ului isi are de fapt originea in Power Email doar pentru "
-#~ "trimiterea email-urilor.\n"
-#~ "    "
-
-#~ msgid "Body (HTML)"
-#~ msgstr "Corp (HTML)"
-
-#~ msgid "Existing files"
-#~ msgstr "Fisiere existente"
-
-#~ msgid ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-#~ msgstr ""
-#~ "Valoarea antetului Mesajului-ID, daca este nevoie sa o specificati, de "
-#~ "exemplu sa recunoasteti automat raspunsurile mai tarziu. Aici puteti folosi "
-#~ "substituenti."
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Introduceti numar port, de exemplu: 25 sau 587"
-
-#~ msgid "Emails will be sent from this approved account."
-#~ msgstr "Email-urile vor fi trimise din acest cont aprobat."
-
-#~ msgid "Addresses"
-#~ msgstr "Adrese"
-
-#, python-format
-#~ msgid "email-template"
-#~ msgstr "sablon-email"
-
-#~ msgid "email_template.account"
-#~ msgstr "email_template.account (email_sablon.cont)"
-
-#~ msgid "Corporate"
-#~ msgstr "Corporat"
-
-#, python-format
-#~ msgid "Core connection for the given ID does not exist"
-#~ msgstr "Conexiunea centrala pentru ID-ul dat nu exista"
-
-#, python-format
-#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
-#~ msgstr ""
-#~ "Email-ul din contul %s a esuat. Motiv probabil: Contul nu a fost aprobat."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed on login. Probable Reason:Could not login to "
-#~ "server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Email-ul din contul %s nu a reusit conectarea. Motiv probabil: Nu s-a putut "
-#~ "face conectarea la server\n"
-#~ "Eroare: %s"
-
-#~ msgid "Message type"
-#~ msgstr "Tip de mesaj"
-
-#~ msgid "Sidebar button"
-#~ msgstr "Buton bara laterala"
-
-#~ msgid "Received"
-#~ msgstr "Primit"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr ""
-#~ "Sterge butonul barei laterale afisat pentru moment in documentele asociate"
-
-#~ msgid "Email Content"
-#~ msgstr "Continut E-mail"
-
-#~ msgid "Cancelled"
-#~ msgstr "Anulat(a)"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Ataseaza fisiere existente"
-
-#~ msgid "Related partner"
-#~ msgstr "Partener asociat"
-
-#~ msgid "Related Document ID"
-#~ msgstr "ID Document Asociat"
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr ""
-#~ "Afiseaza un buton in bara laterala a documentelor asociate pentru a deschide "
-#~ "un wizard de compozitie cu acest sablon"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Asistent compunere e-mail"
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "Creator Valori Dinamice"
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Activati daca doriti sa includeti un marcator special de urmarire in email-"
-#~ "urile de iesire, astfel incat sa puteti identifica raspunsuri si sa le "
-#~ "puteti lega de inregistrarea resursei corespunzatoare. Aceasta este utila de "
-#~ "exemplu pentru piste MRC."
-
-#~ msgid "To"
-#~ msgstr "Catre"
-
-#~ msgid "Use Template"
-#~ msgstr "Foloseste Sablonul"
-
-#~ msgid "Related Document model"
-#~ msgstr "Model Document asociat"
-
-#~ msgid "Language Selection"
-#~ msgstr "Selectare limba"
-
-#~ msgid "Null value"
-#~ msgstr "Valoare nula"
-
-#~ msgid "Preview Template"
-#~ msgstr "Previzualizare Sablon"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Nota: Acesta este un HTML brut."
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Versiunea simpla a mesajului (aici pot fi folositi inlocuitori)"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "Versiunea originala a mesajului, asa cum a fost trimisa pe internet"
-
-#~ msgid "Files to attach"
-#~ msgstr "Fisiere care vor fi atasate"
-
-#~ msgid "Related document model"
-#~ msgstr "Model document asociat"
-
-#~ msgid "Options"
-#~ msgstr "Optiuni"
-
-#~ msgid "Message-Id"
-#~ msgstr "Id-Mesaj"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(copie)"
-
-#~ msgid "Use a message template"
-#~ msgstr "Folositi un mesaj sablon"
-
-#~ msgid "Date"
-#~ msgstr "Data"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Corp (Imbogatit/HTML)"
-
-#~ msgid "Outgoing"
-#~ msgstr "Iesire"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "Adauga buton bara laterala"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Corp (Text)"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Optiuni Avansate"
-
-#~ msgid "Original"
-#~ msgstr "Original"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Continuturi rich-text (text imbogatit)"
-
-#~ msgid "Display Text"
-#~ msgstr "Afiseaza Text"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Antete mesaje complete, de exemplu antetele sesiunii SMTP (de obicei "
-#~ "disponibile doar pentru mesajele primite)"
-
-#~ msgid "Close"
-#~ msgstr "Inchide"
-
-#~ msgid "References"
-#~ msgstr "Referinte"
-
-#~ msgid "Text contents"
-#~ msgstr "Cuprins text"
-
-#~ msgid "Related user"
-#~ msgstr "Utilizator asociat"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr ""
-#~ "Destinatari bcc (copie carbon invizibila) (aici se pot folosi inlocuitori)"
-
-#~ msgid "Bcc"
-#~ msgstr "Bcc (blind carbon copy) (copie carbon invizibila)"
-
-#~ msgid "Message headers"
-#~ msgstr "Antete mesaj"
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "Sterge butonul barei laterale"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "Antetul SMTP ID-mesaj care va fi folosit in mesajele trimise pe baza acetui "
-#~ "sablon. Va rugam sa observati faptul ca acesta anuleaza optiunea 'Urmarire "
-#~ "Resursa', astfel ca daca aveti nevoie sa urmariti raspunsurile la e-mail-"
-#~ "urile trimise, activati in schimb aceasta optiune.\n"
-#~ "Aici trebuie folositi inlocuitori, deoarece aceasta valoare trebuie sa fie "
-#~ "intotdeauna unica!"
-
-#~ msgid "Attach Report"
-#~ msgstr "Ataseaza Raport"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Referinte mesaj, cum ar fi identificatorii mesajelor precedente"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Livrarea a esuat"
-
-#~ msgid "Opt-out"
-#~ msgstr "Nu participa"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Tipul de mesaj, de obicei 'html' sau 'simplu', folosit pentru a selecta ca "
-#~ "atare cuprinsul textului simplu sau textului imbogatit"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""

@@ -59,10 +59,10 @@ class bom_structure(report_sxw.rml_parse):
         return children
 
 
-class report_lunchorder(osv.AbstractModel):
+class report_mrpbomstructure(osv.AbstractModel):
     _name = 'report.mrp.report_mrpbomstructure'
     _inherit = 'report.abstract_report'
-    _template = 'mpr.report_mrpbomstructure'
+    _template = 'mrp.report_mrpbomstructure'
     _wrapped_report_class = bom_structure
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

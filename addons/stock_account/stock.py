@@ -33,6 +33,11 @@ class stock_location_path(osv.osv):
         'invoice_state': '',
     }
 
+    def _prepare_push_apply(self, cr, uid, rule, move, context=None):
+        res = super(stock_location_path, self)._prepare_push_apply(cr, uid, rule, move, context=context)
+        res['invoice_state'] = rule.invoice_state or 'none'
+        return res
+
 #----------------------------------------------------------
 # Procurement Rule
 #----------------------------------------------------------
@@ -91,7 +96,13 @@ class stock_move(osv.osv):
 
     def _get_master_data(self, cr, uid, move, company, context=None):
         ''' returns a tuple (browse_record(res.partner), ID(res.users), ID(res.currency)'''
-        return move.picking_id.partner_id, uid, company.currency_id.id
+        currency = company.currency_id.id
+        partner = move.picking_id and move.picking_id.partner_id
+        if partner:
+            code = self.get_code_from_locs(cr, uid, move, context=context)
+            if partner.property_product_pricelist and code == 'outgoing':
+                currency = partner.property_product_pricelist.currency_id.id
+        return partner, uid, currency
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         return self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
@@ -105,10 +116,19 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if type in ('in_invoice', 'in_refund'):
-            # Take the user company and pricetype
-            product = move_line.product_id.with_context(currency_id=move_line.company_id.currency_id.id)
-            amount_unit = product.price_get('standard_price')[move_line.product_id.id]
-            return amount_unit
+            return move_line.price_unit
+        else:
+            # If partner given, search price in its sale pricelist
+            if move_line.partner_id and move_line.partner_id.property_product_pricelist:
+                pricelist_obj = self.pool.get("product.pricelist")
+                pricelist = move_line.partner_id.property_product_pricelist.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist],
+                        move_line.product_id.id, move_line.product_uom_qty, move_line.partner_id.id, {
+                            'uom': move_line.product_uom.id,
+                            'date': move_line.date,
+                            })[pricelist]
+                if price:
+                    return price
         return move_line.product_id.list_price
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
@@ -167,13 +187,19 @@ class stock_picking(osv.osv):
                 res.append(move.picking_id.id)
         return res
 
+    def _set_inv_state(self, cr, uid, picking_id, name, value, arg, context=None):
+        pick = self.browse(cr, uid, picking_id, context=context)
+        moves = [x.id for x in pick.move_lines]
+        move_obj= self.pool.get("stock.move")
+        move_obj.write(cr, uid, moves, {'invoice_state': pick.invoice_state})
+
     _columns = {
         'invoice_state': fields.function(__get_invoice_state, type='selection', selection=[
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
           ], string="Invoice Control", required=True,
-
+        fnct_inv = _set_inv_state,
         store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),
             'stock.move': (__get_picking_move, ['picking_id', 'invoice_state'], 10),

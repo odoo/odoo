@@ -926,7 +926,7 @@ class view(osv.osv):
         :rtype: boolean
         """
         return any(
-            (attr == 'data-oe-model' or (attr != 't-field' and attr.startswith('t-')))
+            (attr in ('data-oe-model', 'group') or (attr != 't-field' and attr.startswith('t-')))
             for attr in node.attrib
         )
 

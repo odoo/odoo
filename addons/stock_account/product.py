@@ -54,6 +54,10 @@ class product_template(osv.osv):
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
+    _defaults = {
+        'valuation': 'manual_periodic',
+    }
+
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
