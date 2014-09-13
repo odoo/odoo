@@ -35,21 +35,24 @@ class Experiment_snapshot(osv.Model):
     #     ('view_experiment_uniq', 'unique(view_id, experiment_id)', 'You cannot have multiple records with the same view ID in the same experiment!'),
     # ]
 
-    # def onchange_get_key(self,cr,uid,ids,view_id,context=None):
-    #     key = self.pool['ir.ui.view'].browse(cr, uid, [view_id],context=context)[0].key
-    #     print key
-    #     val = {'key': key}
-    #     return {'value': val}
-
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
+
+    def _get_denom(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for exp in self.browse(cr, uid, ids, context=context):
+            result[exp.id] = 0
+            for exp_snap in exp.experiment_snapshot_ids:
+                    result[exp.id] += exp_snap.ponderation
+        return result
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False),
+        'denominator' : fields.function(_get_denom,type='integer'),
     }
 
     _defaults = {

@@ -31,23 +31,11 @@ class QWeb(orm.AbstractModel):
             if 'experiment_id' in context:
                 exp_snap_id = self.pool["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
                 if exp_snap_id:
-                    RNG_exp = int(context.get('RNG_exp'))
-                    number_id = int(''.join(str(ord(c)) for c in id_or_xml_id))
-
                     exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [exp_snap_id[0]], context=context)
                     exp = exp_snapshot.experiment_id
-                    result=[]
-                    pond_sum=0
-                    for exp_snap in exp.experiment_snapshot_ids:
-                        result.append([exp_snap.ponderation+pond_sum, exp_snap.snapshot_id.id])
-                        pond_sum+=exp_snap.ponderation
-                    if pond_sum:
-                        #RANDOM
-                        x = (RNG_exp+number_id)*179426549%pond_sum
-                        for res in result:
-                            if x<res[0]:
-                                context['snapshot_id'] = res[1]
-                                break
+                    print context.get('EXP')
+                    print int(context.get('EXP')[str(exp.id)])
+                    context['snapshot_id'] = int(context.get('EXP')[str(exp.id)])
 
             if 'snapshot_id' in context:
                 snapshot_id=context.get('snapshot_id')

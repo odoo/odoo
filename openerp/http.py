@@ -33,6 +33,7 @@ import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
+import json
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -604,8 +605,10 @@ class HttpRequest(WebRequest):
         :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
         """
         response = Response(template=template, qcontext=qcontext, **kw)
-        if not 'RNG_exp' in request.httprequest.cookies and 'RNG_exp' in request.context:
-            response.set_cookie('RNG_exp', request.context['RNG_exp'])
+
+        if request.context['EXP']:
+            data=json.dumps(request.context['EXP'], ensure_ascii=False)
+            response.set_cookie('EXP', data)
 
         if not lazy:
             return response.render()
