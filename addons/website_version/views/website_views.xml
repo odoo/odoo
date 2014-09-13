@@ -38,7 +38,7 @@
 
                 <group position="before">
                     <button icon="gtk-ok" name="action_publish" string="Publish" type="object" class="oe_highlight"  
-                        context="{'active_id': active_id}" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
+                        context="{'active_id': active_id}" attrs="{'invisible': ['|','|',('type', '!=', 'qweb'),('website_id', '=',False), ('snapshot_id', '=', False)]}" />
                 </group>
 
             </field>

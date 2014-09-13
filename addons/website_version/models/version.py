@@ -57,20 +57,15 @@ class ViewVersion(osv.Model):
         if context is None:
             context = {}
         ctx = dict(context, mykey=True)
-        snap = self.pool['website_version.snapshot']
-        all_snapshot_ids = snap.search(cr, uid, [],context=context)
-        all_snapshots = snap.browse(cr, uid, all_snapshot_ids, context=context)
         view_id = context.get('active_id')
-        view = self.browse(cr, uid, [view_id],ctx)[0]
+        view = self.browse(cr, uid, [view_id],context)[0]
         key = view.key
-        deleted_ids = self.search(cr, uid, [('key','=',key),('website_id','!=',False)],context=context)
-        if view.website_id:
-            master_id = self.search(cr, uid, [('key','=',key),('website_id','=',False),('snapshot_id','=',False)],context=context)[0]
-            deleted_ids.remove(view.id)
-            super(ViewVersion, self).write(cr, uid,[master_id], {'arch': view.arch}, context=ctx)
-            self.unlink(cr, uid, deleted_ids, context=context)
-        else:
-            self.unlink(cr, uid, deleted_ids, context=context)
+        if view.website_id and view.snapshot_id:
+            #from pudb import set_trace; set_trace()
+            master_id = self.search(cr, uid, [('key','=',key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
+            if master_id:
+                self.unlink(cr, uid, master_id, context=context)
+            self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
         
                 

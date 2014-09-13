@@ -48,7 +48,6 @@ class NewWebsite(osv.Model):
                         if x<res[0]:
                             EXP[str(exp.id)] = str(res[1])
                             break
-        print EXP
         request.context['EXP'] = EXP
      
 
