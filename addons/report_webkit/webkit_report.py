@@ -180,14 +180,10 @@ class WebKitParser(report_sxw):
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
 
-        if webkit_header.margin_top :
-            command.extend(['--margin-top', str(webkit_header.margin_top).replace(',', '.')])
-        if webkit_header.margin_bottom :
-            command.extend(['--margin-bottom', str(webkit_header.margin_bottom).replace(',', '.')])
-        if webkit_header.margin_left :
-            command.extend(['--margin-left', str(webkit_header.margin_left).replace(',', '.')])
-        if webkit_header.margin_right :
-            command.extend(['--margin-right', str(webkit_header.margin_right).replace(',', '.')])
+        command.extend(['--margin-top', str(webkit_header.margin_top).replace(',', '.')])
+        command.extend(['--margin-bottom', str(webkit_header.margin_bottom).replace(',', '.')])
+        command.extend(['--margin-left', str(webkit_header.margin_left).replace(',', '.')])
+        command.extend(['--margin-right', str(webkit_header.margin_right).replace(',', '.')])
         if webkit_header.orientation :
             command.extend(['--orientation', str(webkit_header.orientation).replace(',', '.')])
         if webkit_header.format :
