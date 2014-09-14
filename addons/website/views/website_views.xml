@@ -21,32 +21,34 @@
                         or
                         <button string="Cancel" type="object" name="noop" class="oe_link"/>
                     </header>
-                    <div name="domain">
-                        <separator string="Domain"/>
-                        <group name="domain">
-                            <field name="name" class="oe_inline"/>
-                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
-                        </group>
-                    </div>
-                    <div name="social_media">
-                        <separator string="Social Media"/>
-                        <group name="social_media">
-                            <field name="social_twitter" placeholder="https://twitter.com/odooapps"/>
-                            <field name="social_facebook" placeholder="https://facebook.com/odoo"/>
-                            <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
-                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/odoo"/>
-                            <field name="social_youtube" placeholder="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg"/>
-                            <field name="social_github" placeholder="https://youraccount.github.io"/>
-                        </group>
-                    </div>
-                    <div name="other">
-                        <separator string="Other Info"/>
-                        <group name="other">
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="language_ids" widget="many2many_checkboxes"/>
-                            <field name="default_lang_id" widget="selection"/>
-                        </group>
-                    </div>
+                    <sheet>
+                        <div name="domain">
+                            <separator string="Domain"/>
+                            <group name="domain">
+                                <field name="name" class="oe_inline"/>
+                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                            </group>
+                        </div>
+                        <div name="social_media">
+                            <separator string="Social Media"/>
+                            <group name="social_media">
+                                <field name="social_twitter" placeholder="https://twitter.com/odooapps"/>
+                                <field name="social_facebook" placeholder="https://facebook.com/odoo"/>
+                                <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
+                                <field name="social_linkedin" placeholder="http://www.linkedin.com/company/odoo"/>
+                                <field name="social_youtube" placeholder="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg"/>
+                                <field name="social_github" placeholder="https://youraccount.github.io"/>
+                            </group>
+                        </div>
+                        <div name="other">
+                            <separator string="Other Info"/>
+                            <group name="other">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="language_ids" widget="many2many_checkboxes"/>
+                                <field name="default_lang_id" widget="selection"/>
+                            </group>
+                        </div>
+                </sheet>
                 </form>
             </field>
         </record>

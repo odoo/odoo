@@ -7,15 +7,22 @@
             <field name="inherit_id" ref="website.view_website_form"/>
             <field name="arch" type="xml">
                 <!-- find field name, and insert field name before it -->
+                <field name="name" position="replace">
+                </field>
                 <field name="company_id" position="after">
+                    <field name="name" class="oe_inline"/>
                     <field name="company_id"/>
                     <field name="user_id" context="{'active_test': False}"/>
                 </field>
+                <separator string="Domain" position="replace">
+                    <separator string="Statistics"/>
+                </separator>
+
             </field>
         </record>
 
         <record id="action_website_view" model="ir.actions.act_window">
-            <field name="name">Website Domain</field>
+            <field name="name">AB testing</field>
             <field name="res_model">website</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
