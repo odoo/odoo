@@ -56,14 +56,13 @@
                         <field name="name" colspan="4" />
                         <field name="website_id" colspan="4"/>
                         <field name="state" colspan="4"/>
-                        <field name="frequency" colspan="4"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Snapshots in experiment" colspan="4" >
                             <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
                                 <tree string="PPP" editable="bottom">    
                                     <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
-                                    <field name="ponderation"/>
+                                    <field name="frequency" colspan="4"/>
                                 </tree>
                             </field>
                         </page>
@@ -91,7 +90,7 @@
                     <notebook colspan="4">
                         <page string="Features" colspan="4" >
                             <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
-                            <field name="ponderation"/>
+                            <field name="frequency"/>
                         </page>
                     </notebook>
                 </form>

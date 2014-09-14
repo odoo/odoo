@@ -7,34 +7,12 @@ class Experiment_snapshot(osv.Model):
     _columns = {
         'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True),
-        'ponderation': fields.integer(string="Ponderation"),
-        'frequency': fields.selection([type=integer, (1,'Rare'),(10,'Sometimes'),(100,'Offen')], 'Frequency'),
+        'frequency': fields.selection([('10','Rare'),('50','Sometimes'),('100','Offen')], 'Frequency'),
     }
 
-    # def _check_version(self, cr, uid, ids, context=None):
-    #     exp_ids = self.pool["website_version.experiment"].search(cr,uid,[],context=context)
-    #     exp_results = self.pool["website_version.experiment"].browse(cr,uid,exp_ids,context=context)
-    #     keys = []
-    #     for res_k in key_results:
-    #         key = res_k['key']
-    #         if not key in keys:
-    #             keys.append(key)
-    #             current_ids = self.search(cr,uid,[('key','=',key)],context=context)
-    #             exp_results = self.browse(cr,uid,current_ids,context=context)
-    #             exp_id = exp_results[0]
-    #             for i in range(1,len(current_ids)):
-    #                 res_e = exp_results[i]
-    #                 if not res_e.experiment_id.id == exp_id.experiment_id.id and res_e.experiment_id.website_id.id == exp_id.experiment_id.website_id.id:
-    #                     return False
-    #     return True
-
-    # _constraints = [
-    #     (_check_page, 'This page is already used in another experience', ['key','experiment_id']),
-    # ]
-
-    # _sql_constraints = [
-    #     ('view_experiment_uniq', 'unique(view_id, experiment_id)', 'You cannot have multiple records with the same view ID in the same experiment!'),
-    # ]
+    _defaults = {
+        'frequency': '10',
+    }
 
 
 class Experiment(osv.Model):

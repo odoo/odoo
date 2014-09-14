@@ -39,8 +39,8 @@ class NewWebsite(osv.Model):
                 result=[]
                 pond_sum=0
                 for exp_snap in exp.experiment_snapshot_ids:
-                    result.append([exp_snap.ponderation+pond_sum, exp_snap.snapshot_id.id])
-                    pond_sum+=exp_snap.ponderation
+                    result.append([int(exp_snap.frequency)+pond_sum, exp_snap.snapshot_id.id])
+                    pond_sum+=int(exp_snap.frequency)
                 if pond_sum:
                     #RANDOM
                     x = random.getrandbits(128)%pond_sum
