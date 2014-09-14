@@ -520,6 +520,7 @@ def Project():
                     self.pool.get('project.task').write(cr, uid, [task.id], {
                         'user_id': int(p.booked_resource[0].name[5:]),
                     }, context=context)
+            project.write({'date': project_gantt.end.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def create(self, cr, uid, vals, context=None):
