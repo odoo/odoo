@@ -8,6 +8,7 @@ class Experiment_snapshot(osv.Model):
         'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True),
         'ponderation': fields.integer(string="Ponderation"),
+        'frequency': fields.selection([type=integer, (1,'Rare'),(10,'Sometimes'),(100,'Offen')], 'Frequency'),
     }
 
     # def _check_version(self, cr, uid, ids, context=None):
