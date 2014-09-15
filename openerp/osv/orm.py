@@ -2261,6 +2261,7 @@ class BaseModel(object):
                 view = getattr(self, '_get_default_%s_view' % view_type)(
                     cr, user, context)
             except AttributeError:
+                if config['debug_mode']: raise
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
 

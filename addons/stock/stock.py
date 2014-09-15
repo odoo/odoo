@@ -2235,7 +2235,11 @@ class stock_move(osv.osv):
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
                     product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, [move.id], move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
+                    move.write({
+                        'location_id': r[1],
+                        'product_qty': r[0],
+                        'product_uos_qty': product_uos_qty,
+                        })
 
                     while res:
                         r = res.pop(0)
@@ -2434,7 +2438,6 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
-            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2458,15 +2461,11 @@ class stock_move(osv.osv):
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
-                todo.append(move.id)
-
-        if todo:
-            self.action_confirm(cr, uid, todo, context=context)
-
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        for id in move_ids:
-             wf_service.trg_trigger(uid, 'stock.move', id, cr)
-
+                self.action_confirm(cr, uid, [move.id], context=context)
+            self.write(cr, uid, [move.id], 
+                       {'state': 'done', 
+                       'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, 
+                       context=context)
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 

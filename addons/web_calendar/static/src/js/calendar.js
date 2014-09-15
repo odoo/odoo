@@ -542,7 +542,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this;
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(this.dataset.ids[index]);
+            this.dataset.unlink([this.dataset.ids[index]]);
         }
     },
 });
