@@ -3155,6 +3155,9 @@ class BaseModel(object):
         elif self.env.field_todo(field):
             # field must be recomputed, do not prefetch records to recompute
             records -= self.env.field_todo(field)
+        elif not self._context.get('prefetch_fields', True):
+            # do not prefetch other fields
+            pass
         elif self._columns[field.name]._prefetch:
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
@@ -5690,13 +5693,28 @@ class BaseModel(object):
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
+                    field = self._fields[name]
                     newval = record[name]
-                    if newval != oldval or getattr(newval, '_dirty', False):
-                        field = self._fields[name]
-                        result['value'][name] = field.convert_to_write(
-                            newval, record._origin, subfields.get(name),
-                        )
-                        todo.add(name)
+                    if field.type in ('one2many', 'many2many'):
+                        if newval != oldval or newval._dirty:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # keep result: newval may have been dirty before
+                            pass
+                    else:
+                        if newval != oldval:
+                            # put new value in result
+                            result['value'][name] = field.convert_to_write(
+                                newval, record._origin, subfields.get(name),
+                            )
+                            todo.add(name)
+                        else:
+                            # clean up result to not return another value
+                            result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.

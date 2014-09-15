@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+       Resource: ir.sequence.type
+       Add NCF sequence code
+       -->
+        <record id="ir_sequence_type_cf_credito_fiscal" model="ir.sequence.type">
+            <field name="name">Facturas que Genera Crédito Fiscal y/o Sustenta Costos y Gastos</field>
+            <field name="code">cf.credito.fiscal</field>
+        </record>
+        <record id="ir_sequence_type_cf_consumidor_final" model="ir.sequence.type">
+            <field name="name">Factura a Consumidor Final (Sin valor de Credito Fiscal)</field>
+            <field name="code">cf.consumidor.final</field>
+        </record>
+        <record id="ir_sequence_type_cf_nota_debito" model="ir.sequence.type">
+            <field name="name">Nota de Débito</field>
+            <field name="code">cf.nota.debito</field>
+        </record>
+        <record id="ir_sequence_type_cf_nota_credito" model="ir.sequence.type">
+            <field name="name">Nota de Crédito</field>
+            <field name="code">cf.nota.credito</field>
+        </record>
+        <record id="ir_sequence_type_cf_proveedores_informales" model="ir.sequence.type">
+            <field name="name">Registro proveedores informales</field>
+            <field name="code">cf.proveedores.informales</field>
+        </record>
+        <record id="ir_sequence_type_cf_ingreso_unico" model="ir.sequence.type">
+            <field name="name">Registro único de ingresos</field>
+            <field name="code">cf.ingreso.unico</field>
+        </record>
+        <record id="ir_sequence_type_cf_gastos_menores" model="ir.sequence.type">
+            <field name="name">Registro de gastos menores</field>
+            <field name="code">cf.gastos.menores</field>
+        </record>
+        <record id="ir_sequence_type_cf_regimenes_especiales" model="ir.sequence.type">
+            <field name="name">Registro regimenes especiales de tributación</field>
+            <field name="code">cf.regimenes.especiales</field>
+        </record>
+        <record id="ir_sequence_type_cf_gubernamentales" model="ir.sequence.type">
+            <field name="name">Gubernamentales</field>
+            <field name="code">cf.regimenes.gubernamentales</field>
+        </record>
+
+    </data>
+
+</openerp>
