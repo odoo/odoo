@@ -153,7 +153,7 @@ def ensure_db(redirect='/web/database/selector'):
         return
 
     # if db not provided, use the session one
-    if not db and http.db_filter([request.session.db]):
+    if not db and request.session.db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
