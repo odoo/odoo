@@ -52,12 +52,22 @@ class TableExporter(http.Controller):
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
     def get_all_snapshots(self):
-        #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
         ids = snap.search(cr, uid, [('website_id','=',website_id)],context=context)
         result = snap.read(cr, uid, ids,['id','name'],context=context)
+        return result
+
+    @http.route(['/website_version/is_master'], type = 'json', auth = "public", website = True)
+    def is_master(self, view_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        obj = request.registry['ir.ui.view']
+        view = obj.browse(cr,uid,[int(view_id)],context=context)
+        if view.snapshot_id:
+            result = False
+        else:
+            result = True
         return result
 
     @http.route(['/set_context'], type = 'json', auth = "public", website = True)
