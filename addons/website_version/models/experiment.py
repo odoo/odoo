@@ -31,6 +31,7 @@ class Experiment(osv.Model):
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False),
+        'color': fields.integer('Color Index'),
         'denominator' : fields.function(_get_denom,type='integer'),
     }
 

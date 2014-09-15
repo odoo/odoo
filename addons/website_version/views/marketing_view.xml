@@ -18,9 +18,10 @@
                     <field name="name"/>
                     <field name="website_id"/>
                     <field name="experiment_snapshot_ids"/>
+                    <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                          <div class="oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+                          <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
                             <div class="oe_dropdown_kanban">
 
                               <!-- dropdown menu -->
