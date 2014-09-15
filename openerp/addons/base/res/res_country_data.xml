@@ -1080,6 +1080,7 @@
             <field name="name">Poland</field>
             <field name="code">pl</field>
             <field name="image" type="base64" file="base/static/img/country_flags/pl.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="PLN"/>
         </record>
         <record id="pm" model="res.country">
