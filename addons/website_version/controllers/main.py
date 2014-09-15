@@ -41,8 +41,10 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
         snap.unlink(cr, uid, [int(snapshot_id)], context=context)
-        request.session['snapshot_id'] = 0
-        request.session['master'] = 1
+        current_id = request.context.get('snapshot_id')
+        if int(snapshot_id)== current_id:
+            request.session['snapshot_id'] = 0
+            request.session['master'] = 1
         return snapshot_id
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
