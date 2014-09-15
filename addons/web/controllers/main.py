@@ -1772,7 +1772,7 @@ class Reports(openerpweb.Controller):
                 if action.get('name'):
                     item_names.insert(0, action['name'])
                 if item_names:
-                    file_name = '-'.join(item_names)
+                    file_name = '-'.join(item_names)[:251]
         file_name = '%s.%s' % (file_name, report_struct['format'])
         # Create safe filename
         p = re.compile('[/:(")<>|?*]|(\\\)')
