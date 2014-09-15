@@ -9,11 +9,11 @@
     website.EditorVersion = openerp.Widget.extend({
         start: function() {
             var self = this;
-            var snapshot_id = this.$el.find("#version-menu-button").data("snapshot_id");
 
+            $('html').data('snapshot_id', this.$el.find("#version-menu-button").data("snapshot_id"));
             var _get_context = website.get_context;
             website.get_context = function (dict) {
-                return _.extend({ 'snapshot_id': snapshot_id }, _get_context(dict));
+                return _.extend({ 'snapshot_id': $('html').data('snapshot_id') }, _get_context(dict));
             };
 
             self.$el.on('click', 'a[data-action]', function(ev) {

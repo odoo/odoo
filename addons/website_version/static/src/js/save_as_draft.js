@@ -20,7 +20,7 @@
                 }).then(function (name) {
                     var context = website.get_context();
                     openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name }).then(function (result) {
-                        context = website.get_context();
+                        $('html').data('snapshot_id', result);
                         self.save();
                         location.reload();
                     }).fail(function(){

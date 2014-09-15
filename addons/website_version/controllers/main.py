@@ -34,7 +34,7 @@ class TableExporter(http.Controller):
         request.session['snapshot_id'] = new_snapshot_id
         request.context['snapshot_id'] = new_snapshot_id
         request.session['master'] = 0
-        return name
+        return new_snapshot_id
 
     @http.route(['/website_version/delete_snapshot'], type = 'json', auth = "user", website = True)
     def delete_snapshot(self, snapshot_id):
