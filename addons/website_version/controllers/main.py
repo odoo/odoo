@@ -32,6 +32,7 @@ class TableExporter(http.Controller):
             new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
         request.session['snapshot_id'] = new_snapshot_id
+        request.context['snapshot_id'] = new_snapshot_id
         request.session['master'] = 0
         return name
 
