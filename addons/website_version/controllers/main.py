@@ -37,19 +37,13 @@ class TableExporter(http.Controller):
         return name
 
     @http.route(['/website_version/delete_snapshot'], type = 'json', auth = "user", website = True)
-    def delete_snapshot(self):
+    def delete_snapshot(self, snapshot_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
-        snapshot_id = context.get('snapshot_id')
-        website_id = request.website.id
-        if snapshot_id:
-            name = snap.browse(cr,uid,[snapshot_id],context=context).name
-            snap.unlink(cr, uid, [snapshot_id], context=context)
-            request.session['snapshot_id'] = 0
-            request.session['master'] = 1
-        else:
-            name = "nothing to do"
-        return name
+        snap.unlink(cr, uid, [int(snapshot_id)], context=context)
+        request.session['snapshot_id'] = 0
+        request.session['master'] = 1
+        return snapshot_id
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
     def get_all_snapshots(self):

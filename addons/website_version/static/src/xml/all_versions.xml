@@ -3,8 +3,9 @@
 
     <t t-name="all_versions">
         <t t-foreach="snapshots" t-as="item">
-            <li class="snapshot">
-                <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id" ><t t-esc="item.name"></t> </a>
+            <li class="snapshot" t-att-data-snapshot_id="item.id">
+                <a href="#" data-action="delete_snapshot" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
+                <a href="#" data-action="change_snapshot" style="display: inline-block;"><t t-esc="item.name"></t> </a>
             </li>
         </t>
     </t>

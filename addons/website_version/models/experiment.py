@@ -5,7 +5,7 @@ class Experiment_snapshot(osv.Model):
     _name = "website_version.experiment_snapshot"
     
     _columns = {
-        'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ),
+        'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ,ondelete='cascade'),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True),
         'frequency': fields.selection([('10','Rare'),('50','Sometimes'),('100','Offen')], 'Frequency'),
     }

@@ -48,7 +48,7 @@
         },
         
         change_snapshot: function(event) {
-            var snapshot_id = $(event.target).data("snapshot_id");
+            var snapshot_id = $(event.target).parent().data("snapshot_id");
             openerp.jsonRpc( '/website_version/change_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     location.reload();
                 });
@@ -61,8 +61,9 @@
         },
 
         delete_snapshot: function(event) {
-            var text = $(event.target).text();
-            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', {}).then(function (result) {
+            var snapshot_id = $(event.currentTarget).parent().data("snapshot_id");
+            console.log(snapshot_id);
+            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     location.reload();
                 });
         },
