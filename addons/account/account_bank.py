@@ -27,7 +27,7 @@ class bank(osv.osv):
     
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Account Journal', help="This journal will be created automatically for this bank account when you save the record"),
-        'currency_id': fields.many2one('res.currency', string="Currency", help="Currency of the related account journal."),
+        'currency_id': fields.many2one('res.currency', string="Currency", help="Currency of the bank account."),
     }
     
     _defaults = {
