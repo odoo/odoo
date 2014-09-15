@@ -344,7 +344,7 @@
                 }
                 m.message = self.escape_keep_url(m.message);
                 m.message = self.smiley(m.message);
-                m.create_date = new moment(m.create_date).format('L HH:mm:ss');
+                m.create_date = moment.utc(m.create_date).format('YYYY-MM-DD HH:mm:ss');
                 return m;
             });
            	this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));

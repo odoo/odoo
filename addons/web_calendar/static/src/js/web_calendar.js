@@ -319,7 +319,7 @@ openerp.web_calendar = function(instance) {
                         context.$calendar.fullCalendar('changeView','agendaDay');
                     }
                 }
-                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && new moment(curDate).diff(new moment(curView.start))===0)) {
+                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && moment(curDate).diff(moment(curView.start))===0)) {
                         context.$calendar.fullCalendar('changeView','agendaWeek');
                 }
                 context.$calendar.fullCalendar('gotoDate', obj.currentYear , obj.currentMonth, obj.currentDay);
@@ -572,12 +572,12 @@ openerp.web_calendar = function(instance) {
             }
             
             if (!date_stop && date_delay) {
-                var m_start = new moment(date_start).add(date_delay,'hours');
+                var m_start = moment(date_start).add(date_delay,'hours');
                 date_stop = m_start.toDate();
             }
             var r = {
-                'start': new moment(date_start).format('YYYY-MM-DD HH:mm:ss'),
-                'end': new moment(date_stop).format('YYYY-MM-DD HH:mm:ss'),
+                'start': moment(date_start).format('YYYY-MM-DD HH:mm:ss'),
+                'end': moment(date_stop).format('YYYY-MM-DD HH:mm:ss'),
                 'title': the_title,
                 'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
                 'id': evt.id,
@@ -611,7 +611,7 @@ openerp.web_calendar = function(instance) {
             var event_end = event.end;
             //Bug when we move an all_day event from week or day view, we don't have a dateend or duration...            
             if (event_end == null) {
-                var m_date = new moment(event.start).add(2, 'hours');
+                var m_date = moment(event.start).add(2, 'hours');
                 event_end = m_date.toDate();
             }
 

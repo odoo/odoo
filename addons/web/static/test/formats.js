@@ -4,17 +4,17 @@ openerp.testing.section('web-formats', {
     test("format_datetime", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"datetime"});
-        equal(str, (new moment(date)).format("MM/DD/YYYY HH:mm:ss"));
+        equal(str, moment(date).format("MM/DD/YYYY HH:mm:ss"));
     });
     test("format_date", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"date"});
-        equal(str, (new moment(date)).format("MM/DD/YYYY"));
+        equal(str, moment(date).format("MM/DD/YYYY"));
     });
     test("format_time", function (instance) {
         var date = instance.web.str_to_datetime("2009-05-04 12:34:23");
         var str = instance.web.format_value(date, {type:"time"});
-        equal(str, (new moment(date)).format("HH:mm:ss"));
+        equal(str, moment(date).format("HH:mm:ss"));
     });
     test("format_float_time", function (instance) {
         strictEqual(

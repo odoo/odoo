@@ -107,7 +107,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 var end = self.get("date_to");
                 while (start <= end) {
                     dates.push(start);
-                    var m_start = new moment(start).add(1,'days');
+                    var m_start = moment(start).add(1,'days');
                     start = m_start.toDate();
                 }
                 // group by account
