@@ -237,7 +237,9 @@ class QWeb(orm.AbstractModel):
         if not isinstance(qwebcontext, QWebContext):
             qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
 
-        context = context or qwebcontext.context           
+        if context is None:
+            context = {}
+          
         website_id=context.get('website_id')
         if website_id:
             id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
