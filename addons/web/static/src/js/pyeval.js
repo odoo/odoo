@@ -886,33 +886,32 @@
     };
     instance.web.pyeval.eval_domains_and_contexts = function (source) {
         return new $.Deferred(function (d) {setTimeout(function () {
-            var result = instance.web.pyeval.sync_eval_domains_and_contexts(source);
+            var result;
+            try {
+                result = instance.web.pyeval.sync_eval_domains_and_contexts(source);
+            }
+            catch (e) {
+                result = { error: {
+                    code: 400,
+                    message: instance.web._t("Evaluation Error"),
+                    data: {
+                        type: 'local_exception',
+                        debug: _.str.sprintf(
+                                instance.web._t("Local evaluation failure\n%s\n\n%s"),
+                                e.message, JSON.stringify(source))
+                    }
+                }};                
+            }
             d.resolve(result);
         }, 0); });
     };
     instance.web.pyeval.sync_eval_domains_and_contexts = function (source) {
-        var result;
-        try {
-            var contexts = ([instance.session.user_context] || []).concat(source.contexts);
-            // see Session.eval_context in Python
-            result = {
-                context: instance.web.pyeval.eval('contexts', contexts),
-                domain: instance.web.pyeval.eval('domains', source.domains),
-                group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq || [])
-            };
-
-        } catch (e) {
-            result = { error: {
-                code: 400,
-                message: instance.web._t("Evaluation Error"),
-                data: {
-                    type: 'local_exception',
-                    debug: _.str.sprintf(
-                            instance.web._t("Local evaluation failure\n%s\n\n%s"),
-                            e.message, JSON.stringify(source))
-                }
-            }};
-        }
-        return result;
+        var contexts = ([instance.session.user_context] || []).concat(source.contexts);
+        // see Session.eval_context in Python
+        return {
+            context: instance.web.pyeval.eval('contexts', contexts),
+            domain: instance.web.pyeval.eval('domains', source.domains),
+            group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq || [])
+        };
     };
 })();
