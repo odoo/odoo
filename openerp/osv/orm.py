@@ -3016,6 +3016,9 @@ class BaseModel(object):
             if len(constraints) == 1:
                 # Is it the right constraint?
                 cons, = constraints
+                if self.is_transient() and not dest_model.is_transient():
+                    # transient foreign keys are added as cascade by default
+                    ondelete = ondelete or 'cascade'
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     # Wrong FK: drop it and recreate
