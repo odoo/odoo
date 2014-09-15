@@ -661,6 +661,14 @@ class account_voucher(osv.osv):
             context = {}
         #TODO: comment me and use me directly in the sales/purchases views
         res = self.basic_onchange_partner(cr, uid, ids, partner_id, journal_id, ttype, context=context)
+        #Computing the payment_rate and payment_rate_currency_id based on journal currency for Sales and Purchase Receipts
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+        currency_id = currency_id or journal.company_id.currency_id.id
+        res['value'].update({
+            'payment_rate': 1.0,
+            'currency_id': currency_id,
+            'payment_rate_currency_id': currency_id
+        })
         if ttype in ['sale', 'purchase']:
             return res
         ctx = context.copy()
