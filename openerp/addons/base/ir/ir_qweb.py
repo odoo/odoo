@@ -874,15 +874,18 @@ class Contact(orm.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if context is None:
+            context = {}
+
         if options is None:
             options = {}
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
-
         if not getattr(record, field_name):
             return None
 
         id = getattr(record, field_name).id
-        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        context.update(show_address=True)
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context=context)
         value = field_browse.name_get()[0][1]
 
         val = {
