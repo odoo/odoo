@@ -443,22 +443,11 @@
             
         },
         edit: function () {
-            // sig-ajout
-            var self = this;
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$el.show();
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
-            var view_id = $('html').attr('data-view-xmlid');
-            console.log(view_id);
-            openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
-                .then(function (result) {
-                    if(result){
-                        console.log(result);
-                        self.$('#master_edit').show();
-                    }
-                });
 
             this.rte.start_edition();
             this.trigger('rte:called');
