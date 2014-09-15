@@ -164,13 +164,11 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
-            current = request.website
-            new_menu_id = current.menu_id.id
             request.registry['website.menu'].create(request.cr, request.uid, {
                     'name': path,
                     'url': "/page/" + xml_id,
-                    'parent_id': new_menu_id,
-                    'website_id': current.id,
+                    'parent_id': request.website.menu_id.id,
+                    'website_id': request.website.id,
                 }, context=request.context)
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)

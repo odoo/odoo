@@ -148,8 +148,7 @@ response = request.render("website.template_partner_comment", values)
             <field name="type">qweb</field>
             <field name="key">website.homepage</field>
             <field name="website_id" ref="website2"/>
-            <field name="arch">
-                <![CDATA[
+            <field name="arch" type="xml">
                 <t name="Homepage" priority="29" t-name="website.homepage">
                   <t t-call="website.layout">
                     <div id="wrap" class="oe_structure oe_empty">
@@ -183,7 +182,6 @@ response = request.render("website.template_partner_comment", values)
                     </div>
                   </t>
                 </t>
-                ]]>
             </field>
         </record>
 
