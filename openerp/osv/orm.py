@@ -2153,7 +2153,8 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys, aggregated_fields,
+    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys,
+                                 aggregated_fields, count_field,
                                  read_group_result, read_group_order=None, context=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
@@ -2182,19 +2183,13 @@ class BaseModel(object):
         result = []
         known_values = {}
 
-        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
-            count_attr = '_'
-        else:
-            count_attr = groupby
-        count_attr += '_count'
-
         def append_left(left_side):
             grouped_value = left_side[groupby] and left_side[groupby][0]
             if not grouped_value in known_values:
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
-                known_values[grouped_value].update({count_attr: left_side[count_attr]})
+                known_values[grouped_value].update({count_field: left_side[count_field]})
         def append_right(right_side):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
@@ -2438,12 +2433,13 @@ class BaseModel(object):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
             count_field = '_'
+        count_field += '_count'
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count %(extra_fields)s
+            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s
@@ -2483,7 +2479,7 @@ class BaseModel(object):
             # method _read_group_fill_results need to be completely reimplemented
             # in a sane way 
             result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
-                                                       aggregated_fields, result, read_group_order=order,
+                                                       aggregated_fields, count_field, result, read_group_order=order,
                                                        context=context)
         return result
 
