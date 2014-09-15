@@ -1,381 +1,96 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2011-07-09 09:19+0000\n"
-"Last-Translator: OpenBMS JSC <Unknown>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-13 04:38+0000\n"
+"PO-Revision-Date: 2014-09-13 13:34+0700\n"
+"Last-Translator: Leo Tran <leo.tran@ma.tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: hr_recruitment
-#: help:hr.applicant,active:0
-msgid ""
-"If the active field is set to false, it will allow you to hide the case "
-"without removing it."
-msgstr ""
+#: view:hr.job:0
+msgid "(empty = remote work)"
+msgstr "(empty = remote work)"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0
-#: field:hr.recruitment.stage,requirements:0
-msgid "Requirements"
-msgstr "Các yêu cầu"
+#: view:hr.job:0
+msgid ", To start the recruitment"
+msgstr ", Để bắt đầu tuyển dụng"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Application Summary"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_1
+msgid "0-15"
+msgstr "0-15"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Start Interview"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_2
+msgid "16-20"
+msgstr "16-20"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Mobile:"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_3
+msgid "21-30"
+msgstr "21-30"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,fold:0
-msgid ""
-"This stage is not visible, for example in status bar or kanban view, when "
-"there are no records in that stage to display."
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_4
+msgid "31-40"
+msgstr "31-40"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
-msgid "Graduate"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_5
+msgid "41-50"
+msgstr "41-50"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_6
+msgid "51-60"
+msgstr "51-60"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Filter and view on next actions and date"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_7
+msgid "61-70"
+msgstr "61-70"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,department_id:0
-msgid "Department"
-msgstr "Phòng ban"
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_8
+msgid "71+"
+msgstr "71+"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_action:0
-msgid "Next Action Date"
-msgstr "Ngày Hành động Kế tiếp"
-
-#. module: hr_recruitment
-#: field:hr.applicant,salary_expected_extra:0
-msgid "Expected Salary Extra"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Jobs"
-msgstr "Các công việc"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Pending Jobs"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,company_id:0
-msgid "Company"
-msgstr "Công ty"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.source:0
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
-msgid "Sources of Applicants"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
-#, python-format
-msgid "You must define Applied Job for this applicant."
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Job"
-msgstr "Công việc"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.partner.create,close:0
-msgid "Close job request"
-msgstr "Đóng yêu cầu công việc"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new job applicant.\n"
-"              </p><p>\n"
-"                OpenERP helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, "
-"etc.\n"
-"              </p><p>\n"
-"                If you setup the email gateway, applicants and their "
-"attached\n"
-"                CV are created automatically when an email is sent to\n"
-"                jobs@yourcompany.com. If you install the document "
-"management\n"
-"                modules, all resumes are indexed automatically, so that you "
-"can\n"
-"                easily search through their content.\n"
+"                 Click here to create a new job or remove the filter on \"In "
+"Recruitment\" to recruit for an on hold job.\n"
+"              </p>\n"
+"              <p>\n"
+"                Define job position profile and manage recruitment in a "
+"context of a particular job: print interview survey, define number of "
+"expected new employees, and manage its recruitment pipe\n"
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
-msgid "Applications"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,day_open:0
-msgid "Days to Open"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,emp_id:0
-msgid "employee"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.config.settings,fetchmail_applicants:0
-msgid "Create applicants from an incoming email account"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,day:0
-msgid "Day"
-msgstr "Ngày"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.partner.create:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
-msgid "Create Contact"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Refuse"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
-msgid "Master Degree"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_mobile:0
-msgid "Mobile"
-msgstr "Di động"
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_ids:0
-msgid "Messages"
-msgstr "Các thông điệp"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Next Actions"
-msgstr "Các Hành động Kế tiếp"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
-msgid "Doctoral Degree"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,job_id:0
-#: field:hr.recruitment.report,job_id:0
-msgid "Applied Job"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.recruitment.stage,department_id:0
-msgid ""
-"Stages of the recruitment process may be different per department. If this "
-"stage is common to all departments, keep this field empty."
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,color:0
-msgid "Color Index"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
-msgid "Meetings"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
-msgid "Applicants Status"
-msgstr "Tình trạng ứng viên"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "My Recruitment"
-msgstr "Tuyển dụng của tôi"
-
-#. module: hr_recruitment
-#: field:hr.job,survey_id:0
-msgid "Interview Form"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.job,survey_id:0
-msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
-msgid "Recruitment"
-msgstr "Tuyển dụng"
-
-#. module: hr_recruitment
-#: help:hr.applicant,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop:0
-msgid "Salary Proposed"
-msgstr "Mức lương Đề nghị"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,partner_id:0
-msgid "Partner"
-msgstr "Đối tác"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Avg Proposed Salary"
-msgstr "Mức lương Đề nghị Trung bình"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,availability:0
-#: field:hr.recruitment.report,available:0
-msgid "Availability"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
-#: view:hr.recruitment.report:0
-msgid "Proposed Salary"
-msgstr "Mức lương đề nghị"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
-msgid "Source of Applicants"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.partner.create:0
-msgid "Convert To Partner"
-msgstr "Chuyển thành Đối tác"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
-msgid "Recruitments Statistics"
-msgstr "Thống kê Tuyển dụng"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Print interview report"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Hired employees"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_job
-msgid "Job Description"
-msgstr "Mô tả công việc"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_monster
-msgid "Monster"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
-msgid "Applicant Hired"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,email_from:0
-msgid "Email"
-msgstr "Thư điện tử"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Click here to create a new job or remove the filter on \"In "
+"Recruitment\" to recruit for an on hold job.\n"
+"              </p>\n"
+"              <p>\n"
+"                Define job position profile and manage recruitment in a "
+"context of a particular job: print interview survey, define number of "
+"expected new employees, and manage its recruitment pipe\n"
+"              </p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -390,425 +105,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Available"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,title_action:0
-msgid "Next Action"
-msgstr "Hành động Kế tiếp"
-
-#. module: hr_recruitment
-#: help:hr.job,alias_id:0
-msgid ""
-"Email alias for this job position. New emails will automatically create new "
-"applicants for this job position."
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Good"
-msgstr "Tốt"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "August"
-msgstr "Tháng Tám"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,create_date:0
-#: view:hr.recruitment.report:0
-msgid "Creation Date"
-msgstr "Ngày tạo"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
-#: model:ir.model,name:hr_recruitment.model_hired_employee
-msgid "Create Employee"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,priority:0
-#: field:hr.recruitment.report,priority:0
-msgid "Appreciation"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Print Interview"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,stage_id:0
-#: view:hr.recruitment.stage:0
-msgid "Stage"
-msgstr "Giai đoạn"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Phỏng vấn lần hai"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
-msgid "Recruitment / Applicants Stages"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
-#: view:hr.recruitment.report:0
-msgid "Expected Salary"
-msgstr "Mức lương mong đợi"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "July"
-msgstr "Tháng Bảy"
-
-#. module: hr_recruitment
-#: field:hr.applicant,email_cc:0
-msgid "Watchers Emails"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Applicants"
-msgstr "Các ứng viên"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
-#, python-format
-msgid "No Subject"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_exp:0
-msgid "Salary Expected"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_applicant
-msgid "Applicant"
-msgstr "Ứng viên"
-
-#. module: hr_recruitment
-#: help:hr.recruitment.stage,sequence:0
-msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_id:0
-msgid "Contact"
-msgstr "Liên hệ"
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_expected_extra:0
-msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,state:0
-msgid ""
-"The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "March"
-msgstr "Tháng Ba"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.stage:0
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
-msgid "Stages"
-msgstr "Các giai đoạn"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Draft recruitment"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Delete"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "In progress"
-msgstr "Đang tiến hành"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Hire & Create Employee"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
-msgid "Applicant hired"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Jobs - Recruitment Form"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,probability:0
-msgid "Probability"
-msgstr "Xác suất"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "April"
-msgstr "Tháng Tư"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "September"
-msgstr "Tháng Chín"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "December"
-msgstr "Tháng Mười Hai"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
-#, python-format
-msgid "A contact is already defined on this job request."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,categ_ids:0
-msgid "Tags"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
-msgid "Category of applicant"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
-msgid "Month"
-msgstr "Tháng"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Answer related job question"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Phỏng vấn lần một"
-
-#. module: hr_recruitment
-#: field:hr.applicant,write_date:0
-msgid "Update Date"
-msgstr "Ngày cập nhật"
-
-#. module: hr_recruitment
-#: view:hired.employee:0
-msgid "Yes"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,name:0
-msgid "Subject"
-msgstr "Chủ đề"
-
-#. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.partner.create:0
-msgid "or"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
-msgid "Applicant Refused"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule Meeting"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_name:0
-msgid "Applicant's Name"
-msgstr "Tên Ứng viên"
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Very Good"
-msgstr "Rất Tốt"
-
-#. module: hr_recruitment
-#: field:hr.applicant,user_email:0
-msgid "User Email"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,date_open:0
-msgid "Opened"
-msgstr "Đã mở"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Group By ..."
-msgstr "Nhóm theo ..."
-
-#. module: hr_recruitment
-#: view:hired.employee:0
-msgid "No"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_expected:0
-msgid "Salary Expected by Applicant"
-msgstr "Mức lương Ứng viên mong đợi"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "All Initial Jobs"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
-msgid "Degrees"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
-msgid "Closed"
-msgstr "Đã được đóng"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.stage:0
-msgid "Stage Definition"
-msgstr "Định nghĩa Giai đoạn"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,delay_close:0
-msgid "Avg. Delay to Close"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_proposed:0
-msgid "Salary Proposed by the Organisation"
-msgstr "Mức lương Tổ chức đề nghị"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "Pending"
-msgstr "Đang chờ"
-
-#. module: hr_recruitment
-#: field:hr.applicant,state:0
-#: field:hr.recruitment.report,state:0
-#: field:hr.recruitment.stage,state:0
-msgid "Status"
-msgstr "Tình trạng"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule interview with this applicant"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
-#, python-format
-msgid "Applicant <b>created</b>"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,type_id:0
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
-msgid "Degree"
-msgstr "Bằng Cấp"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "Điện thoại"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "June"
-msgstr "Tháng Sáu"
-
-#. module: hr_recruitment
-#: field:hr.applicant,day_close:0
-msgid "Days to Close"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,user_id:0
-msgid "User"
-msgstr "Người sử dụng"
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Excellent"
-msgstr "Tuyệt vời"
-
-#. module: hr_recruitment
-#: field:hr.applicant,active:0
-msgid "Active"
-msgstr "Hoạt động"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,nbr:0
-msgid "# of Applications"
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Nhấp chuột để tạo mới một bước trong quy trình tuyển dụng.\n"
+"          </p><p>\n"
+"            Định nghĩa các bước tuyển dụng tại đây, ví dụ:\n"
+"            gọi điện, phỏng vấn lần đầu, phỏng vấn lần hai, từ chối, tuyển "
+"dụng,...\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -822,78 +126,358 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"           Nhấp chuột để tạo mới một quy trình tuyển dụng.\n"
+"          </p><p>\n"
+"            Đừng quên chỉ ra phòng ban nếu quy trình tuyển dụng của bạn\n"
+"            là khác nhau tùy theo vị trí công việc.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
-#: field:hr.applicant,response:0
-msgid "Response"
-msgstr "Hồi đáp"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "October"
-msgstr "Tháng Mười"
-
-#. module: hr_recruitment
-#: field:hr.config.settings,module_document_ftp:0
-msgid "Allow the automatic indexation of resumes"
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"<p class='oe_view_nocontent_create'>Click here to add new job applicants</"
+"p><p>\n"
+"                OpenERP helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, "
+"etc.\n"
+"              </p><p>\n"
+"                Applicants and their attached CV are created automatically "
+"when an email is sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically,\n"
+"                so that you can easily search through their content.\n"
+"              </p>\n"
+"         "
 msgstr ""
+"<p class='oe_view_nocontent_create'>Click here to add new job applicants</"
+"p><p>\n"
+"                Hệ thống giúp bạn theo dõi ứng viên trong quy trình tuyển "
+"dụng\n"
+"                và theo dõi tất cả các hoạt động: hẹn gặp, phỏng vấn,...\n"
+"              </p><p>\n"
+"         Ứng viên và các CV đính kèm của họ được tạo tự động khi một email "
+"được gửi đến.\n"
+"                Nếu bạn cài phân hệ quản lý tài liệu, tất cả các CV được "
+"đánh chỉ mục tự động,\n"
+"                do đó bạn có thể dễ dàng tìm kiếm thông qua nội dung của "
+"chúng.\n"
+"              </p>\n"
+"         "
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed_extra:0
-msgid "Proposed Salary Extra"
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"<p class='oe_view_nocontent_create'>Click here to add new job applicants</"
+"p><p>\n"
+"                OpenERP helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, "
+"etc.\n"
+"              </p><p>\n"
+"                Applicants and their attached CV are created automatically "
+"when an email is sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically, \n"
+"                so that you can easily search through their content.\n"
+"              </p>\n"
+"            "
 msgstr ""
+"<p class='oe_view_nocontent_create'>Click here to add new job applicants</"
+"p><p>\n"
+"                Hệ thống giúp bạn theo dõi ứng viên trong quy trình tuyển "
+"dụng\n"
+"                và theo dõi tất cả các hoạt động: hẹn gặp, phỏng vấn,...\n"
+"              </p><p>\n"
+"         Ứng viên và các CV đính kèm của họ được tạo tự động khi một email "
+"được gửi đến.\n"
+"                Nếu bạn cài phân hệ quản lý tài liệu, tất cả các CV được "
+"đánh chỉ mục tự động,\n"
+"                do đó bạn có thể dễ dàng tìm kiếm thông qua nội dung của "
+"chúng.\n"
+"              </p>\n"
+"         "
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "January"
-msgstr "Tháng Giêng"
+#: model:survey.page,description:hr_recruitment.recruitment_1
+#: model:survey.page,description:hr_recruitment.recruitment_2
+#: model:survey.page,description:hr_recruitment.recruitment_3
+#: model:survey.survey,thank_you_message:hr_recruitment.recruitment_form
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: hr_recruitment
+#: model:email.template,body_html:hr_recruitment.applicant_interest
+msgid ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>Congrats! Your resume's got our interest!\n"
+"        I will call you as soon as possible to make a 10 minutes phone "
+"interview and  plan a first meeting.</p>\n"
+"        <p>If we can’t reach you or if you miss our call, feel free to reach "
+"me back on the number 001 312 349 3030\n"
+"        If I do not answer, please let me a message with some schedules to "
+"call you back.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id.signature}"
+msgstr ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>Congrats! Your resume's got our interest!\n"
+"        I will call you as soon as possible to make a 10 minutes phone "
+"interview and  plan a first meeting.</p>\n"
+"        <p>If we can’t reach you or if you miss our call, feel free to reach "
+"me back on the number 001 312 349 3030\n"
+"        If I do not answer, please let me a message with some schedules to "
+"call you back.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id.signature}"
+
+#. module: hr_recruitment
+#: model:email.template,body_html:hr_recruitment.applicant_refuse
+msgid ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>We thank you for your interest in our company and for your "
+"application.\n"
+"        Unfortunately, your profile does not match with our needs or our "
+"recruitment\n"
+"        campaign has reached its term.</p>\n"
+"        <p>If you want more details, feel free to contact us by phone.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id and object.user_id.signature or ''}"
+msgstr ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>We thank you for your interest in our company and for your "
+"application.\n"
+"        Unfortunately, your profile does not match with our needs or our "
+"recruitment\n"
+"        campaign has reached its term.</p>\n"
+"        <p>If you want more details, feel free to contact us by phone.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id and object.user_id.signature or ''}"
+
+#. module: hr_recruitment
+#: model:survey.survey,description:hr_recruitment.recruitment_form
+msgid ""
+"<p>This form is intended to help the responsible of a recruitment interview."
+"</p>"
+msgstr ""
+"<p>Form này được thiết kế để trợ giúp người phụ trách một cuộc phỏng vấn.</p>"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
+#, python-format
+msgid "A contact is already defined on this job request."
+msgstr "Một liên hệ đã được tạo trên yêu cầu công việc này."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Một liên hệ đã tồn tại với cùng tên."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
+#: field:hr.applicant,active:0
+msgid "Active"
+msgstr "Hiệu lực"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_4
+msgid "Activities"
+msgstr "Hoạt động"
+
+#. module: hr_recruitment
+#: help:hr.job,address_id:0
+msgid "Address where employees are working"
+msgstr "Địa chỉ làm việ của nhân viên"
+
+#. module: hr_recruitment
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr "Bí danh"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr "Alias Domain"
+
+#. module: hr_recruitment
+#: help:hr.config.settings,fetchmail_applicants:0
+msgid ""
+"Allow applicants to send their job application to an email address "
+"(jobs@mycompany.com), and create automatically application documents in the "
+"system."
 msgstr ""
+"Cho phép ứng viên gửi hồ sơ xin việc tới một địa chỉ email (jobs@mycompany."
+"com) và tự động tạo hồ sơ ứng viên trong hệ thống."
+
+#. module: hr_recruitment
+#: field:hr.config.settings,module_document:0
+msgid "Allow the automatic indexation of resumes"
+msgstr "Cho phép tự động đánh chỉ mục CV"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Contact:"
-msgstr ""
+msgid "Answer related job question"
+msgstr "Trả lời câu hỏi liên quan đến công việc"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant
+msgid "Applicant"
+msgstr "Ứng viên"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
+msgid "Applicant Created"
+msgstr "Ứng viên đã được tạo"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
+msgid "Applicant Hired"
+msgstr "Ứng viên đã được tuyển"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
+msgid "Applicant Stage Changed"
+msgstr "Trạng thái ứng viên đã thay đổi"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
+msgid "Applicant created"
+msgstr "Ứng viên đã được tạo"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
+msgid "Applicant hired"
+msgstr "Ứng viên đã được tuyển"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_name:0
+msgid "Applicant's Name"
+msgstr "Tên Ứng viên"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:90 view:hr.applicant:0
+#, python-format
+msgid "Applicants"
+msgstr "Ứng viên"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Application"
+msgstr "Application"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Search Jobs"
-msgstr "Tìm kiếm Các công việc"
+msgid "Application Summary"
+msgstr "Application Summary"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0
-#: field:hr.recruitment.report,date:0
-msgid "Date"
-msgstr "Ngày"
+#: model:email.template,subject:hr_recruitment.applicant_interest
+msgid "Application approved"
+msgstr "Application approved"
 
 #. module: hr_recruitment
-#: field:hr.applicant,survey:0
-msgid "Survey"
-msgstr ""
+#: model:email.template,subject:hr_recruitment.applicant_refuse
+msgid "Application refused"
+msgstr "Application refused"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-msgid "Would you like to create an employee ?"
-msgstr ""
+#: view:hr.job:0 field:hr.job,application_count:0
+#: field:hr.job,application_ids:0 field:hr.job,document_ids:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
+#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+msgid "Applications"
+msgstr "Applications"
+
+#. module: hr_recruitment
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+msgid "Applied Job"
+msgstr "Applied Job"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: field:hr.recruitment.report,priority:0
+msgid "Appreciation"
+msgstr "Đánh giá cao"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:0
+msgid "Are you sure you want to create a contact based on this job request ?"
+msgstr "Bạn chắc chắn muốn tạo một liên hệ dựa trên  yêu cầu công việc này?"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_open:0
+msgid "Assigned"
+msgstr "Đã gán"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
+msgid "Availability"
+msgstr "Khả dụng"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Average"
+msgstr "Average"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,delay_close:0
+msgid "Avg. Delay to Close"
+msgstr "Avg. Delay to Close"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_exp_avg:0
+msgid "Avg. Expected Salary"
+msgstr "Lương trung bình mong đợi"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop_avg:0
+msgid "Avg. Proposed Salary"
+msgstr "Lương trung bình đề xuất"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
+msgid "Bachelor Degree"
+msgstr "Bằng cử nhân"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Bad"
+msgstr "Tồi tệ"
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_1
+msgid "Basic information"
+msgstr "Thông tin cơ bản"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Below Average"
+msgstr "Below Average"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:0
+msgid "Cancel"
+msgstr "Hủy bỏ"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Degree:"
-msgstr ""
+msgid "Cases By Stage and Estimates"
+msgstr "Cases By Stage and Estimates"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Extended Filters..."
-msgstr "Các bộ lọc Mở rộng..."
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
+msgid "Category of applicant"
+msgstr "Nhóm ứng viên"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
@@ -902,80 +486,794 @@ msgid ""
 "forget to specify the department if your recruitment process is different "
 "according to the job position."
 msgstr ""
+"Đánh dấu nếu bước này trùng khớp với quy trình tuyển dụng. Đừng quên chỉ ra "
+"phòng ban nếu quy trình tuyển dụng là khác nhau tùy theo vị trí công việc."
 
 #. module: hr_recruitment
-#: view:hr.config.settings:0
-msgid "Configure"
+#: help:hr.job,survey_id:0
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
 msgstr ""
+"Chọn một form phỏng vấn cho vị trí công việc này và bạn có thể in/trả lời "
+"cuộc phỏng vấn này từ tất cả ứng viên ứng tuyển vào vị trí này"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposed"
-msgstr ""
+#: field:hr.recruitment.partner.create,close:0
+msgid "Close job request"
+msgstr "Đóng yêu cầu công việc"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+msgid "Closed"
+msgstr "Đã đóng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,color:0 field:hr.job,color:0
+msgid "Color Index"
+msgstr "Mã mầu"
+
+#. module: hr_recruitment
+#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.recruitment.report,company_id:0
+msgid "Company"
+msgstr "Công ty"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_website_company
 msgid "Company Website"
-msgstr ""
+msgstr "Trang web công ty"
 
 #. module: hr_recruitment
-#: sql_constraint:hr.recruitment.degree:0
-msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+#: code:addons/hr_recruitment/hr_recruitment.py:364
+#: field:hr.applicant,partner_id:0
+#, python-format
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:366
+#, python-format
+msgid "Contact Email"
+msgstr "Email liên hệ"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Contact:"
+msgstr "Liên hệ:"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Contract"
+msgstr "Hợp đồng"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposed"
+msgstr "Hợp đồng được đề xuất"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Hợp đồng được ký"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:0
+msgid "Convert To Partner"
+msgstr "Chuyển thành Đối tác"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
+msgid "Create Contact"
+msgstr "Tạo liên hệ"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,date_create:0
+msgid "Create Date"
+msgstr "Tạo ngày tháng"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Create Employee"
+msgstr "Tạo nhân viên"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
+msgid "Create Partner from job application"
+msgstr "Tạo đối tác từ đơn xin việc"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,fetchmail_applicants:0
+msgid "Create applicants from an incoming email account"
+msgstr "Tạo ứng viên từ một tài khoản thư đến"
+
+#. module: hr_recruitment
+#: field:hr.applicant,create_date:0 view:hr.recruitment.report:0
+msgid "Creation Date"
+msgstr "Ngày tạo"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr ""
+msgid "Creation Date (day)"
+msgstr "Ngày tạo (ngày)"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.partner.create:0
-msgid "Cancel"
-msgstr "Hủy bỏ"
+#: view:hr.recruitment.report:0
+msgid "Creation Date (month)"
+msgstr "Ngày tạo (tháng)"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.partner.create:0
-msgid "Are you sure you want to create a contact based on this job request ?"
-msgstr ""
+#: view:hr.recruitment.report:0
+msgid "Creation Date (week)"
+msgstr "Ngày tạo (tuần)"
 
 #. module: hr_recruitment
-#: help:hr.config.settings,fetchmail_applicants:0
+#: view:hr.recruitment.report:0
+msgid "Creation Date (year)"
+msgstr "Ngày tạo (năm)"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Creation Month"
+msgstr "Tháng tạo"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi."
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Day(s)"
+msgstr "Ngày"
+
+#. module: hr_recruitment
+#: field:hr.applicant,day_close:0
+msgid "Days to Close"
+msgstr "Ngày đóng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,day_open:0
+msgid "Days to Open"
+msgstr "Ngày mở"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,alias_prefix:0
+msgid "Default Alias Name for Jobs"
+msgstr "Tên bí danh mặc định cho công việc"
+
+#. module: hr_recruitment
+#: view:hr.config.settings:0
+msgid "Default job email address"
+msgstr "Địa chỉ email công việc mặc định"
+
+#. module: hr_recruitment
+#: view:hr.job:0
 msgid ""
-"Allow applicants to send their job application to an email address "
-"(jobs@mycompany.com),\n"
-"                and create automatically application documents in the system."
+"Define a specific contact address for this job position. If you keep it "
+"empty, the default email address will be used which is in human resources "
+"settings"
 msgstr ""
+"Xác định một địa chỉ liên hệ cụ thể cho vị trí công việc này. Nếu để trống, "
+"địa chỉ email mặc định trong thiết lập Nhân sự sẽ được sử dụng"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: field:hr.recruitment.report,type_id:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
+msgid "Degree"
+msgstr "Bằng Cấp"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Degree of Recruitment"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "In Progress"
-msgstr "Đang thực hiện"
+msgid "Degree:"
+msgstr "Bằng cấp:"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degrees"
+msgstr "Bằng cấp"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 view:hr.job:0
+msgid "Delete"
+msgstr "Xóa"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Subject / Applicant"
+msgid "Departement:"
+msgstr "Phòng ban:"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+msgid "Department"
+msgstr "Phòng ban"
+
+#. module: hr_recruitment
+#: field:hr.job,manager_id:0
+msgid "Department Manager"
+msgstr "Trưởng phòng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,description:0
+msgid "Description"
+msgstr "Miêu tả"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_4
+msgid "Desk space"
+msgstr "Desk space"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr "Bằng tiến sỹ"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Document"
+msgstr "Tài liệu"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 view:hr.job:0 field:hr.job,documents_count:0
+msgid "Documents"
+msgstr "Tài liệu"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_11
+msgid "Dress code"
+msgstr "Dress code"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Edit..."
+msgstr "Sửa..."
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_2
+msgid "Education"
+msgstr "Education"
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_2
+msgid "Education and Activities"
+msgstr "Education and Activities"
+
+#. module: hr_recruitment
+#: field:hr.applicant,email_from:0
+msgid "Email"
+msgstr "Thư điện tử"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Email Alias"
+msgstr "Email Alias"
+
+#. module: hr_recruitment
+#: help:hr.job,alias_id:0
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
 msgstr ""
+"Email bí dinh cho vị trí công việc này. Các thư mới sẽ tạo các ứng viên cho "
+"vị trí công việc này."
+
+#. module: hr_recruitment
+#: field:hr.applicant,emp_id:0
+msgid "Employee"
+msgstr "Nhân viên"
+
+#. module: hr_recruitment
+#: help:hr.applicant,emp_id:0
+msgid "Employee linked to the applicant."
+msgstr "Nhân viên được liên kết tới một ứng viên."
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "Error!"
+msgstr "Lỗi!"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Excellent"
+msgstr "Tuyệt vời"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_expected:0
+msgid "Expected Salary"
+msgstr "Mức lương mong đợi"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_expected_extra:0
+msgid "Expected Salary Extra"
+msgstr "Expected Salary Extra"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_3
+msgid "Experience"
+msgstr "Kinh nghiệm"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Extended Filters..."
+msgstr "Bộ lọc mở rộng..."
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Extra advantages..."
+msgstr "Extra advantages..."
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Feedback of interviews..."
+msgstr "Phản hồi phỏng vấn..."
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_2_2
+msgid "Female"
+msgstr "Nữ"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Filter and view on next actions and date"
+msgstr "Lọc và xem ngày và hành động tiếp theo"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Phỏng vấn lần đầu"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,fold:0
+msgid "Folded in Kanban View"
+msgstr "Folded in Kanban View"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_8
+msgid "Freebies such as tea, coffee and stationery"
+msgstr "Miễn phí như: chè, cà phê và văn phòng phẩm"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_1
+msgid "From which university will you graduate?"
+msgstr "From which university will you graduate?"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_2
+msgid "Getting on with colleagues"
+msgstr "Getting on with colleagues"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách bàng cấp."
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
-msgid "Stage changed"
-msgstr ""
+#: help:hr.recruitment.stage,sequence:0
+msgid "Gives the sequence order when displaying a list of stages."
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách các bước."
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Good"
+msgstr "Tốt"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_7
+msgid "Good management"
+msgstr "Good management"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_1
+msgid "Good pay"
+msgstr "Good pay"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_13
+msgid "Good social life"
+msgstr "Good social life"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
+msgid "Graduate"
+msgstr "Graduate"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Group By ..."
+msgstr "Nhóm theo ..."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: field:hr.applicant,user_id:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Hired Employees"
+msgstr "Nhân viên được tuyển"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_it
+msgid "IT"
+msgstr "IT"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#. module: hr_recruitment
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_1
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_2
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_3
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_1
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_2
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
+#: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
+msgid "If other, precise:"
+msgstr "If other, precise:"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,template_id:0
+msgid ""
+"If set, a message is posted on the applicant using the template when the "
+"applicant is set to the stage."
+msgstr ""
+"Nếu được thiếp lập, một thông điệp được ghi nhận trên ứng viên bằng cách sử "
+"dụng mẫu khi ứng viên được thiết lập."
+
+#. module: hr_recruitment
+#: help:hr.applicant,active:0
+msgid ""
+"If the active field is set to false, it will allow you to hide the case "
+"without removing it."
+msgstr ""
+"If the active field is set to false, it will allow you to hide the case "
+"without removing it."
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_3
+msgid "Importance"
+msgstr "Tầm quan trọng"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_3
+msgid "Important"
+msgstr "Quan trọng"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Thẩm định ban đầu"
+
+#. module: hr_recruitment
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.applicant:0
+msgid "Interview"
+msgstr "Phỏng vấn"
+
+#. module: hr_recruitment
+#: field:hr.job,survey_id:0
+msgid "Interview Form"
+msgstr "Form Phỏng vấn"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Là một người theo dõi"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Job"
+msgstr "Công việc"
+
+#. module: hr_recruitment
+#: field:hr.job,address_id:0
+msgid "Job Location"
+msgstr "Nơi làm việc"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_job
+msgid "Job Position"
+msgstr "Vị trí công việc"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
+msgid "Job Positions"
+msgstr "Vị trí công việc"
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
-msgid "Responsible"
-msgstr "Chịu trách nhiệm"
+msgid "Jobs"
+msgstr "Công việc"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Jobs - Recruitment Form"
+msgstr "Form tuyển dụng"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_1
+msgid "Knowledge"
+msgstr "Tri thức"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_last_post:0
+msgid "Last Message Date"
+msgstr "Ngày thông điệp gần nhất"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,last_stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,last_stage_id:0
+msgid "Last Stage"
+msgstr "Bước cuối cùng"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,date_last_stage_update:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr "Cập nhật bước cuối cùng"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Launch Recruitment"
+msgstr "Khởi động tuyển dụng"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_2_1
+msgid "Male"
+msgstr "Nam"
+
+#. module: hr_recruitment
+#: help:hr.config.settings,module_document:0
+msgid ""
+"Manage your CV's and motivation letter related to all applicants.\n"
+"-This installs the module document_ftp. This will install the knowledge "
+"management  module in order to allow you to search using specific keywords "
+"through  the content of all documents (PDF, .DOCx...)"
+msgstr ""
+"Manage your CV's and motivation letter related to all applicants.\n"
+"-This installs the module document_ftp. This will install the knowledge "
+"management  module in order to allow you to search using specific keywords "
+"through  the content of all documents (PDF, .DOCx...)"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
+msgid "Manager"
+msgstr "Người quản lý"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
+msgid "Master Degree"
+msgstr "Bằng thạc sĩ"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 view:hr.recruitment.report:0
+msgid ""
+"Match this group by with a specific stage filter in order to analyse the "
+"recruitment process"
+msgstr ""
+"Match this group by with a specific stage filter in order to analyse the "
+"recruitment process"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Meeting"
+msgstr "Cuộc họp"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
+msgid "Meetings"
+msgstr "Cuộc họp"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_ids:0
+msgid "Messages"
+msgstr "Thông điệp"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_ids:0
+msgid "Messages and communication history"
+msgstr "Lịch sử thông điệp và liên lạc"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_mobile:0
+msgid "Mobile"
+msgstr "Di động"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Mobile:"
+msgstr "Di động:"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_monster
+msgid "Monster"
+msgstr "Monster"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_5
+msgid "Most important"
+msgstr "Quan trọng nhất"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 view:hr.recruitment.report:0
+msgid "My"
+msgstr "Của bạn"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.recruitment.stage,name:0
+msgid "Name"
+msgstr "Tên"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "New"
+msgstr "Mới"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+msgid "New Applicant"
+msgstr "Ứng viên mới"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:488
+#, python-format
+msgid "New Employee %s Hired"
+msgstr "Ứng viên mới %s đã được tuyển"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:405
+#: code:addons/hr_recruitment/hr_recruitment.py:432
+#, python-format
+msgid "New application from %s"
+msgstr "Đơn xin việc mới từ %s"
+
+#. module: hr_recruitment
+#: field:hr.applicant,title_action:0
+msgid "Next Action"
+msgstr "Hành động Kế tiếp"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_action:0
+msgid "Next Action Date"
+msgstr "Ngày hành động Kế tiếp"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Next Actions"
+msgstr "Hành động Kế tiếp"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:378
+#, python-format
+msgid "No Subject"
+msgstr "Không có chủ đề"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_10
+msgid "No out of hours working"
+msgstr "Không làm việc ngoài giờ"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_1
+msgid "Not important"
+msgstr "Không quan trọng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,attachment_number:0
+msgid "Number of Attachments"
+msgstr "Số lượng đính kèm"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.report,delay_close:0
+msgid "Number of Days to close the project issue"
+msgstr "Số ngày để đóng một phát sinh dự án"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_3
+msgid "Office environment"
+msgstr "Môi trường làm việc"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_6
+msgid "Office location"
+msgstr "Địa điểm văn phòng"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,partner_id:0
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_9
+msgid "Perks such as free parking, gym passes"
+msgstr "Perks such as free parking, gym passes"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Điện thoại"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Print"
+msgstr "In"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Print Interview"
+msgstr "In phỏng vấn"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Print interview report"
+msgstr "In báo cáo phỏng vấn"
+
+#. module: hr_recruitment
+#: field:hr.applicant,probability:0
+msgid "Probability"
+msgstr "Xác suất"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_proposed:0
+msgid "Proposed Salary"
+msgstr "Mức lương đề nghị"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_proposed_extra:0
+msgid "Proposed Salary Extra"
+msgstr "Proposed Salary Extra"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_3_1
+msgid "Rate the Importance"
+msgstr "Rate the Importance"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
+msgid "Recruitment"
+msgstr "Tuyển dụng"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
+msgid "Recruitment / Applicants Stages"
+msgstr "Recruitment / Applicants Stages"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -985,19 +1283,190 @@ msgid "Recruitment Analysis"
 msgstr "Phân tích Tuyển dụng"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-msgid "Create New Employee"
-msgstr ""
+#: view:hr.job:0
+msgid "Recruitment Done"
+msgstr "Tuyển dụng hoàn thành"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
-msgid "LinkedIn"
-msgstr ""
+#: model:survey.survey,title:hr_recruitment.recruitment_form
+msgid "Recruitment Form"
+msgstr "Form Tuyển dụng"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
-msgid "New Applicant"
-msgstr ""
+#: field:hr.job,user_id:0
+msgid "Recruitment Responsible"
+msgstr "Người phụ trách tuyển dụng"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
+msgid "Recruitments Statistics"
+msgstr "Thống kê Tuyển dụng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,reference:0
+msgid "Referred By"
+msgstr "Referred By"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+msgid "Refused"
+msgstr "Bị từ chối"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_12
+msgid "Regular meetings"
+msgstr "Regular meetings"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+msgid "Requirements"
+msgstr "Yêu cầu"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_reserve
+msgid "Reserve"
+msgstr "Reserve"
+
+#. module: hr_recruitment
+#: field:hr.applicant,response_id:0
+msgid "Response"
+msgstr "Phản hồi"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.recruitment.report:0
+msgid "Responsible"
+msgstr "Người phụ trách"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr "Review Recruitment Stages"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_exp:0
+msgid "Salary Expected"
+msgstr "Mức lương mong đợi"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_expected:0
+msgid "Salary Expected by Applicant"
+msgstr "Mức lương Ứng viên mong đợi"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_expected_extra:0
+msgid "Salary Expected by Applicant, extra advantages"
+msgstr "Mức lương Ứng viên mong đợi"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop:0
+msgid "Salary Proposed"
+msgstr "Mức lương Đề nghị"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_proposed:0
+msgid "Salary Proposed by the Organisation"
+msgstr "Mức lương Tổ chức đề nghị"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_proposed_extra:0
+msgid "Salary Proposed by the Organisation, extra advantages"
+msgstr "Mức lương Tổ chức đề nghị"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_sales
+msgid "Sales"
+msgstr "Bán hàng"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Schedule"
+msgstr "Đặt lịch"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Schedule Interview"
+msgstr "Đặt lịch phỏng vấn"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Schedule interview with this applicant"
+msgstr "Đặt lịch phỏng vấn ứng viên này"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Search Applicants"
+msgstr "Tìm kiếm ứng viên"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Phỏng vấn lần hai"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.degree,sequence:0
+#: field:hr.recruitment.stage,sequence:0
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_2
+msgid "Somewhat important"
+msgstr "Hơi quan trọng"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "Nguồn"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.source,name:0
+msgid "Source Name"
+msgstr "Tên nguồn"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Nguồn của ứng viên"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.source:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+msgid "Sources of Applicants"
+msgstr "Nguồn của ứng viên"
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "Specific Email Address"
+msgstr "Địa chỉ email cụ thể"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,department_id:0
+msgid "Specific to a Department"
+msgstr "Cụ thể cho một phòng ban"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.recruitment.stage:0
+msgid "Stage"
+msgstr "Giai đoạn"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage Changed"
+msgstr "Giai đoạn đã thay đổi"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.stage:0
+msgid "Stage Definition"
+msgstr "Định nghĩa Giai đoạn"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage changed"
+msgstr "Giai đoạn đã thay đổi"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1005,357 +1474,233 @@ msgid "Stage of Recruitment"
 msgstr "Giai đoạn Tuyển dụng"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Cases By Stage and Estimates"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "New"
-msgstr "Mới"
-
-#. module: hr_recruitment
-#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
-#: view:hr.job:0
-msgid "Interview"
-msgstr "Phỏng vấn"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.source,name:0
-msgid "Source Name"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Day(s)"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,description:0
-msgid "Description"
-msgstr "Mô tả"
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
-msgid "Stage Changed"
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "May"
-msgstr "Tháng Năm"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_word
-msgid "Word of Mouth"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.stage,fold:0
-msgid "Hide in views if empty"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.config.settings,module_document_ftp:0
+#: help:hr.applicant,last_stage_id:0
 msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"                This installs the module document_ftp. This will install the "
-"knowledge management  module in order to allow you to search using specific "
-"keywords through  the content of all documents (PDF, .DOCx...)"
+"Stage of the applicant before being in the current stage. Used for lost "
+"cases analysis."
 msgstr ""
+"Stage of the applicant before being in the current stage. Used for lost "
+"cases analysis."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: selection:hr.recruitment.report,state:0
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
-#: selection:hr.recruitment.stage,state:0
-msgid "Refused"
-msgstr "Đã từ chối"
+#: view:hr.recruitment.stage:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
+msgid "Stages"
+msgstr "Giai đoạn"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "Hired"
-msgstr "Đã được tuyển dụng"
-
-#. module: hr_recruitment
-#: field:hr.applicant,reference:0
-msgid "Referred By"
+#: help:hr.recruitment.stage,department_id:0
+msgid ""
+"Stages of the recruitment process may be different per department. If this "
+"stage is common to all departments, keep this field empty."
 msgstr ""
+"Giai đoạn của quy trình tuyển dụng phải là khác nhau cho từng phòng ban. Nếu "
+"giai đoạn này là chung cho tất cả phòng ban, để trống trường này."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Departement:"
-msgstr ""
+msgid "Start"
+msgstr "Bắt đầu"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "On Average"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop_avg:0
-msgid "Avg. Proposed Salary"
-msgstr ""
+#: model:survey.label,value:hr_recruitment.rrow_2_1_5
+msgid "State of the art technology"
+msgstr "State of the art technology"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Open Jobs"
-msgstr ""
+msgid "Subject / Applicant"
+msgstr "Chủ đề / Ứng viên"
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "February"
-msgstr "Tháng Hai"
-
-#. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Not Good"
-msgstr "Không Tốt"
-
-#. module: hr_recruitment
-#: field:hr.applicant_category,name:0
-#: field:hr.recruitment.degree,name:0
-#: field:hr.recruitment.stage,name:0
-msgid "Name"
-msgstr "Tên"
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "November"
-msgstr "Tháng Mười Một"
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,salary_exp_avg:0
-msgid "Avg. Expected Salary"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Avg Expected Salary"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
-msgid "Create Partner from job application"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,email_from:0
-msgid "These people will receive email."
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.job,alias_id:0
-msgid "Alias"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Pending recruitment"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Contract"
-msgstr ""
+#: field:hr.applicant,name:0
+msgid "Subject / Application Name"
+msgstr "Tên Chủ đề / Ứng viên"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Tóm tắt"
 
 #. module: hr_recruitment
-#: help:hr.applicant,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
+#: field:hr.applicant,survey:0
+msgid "Survey"
+msgstr "Khảo sát"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
-msgid "Applicant refused"
-msgstr ""
+#: field:hr.applicant,categ_ids:0
+msgid "Tags"
+msgstr "Tags"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,department_id:0
-msgid "Specific to a Department"
-msgstr ""
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_1
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_2
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_3
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_1
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_2
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_3
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_4
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_3_1
+msgid "The answer you entered has an invalid format."
+msgstr "Câu trả lời không đúng định dạng."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "In progress recruitment"
-msgstr ""
+#: sql_constraint:hr.recruitment.degree:0
+msgid "The name of the Degree of Recruitment must be unique!"
+msgstr "Tên của bằng cấp tuyển dụng phải là duy nhất!"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.degree,sequence:0
-#: field:hr.recruitment.stage,sequence:0
-msgid "Sequence"
-msgstr ""
+#: help:hr.applicant,availability:0
+msgid ""
+"The number of days in which the applicant will be available to start working"
+msgstr "Số ngày mà ứng viến có thể bắt đầu làm việc"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
-msgid "Bachelor Degree"
+#: help:hr.applicant,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
 msgstr ""
+"Địa chỉ email này sẽ được thêm vào trường CC của tất cả các thư đến và thư "
+"đi cho bản ghi này trước khi được gửi. Mỗi email được ngăn cách bởi dấy phẩy"
+
+#. module: hr_recruitment
+#: help:hr.applicant,email_from:0
+msgid "These people will receive email."
+msgstr "Những người sẽ nhận được email."
+
+#. module: hr_recruitment
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_2
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_3
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_1
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_2
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_3
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
+msgid "This question requires an answer."
+msgstr "Câu yêu này yêu cầu một câu trả lời."
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+msgstr ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 view:hr.recruitment.report:0
+msgid "Unassigned"
+msgstr "Chưa được gán"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0 field:hr.applicant,message_unread:0 view:hr.job:0
+msgid "Unread Messages"
+msgstr "Thông điệp chưa đọc"
+
+#. module: hr_recruitment
+#: field:hr.applicant,write_date:0
+msgid "Update Date"
+msgstr "Ngày cập nhật"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,template_id:0
+msgid "Use template"
+msgstr "Sử dụng mẫu"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,user_id:0
+msgid "User"
+msgstr "Người dùng"
+
+#. module: hr_recruitment
+#: field:hr.applicant,user_email:0
+msgid "User Email"
+msgstr "Email người dùng"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_4
+msgid "Very important"
+msgstr "Rất quan trọng"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:491
+#, python-format
+msgid "Warning!"
+msgstr "Cảnh báo!"
+
+#. module: hr_recruitment
+#: field:hr.applicant,email_cc:0
+msgid "Watchers Emails"
+msgstr "Watchers Emails"
+
+#. module: hr_recruitment
+#: field:hr.applicant,website_message_ids:0
+msgid "Website Messages"
+msgstr "Website Messages"
+
+#. module: hr_recruitment
+#: help:hr.applicant,website_message_ids:0
+msgid "Website communication history"
+msgstr "Website communication history"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_3
+msgid "What age group do you belong to?"
+msgstr "Độ tuổi của bạn là gì?"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_2
+msgid "What is your gender?"
+msgstr "Giới tính của bạn?"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_word
+msgid "Word of Mouth"
+msgstr "Word of Mouth"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:491
+#, python-format
+msgid "You must define an Applied Job and a Contact Name for this applicant."
+msgstr "Bạn phải định nghĩa một công việc và một tên liên hệ cho ứng viên này."
+
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "click here"
+msgstr "click here"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Unassigned Recruitments"
-msgstr ""
+msgid "e.g. Call for interview"
+msgstr "e.g. Gọi hẹn phỏng vấn"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,state:0
-msgid ""
-"The related status for the stage. The status of your document will "
-"automatically change according to the selected stage. Example, a stage is "
-"related to the status 'Close', when your document reach this stage, it will "
-"be automatically closed."
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.applicant,salary_proposed_extra:0
-msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
-
-#. module: hr_recruitment
-#: help:hr.recruitment.report,delay_close:0
-msgid "Number of Days to close the project issue"
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,state:0
-msgid "Open"
-msgstr "Mở"
-
-#. module: hr_recruitment
-#: view:board.board:0
-msgid "Applications to be Processed"
-msgstr ""
+#: code:addons/hr_recruitment/hr_recruitment.py:503
+#, python-format
+msgid "job applicants"
+msgstr "job applicants"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Schedule Interview"
-msgstr ""
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
 
-#~ msgid "Create Partner"
-#~ msgstr "Tạo Đối tác"
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:0
+msgid "or"
+msgstr "hoặc"
 
-#~ msgid "Goals"
-#~ msgstr "Mục tiêu"
-
-#~ msgid "Contract Data"
-#~ msgstr "Dữ liệu Hợp đồng"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Thêm Ghi chú Nội bộ"
-
-#~ msgid "Notes"
-#~ msgstr "Các ghi chú"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Thông tin liên hệ đối tác"
-
-#~ msgid "Reference"
-#~ msgstr "Tham chiếu"
-
-#, python-format
-#~ msgid "Phone Call"
-#~ msgstr "Cuộc gọi"
-
-#~ msgid "Previous"
-#~ msgstr "Trước"
-
-#~ msgid "Send New Email"
-#~ msgstr "Gửi thư điện tử mới"
-
-#~ msgid "Next"
-#~ msgstr "Tiếp theo"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Lỗi !"
-
-#~ msgid "Planned Date"
-#~ msgstr "Ngày dự kiến"
-
-#~ msgid "Dates"
-#~ msgstr "Ngày"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Tháng-1    "
-
-#~ msgid "History Information"
-#~ msgstr "Thông tin lịch sử"
-
-#~ msgid "Job Info"
-#~ msgstr "Thông tin Công việc"
-
-#~ msgid "HR - Recruitement"
-#~ msgstr "Nhân sự - Tuyển dụng"
-
-#~ msgid "Salesman"
-#~ msgstr "Nhân viên bán hàng"
-
-#~ msgid "Category"
-#~ msgstr "Phân loại"
-
-#~ msgid "Answer"
-#~ msgstr "Trả lời"
-
-#~ msgid "Meeting"
-#~ msgstr "Cuộc gặp"
-
-#~ msgid "Refused by Company"
-#~ msgstr "Từ chối bởi Công ty"
-
-#~ msgid "History"
-#~ msgstr "Lịch sử"
-
-#~ msgid "State"
-#~ msgstr "Trạng thái"
-
-#~ msgid "Attachments"
-#~ msgstr "Các tập tin đính kèm"
-
-#~ msgid "Current"
-#~ msgstr "Hiện hành"
-
-#~ msgid "Details"
-#~ msgstr "Các chi tiết"
-
-#~ msgid "Reply"
-#~ msgstr "Phản hồi"
-
-#, python-format
-#~ msgid "Applicant '%s' is being hired."
-#~ msgstr "Ứng viên '%s' được tuyển dụng."
-
-#~ msgid "Refused by Employee"
-#~ msgstr "Từ chối bởi Người lao động"
-
-#~ msgid "Initial Jobs Demand"
-#~ msgstr "Nhu cầu Công việc Ban đầu"
-
-#~ msgid "Qualification"
-#~ msgstr "Trình độ chuyên môn"
+#. module: hr_recruitment
+#: view:hr.job:0
+msgid "í"
+msgstr "í"

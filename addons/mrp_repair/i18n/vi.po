@@ -1,178 +1,78 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* mrp_repair
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-02 14:28+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-13 09:52+0000\n"
+"PO-Revision-Date: 2014-09-13 17:16+0700\n"
+"Last-Translator: Leo Tran <leo.tran@ma.tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: mrp_repair
-#: field:mrp.repair.line,move_id:0
-msgid "Inventory Move"
+#: help:mrp.repair.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically as draft when repair order in "
+"draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order "
+"in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is "
+"completed.                        \n"
+"* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
+"* Trạng thái 'Dự thảo' được thiết lập tự động khi lệnh sửa chữa được "
+"tạo.                         \n"
+"* Trạng thái 'Xác nhận' được thiết lập tự động khi lệnh sửa chữa được xác "
+"nhận.                         \n"
+"* Trạng thái 'Hoàn thành' được thiết lập tự động khi lệnh sửa chữa được hoàn "
+"thành.                        \n"
+"* Trạng thái 'Hủy bỏ' được thiết lập tự động khi người dùng hủy bỏ lệnh sửa "
+"chữa."
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Group By..."
+#: help:mrp.repair,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo mới và chưa xác "
+"nhận lệnh sửa chữa.             \n"
+"* Trạng thái 'Xác nhận' được sử dụng khi một người dùng xác nhận lệnh sửa "
+"chữa.             \n"
+"* Trạng thái 'Sẵn sàng sửa chữa' được sử dụng để bắt đầu sửa chữa, người "
+"dùng chỉ có thể bắt đầu sửa chữa sau khi lệnh sửa chữa được xác "
+"nhận.             \n"
+"* Trạng thái 'Chờ xuất hóa đơn' đươc sử dụng để tạo hóa đơn sau khi hoặc "
+"trước khi công việc sửa chữa hoàn thành.             \n"
+"* Trạng thái 'Hoàn thành' được sử dụng khi việc sửa chữa hoàn "
+"hành.            \n"
+"* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy bỏ lệnh sửa chữa."
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
-#: view:mrp.repair.cancel:0
-msgid "Cancel Repair Order"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
-msgid "To Invoice"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Printing Date"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.make_invoice,group:0
-msgid "Group by partner invoice address"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
-#, python-format
-msgid "No product defined on Fees!"
-msgstr ""
+#: view:False:0
+msgid "(Add)"
+msgstr "(Thêm)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-#: field:mrp.repair,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Invoice Exception"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Serial Number"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,address_id:0
-msgid "Delivery Address"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "History"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,price_subtotal:0
-#: field:mrp.repair.line,price_subtotal:0
-msgid "Subtotal"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Invoice address :"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,partner_id:0
-msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Guarantee limit"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Notes"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,amount_tax:0
-#: field:mrp.repair.fee,tax_id:0
-#: field:mrp.repair.line,tax_id:0
-msgid "Taxes"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Net Total :"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Operations"
-msgstr ""
+msgid "(update)"
+msgstr "(cập nhật)"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -194,39 +94,219 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nhấp chuột để tạo mới một lệnh sửa chữa. \n"
+"              </p><p>\n"
+"                Trong một lệnh sửa chữa, bạn có thể liệt kê các thành phần "
+"mà bạn ,\n"
+"                gỡ bỏ, thêm vào hoặc thay thế và ghi nhận thời gian mà bạn "
+"sử dụng\n"
+"                trên từng hoạt động sửa chữa khác nhau.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp_repair
-#: help:mrp.repair.line,state:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#, python-format
+msgid "Active ID not Found"
+msgstr "Active ID not Found"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Thêm"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add internal notes..."
+msgstr "Thêm ghi chú nội bộ..."
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add quotation notes..."
+msgstr "Thêm ghi chú báo giá..."
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "Sau sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Trước sửa chữa"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel view:mrp.repair:0
+msgid "Cancel Repair"
+msgstr "Hủy sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:0
+msgid "Cancel Repair Order"
+msgstr "Hủy lệnh sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr "Hủy bỏ"
+
+#. module: mrp_repair
+#: help:mrp.repair,partner_id:0
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr "Chọn đối tác sẽ nhận hóa đơn và giao hàng."
+
+#. module: mrp_repair
+#: view:mrp.repair:0 field:mrp.repair,company_id:0
+msgid "Company"
+msgstr "Công ty"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Confirm Repair"
+msgstr "Xác nhận sửa chữa"
+
+#. module: mrp_repair
+#: view:mrp.repair:0 selection:mrp.repair,state:0
+#: selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Xác nhận"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:552
+#, python-format
 msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in "
-"draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order "
-"in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.     "
-"                   \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Không thể tìn thấy một quy tắc tính giá phù hợp với số lượng và sản phẩm "
+"này.\n"
+"Bạn phải thay đổi hoặc sản phẩm, số lượng hoặc bảng giá."
 
 #. module: mrp_repair
-#: field:mrp.repair,move_id:0
-msgid "Move"
-msgstr ""
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0 view:mrp.repair.make_invoice:0
+msgid "Create Invoice"
+msgstr "Tạo hóa đơn"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
-msgstr ""
+#: view:mrp.repair.make_invoice:0
+msgid "Create invoices"
+msgstr "Tạo hóa đơn"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
-msgid "Repair Orders"
-msgstr ""
+#: field:mrp.repair,location_id:0
+msgid "Current Location"
+msgstr "Địa điểm hiện tại"
 
 #. module: mrp_repair
-#: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
-msgid "Quotation / Order"
-msgstr ""
+#: help:mrp.repair,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên bản ghi."
+
+#. module: mrp_repair
+#: field:mrp.repair,address_id:0
+msgid "Delivery Address"
+msgstr "Địa chỉ giao hàng"
+
+#. module: mrp_repair
+#: field:mrp.repair,location_dest_id:0
+msgid "Delivery Location"
+msgstr "Địa điểm giao hàng"
+
+#. module: mrp_repair
+#: view:False:0 field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
+msgid "Description"
+msgstr "Miêu tả"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,location_dest_id:0
+msgid "Dest. Location"
+msgstr "Địa điểm dích"
+
+#. module: mrp_repair
+#: view:mrp.repair.make_invoice:0
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Bạn thực sự muốn tạo hóa đơn?"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Hoàn thành"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Dự thảo"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "End Repair"
+msgstr "Kết thúc sửa chữa"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:352
+#: code:addons/mrp_repair/mrp_repair.py:380
+#: code:addons/mrp_repair/mrp_repair.py:409
+#, python-format
+msgid "Error!"
+msgstr "Lỗi!"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Extra Info"
+msgstr "Thông tin thêm"
+
+#. module: mrp_repair
+#: view:mrp.repair:0 field:mrp.repair,fees_lines:0
+msgid "Fees"
+msgstr "Fees"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Fees Line(s)"
+msgstr "Fees Line(s)"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_follower_ids:0
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
+
+#. module: mrp_repair
+#: field:mrp.repair.make_invoice,group:0
+msgid "Group by partner invoice address"
+msgstr "Nhóm theo địa chỉ xuất hóa đơn của đối tác"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Guarantee Limit:"
+msgstr "Guarantee Limit:"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Guarantee limit Month"
+msgstr "Guarantee limit Month"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Guarantee limit by Month"
+msgstr "Guarantee limit by Month"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "History"
+msgstr "Lịch sử"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_summary:0
@@ -234,260 +314,368 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+
+#. module: mrp_repair
+#: help:mrp.repair,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#. module: mrp_repair
+#: field:mrp.repair,internal_notes:0
+msgid "Internal Notes"
+msgstr "Ghi chú nội bộ"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,move_id:0
+msgid "Inventory Move"
+msgstr "Dịch chuyển tồn kho"
+
+#. module: mrp_repair
+#: field:mrp.repair,invoice_id:0
+msgid "Invoice"
+msgstr "Hóa đơn"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Extra Info"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "(update)"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,partner_id:0
-msgid "Partner"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Confirmed"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.      "
-"       \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Repairs order"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#, python-format
-msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Order N° :"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,prodlot_id:0
-#: field:mrp.repair.line,prodlot_id:0
-#: report:repair.order:0
-msgid "Lot Number"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,fees_lines:0
-msgid "Fees Lines"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.line,type:0
-msgid "Type"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Fees Line(s)"
-msgstr ""
+msgid "Invoice Corrected"
+msgstr "Hóa đơn sửa chữa"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-msgid "To be Invoiced"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Shipping address :"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Total :"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,pricelist_id:0
-msgid "Pricelist"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,quotation_notes:0
-msgid "Quotation Notes"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,state:0
-#: field:mrp.repair.line,state:0
-msgid "Status"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Search Reair Orders"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "(Add)"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: view:mrp.repair:0
-msgid "Repair Line"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "N° :"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,invoice_method:0
-msgid "Invoice Method"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,repaired:0
-#: selection:mrp.repair,state:0
-msgid "Repaired"
-msgstr ""
+msgid "Invoice Exception"
+msgstr "Ngoại lệ hóa đơn"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
-msgstr ""
+msgstr "Chi tiết hóa đơn"
+
+#. module: mrp_repair
+#: field:mrp.repair,invoice_method:0
+msgid "Invoice Method"
+msgstr "Phương thức xuất hóa đơn"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Invoice address:"
+msgstr "Địa chỉ xuất hóa đơn:"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Invoice and shipping address:"
+msgstr "Địa chỉ xuất hóa đơn và giao hàng:"
+
+#. module: mrp_repair
+#: view:mrp.repair:0 field:mrp.repair,invoiced:0
+#: field:mrp.repair.fee,invoiced:0 field:mrp.repair.line,invoiced:0
+msgid "Invoiced"
+msgstr "Xuất hóa đơn"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Invoicing"
+msgstr "Xuất hóa đơn"
+
+#. module: mrp_repair
+#: field:mrp.repair,partner_invoice_id:0
+msgid "Invoicing Address"
+msgstr "Địa chỉ xuất đơn"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Là một người theo dõi"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_last_post:0
+msgid "Last Message Date"
+msgstr "Ngày thông điệp gần nhất"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,lot_id:0
+msgid "Lot"
+msgstr "Lot"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Lot Number"
+msgstr "Lot Number"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Tao hóa đơn"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_ids:0
+msgid "Messages"
+msgstr "Thông điệp"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages and communication history"
+
+#. module: mrp_repair
+#: field:mrp.repair,move_id:0
+msgid "Move"
+msgstr "Dịch chuyển"
+
+#. module: mrp_repair
+#: help:mrp.repair,move_id:0
+msgid "Move created by the repair order"
+msgstr "Dịch chuyển được tạo bởi lệnh sửa chữa"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
-msgid "Before Repair"
-msgstr ""
+msgid "No Invoice"
+msgstr "Không có hóa đơn"
 
 #. module: mrp_repair
-#: field:mrp.repair,location_id:0
-msgid "Current Location"
-msgstr ""
+#: code:addons/mrp_repair/mrp_repair.py:539
+#, python-format
+msgid "No Pricelist!"
+msgstr "Không có bảng giá!"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid "Yes"
-msgstr ""
+#: code:addons/mrp_repair/mrp_repair.py:352
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "Không có tài khoản được xác định cho đối tác \"%s\"."
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
-msgstr ""
+#: code:addons/mrp_repair/mrp_repair.py:380
+#: code:addons/mrp_repair/mrp_repair.py:409
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "Không có tài khoản được xác định cho sản phẩm \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:338
+#, python-format
+msgid "No partner!"
+msgstr "Không có đối tác!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:402
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No product defined on Fees!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:550
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr "Không tìm thấy quy tắc tính giá hợp lệ !"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-#: field:mrp.repair,invoiced:0
-#: field:mrp.repair.fee,invoiced:0
-#: field:mrp.repair.line,invoiced:0
-msgid "Invoiced"
-msgstr ""
+msgid "Notes"
+msgstr "Ghi chú"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,product_uom:0
+#: view:False:0
+msgid "Operation Line(s)"
+msgstr "Chi tiết hoạt động"
+
+#. module: mrp_repair
+#: field:mrp.repair,operations:0
+msgid "Operation Lines"
+msgstr "Chi tiết hoạt động"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Operations"
+msgstr "Hoạt động"
+
+#. module: mrp_repair
+#: view:mrp.repair:0 field:mrp.repair,partner_id:0
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Price"
+msgstr "Giá"
+
+#. module: mrp_repair
+#: field:mrp.repair,pricelist_id:0
+msgid "Pricelist"
+msgstr "Bảng giá"
+
+#. module: mrp_repair
+#: help:mrp.repair,pricelist_id:0
+msgid "Pricelist of the selected partner."
+msgstr "Bảng giá của đối tác được chọn."
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Printing Date:"
+msgstr "Ngày in:"
+
+#. module: mrp_repair
+#: view:mrp.repair:0 field:mrp.repair.fee,product_id:0
+#: field:mrp.repair.line,product_id:0
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Product Information"
+msgstr "Thông tin sản phẩm"
+
+#. module: mrp_repair
+#: field:mrp.repair,product_qty:0
+msgid "Product Quantity"
+msgstr "Số lượng sản phẩm"
+
+#. module: mrp_repair
+#: field:mrp.repair,product_uom:0 field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Đơn vị đo lường sản phẩm"
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create invoices"
-msgstr ""
+#: field:mrp.repair,product_id:0
+msgid "Product to Repair"
+msgstr "Sản phẩm cần sửa chữa"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "(Remove)"
-msgstr ""
+#: view:False:0
+msgid "Product to Repair:"
+msgstr "Sản phẩm cần sửa chữa:"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,type:0
-msgid "Add"
-msgstr ""
+#: help:mrp.repair,lot_id:0
+msgid "Products repaired are all belonging to this lot"
+msgstr "Products repaired are all belonging to this lot"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: view:mrp.repair:0
-msgid "Repair Order"
-msgstr ""
+#: view:False:0 view:mrp.repair:0 field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
+msgid "Quantity"
+msgstr "Số lượng"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr ""
+msgid "Quotation"
+msgstr "Báo giá"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Báo giá / Đơn hàng"
+
+#. module: mrp_repair
+#: field:mrp.repair,quotation_notes:0
+msgid "Quotation Notes"
+msgstr "Ghi chú báo giá"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Quotations"
+msgstr "Báo giá"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Sẵn sàng sửa chữa"
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Sẵn sàng sửa chữa"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Reair Orders"
+msgstr "Lệnh sửa chữa"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
+msgstr "Tạo lại hóa đơn"
+
+#. module: mrp_repair
+#: view:False:0 selection:mrp.repair.line,type:0
+msgid "Remove"
+msgstr "Xóa bỏ"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr "Repair Fees Line"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line view:mrp.repair:0
+msgid "Repair Line"
+msgstr "Hạng mục sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair view:mrp.repair:0
+msgid "Repair Order"
+msgstr "Lệnh sữa chữa"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Repair Order N°:"
+msgstr "Repair Order N°:"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
+msgstr "Tham chiếu lệnh sữa chữa"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repair Orders"
+msgstr "Lệnh sửa chữa"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "Repair Quotation N°:"
+msgstr "Số báo giá sửa chữa:"
+
+#. module: mrp_repair
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
+msgstr "Tham chiếu sửa chữa"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:315
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr "Lệnh sửa chữa đã được xuất hóa đơn."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr "Lệnh sửa chữa không được xuất hóa đơn."
+
+#. module: mrp_repair
+#: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr "Đã sửa"
+
+#. module: mrp_repair
+#: field:mrp.repair,lot_id:0
+msgid "Repaired Lot"
+msgstr "Repaired Lot"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Repairs order"
+msgstr "Lệnh sửa chữa"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Search Reair Orders"
+msgstr "Tìm kiếm Lệnh sửa chữa"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -496,171 +684,77 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"Việc lựa chọn 'Trước khi sửa chữa' hoặc 'Sau khi sửa chữa' sẽ cho phép bạn "
+"tạo hóa đơn trước hoặc sau khi sửa chữa được hoàn thành. 'Không hóa đơn' "
+"nghĩa là bạn không muốn tạo hóa đơn cho lệnh sửa chữa này."
 
 #. module: mrp_repair
-#: field:mrp.repair,guarantee_limit:0
-msgid "Warranty Expiration"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,pricelist_id:0
-msgid "Pricelist of the selected partner."
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Guarantee Limit"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,default_address_id:0
-msgid "unknown"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,product_id:0
-#: report:repair.order:0
-msgid "Product to Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "After Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#: code:addons/mrp_repair/mrp_repair.py:302
 #, python-format
-msgid "Active ID not Found"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
+msgid "Serial number is required for operation line with product '%s'"
+msgstr "Số sê-ri được yêu cầu cho chi tiết hoạt động với sản phẩm '%s'"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Date"
-msgstr ""
+msgid "Set to Draft"
+msgstr "Thiết lập thành Dự thảo"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
-msgid "Repair Fees Line"
-msgstr ""
+#: view:False:0
+msgid "Shipping address :"
+msgstr "Địa chỉ giao hàng:"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Quotation"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "End Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
-#, python-format
-msgid "No account defined for product \"%s\"."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Quotations"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_uom_qty:0
-#: field:mrp.repair.line,product_uom_qty:0
-#: report:repair.order:0
-msgid "Quantity"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Product Information"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
-msgid "Make Invoice"
-msgstr ""
+#: field:mrp.repair.line,location_id:0
+msgid "Source Location"
+msgstr "Địa điểm nguồn"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "Bắt đầu sửa chữa"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
-#: report:repair.order:0
-msgid "Unit Price"
-msgstr ""
+#: view:mrp.repair:0 field:mrp.repair,state:0 field:mrp.repair.line,state:0
+msgid "Status"
+msgstr "Trạng thái"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Done"
-msgstr ""
+#: field:mrp.repair.fee,price_subtotal:0
+#: field:mrp.repair.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Tổng phụ"
 
 #. module: mrp_repair
-#: field:mrp.repair,invoice_id:0
-msgid "Invoice"
-msgstr ""
+#: field:mrp.repair,message_summary:0
+msgid "Summary"
+msgstr "Tóm tắt"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Fees"
-msgstr ""
+#: view:False:0
+msgid "Tax"
+msgstr "Thuế"
 
 #. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "Cancel"
-msgstr ""
+#: view:False:0 field:mrp.repair,amount_tax:0 field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair.line,tax_id:0
+msgid "Taxes"
+msgstr "Thuế"
 
 #. module: mrp_repair
-#: field:mrp.repair.line,location_dest_id:0
-msgid "Dest. Location"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Operation Line(s)"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,location_dest_id:0
-msgid "Delivery Location"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,deliver_bool:0
+#: code:addons/mrp_repair/mrp_repair.py:237
+#, python-format
 msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired and create a picking with selected product. Note that you can "
-"select the locations in the Info tab, if you have the extended view."
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
 msgstr ""
+"Đơn vị đo lường sản phẩm mà bạn chọn thuộc nhóm khác với đơn vị trên form "
+"sản phẩm."
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
+msgstr "Tên của lệnh sửa chữa phải là duy nhất!"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -670,147 +764,143 @@ msgid ""
 "expiration limit, each operation and fee you will add will be set as 'not to "
 "invoiced' by default. Note that you can change manually afterwards."
 msgstr ""
+"Giới hạn hết hạn bảo hành được tính như sau: ngày dịch chuyển kho gần nhất + "
+"bảo hành được xác định trên sản phẩm. Nếu ngày hiện tại thấp hơn ngày giới "
+"hạn bảo hành, mỗi hoạt động và chi phí mà bạn sẽ thêm sẽ được thiết lập mặc "
+"định là 'không xuất hóa đơn'. Lưu ý rằng bạn có thể thay đổi thủ công sau đó."
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create Invoice"
+#: view:mrp.repair.cancel:0
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
 msgstr ""
+"Hoạt động này sẽ hủy bỏ tiến trình sửa chữa, nhưng sẽ không hủy hóa đơn. Bạn "
+"có muốn tiếp tục?"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Reair Orders"
-msgstr ""
+#: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
+msgid "To Invoice"
+msgstr "Chờ xuất hóa đơn"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,name:0
-#: field:mrp.repair.line,name:0
-#: report:repair.order:0
-msgid "Description"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "Chờ xuất hóa đơn"
 
 #. module: mrp_repair
-#: field:mrp.repair,operations:0
-msgid "Operation Lines"
-msgstr ""
+#: view:False:0 field:mrp.repair,amount_total:0
+msgid "Total"
+msgstr "Tổng"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_id:0
-#: field:mrp.repair.line,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoice Corrected"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Price"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,deliver_bool:0
-msgid "Deliver"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,internal_notes:0
-msgid "Internal Notes"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Taxes:"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,picking_id:0
-msgid "Picking"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Untaxed amount"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
-msgid "Repair Order Reference"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Repair order is not invoiced."
-msgstr ""
+#: view:False:0
+msgid "Total Without Taxes"
+msgstr "Tổng tiền trước thuế"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Total amount"
-msgstr ""
+msgstr "Tổng tiền"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,type:0
-msgid "Remove"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,partner_invoice_id:0
-msgid "Invoicing Address"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoicing"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.line,location_id:0
-msgid "Source Location"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: view:mrp.repair:0
-msgid "Cancel Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "No Invoice"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,amount_total:0
-msgid "Total"
-msgstr ""
+#: field:mrp.repair.line,type:0
+msgid "Type"
+msgstr "Loại"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-msgid "Ready to Repair"
-msgstr ""
+msgid "Under Repair"
+msgstr "Under Repair"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
+#: view:False:0 field:mrp.repair.fee,price_unit:0
+#: field:mrp.repair.line,price_unit:0
+msgid "Unit Price"
+msgstr "Đơn giá"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Unit of Measure"
+msgstr "Đơn vị đo lường"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_unread:0
+msgid "Unread Messages"
+msgstr "Thông điệp chưa đọc"
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Tổng tiền trước thuế"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Untaxed amount"
+msgstr "Tổng tiền trước thuế"
+
+#. module: mrp_repair
+#: view:False:0
+msgid "VAT:"
+msgstr "VAT:"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:237
 #, python-format
-msgid "No partner !"
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:302
+#: code:addons/mrp_repair/mrp_repair.py:315
+#: code:addons/mrp_repair/mrp_repair.py:402
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Warning!"
+msgstr "Cảnh báo!"
+
+#. module: mrp_repair
+#: field:mrp.repair,guarantee_limit:0
+msgid "Warranty Expiration"
+msgstr "Hết hạn bảo hành"
+
+#. module: mrp_repair
+#: field:mrp.repair,website_message_ids:0
+msgid "Website Messages"
+msgstr "Website Messages"
+
+#. module: mrp_repair
+#: help:mrp.repair,website_message_ids:0
+msgid "Website communication history"
+msgstr "Website communication history"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:0
+msgid "Yes"
+msgstr "Yes"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:338
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr "Bạn phải chọn một Địa chỉ xuất hóa đơn cho đối tác trên form sửa chữa!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:541
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+"Please set one before choosing a product."
 msgstr ""
+"Bạn phải chọn một bảng giá trên form sửa chữa !\n"
+"Vui lập thiết lập bảng giá trước khi chọn sản phẩm."
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
+msgid "or"
+msgstr "hoặc"
+
+#. module: mrp_repair
+#: field:mrp.repair,default_address_id:0
+msgid "unknown"
+msgstr "unknown"

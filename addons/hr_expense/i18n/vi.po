@@ -1,601 +1,53 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_expense
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2010-08-02 14:34+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-12 09:48+0000\n"
+"PO-Revision-Date: 2014-09-12 17:09+0700\n"
+"Last-Translator: Leo Tran <leo.tran@ma.tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (TVMTA) <support@ma.tvtmarine.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:07+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: model:process.node,name:hr_expense.process_node_confirmedexpenses0
-msgid "Confirmed Expenses"
-msgstr ""
+#: field:hr.expense.report,no_of_account:0
+msgid "# of Accounts"
+msgstr "# Tài khoản"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_line
-msgid "Expense Line"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_reimbursement0
-msgid "The accoutant reimburse the expenses"
-msgstr ""
-
-#. module: hr_expense
-#: model:mail.message.subtype,description:hr_expense.mt_expense_approved
-msgid "Expense approved"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_confirm:0
-#: field:hr.expense.report,date_confirm:0
-msgid "Confirmation Date"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_expense
-#: model:product.template,name:hr_expense.air_ticket_product_template
-msgid "Air Ticket"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "Validated By"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
-msgid "Department"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "New Expense"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.line,uom_id:0
-#: view:product.product:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "March"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "To Pay"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:172
-#, python-format
-msgid ""
-"No expense journal found. Please make sure you have a journal with type "
-"'purchase' configured."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_report
-msgid "Expenses Statistics"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Open Receipt"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
-msgid "Day"
-msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.expense,date_valid:0
-msgid ""
-"Date of the acceptation of the sheet expense. It's filled when the button "
-"Accept is pressed."
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Notes"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:172
-#: code:addons/hr_expense/hr_expense.py:238
-#: code:addons/hr_expense/hr_expense.py:240
-#: code:addons/hr_expense/hr_expense.py:349
-#: code:addons/hr_expense/hr_expense.py:353
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: hr_expense
-#: model:mail.message.subtype,description:hr_expense.mt_expense_refused
-msgid "Expense refused"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
-#: view:product.product:0
-msgid "Products"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Confirm Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_refused0
-msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.expense,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,state:0
-msgid "Waiting confirmation"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,state:0
-msgid "Accepted"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.line,ref:0
-msgid "Reference"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "Certified honest and conform,"
-msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.expense,state:0
-msgid ""
-"When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
-"If the admin accepts it, the status is 'Accepted'.\n"
-" If a receipt is made for the expense request, the status is 'Done'."
-msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.expense,date_confirm:0
-msgid ""
-"Date of the confirmation of the sheet expense. It's filled when the button "
-"Confirm is pressed."
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
 #: field:hr.expense.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# of Lines"
 
 #. module: hr_expense
-#: help:hr.expense.expense,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:453
-#, python-format
-msgid "Warning"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "(Date and signature)"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "Total:"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_refuseexpense0
-msgid "Refuse expense"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.report,price_average:0
-msgid "Average Price"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_confirm0
-msgid "Confirm"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_supplierinvoice0
-msgid "The accoutant validates the sheet"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.report,delay_valid:0
-msgid "Delay to Valid"
-msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.line,sequence:0
-msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,state:0
-msgid "Status"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,analytic_account:0
-msgid "Analytic account"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.report,date:0
-msgid "Date "
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Waiting"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:0
-msgid "Employee"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
-msgid "New"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
-msgid "Qty"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
-msgid "Total Price"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_reinvoicing0
-msgid "Some costs may be reinvoices to the customer"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:238
-#, python-format
-msgid "The employee must have a home address."
-msgstr ""
-
-#. module: hr_expense
-#: view:board.board:0
-#: view:hr.expense.expense:0
-#: model:ir.actions.act_window,name:hr_expense.action_my_expense
-msgid "My Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Creation Date"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
-msgid "HR expenses"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,id:0
-msgid "Sheet ID"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
-msgid "Reimburse expense"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
-msgid "Force Journal"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
 #: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
-msgstr ""
+msgstr "# Sản phẩm"
 
 #. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "July"
-msgstr ""
+#: view:False:0
+msgid "(Date and signature)."
+msgstr "(Ngày tháng và chữ ký)."
 
 #. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
-msgid "After creating invoice, reimburse expenses"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:121
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_reimbursement0
-msgid "Reimbursement"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
-msgid "Validation Date"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:226
-#, python-format
-msgid "Expense Receipt"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
-#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
-msgid "Expenses Analysis"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
-#: model:ir.model,name:hr_expense.model_hr_expense_expense
-#: model:process.process,name:hr_expense.process_process_expenseprocess0
-msgid "Expense"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
-#: view:hr.expense.line:0
-msgid "Expense Lines"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.report,delay_confirm:0
-msgid "Delay to Confirm"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "September"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "December"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,month:0
-msgid "Month"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,currency_id:0
-#: field:hr.expense.report,currency_id:0
-msgid "Currency"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,voucher_id:0
-msgid "Employee's Receipt"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Waiting Approval"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_draftexpenses0
-msgid "Employee encode all his expenses"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:453
-#, python-format
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new expense category. \n"
+"             </p>\n"
+"            "
 msgstr ""
-
-#. module: hr_expense
-#: help:hr.expense.expense,journal_id:0
-msgid "The journal used when the expense is done."
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,note:0
-msgid "Note"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
-msgid "Create Customer invoice"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,state:0
-msgid "Draft"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:353
-#, python-format
-msgid ""
-"Please configure Default Expense account for Product purchase: "
-"`property_account_expense_categ`."
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_approveexpense0
-msgid "Expense is approved."
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "August"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_approved0
-msgid "The direct manager approves the sheet"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,amount:0
-msgid "Total Amount"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "June"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_draftexpenses0
-msgid "Draft Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
-msgid "Review Your Expenses Products"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
-msgid "Date"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "November"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Extended Filters..."
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.ui.menu,name:hr_expense.menu_hr_product
-msgid "Expense Categories"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "October"
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nhấp chuột để tạo mới một nhóm chi phí. \n"
+"             </p>\n"
+"            "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -612,141 +64,166 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nhấp chuột để đăng ký một chi phí mới. \n"
+"              </p><p>\n"
+"                Hệ thống đảm bảo toàn bộ quá trình được thực hiện: bảng chi "
+"phí được xác nhận bởi người quản lý,\n"
+"                người lao động được hoàn trả từ bảng chi phí , một vài chi "
+"phí phải được xuát lại hóa đơn\n"
+"                cho khách hàng.\n"
+"              </p>\n"
+"            "
+
+#. module: hr_expense
+#: selection:hr.expense.report,state:0
+msgid "Accepted"
+msgstr "Được chấp thuận"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Generate Accounting Entries"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "January"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "HR Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.template,name:hr_expense.car_travel_product_template
-msgid "Car Travel Expenses"
-msgstr ""
+msgid "Accounting"
+msgstr "Kế toán"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Submit to Manager"
-msgstr ""
+msgid "Accounting Data"
+msgstr "Dữ liệu kế toán"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Done Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_confirmedexpenses0
-msgid "The employee validates his expense sheet"
-msgstr ""
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
+#: field:hr.expense.report,analytic_account:0
+msgid "Analytic account"
+msgstr "Tài khoản quản trị"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Expenses to Invoice"
-msgstr ""
+msgid "Approve"
+msgstr "Phê duyệt"
 
 #. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_supplierinvoice0
-#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
-msgid "Supplier Invoice"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Expenses Sheet"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.report,voucher_id:0
-msgid "Receipt"
-msgstr ""
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
+msgid "Approved"
+msgstr "Được phê duyệt"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Approved Expenses"
-msgstr ""
+msgstr "Chi phí được phê duyệt"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
-msgid "Unit Price"
-msgstr ""
+#: selection:hr.expense.report,month:0
+msgid "April"
+msgstr "Tháng 4"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
+#: selection:hr.expense.report,month:0
+msgid "August"
+msgstr "Tháng 8"
+
+#. module: hr_expense
+#: field:hr.expense.report,price_average:0
+msgid "Average Price"
+msgstr "Giá trung bình"
+
+#. module: hr_expense
+#: field:product.template,hr_expense_ok:0
+msgid "Can be Expensed"
+msgstr "Có thể là chi phí"
+
+#. module: hr_expense
 #: selection:hr.expense.report,state:0
-msgid "Done"
-msgstr ""
+msgid "Cancelled"
+msgstr "Đã hủy"
 
 #. module: hr_expense
-#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
-msgid "Invoice"
-msgstr ""
+#: view:False:0
+msgid "Certified honest and conform,"
+msgstr "Certified honest and conform,"
+
+#. module: hr_expense
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
+#: field:hr.expense.report,company_id:0
+msgid "Company"
+msgstr "Công ty"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Confirm"
+msgstr "Xác nhận"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
-msgid "Year"
-msgstr ""
+msgid "Confirm Expenses"
+msgstr "Xác nhận chi phí"
 
 #. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
-msgid "Reinvoice"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Expense Date"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,user_valid:0
-msgid "Validation By"
-msgstr ""
+#: field:hr.expense.expense,date_confirm:0
+#: field:hr.expense.report,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Ngày xác nhận"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
-msgid "Refuse"
-msgstr ""
+msgid "Confirmed Expenses"
+msgstr "Chi phí được xác nhận"
 
 #. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_confirmexpense0
-msgid "Confirm expense"
-msgstr ""
+#: view:hr.expense.report:0
+msgid "Creation Date"
+msgstr "Ngày tạo"
 
 #. module: hr_expense
-#: model:process.transition,name:hr_expense.process_transition_approveexpense0
-msgid "Approve expense"
-msgstr ""
+#: field:hr.expense.expense,currency_id:0
+#: field:hr.expense.report,currency_id:0
+msgid "Currency"
+msgstr "Tiền tệ"
 
 #. module: hr_expense
-#: model:process.transition.action,name:hr_expense.process_transition_action_accept0
-msgid "Accept"
-msgstr ""
+#: view:False:0 field:hr.expense.expense,date:0
+#: field:hr.expense.line,date_value:0
+msgid "Date"
+msgstr "Ngày"
 
 #. module: hr_expense
-#: report:hr.expense:0
-msgid "This document must be dated and signed for reimbursement"
-msgstr ""
+#: field:hr.expense.report,date:0
+msgid "Date "
+msgstr "Ngày"
 
 #. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_refuseexpense0
-msgid "Expense is refused."
-msgstr ""
+#: help:hr.expense.expense,date_valid:0
+msgid ""
+"Date of the acceptation of the sheet expense. It's filled when the button "
+"Accept is pressed."
+msgstr "Ngày chấp nhận bảng chi phí. Nó sẽ được điền khi ấn nút 'Chấp nhận'"
+
+#. module: hr_expense
+#: help:hr.expense.expense,date_confirm:0
+msgid ""
+"Date of the confirmation of the sheet expense. It's filled when the button "
+"Confirm is pressed."
+msgstr "Ngày xác nhận bảng chi phí. Nó được điền khi ấn nút 'Xác nhận'"
+
+#. module: hr_expense
+#: help:hr.expense.expense,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Ngày của thông điệp gần nhất trên một bản ghi."
+
+#. module: hr_expense
+#: view:False:0
+msgid "Date:"
+msgstr "Ngày:"
+
+#. module: hr_expense
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
+msgid "Day"
+msgstr "Ngày"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "December"
+msgstr "Tháng 12"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
@@ -757,149 +234,133 @@ msgid ""
 "based on real costs, set the cost at 0.00. The user will set the real price "
 "when recording his expense sheet."
 msgstr ""
+"Xác định một sản phẩm cho mỗi loại chi phí của một nhân viên (ăn, ở, đi "
+"lại,...). Nếu bạn hoàn tiền cho nhân viên mới một tỷ lệ cố định, thiết lập "
+"một chi phí và một đơn vị đo lường trên sản phẩm. Nếu bạn hoàn tiền dựa trên "
+"chi phí thực tế, thiết lập chi phí là 0.00. Người dùng sẽ thiết lập giá thực "
+"tế ghi trên bảng chi phí của mình."
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
-#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
-#: model:process.node,name:hr_expense.process_node_approved0
-msgid "Approved"
-msgstr ""
+#: field:hr.expense.report,delay_confirm:0
+msgid "Delay to Confirm"
+msgstr "Trì hoãn xác nhận"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,product_id:0
-#: model:ir.model,name:hr_expense.model_product_product
-msgid "Product"
-msgstr ""
+#: field:hr.expense.report,delay_valid:0
+msgid "Delay to Valid"
+msgstr "Trì hoãn xác nhận"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
+msgid "Department"
+msgstr "Phòng ban"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
-msgstr ""
+msgstr "Miêu tả"
 
 #. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "May"
-msgstr ""
+#: view:False:0
+msgid "Description:"
+msgstr "Miêu tả"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_quantity:0
-msgid "Quantities"
-msgstr ""
+#: view:hr.expense.report:0 selection:hr.expense.report,state:0
+msgid "Done"
+msgstr "Hoàn thành"
 
 #. module: hr_expense
-#: report:hr.expense:0
-msgid "Price"
-msgstr ""
+#: view:hr.expense.report:0
+msgid "Done Expenses"
+msgstr "Hoàn hành chi phí"
 
 #. module: hr_expense
-#: field:hr.expense.report,no_of_account:0
-msgid "# of Accounts"
-msgstr ""
+#: selection:hr.expense.report,state:0
+msgid "Draft"
+msgstr "Dự thảo"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
-#: model:process.node,name:hr_expense.process_node_refused0
-msgid "Refused"
-msgstr ""
-
-#. module: hr_expense
-#: field:product.product,hr_expense_ok:0
-msgid "Can be Expensed"
-msgstr ""
-
-#. module: hr_expense
-#: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
-msgid "Expense confirmed, waiting confirmation"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-msgid "Ref."
-msgstr ""
+#: view:hr.expense.expense:0 field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
+msgid "Employee"
+msgstr "Nhân viên"
 
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Tên nhân viên"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,user_id:0
-msgid "Validation User"
-msgstr ""
+#: view:False:0
+msgid "Employee:"
+msgstr "Nhân viên:"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:353
+#: code:addons/hr_expense/hr_expense.py:357
+#, python-format
+msgid "Error!"
+msgstr "Lỗi!"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
+#: model:ir.model,name:hr_expense.model_hr_expense_expense
+msgid "Expense"
+msgstr "Chi phí"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:382
+#, python-format
+msgid "Expense Account Move"
+msgstr "Bút toán chi phí"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
+#: model:ir.ui.menu,name:hr_expense.menu_hr_product
+msgid "Expense Categories"
+msgstr "Nhóm chi phí"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Accounting Data"
-msgstr ""
+msgid "Expense Date"
+msgstr "Ngày chi phí"
 
 #. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "February"
-msgstr ""
+#: model:ir.model,name:hr_expense.model_hr_expense_line
+msgid "Expense Line"
+msgstr "Chi tiết chi phí"
 
 #. module: hr_expense
-#: report:hr.expense:0
-msgid "Name"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:121
-#, python-format
-msgid "You can only delete draft expenses!"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.expense,account_move_id:0
-msgid "Ledger Posting"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_approveinvoice0
-msgid "Creates supplier invoice."
-msgstr ""
-
-#. module: hr_expense
-#: model:product.template,name:hr_expense.hotel_rent_product_template
-msgid "Hotel Accommodation"
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.report,month:0
-msgid "April"
-msgstr ""
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
+#: view:hr.expense.line:0
+msgid "Expense Lines"
+msgstr "Chi tiết chi phí"
 
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Expense Note"
-msgstr ""
+msgstr "Ghi chú chi phí"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Approve"
-msgstr ""
+#: model:mail.message.subtype,description:hr_expense.mt_expense_approved
+msgid "Expense approved"
+msgstr "Chi phí được phê duyệt"
 
 #. module: hr_expense
-#: help:hr.expense.expense,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
+#: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
+msgid "Expense confirmed, waiting confirmation"
+msgstr "Expense confirmed, waiting confirmation"
 
 #. module: hr_expense
-#: field:hr.expense.line,sequence:0
-msgid "Sequence"
-msgstr ""
-
-#. module: hr_expense
-#: model:process.transition,note:hr_expense.process_transition_confirmexpense0
-msgid "Expense is confirmed."
-msgstr ""
+#: model:mail.message.subtype,description:hr_expense.mt_expense_refused
+msgid "Expense refused"
+msgstr "Chi phí bị từ chối"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -908,32 +369,506 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 #: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
-msgstr ""
+msgstr "Chi phí"
 
 #. module: hr_expense
-#: help:product.product,hr_expense_ok:0
-msgid "Specify if the product can be selected in an HR expense line."
-msgstr ""
+#: view:hr.expense.report:0
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
+msgid "Expenses Analysis"
+msgstr "Phân tích Chi phí"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Accounting"
+msgid "Expenses Month"
+msgstr "Expenses Month"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses Sheet"
+msgstr "Bảng chi phí"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_report
+msgid "Expenses Statistics"
+msgstr "Thống kê chi phí"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses by Month"
+msgstr "Chi phí theo tháng"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses to Invoice"
+msgstr "Chí phí cần xuất hóa đơn"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
+msgstr "Bộ lọc mở rộng..."
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "February"
+msgstr "Tháng 2"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_follower_ids:0
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#. module: hr_expense
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
+msgid "Force Journal"
+msgstr "Sổ nhật ký cưỡng bức"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Free Notes"
+msgstr "Ghi chú tự do"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Generate Accounting Entries"
+msgstr "Tạo bút toán kế toán"
+
+#. module: hr_expense
+#: help:hr.expense.line,sequence:0
+msgid "Gives the sequence order when displaying a list of expense lines."
+msgstr "Chỉ ra trình tự sắp xếp khi hiển thị một danh sách chi tiết chi phí."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 view:hr.expense.report:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
+msgid "HR Expense"
+msgstr "Chi phí nhân sự"
+
+#. module: hr_expense
+#: view:False:0
+msgid "HR Expenses"
+msgstr "Chi phí nhân sự"
+
+#. module: hr_expense
+#: help:hr.expense.expense,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+
+#. module: hr_expense
+#: help:hr.expense.expense,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Là một người theo dõi"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "January"
+msgstr "Tháng 1"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move_line
+msgid "Journal Items"
+msgstr "Phát sinh"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "July"
+msgstr "Tháng 7"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "June"
+msgstr "Tháng 6"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_last_post:0
+msgid "Last Message Date"
+msgstr "Ngày thông điệp gần nhất"
+
+#. module: hr_expense
+#: field:hr.expense.expense,account_move_id:0
+msgid "Ledger Posting"
+msgstr "Ghi nhận Sổ cái"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "March"
+msgstr "Tháng 3"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "May"
+msgstr "Tháng 5"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_ids:0
+msgid "Messages"
+msgstr "Thông điệp"
+
+#. module: hr_expense
+#: help:hr.expense.expense,message_ids:0
+msgid "Messages and communication history"
+msgstr "Lịch sử thông điệp và liên lạc"
+
+#. module: hr_expense
+#: view:hr.expense.report:0 field:hr.expense.report,month:0
+msgid "Month"
+msgstr "Tháng"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "My Expenses"
+msgstr "Chi phí của bạn"
+
+#. module: hr_expense
+#: view:False:0
+msgid "Name"
+msgstr "Tên"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
+msgid "New"
+msgstr "Mới"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "New Expense"
+msgstr "Chi phí mới"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:173
+#, python-format
+msgid ""
+"No expense journal found. Please make sure you have a journal with type "
+"'purchase' configured."
+msgstr ""
+"Không có sổ nhật ký chi phí được tìm thấy. Hãy chắc chắn rằng có một số nhật "
+"ký với loại là 'mua hàng' đã được cấu hình."
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:353
+#, python-format
+msgid ""
+"No purchase account found for the product %s (or for his category), please "
+"configure one."
+msgstr ""
+"Không có tài khoản mua hàng được tìm thấy cho sản phẩm %s (hoặc cho nhóm sản "
+"phẩm), vui lòng cấu hình nó."
+
+#. module: hr_expense
+#: field:hr.expense.expense,note:0
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Notes"
+msgstr "Ghi chú"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "November"
+msgstr "Tháng 11"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "October"
+msgstr "Tháng 10"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Open Accounting Entries"
+msgstr "Open Accounting Entries"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Paid"
+msgstr "Đã trả"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:357
+#, python-format
+msgid ""
+"Please configure Default Expense account for Product purchase: "
+"`property_account_expense_categ`."
+msgstr ""
+"Vui lòng cấu hình tài khoản Chi phí mặc định cho sản phẩm mua hàng: "
+"`property_account_expense_categ`."
+
+#. module: hr_expense
+#: view:False:0
+msgid "Price"
+msgstr "Giá"
+
+#. module: hr_expense
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
+#: field:hr.expense.report,product_id:0
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_template
+msgid "Product Template"
+msgstr "Mẫu sản phẩm"
+
+#. module: hr_expense
+#: view:product.product:0
+msgid "Products"
+msgstr "Sản phẩm"
+
+#. module: hr_expense
+#: view:False:0 field:hr.expense.report,product_qty:0
+msgid "Qty"
+msgstr "Số lượng"
+
+#. module: hr_expense
+#: field:hr.expense.line,unit_quantity:0
+msgid "Quantities"
+msgstr "Số lượng"
+
+#. module: hr_expense
+#: view:False:0
+msgid "Ref."
+msgstr "Tham chiếu"
+
+#. module: hr_expense
+#: field:hr.expense.line,ref:0
+msgid "Reference"
+msgstr "Tham chiếu"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Refuse"
+msgstr "Từ chối"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
+msgid "Refused"
+msgstr "Bị từ chối"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
+msgid "Review Your Expenses Products"
+msgstr "Review Your Expenses Products"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:455
+#, python-format
+msgid ""
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
+"Đơn vị đo lường đã chọn không thuộc cùng nhóm với đơn vị đo lường sản phẩm"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "September"
+msgstr "Tháng 9"
+
+#. module: hr_expense
+#: field:hr.expense.line,sequence:0
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Set to Draft"
+msgstr "Thiết lập thành Dự thảo"
+
+#. module: hr_expense
+#: field:hr.expense.expense,id:0
+msgid "Sheet ID"
+msgstr "Sheet ID"
+
+#. module: hr_expense
+#: help:product.template,hr_expense_ok:0
+msgid "Specify if the product can be selected in an HR expense line."
+msgstr "Specify if the product can be selected in an HR expense line."
+
+#. module: hr_expense
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
+#: field:hr.expense.report,state:0
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Submit to Manager"
+msgstr "Gửi tới Quản lý"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_summary:0
+msgid "Summary"
+msgstr "Tóm tắt"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:238
+#, python-format
+msgid "The employee must have a home address."
+msgstr "Nhân viên phải có một địa chỉ nhà."
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:240
+#, python-format
+msgid "The employee must have a payable account set on his home address."
+msgstr ""
+"Nhân viên phải có một tài khoản phải trả được thiết lập trên địa chỉ nhà."
+
+#. module: hr_expense
+#: help:hr.expense.expense,journal_id:0
+msgid "The journal used when the expense is done."
+msgstr "Sổ nhật ký được sử dụng khi chi phí được hoàn thành"
+
+#. module: hr_expense
+#: view:False:0
+msgid "This document must be dated and signed for reimbursement."
+msgstr "This document must be dated and signed for reimbursement."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
-msgstr ""
+msgstr "Cần phê duyệt"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-#: view:hr.expense.line:0
-#: field:hr.expense.line,total_amount:0
-msgid "Total"
-msgstr ""
+msgid "To Pay"
+msgstr "Cần trả"
 
 #. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_reinvoicing0
-msgid "Reinvoicing"
+#: view:False:0 view:hr.expense.expense:0 view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
+msgid "Total"
+msgstr "Tổng"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,amount:0
+msgid "Total Amount"
+msgstr "Tổng tiền"
+
+#. module: hr_expense
+#: field:hr.expense.report,price_total:0
+msgid "Total Price"
+msgstr "Tổng giá"
+
+#. module: hr_expense
+#: view:False:0 field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
+msgstr "Đơn giá"
+
+#. module: hr_expense
+#: field:hr.expense.line,uom_id:0 view:product.product:0
+msgid "Unit of Measure"
+msgstr "Đơn vị đo lường"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_unread:0
+msgid "Unread Messages"
+msgstr "Thong điệp chưa đọc"
+
+#. module: hr_expense
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "Người dùng"
+
+#. module: hr_expense
+#: view:False:0
+msgid "Validated By:"
+msgstr "Xác nhận bởi:"
+
+#. module: hr_expense
+#: field:hr.expense.expense,user_valid:0
+msgid "Validation By"
+msgstr "Xác nhận bởi"
+
+#. module: hr_expense
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
+msgid "Validation Date"
+msgstr "Ngày xác nhận"
+
+#. module: hr_expense
+#: view:hr.expense.report:0 field:hr.expense.report,user_id:0
+msgid "Validation User"
+msgstr "Người xác nhận"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Waiting"
+msgstr "Chờ"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Approval"
+msgstr "Chờ phê duyệt"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Payment"
+msgstr "Chờ thanh toán"
+
+#. module: hr_expense
+#: selection:hr.expense.report,state:0
+msgid "Waiting confirmation"
+msgstr "Chờ xác nhận"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:455
+#, python-format
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:122
+#, python-format
+msgid "Warning!"
+msgstr "Cảnh báo!"
+
+#. module: hr_expense
+#: field:hr.expense.expense,website_message_ids:0
+msgid "Website Messages"
+msgstr "Website Messages"
+
+#. module: hr_expense
+#: help:hr.expense.expense,website_message_ids:0
+msgid "Website communication history"
+msgstr "Website communication history"
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the status is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the status is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the status is 'Accepted'.\n"
+" If the accounting entries are made for the expense request, the status is "
+"'Waiting Payment'."
 msgstr ""
+"Chi một chi phí yêu cầu được tạo, trạng thái là 'Dự thảo'.\n"
+" Nó được xác nhận bởi người dùng và yeu cầu được gửi tới quản lý, trạng thái "
+"là 'Chờ xác nhận'.            \n"
+"Nếu quản lý chấp nhận, trạng thái của nó là 'Được chấp nhận'.\n"
+" Nếu bút toán kế toán được tạo, trạng thái của nó là 'Chờ thanh toán'."
+
+#. module: hr_expense
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
+msgid "Year"
+msgstr "Năm"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:122
+#, python-format
+msgid "You can only delete draft expenses!"
+msgstr "Bạn chỉ có thể xóa chi phí dự thảo!"
