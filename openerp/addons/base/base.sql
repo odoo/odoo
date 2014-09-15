@@ -140,6 +140,7 @@ CREATE TABLE ir_model_constraint (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
+    definition varchar,
     name varchar NOT NULL,
     primary key(id)
 );
