@@ -24,11 +24,16 @@ from openerp.osv import fields, osv
 
 class bank(osv.osv):
     _inherit = "res.partner.bank"
+    
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Account Journal', help="This journal will be created automatically for this bank account when you save the record"),
-        'currency_id': fields.related('journal_id', 'currency', type="many2one", relation='res.currency', readonly=True,
-            string="Currency", help="Currency of the related account journal."),
+        'currency_id': fields.many2one('res.currency', string="Currency", help="Currency of the related account journal."),
     }
+    
+    _defaults = {
+        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+    }
+    
     def create(self, cr, uid, data, context=None):
         result = super(bank, self).create(cr, uid, data, context=context)
         self.post_write(cr, uid, [result], context=context)
@@ -85,6 +90,7 @@ class bank(osv.osv):
                     'reconcile': False,
                     'parent_id': ref_acc_bank.id,
                     'company_id': bank.company_id.id,
+                    'currency_id': bank.currency_id.id,
                 }
                 acc_bank_id  = obj_acc.create(cr,uid,acc,context=context)
 
@@ -106,6 +112,7 @@ class bank(osv.osv):
                     'analytic_journal_id': False,
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
+                    'currency': bank.currency_id.id,
                 }
                 journal_id = jour_obj.create(cr, uid, vals_journal, context=context)
 
