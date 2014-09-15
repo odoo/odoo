@@ -451,7 +451,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     open_record: function(id, editable) {
         if (this.dataset.select_id(id)) {
-            this.do_switch_view('form', null, { mode: editable ? "edit" : undefined });
+            this.do_switch_view('form', null, { editable: editable });
         } else {
             this.do_warn("Kanban: could not find id#" + id);
         }

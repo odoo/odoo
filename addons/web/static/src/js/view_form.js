@@ -258,7 +258,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     /**
      *
      * @param {Object} [options]
-     * @param {Boolean} [mode=undefined] If specified, switch the form to specified mode. Can be "edit" or "view".
+     * @param {Boolean} [editable=false] whether the form should be switched to edition mode. A value of ``false`` will keep the current mode.
      * @param {Boolean} [reload=true] whether the form should reload its content on show, or use the currently loaded record
      * @return {$.Deferred}
      */
@@ -294,7 +294,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             });
         }
         return shown.then(function() {
-            self._actualize_mode(options.mode || self.options.initial_mode);
+            if (options.editable) {
+                self.to_edit_mode();
+            }
             self.$el.css({
                 opacity: '1',
                 filter: 'alpha(opacity = 100)'
@@ -670,21 +672,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this._actualize_mode("edit");
     },
     /**
-     * Ask the view to switch to a precise mode if possible. The view is free to
-     * not respect this command if the state of the dataset is not compatible with
-     * the new mode. For example, it is not possible to switch to edit mode if
-     * the current record is not yet saved in database.
-     *
-     * @param {string} [new_mode] Can be "edit", "view", "create" or undefined. If
-     * undefined the view will test the actual mode to check if it is still consistent
-     * with the dataset state.
+     * Reactualize actual_mode.
      */
     _actualize_mode: function(switch_to) {
         var mode = switch_to || this.get("actual_mode");
         if (! this.datarecord.id) {
             mode = "create";
-        } else if (mode === "create") {
-            mode = "edit";
         }
         this.set({actual_mode: mode});
     },
