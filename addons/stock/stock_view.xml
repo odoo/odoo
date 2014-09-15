@@ -1251,9 +1251,11 @@
             <field name="arch" type="xml">
                 <form string="Incoterms">
                     <sheet>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

@@ -93,6 +93,22 @@
             action="action_view_mail_mail_statistics"/>
 
         <!--  MASS MAILING CONTACT -->
+        
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_contact_subscription" model="ir.filters">
+            <field name="name">List Subscription</field>
+            <field name="model_id">mail.mass_mailing.contact</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month'], 'col_group_by': ['list_id']}</field>
+        </record>
+        <record id="filter_contact_unsubscription" model="ir.filters">
+            <field name="name">List Unsubscription</field>
+            <field name="model_id">mail.mass_mailing.contact</field>
+            <field name="user_id" eval="False"/>
+            <field name="domain">[('opt_out','=',True)]</field>
+            <field name="context">{'group_by': ['unsubscription_date:month'], 'col_group_by': ['list_id']}</field>
+        </record>
+        
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
@@ -103,6 +119,8 @@
                     <field name="list_id"/>
                     <separator/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
+                    <separator/>
+                    <filter string="Exclude Dead" name="not_bounced" domain="[('message_bounce', '&lt;', 5)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Creation Date" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
@@ -122,8 +140,24 @@
                     <field name="email"/>
                     <field name="name"/>
                     <field name="list_id"/>
-                    <field name="opt_out"/>
+                    <field name="message_bounce"/>
+                    <field name="create_date"/>
+                    <field name="unsubscription_date"/>
+                    <field name="opt_out" on_change="on_change_opt_out(opt_out)"/>
+                    <field name="unsubscription_date" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
+            <field name="name">mail.mass_mailing.contact.graph</field>
+            <field name="model">mail.mass_mailing.contact</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <graph string="Mailing Lists Subscriber" type="pivot" stacked="True">
+                    <field name="create_date" type="row"/>
+                    <field name="list_id" type="col"/>
+                </graph>
             </field>
         </record>
 
@@ -131,7 +165,7 @@
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
@@ -496,9 +530,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name= "Mass Mailing" id= "menu_view_mass_mailing_config"
-            parent = "base.menu_marketing_config_root" sequence= "4"
-             groups="mass_mailing.group_mass_mailing_campaign"/>
+        <menuitem name="Mass Mailing" id= "menu_view_mass_mailing_config"
+            parent="base.menu_marketing_config_root" sequence="4"/>
            
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
             parent="menu_view_mass_mailing_config" sequence="1"

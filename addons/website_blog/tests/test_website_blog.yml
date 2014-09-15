@@ -24,10 +24,3 @@
 
       Wiki text can easily be edited
       '
--
-    I check the page history for the current page by clicking on "Page History".After that find difference between history.
--
-    !python {model: blog.post.history.show_diff}: |
-      hist_obj = model.pool.get('blog.post.history')
-      ids = hist_obj.search(cr, uid, [('post_id', '=', ref("test_page0"))])
-      model.get_diff(cr, uid, {'active_ids': ids[:] })

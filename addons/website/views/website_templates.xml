@@ -67,7 +67,7 @@
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-if="not title">
-                <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="res_company.name"/></t>
             </t>
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -111,7 +111,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="/" t-field="res_company.name"/>
+                                <a class="navbar-brand" href="/">YourCompany</a>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
                                 <ul class="nav navbar-nav navbar-right" id="top_menu">

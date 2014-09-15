@@ -557,13 +557,8 @@ Weight: 1.1 ounces</field>
         </record>
 
     <!-- product.public.category -->
-
-        <record id="product.computers" model="product.public.category">
-          <field name="name">Computers</field>
-        </record>
         
         <record id="product.Components" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Components</field>
         </record>
 
@@ -597,7 +592,6 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.devices" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Devices</field>
         </record>
 
@@ -635,12 +629,10 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.laptops" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Laptops</field>
         </record>
 
         <record id="product.sub_computers" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Computers</field>
         </record>
 
@@ -654,7 +646,6 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="product.network" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Network</field>
         </record>
 
@@ -672,7 +663,6 @@ Weight: 1.1 ounces</field>
         </record>
         
         <record id="product.services" model="product.public.category">
-          <field name="parent_id" ref="product.computers"/>
           <field name="name">Services</field>
         </record>
 
