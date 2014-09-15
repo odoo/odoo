@@ -703,20 +703,6 @@
         </receipt>
     </t>
 
-    <t t-name="ChooseReceiptPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-receipt">
-                <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
-                <div class = "button big-left receipt">
-                    Ticket
-                </div>
-                <div class = "button big-right invoice">
-                    Invoice
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="FullscreenPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-fullscreen">
@@ -758,14 +744,6 @@
                         Cancel
                     </div>
                 </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorSessionPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-nosession">
-                <p class="message">Sorry, we could not create a session for this user.</p>
             </div>
         </div>
     </t>
@@ -831,7 +809,7 @@
             <div class="popup popup-barcode">
                 <p class="message">Unknown Barcode
                     <br />
-                    <span class='barcode'></span>
+                    <span class='barcode'><t t-esc="widget.barcode" /></span>
                 </p>
                 <p class="comment">
                     The Point of Sale could not find any product, client, employee

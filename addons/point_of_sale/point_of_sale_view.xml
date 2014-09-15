@@ -169,6 +169,8 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{}"/>
             <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a new product.
@@ -645,11 +647,12 @@
                             <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
                                 on_change="onchange_picking_type_id(picking_type_id)"/>
                             <field name="stock_location_id" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                            <field name="currency_id" invisible="1"/>
                             <field name="journal_id" widget="selection"/>
                             <field name="group_by" groups="account.group_account_user"/>
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">

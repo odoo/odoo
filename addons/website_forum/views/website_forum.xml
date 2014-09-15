@@ -3,7 +3,7 @@
     <data>
 
 <!-- Editor custom -->
-<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets" groups="base.group_user">
     <xpath expr="." position="inside">
         <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
@@ -46,7 +46,6 @@
     <t t-call="website.layout">
         <t t-set="head">
             <t t-call-assets="website_forum.assets_forum"/>
-            <t t-raw="0"/>
         </t>
         <div class="container mt16 website_forum">
             <div class="navbar navbar-default">

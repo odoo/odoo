@@ -135,7 +135,7 @@
         <div class="oe_structure"/>
         <div class="container oe_website_sale">
           <div class="products_pager">
-            <div class="row">
+            <div class="row" style="width: 100%;">
               <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
               <t t-call="website.pager"/>
             </div>
@@ -295,7 +295,7 @@
             <div class="col-sm-4">
                 <ol class="breadcrumb">
                     <li><a t-att-href="keep(category=0)" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="category"><a t-att-href="keep()" t-field="category.name"/></li>
+                    <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>

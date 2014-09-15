@@ -202,6 +202,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     'discount': self.config.barcode_discount,
                     'price':    self.config.barcode_price,
                 });
+
+                if (self.config.company_id[0] !== self.user.company_id[0]) {
+                    throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
+                }
             },
         },{
             model: 'stock.location',
@@ -269,7 +273,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     for(var j = 0, jlen = journals.length; j < jlen; j++){
                         if(bankstatements[i].journal_id[0] === journals[j].id){
                             bankstatements[i].journal = journals[j];
-                            bankstatements[i].self_checkout_payment_method = journals[j].self_checkout_payment_method;
                         }
                     }
                 }
@@ -297,7 +300,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             label: 'pictures',
             loaded: function(self){
                 self.company_logo = new Image();
-                self.company_logo.crossOrigin = 'anonymous';
                 var  logo_loaded = new $.Deferred();
                 self.company_logo.onload = function(){
                     var img = self.company_logo;
@@ -319,13 +321,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ctx.drawImage(self.company_logo,0,0, width, height);
                     
                     self.company_logo_base64 = c.toDataURL();
-                    window.logo64 = self.company_logo_base64;
                     logo_loaded.resolve();
                 };
                 self.company_logo.onerror = function(){
                     logo_loaded.reject();
                 };
-                self.company_logo.src = window.location.origin + '/web/binary/company_logo';
+                self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
 
                 return logo_loaded;
             },

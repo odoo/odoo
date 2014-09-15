@@ -90,3 +90,13 @@ class sale_order_line(osv.osv):
     _columns = {
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
     }
+    
+
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+    
+    def _prepare_procurement_from_move(self, cr, uid, move, context=None):
+        res = super(stock_move, self)._prepare_procurement_from_move(cr, uid, move, context=context)
+        if res and move.procurement_id and move.procurement_id.property_ids:
+            res['property_ids'] = [(6, 0, [x.id for x in move.procurement_id.property_ids])]
+        return res

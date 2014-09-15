@@ -587,7 +587,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.mutating_mutex.exec(function() {
             function iterate() {
-                var defs = [];
+                var start = $.Deferred();
+                start.resolve();
+                start = _.reduce(self.onchanges_defs, function(memo, d){
+                    return memo.then(function(){
+                        return d;
+                    }, function(){
+                        return d;
+                    });
+                }, start);
+                var defs = [start];
                 _.each(self.fields, function(field) {
                     defs.push(field.commit_value());
                 });
@@ -796,14 +805,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
-        return $.when.apply($, self.onchanges_defs).then(function(){
-            return self._process_operations().then(function() {
-                if (save_obj.error)
-                    return $.Deferred().reject();
-                return $.when.apply($, save_obj.ret);
-            }).done(function() {
-                self.$el.removeClass('oe_form_dirty');
-            });
+        return self._process_operations().then(function() {
+            if (save_obj.error)
+                return $.Deferred().reject();
+            return $.when.apply($, save_obj.ret);
+        }).done(function(result) {
+            self.$el.removeClass('oe_form_dirty');
         });
     },
     _process_save: function(save_obj) {

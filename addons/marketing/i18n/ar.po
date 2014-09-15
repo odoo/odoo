@@ -1,60 +1,61 @@
 # Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-01-10 22:02+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_config_settings
-msgid "marketing.config.settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
 msgstr ""
 
 #. module: marketing
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"                This installs the module marketing_campaign_crm_demo."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
 msgstr ""
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_configuration
-#: view:marketing.config.settings:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Configure Marketing"
 msgstr ""
 
 #. module: marketing
-#: view:crm.lead:0
-#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
-msgid "Marketing"
-msgstr "التسويق"
-
-#. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign:0
-msgid "Marketing campaigns"
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "or"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns"
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: marketing
@@ -63,62 +64,47 @@ msgid "Manager"
 msgstr "المدير"
 
 #. module: marketing
-#: model:res.groups,name:marketing.group_marketing_user
-msgid "User"
-msgstr "مستخدم"
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "التسويق"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns Settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Marketing Campaigns"
 msgstr ""
 
 #. module: marketing
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Cancel"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
 msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Apply"
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
 msgstr ""
 
 #. module: marketing
 #: help:marketing.config.settings,module_marketing_campaign:0
 msgid ""
-"Provides leads automation through marketing campaigns.\n"
-"                Campaigns can in fact be defined on any resource, not just "
-"CRM leads.\n"
-"                This installs the module marketing_campaign."
+"Provides leads automation through marketing campaigns. Campaigns can in fact "
+"be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
 msgstr ""
 
 #. module: marketing
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"                This installs the module crm_profiling."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
 msgstr ""
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
-msgstr ""
-
-#~ msgid "Image"
-#~ msgstr "صورة"
-
-#~ msgid "title"
-#~ msgstr "الاسم"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "سير الإعدادات"
-
-#~ msgid "Configure"
-#~ msgstr "تهيئة"
-
-#~ msgid "marketing.installer"
-#~ msgstr "marketing.installer"
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
+msgstr "مستخدم"

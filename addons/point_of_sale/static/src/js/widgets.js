@@ -907,16 +907,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 instance.webclient.set_content_full_screen(true);
 
-                if (!self.pos.session) {
-                    self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
-                }else if(!self.pos.config){
-                    self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }else if(self.pos.config.iface_fullscreen && document.body.webkitRequestFullscreen && (
                     window.screen.availWidth  > window.innerWidth ||
                     window.screen.availHeight > window.innerHeight    )){
                     self.screen_selector.show_popup('fullscreen');
-                }
-            
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.push_order();
@@ -1007,15 +1001,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
             this.error_barcode_popup.appendTo(this.$el);
 
-            this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
-            this.error_session_popup.appendTo(this.$el);
-
-            this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
-            this.choose_receipt_popup.appendTo(this.$el);
-
-            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
-            this.error_invoice_transfer_popup.appendTo(this.$el);
-
             this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
             this.error_traceback_popup.appendTo(this.$el);
 
@@ -1089,9 +1074,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 popup_set:{
                     'error': this.error_popup,
                     'error-barcode': this.error_barcode_popup,
-                    'error-session': this.error_session_popup,
-                    'choose-receipt': this.choose_receipt_popup,
-                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                     'error-traceback': this.error_traceback_popup,
                     'confirm': this.confirm_popup,
                     'fullscreen': this.fullscreen_popup,
@@ -1144,8 +1126,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             function close(){
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
-                    window.location = '/web#action=' + res[0]['res_id'];
+                self.pos.push_order().then(function(){
+                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
+                        window.location = '/web#action=' + res[0]['res_id'];
+                    });
                 });
             }
 
@@ -1154,10 +1138,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             if(draft_order){
                 if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
-                    return close();
+                    close();
                 }
             }else{
-                return close();
+                close();
             }
         },
         destroy: function() {
