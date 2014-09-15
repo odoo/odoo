@@ -227,7 +227,7 @@
 <template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
-            <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/country/all/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_country=1">All Countries</a></li>
+            <li t-att-class=" '' if country_id else 'active' "><a t-attf-href="/jobs#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }?all_country=1">All Countries</a></li>
             <t t-foreach="countries" t-as="country">
                 <li t-att-class="'active' if country_id and country_id.id == country.id else ''">
                     <a t-attf-href="/jobs/country/#{ slug(country) }#{ '/department/%s' % slug(department_id) if department_id else '' }#{ '/office/%s' % office_id if office_id else '' }" ><span t-field="country.name"/></a>
