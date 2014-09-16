@@ -331,6 +331,8 @@ class res_partner(osv.osv, format_address):
 
     def _validate_email(self, cr, uid, ids, context=None):
         from openerp.addons.base.ir.ir_mail_server import extract_rfc2822_addresses
+        # TODO:  Probably there should be a better place to import this from,
+        # but since send_mail uses this same function is best trust on it.
         return all(
             not this.email or extract_rfc2822_addresses(this.email)
             for this in self.browse(cr, uid, ids)
