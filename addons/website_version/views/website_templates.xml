@@ -4,7 +4,7 @@
 
         <!-- Front-end/Back-end integration -->
         <template id="user_navbar_version" inherit_id="website.layout" groups="base.group_user">
-            <xpath expr="//li['class=dropdown']" position="after">
+            <xpath expr="//li[contains(@id, 'customize-menu')]" position="before">
                     <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                         <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">
                             Version (
