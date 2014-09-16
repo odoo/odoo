@@ -95,6 +95,16 @@ class res_currency(osv.osv):
     ]
     _order = "name"
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context={}
+        if not default:
+            default = {}
+        default.update(name=_("%s (copy)")
+                       % (self.browse(cr, uid, id, context=context).name))
+        return super(res_currency, self).copy(
+            cr, uid, id, default=default, context=context)
+            
     def init(self, cr):
         # CONSTRAINT/UNIQUE INDEX on (name,company_id) 
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
