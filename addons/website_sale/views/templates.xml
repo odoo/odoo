@@ -374,7 +374,7 @@
         <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
-                <span itemprop="image" class="agr" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
+                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
