@@ -43,6 +43,10 @@ class NewWebsite(osv.Model):
                     pond_sum+=int(exp_snap.frequency)
                 if pond_sum:
                     #RANDOM
+                    if pond_sum<100:
+                        pond_sum = 100
+                        #by default on master
+                        EXP[str(exp.id)] = str(0)
                     x = random.getrandbits(128)%pond_sum
                     for res in result:
                         if x<res[0]:
