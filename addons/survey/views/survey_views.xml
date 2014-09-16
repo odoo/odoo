@@ -344,7 +344,7 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]},'required':[('type','=','simple_choice')]}"/>
                                     <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 </group>
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
