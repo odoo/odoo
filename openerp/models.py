@@ -237,6 +237,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # transform columns into new-style fields (enables field inheritance)
+        for name, column in self._columns.iteritems():
+            if not hasattr(self, name):
+                setattr(self, name, column.to_field())
+
 
 class NewId(object):
     """ Pseudo-ids for new records. """
