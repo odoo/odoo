@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<template id="contactus_snippets_tab" name="Contactus snippets Tab" inherit_id="website.snippets">
+		<template id="contactus_snippets" name="Contactus snippets" inherit_id="website.snippets">
 			<xpath expr="//div[contains(@class, 'scroll')]/ul[contains(@class, 'nav')]" position="inside">	
 				<li><a href="#snippet_form" data-toggle="tab">Form Fields</a></li>
 			</xpath>	
-		</template>
-		
-		<template id="contactus_form_base" name="Contactus Form Base" inherit_id="website.snippets">
+
 			<xpath expr="//div[@id='snippet_structure']" position="inside" >
 				<div>
 					<div class="oe_snippet_thumbnail">
@@ -16,12 +14,12 @@
 					</div>
 					<section class="oe_snippet_body editForm">
 						<div class="container">
-							<form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+							<form action="/contactus/crm.lead/" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="name" class="col-md-3 col-sm-4 control-label">Your Name</label>
+									<label for="contact_name" class="col-md-3 col-sm-4 control-label">Your Name</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
-											<input type="text" class="form-control" name="name" placeholder="" />
+											<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
 										</div>
 									</div>
 								</div>
@@ -29,30 +27,30 @@
 									<label for="phone" class="col-md-3 col-sm-4 control-label">Phone Number</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
-											<input type="text" class="form-control" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+											<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
 										</div>
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="email" class="col-md-3 col-sm-4 control-label">Email</label>
+									<label for="email_from" class="col-md-3 col-sm-4 control-label">Email</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
-											<input type="text" class="form-control" name="email" placeholder="" />
+											<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
 										</div>
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="subject" class="col-md-3 col-sm-4 control-label">Subject</label>
+									<label for="name" class="col-md-3 col-sm-4 control-label">Subject</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
-											<input type="text" class="form-control" name="email" placeholder="" />
+											<input type="text" class="form-control form-data" name="name" id="name" placeholder="" />
 										</div>
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="textarea">
 									<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
 									<div class="col-md-7 col-sm-8">
-										<textarea  class="form-control" name="description" style="min-height: 120px" required="True"></textarea>
+										<textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
 									</div>
 								</div>
 								<div class="form-group">
@@ -65,12 +63,10 @@
 					</section>
 				</div>
 			</xpath>
-		</template>
-		
+	
 		
 		<!---  FIELD SNIPPETS -->
-		<template id="contactus_form_snippets" name="Contact Form Snippet" inherit_id="website.snippets">
-
+	
 			<xpath expr="//div[@id='snippet_effect']" position="after">
 				<div id="snippet_form" class="tab-pane">
 					<div>
@@ -82,7 +78,7 @@
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-unwrap">
-									<input type="text" class="form-control" placeholder="Placeholder Exemple" />
+									<input type="text" class="form-control form-data" placeholder="Placeholder Exemple" />
 								</div>
 								<p class="help-block">Help exemple.</p>
 							</div>
@@ -96,7 +92,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="textarea">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<textarea  class="form-control" name="" style="min-height: 120px"></textarea>
+								<textarea  class="form-control form-data form-data" name="" style="min-height: 120px"></textarea>
 								<p class="help-block">Help exemple.</p>
 							</div>
 						</div>
@@ -109,7 +105,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="checkbox">
 							<label for="checkbox" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<div class="wrap-options">
+								<div class="wrap-options form-data">
 									<div class="checkbox">
 										<label for="checkbox-0">
 											<input type="checkbox" name="checkbox-0" id="checkbox-0"  value="0" />
@@ -141,7 +137,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="radio">
 							<label for="radio" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<div class="wrap-options">
+								<div class="wrap-options form-data">
 									<div class="radio">
 										<label for="radio-0">
 											<input type="radio" name="radio-0" id="radio-0"  value="0" />
@@ -173,7 +169,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="select">
 							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<select id="select" class="form-control wrap-options">
+								<select id="select" class="form-control form-data wrap-options">
 									<option value="0">Option 0</option>
 									<option value="1">Option 1</option>
 									<option value="2">Option 2</option>
@@ -190,7 +186,7 @@
 						<div class="form-group oe_snippet_body form-field form-field-search" data-form="search">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<div class="form-control">
+								<div class="form-control form-data">
 									<textarea class="form-input-search" name="" rows="1"></textarea>
 								</div>
 								<p class="help-block">Help exemple.</p>
@@ -214,7 +210,7 @@
 									<span class="input-group-btn">
 										<span class="btn btn-primary btn-file">
 											<span class="browse-label">Browse</span>
-											<input type="file" multiple="true" />
+											<input type="file" multiple="true" class="form-data"/>
 										</span>
 									</span>
 									<input type="text" class="form-control" placeholder="no file" readonly="true" />
@@ -226,8 +222,7 @@
 
 				</div>
 			</xpath>
-		</template>
-		<template id="contactus_form_options" name="Contact Form Options" inherit_id="website.snippets">
+		
 			<xpath expr="//div[@id='snippet_effect']" position="after">
 				<div 	data-snippet-option-id='editForm'
 						data-selector=".editForm"

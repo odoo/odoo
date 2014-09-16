@@ -36,12 +36,27 @@
 		start: function() { 
 			var plugin_list = (this.$target.find('.form-control').attr('data-multiple') == 'multiple') ? 'tags autocomplete' : 'autocomplete';
 			var list = new Array();
+			var assocList =new Array();
 			
 			this.$target.find('.wrap-options').children().each(function (i,child) {
-				list[i] = $(child).html();
+				list[i] = {name:$(child).html()};
+				assocList[$(child).html()] = $(child).val();
 			});
 			
-			this.$target.find('textarea')	.textext({plugins : plugin_list})
+			this.$target.find('textarea')	.textext({
+														plugins : plugin_list,
+														ext : {
+											                itemManager: {
+											                    itemToString: function(i){
+											                        return i.name;
+											                    },
+											                    stringToItem: function(str) {
+											                        return {name:str,id:assocList[str]};
+											                    }
+											                }
+											               
+											            }
+													})
         									.bind	('getSuggestions', function(e, data) {
 											            
 											            var textext  = $(e.target).textext()[0],

@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- MODAL DEFAULT WIZARD FORM FOR FORM EDITOR -->
-
 <templates xml:space="preserve">
-	<t t-name="website.form.editor.wizard.template">
+	<t t-name="website.form.editor.wizard.template.modelSelection">
+		<div class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">Add a New Form</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="formEditor-select-action" class="col-md-3 col-sm-4 control-label">Action : </label>
+								<div class="col-md-9 col-sm-8">
+									<select class="form-control form-select-action" id="formEditor-select-action">
+										<option value="crm.lead">Create Lead with CRM</option>
+									</select>
+								</div>
+							</div>
+		<!--				<div class="form-group">
+								<label for="formEditor-mailto" class="col-md-3 col-sm-4 control-label">E-mail : </label>
+								<div class="col-md-9 col-sm-8">
+									<input type="email" class="form-control form-action-mailto" id="formEditor-mailto" />
+								</div>
+						</div> -->
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary validate">
+							Continue
+						</button>
+						<button type="button" class="btn cancel" data-dismiss="modal" aria-hidden="true">
+							Cancel
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+
+<!-- MODAL DEFAULT WIZARD FORM FOR FIELDS EDITOR -->
+
+
+	<t t-name="website.form.editor.wizard.template.default">
 		<div class="modal fade">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -112,16 +154,14 @@
 				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
 				<div class="col-md-9 col-sm-8 form-editor-table">
 					<table class="table table-condensed">
-						<tr>
-							<th>Option</th>
-							<th>Value</th>
-							<th class="tb-actions"></th>
-						</tr>
-						<tr class="last">
-							<td contenteditable="true" class="option-label">New Option Label</td>
-							<td contenteditable="true" class="option-value">New Option Value</td>
-							<td><input type="button" class="btn btn-default form-editor-add" value="+" /></td>
-						</tr>
+						<thead>
+							<tr>
+								<th>Option</th>
+								<th>Value</th>
+								<th class="tb-actions"></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
 					</table>
 				</div>	
 			</div>
@@ -141,16 +181,14 @@
 				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
 				<div class="col-md-9 col-sm-8 form-editor-table">
 					<table class="table table-condensed">
-						<tr>
-							<th>Option</th>
-							<th>Value</th>
-							<th class="tb-actions"></th>
-						</tr>
-						<tr class="last">
-							<td contenteditable="true" class="option-label">New Option Label</td>
-							<td contenteditable="true" class="option-value">New Option Value</td>
-							<td><input type="button" class="btn btn-default form-editor-add" value="+" /></td>
-						</tr>
+						<thead>
+							<tr>
+								<th>Option</th>
+								<th>Value</th>
+								<th class="tb-actions"></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
 					</table>
 				</div>	
 			</div>
@@ -169,18 +207,14 @@
 				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
 				<div class="col-md-9 col-sm-8 form-editor-table">
 					<table class="table table-condensed">
-						<tr>
-							<th>Option</th>
-							<th>Value</th>
-							<th class="tb-actions"></th>
-						</tr>
-						<tr class="last">
-							<td contenteditable="true" class="option-label">New Option Label</td>
-							<td contenteditable="true" class="option-value">New Option Value</td>
-							<td>
-								<input type="button" class="btn btn-default form-editor-add" value="+" />
-							</td>
-						</tr>
+						<thead>
+							<tr>
+								<th>Option</th>
+								<th>Value</th>
+								<th class="tb-actions"></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
 					</table>
 				</div>
 			</div>
@@ -206,16 +240,14 @@
 					<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Options :</label>
 					<div class="col-md-9 col-sm-8 form-editor-table">
 						<table class="table table-condensed">
-							<tr>
-								<th>Option</th>
-								<th>Value</th>
-								<th class="tb-actions"></th>
-							</tr>
-							<tr class="last">
-								<td contenteditable="true" class="option-label">New Option Label</td>
-								<td contenteditable="true" class="option-value">New Option Value</td>
-								<td><input type="button" class="btn btn-default form-editor-add" value="+" /></td>
-							</tr>
+							<thead>
+								<tr>
+									<th>Option</th>
+									<th>Value</th>
+									<th class="tb-actions"></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
 						</table>
 					</div>
 				</div>
@@ -256,7 +288,7 @@
 		<div>
 			<div class="checkbox">
 				<label t-att-for="id">
-					<input type="checkbox" t-att-id="id" t-att-name="id_label" t-att-value="value" />
+					<input type="checkbox" t-att-id="id" t-att-name="id" t-att-value="value" />
 					<span class="option"><t t-raw="label" /></span>
 				</label>
 			</div>
@@ -282,7 +314,18 @@
 		<!-- OPTION TEMPLATE FOR SEARCH -->
 	<t t-name="website.form.editor.template.option.search">
 			<option t-att-value="value"><t t-raw="label" /></option>
-	</t>	
+	</t>
+	
+		<!-- OPTION TEMPLATE FOR OPTION WIZARD -->
+	<t t-name="webiste.form.editor.wizard.option.template">
+		<tr class="last">
+			<td contenteditable="true" class="option-label">New Option Label</td>
+			<td contenteditable="true" class="option-value">New Option Value</td>
+			<td>
+				<input type="button" class="btn btn-default form-editor-add" value="+" />
+			</td>
+		</tr>
+	</t>
 
 
 </templates>
