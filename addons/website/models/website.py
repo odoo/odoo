@@ -600,7 +600,7 @@ class website(osv.osv):
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
-        id = '%s_%s' % (record.id, hashlib.sha1(record.write_date).hexdigest()[0:7])
+        id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
         size = '' if size is None else '-%s' % size
         return '/website/image/%s-%s-%s%s' % (model, id, field, size)
 
