@@ -1034,6 +1034,7 @@ class AssetsBundle(object):
 
         context = self.context.copy()
         context['inherit_branding'] = False
+        context['rendering_bundle'] = True
         self.html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
         self.parse()
 
@@ -1086,10 +1087,13 @@ class AssetsBundle(object):
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
         else:
+            url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                response.append('<link href="/web/css/%s/%s" rel="stylesheet"/>' % (self.xmlid, self.version))
+                href = '/web/css/%s/%s' % (self.xmlid, self.version)
+                response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
-                response.append('<script type="text/javascript" src="/web/js/%s/%s"></script>' % (self.xmlid, self.version))
+                src = '/web/js/%s/%s' % (self.xmlid, self.version)
+                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
         response.extend(self.remains)
         return sep + sep.join(response)
 
