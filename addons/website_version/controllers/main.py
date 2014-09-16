@@ -67,6 +67,21 @@ class TableExporter(http.Controller):
             result = True
         return result
 
+    @http.route(['/website_version/publish'], type = 'json', auth = "public", website = True)
+    def publish(self, view_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        obj = request.registry['ir.ui.view']
+        view = obj.browse(cr, uid, [int(view_id)],context)[0]
+        key = view.key
+        if view.website_id and view.snapshot_id:
+            master_id = obj.search(cr, uid, [('key','=',key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
+            if master_id:
+                obj.unlink(cr, uid, master_id, context=context)
+            obj.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
+        request.session['snapshot_id'] = 0
+        request.session['master'] = 1
+        return view.snapshot_id.id
+
     @http.route(['/set_context'], type = 'json', auth = "public", website = True)
     def set_context(self):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context

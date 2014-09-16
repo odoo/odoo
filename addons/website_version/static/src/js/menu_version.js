@@ -34,7 +34,7 @@
                             self.$el.find("#last_divider").remove();
                             if(!result){
                                 self.$el.find(".version_menu").append('<li class="divider" id="last_divider"> </li>');
-                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish" t-att-data-view_id='+view_id+'>Publish</a></li>');
+                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish" data-view_id='+view_id+'>Publish</a></li>');
                                 
                             }
                         });
@@ -79,6 +79,13 @@
             var snapshot_id = $(event.currentTarget).parent().data("snapshot_id");
             console.log(snapshot_id);
             openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                    location.reload();
+                });
+        },
+
+        publish: function(event) {
+            var view_id = $(event.currentTarget).data("view_id");
+            openerp.jsonRpc( '/website_version/publish', 'call', { 'view_id':view_id }).then(function (result) {
                     location.reload();
                 });
         },
