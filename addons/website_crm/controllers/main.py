@@ -8,6 +8,7 @@ from openerp import http, SUPERUSER_ID
 from openerp.http import request
 from openerp.tools.translate import _
 
+
 class contactus(http.Controller):
 
     def generate_google_map_url(self, street, city, city_zip, country_name):
@@ -90,9 +91,6 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("ACCEPT_LANGUAGE", environ.get("HTTP_ACCEPT_LANGUAGE")))
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
-
-
-
 
         lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
         values.update(lead_id=lead_id)
