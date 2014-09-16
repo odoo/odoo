@@ -69,7 +69,7 @@ class AcquirerPaypal(osv.Model):
         res = cr.fetchall()
         for (company_id, company_paypal_account) in res:
             if company_paypal_account:
-                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('name', '=', 'paypal')], limit=1, context=context)
+                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'paypal')], limit=1, context=context)
                 if company_paypal_ids:
                     self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
                 else:
