@@ -1234,14 +1234,15 @@ openerp.account = function (instance) {
             }
         },
     
-        modeChanged: function() {
+        modeChanged: function(o, val) {
             var self = this;
     
             self.$(".action_pane.active").removeClass("active");
 
-            if (self.st_line.has_no_partner && self.get("mode") === "match") {
+            if (self.st_line.has_no_partner && self.get("mode") === "match")
                 self.set("mode", "create", {silent: true});
-            }
+            if (val.oldValue === "create")
+                self.addLineBeingEdited();
     
             if (self.get("mode") === "inactive") {
                 self.$(".match").slideUp(self.animation_speed);

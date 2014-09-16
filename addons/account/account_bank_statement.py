@@ -544,15 +544,20 @@ class account_bank_statement_line(osv.osv):
         sign = 1
         if statement_currency == company_currency:
             amount_field = 'credit'
-            sign = -1
             if st_line.amount > 0:
                 amount_field = 'debit'
+            else:
+                sign = -1
         else:
             amount_field = 'amount_currency'
             if st_line.amount < 0:
                 sign = -1
+        if st_line.amount_currency:
+            amount = st_line.amount_currency
+        else: 
+            amount = st_line.amount
 
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * amount))])
         if match_id:
             return [match_id[0]]
 
