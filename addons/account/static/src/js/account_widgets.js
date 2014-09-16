@@ -1083,7 +1083,10 @@ openerp.account = function (instance) {
             if (self.get("mode") === "match") {
                 self.set("mode", "inactive");
             } else {
-                self.set("mode", "match");
+                if (self.st_line.has_no_partner && self.get("mode") === "create")
+                    self.set("mode", "inactive");
+                else
+                    self.set("mode", "match");
             }
         },
     
@@ -1091,7 +1094,10 @@ openerp.account = function (instance) {
             var self = this;
             if (self.get("mode") === "create") {
                 self.addLineBeingEdited();
-                self.set("mode", "match");
+                if (self.st_line.has_no_partner)
+                    self.set("mode", "inactive");
+                else
+                    self.set("mode", "match");
             } else {
                 self.set("mode", "create");
             }
@@ -1232,6 +1238,10 @@ openerp.account = function (instance) {
             var self = this;
     
             self.$(".action_pane.active").removeClass("active");
+
+            if (self.st_line.has_no_partner && self.get("mode") === "match") {
+                self.set("mode", "create", {silent: true});
+            }
     
             if (self.get("mode") === "inactive") {
                 self.$(".match").slideUp(self.animation_speed);
@@ -1245,7 +1255,8 @@ openerp.account = function (instance) {
                 return $.when(self.updateMatches()).then(function() {
                     var new_animation_speed = self.animation_speed;
                     self.animation_speed = old_animation_speed;
-                    if (self.$el.hasClass("no_match")) { // TODO : not for manual reconciliation
+                    if (self.$el.hasClass("no_match")) {
+                        self.animation_speed = 0;
                         self.set("mode", "create");
                         return;
                     }
