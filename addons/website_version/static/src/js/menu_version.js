@@ -5,6 +5,7 @@
     var website=openerp.website;
     var QWeb = openerp.qweb;
     website.add_template_file('/website_version/static/src/xml/all_versions.xml');
+    website.add_template_file('/website_version/static/src/xml/publish.xml');
     
     website.EditorVersion = openerp.Widget.extend({
         start: function() {
@@ -25,7 +26,21 @@
                 openerp.jsonRpc( '/website_version/all_snapshots', 'call', {}).then(function (result) {
                     self.$el.find(".snapshot").remove();
                     self.$el.find(".version_menu").append(QWeb.render("all_versions", {snapshots:result}));
+
+                    var view_id = $('html').attr('data-view-xmlid');
+                    openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
+                        .then(function (result) {
+                            self.$el.find(".publish").remove();
+                            self.$el.find("#last_divider").remove();
+                            if(!result){
+                                self.$el.find(".version_menu").append('<li class="divider" id="last_divider"> </li>');
+                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish">Publish</a></li>');
+                                
+                            }
+                        });
+
                 });
+                
             });
             return this._super();
         },
