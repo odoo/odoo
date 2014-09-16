@@ -46,11 +46,18 @@
         },
         
         create_snapshot: function() {
+            var m_names = new Array("January", "February", "March", 
+                "April", "May", "June", "July", "August", "September", 
+                "October", "November", "December");
+            var d = new Date();
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth();
+            var curr_year = d.getFullYear();
             website.prompt({
                 id: "editor_new_snapshot",
                 window_title: _t("New snapshot"),
                 input: "Snapshot name" ,
-                default :(new Date()),
+                default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name }).then(function (result) {
