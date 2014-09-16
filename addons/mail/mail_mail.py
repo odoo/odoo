@@ -305,8 +305,13 @@ class mail_mail(osv.Model):
                         object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                         subtype = 'html',
                         subtype_alternative = 'plain')
-                    res = ir_mail_server.send_email(cr, uid, msg,
-                        mail_server_id=mail.mail_server_id.id, context=context)
+                try:
+                    res = ir_mail_server.send_email(
+                        cr, uid, msg,
+                        mail_server_id=mail.mail_server_id.id,
+                        context=context)
+                except AssertionError:
+                    res = False
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True

@@ -329,7 +329,15 @@ class res_partner(osv.osv, format_address):
         'image': False,
     }
 
+    def _validate_email(self, cr, uid, ids, context=None):
+        from openerp.addons.base.ir.ir_mail_server import extract_rfc2822_addresses
+        return all(
+            not this.email or extract_rfc2822_addresses(this.email)
+            for this in self.browse(cr, uid, ids)
+        )
+
     _constraints = [
+        (_validate_email, 'Invalid email address', ['email']),
         (osv.osv._check_recursion, 'You cannot create recursive Partner hierarchies.', ['parent_id']),
     ]
 
