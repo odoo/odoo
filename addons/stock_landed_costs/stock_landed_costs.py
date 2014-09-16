@@ -98,22 +98,25 @@ class stock_landed_cost(osv.osv):
         'date': fields.date.context_today,
     }
 
-    def _create_accounting_entries(self, cr, uid, line, move_id, context=None):
+    def _create_accounting_entries(self, cr, uid, line, move_id, qty_out, context=None):
         product_obj = self.pool.get('product.template')
         cost_product = line.cost_line_id and line.cost_line_id.product_id
         if not cost_product:
             return False
         accounts = product_obj.get_product_accounts(cr, uid, line.product_id.product_tmpl_id.id, context=context)
         debit_account_id = accounts['property_stock_valuation_account_id']
-        credit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
-        already_out_account_id = cost_product.property_account_income and cost_product.property_account_income.id or cost_product.categ_id.property_account_income_categ.id
+        already_out_account_id = accounts['stock_account_output']
+        credit_account_id = line.cost_line_id.account_id.id or cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
+
         if not credit_account_id:
             raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
-        return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, already_out_account_id, context=context)
 
-    def _create_account_move_line(self, cr, uid, line, move_id, credit_account_id, debit_account_id, already_out_account_id, context=None):
+        return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, qty_out, already_out_account_id, context=context)
+
+    def _create_account_move_line(self, cr, uid, line, move_id, credit_account_id, debit_account_id, qty_out, already_out_account_id, context=None):
         """
         Generate the account.move.line values to track the landed cost.
+        Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         aml_obj = self.pool.get('account.move.line')
         aml_obj.create(cr, uid, {
@@ -133,32 +136,24 @@ class stock_landed_cost(osv.osv):
             'account_id': credit_account_id
         }, context=context)
         
-        #Check if its quants are still in stock and if not create extra move 
-        move_obj = self.pool.get("stock.move")
-        move = move_obj.browse(cr, uid, move_id, context=context)
-        qty = 0
-        for quant in move.quant_ids: 
-            if quant.location_id.usage != 'internal':
-                qty += quant.qty
-        if qty > 0:
+        #Create account move lines for quants already out of stock
+        if qty_out > 0:
             aml_obj.create(cr, uid, {
-                                     'name': line.name,
+                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
                                      'move_id': move_id,
                                      'product_id': line.product_id.id,
-                                     'quantity': qty,
-                                     'credit': line.additional_landed_cost * qty / line.quantity,
+                                     'quantity': qty_out,
+                                     'credit': line.additional_landed_cost * qty_out / line.quantity,
                                      'account_id': debit_account_id
                                      }, context=context)
             aml_obj.create(cr, uid, {
-                                     'name': line.name,
+                                     'name': line.name + ": " + str(qty_out) + _(' already out'),
                                      'move_id': move_id,
                                      'product_id': line.product_id.id,
-                                     'quantity': qty,
-                                     'debit': line.additional_landed_cost * qty / line.quantity,
+                                     'quantity': qty_out,
+                                     'debit': line.additional_landed_cost * qty_out / line.quantity,
                                      'account_id': already_out_account_id
                                      }, context=context)
-        
-        
         return True
 
     def _create_account_move(self, cr, uid, cost, context=None):
@@ -170,11 +165,31 @@ class stock_landed_cost(osv.osv):
         }
         return self.pool.get('account.move').create(cr, uid, vals, context=context)
 
+    def _check_sum(self, cr, uid, landed_cost, context=None):
+        """
+        Will check if each cost line its valuation lines sum to the correct amount
+        and if the overall total amount is correct also
+        """
+        costcor = {}
+        tot = 0
+        for valuation_line in landed_cost.valuation_adjustment_lines:
+            if costcor.get(valuation_line.cost_line_id):
+                costcor[valuation_line.cost_line_id] += valuation_line.additional_landed_cost
+            else:
+                costcor[valuation_line.cost_line_id] = valuation_line.additional_landed_cost
+            tot += valuation_line.additional_landed_cost
+        res = (tot == landed_cost.amount_total)
+        for costl in costcor.keys():
+            if costcor[costl] != costl.price_unit:
+                res = False
+        return res
+
     def button_validate(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
+
         for cost in self.browse(cr, uid, ids, context=context):
-            if not cost.valuation_adjustment_lines:
-                raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valuation line.'))
+            if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
+                raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation lines.'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
             quant_dict = {}
             for line in cost.valuation_adjustment_lines:
@@ -190,7 +205,11 @@ class stock_landed_cost(osv.osv):
                         quant_dict[quant.id] += diff
                 for key, value in quant_dict.items():
                     quant_obj.write(cr, uid, quant.id, {'cost': value}, context=context)
-                self._create_accounting_entries(cr, uid, line, move_id, context=context)
+                qty_out = 0
+                for quant in line.move_id.quant_ids:
+                    if quant.location_id.usage != 'internal':
+                        qty_out += quant.qty
+                self._create_accounting_entries(cr, uid, line, move_id, qty_out, context=context)
             self.write(cr, uid, cost.id, {'state': 'done', 'account_move_id': move_id}, context=context)
         return True
 
@@ -274,7 +293,7 @@ class stock_landed_cost_lines(osv.osv):
         'name': fields.char('Description'),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
+        'price_unit': fields.float('Cost', required=True, digits_compute=dp.get_precision('Product Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
     }
