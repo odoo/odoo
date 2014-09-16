@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="website_blog_post" inherit_id="website.snippets" name="Snippet Blog Post">
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='website_blogpost'
+            data-selector=".blog_post_landing"
+            data-no-check="true">
+
+          <li class='dropdown-submenu'>
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu" name="size">
+              <li><a href="#">
+                <table>
+                  <tr><td class="selected"></td><td></td><td></td></tr>
+                  <tr><td></td><td></td><td></td></tr>
+                  <tr><td></td><td></td><td></td></tr>
+                </table>
+              </a></li>
+            </ul>
+          </li>
+          <li class='dropdown-submenu'>
+              <a tabindex="-1" href="#">Promote</a>
+              <ul class="dropdown-menu">
+                  <li data-go_to="top"><a>Push to top</a></li>
+                  <li data-go_to="up"><a>Push up</a></li>
+                  <li data-go_to="down"><a>Push down</a></li>
+                  <li data-go_to="bottom"><a>Push to bottom</a></li>
+              </ul>
+          </li>
+        </div>
+    </xpath>
+
+</template>
+</data>
+</openerp>

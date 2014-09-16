@@ -6,75 +6,7 @@ from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
-
-PPG = 20 # Products Per Page
-PPR = 4  # Products Per Row
-
-class table_compute(object):
-    def __init__(self):
-        self.table = {}
-
-    def _check_place(self, posx, posy, sizex, sizey):
-        res = True
-        for y in range(sizey):
-            for x in range(sizex):
-                if posx+x>=PPR:
-                    res = False
-                    break
-                row = self.table.setdefault(posy+y, {})
-                if row.setdefault(posx+x) is not None:
-                    res = False
-                    break
-            for x in range(PPR):
-                self.table[posy+y].setdefault(x, None)
-        return res
-
-    def process(self, products):
-        # Compute products positions on the grid
-        minpos = 0
-        index = 0
-        maxy = 0
-        for p in products:
-            x = min(max(p.website_size_x, 1), PPR)
-            y = min(max(p.website_size_y, 1), PPR)
-            if index>PPG:
-                x = y = 1
-
-            pos = minpos
-            while not self._check_place(pos%PPR, pos/PPR, x, y):
-                pos += 1
-
-            if index>PPG and (pos/PPR)>maxy:
-                break
-
-            if x==1 and y==1:   # simple heuristic for CPU optimization
-                minpos = pos/PPR
-
-            for y2 in range(y):
-                for x2 in range(x):
-                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
-            self.table[pos/PPR][pos%PPR] = {
-                'product': p, 'x':x, 'y': y,
-                'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids))
-            }
-            if index<=PPG:
-                maxy=max(maxy,y+(pos/PPR))
-            index += 1
-
-        # Format table according to HTML needs
-        rows = self.table.items()
-        rows.sort()
-        rows = map(lambda x: x[1], rows)
-        for col in range(len(rows)):
-            cols = rows[col].items()
-            cols.sort()
-            x += len(cols)
-            rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
-
-        return rows
-
-        # TODO keep with input type hidden
-
+from openerp.addons.website.controllers.main import table_compute
 
 class QueryURL(object):
     def __init__(self, path='', **args):
@@ -97,8 +29,9 @@ class QueryURL(object):
             path += '?' + '&'.join(l)
         return path
 
-
 class website_sale(http.Controller):
+    _product_per_page = 20
+    _product_per_row = 4
 
     def get_pricelist(self):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -187,8 +120,8 @@ class website_sale(http.Controller):
         product_obj = pool.get('product.template')
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=self._product_per_page, scope=7, url_args=post)
+        product_ids = product_obj.search(cr, uid, domain, limit=self._product_per_page + 10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
@@ -207,8 +140,8 @@ class website_sale(http.Controller):
             'pager': pager,
             'pricelist': pricelist,
             'products': products,
-            'bins': table_compute().process(products),
-            'rows': PPR,
+            'bins': table_compute(self._product_per_page, self._product_per_row).process(products),
+            'rows': self._product_per_row,
             'styles': styles,
             'categories': categs,
             'attributes': attributes,

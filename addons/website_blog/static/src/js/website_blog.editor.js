@@ -55,4 +55,67 @@ $(document).ready(function() {
             },
         });
     }
+
+    website.snippet.options.website_blogpost = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            this.blogpost_id = parseInt(this.$target.find('[data-oe-model="blog.post"]').data('oe-id'));
+            var size_x = parseInt(this.$target.attr("colspan") || 1);
+            var size_y = parseInt(this.$target.attr("rowspan") || 1);
+
+            var $size = this.$el.find('ul[name="size"]');
+            var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
+            if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
+            if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
+            if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
+            $select.addClass("selected");
+
+            this.bind_resize();
+        },
+        reload: function () {
+            if (location.href.match(/\?enable_editor/)) {
+                location.reload();
+            } else {
+                location.href = location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
+            }
+        },
+        bind_resize: function () {
+            var self = this;
+            this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
+                $(event.currentTarget).addClass("oe_hover");
+            });
+            this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
+                $(event.currentTarget).removeClass("oe_hover");
+            });
+            this.$el.on('mouseover', 'ul[name="size"] td', function (event) {
+                var $td = $(event.currentTarget);
+                var $table = $td.closest("table");
+                var x = $td.index()+1;
+                var y = $td.parent().index()+1;
+
+                var tr = [];
+                for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
+                var $select_tr = $table.find(tr.join(","));
+                var td = [];
+                for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
+                var $select_td = $select_tr.find(td.join(","));
+
+                $table.find("td").removeClass("select");
+                $select_td.addClass("select");
+            });
+            this.$el.on('click', 'ul[name="size"] td', function (event) {
+                var $td = $(event.currentTarget);
+                var $data = $td.closest(".js_options:first");
+                var x = $td.index()+1;
+                var y = $td.parent().index()+1;
+                openerp.jsonRpc('/blogpost/change_size', 'call', {'blogpost_id': self.blogpost_id, 'x': x, 'y': y})
+                    .then(self.reload);
+            });
+        },
+        go_to: function (type, value) {
+            if(type !== "click") return;
+            openerp.jsonRpc('/blogpost/change_sequence', 'call', {'blogpost_id': this.blogpost_id, 'sequence': value})
+                .then(this.reload);
+        }
+    });
 });

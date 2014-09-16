@@ -516,3 +516,66 @@ class Website(openerp.addons.web.controllers.main.Home):
             return res
         return request.redirect('/')
 
+class table_compute(object):
+    def __init__(self, IPG, IPR):
+        self.table = {}
+        self.IPG, self.IPR = IPG, IPR # Item Per Page, Item Per Row
+
+    def _check_place(self, posx, posy, sizex, sizey):
+        res = True
+        for y in range(sizey):
+            for x in range(sizex):
+                if posx + x >= self.IPR:
+                    res = False
+                    break
+                row = self.table.setdefault(posy + y, {})
+                if row.setdefault(posx + x) is not None:
+                    res = False
+                    break
+            for x in range(self.IPR):
+                self.table[posy + y].setdefault(x, None)
+        return res
+
+    def process(self, item_list):
+        # Compute positions on the grid
+        minpos = 0
+        index = 0
+        maxy = 0
+        for p in item_list:
+            x = min(max(p.website_size_x, 1), self.IPR)
+            y = min(max(p.website_size_y, 1), self.IPR)
+            if index > self.IPG:
+                x = y = 1
+
+            pos = minpos
+            while not self._check_place(pos % self.IPR, pos / self.IPR, x, y):
+                pos += 1
+
+            if index > self.IPG and (pos / self.IPR) > maxy:
+                break
+
+            if x == 1 and y == 1:   # simple heuristic for CPU optimization
+                minpos = pos / self.IPR
+
+            for y2 in range(y):
+                for x2 in range(x):
+                    self.table[(pos / self.IPR) + y2][(pos % self.IPR) + x2] = False
+            self.table[pos / self.IPR][pos % self.IPR] = {
+                'item': p, 'x': x, 'y': y,
+                'class': " ".join(map(lambda x: x.html_class or '', p.website_style_ids)) or '' if hasattr(p, 'website_style_ids') else ''
+            }
+            if index <= self.IPG:
+                maxy = max(maxy, y + (pos / self.IPR))
+            index += 1
+
+        # Format table according to HTML needs
+        rows = self.table.items()
+        rows.sort()
+        rows = map(lambda x: x[1], rows)
+        for col in range(len(rows)):
+            cols = rows[col].items()
+            cols.sort()
+            x += len(cols)
+            rows[col] = [c for c in map(lambda x: x[1], cols) if c != False]
+
+        return rows

@@ -9,7 +9,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-
+from openerp.addons.website.models.website import slug
 
 class Blog(osv.Model):
     _name = 'blog.blog'
@@ -90,13 +90,58 @@ class BlogPost(osv.Model):
         ),
         'visits': fields.integer('No of Views'),
         'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
+        'website_size_x': fields.integer('Size X'),
+        'website_size_y': fields.integer('Size Y'),
+        'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website"),
     }
+
+    def get_sequence(self, cr, uid, domain=[], order=None, context=None):
+        order = 'website_sequence DESC' if order == 'DESC' else 'website_sequence'
+        blogpost = [blogpost for blogpost in self.search_read(cr, uid, domain, ['website_sequence'], limit=1, order=order, context=context)]
+        return blogpost and blogpost[0] or {'website_sequence': 0}
 
     _defaults = {
         'name': _('Blog Post Title'),
         'subtitle': _('Subtitle'),
         'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
+        'website_size_x': 1,
+        'website_size_y': 1,
+        'website_sequence': lambda self, cr, uid, ctx=None: self.get_sequence(cr, uid, order='DESC', context=ctx)['website_sequence'] + 1
     }
+
+    def set_sequence_top(self, cr, uid, ids, context=None):
+        max_sequence = self.get_sequence(cr, uid, order='DESC', context=context)
+        return self.write(cr, uid, ids, {"website_sequence": max_sequence['website_sequence'] + 1}, context=context)
+
+    def set_sequence_bottom(self, cr, uid, ids, context=None):
+        min_sequence = self.get_sequence(cr, uid, context=context)
+        return self.write(cr, uid, ids, {"website_sequence": min_sequence['website_sequence'] - 1}, context=context)
+
+    def set_sequence_up(self, cr, uid, ids, context=None):
+        blog_post = self.browse(cr, uid, ids, context=context)
+        domain = [('website_sequence', '>', blog_post.website_sequence), ('website_published', '=', blog_post.website_published)]
+        prev = self.get_sequence(cr, uid, domain=domain, context=context)
+        if prev['website_sequence']:
+            self.write(cr, uid, [prev['id']], {"website_sequence": blog_post.website_sequence}, context=context)
+            return self.write(cr, uid, ids, {"website_sequence": prev['website_sequence']}, context=context)
+        else:
+            return self.set_sequence_top(cr, uid, ids, context=context)
+
+    def set_sequence_down(self, cr, uid, ids, context=None):
+        blog_post = self.browse(cr, uid, ids, context=context)
+        domain = [('website_sequence', '<', blog_post.website_sequence), ('website_published', '=', blog_post.website_published)]
+        next = self.get_sequence(cr, uid, domain=domain, order='DESC', context=context)
+        if next['website_sequence']:
+            self.write(cr, uid, [next['id']], {"website_sequence": blog_post.website_sequence}, context=context)
+            return self.write(cr, uid, ids, {"website_sequence": next['website_sequence']}, context=context)
+        else:
+            return self.set_sequence_bottom(cr, uid, ids, context=context)
+
+    def _get_share_url(self, cr, uid, ids, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            share_url = "%s/blog/%s/post/%s" % (base_url, slug(blog_post.blog_id), slug(blog_post))
+        return share_url
 
     def html_tag_nodes(self, html, attribute=None, tags=None, context=None):
         """ Processing of html content to tag paragraphs and set them an unique
