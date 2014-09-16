@@ -34,7 +34,7 @@
                             self.$el.find("#last_divider").remove();
                             if(!result){
                                 self.$el.find(".version_menu").append('<li class="divider" id="last_divider"> </li>');
-                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish">Publish</a></li>');
+                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish" t-att-data-view_id='+view_id+'>Publish</a></li>');
                                 
                             }
                         });
