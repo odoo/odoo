@@ -16,12 +16,11 @@
             <field name="arch" type="xml">
                 <form string="Website Alias">
                     <sheet>
-                        <div class="oe_button_box pull-right" name="buttons">
+                        <div class="oe_button_box pull-right">
                             <button type="object" name="action_visit_page"
-                                string="Visit Page"/>
-                            <button type="object" name="action_view_statistics"
-                                string="Clicks">
-                                <field name="count" widget="percentpie"/>
+                                string="Visit Page" class="oe_stat_button"/>
+                            <button type="object" class="oe_stat_button" name="action_view_statistics">
+                                <field name="count" string="Clicks" widget="percentpie"/>
                             </button>
                         </div>
                         <group>
@@ -31,6 +30,33 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+
+
+        <record id="view_website_alias_form_stats" model="ir.ui.view">
+            <field name="name">website.alias.my.form</field>
+            <field name="model">website.alias</field>
+            <field name="arch" type="xml">
+                <form string="Website Alias Graph">
+                    <sheet>
+                        <field name="alias_clicks">
+                            <graph>
+                                <field name="alias_id"/>
+                                <field name="ip"/>
+                                <field name="country_id"/>
+                            </graph>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_website_alias_stats">
+            <field name="name">website.alias.form.graph.action</field>
+            <field name="res_model">website.alias</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_website_alias_form_stats"/>
         </record>
 
         <record id="view_website_alias_tree" model="ir.ui.view">

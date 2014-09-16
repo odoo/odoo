@@ -17,9 +17,11 @@ class website_alias(models.Model):
 
     url = fields.Char(string='Full URL', required=True)
     code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
-    count = fields.Integer(string='Number of Clicks', compute='_count_url')
+    count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
+    alias_clicks = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
 
     @api.one
+    @api.depends('alias_clicks.id')
     def _count_url(self):
         click_obj = self.env['website.alias.click']
         self.count = click_obj.search_count([('alias_id', '=', self.id)])
@@ -45,7 +47,6 @@ class website_alias(models.Model):
 
     @api.multi
     def action_view_statistics(self):
-        print("The view is called!!!!!!!!!!!!!!!!")
         action = self.env['ir.actions.act_window'].for_xml_id('website_url', 'action_view_click_statistics')
         action['domain'] = [('alias_id', '=', self.id)]
         return action

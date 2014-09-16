@@ -1,0 +1,17 @@
+{
+  "name": "<%= name %>",
+  "description": "<%= description %>",
+  "version": "<%= version %>",
+  "main": ["./dist/ZeroClipboard.js", "./dist/ZeroClipboard.swf"],
+  "keywords": <%= JSON.stringify(keywords) %>,
+  "license": "<%= licenses[0].url %>",
+  "authors": <%= JSON.stringify(contributors) %>,
+  "homepage": "<%= homepage %>",
+  "repository": <%= JSON.stringify(repository) %>,
+  "location": "<%= repository.url.replace(/^https:\/\//, "git://") %>",
+  "ignore": [
+    "*",
+    "!/bower.json",
+    "!/dist/**"
+  ]
+}

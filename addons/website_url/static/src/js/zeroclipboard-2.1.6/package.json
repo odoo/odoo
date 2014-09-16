@@ -1,0 +1,83 @@
+{
+  "name": "zeroclipboard",
+  "title": "ZeroClipboard",
+  "version": "2.1.6",
+  "description": "The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.",
+  "keywords": [
+    "flash",
+    "clipboard",
+    "copy",
+    "cut",
+    "paste",
+    "zclip",
+    "clip",
+    "clippy"
+  ],
+  "homepage": "http://zeroclipboard.org/",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/zeroclipboard/zeroclipboard/blob/master/LICENSE"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Jon Rohan",
+      "url": "http://jonrohan.me/"
+    },
+    {
+      "name": "James M. Greene",
+      "email": "james.m.greene@gmail.com",
+      "url": "http://jamesgreene.net/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeroclipboard/zeroclipboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeroclipboard/zeroclipboard/issues"
+  },
+  "dependencies": {
+    "send": "0"
+  },
+  "devDependencies": {
+    "flex-sdk": "~4.6.0-0",
+    "flexpmd": "^1.3.0-1",
+    "grunt": "^0.4.5",
+    "grunt-chmod": "^1.0.3",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-coveralls": "^0.3.0",
+    "grunt-flexpmd": "^0.1.2",
+    "grunt-mxmlc": "^0.5.1",
+    "grunt-qunit-istanbul": "^0.4.5",
+    "grunt-template": "^0.2.3",
+    "jquery": "^2.1.1",
+    "load-grunt-tasks": "^0.6.0",
+    "qunit-composite": "^1.0.1",
+    "qunitjs": "^1.14.0",
+    "spm": "^3.0.1"
+  },
+  "main": "./dist/ZeroClipboard.js",
+  "component": {
+    "scripts": {
+      "zeroclipboard": "./dist/ZeroClipboard.js"
+    }
+  },
+  "spm": {
+    "main": "dist/ZeroClipboard.js",
+    "output": [
+      "dist/ZeroClipboard.swf",
+      "dist/ZeroClipboard.Core.js"
+    ]
+  },
+  "scripts": {
+    "test": "grunt travis --verbose",
+    "postpublish": "spm publish"
+  }
+}

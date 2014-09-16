@@ -4,6 +4,7 @@
 
         <template id="assets_website_url">
             <script type="text/javascript" src="/website_url/static/src/js/website_url.js"/>
+            <script type="text/javascript" src="/website_url/static/src/js/zeroclipboard-2.1.6/dist/ZeroClipboard.min.js"/>
         </template>
 
         <template id="create_shorten_url">
@@ -13,7 +14,7 @@
                         <h3>
                             <input id="url" type="text" size="50" required="True" placeholder="Enter the URL to shorten"/>
                         </h3>
-                        <button class="btn btn-primary" id="btn_shorten_url">Shorten</button>
+                        <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Shorten</button>
                     </div>
                 </div>
             </div>

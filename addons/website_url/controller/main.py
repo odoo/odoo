@@ -28,6 +28,6 @@ class Website_Url(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         # JSH Todo: Find way to redirect user. to statistics of the
         # perticular url code
-        action_id = request.registry['ir.actions.act_window'].for_xml_id(cr, uid, 'website_url', 'action_view_click_statistics', context=context)['id']
+        action_id = request.registry['ir.actions.act_window'].for_xml_id(cr, uid, 'website_url', 'action_website_alias_stats', context=context)['id']
         return werkzeug.utils.redirect("/web#view_type=graph&model=website.alias.click&action=%d" % (action_id), 302)
 

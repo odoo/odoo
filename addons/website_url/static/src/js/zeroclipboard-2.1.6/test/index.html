@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ZeroClipboard unit tests</title>
+  <link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css">
+  <link rel="stylesheet" href="../node_modules/qunit-composite/qunit-composite.css">
+  <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+  <script src="../node_modules/qunit-composite/qunit-composite.js"></script>
+  <script>
+    (function() {
+      var queryParams = "?noglobals=true";
+      QUnit.testSuites([
+        "shared/private.tests.js.html" + queryParams,
+        "core/private.tests.js.html" + queryParams,
+        "core/api.tests.js.html" + queryParams,
+        "client/private.tests.js.html" + queryParams,
+        "client/api.tests.js.html" + queryParams,
+        "built/ZeroClipboard.Core.tests.js.html" + queryParams,
+        "built/ZeroClipboard.tests.js.html" + queryParams
+      ]);
+    })();
+  </script>
+</head>
+<body>
+  <div id="qunit"></div>
+</body>
+</html>
