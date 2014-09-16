@@ -2214,16 +2214,24 @@ class stock_move(osv.osv):
         return count
 
     def setlast_tracking(self, cr, uid, ids, context=None):
-        tracking_obj = self.pool.get('stock.tracking')
-        picking = self.browse(cr, uid, ids, context=context)[0].picking_id
-        if picking:
-            last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
-            if not last_track:
-                last_track = tracking_obj.create(cr, uid, {}, context=context)
+        assert len(ids) == 1, "1 ID expected, got %s" % (ids, )
+        tracking_obj = self.pool['stock.tracking']
+        move = self.browse(cr, uid, ids[0], context=context)
+        picking_id = move.picking_id.id
+        if picking_id:
+            move_ids = self.search(cr, uid, [
+                ('picking_id', '=', picking_id),
+                ('tracking_id', '!=', False)
+                ], limit=1, order='tracking_id DESC', context=context)
+            if move_ids:
+                tracking_move = self.browse(cr, uid, move_ids[0],
+                                            context=context)
+                tracking_id = tracking_move.tracking_id.id
             else:
-                last_track.sort()
-                last_track = last_track[-1]
-            self.write(cr, uid, ids, {'tracking_id': last_track})
+                tracking_id = tracking_obj.create(cr, uid, {}, context=context)
+            self.write(cr, uid, move.id,
+                       {'tracking_id': tracking_id},
+                       context=context)
         return True
 
     #
