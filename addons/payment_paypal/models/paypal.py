@@ -14,6 +14,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -99,7 +100,7 @@ class AcquirerPaypal(osv.Model):
         return fees
 
     def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
 
         paypal_tx_values = dict(tx_values)
