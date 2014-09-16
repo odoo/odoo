@@ -265,14 +265,15 @@ class QWeb(orm.AbstractModel):
                 for attribute in self._render_att:
                     if attribute_name[2:].startswith(attribute):
                         att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                        generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
+                        if val:
+                            generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
                     if attribute_name[2:] in self._render_tag:
                         t_render = attribute_name[2:]
                     template_attributes[attribute_name[2:]] = attribute_value
             else:
-                generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
+                generated_attributes += self.render_attribute(element, attribute_name, attribute_value, qwebcontext)
 
         if 'debug' in template_attributes:
             debugger = template_attributes.get('debug', 'pdb')
@@ -327,6 +328,9 @@ class QWeb(orm.AbstractModel):
             )
         else:
             return "<%s%s/>" % (name, generated_attributes)
+
+    def render_attribute(self, element, name, value, qwebcontext):
+        return ' %s="%s"' % (name, escape(value))
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
@@ -1030,6 +1034,7 @@ class AssetsBundle(object):
 
         context = self.context.copy()
         context['inherit_branding'] = False
+        context['rendering_bundle'] = True
         self.html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
         self.parse()
 
@@ -1082,10 +1087,13 @@ class AssetsBundle(object):
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
         else:
+            url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                response.append('<link href="/web/css/%s/%s" rel="stylesheet"/>' % (self.xmlid, self.version))
+                href = '/web/css/%s/%s' % (self.xmlid, self.version)
+                response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
-                response.append('<script type="text/javascript" src="/web/js/%s/%s"></script>' % (self.xmlid, self.version))
+                src = '/web/js/%s/%s' % (self.xmlid, self.version)
+                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
         response.extend(self.remains)
         return sep + sep.join(response)
 

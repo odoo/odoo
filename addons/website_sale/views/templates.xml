@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
 
@@ -76,7 +77,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image{{'' if product_image_big else '/300x300' }}"/>
+          <img itemprop="image" class="img img-responsive" t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')"/>
       </a>
   </div>
   <section>
@@ -345,7 +346,6 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -374,7 +374,7 @@
         <section t-attf-class="container oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
-                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
+                <span itemprop="image" class="agr" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
             </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
@@ -603,7 +603,7 @@
                 <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                            <img class="media-object pull-left oe_msg_avatar" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
@@ -633,7 +633,7 @@
                 </ul>
                 <div class="css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>
@@ -649,7 +649,6 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -837,7 +836,6 @@
 
 <template id="checkout">
   <t t-call="website.layout">
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -1014,7 +1012,6 @@
 
 <template id="payment">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1133,7 +1130,6 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">

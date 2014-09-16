@@ -8,8 +8,6 @@ import xml.etree.ElementTree as ET
 import logging
 import re
 
-from sys import maxint
-
 import werkzeug.utils
 import urllib2
 import werkzeug.wrappers
@@ -17,7 +15,8 @@ from PIL import Image
 
 import openerp
 from openerp.addons.web import http
-from openerp.http import request, Response
+from openerp.http import request, STATIC_CACHE
+from openerp.tools import image_save_for_web
 
 logger = logging.getLogger(__name__)
 
@@ -316,7 +315,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return True
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload=None, url=None):
+    def attach(self, func, upload=None, url=None, disable_optimization=None):
         Attachments = request.registry['ir.attachment']
 
         website_url = message = None
@@ -338,6 +337,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     raise ValueError(
                         u"Image size excessive, uploaded images must be smaller "
                         u"than 42 million pixel")
+
+                if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                    image_data = image_save_for_web(image)
 
                 attachment_id = Attachments.create(request.cr, request.uid, {
                     'name': upload.filename,
@@ -397,8 +399,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route([
         '/website/image',
-        '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
+        '/website/image/<model>-<id>-<field>',
+        '/website/image/<model>-<id>-<field>-<int:max_width>x<int:max_height>'
         ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
@@ -416,9 +418,12 @@ class Website(openerp.addons.web.controllers.main.Home):
         all cases.
         """
         try:
+            idsha = id.split('_')
+            id = idsha[0]
             response = werkzeug.wrappers.Response()
             return request.registry['website']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height)
+                request.cr, request.uid, model, id, field, response, max_width, max_height,
+                cache=STATIC_CACHE if len(idsha) > 1 else None)
         except Exception:
             logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
                              field, model, id, max_width, max_height)
