@@ -587,13 +587,9 @@ class account_bank_statement_line(osv.osv):
         mv_line_pool = self.pool.get('account.move.line')
 
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
+        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid'), ('account_id.reconcile', '=', True)]
         if st_line.partner_id.id:
-            domain += [('partner_id', '=', st_line.partner_id.id),
-                '|', ('account_id.type', '=', 'receivable'),
-                ('account_id.type', '=', 'payable')]
-        else:
-            domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+            domain += [('partner_id', '=', st_line.partner_id.id)]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         if str:
