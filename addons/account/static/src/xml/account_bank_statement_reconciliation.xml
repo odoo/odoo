@@ -159,10 +159,15 @@
             <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
             <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
-            <tr><td>Amount</td>
-                <td><t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
-                    <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+            <t t-if="line.is_partially_reconciled">
+                <tr><td>Total</td><td>
+                    <t t-esc="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t>
                 </td></tr>
+            </t>
+            <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
+                <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
+                <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+            </td></tr>
         </table>
     </t>
 
