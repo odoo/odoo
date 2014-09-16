@@ -75,7 +75,8 @@ class AcquirerPaypal(osv.Model):
                 else:
                     paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
                     self.create(cr, uid, {
-                        'name': 'paypal',
+                        'name': 'Paypal',
+                        'provider': 'paypal',
                         'paypal_email_account': company_paypal_account,
                         'view_template_id': paypal_view.id,
                     }, context=context)
