@@ -75,7 +75,9 @@
                                 <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
                                 <td class="cell_account_code"><t t-esc="line.account_code"/></td>
                                 <td class="cell_due_date"><t t-esc="line.date"/></td>
-                                <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
+                                <td class="cell_label">
+                                    <t t-if="line.name" t-esc="line.name"/>
+                                    <t t-if="line.ref"> : <t t-esc="line.ref" /></t>
                                     <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
                                 <td class="cell_debit"><t t-if="line.amount &gt; 0">
                                       <t t-esc="line.amount_str"/></t></td>

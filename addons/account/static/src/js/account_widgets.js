@@ -711,7 +711,6 @@ openerp.account = function (instance) {
             return self.model_bank_statement_line
                 .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids, self.do_load_reconciliation_proposition])
                 .then(function (data) {
-                    console.log(data);
                     self.st_line = data[0].st_line;
                     self.decorateStatementLine(self.st_line);
                     self.partner_id = data[0].st_line.partner_id;
