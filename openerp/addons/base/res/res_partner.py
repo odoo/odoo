@@ -203,7 +203,7 @@ class res_partner(osv.osv, format_address):
         for all commercial fields (see :py:meth:`~_commercial_fields`) """
         result = dict.fromkeys(ids, False)
         for partner in self.browse(cr, uid, ids, context=context):
-            current_partner = partner 
+            current_partner = partner
             while not current_partner.is_company and current_partner.parent_id:
                 current_partner = current_partner.parent_id
             result[partner.id] = current_partner.id
@@ -218,7 +218,7 @@ class res_partner(osv.osv, format_address):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
-        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override    
+        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
@@ -481,7 +481,7 @@ class res_partner(osv.osv, format_address):
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
-            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
+            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if partner.parent_id and partner.use_parent_address:
                 onchange_vals = self.onchange_address(cr, uid, [partner.id],
                                                       use_parent_address=partner.use_parent_address,
@@ -489,7 +489,7 @@ class res_partner(osv.osv, format_address):
                                                       context=context).get('value', {})
                 partner.update_address(onchange_vals)
 
-        # 2. To DOWNSTREAM: sync children 
+        # 2. To DOWNSTREAM: sync children
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
             if partner.commercial_partner_id == partner:
@@ -746,7 +746,7 @@ class res_partner(osv.osv, format_address):
         # default to type 'default' or the partner itself
         default = result.get('default', partner.id)
         for adr_type in adr_pref:
-            result[adr_type] = result.get(adr_type) or default 
+            result[adr_type] = result.get(adr_type) or default
         return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
