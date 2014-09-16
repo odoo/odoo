@@ -2155,7 +2155,8 @@ instance.web.list.columns = new instance.web.Registry({
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
     'field.reference': 'instance.web.list.Reference',
-    'field.many2many': 'instance.web.list.Many2Many'
+    'field.many2many': 'instance.web.list.Many2Many',
+    'span': 'instance.web.list.Span'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2392,6 +2393,27 @@ instance.web.list.Reference = instance.web.list.Column.extend({
             }
         }
         return this._super(row_data, options);
+    }
+});
+instance.web.list.Span = instance.web.list.Column.extend({
+    /**
+     * Return an actual ``<span>`` tag
+     */
+    format: function (row_data, options) {
+        options = options || {};
+        var attrs = {};
+        if (options.process_modifiers !== false) {
+            attrs = this.modifiers_for(row_data);
+        }
+        if (attrs.invisible) { return ''; }
+        var template = 'ListView.row.span';
+        return QWeb.render(template, {
+            widget: this,
+            prefix: instance.session.prefix,
+            disabled: attrs.readonly
+                || isNaN(row_data.id.value)
+                || instance.web.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
+        });
     }
 });
 })();

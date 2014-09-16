@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_print_docsaway_config_settings" model="ir.ui.view">
+            <field name="name">print_docsaway_settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <div name="print_docsaway" position="inside">
+                    <div attrs="{'invisible':[('module_print_docsaway','=',False)]}">
+                        <p>
+                            To use DocsAway, an account is required. To do that:
+                        </p>
+                        <ul>
+                            <li>Go to this URL:
+                                <a href="https://www.docsaway.com/index_m.php" target="_blank">https://www.docsaway.com/index_m.php</a>.
+                            </li>
+                            <li>Create a new account</li>
+                            <ul>
+                                <li>Go under Account -> Open An Account</li>
+                                <li>Fill the form</li>
+                                <li>Follow the instructions to open your account</li>
+                            </ul>
+                            <li>Once logged in, go to Login -> My Account -> General -> Preferences</li>
+                            <li>Find the area called "Installation Key"</li>
+                            <li>Copy the <strong>Email</strong> and <strong>Installation Key</strong> here:
+                                <ul>
+                                    <li>Email: <field name="email" class="oe_inline"/></li>
+                                    <li>Installation Key: <field name="installation_key" class="oe_inline"/></li>
+                                </ul>
+                            </li>
+                            <li>From the same screen, you can define if you allow DocsAway to print their branding on the coversheet of your documents (can decrease the price)</li>
+                            <li>To add funds to your account, go under General -> Add Funds</li>
+                            <li>If you prefer first testing Docsaway (freely) to see if it work (but without actually sending anything, you can just verify DocsAway well received the mail in History -> Test Transactions), select the Test Mode below. When you want to use it in production, select the Production Mode.
+                                <ul>
+                                    <li>Mode: <field name="mode" class="oe_inline"/></li>
+                                    <li>Ink: <field name="ink" class="oe_inline"/></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</openerp>

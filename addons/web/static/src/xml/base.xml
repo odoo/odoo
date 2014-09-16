@@ -103,7 +103,7 @@
                     <tr>
                         <td><label for="db_name">Select a database name:</label></td>
                         <td>
-                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/> 
+                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/>
                         </td>
                     </tr>
                     <tr>
@@ -715,8 +715,8 @@
             </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}"><div>
-                    <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button' and column.tag !== 'span') ? 'oe_sortable' : null)}"><div>
+                    <t t-if="column.tag !== 'button' and column.tag !== 'span'"><t t-esc="column.string"/></t>
                 </div></th>
             </t>
             <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
@@ -788,6 +788,10 @@
         </span>
     </t>
 </t>
+<span t-name="ListView.row.span"
+        t-att-title="widget.title"
+        t-att-class="widget.class"
+        ><t t-esc="widget.string"/></span>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
