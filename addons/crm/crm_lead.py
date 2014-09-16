@@ -354,6 +354,11 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'mobile' : partner.mobile,
                 'fax' : partner.fax,
                 'zip': partner.zip,
+                'function': partner.function or False,
+                'title': partner.title and partner.title.id or False,
+                'opt_out': partner.opt_out or False,
+                'section_id': partner.section_id and partner.section_id.id or False,
+                              
             }
         return {'value' : values}
 
