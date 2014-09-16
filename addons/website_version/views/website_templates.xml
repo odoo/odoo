@@ -16,6 +16,11 @@
                             <li class="divider"> </li>
                             <li><a href="#" data-action="create_snapshot">Create a new snapshot</a></li>
                             <li class="divider"> </li>
+                            <t t-if="website.get_current_snapshot(context=context)[0] != 0">
+                                <li><a href="#" data-action="publish_version" 
+                                    t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">Publish this version</a></li>
+                                <li class="divider"> </li>
+                            </t>
                             <li class="dropdown-header" style="text-transform: uppercase;">All snapshots</li>
                             <li class="divider" id="last_divider"> </li>
                         </ul>
