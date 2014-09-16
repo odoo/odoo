@@ -283,12 +283,79 @@ openerp.account = function (instance) {
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                $.each(self.getChildren(), function(i, o){
-                    if (o.is_valid && o.persistAndDestroy()) {
-                        self.lines_reconciled_with_ctrl_enter++;
-                    }
-                });
+                self.persistReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
             }
+        },
+
+        persistReconciliations: function(reconciliations) {
+            if (reconciliations.length === 0) return;
+            var self = this;
+            // Prepare data
+            var data = [];
+            for (var i=0; i<reconciliations.length; i++) {
+                var child = reconciliations[i];
+                data.push([child.st_line_id, child.makeMoveLineDicts()]);
+            }
+            var deferred_animation = self.$(".reconciliation_lines_container").fadeOut(self.aestetic_animation_speed);
+            deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [data]);
+            return $.when(deferred_animation, deferred_rpc)
+                .done(function() {
+                    // Remove children
+                    for (var i=0; i<reconciliations.length; i++) {
+                        var child = reconciliations[i];
+                        self.unexcludeMoveLines(child, child.partner_id, child.get("mv_lines_selected"));
+                        $.each(child.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
+                        child.destroy();
+                    }
+                    // Update interface
+                    self.lines_reconciled_with_ctrl_enter += reconciliations.length;
+                    self.reconciled_lines += reconciliations.length;
+                    self.updateProgressbar();
+                    self.doReloadMenuReconciliation();
+
+                    // Display new line if there are left
+                    if (self.last_displayed_reconciliation_index < self.st_lines.length) {
+                        var begin = self.last_displayed_reconciliation_index;
+                        var end = Math.min((begin+self.max_reconciliations_displayed), self.st_lines.length);
+                        var reconciliations_to_show = self.st_lines.slice(begin, end);
+
+                        return self.model_bank_statement_line
+                            .call("get_data_for_reconciliations", [reconciliations_to_show])
+                            .then(function (data) {
+                                var child_promises = [];
+                                var datum;
+                                while ((datum = data.shift()) !== undefined) {
+                                    var context = {
+                                        st_line_id: datum.st_line.id,
+                                        mode: 'inactive',
+                                        animate_entrance: false,
+                                        initial_data_provided: true,
+                                        st_line: datum.st_line,
+                                        reconciliation_proposition: datum.reconciliation_proposition,
+                                    };
+                                    var widget = new instance.web.account.bankStatementReconciliationLine(self, context);
+                                    child_promises.push(widget.appendTo(self.$(".reconciliation_lines_container")));
+                                }
+                                self.last_displayed_reconciliation_index += reconciliations_to_show.length;
+                                return $.when.apply($, child_promises).then(function() {
+                                    // Put the first line in match mode
+                                    if (self.reconciled_lines !== self.st_lines.length) {
+                                        var first_child = self.getChildren()[0];
+                                        if (first_child.get("mode") === "inactive") {
+                                            first_child.set("mode", "match");
+                                        }
+                                    }
+                                    self.$(".reconciliation_lines_container").fadeIn(self.aestetic_animation_speed);
+                                });
+                            });
+                    }
+                    // Congratulate the user if the work is done
+                    if (self.reconciled_lines === self.st_lines.length) {
+                        self.displayDoneMessage();
+                    }
+                }).fail(function() {
+                    self.$(".reconciliation_lines_container").fadeIn(self.aestetic_animation_speed);
+                });
         },
 
         // Adds move line ids to the list of move lines not to fetch for a given partner
@@ -644,6 +711,7 @@ openerp.account = function (instance) {
             return self.model_bank_statement_line
                 .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids, self.do_load_reconciliation_proposition])
                 .then(function (data) {
+                    console.log(data);
                     self.st_line = data[0].st_line;
                     self.decorateStatementLine(self.st_line);
                     self.partner_id = data[0].st_line.partner_id;
@@ -1542,6 +1610,7 @@ openerp.account = function (instance) {
                 .call("write", [[self.st_line_id], {'partner_id': partner_id}])
                 .then(function () {
                     self.do_load_reconciliation_proposition = false; // of the server might set the statement line's partner
+                    self.animation_speed = 0;
                     return $.when(self.restart(self.get("mode"))).then(function(){
                         self.do_load_reconciliation_proposition = true;
                         self.is_consistent = true;
@@ -1589,6 +1658,15 @@ openerp.account = function (instance) {
     
             return dict;
         },
+
+        makeMoveLineDicts: function() {
+            var self = this;
+            var mv_line_dicts = [];
+            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
+            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
+            if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
+            return mv_line_dicts;
+        },
     
         // Persist data, notify parent view and terminate widget
         persistAndDestroy: function(speed) {
@@ -1608,7 +1686,8 @@ openerp.account = function (instance) {
             var deferred_animation = self.$el.parent().slideUp(speed*height/150);
     
             // RPC
-            return $.when(self.makeRPCForPersisting())
+            return self.model_bank_statement_line
+                .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
                 .then(function () {
                     $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                     return $.when(deferred_animation).then(function(){
@@ -1623,16 +1702,6 @@ openerp.account = function (instance) {
                         self.$el.unwrap();
                     });
                 });
-        },
-
-        makeRPCForPersisting: function() {
-            var self = this;
-            var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
-            if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
-            return self.model_bank_statement_line
-                .call("process_reconciliation", [self.st_line_id, mv_line_dicts]);
         },
     });
 
