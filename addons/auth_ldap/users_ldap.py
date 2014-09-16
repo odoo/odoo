@@ -243,21 +243,6 @@ class res_company(osv.osv):
 
 class users(osv.osv):
     _inherit = "res.users"
-    def login(self, db, login, password):
-        user_id = super(users, self).login(db, login, password)
-        if user_id:
-            return user_id
-        registry = RegistryManager.get(db)
-        with registry.cursor() as cr:
-            ldap_obj = registry.get('res.company.ldap')
-            for conf in ldap_obj.get_ldap_dicts(cr):
-                entry = ldap_obj.authenticate(conf, login, password)
-                if entry:
-                    user_id = ldap_obj.get_or_create_user(
-                        cr, SUPERUSER_ID, conf, login, entry)
-                    if user_id:
-                        break
-            return user_id
 
     def check_credentials(self, cr, uid, password):
         try:
