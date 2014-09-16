@@ -723,7 +723,7 @@ class task(base_stage, osv.osv):
         if default is None:
             default = {}
         default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
+        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False, 'progress' : 0, 'stage_id' : 1 })
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
