@@ -178,7 +178,7 @@ class hr_holidays(osv.osv):
             \nThe status is \'Approved\', when holiday request is approved by manager.'),
         'payslip_status': fields.boolean(string='Payslip Status',
             help='Check this field when the leave has been taken into account in the payslip.'),
-        'report_note': fields.text('Comment by Manager'),
+        'report_note': fields.text('HR Comments'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True, copy=False),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, copy=False),
@@ -459,11 +459,9 @@ class hr_holidays(osv.osv):
         return True
 
     def set_payslip_status(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'payslip_status': True}, context=context)
-
-    def unset_payslip_status(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'payslip_status': False}, context=context)
-
+        holidays_obj = self.browse(cr, uid, ids, context=context)[0]
+        status = False if holidays_obj['payslip_status'] else True
+        return self.write(cr, uid, ids, {'payslip_status': status}, context=context)
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"
