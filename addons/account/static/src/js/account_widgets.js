@@ -526,7 +526,7 @@ openerp.account = function (instance) {
         className: 'oe_bank_statement_reconciliation_line',
     
         events: {
-            "click .remove_partner": "removePartnerClickHandler",
+            "click .change_partner": "changePartnerClickHandler",
             "click .button_ok": "persistAndDestroy",
             "click .mv_line": "moveLineClickHandler",
             "click .initial_line": "initialLineClickHandler",
@@ -857,7 +857,7 @@ openerp.account = function (instance) {
             self.change_partner_field.on("change:value", self.change_partner_field, function() {
                 self.changePartner(this.get_value());
             });
-            self.change_partner_field.$el.find("input").attr("placeholder", _t("Select Partner"));
+            self.change_partner_field.$el.find("input").attr("placeholder", self.st_line.communication_partner_name || _t("Select Partner"));
     
             field_manager.do_show();
         },
@@ -1097,13 +1097,12 @@ openerp.account = function (instance) {
             }
         },
     
-        removePartnerClickHandler: function() {
+        changePartnerClickHandler: function() {
             var self = this;
-            // Delete statement line's partner
-            return self.changePartner('', function() {
-                self.$(".partner_name").hide();
-                self.$(".change_partner_container").show();
-            });
+            self.$(".change_partner_container").find("input").attr("placeholder", self.st_line.partner_name);
+            self.$(".change_partner_container").show();
+            self.$(".partner_name").hide();
+            self.change_partner_field.$drop_down.trigger("click");
         },
     
     

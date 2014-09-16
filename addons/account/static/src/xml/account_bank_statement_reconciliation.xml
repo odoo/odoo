@@ -66,7 +66,7 @@
                             <button class="button_ok"></button>
                             <span t-if="! line.has_no_partner" class="partner_name">
                                 <t t-esc="line.partner_name"/>
-                                <span class="remove_partner"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="change_partner glyphicon glyphicon-pencil"></span>
                             </span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
@@ -148,7 +148,7 @@
         </tr>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i></t>
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="Click to register a partial payment and keep the invoice open. Otherwise it does a full reconciliation."></i></t>
 
     <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 

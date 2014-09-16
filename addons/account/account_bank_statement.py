@@ -496,6 +496,7 @@ class account_bank_statement_line(osv.osv):
             'account_code': st_line.journal_id.default_debit_account_id.code,
             'account_name': st_line.journal_id.default_debit_account_id.name,
             'partner_name': st_line.partner_id.name,
+            'communication_partner_name': st_line.partner_name,
             'amount_currency_str': amount_currency_str, # Amount in the statement currency
             'has_no_partner': not st_line.partner_id.id,
         }
