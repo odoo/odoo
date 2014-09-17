@@ -109,6 +109,33 @@ $(document).ready(function () {
             return true;
         });
 
+        $('.close_introduction_message').on('click', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            openerp.jsonRpc("/forum/remove_introduction_message", 'call', {})
+            return true;
+        });
+
+        $('.link_url').on('change', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            if ($link.attr("value").search("^http(s?)://.*")) {
+                var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
+                    '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                    'Please enter valid URl.'+
+                    '</div>');
+                $link.parent().append($warning);
+                $link.parent().find("button#btn_post_your_article")[0].disabled = true;
+                $link.parent().find("input[name='content']")[0].value = '';
+            } else {
+                openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.attr("value")}).then(function (data) {
+                    $link.parent().find("input[name='content']")[0].value = data;
+                    $('button').prop('disabled', false);
+                    $('input').prop('readonly', false);
+                });
+            }
+        });
+
         if($('input.load_tags').length){
             var tags = $("input.load_tags").val();
             $("input.load_tags").val("");
@@ -174,8 +201,11 @@ $(document).ready(function () {
         }
 
         if ($('textarea.load_editor').length) {
-            var editor = CKEDITOR.instances['content'];
-            editor.on('instanceReady', CKEDITORLoadComplete);
+            $('textarea.load_editor').each(function () {
+                if (this['id']) {
+                    CKEDITOR.replace(this['id']).on('instanceReady', CKEDITORLoadComplete);
+                }
+            });
         }
     }
 });

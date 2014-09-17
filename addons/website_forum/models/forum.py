@@ -26,6 +26,9 @@ class Forum(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
         'description': fields.html('Description'),
+        'introduction_message': fields.html('Introduction Message'),
+        'relevancy_option_first': fields.float('First Relevancy Parameter'),
+        'relevancy_option_second': fields.float('Second Relevancy Parameter'),
         # karma generation
         'karma_gen_question_new': fields.integer('Karma earned for new questions'),
         'karma_gen_question_upvote': fields.integer('Karma earned for upvoting a question'),
@@ -69,6 +72,13 @@ class Forum(osv.Model):
     _defaults = {
         'description': 'This community is for professionals and enthusiasts of our products and services.',
         'faq': _get_default_faq,
+        'introduction_message': """<h1>Welcome to Odoo Forum</h1>
+                  <p> This community is for professionals and enthusiasts of our products and services.
+                      Share and discuss the best content and new marketing ideas,
+                      build your professional profile and become a better marketer together.
+                  </p>""",
+        'relevancy_option_first': 0.8,
+        'relevancy_option_second': 1.8,
         'karma_gen_question_new': 2,
         'karma_gen_question_upvote': 5,
         'karma_gen_question_downvote': -2,
@@ -113,6 +123,14 @@ class Post(osv.Model):
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
+
+    def _get_post_relevancy(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, 0)
+        for post in self.browse(cr, uid, ids, context=context):
+            days = (datetime.today() - datetime.strptime(post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            relavency = abs(post.vote_count - 1) ** post.forum_id.relevancy_option_first / ( days + 2) ** post.forum_id.relevancy_option_second
+            res[post.id] = relavency if (post.vote_count - 1) >= 0 else -relavency
+        return res
 
     def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -220,6 +238,13 @@ class Post(osv.Model):
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
+        'type': fields.selection([('question', 'Question'), ('link', 'Article'), ('discussion', 'Discussion')], 'Type'),
+        'relevancy': fields.function(
+            _get_post_relevancy, string="Relevancy", type='float',
+            store={
+                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
+                'forum.post.vote': (_get_post_from_vote, [], 10),
+            }),
         'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
@@ -304,6 +329,7 @@ class Post(osv.Model):
         'state': 'active',
         'views': 0,
         'active': True,
+        'type': 'question',
         'vote_ids': list(),
         'favourite_ids': list(),
         'child_ids': list(),
