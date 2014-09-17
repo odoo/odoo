@@ -903,6 +903,9 @@ class Integer(Field):
     type = 'integer'
 
     def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            return value.get('id', False)
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
