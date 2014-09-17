@@ -285,6 +285,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             _logger.info("init db")
             openerp.modules.db.initialize(cr)
+            update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:

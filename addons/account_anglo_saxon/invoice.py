@@ -43,19 +43,11 @@ class account_invoice_line(osv.osv):
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id and i_line.product_id.valuation == 'real_time':
-                    if inv.type == 'out_invoice':
-                        # debit account dacc will be the output account
-                        # first check the product, if empty check the category
-                        dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-                        if not dacc:
-                            dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
-                    else:
-                        # = out_refund
-                        # debit account dacc will be the input account
-                        # first check the product, if empty check the category
-                        dacc = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
-                        if not dacc:
-                            dacc = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
+                    # debit account dacc will be the output account
+                    # first check the product, if empty check the category
+                    dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
+                    if not dacc:
+                        dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
                     # in both cases the credit account cacc will be the expense account
                     # first check the product, if empty check the category
                     cacc = i_line.product_id.property_account_expense and i_line.product_id.property_account_expense.id
@@ -97,19 +89,12 @@ class account_invoice_line(osv.osv):
                             # if not found on the product get the price difference account at the category
                             acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ and i_line.product_id.categ_id.property_account_creditor_price_difference_categ.id
                         a = None
-                        if inv.type == 'in_invoice':
-                            # oa will be the stock input account
-                            # first check the product, if empty check the category
-                            oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
-                            if not oa:
-                                oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
-                        else:
-                            # = in_refund
-                            # oa will be the stock output account
-                            # first check the product, if empty check the category
-                            oa = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-                            if not oa:
-                                oa = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
+
+                        # oa will be the stock input account
+                        # first check the product, if empty check the category
+                        oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
+                        if not oa:
+                            oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
                         if oa:
                             # get the fiscal position
                             fpos = i_line.invoice_id.fiscal_position or False
