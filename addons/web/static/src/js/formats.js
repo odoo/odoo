@@ -208,7 +208,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
     var date_pattern = instance.web.normalize_format(_t.database.parameters.date_format),
         time_pattern = instance.web.normalize_format(_t.database.parameters.time_format);
     var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
-        time_pattern_wo_zero = date_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
+        time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
     switch (value) {
         case false:
         case "":
@@ -374,6 +374,9 @@ instance.web.normalize_format = function(format){
         }
         moment_format += unformatted + (replacement ? replacement : format[directive_index]);
         format = format.substr(directive_index+1);
+    }
+    if (format.length){
+        moment_format += '['+format+']';
     }
     return moment_format;
 };
