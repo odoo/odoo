@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Quote frontend assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
+      <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
+      <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
+    </xpath>
+  </template>
+
   <template id="pricing" name="Price">
       <section data-snippet-id="title">
           <h1 class="page-header">Pricing</h1>
@@ -161,14 +170,8 @@
 
   <template id="so_quotation" name="Product Quotation">
       <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container">
+            <div class="container o_website_quote">
               <div class="row mt16">
                   <div class="col-md-3">
                       <div class="bs-sidebar">
@@ -457,13 +460,8 @@
 
   <template id="so_template" name="SO Template">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container">
+            <div class="container o_website_quote">
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">
