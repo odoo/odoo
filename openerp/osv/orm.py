@@ -4035,7 +4035,7 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    if id not in deleted_related[object]:
+                    if id not in deleted_related[model_name]:
                         todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
