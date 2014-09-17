@@ -597,6 +597,9 @@ class account_bank_statement_line(osv.osv):
             if not st_line.partner_id.id:
                 domain.insert(-1, '|', )
                 domain.append(('partner_id.name', 'ilike', str))
+            if str != '/':
+                domain.insert(-1, '|', )
+                domain.append(('name', 'ilike', str))
 
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
