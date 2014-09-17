@@ -587,7 +587,7 @@ class account_bank_statement_line(osv.osv):
         mv_line_pool = self.pool.get('account.move.line')
 
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
+        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
@@ -605,31 +605,30 @@ class account_bank_statement_line(osv.osv):
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
         reconcile_partial_ids = []
-        shift = 0
+        actual_offset = offset
         while True:
-            actual_offset = offset and offset+limit*shift or offset
-            actual_limit = limit and limit+limit*shift or limit
-            line_ids = mv_line_pool.search(cr, uid, domain, offset=actual_offset, limit=actual_limit, order="date_maturity asc, id asc", context=context)
+            line_ids = mv_line_pool.search(cr, uid, domain, offset=actual_offset, limit=limit, order="date_maturity asc, id asc", context=context)
             lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
-
-            did_filter_out_lines = False
+            make_one_more_loop = False
             for line in lines:
                 if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                    did_filter_out_lines = True
+                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
+                    #in order to get the right number of items in the pager
+                    make_one_more_loop = True
                     continue
                 filtered_lines.append(line)
                 if line.reconcile_partial_id:
                     reconcile_partial_ids.append(line.reconcile_partial_id.id)
-            
-            if not limit or not did_filter_out_lines or len(filtered_lines) >= limit:
+
+            if not limit or not make_one_more_loop or len(filtered_lines) >= limit:
                 break
-            shift += 1
+            actual_offset = actual_offset + limit
         lines = limit and filtered_lines[:limit] or filtered_lines
 
         # Either return number of lines
         if count:
             return len(lines)
-        
+
         # Or return list of dicts representing the formatted move lines
         else:
             target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
