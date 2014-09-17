@@ -685,27 +685,30 @@ class view(osv.osv):
         if 'lang' in context:
             Translations = self.pool['ir.translation']
             if node.text and node.text.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.text.strip())
+                term = node.text.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.text = node.text.replace(node.text.strip(), trans)
+                    node.text = node.text.replace(term, trans)
             if node.tail and node.tail.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.tail.strip())
+                term = node.tail.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+                    node.tail =  node.tail.replace(term, trans)
 
-            if node.get('string') and not result:
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.get('string'))
-                if trans == node.get('string') and ('base_model_name' in context):
+            if node.get('string') and node.get('string').strip() and not result:
+                term = node.get('string').strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                if trans == term and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
                     # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
+                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
                 if trans:
                     node.set('string', trans)
 
             for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
-                if attr_value:
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value)
+                if attr_value and attr_value.strip():
+                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
                     if trans:
                         node.set(attr_name, trans)
 

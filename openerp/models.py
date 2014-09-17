@@ -237,6 +237,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # transform columns into new-style fields (enables field inheritance)
+        for name, column in self._columns.iteritems():
+            if not hasattr(self, name):
+                setattr(self, name, column.to_field())
+
 
 class NewId(object):
     """ Pseudo-ids for new records. """
@@ -1679,8 +1684,9 @@ class BaseModel(object):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        for i, got_name in enumerate(self.name_get()):
-            self[i].display_name = got_name[1]
+        names = dict(self.name_get())
+        for record in self:
+            record.display_name = names.get(record.id, False)
 
     @api.multi
     def name_get(self):

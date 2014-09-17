@@ -1387,6 +1387,10 @@
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
             },
+            'click .js_disable_optimization': function () {
+                this.$('input[name="disable_optimization"]').val('1');
+                this.$('button.filepicker').click();
+            },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
             'change input.url': "change_input",

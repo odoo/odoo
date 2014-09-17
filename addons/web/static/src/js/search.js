@@ -2367,7 +2367,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             switch (ev.which) {
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
-                    if (self.get_search_string().length) {
+                    if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }
                     break;

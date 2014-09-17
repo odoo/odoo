@@ -40,6 +40,12 @@ def py2exe_datafiles():
         base = join('docutils', root[len(dudir) + 1:])
         data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
 
+    import passlib
+    pl = dirname(passlib.__file__)
+    for root, _, filenames in os.walk(pl):
+        base = join('passlib', root[len(pl) + 1:])
+        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+
     return data_files.items()
 
 
@@ -77,6 +83,7 @@ def py2exe_options():
                         'mock',
                         'openerp',
                         'openid',
+                        'passlib',
                         'PIL',
                         'poplib',
                         'psutil',

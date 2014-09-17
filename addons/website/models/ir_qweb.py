@@ -286,21 +286,17 @@ class Image(orm.AbstractModel):
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         if options is None: options = {}
-        classes = ['img', 'img-responsive'] + options.get('class', '').split()
+        aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
+        classes = ' '.join(itertools.imap(escape, aclasses))
 
-        url_frags = {
-            'classes': ' '.join(itertools.imap(escape, classes)),
-            'model': record._model._name,
-            'id': record.id,
-            'field': field_name,
-            'max_size': '',
-        }
+        max_size = None
         max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
         if max_width or max_height:
-            url_frags['max_size'] = '/%sx%s' % (max_width, max_height)
+            max_size = '%sx%s' % (max_width, max_height)
 
-        img = '<img class="%(classes)s" src="/website/image/%(model)s/%(id)s/%(field)s%(max_size)s"/>'
-        return ir_qweb.HTMLSafe(img % url_frags)
+        src = self.pool['website'].image_url(cr, uid, record, field_name, max_size)
+        img = '<img class="%s" src="%s"/>' % (classes, src)
+        return ir_qweb.HTMLSafe(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):
