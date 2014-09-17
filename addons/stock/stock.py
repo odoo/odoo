@@ -938,7 +938,8 @@ class stock_picking(osv.osv):
                 'pack_operation_ids': [],
                 'backorder_id': picking.id,
             })
-            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (picking.name), context=context)
+            backorder = self.browse(cr, uid, backorder_id, context=context)
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (backorder.name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
