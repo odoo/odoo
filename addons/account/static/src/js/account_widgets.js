@@ -234,12 +234,11 @@ openerp.account = function (instance) {
                     .call("get_data_for_reconciliations", [reconciliations_to_show])
                     .then(function (data) {
                         var child_promises = [];
-                        var datum = data.shift();
-                        child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
                         while ((datum = data.shift()) !== undefined)
                             child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
                         $.when.apply($, child_promises).then(function(){
                             self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
+                            self.getChildren()[0].set("mode", "match");
                         });
                     });
             });
