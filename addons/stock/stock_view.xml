@@ -687,18 +687,18 @@
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Operations" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
-                            <field name="pack_operation_ids">
+                            <field name="pack_operation_ids" context="{'default_picking_id': active_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="top">
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                     <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}"/>
                                 </tree>
                             </field>
                             <p class="oe_grey" groups="stock.group_tracking_lot">
