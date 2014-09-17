@@ -25,6 +25,10 @@ class Experiment(osv.Model):
             for exp_snap in exp.experiment_snapshot_ids:
                     result[exp.id] += exp_snap.ponderation
         return result
+
+    # def _read_group_state(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        
+    #     return ['draft','running','done']
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
@@ -38,4 +42,8 @@ class Experiment(osv.Model):
     _defaults = {
         'state': 'draft',
     }
+
+    # _group_by_full = {
+    #     'state': _read_group_state,
+    # }
 

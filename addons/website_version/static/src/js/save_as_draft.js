@@ -30,6 +30,7 @@
                         $('html').data('snapshot_id', result);
                         self.save();
                         location.reload();
+                        alert("You are actually working on "+name+ " version.");
                     }).fail(function(){
                         alert("This name already exists.");
                     });

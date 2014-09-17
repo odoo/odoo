@@ -53,21 +53,25 @@
             <field name="model">website_version.experiment</field> 
             <field name="arch" type="xml">
                 <form string="Experiment Form">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="website_id"/>
-                        <field name="state"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Snapshots in experiment" colspan="4" >
-                            <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
-                                <tree string="PPP" editable="bottom">    
-                                    <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
-                                    <field name="frequency" colspan="4"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,running,done" clickable="True"/>
+                    </header>
+                    <sheet string="Exp">
+                        <h1><field name="name"/></h1>
+                        <group col="4">
+                            <field name="website_id"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Snapshots in experiment" colspan="4" >
+                                <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
+                                    <tree string="PPP" editable="bottom"> 
+                                        <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                                        <field name="frequency" colspan="4"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -117,7 +121,7 @@
                         <field name="create_date" colspan="4"/>
                     </group>
                     <group colspan="4">
-                        <field name="view_ids" colspan="4"/>
+                        <field name="view_ids" widget="handle" colspan="4"/>
                     </group>
                 </form>
             </field>
