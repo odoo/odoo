@@ -776,7 +776,7 @@ class account_move_line(osv.osv):
 
             ret_line = {
                 'id': line.id,
-                'name': line.move_id.name + ' : '+ line.name if line.name != '/' else line.move_id.name,
+                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
                 'ref': line.move_id.ref,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
