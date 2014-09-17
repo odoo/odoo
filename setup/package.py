@@ -227,9 +227,9 @@ class KVMWinTestExe(KVM):
 
         self.rsync('"%s" %s@127.0.0.1:' % (setuppath, self.login))
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
-        self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"OpenERP %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
-        self.ssh('/cygdrive/c/"Program Files"/"OpenERP %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh(['/cygdrive/c/"Program Files"/"OpenERP %s"/server/openerp-server.exe -d mycompany &' % setupversion, '&'])
+        self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
+        self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
+        self.ssh(['/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany &' % setupversion, '&'])
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
