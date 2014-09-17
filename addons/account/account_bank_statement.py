@@ -594,12 +594,14 @@ class account_bank_statement_line(osv.osv):
                 ('account_id.type', '=', 'payable')]
         else:
             domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
-            if str:
-                domain += [('partner_id.name', 'ilike', str)]
         if excluded_ids:
             domain.append(('id', 'not in', excluded_ids))
         if str:
             domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+            if not st_line.partner_id.id:
+                domain.insert(-1, '|', )
+                domain.append(('partner_id.name', 'ilike', str))
+
 
         # Get move lines
         line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
