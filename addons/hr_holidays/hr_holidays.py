@@ -458,10 +458,11 @@ class hr_holidays(osv.osv):
                                 'Please verify also the leaves waiting for validation.'))
         return True
 
-    def set_payslip_status(self, cr, uid, ids, context=None):
-        holidays_obj = self.browse(cr, uid, ids, context=context)[0]
-        status = False if holidays_obj['payslip_status'] else True
-        return self.write(cr, uid, ids, {'payslip_status': status}, context=context)
+    def toggle_payslip_status(self, cr, uid, ids, context=None):
+        ids_to_set_true = self.search(cr, uid, [('id', 'in', ids), ('payslip_status', '=', False)], context=context)
+        ids_to_set_false = list(set(ids) - set(ids_to_set_true))
+        return self.write(cr, uid, ids_to_set_true, {'payslip_status': True}, context=context) and self.write(cr, uid, ids_to_set_false, {'payslip_status': False}, context=context)
+
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"

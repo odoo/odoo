@@ -158,7 +158,7 @@
                     <field name="date_to" required="1" on_change="onchange_date_to(date_to, date_from)"/>
                     <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
                     <field name="state"/>
-                    <button name="set_payslip_status" field_name="payslip_status" type="object"
+                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
                     <field name="report_note" groups="base.group_hr_manager"/>
                     <field name="payslip_status" invisible="1"/>
@@ -202,7 +202,7 @@
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
                     <field name="state"/>
-                    <button name="set_payslip_status" field_name="payslip_status" type="object"
+                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
                     <field name="report_note"/>
                     <field name="payslip_status" invisible="1"/>
@@ -225,7 +225,7 @@
                     <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="state"/>
                     <field name="payslip_status" invisible="1"/>
-                    <button name="set_payslip_status" field_name="payslip_status" type="object"
+                    <button name="toggle_payslip_status" field_name="payslip_status" type="object"
                         widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
