@@ -75,6 +75,7 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
     )
     if modules and len(modules) > 1:
+        time.sleep(1)
         toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/object' % (addr, port)).execute(
             dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
         )
@@ -102,7 +103,7 @@ def publish(o, releases):
         if release_extension == 'deb':
             temp_path = tempfile.mkdtemp(suffix='debPackages')
             system(['cp', release_path, temp_path])
-            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s/Packages.gz' % join(o.pub, 'deb'), shell=True, cwd=temp_path)
+            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s' % join(o.pub, 'deb', 'Packages.gz'), shell=True, cwd=temp_path)
             shutil.rmtree(temp_path)
 
         # Latest/symlink handler
@@ -236,7 +237,7 @@ class KVMWinTestExe(KVM):
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
         self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh(['/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe' % setupversion, '&'])
+        self.ssh('net start odoo-server-8.0')
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
