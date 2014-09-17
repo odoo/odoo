@@ -1013,18 +1013,7 @@ openerp.account = function (instance) {
                 return;
             }
 
-            // If statement line has no partner, give it the partner of the selected move line
-            if (!this.st_line.partner_id && line.partner_id) {
-                self.changePartner(line.partner_id, function() {
-                    self.selectMoveLine(mv_line);
-                });
-            } else {
-                self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
-                // $(mv_line).attr('data-selected','true');
-                // self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
-                // this.set("mv_lines", _.reject(this.get("mv_lines"), function(o){return o.id == line_id}));
-                // this.getParent().excludeMoveLines([line_id]);
-            }
+            self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
         },
 
         deselectMoveLine: function(mv_line) {
@@ -1044,11 +1033,6 @@ openerp.account = function (instance) {
             self.$el.removeClass("no_match");
             self.set("mode", "match");
             self.set("mv_lines_selected", mv_lines_selected);
-
-
-            // $(mv_line).attr('data-selected','false');
-            // this.set("mv_lines", this.get("mv_lines").concat(line));
-            // this.getParent().unexcludeMoveLines([line_id]);
         },
     
         /** Matches pagination */
