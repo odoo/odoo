@@ -5,7 +5,7 @@
         <!--  Compute Stock Minimum Rules Only -->
 
         <record id="view_procurement_compute_wizard" model="ir.ui.view">
-            <field name="name">Compute Stock Minimum Rules Only</field>
+            <field name="name">Run Stock Minimum Rules Only</field>
             <field name="model">procurement.orderpoint.compute</field>
             <field name="arch" type="xml">
                 <form string="Parameters">
@@ -21,7 +21,7 @@
             </field>
         </record>
 
-        <act_window name="Compute Stock Minimum Rules Only"
+        <act_window name="Run Stock Minimum Rules Only"
             res_model="procurement.orderpoint.compute"
             src_model="procurement.order"
             view_mode="form"

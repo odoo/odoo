@@ -26,6 +26,7 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
+from openerp import api
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv import expression
@@ -69,7 +70,7 @@ class share_wizard(osv.TransientModel):
         return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
 
     def has_share(self, cr, uid, unused_param, context=None):
-        return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
+        return self.has_group(cr, uid, module='base', group_xml_id='group_no_one', context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
@@ -82,6 +83,7 @@ class share_wizard(osv.TransientModel):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
+    @api.cr_uid_ids_context
     def share_url_template(self, cr, uid, _ids, context=None):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
@@ -103,7 +105,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = self.env.args
+        cr, uid, context = wizard.env.args
         if options is None:
             options = {}
 
@@ -639,7 +641,7 @@ class share_wizard(osv.TransientModel):
                      _('Action and Access Mode are required to create a shared access.'),
                      context=context)
         self._assert(self.has_share(cr, uid, wizard_data, context=context),
-                     _('You must be a member of the Share/User group to use the share wizard.'),
+                     _('You must be a member of the Technical group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':
             self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),

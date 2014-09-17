@@ -8,7 +8,7 @@
 
     Use INPUT type 'checkbox' or 'radio' or use OPTION in select box
     'data-xmlid' (optional) xml id of the template to add if the input is checked.
-        You can set a list of xml id separate by comma (all template is enable or 
+        You can set a list of xml id separate by comma (all template is enable or
         disable in same time)
     'data-enable' (optional) to checked one or more HTML ids, or list separate by comma
     'data-disable' (optional) to unchecked one or more HTML ids, or list separate by comma
@@ -21,10 +21,10 @@
     - all related fields are enabled for data-enable
     - all related fields are disabled for data-disable
     else unchecked
-    
+
     HTML apply classes:
     - 'checked': on the parent label when input is checked
-    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together 
+    - 'in': on the container (e.g.: bootstrap modal) after added in DOM (removed together
        out is added)
     - 'out': on the container 1 second before removed from ths DOM
     - 'loading': on the container/modal when the new css is loading
@@ -51,7 +51,7 @@
                               <label class=" center-block">
                                   <div class="text-center" style="background-image: url(/website/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
                                   <input name="layoutvar" type="radio" data-xmlid=""/>
-                              </label>                                 
+                              </label>
                           </td>
                           <td class=" text-center">
                               <label class=" center-block">
@@ -172,7 +172,7 @@
 
 <!-- Bootstrap Less File layout -->
 
-<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" optional="disabled">
+<template id="option_bootstrap_less" name="option_bootstrap_less" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[@id='bootstrap_css']" position="replace">
         <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
         <link rel="stylesheet" href='/website/static/src/less/colors.less' t-ignore="true"/>
@@ -181,7 +181,7 @@
 
 <!-- Option layout -->
 
-<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" optional="disabled">
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after">
         <link href="/website/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
     </xpath>
@@ -189,26 +189,26 @@
 
 <!-- Option color -->
 
-<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" optional="disabled">
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" optional="disabled">
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" optional="disabled">
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" optional="disabled">
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" optional="disabled">
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
-<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" optional="disabled">
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
 
-<template id="option_font" name="option_font" inherit_id="website.theme" optional="disabled">
+<template id="option_font" name="option_font" inherit_id="website.theme" active="False" customize_show="False">
     <xpath expr="//link[last()]" position="after"><link href="/website/static/src/less/option_font.less" rel="stylesheet" type="text/less"/></xpath>
 </template>
 

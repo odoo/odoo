@@ -61,7 +61,7 @@
         </record>
 
         <menuitem action="crm_lead_categ_action"
-            id="menu_crm_lead_categ" name="Sales Tags"
+            id="menu_crm_lead_categ" name="Tags"
             parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
 
         <!--
@@ -101,7 +101,7 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button class="oe_inline oe_stat_button" type="action" 
+                        <button class="oe_inline oe_stat_button" type="action"
                             context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}"
                             name="%(crm.crm_case_categ_phone_incoming0)d" icon="fa-phone">
                             <div>Calls</div>
@@ -352,7 +352,7 @@
                         <filter string="Campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Source"  domain="[]" context="{'group_by':'source_id'}"/>
                         <filter string="Channel"  domain="[]" context="{'group_by':'medium_id'}"/>
-                        <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline:week'}"/>
+                        <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                         <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
@@ -379,13 +379,13 @@
                             domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                            <button class="oe_inline oe_stat_button" type="action" 
+                        <div name="buttons" class="oe_right oe_button_box">
+                            <button class="oe_inline oe_stat_button" type="action"
                                 name="%(crm.crm_case_categ_phone_incoming0)d" icon="fa-phone"
                                 context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}">
                                 <div>Calls</div>
                             </button>
-                            <button class="oe_inline oe_stat_button" type="object" 
+                            <button class="oe_inline oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
                                 name="action_schedule_meeting" icon="fa-calendar">
                                 <field string="Meetings" name="meeting_count" widget="statinfo"/>
@@ -393,7 +393,7 @@
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
                             <label for="planned_revenue" class="oe_edit_only"/>
                             <h2>
                                 <field name="company_currency" invisible="1"/>
@@ -489,7 +489,7 @@
                         </page>
                         <page string="Fund Raising" groups="crm.group_fund_raising">
                             <group>
-                                <field name="payment_mode" widget="selection"/>
+                                <field name="payment_mode"/>
                                 <field name="planned_cost"/>
                             </group>
                         </page>
@@ -533,7 +533,6 @@
             </field>
         </record>
 
-
         <!-- Opportunities Search View -->
         <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
             <field name="name">CRM - Opportunities Search</field>
@@ -548,6 +547,8 @@
                     <field name="stage_id" domain="[]"/>
                     <field name="probability"/>
                     <separator/>
+                    <filter string="New" name="new"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
@@ -561,12 +562,17 @@
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
-                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
-                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Last Message" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Campaign" domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Expected Closing" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>

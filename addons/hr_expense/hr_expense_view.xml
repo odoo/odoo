@@ -206,7 +206,7 @@
         </record>
 
         <record id="hr_expense_product" model="ir.actions.act_window">
-            <field name="name">Expense Categories</field>
+            <field name="name">Expense Products</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -248,8 +248,8 @@
             </field>
         </record>
         
-        <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" action="action_approved_expense" sequence="101"/> 
-        <menuitem id="menu_hr_product" name="Expense Categories" parent="hr.menu_hr_configuration" action="hr_expense_product" groups="base.group_hr_manager"/>
+        <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" action="action_approved_expense" sequence="8"/> 
+        <menuitem id="menu_hr_product" name="Expense Products" parent="hr.menu_hr_configuration_expenses" action="hr_expense_product" groups="base.group_hr_manager"/>
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
         <menuitem action="action_request_approve_expense" id="menu_expense_to_approve" name="Expenses to Approve" parent="next_id_49" groups="base.group_hr_user"/>

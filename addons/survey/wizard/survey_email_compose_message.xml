@@ -47,7 +47,7 @@
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
                             <field invisible="context.get('survey_resent_token')" name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}" />
-                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email)" no_resize="1" />
+                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email)" />
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" />

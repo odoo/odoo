@@ -78,6 +78,7 @@ If required, you can manually adjust the descriptions via the CODA configuration
         'l10n_be_coda_view.xml',
     ],
     'auto_install': False,
+    'website': 'https://www.odoo.com/page/accounting',
     'installable': True,
     'license': 'AGPL-3',
 }

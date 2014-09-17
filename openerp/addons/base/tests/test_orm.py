@@ -166,6 +166,12 @@ class TestInherits(common.TransactionCase):
         self.partner = self.registry('res.partner')
         self.user = self.registry('res.users')
 
+    def test_default(self):
+        """ `default_get` cannot return a dictionary or a new id """
+        defaults = self.user.default_get(self.cr, UID, ['partner_id'])
+        if 'partner_id' in defaults:
+            self.assertIsInstance(defaults['partner_id'], (bool, int, long))
+
     def test_create(self):
         """ creating a user should automatically create a new partner """
         partners_before = self.partner.search(self.cr, UID, [])

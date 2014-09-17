@@ -35,7 +35,7 @@ class hr_expense_report(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
+        'product_qty':fields.float('Product Quantity', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True),
         'date_valid': fields.date('Validation Date', readonly=True),
@@ -48,7 +48,7 @@ class hr_expense_report(osv.osv):
         'delay_confirm':fields.float('Delay to Confirm', readonly=True),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
         'price_average':fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'no_of_products':fields.integer('# of Products', readonly=True),
         'no_of_account':fields.integer('# of Accounts', readonly=True),
         'state': fields.selection([

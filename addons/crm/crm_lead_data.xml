@@ -68,7 +68,23 @@
                                             (4, ref('stage_lead7'))]"/>
         </record>
 
-
+        <!-- Crm Campain -->
+        <record model="crm.tracking.campaign" id="crm_campaign_fall_drive">
+            <field name="name">Fall Drive</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+        <record model="crm.tracking.campaign" id="crm_campaign_christmas_special">
+            <field name="name">Christmas Special</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+        <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_services">
+            <field name="name">Email Campaign - Services</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+        <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_products">
+            <field name="name">Email Campaign - Products</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
         <!--  crm categories -->
         <record model="crm.case.categ" id="categ_oppor1">
             <field name="name">Product</field>

@@ -1,27 +1,33 @@
 # French translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-03 20:36+0000\n"
-"Last-Translator: Frederic Clementi - Camptocamp "
-"<frederic.clementi@camptocamp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:22+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Catégorie d'articles"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -29,14 +35,14 @@ msgid "Invoice Line"
 msgstr "Ligne de facture"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Bon de commande"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Modèle d'article"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Liste de colisage"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -45,14 +51,19 @@ msgid "Price Difference Account"
 msgstr "Compte d'écart de prix"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Facture"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Catégorie d'articles"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Liste de colisage"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Bon de commande"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -63,71 +74,3 @@ msgid ""
 msgstr ""
 "Ce compte sera utilisé pour valoriser l'écart de prix entre le prix d'achat "
 "et le prix de revient de l'article."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML invalide pour l'architecture de la vue !"
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "Comptabilité de stock pour les pays anglo-saxons"
-
-#~ msgid ""
-#~ "This module will support the Anglo-Saxons accounting methodology by\n"
-#~ "    changing the accounting logic with stock transactions. The difference "
-#~ "between the Anglo-Saxon accounting countries\n"
-#~ "    and the Rhine or also called Continental accounting countries is the "
-#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
-#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
-#~ "created, Continental accounting will take the cost at the moment the goods "
-#~ "are shipped.\n"
-#~ "    This module will add this functionality by using a interim account, to "
-#~ "store the value of shipped goods and will contra book this interim account\n"
-#~ "    when the invoice is created to transfer this amount to the debtor or "
-#~ "creditor account.\n"
-#~ "    Secondly, price differences between actual purchase price and fixed "
-#~ "product standard price are booked on a separate account"
-#~ msgstr ""
-#~ "Ce module fournit la méthode de gestion comptable Anglo-saxonne\n"
-#~ "    en changeant la logique des transactions de stock. La différence entre "
-#~ "la méthode comptable Anglo-saxonne et la méthode\n"
-#~ "    Continentale est le moment de prise en compte du Revenu des ventes par "
-#~ "rapport au coût des ventes.\n"
-#~ "    La méthode Anglo-saxonne prend en compte le coût au moment de la "
-#~ "création de la facture. La comptabilité Continentale \n"
-#~ "    prend en compte les coûts au moment de l'expédition des biens.\n"
-#~ "    Ce module ajoute la fonctionnalité Anglo-saxonne en utilisant un compte "
-#~ "intermédiaire pour stocker la valeur des biens \n"
-#~ "    expédiés et, au moment de la création de la facture, va extourner "
-#~ "l'écriture sur ce compte intermédiaire pour le transférer\n"
-#~ "    sur le compte du créditeur ou du débiteur.\n"
-#~ "    De plus, l'écart de prix entre le prix d'achat réel et le coût standard "
-#~ "de l'article sont comptabilisés sur des comptes différents."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-#~ "catégorie."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de catégorie récursive."
-
-#~ msgid " Accounting Property"
-#~ msgstr " Propriété de comptabilité"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "La référence de la commande doit être unique !"
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "Erreur! Vous ne pouvez pas créer de catégories récursives"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Structure de communication BBA incorrecte !"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "La référence de commande doit être unique par société !"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "La référence doit être unique par société !"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Le numéro de facture doit être unique par société !"

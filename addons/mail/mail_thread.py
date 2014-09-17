@@ -35,8 +35,8 @@ import re
 import socket
 import time
 import xmlrpclib
-import re
 from email.message import Message
+from email.utils import formataddr
 from urllib import urlencode
 
 from openerp import api, tools
@@ -111,7 +111,7 @@ class mail_thread(osv.AbstractModel):
         model = context.get('empty_list_help_model')
         res_id = context.get('empty_list_help_id')
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        catchall_domain = ir_config_parameter.get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
         document_name = context.get('empty_list_help_document_name', _('document'))
         alias = None
 
@@ -627,7 +627,7 @@ class mail_thread(osv.AbstractModel):
         if params:
             msg_id = params.get('message_id')
             model = params.get('model')
-            res_id = params.get('res_id')
+            res_id = params.get('res_id', params.get('id'))  # signup automatically generated id instead of res_id
         if not msg_id and not (model and res_id):
             return action
         if msg_id and not (model and res_id):
@@ -641,7 +641,7 @@ class mail_thread(osv.AbstractModel):
             if model_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
-                    action = model_obj.get_formview_action(cr, uid, res_id, context=context)
+                    action = model_obj.get_access_action(cr, uid, res_id, context=context)
                 except (osv.except_osv, orm.except_orm):
                     pass
             action.update({
@@ -722,12 +722,10 @@ class mail_thread(osv.AbstractModel):
                     aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
             # compute name of reply-to
             company_name = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).company_id.name
-            res.update(
-                dict((res_id, '"%(company_name)s%(document_name)s" <%(email)s>' %
-                     {'company_name': company_name,
-                      'document_name': doc_names.get(res_id) and ' ' + re.sub(r'[^\w+.]+', '-', doc_names[res_id]) or '',
-                      'email': aliases[res_id]
-                      } or False) for res_id in aliases.keys()))
+            for res_id in aliases.keys():
+                email_name = '%s%s' % (company_name, doc_names.get(res_id) and (' ' + doc_names[res_id]) or '')
+                email_addr = aliases[res_id]
+                res[res_id] = formataddr((email_name, email_addr))
         left_ids = set(ids).difference(set(aliases.keys()))
         if left_ids and default:
             res.update(dict((res_id, default) for res_id in left_ids))
@@ -1550,8 +1548,8 @@ class mail_thread(osv.AbstractModel):
         # set in the context.
         model = False
         if thread_id:
-            model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
-            if model != self._name and hasattr(self.pool[model], 'message_post'):
+            model = context.get('thread_model', False) if self._name == 'mail.thread' else self._name
+            if model and model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
@@ -1604,7 +1602,7 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, [thread_id], list(partner_to_subscribe), context=context)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
-        if self._mail_flat_thread and not parent_id and thread_id:
+        if self._mail_flat_thread and model and not parent_id and thread_id:
             message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
@@ -1623,7 +1621,7 @@ class mail_thread(osv.AbstractModel):
         values.update({
             'author_id': author_id,
             'model': model,
-            'res_id': thread_id or False,
+            'res_id': model and thread_id or False,
             'body': body,
             'subject': subject or False,
             'type': type,
@@ -1645,7 +1643,7 @@ class mail_thread(osv.AbstractModel):
             # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
             self.write(cr, SUPERUSER_ID, [thread_id], {'message_last_post': fields.datetime.now()}, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
-        if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
+        if message.author_id and model and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 

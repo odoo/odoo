@@ -26,12 +26,24 @@
             </field>
         </record>
 
+        <record id="view_picking_inherit_tree2" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="view_picking_inherit_form2" model="ir.ui.view">
             <field name="name">stock.picking.form.inherit</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='do_partial_open_barcode']" position="after">
+                <xpath expr="//button[@name='do_unreserve']" position="after">
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','2binvoiced')]}" type="action" class="oe_highlight" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//field[@name='move_type']" position="after">
@@ -67,6 +79,16 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='picking_type_id']" position="after">
                     <field name="invoice_state"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_move_picking_from_stockaccount_inherit">
+            <field name="name">stock.move.form.invoice_state</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_expected']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>

@@ -125,14 +125,16 @@ instance.web.Dialog = instance.web.Widget.extend({
         var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
+            var pre_text  = fn.pre_text || "";
+            var post_text = fn.post_text || "";
             var oe_link_class = fn.oe_link_class;
             if (!_.isFunction(fn)) {
                 text = fn.text;
                 fn = fn.click;
             }
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': oe_link_class} }}}));
+            var $but = $(QWeb.render('WidgetButton', { widget : { pre_text: pre_text, post_text: post_text, string: text, node: { attrs: {'class': oe_link_class} }}}));
             $customButons.append($but);
-            $but.on('click', function(ev) {
+            $but.filter('button').on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
         });
@@ -151,7 +153,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             delete(options.buttons);
         }
         this.renderElement();
-
         this.$dialog_box = $(QWeb.render('Dialog', options)).appendTo("body");
         this.$el.modal({
             'backdrop': false,
@@ -343,13 +344,14 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
-                {text: error.data.arguments[2],
-                 oe_link_class: 'oe_link',
-                 click: function() {
-                    window.location.href='#action='+error.data.arguments[1];
-                    self.destroy();
-                }}
+                {text: error.data.arguments[2], 
+                    oe_link_class : 'oe_highlight',
+                    post_text : _t("or"),
+                    click: function() {
+                        window.location.href='#action='+error.data.arguments[1]
+                        self.destroy();
+                    }},
+                {text: _t("Cancel"), oe_link_class: 'oe_link', click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
     }
@@ -993,6 +995,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");
         });
+        this.$el.parents().find(".oe_secondary_menus_container").scrollTop(0,0);
 
         this.on_menu_click(ev);
     },
@@ -1048,7 +1051,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         this.update_promise = this.update_promise.then(fct, fct);
     },
     on_menu_help: function() {
-        window.open('http://help.openerp.com', '_blank');
+        window.open('http://help.odoo.com', '_blank');
     },
     on_menu_logout: function() {
         this.trigger('user_logout');
@@ -1077,7 +1080,10 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                     state: JSON.stringify(state),
                     scope: 'userinfo',
                 };
-                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+                instance.web.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
+            }).fail(function(result, ev){
+                ev.preventDefault();
+                instance.web.redirect('https://accounts.odoo.com/web');
             });
         }
     },

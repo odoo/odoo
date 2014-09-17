@@ -51,13 +51,15 @@
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_confirmed"/>
             <field name="signal">button_confirm</field>
+            <field name="condition">True</field>
         </record>
         <record id="prod_trans_picking_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_confirmed"/>
             <field name="act_to" ref="prod_act_ready"/>
-            <field name="trigger_model">stock.move</field>
-            <field name="trigger_expr_id">consume_lines_get()</field>
-            <field name="condition">test_ready()</field>
+            <field name="signal">moves_ready</field>
+            <field name="trigger_model" eval="False"/> <!-- Force empty -->
+            <field name="trigger_expr_id" eval="False"/> <!-- Force empty -->
+            <field name="condition">True</field> <!-- Force default -->
         </record>
         <record id="prod_trans_ready_in_production" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>
