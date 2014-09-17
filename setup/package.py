@@ -25,12 +25,12 @@ import os
 import pexpect
 import shutil
 import signal
+import subprocess
 import time
 import xmlrpclib
 from contextlib import contextmanager
 from glob import glob
 from os.path import abspath, dirname, join
-from subprocess import check_output
 from tempfile import NamedTemporaryFile
 
 
@@ -135,7 +135,7 @@ class OdooDocker(object):
         )
         time.sleep(2)  # let the bash start
         self.docker.logfile_read = self.log_file
-        self.id = check_output('docker ps -l -q', shell=True)
+        self.id = subprocess.check_output('docker ps -l -q', shell=True)
 
     def end(self):
         try:
@@ -247,10 +247,10 @@ def build_tgz(o):
 
 def build_deb(o):
     system(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], o.build_dir)
-    system(['cp', glob('%s/../openerp_*.deb' % o.build_dir)[0], '%s/odoo.deb' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*.dsc' % o.build_dir)[0], '%s/odoo.dsc' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*_amd64.changes' % o.build_dir)[0], '%s/odoo_amd64.changes' % o.build_dir])
-    system(['cp', glob('%s/../openerp_*.tar.gz' % o.build_dir)[0], '%s/odoo.deb.tar.gz' % o.build_dir])
+    system(['cp', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s/odoo.deb' % o.build_dir])
+    system(['cp', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s/odoo.dsc' % o.build_dir])
+    system(['cp', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s/odoo_amd64.changes' % o.build_dir])
+    system(['cp', glob('%s/../odoo_*.tar.gz' % o.build_dir)[0], '%s/odoo.deb.tar.gz' % o.build_dir])
 
 def build_rpm(o):
     system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
@@ -356,7 +356,6 @@ def options():
 def main():
     o = options()
     _prepare_build_dir(o)
-
     try:
         if not o.no_tarball:
             build_tgz(o)
@@ -372,7 +371,7 @@ def main():
                 try:
                     test_deb(o)
                     publish(o, ['odoo.deb', 'odoo.dsc', 'odoo_amd64.changes', 'odoo.deb.tar.gz'])
-                    system('dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz', join(o.pub, 'deb'))
+                    subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s/Packages.gz' % join(o.pub, 'deb'), shell=True)
                 except Exception, e:
                     print("Won't publish the deb release.\n Exception: %s" % str(e))
         if not o.no_rpm:
@@ -394,7 +393,7 @@ def main():
     except:
         pass
     finally:
-        for leftover in glob('%s/../openerp_*' % o.build_dir):
+        for leftover in glob('%s/../odoo_*' % o.build_dir):
             os.remove(leftover)
 
         shutil.rmtree(o.build_dir)
