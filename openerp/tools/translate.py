@@ -39,7 +39,6 @@ from lxml import etree
 
 import config
 import misc
-from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
 import openerp
@@ -49,6 +48,8 @@ _logger = logging.getLogger(__name__)
 
 # used to notify web client that these translations should be loaded in the UI
 WEB_TRANSLATION_COMMENT = "openerp-web"
+
+SKIPPED_ELEMENTS = ('script', 'style')
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -165,51 +166,55 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        is_new_cr = False
-        cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
-        if not cr:
-            s = frame.f_locals.get('self', {})
-            cr = getattr(s, 'cr', None)
-        if not cr and allow_create:
+        # try, in order: cr, cursor, self.env.cr, self.cr
+        if 'cr' in frame.f_locals:
+            return frame.f_locals['cr'], False
+        if 'cursor' in frame.f_locals:
+            return frame.f_locals['cursor'], False
+        s = frame.f_locals.get('self')
+        if hasattr(s, 'env'):
+            return s.env.cr, False
+        if hasattr(s, 'cr'):
+            return s.cr, False
+        if allow_create:
+            # create a new cursor
             db = self._get_db()
             if db is not None:
-                cr = db.cursor()
-                is_new_cr = True
-        return cr, is_new_cr
+                return db.cursor(), True
+        return None, False
 
     def _get_uid(self, frame):
-        return frame.f_locals.get('uid') or frame.f_locals.get('user')
+        # try, in order: uid, user, self.env.uid
+        if 'uid' in frame.f_locals:
+            return frame.f_locals['uid']
+        if 'user' in frame.f_locals:
+            return int(frame.f_locals['user'])      # user may be a record
+        s = frame.f_locals.get('self')
+        return s.env.uid
 
     def _get_lang(self, frame):
-        lang = None
-        ctx = frame.f_locals.get('context')
-        if not ctx:
-            kwargs = frame.f_locals.get('kwargs')
-            if kwargs is None:
-                args = frame.f_locals.get('args')
-                if args and isinstance(args, (list, tuple)) \
-                        and isinstance(args[-1], dict):
-                    ctx = args[-1]
-            elif isinstance(kwargs, dict):
-                ctx = kwargs.get('context')
-        if ctx:
-            lang = ctx.get('lang')
-        s = frame.f_locals.get('self', {})
-        if not lang:
-            c = getattr(s, 'localcontext', None)
-            if c:
-                lang = c.get('lang')
-        if not lang:
-            # Last resort: attempt to guess the language of the user
-            # Pitfall: some operations are performed in sudo mode, and we 
-            #          don't know the originial uid, so the language may
-            #          be wrong when the admin language differs.
-            pool = getattr(s, 'pool', None)
-            (cr, dummy) = self._get_cr(frame, allow_create=False)
-            uid = self._get_uid(frame)
-            if pool and cr and uid:
-                lang = pool['res.users'].context_get(cr, uid)['lang']
-        return lang
+        # try, in order: context.get('lang'), kwargs['context'].get('lang'),
+        # self.env.lang, self.localcontext.get('lang')
+        if 'context' in frame.f_locals:
+            return frame.f_locals['context'].get('lang')
+        kwargs = frame.f_locals.get('kwargs', {})
+        if 'context' in kwargs:
+            return kwargs['context'].get('lang')
+        s = frame.f_locals.get('self')
+        if hasattr(s, 'env'):
+            return s.env.lang
+        if hasattr(s, 'localcontext'):
+            return s.localcontext.get('lang')
+        # Last resort: attempt to guess the language of the user
+        # Pitfall: some operations are performed in sudo mode, and we
+        #          don't know the originial uid, so the language may
+        #          be wrong when the admin language differs.
+        pool = getattr(s, 'pool', None)
+        (cr, dummy) = self._get_cr(frame, allow_create=False)
+        uid = self._get_uid(frame)
+        if pool and cr and uid:
+            return pool['res.users'].context_get(cr, uid)['lang']
+        return None
 
     def __call__(self, source):
         res = source
@@ -313,6 +318,10 @@ class TinyPoFile(object):
                     if not line.startswith('module:'):
                         comments.append(line)
                 elif line.startswith('#:'):
+                    # Process the `reference` comments. Each line can specify
+                    # multiple targets (e.g. model, view, code, selection,
+                    # ...). For each target, we will return an additional
+                    # entry.
                     for lpart in line[2:].strip().split(' '):
                         trans_info = lpart.strip().split(':',2)
                         if trans_info and len(trans_info) == 2:
@@ -362,6 +371,9 @@ class TinyPoFile(object):
                 line = self.lines.pop(0).strip()
 
             if targets and not fuzzy:
+                # Use the first target for the current entry (returned at the
+                # end of this next() call), and keep the others to generate
+                # additional entries (returned the next next() calls).
                 trans_type, name, res_id = targets.pop(0)
                 for t, n, r in targets:
                     if t == trans_type == 'code': continue
@@ -533,28 +545,34 @@ def trans_parse_rml(de):
         res.extend(trans_parse_rml(n))
     return res
 
-def trans_parse_view(de):
-    res = []
-    if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
-        res.append(de.text.strip().encode("utf8"))
-    if de.tail and de.tail.strip():
-        res.append(de.tail.strip().encode("utf8"))
-    if de.tag == 'attribute' and de.get("name") == 'string':
-        if de.text:
-            res.append(de.text.encode("utf8"))
-    if de.get("string"):
-        res.append(de.get('string').encode("utf8"))
-    if de.get("help"):
-        res.append(de.get('help').encode("utf8"))
-    if de.get("sum"):
-        res.append(de.get('sum').encode("utf8"))
-    if de.get("confirm"):
-        res.append(de.get('confirm').encode("utf8"))
-    if de.get("placeholder"):
-        res.append(de.get('placeholder').encode("utf8"))
-    for n in de:
-        res.extend(trans_parse_view(n))
-    return res
+def _push(callback, term, source_line):
+    """ Sanity check before pushing translation terms """
+    term = (term or "").strip().encode('utf8')
+    # Avoid non-char tokens like ':' '...' '.00' etc.
+    if len(term) > 8 or any(x.isalpha() for x in term):
+        callback(term, source_line)
+
+def trans_parse_view(element, callback):
+    """ Helper method to recursively walk an etree document representing a
+        regular view and call ``callback(term)`` for each translatable term
+        that is found in the document.
+
+        :param ElementTree element: root of etree document to extract terms from
+        :param callable callback: a callable in the form ``f(term, source_line)``,
+            that will be called for each extracted term.
+    """
+    if (not isinstance(element, SKIPPED_ELEMENT_TYPES)
+            and element.tag.lower() not in SKIPPED_ELEMENTS
+            and element.text):
+        _push(callback, element.text, element.sourceline)
+    if element.tail:
+        _push(callback, element.tail, element.sourceline)
+    for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+        value = element.get(attr)
+        if value:
+            _push(callback, value, element.sourceline)
+    for n in element:
+        trans_parse_view(n, callback)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -570,6 +588,30 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
+def _extract_translatable_qweb_terms(element, callback):
+    """ Helper method to walk an etree document representing
+        a QWeb template, and call ``callback(term)`` for each
+        translatable term that is found in the document.
+
+        :param ElementTree element: root of etree document to extract terms from
+        :param callable callback: a callable in the form ``f(term, source_line)``,
+            that will be called for each extracted term.
+    """
+    # not using elementTree.iterparse because we need to skip sub-trees in case
+    # the ancestor element had a reason to be skipped
+    for el in element:
+        if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
+        if (el.tag.lower() not in SKIPPED_ELEMENTS
+                and "t-js" not in el.attrib
+                and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
+                and not ("t-translation" in el.attrib and
+                         el.attrib["t-translation"].strip() == "off")):
+            _push(callback, el.text, el.sourceline)
+            for att in ('title', 'alt', 'label', 'placeholder'):
+                if att in el.attrib:
+                    _push(callback, el.attrib[att], el.sourceline)
+            _extract_translatable_qweb_terms(el, callback)
+        _push(callback, el.tail, el.sourceline)
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """Babel message extractor for qweb template files.
@@ -585,30 +627,10 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """
     result = []
     def handle_text(text, lineno):
-        text = (text or "").strip()
-        if len(text) > 1: # Avoid mono-char tokens like ':' ',' etc.
-            result.append((lineno, None, text, []))
-
-    # not using elementTree.iterparse because we need to skip sub-trees in case
-    # the ancestor element had a reason to be skipped
-    def iter_elements(current_element):
-        for el in current_element:
-            if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
-            if "t-js" not in el.attrib and \
-                    not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
-                    not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
-                handle_text(el.text, el.sourceline)
-                for att in ('title', 'alt', 'label', 'placeholder'):
-                    if att in el.attrib:
-                        handle_text(el.attrib[att], el.sourceline)
-                iter_elements(el)
-            handle_text(el.tail, el.sourceline)
-
+        result.append((lineno, None, text, []))
     tree = etree.parse(fileobj)
-    iter_elements(tree.getroot())
-
+    _extract_translatable_qweb_terms(tree.getroot(), handle_text)
     return result
-
 
 def trans_generate(lang, modules, cr):
     dbname = cr.dbname
@@ -646,7 +668,6 @@ def trans_generate(lang, modules, cr):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         if not source or len(source.strip()) <= 1:
-            _logger.debug("Ignoring empty or 1-letter source term: %r", tuple)
             return
         if tuple not in _to_translate:
             _to_translate.append(tuple)
@@ -655,6 +676,19 @@ def trans_generate(lang, modules, cr):
         if isinstance(s, unicode):
             return s.encode('utf8')
         return s
+
+    def push(mod, type, name, res_id, term):
+        term = (term or '').strip()
+        if len(term) > 2:
+            push_translation(mod, type, name, res_id, term)
+
+    def get_root_view(xml_id):
+        view = model_data_obj.xmlid_to_object(cr, uid, xml_id)
+        if view:
+            while view.mode != 'primary':
+                view = view.inherit_id
+        xml_id = view.get_external_id(cr, uid).get(view.id, xml_id)
+        return xml_id
 
     for (xml_name,model,res_id,module) in cr.fetchall():
         module = encode(module)
@@ -665,6 +699,10 @@ def trans_generate(lang, modules, cr):
             _logger.error("Unable to find object %r", model)
             continue
 
+        if not registry[model]._translate:
+            # explicitly disabled
+            continue
+
         exists = registry[model].exists(cr, uid, res_id)
         if not exists:
             _logger.warning("Unable to find object %r with id %d", model, res_id)
@@ -673,8 +711,13 @@ def trans_generate(lang, modules, cr):
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
-            for t in trans_parse_view(d):
-                push_translation(module, 'view', encode(obj.model), 0, t)
+            if obj.type == 'qweb':
+                view_id = get_root_view(xml_name)
+                push_qweb = lambda t,l: push(module, 'view', 'website', view_id, t)
+                _extract_translatable_qweb_terms(d, push_qweb)
+            else:
+                push_view = lambda t,l: push(module, 'view', obj.model, xml_name, t)
+                trans_parse_view(d, push_view)
         elif model=='ir.actions.wizard':
             pass # TODO Can model really be 'ir.actions.wizard' ?
 
@@ -685,7 +728,8 @@ def trans_generate(lang, modules, cr):
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = registry.get(obj.model)
-            if not objmodel or not field_name in objmodel._columns:
+            if (objmodel is None or field_name not in objmodel._columns
+                    or not objmodel._translate):
                 continue
             field_def = objmodel._columns[field_name]
 
@@ -736,14 +780,17 @@ def trans_generate(lang, modules, cr):
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for field_name,field_def in obj._table._columns.items():
+        for field_name, field_def in obj._columns.items():
+            if model == 'ir.model' and field_name == 'name' and obj.name == obj.model:
+                # ignore model name if it is the technical one, nothing to translate
+                continue
             if field_def.translate:
                 name = model + "," + field_name
                 try:
-                    trad = getattr(obj, field_name) or ''
+                    term = obj[field_name] or ''
                 except:
-                    trad = ''
-                push_translation(module, 'model', name, xml_name, encode(trad))
+                    term = ''
+                push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 
@@ -778,7 +825,6 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-
     modobj = registry['ir.module.module']
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
@@ -788,7 +834,7 @@ def trans_generate(lang, modules, cr):
     for bin_path in ['osv', 'report' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
-    _logger.debug("Scanning modules at paths: ", path_list)
+    _logger.debug("Scanning modules at paths: %s", path_list)
 
     mod_paths = list(path_list)
 
@@ -886,6 +932,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             # lets create the language with locale information
             lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
 
+        # Parse also the POT: it will possibly provide additional targets.
+        # (Because the POT comments are correct on Launchpad but not the
+        # PO comments due to a Launchpad limitation. See LP bug 933496.)
+        pot_reader = []
 
         # now, the serious things: we read the language file
         fileobj.seek(0)
@@ -898,19 +948,42 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         elif fileformat == 'po':
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value', 'comments']
+
+            # Make a reader for the POT file and be somewhat defensive for the
+            # stable branch.
+            if fileobj.name.endswith('.po'):
+                try:
+                    # Normally the path looks like /path/to/xxx/i18n/lang.po
+                    # and we try to find the corresponding
+                    # /path/to/xxx/i18n/xxx.pot file.
+                    head, _ = os.path.split(fileobj.name)
+                    head2, _ = os.path.split(head)
+                    head3, tail3 = os.path.split(head2)
+                    pot_handle = misc.file_open(os.path.join(head3, tail3, 'i18n', tail3 + '.pot'))
+                    pot_reader = TinyPoFile(pot_handle)
+                except:
+                    pass
+
         else:
             _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
+        # Read the POT `reference` comments, and keep them indexed by source
+        # string.
+        pot_targets = {}
+        for type, name, res_id, src, _, comments in pot_reader:
+            if type is not None:
+                pot_targets.setdefault(src, {'value': None, 'targets': []})
+                pot_targets[src]['targets'].append((type, name, res_id))
+
         # read the rest of the file
-        line = 1
         irt_cursor = trans_obj._get_import_cursor(cr, SUPERUSER_ID, context=context)
 
-        for row in reader:
-            line += 1
+        def process_row(row):
+            """Process a single PO (or POT) entry."""
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             #if (not row) or (not row[-1]):
-            #    continue
+            #    return
 
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
@@ -920,9 +993,17 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             for i, field in enumerate(f):
                 dic[field] = row[i]
 
+            # Get the `reference` comments from the POT.
+            src = row[3]
+            if pot_reader and src in pot_targets:
+                pot_targets[src]['targets'] = filter(lambda x: x != row[:3], pot_targets[src]['targets'])
+                pot_targets[src]['value'] = row[4]
+                if not pot_targets[src]['targets']:
+                    del pot_targets[src]
+
             # This would skip terms that fail to specify a res_id
             if not dic.get('res_id'):
-                continue
+                return
 
             res_id = dic.pop('res_id')
             if res_id and isinstance(res_id, (int, long)) \
@@ -942,6 +1023,21 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 dic['res_id'] = None
 
             irt_cursor.push(dic)
+
+        # First process the entries from the PO file (doing so also fills/removes
+        # the entries from the POT file).
+        for row in reader:
+            process_row(row)
+
+        # Then process the entries implied by the POT file (which is more
+        # correct w.r.t. the targets) if some of them remain.
+        pot_rows = []
+        for src in pot_targets:
+            value = pot_targets[src]['value']
+            for type, name, res_id in pot_targets[src]['targets']:
+                pot_rows.append((type, name, res_id, src, value, comments))
+        for row in pot_rows:
+            process_row(row)
 
         irt_cursor.finish()
         trans_obj.clear_caches()

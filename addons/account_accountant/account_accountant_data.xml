@@ -5,7 +5,7 @@
         <!-- Top menu item -->
         <menuitem name="Accounting"
             id="account.menu_finance"/>
-        <menuitem id="account.menu_account_config" name="Accounting" parent="base.menu_config"/>
+        <menuitem id="account.menu_account_config" name="Accounting" parent="base.menu_config" sequence="3"/>
 
     </data>
 
@@ -28,8 +28,8 @@
             <field name="type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Accounting and Finance application installed!</field>
-            <field name="body"><![CDATA[<p>With OpenERP's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.</p>
-<p>The accounting features are fully integrated with other OpenERP applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</p>]]></field>
+            <field name="body"><![CDATA[<p>With Odoo's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.</p>
+<p>The accounting features are fully integrated with other Odoo applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</p>]]></field>
         </record>
     </data>
 </openerp>

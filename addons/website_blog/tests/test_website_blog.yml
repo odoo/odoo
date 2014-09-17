@@ -6,7 +6,7 @@
       blog_id: blog_blog_1
       content: 'Test content
 
-      The Open ERP wiki allows you to manage your enterprise contents using wiki
+      The Odoo wiki allows you to manage your enterprise contents using wiki
 
       restructured texts. This module provides a collaborative way to manage internal
 
@@ -16,7 +16,7 @@
     !record {model: blog.post, id: test_page0}:
       content: 'Test updated content
 
-      The Open ERP wiki allows you to manage your enterprise contents using wiki
+      The Odoo wiki allows you to manage your enterprise contents using wiki
 
       restructured texts. This module provides a collaborative way to manage internal
 
@@ -24,10 +24,3 @@
 
       Wiki text can easily be edited
       '
--
-    I check the page history for the current page by clicking on "Page History".After that find difference between history.
--
-    !python {model: blog.post.history.show_diff}: |
-      hist_obj = model.pool.get('blog.post.history')
-      ids = hist_obj.search(cr, uid, [('post_id', '=', ref("test_page0"))])
-      model.get_diff(cr, uid, {'active_ids': ids[:] })

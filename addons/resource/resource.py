@@ -44,9 +44,9 @@ class resource_calendar(osv.osv):
     _description = "Resource Calendar"
 
     _columns = {
-        'name': fields.char("Name", size=64, required=True),
+        'name': fields.char("Name", required=True),
         'company_id': fields.many2one('res.company', 'Company', required=False),
-        'attendance_ids': fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
+        'attendance_ids': fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time', copy=True),
         'manager': fields.many2one('res.users', 'Workgroup Manager'),
         'leave_ids': fields.one2many(
             'resource.calendar.leaves', 'calendar_id', 'Leaves',
@@ -329,7 +329,8 @@ class resource_calendar(osv.osv):
         # no calendar: try to use the default_interval, then return directly
         if id is None:
             if default_interval:
-                intervals.append((start_dt.replace(hour=default_interval[0]), start_dt.replace(hour=default_interval[1])))
+                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0), start_dt.replace(hour=default_interval[1], minute=0, second=0))
+            intervals = self.interval_remove_leaves(working_interval, work_limits)
             return intervals
 
         working_intervals = []
@@ -371,10 +372,16 @@ class resource_calendar(osv.osv):
                           resource_id=None, default_interval=None, context=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=end_dt + datetime.timedelta(days=1),
+                               until=(end_dt + datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0),
                                byweekday=self.get_weekdays(cr, uid, id, context=context)):
+            day_start_dt = day.replace(hour=0, minute=0, second=0)
+            if start_dt and day.date() == start_dt.date():
+                day_start_dt = start_dt
+            day_end_dt = day.replace(hour=23, minute=59, second=59)
+            if end_dt and day.date() == end_dt.date():
+                day_end_dt = end_dt
             hours += self.get_working_hours_of_date(
-                cr, uid, id, start_dt=day,
+                cr, uid, id, start_dt=day_start_dt, end_dt=day_end_dt,
                 compute_leaves=compute_leaves, resource_id=resource_id,
                 default_interval=default_interval,
                 context=context)
@@ -631,7 +638,7 @@ class resource_calendar_attendance(osv.osv):
     _description = "Work Detail"
 
     _columns = {
-        'name' : fields.char("Name", size=64, required=True),
+        'name' : fields.char("Name", required=True),
         'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
         'date_from' : fields.date('Starting Date'),
         'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
@@ -654,8 +661,8 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", size=64, required=True),
-        'code': fields.char('Code', size=16),
+        'name': fields.char("Name", required=True),
+        'code': fields.char('Code', size=16, copy=False),
         'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
@@ -792,7 +799,7 @@ class resource_calendar_leaves(osv.osv):
     _name = "resource.calendar.leaves"
     _description = "Leave Detail"
     _columns = {
-        'name' : fields.char("Name", size=64),
+        'name' : fields.char("Name"),
         'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working Time"),
         'date_from' : fields.datetime('Start Date', required=True),
@@ -801,11 +808,10 @@ class resource_calendar_leaves(osv.osv):
     }
 
     def check_dates(self, cr, uid, ids, context=None):
-         leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
-         if leave['date_from'] and leave['date_to']:
-             if leave['date_from'] > leave['date_to']:
-                 return False
-         return True
+        for leave in self.browse(cr, uid, ids, context=context):
+            if leave.date_from and leave.date_to and leave.date_from > leave.date_to:
+                return False
+        return True
 
     _constraints = [
         (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])

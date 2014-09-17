@@ -682,7 +682,7 @@ class Escpos:
         try:
             stylestack      = StyleStack() 
             serializer      = XmlSerializer(self)
-            root            = ET.fromstring(xml)
+            root            = ET.fromstring(xml.encode('utf-8'))
 
             self._raw(stylestack.to_escpos())
 

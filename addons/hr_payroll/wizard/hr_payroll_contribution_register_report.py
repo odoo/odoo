@@ -42,7 +42,7 @@ class payslip_lines_contribution_register(osv.osv_memory):
         datas = {
              'ids': context.get('active_ids', []),
              'model': 'hr.contribution.register',
-             'form': self.read(cr, uid, ids, [], context=context)[0]
+             'form': self.read(cr, uid, ids, context=context)[0]
         }
         return self.pool['report'].get_action(
             cr, uid, [], 'hr_payroll.report_contributionregister', data=datas, context=context

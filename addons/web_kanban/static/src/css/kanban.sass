@@ -119,6 +119,8 @@
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
+    .oe_kanban_groups_records
+        height: 100%
     &.oe_kanban_grouped_by_m2o .oe_kanban_group_title
         cursor: move
     .oe_kanban_header
@@ -178,9 +180,9 @@
         .oe_kanban_column
             padding: 0px
             background: #ffffff
-
-    .oe_kanban_column, .oe_kanban_column_cards
-        height: 100%
+    &.oe_kanban_grouped
+        .oe_kanban_column, .oe_kanban_column_cards
+            height: 100%
     .oe_kanban_aggregates
         padding: 0
         margin: 0px

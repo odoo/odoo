@@ -13,7 +13,7 @@
     <t t-call="website.layout">
         <div id="wrap">
             <div class="oe_structure">
-                <section data-snippet-id="title">
+                <section>
                     <h1 class="text-center">
                         Our References
                     </h1><h2 class="text-center text-muted">
@@ -66,7 +66,7 @@
 </template>
 
 <!-- Option: left column: World Map -->
-<template id="opt_country" inherit_id="website_customer.index" optional="enabled" name="Show Map">
+<template id="opt_country" inherit_id="website_customer.index" customize_show="True" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <!-- modal for large map -->
         <div class="modal fade customer_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -84,13 +84,13 @@
         <!-- modal end -->
         <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" /></button></h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
-                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
         </ul>
     </xpath>
 </template>
 
-<template id="opt_country_list" inherit_id="website_customer.index" optional="enabled" name="Filter on Countries">
+<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32">

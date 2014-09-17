@@ -9,7 +9,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         </record>
-        <menuitem name="Events" parent="base.marketing_menu" id="event_main_menu"/>
+        <menuitem name="Events" parent="base.marketing_menu" id="event_main_menu" sequence="2"/>
 
         <!-- EVENTS  -->
 
@@ -42,13 +42,12 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Types of Events</field>
+            <field name="name">Events Types</field>
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30"/>
-        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root" sequence="1"/>
+        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="event.event_configuration" groups="base.group_no_one"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -56,7 +55,7 @@
             <field name="name">Events</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <form string="Events" version="7.0">
+                <form string="Events">
                     <header>
                         <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button string="Finish Event" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
@@ -86,8 +85,8 @@
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="type" on_change="onchange_event_type(type,context)" />
-                                <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
+                                <field name="type"/>
+                                <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
                             </group>
@@ -117,7 +116,7 @@
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </tree>
                                     <form string="Registration">
-                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
+                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                         <field name="name"/>
                                         <group colspan="4" col="4">
                                         <field name="email"/>
@@ -280,7 +279,7 @@
                     <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
                     <field name="type"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Type" context="{'group_by':'type'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
@@ -304,7 +303,7 @@
              <p class="oe_view_nocontent_create">
                Click to add a new event.
              </p><p>
-               OpenERP helps you schedule and efficiently organize your events:
+               Odoo helps you schedule and efficiently organize your events:
                track subscriptions and participations, automate the confirmation emails,
                sell tickets, etc.
              </p>
@@ -351,7 +350,7 @@
             <field name="name">event.registration.form</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <form string="Event Registration" version="7.0">
+                <form string="Event Registration">
                     <header>
                         <button name="registration_open" string="Confirm" states="draft" type="object" class="oe_highlight"/>
                         <button name="button_reg_close" string="Attended" states="open" type="object" class="oe_highlight"/>
@@ -366,7 +365,7 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <label for="email"/>
@@ -436,7 +435,7 @@
                     <field name="event_id"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible"  domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>

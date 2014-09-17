@@ -12,14 +12,103 @@
         <!-- Marketing / Mass Mailing -->
         <menuitem name="Mass Mailing" id="mass_mailing_campaign"
             parent="base.marketing_menu" sequence="1"/>
-        <!-- Marketing / Mailing Lists -->
-        <menuitem name="Mailing Lists" id="mass_mailing_list"
-            parent="base.marketing_menu" sequence="2"/>
         <!-- Marketing / Configuration -->
         <menuitem name="Configuration" id="marketing_configuration"
             parent="base.marketing_menu" sequence="99"/>
 
+        <!--  MAIL MAIL STATISTICS !-->
+        <record model="ir.ui.view" id="view_mail_mail_statistics_search">
+            <field name="name">mail.mail.statistics.search</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+               <search string="Mail Statistics">
+                    <field name="mail_mail_id_int"/>
+                    <field name="message_id"/>
+                    <field name="mass_mailing_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+            <field name="name">mail.mail.statistics.tree</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <tree string="Mail Statistics">
+                    <field name="mail_mail_id_int"/>
+                    <field name="message_id"/>
+                    <field name="sent"/>
+                    <field name="exception"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="bounced"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+            <field name="name">mail.mail.statistics.form</field>
+            <field name="model">mail.mail.statistics</field>
+            <field name="arch" type="xml">
+                <form string="Mail Statistics">
+                    <group>
+                        <group>
+                            <field name="mail_mail_id"/>
+                            <field name="mail_mail_id_int"/>
+                            <field name="message_id"/>
+                            <field name="exception"/>
+                            <field name="sent"/>
+                            <field name="opened"/>
+                            <field name="replied"/>
+                            <field name="bounced"/>
+                        </group>
+                        <group>
+                            <field name="mass_mailing_id"/>
+                            <field name="mass_mailing_campaign_id"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
+            <field name="name">Mail Statistics</field>
+            <field name="res_model">mail.mail.statistics</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+        </record>
+
+        <!-- Add in Technical/Email -->
+        <menuitem name="Mail Statistics" id="menu_email_statistics"
+            parent="base.menu_email" sequence="50"
+            action="action_view_mail_mail_statistics"/>
+
         <!--  MASS MAILING CONTACT -->
+        
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_contact_subscription" model="ir.filters">
+            <field name="name">List Subscription</field>
+            <field name="model_id">mail.mass_mailing.contact</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month'], 'col_group_by': ['list_id']}</field>
+        </record>
+        <record id="filter_contact_unsubscription" model="ir.filters">
+            <field name="name">List Unsubscription</field>
+            <field name="model_id">mail.mass_mailing.contact</field>
+            <field name="user_id" eval="False"/>
+            <field name="domain">[('opt_out','=',True)]</field>
+            <field name="context">{'group_by': ['unsubscription_date:month'], 'col_group_by': ['list_id']}</field>
+        </record>
+        
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
@@ -30,7 +119,9 @@
                     <field name="list_id"/>
                     <separator/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
-                    <group expand="0" string="Group By...">
+                    <separator/>
+                    <filter string="Exclude Dead" name="not_bounced" domain="[('message_bounce', '&lt;', 5)]"/>
+                    <group expand="0" string="Group By">
                         <filter string="Creation Date" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
                         <filter string="Mailing Lists" name="group_list_id"
@@ -49,8 +140,24 @@
                     <field name="email"/>
                     <field name="name"/>
                     <field name="list_id"/>
-                    <field name="opt_out"/>
+                    <field name="message_bounce"/>
+                    <field name="create_date"/>
+                    <field name="unsubscription_date"/>
+                    <field name="opt_out" on_change="on_change_opt_out(opt_out)"/>
+                    <field name="unsubscription_date" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
+            <field name="name">mail.mass_mailing.contact.graph</field>
+            <field name="model">mail.mass_mailing.contact</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <graph string="Mailing Lists Subscriber" type="pivot" stacked="True">
+                    <field name="create_date" type="row"/>
+                    <field name="list_id" type="col"/>
+                </graph>
             </field>
         </record>
 
@@ -58,7 +165,7 @@
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
@@ -76,7 +183,7 @@
         </record>
 
         <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
-            parent="mass_mailing_list" sequence="50"
+            parent="mass_mailing_campaign" sequence="4"
             action="action_view_mass_mailing_contacts"/>
 
         <!--  MASS MAILING LIST -->
@@ -106,7 +213,7 @@
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-                <form string="Contact List" version="7.0">
+                <form string="Contact List">
                     <sheet>
                         <div class="oe_right oe_button_box" name="buttons">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
@@ -140,7 +247,7 @@
         </record>
 
         <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
-            parent="mass_mailing_list" sequence="40"
+            parent="mass_mailing_campaign" sequence="3"
             action="action_view_mass_mailing_lists"/>
 
         <!--  MASS MAILING !-->
@@ -151,12 +258,17 @@
                <search string="Mass Mailings">
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="State" name="group_state"
-                            context="{'group_by': 'state'}"/>
+                    <group expand="0" string="Group By">
                         <filter string="Campaign" name="group_mass_mailing_campaign_id"
                             groups="mass_mailing.group_mass_mailing_campaign"
                             context="{'group_by': 'mass_mailing_campaign_id'}"/>
+                        <filter string="State" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                        <filter string="Sent By" domain="[]"
+                            context="{'group_by':'email_from'}"/>
+                        <separator/>
+                        <filter string="Sent Month"
+                            domain="[]" context="{'group_by':'sent_date:month'}"/>
                     </group>
                 </search>
             </field>
@@ -183,7 +295,7 @@
             <field name="name">mail.mass_mailing.form</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing" version="7.0">
+                <form string="Mass Mailing">
                     <header>
                         <button name="action_test_mailing" type="object"
                             class="oe_highlight" string="Test Mailing"
@@ -207,28 +319,28 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="opened_daily" string="Opened Daily" widget="barchart"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_contacts)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="replied_daily" string="Replied Daily" widget="barchart"/>
                             </button>
                         </div>
-                        <button name="%(action_view_mass_mailing_contacts)d" type="action"
+                        <button name="%(action_view_mail_mail_statistics_mailing)d" type="action"
                             icon="fa-envelope-o" class="oe_stat_button"
                             attrs="{'invisible': [('total', '=', 0)]}" >
                             <field name="total" string="Emails" widget="statinfo"/>
@@ -287,7 +399,7 @@
                                     </group>
                                     <group string="Campaign">
                                         <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                        <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                        <label for="contact_ab_pc"/>
                                         <div>
                                             <field name="contact_ab_pc" class="oe_inline"/> %
                                         </div>
@@ -343,6 +455,17 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_graph" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.graph</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing" type="bar" stacked="True">
+                    <field name="mass_mailing_campaign_id" type="row"/>
+                    <field name="sent_date" interval="month" type="col"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
             <field name="name">Mass Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
@@ -362,7 +485,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
-                'search_default_mass_mailing_campaign_id': [active_id], 
+                'search_default_mass_mailing_campaign_id': [active_id],
                 'default_mass_mailing_campaign_id': active_id,
             }
             </field>
@@ -407,8 +530,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <menuitem name="Mass Mailing" id= "menu_view_mass_mailing_config"
+            parent="base.menu_marketing_config_root" sequence="4"/>
+           
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
-            parent="marketing_configuration" sequence="1"
+            parent="menu_view_mass_mailing_config" sequence="1"
             groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
@@ -421,7 +547,7 @@
                     <field name="name" string="Campaigns"/>
                     <field name="category_ids"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Stage" name="group_stage_id"
                             context="{'group_by': 'stage_id'}"/>
                         <filter string="Responsible" name="group_user_id"
@@ -449,7 +575,7 @@
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Campaign" version="7.0">
+                <form string="Mass Mailing Campaign">
                     <header>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
@@ -570,71 +696,6 @@
             parent="mass_mailing_campaign" sequence="1"
             action="action_view_mass_mailing_campaigns"
             groups="mass_mailing.group_mass_mailing_campaign"/>
-
-        <!--  MAIL MAIL STATISTICS !-->
-        <record model="ir.ui.view" id="view_mail_mail_statistics_search">
-            <field name="name">mail.mail.statistics.search</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-               <search string="Mail Statistics">
-                    <field name="mail_mail_id"/>
-                    <field name="message_id"/>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
-            <field name="name">mail.mail.statistics.tree</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-                <tree string="Mail Statistics">
-                    <field name="mail_mail_id"/>
-                    <field name="message_id"/>
-                    <field name="sent"/>
-                    <field name="opened"/>
-                    <field name="replied"/>
-                    <field name="bounced"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_mail_mail_statistics_form">
-            <field name="name">mail.mail.statistics.form</field>
-            <field name="model">mail.mail.statistics</field>
-            <field name="arch" type="xml">
-                <form string="Mail Statistics" version="7.0">
-                    <group>
-                        <group>
-                            <field name="mail_mail_id"/>
-                            <field name="message_id"/>
-                            <field name="exception"/>
-                            <field name="sent"/>
-                            <field name="opened"/>
-                            <field name="replied"/>
-                            <field name="bounced"/>
-                        </group>
-                        <group>
-                            <field name="mass_mailing_id"/>
-                            <field name="mass_mailing_campaign_id"/>
-                            <field name="model"/>
-                            <field name="res_id"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_mail_mail_statistics" model="ir.actions.act_window">
-            <field name="name">Mail Statistics</field>
-            <field name="res_model">mail.mail.statistics</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!-- Add in Technical/Email -->
-        <menuitem name="Mail Statistics" id="menu_email_statistics"
-            parent="base.menu_email" sequence="50"
-            action="action_view_mail_mail_statistics"/>
 
     </data>
 </openerp>

@@ -20,8 +20,10 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+import openerp
 
 
 class res_users(osv.Model):
@@ -38,7 +40,7 @@ class res_users(osv.Model):
     _columns = {
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications."),
+                 "emails will appear in the user's notifications.", copy=False, auto_join=True),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 
@@ -68,7 +70,9 @@ class res_users(osv.Model):
 
     def create(self, cr, uid, data, context=None):
         if not data.get('login', False):
-            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_users')
+            msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         if context is None:
             context = {}
 
@@ -112,8 +116,9 @@ class res_users(osv.Model):
             thread_id = thread_id[0]
         return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
 
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
+        """ Redirect the posting of message on res.users as a private discussion.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id. """
         if isinstance(thread_id, (list, tuple)):
@@ -131,7 +136,9 @@ class res_users(osv.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        return self.pool.get('mail.thread').message_post(cr, uid, False, **kwargs)
+        if context and context.get('thread_model') == 'res.partner':
+            return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
+        return self.pool['mail.thread'].message_post(cr, uid, uid, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         return True

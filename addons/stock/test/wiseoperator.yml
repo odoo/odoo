@@ -36,7 +36,7 @@
     stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 4, 'location_dest_id': ref('stock_location_components')})
     new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_wise'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'product_qty': 6.0, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_14')}, context=context)
 - 
-  Transfer the reception
+  Transfer the receipt
 - 
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('pick1')], context=context)

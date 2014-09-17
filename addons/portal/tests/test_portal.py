@@ -48,7 +48,7 @@ class test_portal(TestMail):
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_mail_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid
@@ -90,7 +90,7 @@ class test_portal(TestMail):
         # Do: Chell replies to a Pigs message using the composer
         compose_id = mail_compose.create(cr, self.user_chell_id,
             {'subject': 'Subject', 'body': 'Body text'},
-            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+            {'default_composition_mode': 'comment', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
 
         # Do: Chell browses PigsPortal -> ok because groups security, ko for partners (no read permission)
@@ -131,12 +131,11 @@ class test_portal(TestMail):
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._build_email_kwargs_list:
             self.assertEqual(sent_email.get('subject'), 'Invitation to follow Discussion group: Pigs',
-                            'invite: subject of invitation email is incorrect')
+                             'invite: subject of invitation email is incorrect')
             self.assertIn('Administrator invited you to follow Discussion group document: Pigs', sent_email.get('body'),
-                            'invite: body of invitation email is incorrect')
-            invite_url = partner_carine._get_signup_url_for_action(model='mail.group', res_id=self.group_pigs_id)[partner_carine.id]
-            self.assertTrue(invite_url in sent_email.get('body'),
-                            'invite: body of invitation email does not contain signup url')
+                          'invite: body of invitation email is incorrect')
+            self.assertIn(partner_carine.signup_token, sent_email.get('body'),
+                          'invite: body of invitation email does not contain signup token')
 
     def test_20_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
@@ -157,8 +156,8 @@ class test_portal(TestMail):
 
         # Test: link for partner -> signup URL
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_bert)
-        self.assertIn(partner_bert.signup_url, url,
-                        'notification email: mails send to a not-user partner should contain the signup URL')
+        self.assertIn(partner_bert.signup_token, url,
+                        'notification email: mails send to a not-user partner should contain the signup token')
 
         # Test: link for user -> signin
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_raoul)
@@ -167,7 +166,7 @@ class test_portal(TestMail):
         self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
                         'notification email: link should contain the user login')
 
-    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.models')
     def test_21_inbox_redirection(self):
         """ Tests designed to test the inbox redirection of emails notification URLs. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs

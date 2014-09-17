@@ -35,9 +35,9 @@ class sale_configuration(osv.osv_memory):
             help='Lets you transfer the entries under tasks defined for Project Management to '
                  'the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways '
                  'and to automatically creates project tasks from procurement lines.\n'
-                 '-This installs the modules project_timesheet and project_mrp.'),
+                 '-This installs the modules project_timesheet and sale_service.'),
         'default_order_policy': fields.selection(
-            [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
+            [('manual', 'Create invoice on sales order'), ('picking', 'Create invoice on deliveries')],
             'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
@@ -50,7 +50,7 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale.group_mrp_properties',
             help="Allows you to tag sales order lines with properties."),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
-        'module_project_mrp': fields.boolean("Project MRP"),
+        'module_sale_service': fields.boolean("Sale Service"),
         'group_route_so_lines': fields.boolean('Choose MTO, drop shipping,... on sales order lines',
             implied_group='sale_stock.group_route_so_lines',
             help="Allows you to choose a delivery route on sales order lines"),
@@ -63,7 +63,7 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
         # task_work, time_unit depend on other fields
-        res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
+        res['task_work'] = res.get('module_sale_service') and res.get('module_project_timesheet')
         return res
 
     def get_default_sale_config(self, cr, uid, ids, context=None):

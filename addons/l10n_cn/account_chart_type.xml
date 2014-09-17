@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<!--
+
+    Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+
+    科目类型
+我们借用这个对象生成资产负债表和损益表
+-->
+    <data noupdate="True">
+        <!-- 根科目，不显示在报表行上 -->
+        <record id="user_type_all" model="account.account.type">
+            <field name="name">不显示在报表上</field>
+            <field name="code">0</field>
+            <field name="close_method">none</field>
+            <field name="report_type">none</field>
+        </record>
+        <!-- 利润表科目 -->
+        <record id="user_type_pl1" model="account.account.type">
+            <field name="name">一、主营业务收入</field>
+            <field name="code">pl1</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_pl21" model="account.account.type">
+            <field name="name">补贴收入</field>
+            <field name="code">pl21</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_pl3" model="account.account.type">
+            <field name="name">减：主营业务成本</field>
+            <field name="code">pl3</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>      
+        <record id="user_type_pl5" model="account.account.type">
+            <field name="name">    主营业务税金及附加</field>
+            <field name="code">pl5</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>                  
+        <record id="user_type_pl9" model="account.account.type">
+            <field name="name">加：其他业务利润（亏损以“－”号填列）</field>
+            <field name="code">pl9</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_pl11" model="account.account.type">
+            <field name="name">减：营业费用</field>
+            <field name="code">pl11</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_pl13" model="account.account.type">
+            <field name="name">    管理费用</field>
+            <field name="code">pl13</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_pl15" model="account.account.type">
+            <field name="name">    财务费用</field>
+            <field name="code">pl15</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_pl19" model="account.account.type">
+            <field name="name">加：投资收益（损失以“-”号填列）</field>
+            <field name="code">pl19</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_pl23" model="account.account.type">
+            <field name="name">    营业外收入</field>
+            <field name="code">pl23</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_pl25" model="account.account.type">
+            <field name="name">减：营业外支出</field>
+            <field name="code">pl25</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_pl29" model="account.account.type">
+            <field name="name">减：所得税</field>
+            <field name="code">pl29</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <!-- 资产负债表科目 -->
+        <record id="user_type_bs1" model="account.account.type">
+            <field name="name">货币资金</field>
+            <field name="code">bs1</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs2" model="account.account.type">
+            <field name="name">短期投资</field>
+            <field name="code">bs2</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs3" model="account.account.type">
+            <field name="name">应收票据</field>
+            <field name="code">bs3</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs4" model="account.account.type">
+            <field name="name">应收股利</field>
+            <field name="code">bs4</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs5" model="account.account.type">
+            <field name="name">应收利息</field>
+            <field name="code">bs5</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs6" model="account.account.type">
+            <field name="name">应收账款</field>
+            <field name="code">bs6</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs7" model="account.account.type">
+            <field name="name">其他应收款</field>
+            <field name="code">bs7</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs10" model="account.account.type">
+            <field name="name">存货</field>
+            <field name="code">bs10</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs11" model="account.account.type">
+            <field name="name">待摊费用</field>
+            <field name="code">bs11</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs21" model="account.account.type">
+            <field name="name">一年内到期的长期债权投资</field>
+            <field name="code">bs21</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs32" model="account.account.type">
+            <field name="name">长期股权投资</field>
+            <field name="code">bs32</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs34" model="account.account.type">
+            <field name="name">长期债权投资</field>
+            <field name="code">bs34</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs39" model="account.account.type">
+            <field name="name">固定资产原值</field>
+            <field name="code">bs39</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs40" model="account.account.type">
+            <field name="name">累计折旧</field>
+            <field name="code">bs40</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs42" model="account.account.type">
+            <field name="name">固定资产减值准备</field>
+            <field name="code">bs42</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs44" model="account.account.type">
+            <field name="name">工程物资</field>
+            <field name="code">bs44</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs45" model="account.account.type">
+            <field name="name">在建工程</field>
+            <field name="code">bs45</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs46" model="account.account.type">
+            <field name="name">固定资产清理</field>
+            <field name="code">bs46</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs51" model="account.account.type">
+            <field name="name">无形资产</field>
+            <field name="code">bs51</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs52" model="account.account.type">
+            <field name="name">长期待摊费用</field>
+            <field name="code">bs52</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs61" model="account.account.type">
+            <field name="name">递延税款借项</field>
+            <field name="code">bs61</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs68" model="account.account.type">
+            <field name="name">短期借款</field>
+            <field name="code">bs68</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs69" model="account.account.type">
+            <field name="name">应付票据</field>
+            <field name="code">bs69</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs70" model="account.account.type">
+            <field name="name">应付账款</field>
+            <field name="code">bs70</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs71" model="account.account.type">
+            <field name="name">预收账款</field>
+            <field name="code">bs71</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs72" model="account.account.type">
+            <field name="name">应付工资</field>
+            <field name="code">bs72</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs74" model="account.account.type">
+            <field name="name">应付股利</field>
+            <field name="code">bs74</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs75" model="account.account.type">
+            <field name="name">应交税金</field>
+            <field name="code">bs75</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs82" model="account.account.type">
+            <field name="name">预提费用</field>
+            <field name="code">bs82</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs101" model="account.account.type">
+            <field name="name">长期借款</field>
+            <field name="code">bs101</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs102" model="account.account.type">
+            <field name="name">应付债券</field>
+            <field name="code">bs102</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs103" model="account.account.type">
+            <field name="name">长期应付款</field>
+            <field name="code">bs103</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs115" model="account.account.type">
+            <field name="name">实收资本</field>
+            <field name="code">bs115</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs118" model="account.account.type">
+            <field name="name">资本公积</field>
+            <field name="code">bs118</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs119" model="account.account.type">
+            <field name="name">盈余公积</field>
+            <field name="code">bs119</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs121" model="account.account.type">
+            <field name="name">未分配利润</field>
+            <field name="code">bs121</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>        
+    </data>
+</openerp>

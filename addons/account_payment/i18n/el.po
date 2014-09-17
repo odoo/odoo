@@ -1,21 +1,21 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-11-15 08:29+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -31,53 +31,14 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,currency:0
-msgid "Partner Currency"
-msgstr "Νόμισμα Συνεργάτη"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Set to draft"
-msgstr "Ρύθμιση σε πρόχειρο"
-
-#. module: account_payment
-#: help:payment.order,mode:0
-msgid "Select the Payment Mode to be applied."
-msgstr "Επιλέξτε την Κατάσταση Πληρωμής που θα εφαρμοστεί."
-
-#. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
-msgid "Group By..."
-msgstr "Ομαδοποίηση Κατά..."
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Γραμμές Πληρωμής"
-
-#. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
-msgid "Owner Account"
-msgstr "Λογαριασμός Κατόχου"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
+#: model:ir.model,name:account_payment.model_account_payment_populate_statement
+msgid "Account Payment Populate Statement"
 msgstr ""
-"Το ποσό που θα πρέπει να πληρωθεί στην τρέχουσα ημερομηνία\n"
-"μείον το ποσό που είναι ήδη σε εντολή πληρωμής"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
-#: field:payment.order,company_id:0
-msgid "Company"
-msgstr "Εταιρία"
+#: model:ir.model,name:account_payment.model_account_payment_make_payment
+msgid "Account make payment"
+msgstr ""
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -85,168 +46,83 @@ msgid "Accounting / Payments"
 msgstr ""
 
 #. module: account_payment
-#: selection:payment.line,state:0
-msgid "Free"
-msgstr "Ελεύθερο"
+#: help:payment.line,info_owner:0
+msgid "Address of the Main Partner"
+msgstr "Διεύθυνση του κύριου Συνεργάτη"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
-msgid "Entries"
-msgstr "Εγγραφές"
+#: help:payment.line,info_partner:0
+msgid "Address of the Ordering Customer."
+msgstr "Διεύθυνση του Πελάτη Παραγγελίας."
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Used Account"
-msgstr "Χρησιμοποίηση Λογαριασμού"
-
-#. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
-msgid "Due Date"
-msgstr "Ημερομηνία Λήξης"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "_Add to payment order"
-msgstr "_Προσθήκη σε εντολή πληρωμής"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
-#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
-msgid "Payment Populate statement"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#, python-format
-msgid ""
-"You cannot cancel an invoice which has already been imported in a payment "
-"order. Remove it from the following payment order : %s."
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:website:account_payment.report_paymentorder
 msgid "Amount"
 msgstr "Ποσό"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Total in Company Currency"
-msgstr "Σύνολο σε Νόμισμα Εταιρίας"
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Amount Total"
+msgstr "Σύνολο Ποσού"
+
+#. module: account_payment
+#: field:payment.line,amount:0
+msgid "Amount in Company Currency"
+msgstr "Ποσό σε Νόμισμα Εταιρίας"
+
+#. module: account_payment
+#: field:payment.line,amount_currency:0
+msgid "Amount in Partner Currency"
+msgstr "Ποσό σε Νόμισμα Συνεργάτη"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Are you sure you want to make payment?"
+msgstr "Είστε σίγουρος ότι θέλετε να κάνετε αυτή την πληρωμή;"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Bank Account"
+msgstr "Λογαριασμός Τραπέζης"
+
+#. module: account_payment
+#: help:payment.mode,bank_id:0
+msgid "Bank Account for the Payment Mode"
+msgstr "Λογαριασμός Τραπέζης για την Κατάσταση Πληρωμής"
+
+#. module: account_payment
+#: field:payment.mode,bank_id:0
+msgid "Bank account"
+msgstr "Λογαριασμός τράπεζας"
+
+#. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.line,bank_statement_line_id:0
+msgid "Bank statement line"
+msgstr "Γραμμή Παραστατικού Τράπεζας"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Cancel Payments"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
 msgstr "Ακυρωμένο"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
-msgid "New Payment Order"
-msgstr "Νέα Εντολή Πληρωμής"
-
-#. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
-msgid "Reference"
-msgstr "Αναφορά"
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
-msgstr "Η γραμή πληρωμής θα πρέπει να είναι μοναδική"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
-msgid "Payment Orders"
-msgstr "Εντολές Πληρωμής"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Directly"
-msgstr "Άμεσα"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr "Γραμμή Πληρωμής"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Amount Total"
-msgstr "Σύνολο Ποσού"
-
-#. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the status is 'Draft'.\n"
-" Once the bank is confirmed the status is set to 'Confirmed'.\n"
-" Then the order is paid the status is 'Done'."
-msgstr ""
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Confirmed"
-msgstr "Επιβεβαιωμένο"
-
-#. module: account_payment
-#: help:payment.line,ml_date_created:0
-msgid "Invoice Effective Date"
-msgstr "Ημερομηνία Εφαρμογής Τιμολογίου"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Execution Type"
-msgstr "Τύπος Εκτέλεσης"
-
-#. module: account_payment
-#: selection:payment.line,state:0
-msgid "Structured"
-msgstr "Δομημένο"
-
-#. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import Payment Lines"
-msgstr ""
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Transaction Information"
-msgstr "Πληροφορίες Συναλλαγής"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
-#: model:ir.model,name:account_payment.model_payment_mode
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
-msgid "Payment Mode"
-msgstr "Κατάσταση Πληρωμής"
-
-#. module: account_payment
-#: field:payment.line,ml_date_created:0
-msgid "Effective Date"
-msgstr "Ημερομηνία Εφαρμογής"
-
-#. module: account_payment
-#: field:payment.line,ml_inv_ref:0
-msgid "Invoice Ref."
-msgstr "Σχετ. Τιμολόγιο"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -260,13 +136,174 @@ msgstr ""
 "\"Ημερομηνία Λήξης\" σημαίνει την καθορισμένη ημερομηνία εκτέλεσης."
 
 #. module: account_payment
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Επικοινωνία"
+
+#. module: account_payment
+#: field:payment.line,communication2:0
+msgid "Communication 2"
+msgstr "Επικοινωνία 2"
+
+#. module: account_payment
+#: field:payment.line,state:0
+msgid "Communication Type"
+msgstr "Τύπος Επικοινωνίας"
+
+#. module: account_payment
+#: field:payment.line,company_id:0
+#: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: account_payment
+#: field:payment.line,company_currency:0
+msgid "Company Currency"
+msgstr "Νόμισμα Εταιρίας"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Company Currency:"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Confirm Payments"
+msgstr "Επιβεβαίωση Πληρωμών"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Confirmed"
+msgstr "Επιβεβαιωμένο"
+
+#. module: account_payment
+#: field:payment.line,create_date:0
+msgid "Created"
+msgstr "Δημιουργήθηκε"
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_uid:0
+#: field:account.payment.populate.statement,create_uid:0
+#: field:payment.line,create_uid:0
+#: field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0
+#: field:payment.order.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_date:0
+#: field:account.payment.populate.statement,create_date:0
+#: field:payment.mode,create_date:0
+#: field:payment.order,create_date:0
+#: field:payment.order.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
 msgstr ""
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Bank or Cash Journal for the Payment Mode"
+#: view:website:account_payment.report_paymentorder
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Currency Amount Total"
+msgstr "Συνολικό Ποσό Νομίσματος"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+msgid "Desitination Account"
+msgstr "Λογαριασμός Προορισμού"
+
+#. module: account_payment
+#: field:payment.line,info_partner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Destination Account"
+msgstr "Λογαριασμός Προορισμού"
+
+#. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Directly"
+msgstr "Άμεσα"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Done"
+msgstr "Εκπληρωμένο"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Πρόχειρο"
+
+#. module: account_payment
+#: field:payment.line,ml_maturity_date:0
+#: field:payment.order.create,duedate:0
+msgid "Due Date"
+msgstr "Ημερομηνία Λήξης"
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Due date"
+msgstr "Ημερομηνία λήξης"
+
+#. module: account_payment
+#: field:payment.line,ml_date_created:0
+msgid "Effective Date"
+msgstr "Ημερομηνία Εφαρμογής"
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: field:payment.order.create,entries:0
+msgid "Entries"
+msgstr "Εγγραφές"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Entry Information"
+msgstr "Πληροφορίες Εγγραφής"
+
+#. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:113
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.line,move_line_id:0
+msgid "Entry line"
+msgstr "Γραμμή εγγραφής"
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:42
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Execution:"
 msgstr ""
 
 #. module: account_payment
@@ -275,82 +312,32 @@ msgid "Fixed date"
 msgstr "Καθορισμένη ημερομηνία"
 
 #. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
-msgid "Destination Account"
-msgstr "Λογαριασμός Προορισμού"
+#: selection:payment.line,state:0
+msgid "Free"
+msgstr "Ελεύθερο"
 
 #. module: account_payment
-#: view:payment.line:0
-msgid "Desitination Account"
-msgstr "Λογαριασμός Προορισμού"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "General Information"
+msgstr "Γενικές Πληροφορίες"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Search Payment Orders"
-msgstr "Αναζήτηση Παραγγελίες Πληρωμής"
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Group By"
+msgstr ""
 
 #. module: account_payment
-#: field:payment.line,create_date:0
-msgid "Created"
-msgstr "Δημιουργήθηκε"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Επιλέξτε Τιμολόγια Προς Πληρωμή"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Currency Amount Total"
-msgstr "Συνολικό Ποσό Νομίσματος"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Make Payments"
-msgstr "Εκτελέστε Πληρωμές"
-
-#. module: account_payment
-#: field:payment.line,state:0
-msgid "Communication Type"
-msgstr "Τύπος Επικοινωνίας"
-
-#. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Συνεργάτης"
-
-#. module: account_payment
-#: field:payment.line,bank_statement_line_id:0
-msgid "Bank statement line"
-msgstr "Γραμμή Παραστατικού Τράπεζας"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Due date"
-msgstr "Ημερομηνία λήξης"
-
-#. module: account_payment
-#: field:account.invoice,amount_to_pay:0
-msgid "Amount to be paid"
-msgstr "Ποσό προς πληρωμή"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Currency"
-msgstr "Νόμισμα"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Yes"
-msgstr "Ναι"
-
-#. module: account_payment
-#: help:payment.line,info_owner:0
-msgid "Address of the Main Partner"
-msgstr "Διεύθυνση του κύριου Συνεργάτη"
+#: field:account.payment.make.payment,id:0
+#: field:account.payment.populate.statement,id:0
+#: field:payment.line,id:0
+#: field:payment.mode,id:0
+#: field:payment.order,id:0
+#: field:payment.order.create,id:0
+#: field:report.account_payment.report_paymentorder,id:0
+msgid "ID"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -362,15 +349,87 @@ msgstr ""
 "αυτήν την γραμμή πληρωμής άμεσα"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_populate_statement
-msgid "Account Payment Populate Statement"
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Lines"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "There is no partner defined on the entry line."
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Payment Lines"
 msgstr ""
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Information"
+msgstr "Πληροφορίες"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Τιμολόγιο"
+
+#. module: account_payment
+#: help:payment.line,ml_date_created:0
+msgid "Invoice Effective Date"
+msgstr "Ημερομηνία Εφαρμογής Τιμολογίου"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Invoice Ref"
+msgstr "Παρ. Τιμολογίου"
+
+#. module: account_payment
+#: field:payment.line,ml_inv_ref:0
+msgid "Invoice Ref."
+msgstr "Σχετ. Τιμολόγιο"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Invoices"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Ημερολόγιο"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move_line
+msgid "Journal Items"
+msgstr "Στοιχεία Ημερολογίου"
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_uid:0
+#: field:account.payment.populate.statement,write_uid:0
+#: field:payment.line,write_uid:0
+#: field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0
+#: field:payment.order.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_date:0
+#: field:account.payment.populate.statement,write_date:0
+#: field:payment.line,write_date:0
+#: field:payment.mode,write_date:0
+#: field:payment.order,write_date:0
+#: field:payment.order.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
+msgid "Make Payment"
+msgstr "Κάνε Πληρωμή"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Make Payments"
+msgstr "Εκτελέστε Πληρωμές"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -378,14 +437,111 @@ msgid "Mode of Payment"
 msgstr "Κατάσταση των Πληρωμών"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Value Date"
+#: field:payment.mode,name:0
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
+msgid "New Payment Order"
+msgstr "Νέα Εντολή Πληρωμής"
+
+#. module: account_payment
+#: field:payment.line,order_id:0
+msgid "Order"
+msgstr "Εντολή"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: field:payment.line,info_owner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Owner Account"
+msgstr "Λογαριασμός Κατόχου"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: view:website:account_payment.report_paymentorder
+msgid "Partner"
+msgstr "Συνεργάτης"
+
+#. module: account_payment
+#: field:payment.line,currency:0
+msgid "Partner Currency"
+msgstr "Νόμισμα Συνεργάτη"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.menu_main_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment"
+msgstr "Πληρωμή"
+
+#. module: account_payment
+#: field:payment.line,date:0
+msgid "Payment Date"
+msgstr "Ημερομηνία Πληρωμής"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment Line"
+msgstr "Γραμμή Πληρωμής"
+
+#. module: account_payment
+#: field:account.payment.populate.statement,lines:0
+msgid "Payment Lines"
+msgstr "Γραμμές Πληρωμής"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
+#: model:ir.model,name:account_payment.model_payment_mode
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.mode:account_payment.view_payment_mode_tree
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,mode:0
+msgid "Payment Mode"
+msgstr "Κατάσταση Πληρωμής"
+
+#. module: account_payment
+#: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Payment Order"
+msgstr "Διάταξη Πληρωμής"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Order / Payment"
 msgstr ""
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Payment Type"
-msgstr "Τύπος Πληρωμής"
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
+msgid "Payment Orders"
+msgstr "Εντολές Πληρωμής"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
+#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
+msgid "Payment Populate statement"
+msgstr ""
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Type:"
+msgstr ""
+
+#. module: account_payment
+#: help:payment.line,amount:0
+msgid "Payment amount in the company currency"
+msgstr "Πληρωμή ποσού στο νόμισμα της εταιρίας"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -393,31 +549,62 @@ msgid "Payment amount in the partner currency"
 msgstr "Ποσό Πληρωμής στο νόμισμα του συνεργάτη"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Πρόχειρο"
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Γραμμές Πληρωμής"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "Status"
-msgstr ""
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_tree
+msgid "Payment order"
+msgstr "Διάταξη Πληρωμής"
 
 #. module: account_payment
-#: help:payment.line,communication2:0
-msgid "The successor message of Communication."
-msgstr "Το επόμενο μήνυμα της Επικοινωνίας."
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Συμπλήρωση Πληρωμής"
 
 #. module: account_payment
-#: help:payment.line,info_partner:0
-msgid "Address of the Ordering Customer."
-msgstr "Διεύθυνση του Πελάτη Παραγγελίας."
-
-#. module: account_payment
-#: view:account.payment.populate.statement:0
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
 msgid "Populate Statement:"
 msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,reference:0
+#: view:website:account_payment.report_paymentorder
+msgid "Reference"
+msgstr "Αναφορά"
+
+#. module: account_payment
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Search Payment Orders"
+msgstr "Αναζήτηση Παραγγελίες Πληρωμής"
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Search Payment lines"
+msgstr "Εύρεση Γραμμών Πληρωμής"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -427,14 +614,46 @@ msgstr ""
 "καθορισμένο."
 
 #. module: account_payment
-#: field:account.payment.populate.statement,lines:0
-msgid "Payment Lines"
-msgstr "Γραμμές Πληρωμής"
+#: help:payment.order,mode:0
+msgid "Select the Payment Mode to be applied."
+msgstr "Επιλέξτε την Κατάσταση Πληρωμής που θα εφαρμοστεί."
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_move_line
-msgid "Journal Items"
-msgstr "Στοιχεία Ημερολογίου"
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Set to draft"
+msgstr "Ρύθμιση σε πρόχειρο"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.line,state:0
+msgid "Structured"
+msgstr "Δομημένο"
+
+#. module: account_payment
+#: help:payment.line,partner_id:0
+msgid "The Ordering Customer"
+msgstr "Ο Πελάτης Παραγγελίας"
+
+#. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "Η γραμή πληρωμής θα πρέπει να είναι μοναδική"
+
+#. module: account_payment
+#: help:payment.line,communication2:0
+msgid "The successor message of Communication."
+msgstr "Το επόμενο μήνυμα της Επικοινωνίας."
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -446,190 +665,31 @@ msgstr ""
 "παραγγελίας."
 
 #. module: account_payment
-#: view:payment.order.create:0
-msgid "Search"
-msgstr "Αναζήτηση"
+#: field:payment.order,total:0
+#: view:website:account_payment.report_paymentorder
+msgid "Total"
+msgstr "Σύνολο"
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "Responsible"
+#: view:website:account_payment.report_paymentorder
+msgid "Total (Currency)"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,date:0
-msgid "Payment Date"
-msgstr "Ημερομηνία Πληρωμής"
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Total in Company Currency"
+msgstr "Σύνολο σε Νόμισμα Εταιρίας"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Total:"
-msgstr "Σύνολο:"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Transaction Information"
+msgstr "Πληροφορίες Συναλλαγής"
 
 #. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution Date"
+#: view:website:account_payment.report_paymentorder
+msgid "Used Account:"
 msgstr ""
-
-#. module: account_payment
-#: view:account.payment.populate.statement:0
-msgid "ADD"
-msgstr "ΠΡΟΣΘΗΚΗ"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "Συμπλήρωση Πληρωμής"
-
-#. module: account_payment
-#: field:account.move.line,amount_to_pay:0
-msgid "Amount to pay"
-msgstr "Ποσό προς πληρωμή"
-
-#. module: account_payment
-#: field:payment.line,amount:0
-msgid "Amount in Company Currency"
-msgstr "Ποσό σε Νόμισμα Εταιρίας"
-
-#. module: account_payment
-#: help:payment.line,partner_id:0
-msgid "The Ordering Customer"
-msgstr "Ο Πελάτης Παραγγελίας"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_make_payment
-msgid "Account make payment"
-msgstr ""
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Invoice Ref"
-msgstr "Παρ. Τιμολογίου"
-
-#. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
-msgstr "Η Αναφορά Σας"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Payment order"
-msgstr "Διάταξη Πληρωμής"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "General Information"
-msgstr "Γενικές Πληροφορίες"
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Done"
-msgstr "Εκπληρωμένο"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_invoice
-msgid "Invoice"
-msgstr "Τιμολόγιο"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Επικοινωνία"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "Cancel"
-msgstr "Άκυρο"
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank Account"
-msgstr ""
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Information"
-msgstr "Πληροφορίες"
-
-#. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-#: view:payment.order:0
-msgid "Payment Order"
-msgstr "Διάταξη Πληρωμής"
-
-#. module: account_payment
-#: help:payment.line,amount:0
-msgid "Payment amount in the company currency"
-msgstr "Πληρωμή ποσού στο νόμισμα της εταιρίας"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "Search Payment lines"
-msgstr "Εύρεση Γραμμών Πληρωμής"
-
-#. module: account_payment
-#: field:payment.line,amount_currency:0
-msgid "Amount in Partner Currency"
-msgstr "Ποσό σε Νόμισμα Συνεργάτη"
-
-#. module: account_payment
-#: field:payment.line,communication2:0
-msgid "Communication 2"
-msgstr "Επικοινωνία 2"
-
-#. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled Date"
-msgstr ""
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Are you sure you want to make payment?"
-msgstr "Είστε σίγουρος ότι θέλετε να κάνετε αυτή την πληρωμή;"
-
-#. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Ημερολόγιο"
-
-#. module: account_payment
-#: field:payment.mode,bank_id:0
-msgid "Bank account"
-msgstr "Λογαριασμός τράπεζας"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Confirm Payments"
-msgstr "Επιβεβαίωση Πληρωμών"
-
-#. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
-msgid "Company Currency"
-msgstr "Νόμισμα Εταιρίας"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment"
-msgstr "Πληρωμή"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Payment Order / Payment"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,move_line_id:0
-msgid "Entry line"
-msgstr "Γραμμή εγγραφής"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -642,206 +702,37 @@ msgstr ""
 "παραγγελία;\""
 
 #. module: account_payment
-#: field:payment.mode,name:0
-msgid "Name"
-msgstr "Όνομα"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Bank Account"
-msgstr "Λογαριασμός Τραπέζης"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Entry Information"
-msgstr "Πληροφορίες Εγγραφής"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_order_create
-msgid "payment.order.create"
+#: view:website:account_payment.report_paymentorder
+msgid "Value Date"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,order_id:0
-msgid "Order"
-msgstr "Εντολή"
-
-#. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Σύνολο"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
-msgid "Make Payment"
-msgstr "Κάνε Πληρωμή"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred Date"
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
 msgstr ""
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "or"
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Yes"
+msgstr "Ναι"
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:42
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
 msgstr ""
 
 #. module: account_payment
-#: help:payment.mode,bank_id:0
-msgid "Bank Account for the Payment Mode"
-msgstr "Λογαριασμός Τραπέζης για την Κατάσταση Πληρωμής"
+#: field:payment.line,name:0
+msgid "Your Reference"
+msgstr "Η Αναφορά Σας"
 
-#~ msgid "Preferred date"
-#~ msgstr "Προτιμώμενη ημερομηνία"
-
-#~ msgid "Scheduled date if fixed"
-#~ msgstr "Προγραμματισμένη ημερομηνία εάν είναι καθορισμένο"
-
-#~ msgid "Account Entry Line"
-#~ msgstr "Γραμμή Εγγραφής Λογαριασμού"
-
-#~ msgid "Execution date:"
-#~ msgstr "Ημερομηνία εκτέλεσης:"
-
-#~ msgid "State"
-#~ msgstr "Κατάσταση"
-
-#~ msgid "Suitable bank types"
-#~ msgstr "Κατάλληλοι τύποι τράπεζας"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Σφάλμα!"
-
-#~ msgid "Execution date"
-#~ msgstr "Ημερομηνία εκτέλεσης"
-
-#~ msgid "Total debit"
-#~ msgstr "Συνολική χρέωση"
-
-#~ msgid "Payment Management"
-#~ msgstr "Διαχείριση Πληρωμών"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Άκυρο"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
-
-#, python-format
-#~ msgid "No partner defined on entry line"
-#~ msgstr "Κανένας συνεργάτης δεν καθορίστηκε για αυτήν την γραμμή εγγραφής"
-
-#~ msgid "Total credit"
-#~ msgstr "Συνολική πίστωση"
-
-#~ msgid "Creation date"
-#~ msgstr "Ημερομηνία δημιουργίας"
-
-#~ msgid "Reference:"
-#~ msgstr "Αναφορά:"
-
-#~ msgid "Date"
-#~ msgstr "Ημερομηνία"
-
-#~ msgid "Maturity Date"
-#~ msgstr "Ημερομηνία Ενηλικίωσης"
-
-#~ msgid "Populate payment"
-#~ msgstr "Συγκέντρωση πληρωμών"
-
-#~ msgid "User"
-#~ msgstr "Χρήστης"
-
-#~ msgid "Import payment lines"
-#~ msgstr "Εισαγωγή γραμμών πληρωμής"
-
-#~ msgid "Code"
-#~ msgstr "Κώδικας"
-
-#~ msgid "Specify the Code for Payment Type"
-#~ msgstr "Καθορισμός του κώδικα Τύπου Πληρωμής"
-
-#~ msgid "Draft Payment Order"
-#~ msgstr "Διάταξη Πρόχειρων Πληρωμών"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-#~ "ειδικούς χαρακτήρες!"
-
-#~ msgid "Pay"
-#~ msgstr "Πληρωμή"
-
-#~ msgid "Destination Bank account"
-#~ msgstr "Λογαριασμός Τράπεζας Προορισμού"
-
-#~ msgid "Cash Journal for the Payment Mode"
-#~ msgstr "Ημερολόγιο Μετρητών για την Κατάσταση Πληρωμών"
-
-#~ msgid "_Add"
-#~ msgstr "_Προσθήκη"
-
-#~ msgid "Payment Orders to Validate"
-#~ msgstr "Εντολές Πληρωμής Προς Έλεγχο"
-
-#~ msgid "Populate Statement with Payment lines"
-#~ msgstr "Συγκέντρωση δήλωσης με εγγραφές Πληρωμών"
-
-#~ msgid "_Search"
-#~ msgstr "_Εύρεση"
-
-#~ msgid "Payment type"
-#~ msgstr "Τύπος πληρωμής"
-
-#, python-format
-#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-#~ msgstr ""
-#~ "Ο συνεργάτης '+ line.partner_id.name+ ' δεν έχει καθορισμένο λογαριασμό "
-#~ "τραπέζης"
-
-#~ msgid "Select the Payment Type for the Payment Mode."
-#~ msgstr "Επιλέξτε τον Τύπο Πληρωμής για την Κατάσταση Πληρωμής."
-
-#~ msgid "Payment mode"
-#~ msgstr "Κατάσταση πληρωμής"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
-
-#~ msgid ""
-#~ "When an order is placed the state is 'Draft'.\n"
-#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
-#~ " Then the order is paid the state is 'Done'."
-#~ msgstr ""
-#~ "Όταν η κατάσταση της παραγγελίας είναι «Σχέδιο».\n"
-#~ " Μόλις η τράπεζα επιβεβαιώθεί η κατάσταση  ορίζεται σε «Επικύρωμένο».\n"
-#~ " Στη συνέχεια, η παραγγελία πληρώνεται και η κατάσταση είναι "
-#~ "'Πραγματοποιήθηκε'."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Λάθος πιστωτική ή χρεωστική τιμή στην καταχώρηση!"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module provides :\n"
-#~ "* a more efficient way to manage invoice payment.\n"
-#~ "* a basic mechanism to easily plug various automated payment.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Αυτό το άρθρωμα παρέχει:\n"
-#~ "*έναν αποδοτικότερο τρόπο πληρωμής τιμολογίων.\n"
-#~ "*έναν βασικό μηχανισμό για να προσαρμόσετε διάφορα συστήματα πληρωμω΄ν.\n"
-#~ "    "
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Δεν μπορείς να δημιουργήσεις γραμμή κίνησης σε λογαριασμό όψης."
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Δεν μπορείς να δημιουργήσεις γραμμή κίνησης σε κλειστό λογαριασμό."
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "_Add to payment order"
+msgstr "_Προσθήκη σε εντολή πληρωμής"

@@ -86,7 +86,7 @@ CREATE TABLE ir_module_module (
     summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
-    icon character varying(64),
+    icon varchar,
     state character varying(16),
     latest_version character varying(64),
     shortdesc character varying(256),
@@ -140,6 +140,7 @@ CREATE TABLE ir_model_constraint (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
+    definition varchar,
     name varchar NOT NULL,
     primary key(id)
 );

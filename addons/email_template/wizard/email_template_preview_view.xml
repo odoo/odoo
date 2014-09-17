@@ -6,7 +6,7 @@
             <field name="name">email_template.preview.form</field>
             <field name="model">email_template.preview</field>
             <field name="arch" type="xml">
-                <form string="Email Preview" version="7.0">
+                <form string="Email Preview">
                     <field name="model_id" invisible="1"/>
                     <h3>Preview of <field name="name" readonly="1" nolabel="1" class="oe_inline"/></h3>
                     Choose an example <field name="model_id" class="oe_inline" readonly="1"/> record:
@@ -26,7 +26,7 @@
                     </group>
                     <field name="body_html" widget="html" readonly="1"
                             nolabel="1" options='{"safe": True}'/>
-                    <field name="attachment_ids" widget="many2many_binary" radonly="1"/>
+                    <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
                 </form>
             </field>
         </record>

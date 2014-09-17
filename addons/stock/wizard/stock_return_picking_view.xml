@@ -26,7 +26,7 @@
             <field name="name">stock.return.picking.line.from</field>
             <field name="model">stock.return.picking.line</field>
             <field name="arch" type="xml">
-                <form string="Return Picking Memory" version="7.0">
+                <form string="Return Picking Memory">
                     <group col="4">
                         <field name="product_id" />
                         <field name="lot_id" groups="stock.group_production_lot"/>
@@ -40,7 +40,7 @@
             <field name="name">Return lines</field>
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
-                <form string="Return lines" version="7.0">
+                <form string="Return lines">
                     <group string="Provide the quantities of the returned products.">
                         <field name="move_dest_exists" invisible="1"/>
 			<div attrs="{'invisible': [('move_dest_exists', '=', False)]}" class="oe_grey" colspan="4">

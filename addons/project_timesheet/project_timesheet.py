@@ -38,9 +38,9 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
-
+        
     _defaults = {
-        'use_timesheets': True,
+        'invoice_on_timesheets': True,
     }
 
     def open_timesheets(self, cr, uid, ids, context=None):
@@ -137,7 +137,8 @@ class project_work(osv.osv):
                 amount = vals_line['unit_amount']
                 prod_id = vals_line['product_id']
                 unit = False
-                timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
+                context = dict(context, recompute=True)
+                timeline_id = timesheet_obj.create(cr, uid, vals_line, context=context)
 
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
@@ -198,7 +199,8 @@ class project_work(osv.osv):
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
 
-            self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
+            if vals_line:
+                self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

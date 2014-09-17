@@ -45,13 +45,23 @@
             </field>
         </field>
     </record>
+    <record id="variants_tree_view" model="ir.ui.view">
+        <field name="name">variants.template.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.variants_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="color"/>
+            </field>
+        </field>
+    </record>
 
     <!-- Product Public Categories -->
     <record id="product_public_category_form_view" model="ir.ui.view">
         <field name="name">product.public.category.form</field>
         <field name="model">product.public.category</field>
         <field name="arch" type="xml">
-            <form string="Public Categories" version="7.0">
+            <form string="Public Categories">
                 <sheet>
                     <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
                     <div class="oe_left">
@@ -77,7 +87,7 @@
         </field>
     </record>
     <record id="product_public_category_action" model="ir.actions.act_window">
-        <field name="name">Public Product Categories</field>
+        <field name="name">Public Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
         <field name="view_type">form</field>
@@ -96,7 +106,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="10" />
+    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
     <!-- END -->
 
  </data>

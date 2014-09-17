@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from psycopg2 import OperationalError
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
@@ -64,7 +65,7 @@ class procurement_group(osv.osv):
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or '',
-        'move_type': lambda self, cr, uid, c: 'one'
+        'move_type': lambda self, cr, uid, c: 'direct'
     }
 
 class procurement_rule(osv.osv):
@@ -109,9 +110,9 @@ class procurement_order(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
 
-        'origin': fields.char('Source Document', size=64,
+        'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by OpenERP."),
+            "This is automatically completed by Odoo."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
@@ -134,7 +135,7 @@ class procurement_order(osv.osv):
             ('exception', 'Exception'),
             ('running', 'Running'),
             ('done', 'Done')
-        ], 'Status', required=True, track_visibility='onchange'),
+        ], 'Status', required=True, track_visibility='onchange', copy=False),
     }
 
     _defaults = {
@@ -193,31 +194,49 @@ class procurement_order(osv.osv):
     def reset_to_confirmed(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
-    def run(self, cr, uid, ids, context=None):
+    def run(self, cr, uid, ids, autocommit=False, context=None):
         for procurement_id in ids:
-            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be ressource greedy
+            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
             #and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
             #will fetch all the ids again) 
             procurement = self.browse(cr, uid, procurement_id, context=context)
             if procurement.state not in ("running", "done"):
-                if self._assign(cr, uid, procurement, context=context):
-                    procurement.refresh()
-                    res = self._run(cr, uid, procurement, context=context or {})
-                    if res:
-                        self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                try:
+                    if self._assign(cr, uid, procurement, context=context):
+                        procurement.refresh()
+                        res = self._run(cr, uid, procurement, context=context or {})
+                        if res:
+                            self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                        else:
+                            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
                     else:
+                        self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
                         self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
-                else:
-                    self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
-                    self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                    if autocommit:
+                        cr.commit()
+                except OperationalError:
+                    if autocommit:
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
         return True
 
-    def check(self, cr, uid, ids, context=None):
+    def check(self, cr, uid, ids, autocommit=False, context=None):
         done_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
-            result = self._check(cr, uid, procurement, context=context)
-            if result:
-                done_ids.append(procurement.id)
+            try:
+                result = self._check(cr, uid, procurement, context=context)
+                if result:
+                    done_ids.append(procurement.id)
+                if autocommit:
+                    cr.commit()
+            except OperationalError:
+                if autocommit:
+                    cr.rollback()
+                    continue
+                else:
+                    raise
         if done_ids:
             self.write(cr, uid, done_ids, {'state': 'done'}, context=context)
         return done_ids
@@ -267,7 +286,7 @@ class procurement_order(osv.osv):
     #
     # Scheduler
     #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
         '''
         Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
         the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
@@ -288,22 +307,33 @@ class procurement_order(osv.osv):
                 cr = openerp.registry(cr.dbname).cursor()
 
             # Run confirmed procurements
+            dom = [('state', '=', 'confirmed')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
+            prev_ids = []
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'confirmed')], context=context)
-                if not ids:
+                ids = self.search(cr, SUPERUSER_ID, dom, context=context)
+                if not ids or prev_ids == ids:
                     break
-                self.run(cr, SUPERUSER_ID, ids, context=context)
+                else:
+                    prev_ids = ids
+                self.run(cr, SUPERUSER_ID, ids, autocommit=use_new_cursor, context=context)
                 if use_new_cursor:
                     cr.commit()
 
             # Check if running procurements are done
             offset = 0
+            dom = [('state', '=', 'running')]
+            if company_id:
+                dom += [('company_id', '=', company_id)]
+            prev_ids = []
             while True:
-                ids = self.search(cr, SUPERUSER_ID, [('state', '=', 'running')], offset=offset, context=context)
-                if not ids:
+                ids = self.search(cr, SUPERUSER_ID, dom, offset=offset, context=context)
+                if not ids or prev_ids == ids:
                     break
-                done = self.check(cr, SUPERUSER_ID, ids, context=context)
-                offset += len(ids) - len(done)
+                else:
+                    prev_ids = ids
+                self.check(cr, SUPERUSER_ID, ids, autocommit=use_new_cursor, context=context)
                 if use_new_cursor:
                     cr.commit()
 

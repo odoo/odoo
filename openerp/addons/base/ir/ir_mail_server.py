@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEMultipart import MIMEMultipart
-from email.Charset import Charset
-from email.Header import Header
-from email.Utils import formatdate, make_msgid, COMMASPACE
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.charset import Charset
+from email.header import Header
+from email.utils import formatdate, make_msgid, COMMASPACE, parseaddr
 from email import Encoders
 import logging
 import re
@@ -120,6 +120,7 @@ def encode_header_param(param_text):
     return param_text_ascii if param_text_ascii\
          else Charset('utf8').header_encode(param_text_utf8)
 
+# TODO master, remove me, no longer used internaly
 name_with_email_pattern = re.compile(r'("[^<@>]+")\s*<([^ ,<@]+@[^> ,]+)>')
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 
@@ -143,15 +144,16 @@ def encode_rfc2822_address_header(header_text):
     header_text_ascii = try_coerce_ascii(header_text_utf8)
     if header_text_ascii:
         return header_text_ascii
+
+    name, email = parseaddr(header_text_utf8)
+    if not name:
+      return email
+
     # non-ASCII characters are present, attempt to
     # replace all "Name" patterns with the RFC2047-
     # encoded version
-    def replace(match_obj):
-        name, email = match_obj.group(1), match_obj.group(2)
-        name_encoded = str(Header(name, 'utf-8'))
-        return "%s <%s>" % (name_encoded, email)
-    header_text_utf8 = name_with_email_pattern.sub(replace,
-                                                   header_text_utf8)
+    name_encoded = str(Header(name, 'utf-8'))
+    header_text_utf8 = "%s <%s>" % (name_encoded, email)
     # try again after encoding
     header_text_ascii = try_coerce_ascii(header_text_utf8)
     if header_text_ascii:
@@ -167,8 +169,8 @@ class ir_mail_server(osv.osv):
     _name = "ir.mail_server"
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True, select=True),
-        'smtp_host': fields.char('SMTP Server', size=128, required=True, help="Hostname or IP of SMTP server"),
+        'name': fields.char('Description', required=True, select=True),
+        'smtp_host': fields.char('SMTP Server', required=True, help="Hostname or IP of SMTP server"),
         'smtp_port': fields.integer('SMTP Port', size=5, required=True, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."),
         'smtp_user': fields.char('Username', size=64, help="Optional username for SMTP authentication"),
         'smtp_pass': fields.char('Password', size=64, help="Optional password for SMTP authentication"),
@@ -415,6 +417,13 @@ class ir_mail_server(osv.osv):
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
         assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
 
+        x_forge_to = message['X-Forge-To']
+        if x_forge_to:
+            # `To:` header forged, e.g. for posting on mail.groups, to avoid confusion
+            del message['X-Forge-To']
+            del message['To'] # avoid multiple To: headers!
+            message['To'] = x_forge_to
+
         # Do not actually send emails in testing mode!
         if getattr(threading.currentThread(), 'testing', False):
             _test_logger.info("skip sending email in test mode")
@@ -461,21 +470,18 @@ class ir_mail_server(osv.osv):
                 mdir.add(message.as_string(True))
                 return message_id
 
+            smtp = None
             try:
                 smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                try:
-                    # Close Connection of SMTP Server
+                if smtp is not None:
                     smtp.quit()
-                except Exception:
-                    # ignored, just a consequence of the previous exception
-                    pass
         except Exception, e:
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.exception(msg)
+            _logger.error(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 

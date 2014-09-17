@@ -33,10 +33,11 @@ from openerp.tools import misc, config
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
-    "database.uuid": lambda: str(uuid.uuid1()),
-    "database.create_date": lambda: datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT),
-    "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
+    "database.uuid": lambda: (str(uuid.uuid1()), []),
+    "database.create_date": lambda: (datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
+    "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
 }
+
 
 class ir_config_parameter(osv.osv):
     """Per-database storage of configuration key-value pairs."""
@@ -45,8 +46,9 @@ class ir_config_parameter(osv.osv):
     _rec_name = 'key'
 
     _columns = {
-        'key': fields.char('Key', size=256, required=True, select=1),
+        'key': fields.char('Key', required=True, select=1),
         'value': fields.text('Value', required=True),
+        'group_ids': fields.many2many('res.groups', 'ir_config_parameter_groups_rel', 'icp_id', 'group_id', string='Groups'),
     }
 
     _sql_constraints = [
@@ -62,7 +64,9 @@ class ir_config_parameter(osv.osv):
             # force=True skips search and always performs the 'if' body (because ids=False)
             ids = not force and self.search(cr, SUPERUSER_ID, [('key','=',key)])
             if not ids:
-                self.set_param(cr, SUPERUSER_ID, key, func())
+                value, groups = func()
+                self.set_param(cr, SUPERUSER_ID, key, value, groups=groups)
+
 
     def get_param(self, cr, uid, key, default=False, context=None):
         """Retrieve the value for a given key.
@@ -78,24 +82,36 @@ class ir_config_parameter(osv.osv):
         param = self.browse(cr, uid, ids[0], context=context)
         value = param.value
         return value
-    
-    def set_param(self, cr, uid, key, value, context=None):
+
+    def set_param(self, cr, uid, key, value, groups=[], context=None):
         """Sets the value of a parameter.
-        
+
         :param string key: The key of the parameter value to set.
         :param string value: The value to set.
+        :param list of string groups: List of group (xml_id allowed) to read this key.
         :return: the previous value of the parameter or False if it did
                  not exist.
         :rtype: string
         """
         ids = self.search(cr, uid, [('key','=',key)], context=context)
+
+        gids = []
+        for group_xml in groups:
+            res_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, group_xml)
+            if res_id:
+                gids.append((4, res_id))
+
+        vals = {'value': value}
+        if gids:
+            vals.update(group_ids=gids)
         if ids:
             param = self.browse(cr, uid, ids[0], context=context)
             old = param.value
-            self.write(cr, uid, ids, {'value': value}, context=context)
+            self.write(cr, uid, ids, vals, context=context)
             return old
         else:
-            self.create(cr, uid, {'key': key, 'value': value}, context=context)
+            vals.update(key=key)
+            self.create(cr, uid, vals, context=context)
             return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

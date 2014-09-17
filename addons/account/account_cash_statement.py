@@ -77,7 +77,11 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            if (statement.journal_id.type not in ('cash',)) or (not statement.journal_id.cash_control):
+            if (statement.journal_id.type not in ('cash',)):
+                continue
+            if not statement.journal_id.cash_control:
+                if statement.balance_end_real <> statement.balance_end:
+                    statement.write({'balance_end_real' : statement.balance_end})
                 continue
             start = end = 0
             for line in statement.details_ids:
@@ -179,7 +183,7 @@ class account_cash_statement(osv.osv):
             },
             help="Total of cash transaction lines."),
         'closing_date': fields.datetime("Closed On"),
-        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
+        'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines', copy=True),
         'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
@@ -295,7 +299,6 @@ class account_cash_statement(osv.osv):
         return state=='open'
 
     def button_confirm_cash(self, cr, uid, ids, context=None):
-        super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         absl_proxy = self.pool.get('account.bank.statement.line')
 
         TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
@@ -303,27 +306,27 @@ class account_cash_statement(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.difference == 0.0:
                 continue
-
-            for item_label, item_account in TABLES:
-                if getattr(obj.journal_id, item_account):
-                    raise osv.except_osv(_('Error!'),
-                                         _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
-
-            is_profit = obj.difference < 0.0
-
-            account = getattr(obj.journal_id, TABLES[is_profit][1])
+            elif obj.difference < 0.0:
+                account = obj.journal_id.loss_account_id
+                name = _('Loss')
+                if not obj.journal_id.loss_account_id:
+                    raise osv.except_osv(_('Error!'), _('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
+            else: # obj.difference > 0.0
+                account = obj.journal_id.profit_account_id
+                name = _('Profit')
+                if not obj.journal_id.profit_account_id:
+                    raise osv.except_osv(_('Error!'), _('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
 
             values = {
                 'statement_id' : obj.id,
                 'journal_id' : obj.journal_id.id,
                 'account_id' : account.id,
                 'amount' : obj.difference,
-                'name' : 'Exceptional %s' % TABLES[is_profit][0],
+                'name' : name,
             }
-
             absl_proxy.create(cr, uid, values, context=context)
 
-        return self.write(cr, uid, ids, {'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
+        return super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
 
 
 class account_journal(osv.osv):
@@ -337,7 +340,7 @@ class account_journal(osv.osv):
         return result
 
     _columns = {
-        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox'),
+        'cashbox_line_ids' : fields.one2many('account.journal.cashbox.line', 'journal_id', 'CashBox', copy=True),
     }
 
     _defaults = {

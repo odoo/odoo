@@ -44,7 +44,7 @@
         <record id="mt_question_new" model="mail.message.subtype">
             <field name="name">New Question</field>
             <field name="res_model">forum.post</field>
-            <field name="default" eval="False"/>
+            <field name="default" eval="True"/>
             <field name="description">New Question</field>
         </record>
         <record id="mt_question_edit" model="mail.message.subtype">
@@ -57,7 +57,7 @@
         <record id="mt_forum_answer_new" model="mail.message.subtype">
             <field name="name">New Answer</field>
             <field name="res_model">forum.forum</field>
-            <field name="default" eval="False"/>
+            <field name="default" eval="True"/>
             <field name="hidden" eval="False"/>
             <field name="parent_id" eval="ref('mt_answer_new')"/>
             <field name="relation_field">forum_id</field>

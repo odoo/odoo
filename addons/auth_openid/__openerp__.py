@@ -30,7 +30,7 @@ Allow users to login through OpenID.
 """,
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['base', 'web'],
     'data': [
         'res_users.xml',

@@ -4,17 +4,17 @@
     <record model="ir.actions.act_window" id="action_fleet_reporting_costs">
       <field name="name">Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_id" ref="fleet_vehicle_costs_report"></field>
+      <field name="view_id" ref="fleet_vehicle_effective_costs_report"></field>
       <field name="view_type">form</field>
       <field name="view_mode">graph</field>
-      <field name="context">{"search_default_parent_false" : True,"search_default_groupby_year" : True, "search_default_groupby_cost_subtype" : True,"search_default_groupby_vehicle_id" : True}</field>
+      <field name="context">{"search_default_parent_false" : True,}</field>
       <field name="help" type="html">
         <p>
-          OpenERP helps you managing the costs for your different vehicles
+          Odoo helps you managing the costs for your different vehicles
           Costs are generally created from services and contract and appears here.
         </p>
         <p>
-          Thanks to the different filters, OpenERP can only print the effective
+          Thanks to the different filters, Odoo can only print the effective
           costs, sort them by type and by vehicle.
         </p>
       </field>
@@ -23,32 +23,32 @@
     <record model="ir.actions.act_window" id="action_fleet_reporting_costs_non_effective">
       <field name="name">Indicative Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
-      <field name="view_id" ref="fleet_vehicle_costs_report"></field>
+      <field name="view_id" ref="fleet_vehicle_indicative_costs_report"></field>
       <field name="view_type">form</field>
       <field name="view_mode">graph</field>
-      <field name="context">{"search_default_parent_true" : True,"search_default_groupby_cost_subtype" : True,"search_default_groupby_parent_id" : True,}</field>
+      <field name="context">{"search_default_parent_true" : True,}</field>
       <field name="help" type="html">
         <p>
-          OpenERP helps you managing the costs for your different vehicles
+          Odoo helps you managing the costs for your different vehicles
           Costs are generally created from services and contract and appears here.
         </p>
         <p>
-          Thanks to the different filters, OpenERP can only print the effective
+          Thanks to the different filters, Odoo can only print the effective
           costs, sort them by type and by vehicle.
         </p>
       </field>
     </record>
     
-    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="50" groups="group_fleet_manager"/>
+    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="90" groups="group_fleet_manager"/>
 
-    <menuitem id="menu_fleet_reporting_costs" 
-              parent="menu_fleet_reporting" 
-              action="action_fleet_reporting_costs" 
+    <menuitem id="menu_fleet_reporting_costs"
+              parent="menu_fleet_reporting"
+              action="action_fleet_reporting_costs"
               sequence="1"
               groups="group_fleet_manager"/>
-    <menuitem id="menu_fleet_reporting_indicative_costs" 
-              parent="menu_fleet_reporting" 
-              action="action_fleet_reporting_costs_non_effective" 
+    <menuitem id="menu_fleet_reporting_indicative_costs"
+              parent="menu_fleet_reporting"
+              action="action_fleet_reporting_costs_non_effective"
               sequence="2"
               groups="group_fleet_manager"/>
 </data>

@@ -30,12 +30,37 @@ import urlparse
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
-
 _logger = logging.getLogger(__name__)
+
+
+def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
+    context = dict(context or {})
+    if tz:
+        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
+    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+    ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+
+    if format:
+        return ts.strftime(format)
+    else:
+        lang = context.get("lang")
+        lang_params = {}
+        if lang:
+            res_lang = pool.get('res.lang')
+            ids = res_lang.search(cr, uid, [("code", "=", lang)])
+            if ids:
+                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
+        format_date = lang_params.get("date_format", '%B-%d-%Y')
+        format_time = lang_params.get("time_format", '%I-%M %p')
+
+        fdate = ts.strftime(format_date)
+        ftime = ts.strftime(format_time)
+        return "%s %s (%s)" % (fdate, ftime, tz)
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -120,7 +145,7 @@ class email_template(osv.osv):
         # - img src -> check URL
         # - a href -> check URL
         for node in root.iter():
-            if node.tag == 'a':
+            if node.tag == 'a' and node.get('href'):
                 node.set('href', _process_link(node.get('href')))
             elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
                 node.set('src', _process_link(node.get('src')))
@@ -151,6 +176,7 @@ class email_template(osv.osv):
         """
         if context is None:
             context = {}
+        res_ids = filter(None, res_ids)         # to avoid browsing [None] below
         results = dict.fromkeys(res_ids, u"")
 
         # try to load the template
@@ -164,6 +190,7 @@ class email_template(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
         variables = {
+            'format_tz': lambda dt, tz=False, format=False: format_tz(self.pool, cr, uid, dt, tz, format, context),
             'user': user,
             'ctx': context,  # context kw would clash with mako internals
         }
@@ -216,14 +243,14 @@ class email_template(osv.osv):
         'name': fields.char('Name'),
         'model_id': fields.many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used"),
         'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                size=128, select=True, store=True, readonly=True),
+                                 select=True, store=True, readonly=True),
         'lang': fields.char('Language',
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
                                  "This should usually be a placeholder expression "
-                                 "that provides the appropriate language code, e.g. "
-                                 "${object.partner_id.lang.code}.",
-                            placeholder="${object.partner_id.lang.code}"),
+                                 "that provides the appropriate language, e.g. "
+                                 "${object.partner_id.lang}.",
+                            placeholder="${object.partner_id.lang}"),
         'user_signature': fields.boolean('Add Signature',
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),
@@ -250,10 +277,10 @@ class email_template(osv.osv):
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
         'report_template': fields.many2one('ir.actions.report.xml', 'Optional report to print and attach'),
-        'ref_ir_act_window': fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
+        'ref_ir_act_window': fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                             help="Sidebar action to make this template available on records "
                                                  "of the related document model"),
-        'ref_ir_value': fields.many2one('ir.values', 'Sidebar Button', readonly=True,
+        'ref_ir_value': fields.many2one('ir.values', 'Sidebar Button', readonly=True, copy=False,
                                        help="Sidebar button to open the sidebar action"),
         'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                            'attachment_id', 'Attachments',
@@ -334,13 +361,8 @@ class email_template(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         template = self.browse(cr, uid, id, context=context)
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update(
-            name=_("%s (copy)") % (template.name),
-            ref_ir_act_window=False,
-            ref_ir_value=False)
+        default = dict(default or {},
+                       name=_("%s (copy)") % template.name)
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
@@ -464,7 +486,7 @@ class email_template(osv.osv):
                 # body: add user signature, sanitize
                 if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # technical settings
@@ -505,6 +527,7 @@ class email_template(osv.osv):
 
         return results
 
+    @api.cr_uid_id_context
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.
@@ -541,6 +564,7 @@ class email_template(osv.osv):
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }
+            context = dict(context)
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:

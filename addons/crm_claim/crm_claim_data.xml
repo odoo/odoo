@@ -28,12 +28,12 @@
         Case Category2
         -->
         
-        <record model="crm.case.resource.type" id="type_claim1">
+        <record model="crm.tracking.campaign" id="claim_source1">
             <field name="name">Corrective</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
         
-        <record model="crm.case.resource.type" id="type_claim2">
+        <record model="crm.tracking.campaign" id="claim_source2">
             <field name="name">Preventive</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
@@ -61,7 +61,6 @@
             <field name="name">Rejected</field>
             <field name="sequence">29</field>
             <field name="case_default" eval="True"/>
-            <field name="fold" eval="True"/>
         </record>
         
 

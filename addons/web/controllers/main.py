@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp import http
 
@@ -48,6 +49,9 @@ else:
 
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = simplejson.dumps
+
+# 1 week cache for asset bundles as advised by Google Page Speed
+BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -67,7 +71,7 @@ def serialize_exception(f):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
@@ -119,7 +123,7 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
-    if not db:
+    if not db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
@@ -138,50 +142,6 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_topological_sort(modules):
-    """ Return a list of module names sorted so that their dependencies of the
-    modules are listed before the module itself
-
-    modules is a dict of {module_name: dependencies}
-
-    :param modules: modules to sort
-    :type modules: dict
-    :returns: list(str)
-    """
-
-    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
-    # incoming edge: dependency on other module (if a depends on b, a has an
-    # incoming edge from b, aka there's an edge from b to a)
-    # outgoing edge: other module depending on this one
-
-    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
-    #L ← Empty list that will contain the sorted nodes
-    L = []
-    #S ← Set of all nodes with no outgoing edges (modules on which no other
-    #    module depends)
-    S = set(module for module in modules if module not in dependencies)
-
-    visited = set()
-    #function visit(node n)
-    def visit(n):
-        #if n has not been visited yet then
-        if n not in visited:
-            #mark n as visited
-            visited.add(n)
-            #change: n not web module, can not be resolved, ignore
-            if n not in modules: return
-            #for each node m with an edge from m to n do (dependencies of n)
-            for m in modules[n]:
-                #visit(m)
-                visit(m)
-            #add n to L
-            L.append(n)
-    #for each node n in S do
-    for n in S:
-        #visit(n)
-        visit(n)
-    return L
-
 def module_installed():
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
@@ -199,7 +159,7 @@ def module_installed():
             dependencies = [i['name'] for i in deps_read]
             modules[module['name']] = dependencies
 
-    sorted_modules = module_topological_sort(modules)
+    sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_installed_bypass_session(dbname):
@@ -221,7 +181,7 @@ def module_installed_bypass_session(dbname):
                     modules[module['name']] = dependencies
     except Exception,e:
         pass
-    sorted_modules = module_topological_sort(modules)
+    sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_boot(db=None):
@@ -510,7 +470,11 @@ class Home(http.Controller):
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
-            return request.render('web.webclient_bootstrap')
+            if not request.uid:
+                request.uid = request.session.uid
+
+            menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
+            return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
 
@@ -545,39 +509,35 @@ class Home(http.Controller):
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
+        if not http.db_filter([db]):
+            return werkzeug.utils.redirect('/', 303)
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
-    @http.route('/web/js/<xmlid>', type='http', auth="public")
-    def js_bundle(self, xmlid, **kw):
-        # manifest backward compatible mode, to be removed
-        values = {'manifest_list': manifest_list}
+    @http.route([
+        '/web/js/<xmlid>',
+        '/web/js/<xmlid>/<version>',
+    ], type='http', auth='public')
+    def js_bundle(self, xmlid, version=None, **kw):
         try:
-            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
-        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
-        response = request.make_response(
-            bundle.js(), [('Content-Type', 'application/javascript')])
+        response = request.make_response(bundle.js(), [('Content-Type', 'application/javascript')])
+        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
-        # TODO: check that we don't do weird lazy overriding of __call__ which break body-removal
-        return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
-
-    @http.route('/web/css/<xmlid>', type='http', auth='public')
-    def css_bundle(self, xmlid, **kw):
-        values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
+    @http.route([
+        '/web/css/<xmlid>',
+        '/web/css/<xmlid>/<version>',
+    ], type='http', auth='public')
+    def css_bundle(self, xmlid, version=None, **kw):
         try:
-            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+            bundle = AssetsBundle(xmlid)
         except QWebTemplateNotFound:
             return request.not_found()
-        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
-        response = request.make_response(
-            bundle.css(), [('Content-Type', 'text/css')])
-
-        return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
+        response = request.make_response(bundle.css(), [('Content-Type', 'text/css')])
+        return make_conditional(response, bundle.last_modified, max_age=BUNDLE_MAXAGE)
 
 class WebClient(http.Controller):
 
@@ -588,6 +548,34 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
+
+    @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
+    def load_locale(self, lang):
+        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        addons_path = http.addons_manifest['web']['addons_path']
+        #load datejs locale
+        datejs_locale = ""
+        try:
+            with open(os.path.join(addons_path, 'web', 'static', 'lib', 'datejs', 'globalization', lang.replace('_', '-') + '.js'), 'r') as f:
+                datejs_locale = f.read()
+        except IOError:
+            pass
+
+        #load momentjs locale
+        momentjs_locale_file = False
+        momentjs_locale = ""
+        for code in magic_file_finding:
+            try:
+                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
+                    momentjs_locale = f.read()
+                #we found a locale matching so we can exit
+                break
+            except IOError:
+                continue
+
+        #return the content of the locale
+        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
+        return request.make_response(datejs_locale + "\n"+ momentjs_locale, headers)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -681,7 +669,8 @@ class Proxy(http.Controller):
         from werkzeug.test import Client
         from werkzeug.wrappers import BaseResponse
 
-        return Client(request.httprequest.app, BaseResponse).get(path).data
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
 class Database(http.Controller):
 
@@ -746,7 +735,7 @@ class Database(http.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        
+
         try:
             if request.session.proxy("db").drop(password, db):
                 return True
@@ -891,70 +880,6 @@ class Session(http.Controller):
         return werkzeug.utils.redirect(redirect, 303)
 
 class Menu(http.Controller):
-
-    @http.route('/web/menu/get_user_roots', type='json', auth="user")
-    def get_user_roots(self):
-        """ Return all root menu ids visible for the session user.
-
-        :return: the root menu ids
-        :rtype: list(int)
-        """
-        s = request.session
-        Menus = s.model('ir.ui.menu')
-        menu_domain = [('parent_id', '=', False)]
-
-        return Menus.search(menu_domain, 0, False, False, request.context)
-
-    @http.route('/web/menu/load', type='json', auth="user")
-    def load(self):
-        """ Loads all menu items (all applications and their sub-menus).
-
-        :return: the menu root
-        :rtype: dict('children': menu_nodes)
-        """
-        Menus = request.session.model('ir.ui.menu')
-
-        fields = ['name', 'sequence', 'parent_id', 'action']
-        menu_root_ids = self.get_user_roots()
-        menu_roots = Menus.read(menu_root_ids, fields, request.context) if menu_root_ids else []
-        menu_root = {
-            'id': False,
-            'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots,
-            'all_menu_ids': menu_root_ids,
-        }
-        if not menu_roots:
-            return menu_root
-
-        # menus are loaded fully unlike a regular tree view, cause there are a
-        # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([('id', 'child_of', menu_root_ids)], 0, False, False, request.context)
-        menu_items = Menus.read(menu_ids, fields, request.context)
-        # adds roots at the end of the sequence, so that they will overwrite
-        # equivalent menu items from full menu read when put into id:item
-        # mapping, resulting in children being correctly set on the roots.
-        menu_items.extend(menu_roots)
-        menu_root['all_menu_ids'] = menu_ids # includes menu_root_ids!
-
-        # make a tree using parent_id
-        menu_items_map = dict(
-            (menu_item["id"], menu_item) for menu_item in menu_items)
-        for menu_item in menu_items:
-            if menu_item['parent_id']:
-                parent = menu_item['parent_id'][0]
-            else:
-                parent = False
-            if parent in menu_items_map:
-                menu_items_map[parent].setdefault(
-                    'children', []).append(menu_item)
-
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(
-                key=operator.itemgetter('sequence'))
-
-        return menu_root
 
     @http.route('/web/menu/load_needaction', type='json', auth="user")
     def load_needaction(self, menu_ids):
@@ -1114,7 +1039,7 @@ class TreeView(View):
 
 class Binary(http.Controller):
 
-    @http.route('/web/binary/image', type='http', auth="user")
+    @http.route('/web/binary/image', type='http', auth="public")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
         Model = request.session.model(model)
@@ -1169,7 +1094,7 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    @http.route('/web/binary/saveas', type='http', auth="user")
+    @http.route('/web/binary/saveas', type='http', auth="public")
     @serialize_exception
     def saveas(self, model, field, id=None, filename_field=None, **kw):
         """ Download link for files stored as binary fields.
@@ -1203,7 +1128,7 @@ class Binary(http.Controller):
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', content_disposition(filename))])
 
-    @http.route('/web/binary/saveas_ajax', type='http', auth="user")
+    @http.route('/web/binary/saveas_ajax', type='http', auth="public")
     @serialize_exception
     def saveas_ajax(self, data, token):
         jdata = simplejson.loads(data)
@@ -1282,7 +1207,7 @@ class Binary(http.Controller):
         '/logo',
         '/logo.png',
     ], type='http', auth="none")
-    def company_logo(self, dbname=None):
+    def company_logo(self, dbname=None, **kw):
         # TODO add etag, refactor to use /image code for etag
         uid = None
         if request.session.db:
@@ -1324,7 +1249,7 @@ class Binary(http.Controller):
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
-    def load(self, action_id, do_not_eval=False):
+    def load(self, action_id, do_not_eval=False, additional_context=None):
         Actions = request.session.model('ir.actions.actions')
         value = False
         try:
@@ -1339,11 +1264,12 @@ class Action(http.Controller):
 
         base_action = Actions.read([action_id], ['type'], request.context)
         if base_action:
-            ctx = {}
+            ctx = request.context
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
-            ctx.update(request.context)
+            if additional_context:
+                ctx.update(additional_context)
             action = request.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(action[0])
@@ -1393,7 +1319,7 @@ class Export(http.Controller):
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: field[1].get('string', ''))
+            key=lambda field: openerp.tools.ustr(field[1].get('string', '')))
 
         records = []
         for field_name, field in fields_sequence:
@@ -1524,16 +1450,18 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
+        params = simplejson.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
-                simplejson.loads(data))
+                params)
 
         Model = request.session.model(model)
-        ids = ids or Model.search(domain, 0, False, False, request.context)
+        context = dict(request.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1721,7 +1649,7 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-        
+
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

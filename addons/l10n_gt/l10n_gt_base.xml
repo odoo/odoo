@@ -5,21 +5,6 @@
             <field name="state">open</field>
         </record>
 
-        <!-- Moneda Quetzal -->
-
-        <record id="GTQ" model="res.currency">
-            <field name="name">GTQ</field>
-            <field name="symbol">Q</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-        <record id="rateGTQ" model="res.currency.rate">
-            <field name="rate">11.2020</field>
-            <field name="currency_id" ref="GTQ"/>
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-        </record>
-
         <!-- Plantilla de cuentas -->
 
         <record id="cuentas_plantilla" model="account.chart.template">

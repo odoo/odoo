@@ -29,8 +29,8 @@ class hr_timesheet_invoice_factor(osv.osv):
     _description = "Invoice Rate"
     _order = 'factor'
     _columns = {
-        'name': fields.char('Internal Name', size=128, required=True, translate=True),
-        'customer_name': fields.char('Name', size=128, help="Label for the customer"),
+        'name': fields.char('Internal Name', required=True, translate=True),
+        'customer_name': fields.char('Name', help="Label for the customer"),
         'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
     _defaults = {
@@ -74,6 +74,10 @@ class account_analytic_account(osv.osv):
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
 
+    _defaults = {
+         'pricelist_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
+    }
+    
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         if partner_id:
@@ -99,7 +103,7 @@ class account_analytic_account(osv.osv):
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null", copy=False),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
@@ -140,14 +144,6 @@ class account_analytic_line(osv.osv):
                     raise osv.except_osv(_('Error!'),
                         _('You cannot modify an invoiced analytic line!'))
         return True
-
-    def copy(self, cursor, user, obj_id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'invoice_id': False})
-        return super(account_analytic_line, self).copy(cursor, user, obj_id,
-                default, context=context)
 
     def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
         pro_price_obj = self.pool.get('product.pricelist')
@@ -291,6 +287,7 @@ class account_analytic_line(osv.osv):
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
                     cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+                    self.invalidate_cache(cr, uid, ['invoice_id'], ids, context=context)
 
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
@@ -314,23 +311,13 @@ class hr_analytic_timesheet(osv.osv):
             }
         return res
 
-    def copy(self, cursor, user, obj_id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'invoice_id': False})
-        return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
-                default, context=context)
-
-
-
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id, context=context)
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, ids, context=context)
 
-        inv = self.browse(cr, uid, [id], context=context)[0]
+        inv = self.browse(cr, uid, ids, context=context)[0]
         if inv.type == 'in_invoice':
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:

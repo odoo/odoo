@@ -286,21 +286,21 @@ class Partner(osv.osv):
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_from', context=context)
                 if line_id:
-                        res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
-                                ['date_from'], context=context)['date_from']
+                        res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, [line_id[0]],
+                                ['date_from'], context=context)[0]['date_from']
 
             if name == 'membership_stop':
                 line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_to desc', context=context)
                 if line_id1:
-                      res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
-                                ['date_to'], context=context)['date_to']
+                      res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, [line_id1[0]],
+                                ['date_to'], context=context)[0]['date_to']
 
             if name == 'membership_cancel':
                 if partner.membership_state == 'canceled':
                     line_id2 = member_line_obj.search(cr, uid, [('partner', '=', partner.id)], limit=1, order='date_cancel', context=context)
                     if line_id2:
-                        res[partner.id]['membership_cancel'] = member_line_obj.read(cr, uid, line_id2[0], ['date_cancel'], context=context)['date_cancel']
+                        res[partner.id]['membership_cancel'] = member_line_obj.read(cr, uid, [line_id2[0]], ['date_cancel'], context=context)[0]['date_cancel']
         return res
 
     def _get_partners(self, cr, uid, ids, context=None):
@@ -380,13 +380,6 @@ class Partner(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive associated members.', ['associate_member'])
     ]
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['member_lines'] = []
-        return super(Partner, self).copy(cr, uid, id, default, context=context)
 
     def create_membership_invoice(self, cr, uid, ids, product_id=None, datas=None, context=None):
         """ Create Customer Invoice of Membership for partners.

@@ -12,8 +12,6 @@
             <field name="context">{'search_default_model_id':'account.invoice'}</field>
             <field name="context" eval="{'search_default_model_id': ref('account.model_account_invoice')}"/>
         </record>
-        <menuitem id="menu_email_templates" parent="menu_configuration_misc" action="action_email_templates" sequence="30" groups="base.group_no_one"/>
-
     </data>
 
     <!-- Mail template are declared in a NOUPDATE block
@@ -23,7 +21,7 @@
         <record id="email_template_edi_invoice" model="email.template">
             <field name="name">Invoice - Send by Email</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
-            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="subject">${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field name="auto_delete" eval="True"/>

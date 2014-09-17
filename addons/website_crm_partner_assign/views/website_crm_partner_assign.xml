@@ -54,7 +54,7 @@
                     <li class="nav-header"><h3>Filter by Country</h3></li>
                     <t t-foreach="countries" t-as="country">
                         <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or ''">
-                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '')}">
+                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}">
                                 <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/>
                             </a>
@@ -113,7 +113,7 @@
     </t>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" optional="enabled" name="Left World Map">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" customize_show="True" name="Left World Map">
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <!-- modal for large map -->
         <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -131,8 +131,8 @@
         <!-- modal end -->
         <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
         </ul>
     </xpath>
 </template>

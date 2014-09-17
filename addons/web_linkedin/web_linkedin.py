@@ -34,7 +34,7 @@ class Binary(openerp.http.Controller):
         _scheme, _netloc, path, params, query, fragment = urlparse(url)
         # media.linkedin.com is the master domain for LinkedIn media (replicated to CDNs),
         # so forcing it should always work and prevents abusing this method to load arbitrary URLs
-        url = urlunparse(('http', 'media.linkedin.com', path, params, query, fragment))
+        url = urlunparse(('http', 'media.licdn.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
     
@@ -42,7 +42,7 @@ class web_linkedin_settings(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
         'api_key': fields.char(string="API Key", size=50),
-        'server_domain': fields.char(size=100),
+        'server_domain': fields.char(),
     }
     
     def get_default_linkedin(self, cr, uid, fields, context=None):
@@ -52,7 +52,7 @@ class web_linkedin_settings(osv.osv_memory):
     
     def set_linkedin(self, cr, uid, ids, context=None):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
-        self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key)
+        self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key, groups=['base.group_user'])
 
 class web_linkedin_fields(osv.Model):
     _inherit = 'res.partner'
@@ -85,8 +85,8 @@ class web_linkedin_fields(osv.Model):
         return res
 
     _columns = {
-        'linkedin_id': fields.char(string="LinkedIn ID", size=50),
-        'linkedin_url': fields.char(string="LinkedIn url", size=100, store=True),
+        'linkedin_id': fields.char(string="LinkedIn ID"),
+        'linkedin_url': fields.char(string="LinkedIn url", store=True),
         'linkedin_public_url': fields.function(_get_url, type='text', string="LinkedIn url", 
             help="This url is set automatically when you join the partner with a LinkedIn account."),
     }

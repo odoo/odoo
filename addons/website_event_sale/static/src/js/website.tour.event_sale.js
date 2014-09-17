@@ -1,9 +1,7 @@
 (function () {
     'use strict';
 
-    var website = openerp.website;
-
-    website.Tour.register({
+    openerp.Tour.register({
         id:   'event_buy_tickets',
         name: "Try to buy tickets for event",
         path: '/event',
@@ -31,14 +29,27 @@
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
+                title:     "Check the cart",
+                element:   '#top_menu .my_cart_quantity:contains(5)'
+            },
+            {
+                title:     "Check if the cart have 2 order lines and add one VIP ticket",
+                waitFor:   "#cart_products:contains(Standard):contains(VIP)",
+                element:   "#cart_products tr:contains(VIP) .fa-plus",
+            },
+            {
+                title:     "Process Checkout",
+                waitFor:   '#top_menu .my_cart_quantity:contains(6)',
+                element:   '.btn-primary:contains("Process Checkout")'
+            },
+            {
                 title:     "Complete checkout",
-                waitFor:   '#top_menu .my_cart_quantity:contains(5)',
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                 autoComplete: function (tour) {
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
-                        $("input[name='email']").val("website_event_sale_test_shoptest@websiteeventsaletest.optenerp.com");
+                        $("input[name='email']").val("website_event_sale_test_shoptest@websiteeventsaletest.odoo.com");
                     $("input[name='phone']").val("123");
                     $("input[name='street']").val("123");
                     $("input[name='city']").val("123");

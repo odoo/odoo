@@ -23,8 +23,9 @@ import openerp
 import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
-
+from openerp.tools.translate import _
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -36,7 +37,7 @@ class mail_group(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
@@ -45,10 +46,10 @@ class mail_group(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
-        'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
+        'public': fields.selection([('public', 'Everyone'), ('private', 'Invited people only'), ('groups', 'Selected group of users')], 'Privacy', required=True,
             help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
@@ -162,15 +163,20 @@ class mail_group(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         groups = self.browse(cr, uid, ids, context=context)
-        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
-        mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
+        menu_ids = [group.menu_id.id for group in groups if group.menu_id]
         # Delete mail_group
+        try:
+            all_emp_group = self.pool['ir.model.data'].get_object_reference(cr, uid, 'mail', 'group_all_employees')[1]
+        except ValueError:
+            all_emp_group = None
+        if all_emp_group and all_emp_group in ids:
+            raise osv.except_osv(_('Warning!'), _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
-        # Delete alias
-        mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
+        # Cascade-delete mail aliases as well, as they should not exist without the mail group.
+        self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)
         # Cascade-delete menu entries as well
-        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, [group.menu_id.id for group in groups if group.menu_id], context=context)
+        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, menu_ids, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -211,3 +217,26 @@ class mail_group(osv.Model):
             return []
         else:
             return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
+        group = self.browse(cr, uid, id, context=context)
+        headers = {}
+        if res.get('headers'):
+            try:
+                headers.update(eval(res['headers']))
+            except Exception:
+                pass
+        headers['Precedence'] = 'list'
+        # avoid out-of-office replies from MS Exchange
+        # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
+        headers['X-Auto-Response-Suppress'] = 'OOF'
+        if group.alias_domain and group.alias_name:
+            headers['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+            headers['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+            # Avoid users thinking it was a personal message
+            # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
+            list_to = '"%s" <%s@%s>' % (group.name, group.alias_name, group.alias_domain)
+            headers['X-Forge-To'] = list_to
+        res['headers'] = repr(headers)
+        return res

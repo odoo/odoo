@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools, SUPERUSER_ID
+from openerp import tools
 from openerp.osv import osv, fields
 
 
@@ -54,6 +54,8 @@ class mail_compose_message(osv.TransientModel):
                     res.get('model'), res.get('res_id'), context=context
                 )['value']
             )
+        if fields is not None:
+            [res.pop(field, None) for field in res.keys() if field not in fields]
         return res
 
     _columns = {
@@ -113,7 +115,9 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
+            default_context = dict(context, default_composition_mode=composition_mode, default_model=model, default_res_id=res_id)
+            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

@@ -7,10 +7,12 @@
             <field name="model">test.workflow.model</field>
             <field name="arch" type="xml">
                 <form string="Test workflow">
-                          <button name="a-b" string="a-b" type="workflow" icon="gtk-ok" colspan="1"/>
-                          <label string="a-b"/>
-                          <button name="trigger" string="trigger" type="object" icon="gtk-ok" colspan="1"/>
-                          <label string="trigger"/>
+                    <group col="4">
+                        <button name="a-b" string="a-b" type="workflow" icon="gtk-ok" colspan="1"/>
+                        <label string="a-b"/>
+                        <button name="trigger" string="trigger" type="object" icon="gtk-ok" colspan="1"/>
+                        <label string="trigger"/>
+                    </group>
                 </form>
            </field>
         </record>

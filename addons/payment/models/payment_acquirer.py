@@ -73,7 +73,7 @@ class PaymentAcquirer(osv.Model):
             [('test', 'Test'), ('prod', 'Production')],
             string='Environment', oldname='env'),
         'website_published': fields.boolean(
-            'Visible in Portal / Website',
+            'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
@@ -140,6 +140,7 @@ class PaymentAcquirer(osv.Model):
                 'country': tx.partner_country_id,
                 'phone': tx.partner_phone,
                 'reference': tx.partner_reference,
+                'state': None,
             }
         else:
             if partner_id:
@@ -154,6 +155,7 @@ class PaymentAcquirer(osv.Model):
                     'country_id': partner.country_id.id,
                     'country': partner.country_id,
                     'phone': partner.phone,
+                    'state': partner.state_id,
                 }
             else:
                 partner, partner_data = False, {}
@@ -338,7 +340,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange'),
+            track_visiblity='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment

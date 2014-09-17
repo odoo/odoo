@@ -43,8 +43,15 @@ class one2many_mod2(fields.one2many):
                 ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids),('analytic_account_id','child_of',[acc_id])], limit=self._limit)
         if ids2 is None:
             ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
-        for r in obj.pool[self._obj]._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+
+        for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            key = r[self._fields_id]
+            if isinstance(key, tuple):
+                # Read return a tuple in the case where the field is a many2one
+                # but we want to get the id of this field.
+                key = key[0]
+
+            res[key].append( r['id'] )
         return res
 
 class account_analytic_line(osv.osv):
@@ -70,8 +77,8 @@ class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
     _description = "Analytic Plan"
     _columns = {
-        'name': fields.char('Analytic Plan', size=64, required=True, select=True),
-        'plan_ids': fields.one2many('account.analytic.plan.line', 'plan_id', 'Analytic Plans'),
+        'name': fields.char('Analytic Plan', required=True, select=True),
+        'plan_ids': fields.one2many('account.analytic.plan.line', 'plan_id', 'Analytic Plans', copy=True),
     }
 
 
@@ -81,7 +88,7 @@ class account_analytic_plan_line(osv.osv):
     _order = "sequence, id"
     _columns = {
         'plan_id': fields.many2one('account.analytic.plan','Analytic Plan',required=True),
-        'name': fields.char('Plan Name', size=64, required=True, select=True),
+        'name': fields.char('Axis Name', required=True, select=True),
         'sequence': fields.integer('Sequence'),
         'root_analytic_id': fields.many2one('account.analytic.account', 'Root Account', help="Root account of this plan.", required=False),
         'min_required': fields.float('Minimum Allowed (%)'),
@@ -97,10 +104,10 @@ class account_analytic_plan_instance(osv.osv):
     _name = "account.analytic.plan.instance"
     _description = "Analytic Plan Instance"
     _columns = {
-        'name': fields.char('Analytic Distribution', size=64),
+        'name': fields.char('Analytic Distribution'),
         'code': fields.char('Distribution Code', size=16),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal' ),
-        'account_ids': fields.one2many('account.analytic.plan.instance.line', 'plan_id', 'Account Id'),
+        'account_ids': fields.one2many('account.analytic.plan.instance.line', 'plan_id', 'Account Id', copy=True),
         'account1_ids': one2many_mod2('account.analytic.plan.instance.line', 'plan_id', 'Account1 Id'),
         'account2_ids': one2many_mod2('account.analytic.plan.instance.line', 'plan_id', 'Account2 Id'),
         'account3_ids': one2many_mod2('account.analytic.plan.instance.line', 'plan_id', 'Account3 Id'),
@@ -123,13 +130,6 @@ class account_analytic_plan_instance(osv.osv):
         res = super(account_analytic_plan_instance, self).search(cr, user, args, offset=offset, limit=limit, order=order,
                                                                  context=context, count=count)
         return res
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'account1_ids':False, 'account2_ids':False, 'account3_ids':False,
-                'account4_ids':False, 'account5_ids':False, 'account6_ids':False})
-        return super(account_analytic_plan_instance, self).copy(cr, uid, id, default, context=context)
 
     def _default_journal(self, cr, uid, context=None):
         if context is None:
@@ -210,7 +210,7 @@ class account_analytic_plan_instance(osv.osv):
         ana_plan_instance_obj = self.pool.get('account.analytic.plan.instance')
         acct_anal_acct = self.pool.get('account.analytic.account')
         acct_anal_plan_line_obj = self.pool.get('account.analytic.plan.line')
-        if context and 'journal_id' in context:
+        if context and context.get('journal_id'):
             journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
@@ -302,8 +302,8 @@ class account_invoice_line(osv.osv):
         res ['analytics_id'] = line.analytics_id and line.analytics_id.id or False
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context, company_id=company_id)
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
+        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, company_id=company_id, context=context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id': rec.analytics_id.id})
@@ -373,8 +373,8 @@ class account_invoice(osv.osv):
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        inv = self.browse(cr, uid, [id])[0]
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        inv = self.browse(cr, uid, ids)[0]
         cur_obj = self.pool.get('res.currency')
         invoice_line_obj = self.pool.get('account.invoice.line')
         acct_ins_obj = self.pool.get('account.analytic.plan.instance')
@@ -392,7 +392,7 @@ class account_invoice(osv.osv):
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
                 else:
-                    ref = self._convert_ref(cr, uid, inv.number)
+                    ref = self._convert_ref(inv.number)
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
                 ctx = context.copy()
                 ctx.update({'date': inv.date_invoice})

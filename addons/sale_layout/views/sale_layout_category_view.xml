@@ -51,7 +51,7 @@
             <field name="name">report.configuration.form.view</field>
             <field name="model">sale_layout.category</field>
             <field name="arch" type="xml">
-                <form string="Report Configuration" version="7.0">
+                <form string="Report Configuration">
                     <group>
                         <field name="name"/>
                         <field name="subtotal" widget="checkbox"/>
@@ -99,11 +99,19 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <menuitem
+            id= "base.menu_sales_config"
+            parent= "base.menu_base_config"
+            sequence= "1"
+            name= "Sales"
+            groups= "base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"
+        />
+
         <menuitem 
             action="report_configuration_action" 
             id="Report_configuration" 
-            parent="base.menu_base_config" 
-            sequence="25" 
+            parent="base.menu_sales_config" 
+            sequence="2" 
             name="Report Layout Categories" 
             groups="base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"
         />

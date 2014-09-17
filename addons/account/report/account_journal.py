@@ -31,6 +31,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if context is None:
             context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
+        self.context = context
         self.period_ids = []
         self.last_move_id = False
         self.journal_ids = []
@@ -156,6 +157,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             journal_id = [journal_id]
         obj_mline = self.pool.get('account.move.line')
         self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
+        self.pool.get('account.journal.period').invalidate_cache(self.cr, self.uid, ['state'], context=self.context)
 
         move_state = ['draft','posted']
         if self.target_move == 'posted':

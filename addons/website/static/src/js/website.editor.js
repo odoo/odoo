@@ -3,6 +3,7 @@
 
     var website = openerp.website;
     var _t = openerp._t;
+    website.no_editor = !!$(document.documentElement).data('editable-no-editor');
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
@@ -11,8 +12,14 @@
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         } else {
-            // remove padding of fake editor bar
-            document.body.style.padding = 0;
+            var resize_smartphone = function () {
+                is_smartphone = $(document.body)[0].clientWidth < 767;
+                if (!is_smartphone) {
+                    $(window).off("resize", resize_smartphone);
+                    website.init_editor();
+                }
+            };
+            $(window).on("resize", resize_smartphone);
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
@@ -77,6 +84,7 @@
     // Disable removal of empty elements on CKEDITOR activation. Empty
     // elements are used for e.g. support of FontAwesome icons
     CKEDITOR.dtd.$removeEmpty = {};
+
 
     website.init_editor = function () {
         CKEDITOR.plugins.add('customdialogs', {
@@ -201,152 +209,108 @@
             }
         });
 
-        CKEDITOR.plugins.add('linkstyle', {
+        CKEDITOR.plugins.add('customColor', {
             requires: 'panelbutton,floatpanel',
             init: function (editor) {
-                var label = "Link Style";
+                function create_button (buttonID, label) {
+                    var btnID = buttonID;
+                    editor.ui.add(buttonID, CKEDITOR.UI_PANELBUTTON, {
+                        label: label,
+                        title: label,
+                        modes: { wysiwyg: true },
+                        editorFocus: true,
+                        context: 'font',
+                        panel: {
+                            css: [  '/web/css/web.assets_common/' + (new Date().getTime()),
+                                    '/web/css/website.assets_frontend/' + (new Date().getTime()),
+                                    '/web/css/website.assets_editor/' + (new Date().getTime())],
+                            attributes: { 'role': 'listbox', 'aria-label': label },
+                        },
+                        enable: function () {
+                            this.setState(CKEDITOR.TRISTATE_OFF);
+                        },
+                        disable: function () {
+                            this.setState(CKEDITOR.TRISTATE_DISABLED);
+                        },
+                        onBlock: function (panel, block) {
+                            var self = this;
+                            var html = openerp.qweb.render('website.colorpicker');
+                            block.autoSize = true;
+                            block.element.setHtml( html );
+                            $(block.element.$).on('click', 'button', function () {
+                                self.clicked(this);
+                            });
+                            if (btnID === "TextColor") {
+                                $(".only-text", block.element.$).css("display", "block");
+                                $(".only-bg", block.element.$).css("display", "none");
+                            }
+                            var $body = $(block.element.$).parents("body");
+                            setTimeout(function () {
+                                $body.css('background-color', '#fff');
+                            }, 0);
+                        },
+                        getClasses: function () {
+                            var self = this;
+                            var classes = [];
+                            var id = this._.id;
+                            var block = this._.panel._.panel._.blocks[id];
+                            var $root = $(block.element.$);
+                            $root.find("button").map(function () {
+                                var color = self.getClass(this);
+                                if(color) classes.push( color );
+                            });
+                            return classes;
+                        },
+                        getClass: function (button) {
+                            var color = btnID === "BGColor" ? $(button).attr("class") : $(button).attr("class").replace(/^bg-/i, 'text-');
+                            return color.length && color;
+                        },
+                        clicked: function (button) {
+                            var className = this.getClass(button);
+                            var ancestor = editor.getSelection().getCommonAncestor();
 
-                editor.ui.add('LinkStyle', CKEDITOR.UI_PANELBUTTON, {
-                    label: label,
-                    title: label,
-                    icon: '/website/static/src/img/bglink.png',
-                    modes: { wysiwyg: true },
-                    editorFocus: true,
-                    context: 'a',
-                    panel: {
-                        css: '/web/static/lib/bootstrap/css/bootstrap.css',
-                        attributes: { 'role': 'listbox', 'aria-label': label },
-                    },
+                            editor.focus();
+                            this._.panel.hide();
+                            editor.fire('saveSnapshot');
 
-                    types: {
-                        'btn-default': _t("Basic"),
-                        'btn-primary': _t("Primary"),
-                        'btn-success': _t("Success"),
-                        'btn-info': _t("Info"),
-                        'btn-warning': _t("Warning"),
-                        'btn-danger': _t("Danger"),
-                    },
-                    sizes: {
-                        'btn-xs': _t("Extra Small"),
-                        'btn-sm': _t("Small"),
-                        '': _t("Default"),
-                        'btn-lg': _t("Large")
-                    },
-
-                    onRender: function () {
-                        var self = this;
-                        editor.on('selectionChange', function (e) {
-                            var path = e.data.path, el;
-
-                            if (!(e = path.contains('a')) || e.isReadOnly()) {
-                                self.disable();
-                                return;
+                            // remove style
+                            var classes = [];
+                            var $ancestor = $(ancestor.$);
+                            var $fonts = $(ancestor.$).find('font');
+                            if (!ancestor.$.tagName) {
+                                $ancestor = $ancestor.parent();
+                            }
+                            if ($ancestor.is('font')) {
+                                $fonts = $fonts.add($ancestor[0]);
                             }
 
-                            self.enable();
-                        });
-                        // no hook where button is available, so wait
-                        // "some time" after render.
-                        setTimeout(function () {
-                            self.disable();
-                        }, 0)
-                    },
-                    enable: function () {
-                        this.setState(CKEDITOR.TRISTATE_OFF);
-                    },
-                    disable: function () {
-                        this.setState(CKEDITOR.TRISTATE_DISABLED);
-                    },
+                            $fonts.filter("."+this.getClasses().join(",.")).map(function () {
+                                var className = $(this).attr("class");
+                                if (classes.indexOf(className) === -1) {
+                                    classes.push(className);
+                                }
+                            });
+                            for (var k in classes) {
+                                editor.removeStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': classes[k] },
+                                }) );
+                            }
 
-                    onOpen: function () {
-                        var link = get_selected_link(editor);
-                        var id = this._.id;
-                        var block = this._.panel._.panel._.blocks[id];
-                        var $root = $(block.element.$);
-                        $root.find('button').removeClass('active').removeProp('disabled');
-
-                        // enable buttons matching link state
-                        for (var type in this.types) {
-                            if (!this.types.hasOwnProperty(type)) { continue; }
-                            if (!link.hasClass(type)) { continue; }
-
-                            $root.find('button[data-type=types].' + type)
-                                 .addClass('active');
+                            // add new style
+                            if (className) {
+                                editor.applyStyle( new CKEDITOR.style({
+                                    element: 'font',
+                                    attributes: { 'class': className },
+                                }) );
+                            }
+                            editor.fire('saveSnapshot');
                         }
-                        var found;
-                        for (var size in this.sizes) {
-                            if (!this.sizes.hasOwnProperty(size)) { continue; }
-                            if (!size || !link.hasClass(size)) { continue; }
-                            found = true;
-                            $root.find('button[data-type=sizes].' + size)
-                                 .addClass('active');
-                        }
-                        if (!found && link.hasClass('btn')) {
-                            $root.find('button[data-type="sizes"][data-set-class=""]')
-                                 .addClass('active');
-                        }
-                    },
 
-                    onBlock: function (panel, block) {
-                        var self = this;
-                        block.autoSize = true;
-
-                        var html = ['<div style="padding: 5px">'];
-                        html.push('<div style="white-space: nowrap">');
-                        _(this.types).each(function (label, key) {
-                            html.push(_.str.sprintf(
-                                '<button type="button" class="btn %s" ' +
-                                        'data-type="types" data-set-class="%s">%s</button>',
-                                key, key, label));
-                        });
-                        html.push('</div>');
-                        html.push('<div style="white-space: nowrap; margin: 5px 0; text-align: center">');
-                        _(this.sizes).each(function (label, key) {
-                            html.push(_.str.sprintf(
-                                '<button type="button" class="btn btn-default %s" ' +
-                                        'data-type="sizes" data-set-class="%s">%s</button>',
-                                key, key, label));
-                        });
-                        html.push('</div>');
-                        html.push('<button type="button" class="btn btn-link btn-block" ' +
-                                          'data-type="reset">Reset</button>');
-                        html.push('</div>');
-
-                        block.element.setHtml(html.join(' '));
-                        var $panel = $(block.element.$);
-                        $panel.on('click', 'button', function () {
-                            self.clicked(this);
-                        });
-                    },
-                    clicked: function (button) {
-                        editor.focus();
-                        editor.fire('saveSnapshot');
-
-                        var $button = $(button),
-                              $link = $(get_selected_link(editor).$);
-                        if (!$link.hasClass('btn')) {
-                            $link.addClass('btn btn-default');
-                        }
-                        switch($button.data('type')) {
-                        case 'reset':
-                            $link.removeClass('btn')
-                                 .removeClass(_.keys(this.types).join(' '))
-                                 .removeClass(_.keys(this.sizes).join(' '));
-                            break;
-                        case 'types':
-                            $link.removeClass(_.keys(this.types).join(' '))
-                                 .addClass($button.data('set-class'));
-                            break;
-                        case 'sizes':
-                            $link.removeClass(_.keys(this.sizes).join(' '))
-                                 .addClass($button.data('set-class'));
-                        }
-                        this._.panel.hide();
-
-                        editor.fire('saveSnapshot');
-                    },
-
-                });
+                    });
+                }
+                create_button("BGColor", "Background Color");
+                create_button("TextColor", "Text Color");
             }
         });
 
@@ -434,113 +398,58 @@
     website.EditorBar = openerp.Widget.extend({
         template: 'website.editorbar',
         events: {
-            'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
             'click a[data-action=cancel]': 'cancel',
         },
-        container: 'body',
-        customize_setup: function() {
-            var self = this;
-            var view_name = $(document.documentElement).data('view-xmlid');
-            if (!view_name) {
-                this.$('#customize-menu-button').addClass("hidden");
-            }
-            var menu = $('#customize-menu');
-            this.$('#customize-menu-button').click(function(event) {
-                menu.empty();
-                openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': view_name }).then(
-                    function(result) {
-                        _.each(result, function (item) {
-                            if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
-                            if (item.header) {
-                                menu.append('<li class="dropdown-header">' + item.name + '</li>');
-                            } else {
-                                menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                                    item.id, item.active ? '-check' : '', item.name));
-                            }
-                        });
-                        // Adding Static Menus
-                        menu.append('<li class="divider"></li>');
-                        menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
-                        menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
-                        menu.append('<li><a href="/web#return_label=Website&action=website.action_module_website">Install Apps</a></li>');
-                        self.trigger('rte:customize_menu_ready');
-                    }
-                );
-            });
-            menu.on('click', 'a[data-action!=ace]', function (event) {
-                var view_id = $(event.currentTarget).data('view-id');
-                return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                    model: 'ir.ui.view',
-                    method: 'toggle',
-                    args: [],
-                    kwargs: {
-                        ids: [parseInt(view_id, 10)],
-                        context: website.get_context()
-                    }
-                }).then( function() {
-                    window.location.reload();
-                });
-            });
-        },
         start: function() {
-            // remove placeholder editor bar
-            var fakebar = document.getElementById('website-top-navbar-placeholder');
-            if (fakebar) {
-                fakebar.parentNode.removeChild(fakebar);
-            }
-
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
-            this.$('#website-top-edit').hide();
-            this.$('#website-top-view').show();
-
-            $('.dropdown-toggle').dropdown();
-            this.customize_setup();
-
             this.$buttons = {
-                edit: this.$('button[data-action=edit]'),
+                edit: this.$el.parents().find('button[data-action=edit]'),
                 save: this.$('button[data-action=save]'),
                 cancel: this.$('button[data-action=cancel]'),
             };
+
+            this.$('#website-top-edit').hide();
+            this.$('#website-top-view').show();
+            this.$buttons.edit.show();
+
+            var $edit_button = this.$buttons.edit
+                    .prop('disabled', website.no_editor);
+            if (website.no_editor) {
+                var help_text = $(document.documentElement).data('editable-no-editor');
+                $edit_button.parent()
+                    // help must be set on form above button because it does
+                    // not appear on disabled button
+                    .attr('title', help_text);
+            }
+
+            $('.dropdown-toggle').dropdown();
+
+            this.$buttons.edit.click(function(ev) {
+                self.edit();
+            });
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
-                self.check_height();
             });
 
-            $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
-            this.check_height();
-
-            if (website.is_editable_button) {
-                this.$("button[data-action=edit]").removeClass("hidden");
-            }
-
-            return $.when(
-                this._super.apply(this, arguments),
-                this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
-            ).then(function () {
-                self.check_height();
-            });
-        },
-        check_height: function () {
-            var editor_height = this.$el.outerHeight();
-            if (this.get('height') != editor_height) {
-                $(document.body).css('padding-top', editor_height);
-                this.set('height', editor_height);
-            }
+            this.rte.appendTo(this.$('#website-top-edit .nav.js_editor_placeholder'));
+            return this._super.apply(this, arguments);
+            
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
+            this.$el.show();
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            this.rte.start_edition().then(this.check_height.bind(this));
+            this.rte.start_edition();
             this.trigger('rte:called');
         },
         rte_changed: function () {
@@ -552,7 +461,13 @@
             observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
-            editor.destroy();
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
                 .filter('.oe_dirty')
@@ -749,6 +664,62 @@
                 previous = null;
             });
         }
+    });
+    
+    website.EditorBarCustomize = openerp.Widget.extend({
+        events: {
+            'mousedown a.dropdown-toggle': 'load_menu',
+            'click ul a[data-view-id]': 'do_customize',
+        },
+        start: function() {
+            var self = this;
+            this.$menu = self.$el.find('ul');
+            this.view_name = $(document.documentElement).data('view-xmlid');
+            if (!this.view_name) {
+                this.$el.hide();
+            }
+            this.loaded = false;
+        },
+        load_menu: function () {
+            var self = this;
+            if(this.loaded) {
+                return;
+            }
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': this.view_name }).then(
+                function(result) {
+                    _.each(result, function (item) {
+                        if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.header) {
+                            self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
+                        } else {
+                            self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
+                                item.id, item.active ? '-check' : '', item.name));
+                        }
+                    });
+                    self.loaded = true;
+                }
+            );
+        },
+        do_customize: function (event) {
+            var view_id = $(event.currentTarget).data('view-id');
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'ir.ui.view',
+                method: 'toggle',
+                args: [],
+                kwargs: {
+                    ids: [parseInt(view_id, 10)],
+                    context: website.get_context()
+                }
+            }).then( function() {
+                window.location.reload();
+            });
+        },
+    });
+
+    $(document).ready(function() {
+        var editorBarCustomize = new website.EditorBarCustomize();
+        editorBarCustomize.setElement($('li[id=customize-menu]'));
+        editorBarCustomize.start();
     });
 
     var blocks_selector = _.keys(CKEDITOR.dtd.$block).join(',');
@@ -1002,7 +973,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,linkstyle',
+                extraPlugins: 'customColor,sharedspace,customdialogs,tablebutton,oeref',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -1011,7 +982,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "LinkStyle", "Blockquote", "BulletedList",
+                        "Link", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -1034,7 +1005,7 @@
                     {name: "Heading 5", element: 'h5'},
                     {name: "Heading 6", element: 'h6'},
                     {name: "Formatted", element: 'pre'},
-                    {name: "Address", element: 'address'}
+                    {name: "Address", element: 'address'},
                 ],
             };
         },
@@ -1072,19 +1043,23 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change :input.url-source': function (e) { this.changed($(e.target)); },
+            'change :input.url-source': 'changed',
+            'keyup :input.url': 'onkeyup',
+            'keyup :input': 'preview',
             'mousedown': function (e) {
-                var $target = $(e.target).closest('.list-group-item');
+                var $target = $(e.target).closest('.list-group-item:has(.url-source)');
                 if (!$target.length || $target.hasClass('active')) {
                     // clicked outside groups, or clicked in active groups
                     return;
                 }
-
-                this.changed($target.find('.url-source').filter(':input'));
+                $target.find("input.url-source").change();
             },
             'click button.remove': 'remove_link',
             'change input#link-text': function (e) {
-                this.text = $(e.target).val()
+                this.text = $(e.target).val();
+            },
+            'change .link-style': function (e) {
+                this.preview();
             },
         }),
         init: function (editor) {
@@ -1108,7 +1083,7 @@
                         self.fetch_pages(q.term)
                     ).then(function (exists, results) {
                         var rs = _.map(results, function (r) {
-                            return { id: r.url, text: r.name, };
+                            return { id: r.loc, text: r.loc, };
                         });
                         if (!exists) {
                             rs.push({
@@ -1128,67 +1103,102 @@
             });
             return this._super().then(this.proxy('bind_data'));
         },
-        save: function () {
-            var self = this, _super = this._super.bind(this);
-            var $e = this.$('.list-group-item.active .url-source').filter(':input');
-            var val = $e.val();
-            if (!val || !$e[0].checkValidity()) {
+        get_data: function (test) {
+            var self = this,
+                def = new $.Deferred(),
+                $e = this.$('.active input.url-source').filter(':input'),
+                val = $e.val(),
+                label = this.$('#link-text').val() || val;
+
+            if (test !== false && (!val || !$e[0].checkValidity())) {
                 // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
                 $e.focus();
-                return;
+                def.reject();
             }
 
-            var done = $.when();
-            if ($e.hasClass('email-address')) {
-                this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('page')) {
+            var style = this.$("input[name='link-style-type']:checked").val();
+            var size = this.$("input[name='link-style-size']:checked").val();
+            var classes = (style && style.length ? "btn " : "") + style + " " + size;
+
+            if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
+                def.resolve('mailto:' + val, false, label);
+            } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    self.make_link(data.id, false, data.text);
+                    def.resolve(data.id, false, data.text);
                 } else {
                     // Create the page, get the URL back
-                    done = $.get(_.str.sprintf(
+                    $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            self.make_link(response, false, data.id);
+                            def.resolve(response, false, data.id);
                         });
                 }
             } else {
-                this.make_link(val, this.$('input.window-new').prop('checked'));
+                def.resolve(val, this.$('input.window-new').prop('checked'), label, classes);
             }
-            done.then(_super);
+            return def;
         },
-        make_link: function (url, new_window, label) {
+        save: function () {
+            var self = this;
+            var _super = this._super.bind(this);
+            return this.get_data()
+                .then(function (url, new_window, label, classes) {
+                    self.make_link(url, new_window, label, classes);
+                }).then(_super);
         },
-        bind_data: function (text, href, new_window) {
-            href = href || this.element && (this.element.data( 'cke-saved-href')
+        make_link: function (url, new_window, label, classes) {
+        },
+        bind_data: function () {
+            var self = this;
+            var href = this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
-
-            if (new_window === undefined) {
-                new_window = this.element
+            var new_window = this.element
                         ? this.element.getAttribute('target') === '_blank'
                         : false;
-            }
-            if (text === undefined) {
-                text = this.element ? this.element.getText() : '';
+            var text = this.element ? this.element.getText() : '';
+            if (!text.length) {
+                if (this.editor) {
+                    text = this.editor.getSelection().getSelectedText();
+                } else {
+                    text = this.data.name;
+                    href = this.data.url;
+                    new_window = this.data.new_window;
+                }
             }
 
             this.$('input#link-text').val(text);
             this.$('input.window-new').prop('checked', new_window);
 
-            if (!href) { return; }
-            var match, $control;
-            if ((match = /mailto:(.+)/.exec(href))) {
-                $control = this.$('input.email-address').val(match[1]);
-            }
-            if (!$control) {
-                $control = this.$('input.url').val(href);
+            var classes = this.element && this.element.$.className;
+            if (classes) {
+                this.$('input[value!=""]').each(function () {
+                    var $option = $(this);
+                    if (classes.indexOf($option.val()) !== -1) {
+                        $option.attr("checked", "checked");
+                    }
+                });
             }
 
-            this.changed($control);
+            var match, $control;
+            if (href && (match = /mailto:(.+)/.exec(href))) {
+                this.$('input.email-address').val(match[1]).change();
+            }
+            if (href && !$control) {
+                this.page_exists(href).then(function (exist) {
+                    if (exist) {
+                        self.$('#link-page').select2('data', {'id': href, 'text': href});
+                    } else {
+                        self.$('input.url').val(href).change();
+                        self.$('input.window-new').closest("div").show();
+                    }
+                });
+            }
+            this.preview();
         },
-        changed: function ($e) {
+        changed: function (e) {
+            var $e = $(e.target);
             this.$('.url-source').filter(':input').not($e).val('')
                     .filter(function () { return !!$(this).data('select2'); })
                     .select2('data', null);
@@ -1196,6 +1206,7 @@
                 .addClass('active')
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
+            this.preview();
         },
         call: function (method, args, kwargs) {
             var self = this;
@@ -1223,6 +1234,20 @@
                 context: website.get_context(),
             });
         },
+        onkeyup: function (e) {
+            var $e = $(e.target);
+            var is_link = ($e.val()||'').length && $e.val().indexOf("@") === -1;
+            this.$('input.window-new').closest("div").toggle(is_link);
+            this.preview();
+        },
+        preview: function () {
+            var $preview = this.$("#link-preview");
+            this.get_data(false).then(function (url, new_window, label, classes) {
+                $preview.attr("target", new_window ? '_blank' : "")
+                    .text((label && label.length ? label : url))
+                    .attr("class", classes);
+            });
+        }
     });
     website.editor.RTELinkDialog = website.editor.LinkDialog.extend({
         start: function () {
@@ -1262,13 +1287,16 @@
          * @param {Boolean} [new_window=false]
          * @param {String} [label=null]
          */
-        make_link: function (url, new_window, label) {
+        make_link: function (url, new_window, label, classes) {
             var attributes = {href: url, 'data-cke-saved-href': url};
             var to_remove = [];
             if (new_window) {
                 attributes['target'] = '_blank';
             } else {
                 to_remove.push('target');
+            }
+            if (classes && classes.length) {
+                attributes['class'] = classes;
             }
 
             if (this.element) {
@@ -1347,6 +1375,11 @@
         start: function () {
             var self = this;
 
+            if (this.editor.getSelection) {
+                var selection = this.editor.getSelection();
+                this.range = selection.getRanges(true)[0];
+            }
+
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
@@ -1400,11 +1433,9 @@
                     this.videoDialog.clear();
                 }
             } else {
-                var selection = this.editor.getSelection();
-                var range = selection.getRanges(true)[0];
                 this.media = new CKEDITOR.dom.element("img");
-                range.insertNode(this.media);
-                range.selectNodeContents(this.media);
+                self.range.insertNode(this.media);
+                self.range.selectNodeContents(this.media);
                 this.active.media = this.media;
             }
 
@@ -1415,6 +1446,7 @@
             this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
 
             setTimeout(function () {
+                if(self.range) self.range.select();
                 $el.trigger("saved", self.active.media.$);
                 $(document.body).trigger("media-saved", [$el[0], self.active.media.$]);
             },0);
@@ -1504,7 +1536,7 @@
                 url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.link;
+            $(this.media).attr('src', this.link);
             return this._super();
         },
         clear: function () {
@@ -1552,9 +1584,9 @@
             }
             var callback = _.uniqueId('func_');
             this.$('input[name=func]').val(callback);
-            window[callback] = function (url, error) {
+            window[callback] = function (attachments, error) {
                 delete window[callback];
-                self.file_selected(url, error);
+                self.file_selected(attachments[0]['website_url'], error);
             };
         },
         file_selection: function () {
@@ -1988,6 +2020,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any SVG target, these blokes are like weird mon
+                if (m.target && m.target instanceof SVGElement) {
+                    return false;
+                }
+
                 // ignore any change related to mundane image-edit-button
                 if (m.target && m.target.className
                         && m.target.className.indexOf('image-edit-button') !== -1) {

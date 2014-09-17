@@ -6,14 +6,14 @@
             <field name="name">Website settings</field>
             <field name="model">website.config.settings</field>
             <field name="arch" type="xml">
-                <form string="Configure Website" version="7.0" class="oe_form_configuration">
+                <form string="Configure Website" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" invisible="True" on_change="on_change_website_id(website_id)"/>
+                        <field name="website_id" on_change="on_change_website_id(website_id)"/>
                         <group string="Domain">
                             <label for="google_analytics_key"/>
                             <div name="google_analytics_key">

@@ -32,7 +32,7 @@ This is the latest UK OpenERP localisation necessary to run OpenERP accounting f
     - a few other adaptations""",
     'author': 'SmartMode LTD',
     'website': 'http://www.smartmode.co.uk',
-    'depends': ['base_iban', 'base_vat', 'account_chart'],
+    'depends': ['base_iban', 'base_vat', 'account_chart', 'account_anglo_saxon'],
     'data': [
         'data/account.account.type.csv',
         'data/account.account.template.csv',

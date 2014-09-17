@@ -64,23 +64,23 @@ OERP_WEBSITE_HTML_1 = """
 <div>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 text-center mt16 mb16" data-snippet-id="colmd">
+            <div class="col-md-12 text-center mt16 mb16">
                 <h2>OpenERP HR Features</h2>
                 <h3 class="text-muted">Manage your company most important asset: People</h3>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg">
                 <h4 class="mt16">Streamline Recruitments</h4>
                 <p>Post job offers and keep track of each application received. Follow applicants in your recruitment process with the smart kanban view.</p>
                 <p>Save time by automating some communications with email templates. Resumes are indexed automatically, allowing you to easily find for specific profiles.</p>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg">
                 <h4 class="mt16">Enterprise Social Network</h4>
                 <p>Break down information silos. Share knowledge and best practices amongst all employees. Follow specific people or documents and join groups of interests to share expertise and documents.</p>
                 <p>Interact with your collegues in real time with live chat.</p>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg">
                 <h4 class="mt16">Leaves Management</h4>
                 <p>Keep track of the vacation days accrued by each employee. Employees enter their requests (paid holidays, sick leave, etc), for managers to approve and validate. It's all done in just a few clicks. The agenda of each employee is updated accordingly.</p>
@@ -101,16 +101,16 @@ OERP_WEBSITE_HTML_1_OUT = [
 
 OERP_WEBSITE_HTML_2 = """
 <div class="mt16 cke_widget_editable cke_widget_element oe_editable oe_dirty" data-oe-model="blog.post" data-oe-id="6" data-oe-field="content" data-oe-type="html" data-oe-translate="0" data-oe-expression="blog_post.content" data-cke-widget-data="{}" data-cke-widget-keep-attr="0" data-widget="oeref" contenteditable="true" data-cke-widget-editable="text">
-    <section class="mt16 mb16" data-snippet-id="text-block">
+    <section class="mt16 mb16">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center mt16 mb32" data-snippet-id="colmd">
+                <div class="col-md-12 text-center mt16 mb32">
                     <h2>
                         OpenERP Project Management
                     </h2>
                     <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
                 </div>
-                <div class="col-md-12 mb16 mt16" data-snippet-id="colmd">
+                <div class="col-md-12 mb16 mt16">
                     <p>
                         OpenERP's <b>collaborative and realtime</b> project
                         management helps your team get work done. Keep
@@ -128,13 +128,13 @@ OERP_WEBSITE_HTML_2 = """
             </div>
         </div>
     </section>
-    <section class="" data-snippet-id="image-text">
+    <section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt16 mb16" data-snippet-id="colmd">
+                <div class="col-md-6 mt16 mb16">
                     <img class="img-responsive shadow" src="/website/static/src/img/image_text.jpg">
                 </div>
-                <div class="col-md-6 mt32" data-snippet-id="colmd">
+                <div class="col-md-6 mt32">
                     <h3>Manage Your Shops</h3>
                     <p>
                         OpenERP's Point of Sale introduces a super clean
@@ -150,10 +150,10 @@ OERP_WEBSITE_HTML_2 = """
             </div>
         </div>
     </section>
-    <section class="" data-snippet-id="text-image">
+    <section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt32" data-snippet-id="colmd">
+                <div class="col-md-6 mt32">
                     <h3>Enterprise Social Network</h3>
                     <p>
                         Make every employee feel more connected and engaged
@@ -167,29 +167,29 @@ OERP_WEBSITE_HTML_2 = """
                         and business applications.
                     </p>
                 </div>
-                <div class="col-md-6 mt16 mb16" data-snippet-id="colmd">
+                <div class="col-md-6 mt16 mb16">
                     <img class="img-responsive shadow" src="/website/static/src/img/text_image.png">
                 </div>
             </div>
         </div>
-    </section><section class="" data-snippet-id="portfolio">
+    </section><section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center mt16 mb32" data-snippet-id="colmd">
+                <div class="col-md-12 text-center mt16 mb32">
                     <h2>Our Porfolio</h2>
                     <h4 class="text-muted">More than 500 successful projects</h4>
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg">
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/landscape.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">
@@ -897,7 +897,7 @@ BUG2 = """
               <th nowrap="" valign="BASELINE" align="RIGHT">Répondre
 
                 à&nbsp;: </th>
-              <td><a class="moz-txt-link-abbreviated" href="mailto:catchall@openerp.my.openerp.com">catchall@openerp.my.openerp.com</a></td>
+              <td><a class="moz-txt-link-abbreviated" href="mailto:catchall@mail.odoo.com">catchall@mail.odoo.com</a></td>
             </tr>
             <tr>
               <th nowrap="" valign="BASELINE" align="RIGHT">Pour&nbsp;:
@@ -1103,4 +1103,73 @@ BUG_2_IN = [
 BUG_2_OUT = [
     'Fwd: TR: OpenERP S.A'
     'fait un mois'
+]
+
+
+# BUG 20/08/2014: READ MORE NOT APPEARING
+BUG3 = """<div class="oe_msg_body_long" style="/* display: none; */"><p>OpenERP has been upgraded to version 8.0.</p>
+<h2>What's new in this upgrade?</h2>
+<div class="document">
+<ul>
+<li><p class="first">New Warehouse Management System:</p>
+<blockquote>
+<p>Schedule your picking, packing, receptions and internal moves automatically with Odoo using
+your own routing rules. Define push and pull rules to organize a warehouse or to manage
+product moves between several warehouses. Track in detail all stock moves, not only in your
+warehouse but wherever else it's taken as well (customers, suppliers or manufacturing
+locations).</p>
+</blockquote>
+</li>
+<li><p class="first">New Product Configurator</p>
+</li>
+<li><p class="first">Documentation generation from website forum:</p>
+<blockquote>
+<p>New module to generate a documentation from questions and responses from your forum.
+The documentation manager can define a table of content and any user, depending their karma,
+can link a question to an entry of this TOC.</p>
+</blockquote>
+</li>
+<li><p class="first">New kanban view of documents (resumes and letters in recruitement, project documents...)</p>
+</li>
+<li><p class="first">E-Commerce:</p>
+<blockquote>
+<ul class="simple">
+<li>Manage TIN in contact form for B2B.</li>
+<li>Dedicated salesteam to easily manage leads and orders.</li>
+</ul>
+</blockquote>
+</li>
+<li><p class="first">Better Instant Messaging.</p>
+</li>
+<li><p class="first">Faster and Improved Search view: Search drawer now appears on top of the results, and is open
+by default in reporting views</p>
+</li>
+<li><p class="first">Improved User Interface:</p>
+<blockquote>
+<ul class="simple">
+<li>Popups has changed to be more responsive on tablets and smartphones.</li>
+<li>New Stat Buttons: Forms views have now dynamic buttons showing some statistics abouts linked models.</li>
+<li>Color code to check in one look availability of components in an MRP order.</li>
+<li>Unified menu bar allows you to switch easily between the frontend (website) and backend</li>
+<li>Results panel is now scrollable independently of the menu bars, keeping the navigation,
+search bar and view switcher always within reach.</li>
+</ul>
+</blockquote>
+</li>
+<li><p class="first">User signature is now in HTML.</p>
+</li>
+<li><p class="first">New development API.</p>
+</li>
+<li><p class="first">Remove support for Outlook and Thunderbird plugins</p>
+</li>
+</ul>
+</div>
+<p>Enjoy the new OpenERP Online!</p><span class="oe_mail_reduce"><a href="#">read less</a></span></div>"""
+
+BUG_3_IN = [
+    'read more',
+    '...',
+]
+BUG_3_OUT = [
+    'New kanban view of documents'
 ]

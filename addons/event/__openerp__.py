@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     'name': 'Events Organisation',
     'version': '0.1',
+    'website' : 'https://www.odoo.com/page/events',
     'category': 'Tools',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
@@ -47,6 +46,7 @@ Key Features
         'event_data.xml',
         'report/report_event_registration_view.xml',
         'res_partner_view.xml',
+        'res_config_view.xml',
         'email_template.xml',
         'views/event.xml',
     ],

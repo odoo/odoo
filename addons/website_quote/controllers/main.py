@@ -38,6 +38,7 @@ class sale_quote(http.Controller):
         # only if he knows the private token
         order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
         now = time.strftime('%Y-%m-%d')
+        dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'sale', 'action_quotations')
         if token:
             if token != order.access_token:
                 return request.website.render('website.404')
@@ -54,7 +55,8 @@ class sale_quote(http.Controller):
             'message': message and int(message) or False,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (now <= order.validity_date),
-            'days_valid': max(days, 0)
+            'days_valid': max(days, 0),
+            'action': action
         }
         return request.website.render('website_quote.so_quotation', values)
 
@@ -65,7 +67,7 @@ class sale_quote(http.Controller):
         if token != order.access_token:
             return request.website.render('website.404')
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
-        order_obj.signal_order_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
         self.__message_post(message, order_id, type='comment', subtype='mt_comment', attachments=attachments)
         return True

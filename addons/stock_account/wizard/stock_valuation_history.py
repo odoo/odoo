@@ -55,12 +55,13 @@ class stock_history(osv.osv):
                     product_tmpl_obj = self.pool.get("product.template")
                     lines_rec = self.browse(cr, uid, lines, context=context)
                     for line_rec in lines_rec:
-                        if not line_rec.product_id.id in prod_dict:
-                            if line_rec.product_id.cost_method == 'real':
-                                prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
-                            else:
+                        if line_rec.product_id.cost_method == 'real':
+                            price = line_rec.price_unit_on_quant
+                        else:
+                            if not line_rec.product_id.id in prod_dict:
                                 prod_dict[line_rec.product_id.id] = product_tmpl_obj.get_history_price(cr, uid, line_rec.product_id.product_tmpl_id.id, line_rec.company_id.id, date=date, context=context)
-                        inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
+                            price = prod_dict[line_rec.product_id.id]
+                        inv_value += price * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
 
@@ -83,7 +84,7 @@ class stock_history(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
-        'quantity': fields.integer('Product Quantity'),
+        'quantity': fields.float('Product Quantity'),
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),

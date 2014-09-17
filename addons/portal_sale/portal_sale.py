@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 
 class sale_order(osv.Model):
@@ -35,7 +37,7 @@ class sale_order(osv.Model):
     def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool['payment.acquirer']
-        for this in self.browse(cr, uid, ids, context=context):
+        for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
@@ -60,17 +62,26 @@ class sale_order(osv.Model):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
-        if partner.id not in document.message_follower_ids:
+        if partner not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
-        partner = document.partner_id
-        action = 'portal_sale.action_quotations_portal' if document.state in ('draft', 'sent') else 'portal_sale.action_orders_portal'
-        partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        contex_signup = dict(context, signup_valid=True)
+        return self.pool['res.partner']._get_signup_url_for_action(
+            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            model=self._name, res_id=document.id, context=contex_signup,
+        )[document.partner_id.id]
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if user.share:
+            document = self.browse(cr, uid, id, context=context)
+            action_xmlid = 'action_quotations_portal' if document.state in ('draft', 'sent') else 'action_orders_portal'
+            return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', action_xmlid, context=context)
+        return super(sale_order, self).get_formview_action(cr, uid, id, context=context)
 
 
 class account_invoice(osv.Model):
@@ -110,17 +121,24 @@ class account_invoice(osv.Model):
         # fetch the partner's id and subscribe the partner to the invoice
         for invoice in self.browse(cr, uid, ids, context=context):
             partner = invoice.partner_id
-            if partner.id not in invoice.message_follower_ids:
+            if partner not in invoice.message_follower_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
-        partner = document.partner_id
-        action = 'portal_sale.portal_action_invoices'
-        partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        contex_signup = dict(context, signup_valid=True)
+        return self.pool['res.partner']._get_signup_url_for_action(
+            cr, uid, [document.partner_id.id], action='mail.action_mail_redirect',
+            model=self._name, res_id=document.id, context=contex_signup,
+        )[document.partner_id.id]
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if user.share:
+            return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
+        return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)
 
 
 class mail_mail(osv.osv):
@@ -132,10 +150,10 @@ class mail_mail(osv.osv):
             order = so_obj.browse(cr, uid, mail.res_id, context=context)
             partner = order.partner_id
             # Add the customer in the SO as follower
-            if partner.id not in order.message_follower_ids:
+            if partner not in order.message_follower_ids:
                 so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
             # Add all recipients of the email as followers
             for p in mail.partner_ids:
-                if p.id not in order.message_follower_ids:
+                if p not in order.message_follower_ids:
                     so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)

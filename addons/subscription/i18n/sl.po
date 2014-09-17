@@ -1,56 +1,48 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* subscription
+# Slovenian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-10-30 10:14+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:56+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: subscription
-#: field:subscription.subscription,doc_source:0
-#: field:subscription.subscription.history,document_id:0
-msgid "Source Document"
-msgstr "Izvorni dokument"
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "Aktivno"
 
 #. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr "Predmet"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Search Subscription"
+#: field:subscription.document,create_uid:0
+#: field:subscription.document.fields,create_uid:0
+#: field:subscription.subscription,create_uid:0
+#: field:subscription.subscription.history,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: subscription
-#: field:subscription.subscription,date_init:0
-msgid "First Date"
-msgstr "Prvi datum"
+#: field:subscription.document,create_date:0
+#: field:subscription.document.fields,create_date:0
+#: field:subscription.subscription,create_date:0
+#: field:subscription.subscription.history,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: subscription
-#: field:subscription.document.fields,field:0
-msgid "Field"
-msgstr "Polje"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription_history
-msgid "Subscription history"
-msgstr "Zgodovina naročnine"
-
-#. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Draft"
-msgstr "Osnutek"
+#: field:subscription.subscription,cron_id:0
+msgid "Cron Job"
+msgstr "Obdelava Cron-a"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -58,75 +50,84 @@ msgid "Current Date"
 msgstr "Trenutni datum"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Weeks"
-msgstr "Tedni"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "Status"
-msgstr "Stanje"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr ""
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_subscription_form
-#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr "Naročnine"
-
-#. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr "Kol. obdobja"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Stop"
-msgstr "Ustavi"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Set to Draft"
-msgstr "Preklopi v pripravo"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: selection:subscription.subscription,state:0
-msgid "Running"
-msgstr "V teku"
-
-#. module: subscription
-#: view:subscription.subscription.history:0
-msgid "Subscription History"
-msgstr "Zgodobina naročnine"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
-msgid "User"
-msgstr "Uporabnik"
-
-#. module: subscription
-#: field:subscription.subscription,interval_type:0
-msgid "Interval Unit"
-msgstr "Enota intervala"
-
-#. module: subscription
 #: field:subscription.subscription.history,date:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: subscription
-#: field:subscription.subscription,exec_init:0
-msgid "Number of documents"
-msgstr "Število dokumentov"
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "Dni"
+
+#. module: subscription
+#: field:subscription.document.fields,value:0
+msgid "Default Value"
+msgstr "Privzeta vrednost"
+
+#. module: subscription
+#: help:subscription.document.fields,value:0
+msgid "Default value is considered for field when new document is generated."
+msgstr ""
+
+#. module: subscription
+#: help:subscription.subscription,note:0
+msgid "Description or Summary of Subscription"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,doc_lines:0
+msgid "Documents created"
+msgstr "Izdelani dokumenti"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Done"
+msgstr "Zaključeno"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:145
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: subscription
+#: selection:subscription.document.fields,value:0
+msgid "False"
+msgstr "Napačno"
+
+#. module: subscription
+#: field:subscription.document.fields,field:0
+msgid "Field"
+msgstr "Polje"
+
+#. module: subscription
+#: field:subscription.document,field_ids:0
+msgid "Fields"
+msgstr "Polja"
+
+#. module: subscription
+#: field:subscription.subscription,date_init:0
+msgid "First Date"
+msgstr "Prvi datum"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+msgid "Group By"
+msgstr ""
+
+#. module: subscription
+#: field:subscription.document,id:0
+#: field:subscription.document.fields,id:0
+#: field:subscription.subscription,id:0
+#: field:subscription.subscription.history,id:0
+msgid "ID"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.document,active:0
@@ -136,86 +137,6 @@ msgid ""
 msgstr ""
 
 #. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
-msgid "Name"
-msgstr "Ime"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.document,field_ids:0
-msgid "Fields"
-msgstr "Polja"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
-#: field:subscription.subscription,notes:0
-msgid "Notes"
-msgstr "Opombe"
-
-#. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Months"
-msgstr "Meseci"
-
-#. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Days"
-msgstr "Dni"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: subscription
-#: field:subscription.subscription,cron_id:0
-msgid "Cron Job"
-msgstr "Obdelava Cron-a"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription.history,subscription_id:0
-msgid "Subscription"
-msgstr "Naročnina"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: subscription
-#: help:subscription.subscription,cron_id:0
-msgid "Scheduler which runs on subscription"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Podatki naročnine"
-
-#. module: subscription
-#: help:subscription.subscription,note:0
-msgid "Description or Summary of Subscription"
-msgstr ""
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-#: view:subscription.document:0
-#: field:subscription.document.fields,document_id:0
-msgid "Subscription Document"
-msgstr "Dokument naročnine"
-
-#. module: subscription
 #: help:subscription.subscription,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
@@ -223,24 +144,183 @@ msgid ""
 msgstr ""
 
 #. module: subscription
-#: help:subscription.document.fields,value:0
-msgid "Default value is considered for field when new document is generated."
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,notes:0
+msgid "Internal Notes"
 msgstr ""
 
 #. module: subscription
-#: selection:subscription.document.fields,value:0
-msgid "False"
-msgstr "Napačno"
+#: field:subscription.subscription,interval_number:0
+msgid "Interval Qty"
+msgstr "Kol. obdobja"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Group By..."
+#: field:subscription.subscription,interval_type:0
+msgid "Interval Unit"
+msgstr "Enota intervala"
+
+#. module: subscription
+#: field:subscription.document,write_uid:0
+#: field:subscription.document.fields,write_uid:0
+#: field:subscription.subscription,write_uid:0
+#: field:subscription.subscription.history,write_uid:0
+msgid "Last Updated by"
 msgstr ""
 
 #. module: subscription
-#: view:subscription.subscription:0
+#: field:subscription.document,write_date:0
+#: field:subscription.document.fields,write_date:0
+#: field:subscription.subscription,write_date:0
+#: field:subscription.subscription.history,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Months"
+msgstr "Meseci"
+
+#. module: subscription
+#: field:subscription.document,name:0
+#: field:subscription.subscription,name:0
+msgid "Name"
+msgstr "Ime"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: field:subscription.subscription,note:0
+msgid "Notes"
+msgstr "Opombe"
+
+#. module: subscription
+#: field:subscription.subscription,exec_init:0
+msgid "Number of documents"
+msgstr "Število dokumentov"
+
+#. module: subscription
+#: field:subscription.document,model:0
+msgid "Object"
+msgstr "Predmet"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:118
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
 msgid "Process"
 msgstr "Procesiraj"
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_subscription_form
+#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
+msgid "Recurring Documents"
+msgstr ""
+
+#. module: subscription
+#: model:ir.actions.act_window,name:subscription.action_document_form
+#: model:ir.ui.menu,name:subscription.menu_action_document_form
+msgid "Recurring Types"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: selection:subscription.subscription,state:0
+msgid "Running"
+msgstr "V teku"
+
+#. module: subscription
+#: help:subscription.subscription,cron_id:0
+msgid "Scheduler which runs on subscription"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+msgid "Search Subscription"
+msgstr ""
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Set to Draft"
+msgstr "Preklopi v pripravo"
+
+#. module: subscription
+#: field:subscription.subscription,doc_source:0
+#: field:subscription.subscription.history,document_id:0
+msgid "Source Document"
+msgstr "Izvorni dokument"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,state:0
+msgid "Status"
+msgstr "Stanje"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Stop"
+msgstr "Ustavi"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription.history,subscription_id:0
+msgid "Subscription"
+msgstr "Naročnina"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+#: view:subscription.document:subscription.document_form
+#: view:subscription.document:subscription.document_tree
+#: view:subscription.document:subscription.view_subscription_document_filter
+#: field:subscription.document.fields,document_id:0
+msgid "Subscription Document"
+msgstr "Dokument naročnine"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document_fields
+#: view:subscription.document.fields:subscription.document_fields_form
+#: view:subscription.document.fields:subscription.document_fields_tree
+msgid "Subscription Document Fields"
+msgstr "Polja dokumenta naročnine"
+
+#. module: subscription
+#: view:subscription.subscription.history:subscription.subscription_subscription_history_form
+#: view:subscription.subscription.history:subscription.subscription_subscription_history_tree
+msgid "Subscription History"
+msgstr "Zgodobina naročnine"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "Zgodovina naročnine"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+#: view:subscription.subscription:subscription.view_subscription_tree
+msgid "Subscriptions"
+msgstr "Naročnine"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_form
+msgid "Subsription Data"
+msgstr "Podatki naročnine"
+
+#. module: subscription
+#: view:subscription.subscription:subscription.view_subscription_filter
+#: field:subscription.subscription,user_id:0
+msgid "User"
+msgstr "Uporabnik"
 
 #. module: subscription
 #: help:subscription.subscription,doc_source:0
@@ -249,92 +329,18 @@ msgid ""
 msgstr ""
 
 #. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_document_form
-#: model:ir.ui.menu,name:subscription.menu_action_document_form
-msgid "Document Types"
-msgstr "Tipi dokumentov"
+#: selection:subscription.subscription,interval_type:0
+msgid "Weeks"
+msgstr "Tedni"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
+#: code:addons/subscription/subscription.py:118
 #, python-format
-msgid "Wrong Source Document !"
-msgstr "Napačen izvorni dokument!"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document_fields
-#: view:subscription.document.fields:0
-msgid "Subscription Document Fields"
-msgstr "Polja dokumenta naročnine"
-
-#. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Done"
-msgstr "Zaključeno"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
+msgid "Wrong Source Document!"
 msgstr ""
-"Prosim, podajte nov izvorni dokument.\n"
-"Podani namreč ne obstaja!"
 
 #. module: subscription
-#: field:subscription.document.fields,value:0
-msgid "Default Value"
-msgstr "Privzeta vrednost"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,doc_lines:0
-msgid "Documents created"
-msgstr "Izdelani dokumenti"
-
-#. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "Aktivno"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#~ msgid "Configuration"
-#~ msgstr "Konfiguracija"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#~ msgid "Sale Order"
-#~ msgstr "Prodajni nalog"
-
-#~ msgid "Invoice"
-#~ msgstr "Račun"
-
-#~ msgid "Tools"
-#~ msgstr "Orodja"
-
-#~ msgid "Subscription document"
-#~ msgstr "Dokument naročnine"
-
-#~ msgid "Subscription document fields"
-#~ msgstr "Polja dokumenta naročnine"
-
-#~ msgid "All Subscriptions"
-#~ msgstr "Vse naročnine"
-
-#~ msgid "Subscription and recurring operations"
-#~ msgstr "Naročnine in ponavljajoče operacije"
-
-#~ msgid ""
-#~ "Module allows to create new documents and add subscription on that document."
-#~ msgstr ""
-#~ "Modul omogoča izdelavo novih dokumentov in dodajanje naročnin na te "
-#~ "dokumente."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Napačno ime modela v definiciji dejanja."
+#: code:addons/subscription/subscription.py:145
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""

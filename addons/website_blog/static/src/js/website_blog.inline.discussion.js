@@ -4,8 +4,8 @@
     'use strict';
     
     var website = openerp.website,
-    qweb = openerp.qweb;
-    website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml');
+        qweb = openerp.qweb;
+
     website.blog_discussion = openerp.Class.extend({
         init: function(options) {
             var self = this ;
@@ -17,7 +17,11 @@
                 public_user: false,
             };
             self.settings = $.extend({}, defaults, options);
-            self.do_render(self);
+
+            // TODO: bundlify qweb templates
+            website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml').then(function () {
+                self.do_render(self);
+            });
         },
         do_render: function(data) {
             var self = this;
@@ -25,9 +29,8 @@
                 $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
             }
             // Attach a discussion to each paragraph.
-            $(self.settings.content).each(function(i) {
-                self.discussion_handler(i, $(this));
-            });
+            self.discussions_handler(self.settings.content);
+
             // Hide the discussion.
             $('html').click(function(event) {
                 if($(event.target).parents('#discussions_wrapper, .main-discussion-link-wrp').length === 0) {
@@ -54,14 +57,29 @@
                 'count': comment_count, //if true only get length of total comment, display on discussion thread.
             })
         },
-        discussion_handler : function(i, node) {
+        prepare_multi_data : function(identifiers, comment_count) {
             var self = this;
-            var identifier = node.attr('data-chatter-id');
-            if (identifier) {
-                self.prepare_data(identifier, true).then( function (data) {
-                    self.prepare_discuss_link(data, identifier, node);
+            return openerp.jsonRpc("/blogpost/get_discussions/", 'call', {
+                'post_id': self.settings.post_id,
+                'paths': identifiers,
+                'count': comment_count, //if true only get length of total comment, display on discussion thread.
+            })
+        },
+        discussions_handler: function() {
+            var self = this;
+            var node_by_id = {};
+            $(self.settings.content).each(function(i) {
+                var node = $(this);
+                var identifier = node.attr('data-chatter-id');
+                if (identifier) {
+                    node_by_id[identifier] = node;
+                }
+            });
+            self.prepare_multi_data(_.keys(node_by_id), true).then( function (multi_data) {
+                _.forEach(multi_data, function(data) {
+                    self.prepare_discuss_link(data.val, data.path, node_by_id[data.path]);
                 });
-            }
+            });
         },
         prepare_discuss_link :  function(data, identifier, node) {
             var self = this;

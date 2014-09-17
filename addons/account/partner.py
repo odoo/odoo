@@ -23,23 +23,31 @@ from operator import itemgetter
 import time
 
 from openerp.osv import fields, osv
+from openerp import api
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
+    _order = 'sequence'
     _columns = {
-        'name': fields.char('Fiscal Position', size=64, required=True),
+        'sequence': fields.integer('Sequence'),
+        'name': fields.char('Fiscal Position', required=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a fiscal position without deleting it."),
         'company_id': fields.many2one('res.company', 'Company'),
-        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes', translate=True),
+        'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping', copy=True),
+        'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping', copy=True),
+        'note': fields.text('Notes'),
+        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position."),
+        'vat_required': fields.boolean('VAT required', help="Apply only if partner has a VAT number."),
+        'country_id': fields.many2one('res.country', 'Countries', help="Apply only if delivery or invoicing country match."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply only if delivery or invocing country match the group."),
     }
 
     _defaults = {
         'active': True,
     }
 
+    @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
         if not taxes:
             return []
@@ -57,6 +65,20 @@ class account_fiscal_position(osv.osv):
                 result.add(t.id)
         return list(result)
 
+    @api.v8     # noqa
+    def map_tax(self, taxes):
+        result = self.env['account.tax'].browse()
+        for tax in taxes:
+            for t in self.tax_ids:
+                if t.tax_src_id == tax:
+                    if t.tax_dest_id:
+                        result |= t.tax_dest_id
+                    break
+            else:
+                result |= tax
+        return result
+
+    @api.v7
     def map_account(self, cr, uid, fposition_id, account_id, context=None):
         if not fposition_id:
             return account_id
@@ -66,6 +88,40 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
+    @api.v8
+    def map_account(self, account):
+        for pos in self.account_ids:
+            if pos.account_src_id == account:
+                return pos.account_dest_id
+        return account
+
+    def get_fiscal_position(self, cr, uid, company_id, partner_id, delivery_id=None, context=None):
+        if not partner_id:
+            return False
+        # This can be easily overriden to apply more complex fiscal rules
+        part_obj = self.pool['res.partner']
+        partner = part_obj.browse(cr, uid, partner_id, context=context)
+
+        # partner manually set fiscal position always win
+        if partner.property_account_position:
+            return partner.property_account_position.id
+
+        # if no delivery use invocing
+        if delivery_id:
+            delivery = part_obj.browse(cr, uid, delivery_id, context=context)
+        else:
+            delivery = partner
+
+        domain = [
+            ('auto_apply', '=', True),
+            '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
+            '|', ('country_id', '=', None), ('country_id', '=', delivery.country_id.id),
+            '|', ('country_group_id', '=', None), ('country_group_id.country_ids', '=', delivery.country_id.id)
+        ]
+        fiscal_position_ids = self.search(cr, uid, domain, context=context)
+        if fiscal_position_ids:
+            return fiscal_position_ids[0]
+        return False
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -166,7 +222,8 @@ class res_partner(osv.osv):
         result = {}
         account_invoice_report = self.pool.get('account.invoice.report')
         for partner in self.browse(cr, uid, ids, context=context):
-            invoice_ids = account_invoice_report.search(cr, uid, [('partner_id','child_of',partner.id)], context=context)
+            domain = [('partner_id', 'child_of', partner.id)]
+            invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
             invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
             result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
         return result
@@ -206,11 +263,13 @@ class res_partner(osv.osv):
         return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     _columns = {
+        'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."),
         'credit': fields.function(_credit_debit_get,
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
-        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
+        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float', groups='account.group_account_invoice'),
+
         'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
         'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
@@ -245,7 +304,14 @@ class res_partner(osv.osv):
              help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')
+        'last_reconciliation_date': fields.datetime(
+            'Latest Full Reconciliation Date', copy=False,
+            help='Date on which the partner accounting entries were fully reconciled last time. '
+                 'It differs from the last date where a reconciliation has been made for this partner, '
+                 'as here we depict the fact that nothing more was to be reconciled at this date. '
+                 'This can be achieved in 2 different ways: either the last unreconciled debit/credit '
+                 'entry of this partner was reconciled, either the user pressed the button '
+                 '"Nothing more to reconcile" during the manual reconciliation process.')
     }
 
     def _commercial_fields(self, cr, uid, context=None):

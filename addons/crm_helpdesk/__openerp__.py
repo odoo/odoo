@@ -34,7 +34,7 @@ which is not necessarily related to a claim. Select a customer, add notes
 and categorize your interventions with a channel and a priority level.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['crm'],
     'data': [
         'crm_helpdesk_view.xml',

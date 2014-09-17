@@ -49,6 +49,7 @@
 -
   !python {model: account.invoice}: |
     import time
+    from openerp.tools import float_compare
     edi_document = {
         "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.random_invoice_763jsms",
         "__module": "account",
@@ -141,14 +142,14 @@
     for inv_line in invoice_new.invoice_line:
         if inv_line.name == 'PC Assemble SC234':
             assert inv_line.uos_id.name == "Unit" , "uom is not same"
-            assert inv_line.price_unit == 10 , "price unit is not same"
-            assert inv_line.quantity == 1 , "product qty is not same"
-            assert inv_line.price_subtotal == 10, "price sub total is not same"
+            assert float_compare(inv_line.price_unit, 10, precision_digits=2) == 0, "price unit is not same"
+            assert float_compare(inv_line.quantity, 1, precision_digits=2) == 0, "product qty is not same"
+            assert float_compare(inv_line.price_subtotal, 10, precision_digits=2) == 0, "price sub total is not same"
         elif inv_line.name == 'PC on Demand':
             assert inv_line.uos_id.name == "Unit" , "uom is not same"
-            assert inv_line.price_unit == 100 , "price unit is not same"
-            assert inv_line.quantity == 5 , "product qty is not same"
-            assert inv_line.price_subtotal == 500, "price sub total is not same"
+            assert float_compare(inv_line.price_unit, 100, precision_digits=2) == 0, "price unit is not same"
+            assert float_compare(inv_line.quantity, 5, precision_digits=2) == 0, "product qty is not same"
+            assert float_compare(inv_line.price_subtotal, 500, precision_digits=2) == 0, "price sub total is not same"
         else:
             raise AssertionError('unknown invoice line: %s' % inv_line)
     for inv_tax in invoice_new.tax_line:
@@ -159,6 +160,7 @@
 -
   !python {model: account.invoice}: |
     import time
+    from openerp.tools import float_compare
     edi_document = {
         "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.random_invoice_763jsms", 
         "__module": "account", 
@@ -249,14 +251,14 @@
     for inv_line in invoice_new.invoice_line:
         if inv_line.name == 'Basic PC':
             assert inv_line.uos_id.name == "PCE" , "uom is not same"
-            assert inv_line.price_unit == 10 , "price unit is not same"
-            assert inv_line.quantity == 1 , "product qty is not same"
-            assert inv_line.price_subtotal == 10, "price sub total is not same"
+            assert float_compare(inv_line.price_unit, 10, precision_digits=2) == 0, "price unit is not same"
+            assert float_compare(inv_line.quantity, 1, precision_digits=2) == 0, "product qty is not same"
+            assert float_compare(inv_line.price_subtotal, 10, precision_digits=2) == 0, "price sub total is not same"
         elif inv_line.name == 'Medium PC':
             assert inv_line.uos_id.name == "PCE" , "uom is not same"
-            assert inv_line.price_unit == 100 , "price unit is not same"
-            assert inv_line.quantity == 5 , "product qty is not same"
-            assert inv_line.price_subtotal == 500, "price sub total is not same"
+            assert float_compare(inv_line.price_unit, 100, precision_digits=2) == 0, "price unit is not same"
+            assert float_compare(inv_line.quantity, 5, precision_digits=2) == 0, "product qty is not same"
+            assert float_compare(inv_line.price_subtotal, 500, precision_digits=2) == 0, "price sub total is not same"
         else:
             raise AssertionError('unknown invoice line: %s' % inv_line)
     for inv_tax in invoice_new.tax_line:

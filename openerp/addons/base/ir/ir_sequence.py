@@ -32,7 +32,7 @@ class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
     _order = 'name'
     _columns = {
-        'name': openerp.osv.fields.char('Name', size=64, required=True),
+        'name': openerp.osv.fields.char('Name', required=True),
         'code': openerp.osv.fields.char('Code', size=32, required=True),
     }
 
@@ -92,12 +92,12 @@ class ir_sequence(openerp.osv.osv.osv):
             "and 'No gap'. The later is slower than the former but forbids any"
             " gap in the sequence (while they are possible in the former)."),
         'active': openerp.osv.fields.boolean('Active'),
-        'prefix': openerp.osv.fields.char('Prefix', size=64, help="Prefix value of the record for the sequence"),
-        'suffix': openerp.osv.fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
+        'prefix': openerp.osv.fields.char('Prefix', help="Prefix value of the record for the sequence"),
+        'suffix': openerp.osv.fields.char('Suffix', help="Suffix value of the record for the sequence"),
         'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_next_actual': openerp.osv.fields.function(_get_number_next_actual, fnct_inv=_set_number_next_actual, type='integer', required=True, string='Next Number', help='Next number that will be used. This number can be incremented frequently so the displayed value might already be obsolete'),
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
     }
     _defaults = {
@@ -234,15 +234,15 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    def _next(self, cr, uid, seq_ids, context=None):
-        if not seq_ids:
+    def _next(self, cr, uid, ids, context=None):
+        if not ids:
             return False
         if context is None:
             context = {}
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, seq_ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
+        sequences = self.read(cr, uid, ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
         preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
         seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
@@ -251,6 +251,7 @@ class ir_sequence(openerp.osv.osv.osv):
         else:
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
             cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
+            self.invalidate_cache(cr, uid, ['number_next'], [seq['id']], context=context)
         d = self._interpolation_dict()
         try:
             interpolated_prefix = self._interpolate(seq['prefix'], d)

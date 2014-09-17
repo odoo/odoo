@@ -122,7 +122,7 @@ class product_template(osv.Model):
             ],
             string='Website Comments',
         ),
-        'website_published': fields.boolean('Available in the website'),
+        'website_published': fields.boolean('Available in the website', copy=False),
         'website_description': fields.html('Description for the website'),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
@@ -179,7 +179,7 @@ class product_template(osv.Model):
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
     def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
+        return "/website/image/%s/%s/%s" % (self._name, ids[0], field)
 
 class product_product(osv.Model):
     _inherit = "product.product"
@@ -196,12 +196,12 @@ class product_product(osv.Model):
 
     def img(self, cr, uid, ids, field='image_small', context=None):
         temp_id = self.browse(cr, uid, ids[0], context=context).product_tmpl_id.id
-        return "/website/image?model=product.template&field=%s&id=%s" % (field, temp_id)
+        return "/website/image/product.template/%s/%s" % (temp_id, field)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
-        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], string="Type", type="char"),
+        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type", type="char"),
     }
     _defaults = {
         'type': lambda *a: 'radio',
@@ -210,5 +210,5 @@ class product_attribute(osv.Model):
 class product_attribute_value(osv.Model):
     _inherit = "product.attribute.value"
     _columns = {
-        'color': fields.char("Color for Color Attributes"),
+        'color': fields.char("HTML Color Index", help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."),
     }

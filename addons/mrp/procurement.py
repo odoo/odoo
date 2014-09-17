@@ -63,7 +63,7 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids, context=context):
             properties = [x.id for x in procurement.property_ids]
             bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_uom.id,
-                product_id=procurement.product_id.id, properties=properties)
+                product_id=procurement.product_id.id, properties=properties, context=context)
             if not bom_id:
                 return False
         return True
@@ -85,7 +85,7 @@ class procurement_order(osv.osv):
                 else:
                     properties = [x.id for x in procurement.property_ids]
                     bom_id = bom_obj._bom_find(cr, uid, procurement.product_uom.id,
-                        product_id=procurement.product_id.id, properties=properties)
+                        product_id=procurement.product_id.id, properties=properties, context=context)
                     bom = bom_obj.browse(cr, uid, bom_id, context=context)
                     routing_id = bom.routing_id.id
 
@@ -114,7 +114,7 @@ class procurement_order(osv.osv):
                 procurement.refresh()
                 self.production_order_create_note(cr, uid, procurement, context=context)
                 production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
-                production_obj.signal_button_confirm(cr, uid, [produce_id])
+                production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')
             else:
                 res[procurement.id] = False
                 self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)

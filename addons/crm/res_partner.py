@@ -53,14 +53,6 @@ class res_partner(osv.osv):
         'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
     }
 
-    def copy(self, cr, uid, record_id, default=None, context=None):
-        if default is None:
-            default = {}
-
-        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
-
-        return super(res_partner, self).copy(cr, uid, record_id, default, context)
-
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
         value = {
@@ -96,16 +88,11 @@ class res_partner(osv.osv):
         return opportunity_ids
 
     def schedule_meeting(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         partner_ids = list(ids)
         partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
-            'default_partner_id': ids and ids[0] or False,
+            'search_default_partner_ids': list(ids),
             'default_partner_ids': partner_ids,
         }
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

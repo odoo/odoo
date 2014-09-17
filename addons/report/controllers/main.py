@@ -50,7 +50,12 @@ class ReportController(Controller):
         if data.get('options'):
             options_data = simplejson.loads(data['options'])
         if data.get('context'):
-            context.update(simplejson.loads(data['context']))
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it. 
+            data_context = simplejson.loads(data['context'])
+            if data_context.get('lang'):
+                del data_context['lang']
+            context.update(data_context)
 
         if converter == 'html':
             html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
@@ -88,7 +93,7 @@ class ReportController(Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @route(['/report/download'], type='http', auth="user", website=True)
+    @route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a pdf/controller report.
@@ -129,7 +134,7 @@ class ReportController(Controller):
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
             return request.make_response(simplejson.dumps(error))

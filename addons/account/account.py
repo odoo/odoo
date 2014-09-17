@@ -26,7 +26,7 @@ from operator import itemgetter
 import time
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
@@ -55,14 +55,27 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+    }
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
     _columns = {
-        'name': fields.char('Payment Term', size=64, translate=True, required=True),
+        'name': fields.char('Payment Term', translate=True, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
-        'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
+        'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms', copy=True),
     }
     _defaults = {
         'active': 1,
@@ -180,7 +193,7 @@ class account_account_type(osv.osv):
             return obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
 
     _columns = {
-        'name': fields.char('Account Type', size=64, required=True, translate=True),
+        'name': fields.char('Account Type', required=True, translate=True),
         'code': fields.char('Code', size=32, required=True, select=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
@@ -212,9 +225,6 @@ def _code_get(self, cr, uid, context=None):
 #----------------------------------------------------------
 # Accounts
 #----------------------------------------------------------
-
-class account_tax(osv.osv):
-    _name = 'account.tax'
 
 class account_account(osv.osv):
     _order = "parent_left"
@@ -444,7 +454,7 @@ class account_account(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -580,7 +590,14 @@ class account_account(osv.osv):
             pass
         if name:
             if operator not in expression.NEGATIVE_TERM_OPERATORS:
-                ids = self.search(cr, user, ['|', ('code', '=like', name+"%"), '|',  ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                plus_percent = lambda n: n+'%'
+                code_op, code_conv = {
+                    'ilike': ('=ilike', plus_percent),
+                    'like': ('=like', plus_percent),
+                }.get(operator, (operator, lambda n: n))
+
+                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+
                 if not ids and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
@@ -633,16 +650,16 @@ class account_account(osv.osv):
 
     def _check_moves(self, cr, uid, ids, method, context=None):
         line_obj = self.pool.get('account.move.line')
-        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
-        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
             if method == 'write':
                 raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
-        value = 'account.account,' + str(ids[0])
-        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
+        values = ['account.account,%s' % (account_id,) for account_id in ids]
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','in', values)], context=context)
         if partner_prop_acc:
             raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
@@ -665,7 +682,7 @@ class account_account(osv.osv):
 
     # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
     # the code of an account if journal entries have been already posted on this account. This cannot be simply 
-    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
@@ -684,10 +701,10 @@ class account_account(osv.osv):
 
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)], context=context)
             if move_lines:
                 # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
                     if vals['company_id']!=i:
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
@@ -707,8 +724,8 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
-        'name': fields.char('Journal Name', size=64, required=True),
+        'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
+        'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
@@ -723,7 +740,7 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True),
+        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -734,11 +751,12 @@ class account_journal(osv.osv):
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
 
     _defaults = {
         'cash_control' : False,
-        'with_last_closing_balance' : False,
+        'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
@@ -762,15 +780,12 @@ class account_journal(osv.osv):
         (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
     ]
 
-    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
-        default = {} if default is None else default.copy()
-        if done_list is None:
-            done_list = []
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = dict(context or {})
         journal = self.browse(cr, uid, id, context=context)
         default.update(
             code=_("%s (copy)") % (journal['code'] or ''),
-            name=_("%s (copy)") % (journal['name'] or ''),
-            sequence_id=False)
+            name=_("%s (copy)") % (journal['name'] or ''))
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -852,13 +867,16 @@ class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
     _columns = {
-        'name': fields.char('Fiscal Year', size=64, required=True),
+        'name': fields.char('Fiscal Year', required=True),
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True),
+        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False),
+        'end_journal_period_id': fields.many2one(
+             'account.journal.period', 'End of Year Entries Journal',
+             readonly=True, copy=False),
     }
     _defaults = {
         'state': 'draft',
@@ -925,7 +943,9 @@ class account_fiscalyear(osv.osv):
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
-                raise osv.except_osv(_('Error!'), _('There is no fiscal year defined for this date.\nPlease create one from the configuration of the accounting menu.'))
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
+                msg = _('No accounting period is covering this date: %s.') % dt
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _(' Configure Fiscal Year Now'))
             else:
                 return []
         return ids
@@ -945,14 +965,13 @@ class account_period(osv.osv):
     _name = "account.period"
     _description = "Account period"
     _columns = {
-        'name': fields.char('Period Name', size=64, required=True),
+        'name': fields.char('Period Name', required=True),
         'code': fields.char('Code', size=12),
-        'special': fields.boolean('Opening/Closing Period', size=12,
-            help="These periods can overlap."),
+        'special': fields.boolean('Opening/Closing Period',help="These periods can overlap."),
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True,
+        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False,
                                   help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.'),
         'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
@@ -992,12 +1011,14 @@ class account_period(osv.osv):
         (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
     ]
 
+    @api.returns('self')
     def next(self, cr, uid, period, step, context=None):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
             return ids[step-1]
         return False
 
+    @api.returns('self')
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
@@ -1015,19 +1036,19 @@ class account_period(osv.osv):
         if not result:
             result = self.search(cr, uid, args, context=context)
         if not result:
-            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
-            msg = _('There is no period defined for this date: %s.\nPlease, go to Configuration/Periods and configure a fiscal year.') % dt
-            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
-
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_period')
+            msg = _('No accounting period is covering this date: %s.') % dt
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Configure Periods Now'))
         return result
 
-    def action_draft(self, cr, uid, ids, *args):
+    def action_draft(self, cr, uid, ids, context=None):
         mode = 'draft'
         for period in self.browse(cr, uid, ids):
             if period.fiscalyear_id.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -1085,10 +1106,10 @@ class account_journal_period(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Journal-Period Name', size=64, required=True),
+        'name': fields.char('Journal-Period Name', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-        'icon': fields.function(_icon_get, string='Icon', type='char', size=32),
+        'icon': fields.function(_icon_get, string='Icon', type='char'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True,
                                   help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.'),
@@ -1124,22 +1145,6 @@ class account_journal_period(osv.osv):
         'active': True,
     }
     _order = "period_id"
-
-
-class account_fiscalyear(osv.osv):
-    _inherit = "account.fiscalyear"
-    _description = "Fiscal Year"
-    _columns = {
-        'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
-    }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = {} if default is None else default.copy()
-        default.update({
-            'period_ids': [],
-            'end_journal_period_id': False
-        })
-        return super(account_fiscalyear, self).copy(cr, uid, id, default=default, context=context)
 
 #----------------------------------------------------------
 # Entries
@@ -1228,13 +1233,21 @@ class account_move(osv.osv):
         return [line.move_id.id for line in line_obj.browse(cr, uid, ids, context=context)]
 
     _columns = {
-        'name': fields.char('Number', size=64, required=True),
-        'ref': fields.char('Reference', size=64),
+        'name': fields.char('Number', required=True, copy=False),
+        'ref': fields.char('Reference', copy=False),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
-        'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
-            help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.'),
-        'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
+        'state': fields.selection(
+              [('draft','Unposted'), ('posted','Posted')], 'Status',
+              required=True, readonly=True, copy=False,
+              help='All manually created new journal entries are usually in the status \'Unposted\', '
+                   'but you can set the option to skip that status on the related journal. '
+                   'In that case, they will behave as journal entries automatically created by the '
+                   'system on document validation (invoices, bank statements...) and will be created '
+                   'in \'Posted\' status.'),
+        'line_id': fields.one2many('account.move.line', 'move_id', 'Entries',
+                                   states={'posted':[('readonly',True)]},
+                                   copy=True),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
             _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
@@ -1302,6 +1315,7 @@ class account_move(osv.osv):
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -1328,6 +1342,7 @@ class account_move(osv.osv):
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(ids),))
+            self.invalidate_cache(cr, uid, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1343,23 +1358,9 @@ class account_move(osv.osv):
     # TODO: Check if period is closed !
     #
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if 'line_id' in vals and context.get('copy'):
-            for l in vals['line_id']:
-                if not l[0]:
-                    l[2].update({
-                        'reconcile_id':False,
-                        'reconcile_partial_id':False,
-                        'analytic_lines':False,
-                        'invoice':False,
-                        'ref':False,
-                        'balance':False,
-                        'account_tax_id':False,
-                        'statement_id': False,
-                    })
-
-            if 'journal_id' in vals and vals.get('journal_id', False):
+        context = dict(context or {})
+        if vals.get('line_id'):
+            if vals.get('journal_id'):
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
@@ -1376,7 +1377,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        if vals.get('line_id', False):
             c = context.copy()
             c['novalidate'] = True
             c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
@@ -1391,22 +1391,8 @@ class account_move(osv.osv):
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = {} if default is None else default.copy()
-        context = {} if context is None else context.copy()
-        default.update({
-            'state':'draft',
-            'ref': False,
-            'name':'/',
-        })
-        context.update({
-            'copy':True
-        })
-        return super(account_move, self).copy(cr, uid, id, default, context)
-
     def unlink(self, cr, uid, ids, context=None, check=True):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if isinstance(ids, (int, long)):
             ids = [ids]
         toremove = []
@@ -1440,8 +1426,8 @@ class account_move(osv.osv):
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         currency_obj = self.pool.get('res.currency')
-        if context is None:
-            context = {}
+        account_move_line_obj = self.pool.get('account.move.line')
+        context = dict(context or {})
 
         if mode=='credit':
             account_id = move.journal_id.default_debit_account_id.id
@@ -1466,7 +1452,7 @@ class account_move(osv.osv):
             line_id = res[0]
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-            line_id = self.pool.get('account.move.line').create(cr, uid, {
+            line_id = account_move_line_obj.create(cr, uid, {
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'partner_id': False,
@@ -1491,6 +1477,7 @@ class account_move(osv.osv):
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
+        account_move_line_obj.invalidate_cache(cr, uid, [mode2], [line_id], context=context)
 
         #adjust also the amount in currency if needed
         cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
@@ -1503,9 +1490,10 @@ class account_move(osv.osv):
                 res = cr.fetchone()
                 if res:
                     cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
+                    account_move_line_obj.invalidate_cache(cr, uid, ['amount_currency', 'account_id'], [res[0]], context=context)
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-                    line_id = self.pool.get('account.move.line').create(cr, uid, {
+                    line_id = account_move_line_obj.create(cr, uid, {
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
                         'partner_id': False,
@@ -1622,8 +1610,8 @@ class account_move_reconcile(osv.osv):
     _name = "account.move.reconcile"
     _description = "Account Reconciliation"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Type', size=16, required=True),
+        'name': fields.char('Name', required=True),
+        'type': fields.char('Type', required=True),
         'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
@@ -1673,7 +1661,8 @@ class account_move_reconcile(osv.osv):
         if not total:
             self.pool.get('account.move.line').write(cr, uid,
                 map(lambda x: x.id, rec.line_partial_ids),
-                {'reconcile_id': rec.id }
+                {'reconcile_id': rec.id },
+                context=context
             )
         return True
 
@@ -1779,8 +1768,9 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _description = 'Tax Code'
     _rec_name = 'code'
+    _order = 'sequence, code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
+        'name': fields.char('Tax Case Name', required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, string="Year Sum"),
@@ -1811,7 +1801,7 @@ class account_tax_code(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
@@ -1820,18 +1810,12 @@ class account_tax_code(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
     _defaults = {
         'company_id': _default_company,
         'sign': 1.0,
         'notprintable': False,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'line_ids': []})
-        return super(account_tax_code, self).copy(cr, uid, id, default, context)
 
     _check_recursion = check_cycle
     _constraints = [
@@ -1861,15 +1845,14 @@ class account_tax(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        name = self.read(cr, uid, id, ['name'], context=context)['name']
-        default = default.copy()
-        default.update({'name': name + _(' (Copy)')})
-        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
+        this = self.browse(cr, uid, id, context=context)
+        tmp_default = dict(default, name=_("%s (Copy)") % this.name)
+        return super(account_tax, self).copy_data(cr, uid, id, default=tmp_default, context=context)
 
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
-        'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
+        'name': fields.char('Tax Name', required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
@@ -1877,7 +1860,7 @@ class account_tax(osv.osv):
             help="The computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
+        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
         'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
         'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
@@ -2080,6 +2063,7 @@ class account_tax(osv.osv):
         tax = self.browse(cr, uid, tax_id, context=context)
         return self.compute_all(cr, uid, [tax], amount, 1) # TOCHECK may use force_exclude parameter
 
+    @api.v7
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
@@ -2129,6 +2113,12 @@ class account_tax(osv.osv):
             'total_included': totalin,
             'taxes': tin + tex
         }
+
+    @api.v8
+    def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
+        return self._model.compute_all(
+            self._cr, self._uid, self, price_unit, quantity,
+            product=product, partner=partner, force_excluded=force_excluded)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
@@ -2260,10 +2250,10 @@ class account_model(osv.osv):
     _name = "account.model"
     _description = "Account Model"
     _columns = {
-        'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
+        'name': fields.char('Model Name', required=True, help="This is a model for recurring accounting entries"),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
+        'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries', copy=True),
         'legend': fields.text('Legend', readonly=True, size=100),
     }
 
@@ -2285,6 +2275,7 @@ class account_model(osv.osv):
             context = {}
 
         if data.get('date', False):
+            context = dict(context)
             context.update({'date': data['date']})
 
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
@@ -2367,7 +2358,7 @@ class account_model_line(osv.osv):
     _name = "account.model.line"
     _description = "Account Model Entries"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones."),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries."),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
@@ -2395,15 +2386,15 @@ class account_subscription(osv.osv):
     _name = "account.subscription"
     _description = "Account Subscription"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'ref': fields.char('Reference', size=16),
+        'name': fields.char('Name', required=True),
+        'ref': fields.char('Reference'),
         'model_id': fields.many2one('account.model', 'Model', required=True),
         'date_start': fields.date('Start Date', required=True),
         'period_total': fields.integer('Number of Periods', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
-        'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True, copy=False),
+        'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines', copy=True)
     }
     _defaults = {
         'date_start': fields.date.context_today,
@@ -2500,7 +2491,7 @@ class account_account_template(osv.osv):
     _description ='Templates for Accounts'
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
@@ -2512,7 +2503,7 @@ class account_account_template(osv.osv):
             ('other','Regular'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
@@ -2678,16 +2669,21 @@ class account_tax_code_template(osv.osv):
 
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
-    _order = 'code'
+    _order = 'sequence, code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', required=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
         'sign': fields.float('Sign For Parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
+        'sequence': fields.integer(
+            'Sequence', help=(
+                "Determine the display order in the report 'Accounting "
+                "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
+            ),
     }
 
     _defaults = {
@@ -2720,6 +2716,7 @@ class account_tax_code_template(osv.osv):
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
+                'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
             rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)
@@ -2735,7 +2732,7 @@ class account_tax_code_template(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 
@@ -2751,7 +2748,7 @@ class account_chart_template(osv.osv):
     _description= "Templates for Account Chart"
 
     _columns={
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
@@ -2785,12 +2782,12 @@ class account_tax_template(osv.osv):
 
     _columns = {
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'name': fields.char('Tax Name', size=64, required=True),
+        'name': fields.char('Tax Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For Tax Type percent enter % ratio between 0-1."),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
+        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
@@ -2914,11 +2911,11 @@ class account_fiscal_position_template(osv.osv):
     _description = 'Template for Fiscal Position'
 
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, required=True),
+        'name': fields.char('Fiscal Position Template', required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
     }
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
@@ -3546,10 +3543,10 @@ class account_bank_accounts_wizard(osv.osv_memory):
     _name='account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'acc_name': fields.char('Account Name.', required=True),
         'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True, ondelete='cascade'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
+        'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type'),
     }
 
 

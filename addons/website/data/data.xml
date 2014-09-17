@@ -11,6 +11,7 @@
 
         <record id="main_menu" model="website.menu">
             <field name="name">Top Menu</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_homepage" model="website.menu">
@@ -18,6 +19,7 @@
             <field name="url">/page/homepage</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="menu_contactus" model="website.menu">
@@ -25,6 +27,7 @@
             <field name="url">/page/website.contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="base.group_website_publisher" model="res.groups">
@@ -48,6 +51,18 @@
             <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_website'))+'}'"/>
             <field name="help" type="html">
               <p><b>No website module found!</b></p>
+              <p>You should try others search criteria.</p>
+            </field>
+        </record>
+
+        <record id="action_module_theme" model="ir.actions.act_window">
+            <field name="name">Website Theme</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_theme'))+'}'"/>
+            <field name="help" type="html">
+              <p><b>No theme module found!</b></p>
               <p>You should try others search criteria.</p>
             </field>
         </record>
@@ -80,12 +95,13 @@
 
         <!-- Pre loaded images -->
 
-        <record model="ir.attachment">
+        <!-- base64-encoded on ir.attachment, to allow to load image with the xmlid -->
+        <record id="website.business_conference" model="ir.attachment">
             <field name="name">business_conference</field>
             <field name="datas_fname">business_conference.jpg</field>
             <field name="res_model">ir.ui.view</field>
-            <field name="type">url</field>
-            <field name="url">/website/static/src/img/library/business_conference.jpg</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="website/static/src/img/library/business_conference.jpg"/>
         </record>
 
         <record model="ir.attachment">

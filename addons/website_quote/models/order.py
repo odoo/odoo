@@ -30,11 +30,11 @@ class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
     _description = "Sale Quotation Template"
     _columns = {
-        'name': fields.char('Quotation Template', size=256, required=True),
+        'name': fields.char('Quotation Template', required=True),
         'website_description': fields.html('Description', translate=True),
-        'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
+        'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines', copy=True),
         'note': fields.text('Terms and conditions'),
-        'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines'),
+        'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quote Duration', help='Number of days for the validaty date computation of the quotation'),
     }
     def open_template(self, cr, uid, quote_id, context=None):
@@ -48,29 +48,54 @@ class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
     _description = "Quotation Template Lines"
     _columns = {
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale quote lines."),
         'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
-        'website_description': fields.html('Line Description', translate=True),
+        'website_description': fields.related('product_id', 'product_tmpl_id', 'quote_description', string='Line Description', type='html', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'product_uom_qty': fields.float('Quantity', required=True, digits_compute= dp.get_precision('Product UoS')),
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
     }
+    _order = 'sequence, id'
     _defaults = {
         'product_uom_qty': 1,
         'discount': 0.0,
+        'sequence': 10,
     }
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        name = product_obj.name
+        if product_obj.description_sale:
+            name += '\n' + product_obj.description_sale
         vals.update({
             'price_unit': product_obj.list_price,
             'product_uom_id': product_obj.uom_id.id,
-            'website_description': product_obj.website_description,
-            'name': product_obj.name,
+            'website_description': product_obj and (product_obj.quote_description or product_obj.website_description) or '',
+            'name': name,
         })
         return {'value': vals}
+
+    def _inject_quote_description(self, cr, uid, values, context=None):
+        values = dict(values or {})
+        if not values.get('website_description') and values.get('product_id'):
+            product = self.pool['product.product'].browse(cr, uid, values['product_id'], context=context)
+            values['website_description'] = product.quote_description or product.website_description or ''
+        return values
+
+    def create(self, cr, uid, values, context=None):
+        values = self._inject_quote_description(cr, uid, values, context)
+        ret = super(sale_quote_line, self).create(cr, uid, values, context=context)
+        # hack because create don t make the job for a related field
+        if values.get('website_description'):
+            self.write(cr, uid, ret, {'website_description': values['website_description']}, context=context)
+        return ret
+
+    def write(self, cr, uid, ids, values, context=None):
+        values = self._inject_quote_description(cr, uid, values, context)
+        return super(sale_quote_line, self).write(cr, uid, ids, values, context=context)
 
 
 class sale_order_line(osv.osv):
@@ -81,19 +106,23 @@ class sale_order_line(osv.osv):
         'option_line_id': fields.one2many('sale.order.option', 'line_id', 'Optional Products Lines'),
     }
 
-    def _inject_website_description(self, cr, uid, values, context=None):
+    def _inject_quote_description(self, cr, uid, values, context=None):
         values = dict(values or {})
         if not values.get('website_description') and values.get('product_id'):
             product = self.pool['product.product'].browse(cr, uid, values['product_id'], context=context)
-            values['website_description'] = product.website_description
+            values['website_description'] = product.quote_description or product.website_description
         return values
 
     def create(self, cr, uid, values, context=None):
-        values = self._inject_website_description(cr, uid, values, context)
-        return super(sale_order_line, self).create(cr, uid, values, context=context)
+        values = self._inject_quote_description(cr, uid, values, context)
+        ret = super(sale_order_line, self).create(cr, uid, values, context=context)
+        # hack because create don t make the job for a related field
+        if values.get('website_description'):
+            self.write(cr, uid, ret, {'website_description': values['website_description']}, context=context)
+        return ret
 
     def write(self, cr, uid, ids, values, context=None):
-        values = self._inject_website_description(cr, uid, values, context)
+        values = self._inject_quote_description(cr, uid, values, context)
         return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
 
 
@@ -110,16 +139,24 @@ class sale_order(osv.osv):
         return res
 
     _columns = {
-        'access_token': fields.char('Security Token', size=256, required=True),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'access_token': fields.char('Security Token', required=True, copy=False),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
-        'validity_date': fields.date('Validity Date'),
+        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
     }
+
+    def _get_template_id(self, cr, uid, context=None):
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_quote', 'website_quote_template_default')[1]
+        except ValueError:
+            template_id = False
+        return template_id
+
     _defaults = {
-        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
+        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
+        'template_id' : _get_template_id,
     }
 
     def open_quotation(self, cr, uid, quote_id, context=None):
@@ -136,8 +173,9 @@ class sale_order(osv.osv):
 
         if context is None:
             context = {}
-        context = dict(context, lang=self.pool.get('res.partner').browse(cr, uid, partner, context).lang)
-        
+        if partner:
+            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
+
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
@@ -183,7 +221,19 @@ class sale_order(osv.osv):
         for line in order_line:
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
-        
+
+    def get_access_action(self, cr, uid, id, context=None):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the online quote if exists. """
+        quote = self.browse(cr, uid, id, context=context)
+        if not quote.template_id:
+            return super(sale_order, self).get_access_action(cr, uid, id, context=context)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/quote/%s' % id,
+            'target': 'self',
+            'res_id': id,
+        }
 
 
 class sale_quote_option(osv.osv):
@@ -207,7 +257,7 @@ class sale_quote_option(osv.osv):
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
-            'website_description': product_obj.product_tmpl_id.website_description,
+            'website_description': product_obj.product_tmpl_id.quote_description,
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
@@ -234,10 +284,12 @@ class sale_order_option(osv.osv):
     }
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
+        if not product:
+            return vals
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
-            'website_description': product_obj.product_tmpl_id.website_description,
+            'website_description': product_obj and (product_obj.quote_description or product_obj.website_description),
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
@@ -245,6 +297,9 @@ class sale_order_option(osv.osv):
 
 class product_template(osv.Model):
     _inherit = "product.template"
+
     _columns = {
-        'website_description': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website'), # hack, if website_sale is not installed
+        'quote_description': fields.html('Description for the quote'),
     }
+

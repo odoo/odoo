@@ -3,7 +3,6 @@
     <data>
 
         <!-- DOCUMENTATION TOC VIEWS -->
-
         <record id="view_documentation_toc_list" model="ir.ui.view">
             <field name="name">forum.documentation.toc.list</field>
             <field name="model">forum.documentation.toc</field>
@@ -12,28 +11,6 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="forum_id"/>
-                    <field name="parent_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_documentation_toc" model="ir.actions.act_window">
-            <field name="name">Documentation</field>
-            <field name="res_model">forum.documentation.toc</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-        </record>
-        <menuitem id="menu_documentation"
-            parent="website_forum.menu_website_forum" groups="base.group_user"
-            name="Documentation ToC" action="action_documentation_toc" sequence="20"/>
-
-
-        <record id="view_documentation_toc_list" model="ir.ui.view">
-            <field name="name">forum.documentation.toc.list</field>
-            <field name="model">forum.documentation.toc</field>
-            <field name="arch" type="xml">
-                <tree string="Documentation TOC" editable="bottom">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
                     <field name="parent_id"/>
                 </tree>
             </field>
@@ -110,7 +87,16 @@
             </field>
         </record>
 
-
+        <record id="view_forum_post_doc_list" model="ir.ui.view">
+            <field name="name">forum.post.list.doc</field>
+            <field name="model">forum.post</field>
+            <field name="inherit_id" ref="website_forum.view_forum_post_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='forum_id']" position="after">
+                    <field name="documentation_toc_id"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

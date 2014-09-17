@@ -6,10 +6,10 @@ class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
     _order = "name desc"
     _columns = {
-        'name': fields.char('Picking Wave Name', required=True, help='Name of the picking wave'),
+        'name': fields.char('Picking Wave Name', required=True, help='Name of the picking wave', copy=False),
         'user_id': fields.many2one('res.users', 'Responsible', help='Person responsible for this wave'),
         'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
-        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], string="State", required=True),
+        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], string="State", required=True, copy=False),
     }
 
     _defaults = {
@@ -31,8 +31,7 @@ class stock_picking_wave(osv.osv):
         '''
         This function print the report for all picking_ids associated to the picking wave
         '''
-        if context is None:
-            context = {}
+        context = dict(context or {})
         picking_ids = []
         for wave in self.browse(cr, uid, ids, context=context):
             picking_ids += [picking.id for picking in wave.picking_ids]
@@ -46,15 +45,6 @@ class stock_picking_wave(osv.osv):
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'picking.wave') or '/'
         return super(stock_picking_wave, self).create(cr, uid, vals, context=context)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'state': 'in_progress',
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'picking.wave'),
-        })
-        return super(stock_picking_wave, self).copy(cr, uid, id, default=default, context=context)
 
     def done(self, cr, uid, ids, context=None):
         picking_todo = set()

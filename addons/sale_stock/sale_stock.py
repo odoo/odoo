@@ -30,15 +30,6 @@ from openerp import SUPERUSER_ID
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'shipped': False,
-            'picking_ids': []
-        })
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
-
     def _get_default_warehouse(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
@@ -168,7 +159,7 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel sales order!'),
                         _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
+            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -203,9 +194,6 @@ class sale_order(osv.osv):
             res = self.write(cr, uid, [order.id], val)
         return True
 
-
-
-
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
@@ -214,16 +202,20 @@ class sale_order(osv.osv):
         return False
 
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
+    
+    def need_procurement(self, cr, uid, ids, context=None):
+        #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
+        #we must create a procurement for each product that is not a service.
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.type != 'service':
+                return True
+        return super(product_product, self).need_procurement(cr, uid, ids, context=context)
+
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
-    def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with sale_stock
-        #we must create a procurement for each product that is not a service.
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.product_id and line.product_id.type != 'service':
-                return True
-        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
 
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -243,22 +235,6 @@ class sale_order_line(osv.osv):
     _defaults = {
         'product_packaging': False,
     }
-
-    def button_cancel(self, cr, uid, ids, context=None):
-        res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
-        for line in self.browse(cr, uid, ids, context=context):
-            for move_line in line.move_ids:
-                if move_line.state != 'cancel':
-                    raise osv.except_osv(
-                            _('Cannot cancel sales order line!'),
-                            _('You must first cancel stock moves attached to this sales order line.'))
-        return res
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'move_ids': []})
-        return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
@@ -312,8 +288,9 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
         warning = {}
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+        #UoM False due to hack which makes sure uom changes price, ... in product_id_change
+        res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=False, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         if not product:
@@ -329,42 +306,43 @@ class sale_order_line(osv.osv):
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
 
-        #determine if the product is MTO or not (for a further check)
-        isMto = False
-        if warehouse_id:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            for product_route in product_obj.route_ids:
-                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
-                    isMto = True
-                    break
-        else:
-            try:
-                mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
-            except:
-                # if route MTO not found in ir_model_data, we treat the product as in MTS
-                mto_route_id = False
-            if mto_route_id:
+        if product_obj.type == 'product':
+            #determine if the product is MTO or not (for a further check)
+            isMto = False
+            if warehouse_id:
+                warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
                 for product_route in product_obj.route_ids:
-                    if product_route.id == mto_route_id:
+                    if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
                         isMto = True
                         break
+            else:
+                try:
+                    mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+                except:
+                    # if route MTO not found in ir_model_data, we treat the product as in MTS
+                    mto_route_id = False
+                if mto_route_id:
+                    for product_route in product_obj.route_ids:
+                        if product_route.id == mto_route_id:
+                            isMto = True
+                            break
 
-        #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
-        if not isMto:
-            uom2 = False
-            if uom:
-                uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
-                if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                    uom = False
-            if not uom2:
-                uom2 = product_obj.uom_id
-            compare_qty = float_compare(product_obj.virtual_available, qty, precision_rounding=uom2.rounding)
-            if (product_obj.type=='product') and int(compare_qty) == -1:
-                warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                    (qty, uom2.name,
-                     max(0,product_obj.virtual_available), uom2.name,
-                     max(0,product_obj.qty_available), uom2.name)
-                warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
+            #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
+            if not isMto:
+                uom_record = False
+                if uom:
+                    uom_record = product_uom_obj.browse(cr, uid, uom, context=context)
+                    if product_obj.uom_id.category_id.id != uom_record.category_id.id:
+                        uom_record = False
+                if not uom_record:
+                    uom_record = product_obj.uom_id
+                compare_qty = float_compare(product_obj.virtual_available, qty, precision_rounding=uom_record.rounding)
+                if compare_qty == -1:
+                    warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                        (qty, uom_record.name,
+                         max(0,product_obj.virtual_available), uom_record.name,
+                         max(0,product_obj.qty_available), uom_record.name)
+                    warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
 
         #update of warning messages
         if warning_msgs:
@@ -378,17 +356,8 @@ class sale_order_line(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        sale_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
-        if sale_ids:
-            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
-        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
-
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+        invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
@@ -411,8 +380,14 @@ class stock_move(osv.osv):
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
-            res['price_unit'] = sale_line.price_unit
             res['discount'] = sale_line.discount
+            if move.product_id.id != sale_line.product_id.id:
+                res['price_unit'] = self.pool['product.pricelist'].price_get(
+                    cr, uid, [sale_line.order_id.pricelist_id.id],
+                    move.product_id.id, move.product_uom_qty or 1.0,
+                    sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
+            else:
+                res['price_unit'] = sale_line.price_unit
         return res
 
 
@@ -426,6 +401,17 @@ class stock_location_route(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Inherit the original function of the 'stock' module
+            We select the partner of the sales order as the partner of the customer invoice
+        """
+        saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
+        saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
+        if saleorders and saleorders[0]:
+            saleorder = saleorders[0]
+            return saleorder.partner_invoice_id.id
+        return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
+    
     def _get_sale_id(self, cr, uid, ids, name, args, context=None):
         sale_obj = self.pool.get("sale.order")
         res = {}

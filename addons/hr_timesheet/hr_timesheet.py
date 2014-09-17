@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
+import openerp
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -147,7 +148,9 @@ class hr_analytic_timesheet(osv.osv):
         else:
             emp_id = emp_obj.search(cr, uid, [('user_id','=',context.get('user_id') or uid)], limit=1, context=context)
         if not emp_id:
-            raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'hr', 'open_view_employee_list_my')
+            msg = _("Employee is not created for this user. Please create one from configuration panel.")
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
         if emp.journal_id:
             return emp.journal_id.id
@@ -204,14 +207,26 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets", deprecated=True),
+        'invoice_on_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
-            res['value']['use_timesheets'] = template.use_timesheets
+            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
         return res
+
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        result = {}
+        if not invoice_on_timesheets:
+            return {'value': {'to_invoice': False}}
+        try:
+            to_invoice = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'hr_timesheet_invoice.timesheet_invoice_factor1')
+            result['to_invoice'] = to_invoice
+        except ValueError:
+            pass
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

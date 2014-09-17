@@ -40,8 +40,8 @@ class report_intrastat_code(osv.osv):
     _name = "report.intrastat.code"
     _description = "Intrastat code"
     _columns = {
-        'name': fields.char('Intrastat Code', size=16),
-        'description': fields.char('Description', size=64),
+        'name': fields.char('Intrastat Code'),
+        'description': fields.char('Description'),
     }
 
 
@@ -59,11 +59,11 @@ class report_intrastat(osv.osv):
     _description = "Intrastat report"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month', readonly=True),
         'supply_units':fields.float('Supply Units', readonly=True),
-        'ref':fields.char('Source document',size=64, readonly=True),
+        'ref':fields.char('Source document', readonly=True),
         'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),

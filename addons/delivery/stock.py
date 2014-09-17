@@ -64,7 +64,7 @@ class stock_picking(osv.osv):
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
-        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref'),
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
     }
@@ -91,9 +91,10 @@ class stock_picking(osv.osv):
                     _('The carrier %s (id: %d) has no delivery grid!') \
                             % (picking.carrier_id.name,
                                 picking.carrier_id.id))
+        quantity = sum([line.product_uom_qty for line in picking.move_lines])
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
                 invoice.amount_untaxed, picking.weight, picking.volume,
-                context=context)
+                quantity, context=context)
         account_id = picking.carrier_id.product_id.property_account_income.id
         if not account_id:
             account_id = picking.carrier_id.product_id.categ_id\

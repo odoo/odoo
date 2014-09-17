@@ -42,7 +42,7 @@ class account_config_settings(osv.osv_memory):
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
-            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
+            string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal."),
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
             string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
@@ -51,8 +51,8 @@ class account_config_settings(osv.osv_memory):
         'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round per line'),
-            ('round_globally', 'Round globally'),
+            ('round_per_line', 'Round calculation of taxes per line'),
+            ('round_globally', 'Round globally calculation of taxes '),
             ], string='Tax calculation rounding method',
             help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
@@ -108,6 +108,12 @@ class account_config_settings(osv.osv_memory):
         'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
             help='With this module, link your products to a template to send complete information and tools to your customer.\n'
                  'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
+        'module_account_bank_statement_import_ofx': fields.boolean('Import of Bank Statements in .OFX Format',
+            help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
+                '-that installs the module account_bank_statement_import.'),
+        'module_account_bank_statement_import_qif': fields.boolean('Import of Bank Statements in .QIF Format.',
+            help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
+                '-that installs the module account_bank_statement_import_qif.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
@@ -125,7 +131,29 @@ class account_config_settings(osv.osv_memory):
             help="Allows you to use the analytic accounting."),
         'group_check_supplier_invoice_total': fields.boolean('Check the total of supplier invoices', 
             implied_group="account.group_supplier_inv_check_total"),
+        'income_currency_exchange_account_id': fields.related(
+            'company_id', 'income_currency_exchange_account_id',
+            type='many2one',
+            relation='account.account',
+            string="Gain Exchange Rate Account", 
+            domain="[('type', '=', 'other')]"),
+        'expense_currency_exchange_account_id': fields.related(
+            'company_id', 'expense_currency_exchange_account_id',
+            type="many2one",
+            relation='account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]"),
     }
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False, 
+                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False})
+        else: 
+            res['value'].update({'income_currency_exchange_account_id': False, 
+                                 'expense_currency_exchange_account_id': False})
+        return res
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)

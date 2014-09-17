@@ -2,6 +2,7 @@
     'name': 'Website Builder',
     'category': 'Website',
     'summary': 'Build Your Enterprise Website',
+    'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': """
 OpenERP Website CMS
@@ -21,6 +22,7 @@ OpenERP Website CMS
         'views/themes.xml',
         'views/res_config.xml',
         'views/ir_actions.xml',
+        'views/website_backend_navbar.xml',
     ],
     'demo': [
         'data/demo.xml',

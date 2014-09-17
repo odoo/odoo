@@ -11,7 +11,7 @@
 -
   Add Buy route
 - 
-  !python {model: product.product, id: scheduler_product}: |
+  !python {model: product.product}: |
     self.write(cr, uid, [ref("scheduler_product")], {"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
 -
   I create a procurement order.

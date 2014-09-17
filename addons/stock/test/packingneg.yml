@@ -52,7 +52,7 @@
     new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
 - 
-  Transfer the reception
+  Transfer the receipt
 - 
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('pick_neg')], context=context)

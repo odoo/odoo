@@ -23,8 +23,8 @@ import os, sys
 import re
 import smtplib
 import email, mimetypes
-from email.Header import decode_header
-from email.MIMEText import MIMEText
+from email.header import decode_header
+from email.mime.text import MIMEText
 import xmlrpclib
 
 warn_msg = """
