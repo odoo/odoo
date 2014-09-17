@@ -1150,21 +1150,14 @@ openerp.account = function (instance) {
             if (self.get("mode") === "match") {
                 self.set("mode", "inactive");
             } else {
-                if (self.st_line.has_no_partner && self.get("mode") === "create")
-                    self.set("mode", "inactive");
-                else
-                    self.set("mode", "match");
+                self.set("mode", "match");
             }
         },
     
         lineOpenBalanceClickHandler: function() {
             var self = this;
             if (self.get("mode") === "create") {
-                self.addLineBeingEdited();
-                if (self.st_line.has_no_partner)
-                    self.set("mode", "inactive");
-                else
-                    self.set("mode", "match");
+                self.set("mode", "match");
             } else {
                 self.set("mode", "create");
             }
@@ -1306,8 +1299,6 @@ openerp.account = function (instance) {
     
             self.$(".action_pane.active").removeClass("active");
 
-            if (self.st_line.has_no_partner && self.get("mode") === "match")
-                self.set("mode", "create", {silent: true});
             if (val.oldValue === "create")
                 self.addLineBeingEdited();
     
@@ -1673,8 +1664,6 @@ openerp.account = function (instance) {
             speed = (isNaN(speed) ? self.animation_speed : speed);
             if (! self.is_consistent) return;
 
-            self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
-            
             // Sliding animation
             var height = self.$el.outerHeight();
             var container = $("<div />");
@@ -1688,6 +1677,7 @@ openerp.account = function (instance) {
             return self.model_bank_statement_line
                 .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
                 .then(function () {
+                    self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
                     $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                     return $.when(deferred_animation).then(function(){
                         self.$el.parent().remove();
