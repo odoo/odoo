@@ -13,7 +13,18 @@
 
     <t t-name="bank_statement_reconciliation">
         <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
-            <h1><t t-esc="title"/></h1>
+            <t t-if="single_statement">
+                <h1 class="statement_name">
+                    <span><t t-esc="title"/></span>
+                    <table class="change_statement_name_container oe_form"><tr>
+                        <td><input class="change_statement_name_field" type="text"/></td>
+                        <td><button class="change_statement_name_button oe_highlight">OK</button></td>
+                    </tr></table>
+                </h1>
+            </t>
+            <t t-if="!single_statement">
+                <h1><t t-esc="title"/></h1>
+            </t>
             <div class="progress progress-striped">
             	<div class="progress-text"><span class="valuenow">0</span> / <span class="valuemax"><t t-esc="total_lines"/></span></div>
             	<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" t-att-aria-valuemax="total_lines" style="width: 0%;">
@@ -38,9 +49,9 @@
                 </t>
             </p>
             <p class="action_buttons">
-                <t t-if="has_statement_id">
-                    <button class="button_back_to_statement">Back to statement</button>
-                    <button class="button_close_statement">Close the statement</button>
+                <t t-if="single_statement or multiple_statements">
+                    <button class="button_back_to_statement">Back to statements list</button>
+                    <button class="button_close_statement">Close the statement<t t-if="multiple_statements">s</t></button>
                 </t>
             </p>
         </div>
@@ -53,7 +64,10 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok"></button>
-                            <span t-if="! line.has_no_partner" class="partner_name"><t t-esc="line.partner_name"/></span>
+                            <span t-if="! line.has_no_partner" class="partner_name">
+                                <t t-esc="line.partner_name"/>
+                                <span class="change_partner glyphicon glyphicon-pencil"></span>
+                            </span>
                             <div class="change_partner_container oe_form"></div>
                         </caption>
                         <tbody class="tbody_initial_line">
@@ -61,7 +75,9 @@
                                 <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
                                 <td class="cell_account_code"><t t-esc="line.account_code"/></td>
                                 <td class="cell_due_date"><t t-esc="line.date"/></td>
-                                <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
+                                <td class="cell_label">
+                                    <t t-if="line.name" t-esc="line.name"/>
+                                    <t t-if="line.ref"> : <t t-esc="line.ref" /></t>
                                     <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
                                 <td class="cell_debit"><t t-if="line.amount &gt; 0">
                                       <t t-esc="line.amount_str"/></t></td>
@@ -134,22 +150,26 @@
         </tr>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to do a partial reconciliation"></i></t>
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="Click to register a partial payment and keep the invoice open. Otherwise it does a full reconciliation."></i></t>
 
     <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
     <t t-name="bank_statement_reconciliation_move_line_details">
         <table class='details'>
-            <tr><td>id</td><td><t t-esc="line.id" /></td></tr>
             <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
             <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
             <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
             <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
             <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
-            <tr><td>Amount</td>
-                <td><t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
-                    <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+            <t t-if="line.is_partially_reconciled">
+                <tr><td>Total</td><td>
+                    <t t-esc="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t>
                 </td></tr>
+            </t>
+            <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
+                <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
+                <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+            </td></tr>
         </table>
     </t>
 
