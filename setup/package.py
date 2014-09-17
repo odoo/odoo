@@ -26,6 +26,7 @@ import pexpect
 import shutil
 import signal
 import subprocess
+import tempfile
 import time
 import xmlrpclib
 from contextlib import contextmanager
@@ -97,6 +98,12 @@ def publish(o, releases):
 
         system('mkdir -p %s' % join(o.pub, release_dir))
         shutil.move(join(o.build_dir, release), release_path)
+
+        if release_extension == 'deb':
+            temp_path = tempfile.mkdtemp(suffix='debPackages')
+            system(['cp', release_path, temp_path])
+            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s/Packages.gz' % join(o.pub, 'deb'), shell=True, cwd=temp_path)
+            shutil.rmtree(temp_path)
 
         # Latest/symlink handler
         release_abspath = abspath(release_path)
@@ -229,7 +236,7 @@ class KVMWinTestExe(KVM):
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
         self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh(['/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany &' % setupversion, '&'])
+        self.ssh(['/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe' % setupversion, '&'])
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
@@ -371,7 +378,6 @@ def main():
                 try:
                     test_deb(o)
                     publish(o, ['odoo.deb', 'odoo.dsc', 'odoo_amd64.changes', 'odoo.deb.tar.gz'])
-                    subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s/Packages.gz' % join(o.pub, 'deb'), shell=True)
                 except Exception, e:
                     print("Won't publish the deb release.\n Exception: %s" % str(e))
         if not o.no_rpm:
