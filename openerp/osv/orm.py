@@ -53,6 +53,7 @@ import simplejson
 import time
 import traceback
 import types
+from collections import defaultdict
 
 import babel.dates
 import dateutil.parser
@@ -2660,6 +2661,9 @@ class BaseModel(object):
             if len(constraints) == 1:
                 # Is it the right constraint?
                 cons, = constraints
+                if self.is_transient() and not dest_model.is_transient():
+                    # transient foreign keys are added as cascade by default
+                    ondelete = ondelete or 'cascade'
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     # Wrong FK: drop it and recreate
@@ -3812,6 +3816,7 @@ class BaseModel(object):
         """
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
+        deleted_related = defaultdict(list)
         for field in vals.copy():
             fobj = None
             if field in self._columns:
@@ -3820,6 +3825,10 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
+            if fobj._type in ['one2many', 'many2many'] and vals[field]:
+                for wtuple in vals[field]:
+                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
+                        deleted_related[fobj._obj].append(wtuple[1])
             groups = fobj.write
 
             if groups:
@@ -4026,7 +4035,8 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    todo.append(id)
+                    if id not in deleted_related[object]:
+                        todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         self.step_workflow(cr, user, ids, context=context)
