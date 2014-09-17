@@ -12,7 +12,6 @@
         'payment',
     ],
     'data': [
-        'payment_security.xml',
         'views/website_payment_templates.xml',
         'views/website_settings_payment.xml',
     ],
