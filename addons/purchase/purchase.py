@@ -679,11 +679,12 @@ class purchase_order(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
-                if pick.state not in ('draft', 'cancel', 'confirmed'):
-                    raise osv.except_osv(
-                        _('Unable to cancel the purchase order %s.') % (purchase.name),
-                        _('First cancel all receipts related to this purchase order.'))
-            self.pool.get('stock.picking').action_cancel(cr, uid, map(attrgetter('id'), purchase.picking_ids), context=context)
+                for move in pick.move_lines:
+                    if pick.state == 'done':
+                        raise osv.except_osv(
+                            _('Unable to cancel the purchase order %s.') % (purchase.name),
+                            _('You have already received some goods for it.  '))
+            self.pool.get('stock.picking').action_cancel(cr, uid, [x.id for x in purchase.picking_ids if x.state != 'cancel'], context=context)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise osv.except_osv(
@@ -691,7 +692,6 @@ class purchase_order(osv.osv):
                         _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_workflow(cr, uid, map(attrgetter('id'), purchase.invoice_ids), 'invoice_cancel')
-        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         self.signal_workflow(cr, uid, ids, 'purchase_cancel')
         return True
 
@@ -1284,7 +1284,7 @@ class procurement_order(osv.osv):
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
         taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-        name = product.partner_ref
+        name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
 
