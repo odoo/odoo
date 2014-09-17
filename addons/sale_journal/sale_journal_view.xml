@@ -90,12 +90,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <group name="invoicing" position="replace">
-                    <group string="Invoicing">
-                        <group cols="2" colspan="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                            <field name="property_invoice_type"/>
-                        </group>
-                    </group>
+                <group name="sale">
+                    <field name="property_invoice_type"/>
                 </group>
             </field>
         </record>
