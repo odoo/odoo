@@ -33,5 +33,20 @@ class TestUom(TransactionCase):
             'category_id': categ_unit_id
         })
 
+    def test_12_rounding(self):
+        cr, uid = self.cr, self.uid
+        unit_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
+        categ_unit_id = self.imd.get_object_reference(cr, uid, 'product', 'product_uom_categ_unit')[1]
+        
+        score_id = self.uom.create(cr, uid, {
+            'name': 'Score',
+            'factor_inv': 12,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+            'category_id': categ_unit_id
+        })
+
+        qty = self.uom._compute_qty(cr, uid, score_id, 1, unit_id)
+        self.assertEquals(qty, 12, "Converted quantity should be rounded up.")
         qty = self.uom._compute_qty(cr, uid, unit_id, 2, score_id)
         self.assertEquals(qty, 1, "Converted quantity should be rounded up.")
