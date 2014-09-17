@@ -72,6 +72,13 @@
             <field name="url">/</field>
             <field name="target">self</field>
         </record>
+
+        <record id="action_analytic" model="ir.actions.act_url">
+            <field name="name">Google analytics</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+
         <record id="action_website_tutorial" model="ir.actions.act_url">
             <field name="name">Website With Tutorial</field>
             <field name="url">/#tutorial.banner=true</field>
@@ -88,6 +95,13 @@
             <field name="sequence" eval="400"/>
             <field name="action" ref="action_website"/>
         </record>
+
+        <record id="menu_analytic" model="ir.ui.menu">
+            <field name="name">Google analytics</field>
+            <field name="sequence" eval="400"/>
+            <field name="action" ref="action_analytic"/>
+        </record>
+
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_website_tutorial"/>
             <field name="state">open</field>

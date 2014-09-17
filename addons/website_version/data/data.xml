@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="action_analytic" model="ir.actions.act_url">
+            <field name="name">Google analytics</field>
+            <field name="url">https://www.google.com/analytics/web</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="menu_analytic" model="ir.ui.menu">
+            <field name="name">Google analytics</field>
+            <field name="sequence" eval="400"/>
+            <field name="action" ref="action_analytic"/>
+        </record>
+
+    </data>
+</openerp>
