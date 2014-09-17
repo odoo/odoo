@@ -250,6 +250,7 @@
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     <field name="project_id"/>
+                    <field name="product_id"/>
                     <filter string="My" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>

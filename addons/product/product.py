@@ -1007,9 +1007,10 @@ class product_product(osv.osv):
                 sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
             if sellers:
                 for s in sellers:
+                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
                     mydict = {
                               'id': product.id,
-                              'name': s.product_name or name,
+                              'name': seller_variant or name,
                               'default_code': s.product_code or product.default_code,
                               }
                     result.append(_name_get(mydict))
