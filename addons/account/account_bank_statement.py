@@ -418,7 +418,7 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('amount_currency', 0) != 0 and vals.get('amount', 0) == 0:
+        if vals.get('amount_currency', 0) and not vals.get('amount', 0):
             raise osv.except_osv(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
         return super(account_bank_statement_line, self).create(cr, uid, vals, context=context)
 
