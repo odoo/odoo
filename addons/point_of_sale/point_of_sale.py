@@ -1403,4 +1403,27 @@ class product_template(osv.osv):
         'available_in_pos': True,
     }
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
+    def create_from_ui(self, cr, uid, partner, context=None):
+        """ create or modify a partner from the point of sale ui.
+            partner contains the partner's fields. """
+
+        #image is a dataurl, get the data after the comma
+        if partner.get('image',False):
+            img =  partner['image'].split(',')[1]
+            partner['image'] = img
+
+        if partner.get('id',False):  # Modifying existing partner
+            partner_id = partner['id']
+            del partner['id']
+            self.write(cr, uid, [partner_id], partner, context=context)
+        else:
+            partner_id = self.create(cr, uid, partner, context=context)
+        
+        return partner_id
+
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -220,12 +220,12 @@ function openerp_pos_db(instance, module){
         },
         add_partners: function(partners){
             var updated_count = 0;
+            var new_write_date = '';
             for(var i = 0, len = partners.length; i < len; i++){
                 var partner = partners[i];
 
-                if (!this.partner_write_date) {
-                    this.partner_write_date = partner.write_date;
-                } else if ( this.partner_by_id[partner.id] &&
+                if (    this.partner_write_date && 
+                        this.partner_by_id[partner.id] &&
                         new Date(this.partner_write_date).getTime() + 1000 >=
                         new Date(partner.write_date).getTime() ) {
                     // FIXME: The write_date is stored with milisec precision in the database
@@ -233,8 +233,8 @@ function openerp_pos_db(instance, module){
                     // you read partners modified strictly after time X, you get back partners that were
                     // modified X - 1 sec ago. 
                     continue;
-                } else if ( this.partner_write_date < partner.write_date ) { 
-                    this.partner_write_date = partner.write_date;
+                } else if ( new_write_date < partner.write_date ) { 
+                    new_write_date  = partner.write_date;
                 }
                 if (!this.partner_by_id[partner.id]) {
                     this.partner_sorted.push(partner.id);
@@ -243,6 +243,8 @@ function openerp_pos_db(instance, module){
 
                 updated_count += 1;
             }
+
+            this.partner_write_date = new_write_date || this.partner_write_date;
 
             if (updated_count) {
                 // If there were updates, we need to completely 
