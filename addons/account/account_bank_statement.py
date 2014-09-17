@@ -602,22 +602,33 @@ class account_bank_statement_line(osv.osv):
                 domain.insert(-1, '|', )
                 domain.append(('partner_id.name', 'ilike', str))
 
+        # Get move lines ; in case of a partial reconciliation, only consider one line
+        filtered_lines = []
+        reconcile_partial_ids = []
+        shift = 0
+        while True:
+            actual_offset = offset and offset+limit*shift or offset
+            actual_limit = limit and limit+limit*shift or limit
+            line_ids = mv_line_pool.search(cr, uid, domain, offset=actual_offset, limit=actual_limit, order="date_maturity asc, id asc", context=context)
+            lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
 
-        # Get move lines
-        line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
-        lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
-        
-        # Either return number of lines
-        if count:
-            nb_lines = 0
-            reconcile_partial_ids = [] # for a partial reconciliation, take only one line
+            did_filter_out_lines = False
             for line in lines:
                 if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                    did_filter_out_lines = True
                     continue
-                nb_lines += 1
+                filtered_lines.append(line)
                 if line.reconcile_partial_id:
                     reconcile_partial_ids.append(line.reconcile_partial_id.id)
-            return nb_lines
+            
+            if not limit or not did_filter_out_lines or len(filtered_lines) >= limit:
+                break
+            shift += 1
+        lines = limit and filtered_lines[:limit] or filtered_lines
+
+        # Either return number of lines
+        if count:
+            return len(lines)
         
         # Or return list of dicts representing the formatted move lines
         else:

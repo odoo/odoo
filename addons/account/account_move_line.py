@@ -766,15 +766,11 @@ class account_move_line(osv.osv):
         currency_obj = self.pool.get('res.currency')
         company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
         rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
-        reconcile_partial_ids = []  # for a partial reconciliation, take only one line
         ret = []
 
         for line in lines:
-            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                continue
             partial_reconciliation_siblings_ids = []
             if line.reconcile_partial_id:
-                reconcile_partial_ids.append(line.reconcile_partial_id.id)
                 partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
                 partial_reconciliation_siblings_ids.remove(line.id)
 
