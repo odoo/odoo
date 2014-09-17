@@ -121,7 +121,7 @@ $('.oe_website_sale').each(function () {
 
         if (product_id) {
             var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img');
-            $img.attr("src", "/website/image/product.product-" + product_id + "-image");
+            $img.attr("src", "/website/image/product.product/" + product_id + "/image");
             $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                 .data('oe-model', 'product.product').data('oe-id', product_id);
         }

@@ -573,13 +573,15 @@ class website(osv.osv):
             return response
 
         data = record[field].decode('base64')
+        image = Image.open(cStringIO.StringIO(data))
+        response.mimetype = Image.MIME[image.format]
+
+        filename = '%s_%s.%s' % (model.replace('.', '_'), id, str(image.format).lower())
+        response.headers['Content-Disposition'] = 'inline; filename="%s"' % filename
 
         if (not max_width) and (not max_height):
             response.data = data
             return response
-
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
         max_w = int(max_width) if max_width else maxint
@@ -601,8 +603,8 @@ class website(osv.osv):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
         id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
-        size = '' if size is None else '-%s' % size
-        return '/website/image/%s-%s-%s%s' % (model, id, field, size)
+        size = '' if size is None else '/%s' % size
+        return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
 
 class website_menu(osv.osv):

@@ -303,11 +303,15 @@ class Image(orm.AbstractModel):
         url = element.find('img').get('src')
 
         url_object = urlparse.urlsplit(url)
-        query = dict(urlparse.parse_qsl(url_object.query))
-        if url_object.path == '/website/image':
-            item = self.pool[query['model']].browse(
-                cr, uid, int(query['id']), context=context)
-            return item[query['field']]
+        if url_object.path.startswith('/website/image'):
+            # url might be /website/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
+            fragments = url_object.path.split('/')
+            query = dict(urlparse.parse_qsl(url_object.query))
+            model = query.get('model', fragments[3])
+            oid = query.get('id', fragments[4].split('_')[0])
+            field = query.get('field', fragments[5])
+            item = self.pool[model].browse(cr, uid, int(oid), context=context)
+            return item[field]
 
         if self.local_url_re.match(url_object.path):
             return self.load_local_url(url)
