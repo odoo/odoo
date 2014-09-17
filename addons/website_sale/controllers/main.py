@@ -690,7 +690,7 @@ class Ecommerce(http.Controller):
             }
 
         tx_ids = request.registry['payment.transaction'].search(
-            cr, uid, [
+            cr, SUPERUSER_ID, [
                 '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
             ], context=context)
 
@@ -705,7 +705,7 @@ class Ecommerce(http.Controller):
                 message = ""
                 validation = None
         else:
-            tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+            tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
                 message = '<p>%s</p>' % _('Your payment has been received.')

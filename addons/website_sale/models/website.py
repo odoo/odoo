@@ -214,7 +214,7 @@ class Website(orm.Model):
     def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': self.ecommerce_get_current_order(cr, uid, context=context),
-            'website_sale_transaction': self.ecommerce_get_current_transaction(cr, uid, context=context)
+            'website_sale_transaction': self.ecommerce_get_current_transaction(cr, SUPERUSER_ID, context=context)
         })
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
