@@ -725,6 +725,7 @@ class account_bank_statement_line(osv.osv):
             mv_line_dict['statement_id'] = st_line.statement_id.id
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(cr, uid, mv_line_dict['counterpart_move_line_id'], context=context)
+                mv_line_dict['partner_id'] = mv_line.partner_id.id or st_line.partner_id.id
                 mv_line_dict['account_id'] = mv_line.account_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = context.copy()
