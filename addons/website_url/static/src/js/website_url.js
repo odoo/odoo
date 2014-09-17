@@ -1,4 +1,7 @@
 $(document).ready( function() {
+    ZeroClipboard.config(
+        {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
+    );
     var client = new ZeroClipboard($("#btn_shorten_url"));
     $("#btn_shorten_url").click( function() {
         if($(this).attr('class').indexOf('btn_copy') === -1) {
