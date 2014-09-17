@@ -798,7 +798,7 @@ class account_move_line(osv.osv):
             # Amount residual can be negative
             debit = line.debit
             credit = line.credit
-            total_amount = debit-credit
+            total_amount = abs(debit - credit)
             total_amount_currency = line.amount_currency
             amount_residual = line.amount_residual
             amount_residual_currency = line.amount_residual_currency
@@ -832,10 +832,10 @@ class account_move_line(osv.osv):
                     ctx = context.copy()
                     if target_date:
                         ctx.update({'date': target_date})
-                    debit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, debit, context=ctx)
-                    credit = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, credit, context=ctx)
+                    debit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, debit, context=ctx)
+                    credit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, credit, context=ctx)
                     amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                    total_amount = currency_obj.compute(cr, uid, target_currency.id, company_currency.id, total_amount, context=ctx)
+                    total_amount = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, total_amount, context=ctx)
                     total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
             ret_line['credit'] = credit
