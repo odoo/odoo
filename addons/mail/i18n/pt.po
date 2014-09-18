@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-26 21:29+0000\n"
-"Last-Translator: Ricardo Santa Ana <ricardosantana@gmail.com>\n"
+"PO-Revision-Date: 2014-09-16 14:23+0000\n"
+"Last-Translator: Opencloud - PT <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-27 08:31+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-09-17 08:27+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:385
@@ -27,28 +27,28 @@ msgstr "%s criado"
 #: code:addons/mail/res_users.py:98
 #, python-format
 msgid "%s has joined the %s network."
-msgstr ""
+msgstr "%s juntou-se à rede %s."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "&ograve"
-msgstr ""
+msgstr "&ograve"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:156
 #, python-format
 msgid "(no email address)"
-msgstr ""
+msgstr "(sem endereço de e-mail)"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr ""
+msgstr "<div><p>Olá,</p><p>%s convidou-o a seguir %s documento: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
@@ -56,6 +56,7 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
+"<div><p>Olá,</p><p>%s convidou-o a seguir um novo documento.</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:135
@@ -67,6 +68,11 @@ msgid ""
 "                        </p>\n"
 "                        %(static_help)s"
 msgstr ""
+"<p class = 'oe_view_nocontent_create> \n"
+"                             Clique aqui para adicionar novos %(document)s "
+"ou enviar um email para: <a href='mailto:%(email)s'>%(email)s </a> \n"
+"                         </ p> \n"
+"                         %(static_help)s"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:146
@@ -75,6 +81,8 @@ msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
 msgstr ""
+"<p class='oe_view_nocontent_create'>Clique aqui para adicionar "
+"%(document)s</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -90,6 +98,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Bom trabalho!</b> A sua caixa está vazia.\n"
+"                </p><p>\n"
+"                    A sua caixa contém mensagens privadas ou email's "
+"enviados para si\n"
+"                    como também informação relacionada com documentos ou "
+"pessoas\n"
+"                    que estiver a seguir.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -101,6 +119,12 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nenhum mensagem privada.</b>\n"
+"                </p><p>\n"
+"                    Esta lista contém mensagens enviadas para si.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_star_feeds
@@ -115,6 +139,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Nada a fazer.</b>\n"
+"                </p><p>\n"
+"                   Quando processa mensagens na sua caixa de entrada, pode "
+"marcar algumas\n"
+"                     como <i> A Fazer </ i>. A partir deste menu, pode "
+"processar todos os seus afazeres.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_archives_feeds
@@ -195,7 +228,7 @@ msgstr ""
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr ""
+msgstr "Adicione contactos a notificar..."
 
 #. module: mail
 #. openerp-web
@@ -207,7 +240,7 @@ msgstr "Adicionar outros"
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "Contactos Adicionais"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -220,48 +253,48 @@ msgstr "Avançado"
 #: field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Apelido"
 
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "Apelido Aceita E-mails de"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Segurança dos Contactos do Apelido"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr ""
+msgstr "Domínio do Apelido"
 
 #. module: mail
 #: field:mail.alias,alias_name:0
 msgid "Alias Name"
-msgstr ""
+msgstr "Nome do Apelido"
 
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr ""
+msgstr "Domínio do Apelido"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
 msgid "Aliased Model"
-msgstr ""
+msgstr "Modelo do Apelido"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
-msgstr ""
+msgstr "Apelidos"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Todas as Mensagens"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -270,13 +303,17 @@ msgid ""
 "                                    not only the ids selected in the list "
 "view."
 msgstr ""
+"Todos os registros que correspondem ao seu filtro de pesquisa atual serão "
+"enviados pelo correio, \n"
+"                                     não só os ids selecionados na exibição "
+"de lista."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:62
 #, python-format
 msgid "And"
-msgstr ""
+msgstr "E"
 
 #. module: mail
 #: help:mail.compose.message,no_auto_thread:0
@@ -285,19 +322,21 @@ msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"As respostas não vão no documento original 'conversa. Isso tem um impacto "
+"sobre o message-id gerado."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:101
 #, python-format
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_archives_feeds
 #: model:ir.ui.menu,name:mail.mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "Arquivos"
 
 #. module: mail
 #. openerp-web
@@ -309,7 +348,7 @@ msgstr "Anexar um ficheiro"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Anexar um arquivo"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -337,12 +376,14 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"Autor da mensagem. Se não for definido, email_from pode deter um endereço de "
+"e-mail que não encontrou nenhum parceiro."
 
 #. module: mail
 #: field:mail.compose.message,author_avatar:0
 #: field:mail.message,author_avatar:0
 msgid "Author's Avatar"
-msgstr ""
+msgstr "Avatar do Autor"
 
 #. module: mail
 #: field:mail.group,group_public_id:0

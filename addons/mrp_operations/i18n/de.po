@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-09 12:18+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:29+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-10 08:14+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -36,11 +36,12 @@ msgid ""
 msgstr ""
 "* Wenn ein Arbeitsauftrag erstellt wurde, befindet er sich zunächst im "
 "Status 'Entwurf'.\n"
-"* Wenn ein Anwender den Arbeitsauftrag dann started, ist der Auftrag dadurch "
+"* Wenn ein Anwender den Arbeitsauftrag dann startet, ist der Auftrag dadurch "
 "'in Bearbeitung'.\n"
 "* Ein Auftrag in Bearbeitung kann durch Unterbrechung oder Anpassung in den "
-"'Wiedervorlage\" Status versetzt werden.\n"
-"* Durch Abbrechen des Arbeitsauftrags kann er 'Storniert' werden.\n"
+"'Ausgesetzt'  Status versetzt werden.\n"
+"* Durch Abbrechen des Arbeitsauftrags kann er den Status 'Abgebrochen' "
+"erlangen.\n"
 "* Wenn der Auftrag fertig gestellt wird, kann er dadurch 'Erledigt' werden."
 
 #. module: mrp_operations
@@ -149,7 +150,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr "Abhängige Lieferungen"
+msgstr "Abhängige Lagerbuchungen"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -192,7 +193,7 @@ msgstr "Plandatum"
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
 msgid "Delay"
-msgstr "Verzögerung"
+msgstr "Verzug"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -234,7 +235,7 @@ msgstr "Fehler!"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Finish Order"
-msgstr "Auftrag beenden"
+msgstr "Auftrag abschliessen"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -307,7 +308,8 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:450
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr "Um einen Vorgang fortzusetzen muss dieser den Status Pause haben"
+msgstr ""
+"Um einen Vorgang fortzusetzen muss dieser den Status Ausgesetzt haben"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -356,7 +358,7 @@ msgstr "Auftragskürzel"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Arbeitsauftrag"
+msgstr "Vorgangbezeichnung"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:442
@@ -366,13 +368,13 @@ msgid ""
 "operation."
 msgstr ""
 "Der Arbeitsauftrag wurde bereits gestartet! Sie können jetzt entweder "
-"unterbrechen / erledigen / stornieren."
+"aussetzen / erledigen / abbrechen."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:458
 #, python-format
 msgid "Operation is Already Cancelled!"
-msgstr "Vorgang ist bereits storniert"
+msgstr "Vorgang ist bereits abgebrochen!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:465
@@ -416,7 +418,7 @@ msgstr "Arbeitsauftrag aussetzen"
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
-msgstr "Im Wartezustand"
+msgstr "Ausstehend"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -443,7 +445,7 @@ msgstr "Produktmenge"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Product to Produce"
-msgstr "Produkt zu Fertigen"
+msgstr "Zu fertigendes Produkt"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -456,7 +458,7 @@ msgstr "Fertigung"
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
 msgid "Production Operation"
-msgstr "Arbeitsauftrag"
+msgstr "Produktionsvorgang"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
@@ -477,7 +479,7 @@ msgstr "Arbeitsplatz"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
-msgstr "Produktion begann zu spät"
+msgstr "Produktion verspätet begonnen"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -487,7 +489,7 @@ msgstr "Menge"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Ready to Produce"
-msgstr "Startbereit für Fertigung"
+msgstr "Fertigung startbereit"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -565,7 +567,7 @@ msgstr "Startdatum"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Start Working"
-msgstr "Beginne Arbeit"
+msgstr "Arbeit aufnehmen"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
