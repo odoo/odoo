@@ -907,10 +907,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 instance.webclient.set_content_full_screen(true);
 
-                }else if(self.pos.config.iface_fullscreen && document.body.webkitRequestFullscreen && (
+                if(self.pos.config.iface_fullscreen && document.body.webkitRequestFullscreen && (
                     window.screen.availWidth  > window.innerWidth ||
                     window.screen.availHeight > window.innerHeight    )){
                     self.screen_selector.show_popup('fullscreen');
+                }
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.push_order();
