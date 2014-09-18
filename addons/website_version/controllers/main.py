@@ -91,6 +91,19 @@ class TableExporter(http.Controller):
             self.publish(view.id)
         return snapshot.id
 
+    @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
+    def get_analytics(self, view_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        obj_v = request.registry['ir.ui.view']
+        view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
+        obj_es = request.registry['website_version.experiment_snapshot']
+        exp_snap_id = obj_es.search(cr, uid, [('snapshot_id', '=', view.snapshot_id.id)],context=context)
+        result = {'snapshot_id': view.snapshot_id.id, 'experiment_id': False}
+        if exp_snap_id:
+            exp_snap = obj_es.browse(cr, uid, [exp_snap_id[0]],context)[0]
+            result['experiment_id'] = exp_snap.experiment_id.id
+        return result
+
     @http.route(['/set_context'], type = 'json', auth = "public", website = True)
     def set_context(self):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context

@@ -16,6 +16,9 @@
         })();
 
         var view_id = $('html').attr('data-view-xmlid');
+        openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
+                    console.log(result);
+                });
         console.log(view_id);
         _gaq.push(['_setCustomVar', 4, 'view_id', view_id, 1]);
     });
