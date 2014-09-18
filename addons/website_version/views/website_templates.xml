@@ -14,7 +14,11 @@
                         <ul class="dropdown-menu version_menu" role="menu">
                             <li><a href="#" data-action="google_analytics">Analytics</a></li>
                             <li class="divider"> </li>
-                            <t t-if="website.get_current_snapshot(context=context)[0] != 0">
+                            <t t-if="website.get_current_snapshot(context=context)[1] == 'experiment'">
+                                <li><a href="#" data-action="master">Master</a></li>
+                                <li class="divider"> </li>
+                            </t>
+                            <t t-if="website.get_current_snapshot(context=context)[0] != 0 ">
                                 <li><a href="#" data-action="master">Master</a></li>
                                 <li class="divider"> </li>
                                 <li><a href="#" data-action="create_snapshot">Create a new version</a></li>
