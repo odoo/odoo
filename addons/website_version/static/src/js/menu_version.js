@@ -104,6 +104,11 @@
                     location.reload();
                 });
         },
+
+        google_analytics: function(event){
+            window.location.href = 'https://www.google.com/analytics/web';
+
+        },
         
     });
 

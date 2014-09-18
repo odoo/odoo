@@ -40,6 +40,6 @@ class Experiment(osv.Model):
     }
 
     # _group_by_full = {
-    #     'state': lambda *args, **kwargs:['draft','running','done'],
+    #     'state': lambda *args, **kwargs :['draft','running','done'],
     # }
 
