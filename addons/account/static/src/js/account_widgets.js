@@ -241,7 +241,7 @@ openerp.account = function (instance) {
             this.map_account_id_code = this.getParent().map_account_id_code;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
-            this.total_move_lines_num = undefined; // Used for pagers
+            this.can_fetch_more_move_lines; // Tell if we can show more move lines
             this.filter = "";
         
             this.set("mode", undefined);
@@ -484,7 +484,7 @@ openerp.account = function (instance) {
         pagerControlLeftHandler: function() {
             var self = this;
             if (self.$(".pager_control_left").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if (self.total_move_lines_num < 0) { return; }
+            if (self.get("pager_index") === 0) { return; }
             self.set("pager_index", self.get("pager_index")-1 );
         },
         
@@ -492,7 +492,7 @@ openerp.account = function (instance) {
             var self = this;
             var new_index = self.get("pager_index")+1;
             if (self.$(".pager_control_right").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
-            if ((new_index * self.max_move_lines_displayed) >= self.total_move_lines_num) { return; }
+            if (! self.can_fetch_more_move_lines) { return; }
             self.set("pager_index", new_index );
         },
 
@@ -641,7 +641,7 @@ openerp.account = function (instance) {
                 self.$(".pager_control_left").addClass("disabled");
             else
                 self.$(".pager_control_left").removeClass("disabled");
-            if (self.total_move_lines_num <= ((self.get("pager_index")+1) * self.max_move_lines_displayed))
+            if (! self.can_fetch_more_move_lines)
                 self.$(".pager_control_right").addClass("disabled");
             else
                 self.$(".pager_control_right").removeClass("disabled");
@@ -700,12 +700,12 @@ openerp.account = function (instance) {
         mvLinesChanged: function() {
             var self = this;
             // If pager_index is out of range, set it to display the last page
-            if (self.get("pager_index") !== 0 && self.total_move_lines_num <= (self.get("pager_index") * self.max_move_lines_displayed)) {
-                self.set("pager_index", Math.ceil(self.total_move_lines_num/self.max_move_lines_displayed)-1);
+            if (self.get("pager_index") !== 0 && ! self.can_fetch_more_move_lines) {
+                self.set("pager_index", 0);
             }
         
             // If there is no match to display, disable match view and pass in mode inactive
-            if (self.total_move_lines_num + self.mv_lines_deselected.length === 0 && self.filter === "") {
+            if (self.get("mv_lines").length + self.mv_lines_deselected.length === 0 && !self.can_fetch_more_move_lines && self.filter === "") {
                 self.$el.addClass("no_match");
                 if (self.get("mode") === "match") {
                     self.set("mode", "inactive");
@@ -741,28 +741,17 @@ openerp.account = function (instance) {
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
             var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o) { return o.id; });
             
-            // Load move lines
-            var move_lines = [];
-            if (limit > 0) {
-                deferred_move_lines = self.updateMatchesGetMvLines(excluded_ids, offset, limit, function(result) {
-                    move_lines = result;
+            limit += 1; // To see if there's more move lines than we display
+            if (limit > 0)
+                self.updateMatchesGetMvLines(excluded_ids, offset, limit, function(move_lines) {
+                    self.set("mv_lines", move_lines.slice(0, limit-1));
+                    self.can_fetch_more_move_lines = (move_lines.length === limit);
                 });
-            }
-        
-            // Load the number of move lines corresponding to this statement line and this filter
-            var deferred_total_move_lines_num = self.updateMatchesGetMvLinesNum(excluded_ids, offset, limit, function(result) {
-                move_lines_num = result;
-            });
-        
-            return $.when(deferred_move_lines, deferred_total_move_lines_num).then(function(){
-                self.total_move_lines_num = move_lines_num + deselected_lines_num;
-                self.set("mv_lines", move_lines);
-            });
+            else
+                self.set("mv_lines", []);
         },
 
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {},
-
-        updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {},
 
         // Generic function for updating the line_created_being_edited
         formCreateInputChanged: function(elt, val) {
@@ -1803,20 +1792,6 @@ openerp.account = function (instance) {
                 });
         },
 
-        updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {
-            var self = this;
-            var globally_excluded_ids = self.getParent().excluded_move_lines_ids[self.partner_id];
-            if (globally_excluded_ids !== undefined)
-                for (var i=0; i<globally_excluded_ids.length; i++)
-                    if (excluded_ids.indexOf(globally_excluded_ids[i]) === -1)
-                        excluded_ids.push(globally_excluded_ids[i]);
-            return self.model_bank_statement_line
-                .call("get_move_lines_for_bank_reconciliation_by_statement_line_id", [self.st_line.id, excluded_ids, self.filter, 0, undefined, true])
-                .then(function(num) {
-                    callback.call(self, num)
-                });
-        },
-
         // Changes the partner_id of the statement_line in the DB and reloads the widget
         changePartner: function(partner_id, callback) {
             var self = this;
@@ -2142,7 +2117,7 @@ openerp.account = function (instance) {
 
             // If we're displaying all remaining move lines and there's not at least a debit and a credit,
             // consider that the reconciliation is done
-            if (self.get("mv_lines").length === self.total_move_lines_num && self.get("mv_lines_selected").length === 0 && self.filter === '') {
+            if (!self.can_fetch_more_move_lines && self.get("mv_lines_selected").length === 0 && self.filter === '') {
                 var mkay, mmkay = false;
                 var lines = self.get("mv_lines").concat(self.mv_lines_deselected);
                 for (var i=0; i<lines.length; i++) {
@@ -2247,16 +2222,6 @@ openerp.account = function (instance) {
                     debugger;
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     callback.call(self, lines);
-                });
-        },
-
-        updateMatchesGetMvLinesNum: function(excluded_ids, offset, limit, callback) {
-            var self = this;
-            excluded_ids = excluded_ids.concat(self.excluded_move_lines_ids);
-            return self.model_aml
-                .call("get_move_lines_for_manual_reconciliation", [self.data.account_id, self.data.partner_id || undefined, excluded_ids, self.filter, 0, undefined, true])
-                .then(function(num) {
-                    callback.call(self, num);
                 });
         },
 
