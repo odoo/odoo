@@ -25,6 +25,9 @@ import json
 import openerp.addons.im_chat.im_chat
 import datetime
 
+import re
+import json
+
 from openerp.osv import osv, fields
 from openerp import tools
 from openerp import http
@@ -123,6 +126,7 @@ class im_livechat_channel(osv.Model):
                  "Use this field anywhere a small image is required."),
         'session_ids' : fields.one2many('im_chat.session', 'channel_id', 'Sessions'),
         'nbr_session' : fields.function(_compute_nbr_session, type='integer', string='Number of session', store=False),
+        'rule_ids': fields.one2many('im_livechat.channel.rule','channel_id','Rules'),
     }
 
     def _default_user_ids(self, cr, uid, context=None):
@@ -183,6 +187,36 @@ class im_livechat_channel(osv.Model):
     def quit(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'user_ids': [(3, uid)]})
         return True
+
+
+
+class im_livechat_channel_rule(osv.Model):
+    _name = 'im_livechat.channel.rule'
+
+    _columns = {
+        'regex_url' : fields.char('URL Regex', help="Regular expression identifying the web page on which the rules will be applied."),
+        'action' : fields.selection([('display_button', 'Display the button'),('auto_popup','Auto popup'), ('hide_button', 'Hide the button')], 'Action', size=32, required=True,
+                                 help="Select 'Display the button' to simply display the chat button on the pages."\
+                                 " Select 'Auto popup' for to display the button, and automatically open the conversation window."\
+                                 " Select 'Hide the button' to hide the chat button on the pages."),
+        'auto_popup_timer' : fields.integer('Auto popup timer', help="Delay (in seconds) to automatically open the converssation window. Note : the selected action must be 'Auto popup', otherwise this parameter will not be take into account."),
+        'channel_id': fields.many2one('im_livechat.channel', 'Channel', help="The channel of the rule"),
+        'country_ids': fields.many2many('res.country', 'im_livechat_channel_blocked_country_rel', 'channel_id', 'country_id', 'Blocked Country', help="For this country list, the channel will not be available on the web page matched with the Regular Expression. This feature requires GeoIP installed on your server."),
+    }
+
+    _defaults = {
+        'auto_popup_timer': 0,
+        'action' : 'display_button',
+    }
+
+    def match_rule(self, cr, uid, channel_id, word, context=None):
+        """ determine if a rule of the given channel match with the given word """
+        rule_ids = self.search(cr, uid, [('channel_id', '=', channel_id)], context=context)
+        for rule in self.browse(cr, uid, rule_ids, context=context):
+            if re.search(rule.regex_url, word):
+                return rule
+        return False
+
 
 class im_chat_session(osv.Model):
 
@@ -259,6 +293,20 @@ class LiveChatController(http.Controller):
         info["dbname"] = dbname
         info["channel"] = channel_id
         info["username"] = kwargs.get("username", "Visitor")
+        url = request.httprequest.headers['Referer'] or request.httprequest.base_url
+        rule = registry.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, context=context)
+        if rule:
+            if request.session.geoip and request.session.geoip.get('country_name', "") in [c.code for c in rule.country_ids]:
+                # don't return the initialization script, since its blocked in the country
+                return
+            if rule.action == 'hide_button':
+                return
+            rule_data = {
+                'action' : rule.action,
+                'auto_popup_timer' : rule.auto_popup_timer,
+                'regex_url' : rule.regex_url,
+            }
+        info['rule'] = json.dumps(rule and rule_data or False)
         return request.render('im_livechat.loader', info)
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
@@ -266,8 +314,8 @@ class LiveChatController(http.Controller):
         cr, uid, context, db = request.cr, request.uid or openerp.SUPERUSER_ID, request.context, request.db
         reg = openerp.modules.registry.RegistryManager.get(db)
         # if geoip, add the country name to the anonymous name
-        if hasattr(request, 'geoip'):
-            anonymous_name = anonymous_name + " ("+request.geoip.get('country_name', "")+")"
+        if request.session.geoip:
+            anonymous_name = anonymous_name + " ("+request.session.geoip.get('country_name', "")+")"
         return reg.get("im_livechat.channel").get_channel_session(cr, uid, channel_id, anonymous_name, context=context)
 
     @http.route('/im_livechat/available', type='json', auth="none")

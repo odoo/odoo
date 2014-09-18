@@ -216,7 +216,50 @@
                         <field name="web_page" readonly="1" class="oe_tag" widget="url"/>
                         <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Live Chat Channel you want to add on your website.</p>
                     </div>
+
+                    <group string="Channel Rules">
+                        <field name="rule_ids" nolabel="1"/>
+                    </group>
                 </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+        <!--
+            Views for im_livechat_channel_rule
+        -->
+        <record id="im_livechat_channel_rule_tree_view" model="ir.ui.view">
+            <field name="name">im.livechat.channel.rule.tree</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Rules">
+                    <field name="regex_url"/>
+                    <field name="action"/>
+                    <field name="country_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_rule_form_view" model="ir.ui.view">
+            <field name="name">im_livechat.channel.rule.form</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Channel Rule">
+                    <sheet>
+                        <group>
+                            <field name="action"/>
+                            <field name="regex_url" />
+                            <field name="auto_popup_timer" />
+                        </group>
+                        <notebook>
+                            <page string="Blocked Countries">
+                                <field name="country_ids" />
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -228,6 +271,7 @@
         <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat"/>
 
         <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
+
 
     </data>
 </openerp>
