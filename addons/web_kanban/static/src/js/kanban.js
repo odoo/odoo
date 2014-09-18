@@ -272,8 +272,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 return def.then(function(records) {
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (!remaining--) {
+                        if (self.dataset.index >= records.length){
                             self.dataset.index = self.dataset.size() ? 0 : null;
+                        }
+                        if (!remaining--) {
                             return self.do_add_groups(groups_array);
                         }
                 });
