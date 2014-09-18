@@ -1074,12 +1074,13 @@ class mrp_production(osv.osv):
         type_obj = self.pool.get('stock.picking.type')
         # Need to search for a picking type
         move = stock_move.browse(cr, uid, move_id, context=context)
-        code = stock_move.get_code_from_locs(cr, uid, move, context=context)
+        src_loc = loc_obj.browse(cr, uid, source_location_id, context=context)
+        dest_loc = loc_obj.browse(cr, uid, dest_location_id, context=context)
+        code = stock_move.get_code_from_locs(cr, uid, move, src_loc, dest_loc, context=context)
         if code == 'outgoing':
-            check_loc_id = source_location_id
+            check_loc = src_loc
         else:
-            check_loc_id = dest_location_id
-        check_loc = loc_obj.browse(cr, uid, check_loc_id, context=context)
+            check_loc = dest_loc
         wh = loc_obj.get_warehouse(cr, uid, check_loc, context=context)
         domain = [('code', '=', code)]
         if wh: 

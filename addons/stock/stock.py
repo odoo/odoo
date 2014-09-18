@@ -383,7 +383,7 @@ class stock_quant(osv.osv):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
     def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
-        """Moves all given stock.quant in the given destination location.
+        """Moves all given stock.quant in the given destination location.  Unreserve from current move.
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
         :param location_to: browse record (stock.location) depicting where the quants have to be moved
@@ -418,7 +418,8 @@ class stock_quant(osv.osv):
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
-                'package_id': dest_package_id}
+                'package_id': dest_package_id,
+                'reservation_id': False}
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -2304,15 +2305,10 @@ class stock_move(osv.osv):
                 qty = move_qty[move.id]
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain_list=prefered_domain_list, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
-            #unreserve the quants and make them available for other operations/moves
-            quant_obj.quants_unreserve(cr, uid, move, context=context)
 
             #Check moves that were pushed
             if move.move_dest_id.state in ('waiting', 'confirmed'):
-                # FIXME is opw 607970 still present with new WMS?
-                # (see commits 1ef2c181033bd200906fb1e5ce35e234bf566ac6
-                # and 41c5ceb8ebb95c1b4e98d8dd1f12b8e547a24b1d)
-                other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
+                other_upstream_move_ids = self.search(cr, uid, [('id', 'not in', ids), ('state', 'not in', ['done', 'cancel']),
                                             ('move_dest_id', '=', move.move_dest_id.id)], context=context)
                 #If no other moves for the move that got pushed:
                 if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
@@ -2320,6 +2316,8 @@ class stock_move(osv.osv):
             if move.procurement_id:
                 procurement_ids.append(move.procurement_id.id)
 
+        #unreserve the quants and make them available for other operations/moves
+        quant_obj.quants_unreserve(cr, uid, move, context=context)
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
@@ -2443,14 +2441,15 @@ class stock_move(osv.osv):
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
 
 
-    def get_code_from_locs(self, cr, uid, move, context=None):
+    def get_code_from_locs(self, cr, uid, move, location_id=False, location_dest_id=False, context=None):
         """
         Returns the code the picking type should have.  This can easily be used
         to check if a move is internal or not
+        move, location_id and location_dest_id are browse records
         """
         code = 'internal'
-        src_loc = move.location_id
-        dest_loc = move.location_dest_id
+        src_loc = location_id or move.location_id
+        dest_loc = location_dest_id or move.location_dest_id
         if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
             code = 'outgoing'
         if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
