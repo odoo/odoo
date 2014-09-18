@@ -241,7 +241,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}' display_as_tooltip="1"/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="survey"/>
@@ -255,6 +255,8 @@
                 <field name="categ_ids"/>
                 <field name="message_summary"/>
                 <field name="attachment_number"/>
+                <field name="date_last_stage_update" display_as_tooltip="1"/>
+                <field name="salary_expected" display_as_tooltip="1"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">

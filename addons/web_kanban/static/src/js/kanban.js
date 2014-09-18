@@ -28,6 +28,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.group_by_field = {};
         this.grouped_by_m2o = false;
         this.many2manys = [];
+        this.tooltip_fields = [];
         this.state = {
             groups : {},
             records : {}
@@ -112,6 +113,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 this.qweb.add_template(instance.web.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
+                if (_.has(child.attrs, 'display_as_tooltip')) {
+                    this.tooltip_fields.push(child.attrs.name);
+                }
                 this.extract_aggregates(child);
             }
         }
@@ -947,6 +951,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         return new_record;
     },
     renderElement: function() {
+        var self = this;
         this.qweb_context = {
             instance: instance,
             record: this.record,
@@ -964,6 +969,20 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         });
         this.replaceElement($el);
         this.replace_fields();
+        self.$el.tooltip({
+            delay: { show: 500, hide: 0 },
+            placement: "auto",
+            title: function() {
+                var title = '';
+                _.each(self.view.tooltip_fields, function(tooltip_field) {
+                    field = self.record[tooltip_field];
+                    if (field) {
+                        title += field.string + " : " + (((field.type == "datetime")? field.value.split(" ")[0]:field.value) || "-----") + "<br/>";
+                    }
+                });
+                return title;
+            },
+        });
     },
     replace_fields: function() {
         var self = this;

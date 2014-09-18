@@ -108,6 +108,8 @@ class note_note(osv.osv):
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
+        'write_date': fields.datetime('Last Modification Date', readonly=True, select=True),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,

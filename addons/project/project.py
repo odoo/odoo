@@ -802,6 +802,8 @@ class task(osv.osv):
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
+        'last_stage_id': fields.many2one('project.task.type', 'Last Stage',
+                                         help='Stage of the task before being in the current stage.'),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'In Progress'),('done', 'Ready for next stage'),('blocked', 'Blocked')], 'Kanban State',
                                          track_visibility='onchange',
@@ -810,7 +812,7 @@ class task(osv.osv):
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          required=False, copy=False),
-        'create_date': fields.datetime('Create Date', readonly=True, select=True),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date', select=True, copy=False),
         'date_end': fields.datetime('Ending Date', select=True, copy=False),
@@ -1093,6 +1095,8 @@ class task(osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            for tasks in self.browse(cr, uid, ids, context=None):
+                vals['last_stage_id'] = tasks.stage_id.id
         # user_id change: update date_start
         if vals.get('user_id') and 'date_start' not in vals:
             vals['date_start'] = fields.datetime.now()

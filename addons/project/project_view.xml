@@ -500,9 +500,10 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
                     <field name="color"/>
-                    <field name="priority"/>
-                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
-                    <field name="user_id"/>
+                    <field name="user_id" display_as_tooltip="1"/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}' display_as_tooltip="1"/>
+                    <field name="last_stage_id" display_as_tooltip="1"/>
+                    <field name="date_last_stage_update" display_as_tooltip="1"/>
                     <field name="user_email"/>
                     <field name="description"/>
                     <field name="sequence"/>
@@ -510,6 +511,8 @@
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
                     <field name="categ_ids"/>
+                    <field name="create_date" display_as_tooltip="1"/>
+                    <field name="priority" display_as_tooltip="1"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
