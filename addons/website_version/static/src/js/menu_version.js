@@ -54,15 +54,16 @@
             var curr_month = d.getMonth();
             var curr_year = d.getFullYear();
             website.prompt({
-                id: "editor_new_snapshot",
-                window_title: _t("New snapshot"),
-                input: "Snapshot name" ,
+                id: "editor_new_version",
+                window_title: _t("New version"),
+                input: "version name" ,
                 default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name }).then(function (result) {
 
                     location.reload();
+                    alert("You are actually working on "+name+ " version.");
                 }).fail(function(){
                     alert("This name already exists.");
                 });

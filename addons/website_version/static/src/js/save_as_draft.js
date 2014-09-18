@@ -20,9 +20,9 @@
                 var curr_year = d.getFullYear();
                 
                 website.prompt({
-                    id: "editor_new_snapshot",
-                    window_title: _t("New snapshot"),
-                    input: "Snapshot name" ,
+                    id: "editor_new_version",
+                    window_title: _t("New version"),
+                    input: "Version name" ,
                     default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
                 }).then(function (name) {
                     var context = website.get_context();
