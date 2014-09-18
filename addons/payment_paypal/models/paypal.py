@@ -14,6 +14,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -69,13 +70,14 @@ class AcquirerPaypal(osv.Model):
         res = cr.fetchall()
         for (company_id, company_paypal_account) in res:
             if company_paypal_account:
-                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('name', '=', 'paypal')], limit=1, context=context)
+                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'paypal')], limit=1, context=context)
                 if company_paypal_ids:
                     self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
                 else:
                     paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
                     self.create(cr, uid, {
-                        'name': 'paypal',
+                        'name': 'Paypal',
+                        'provider': 'paypal',
                         'paypal_email_account': company_paypal_account,
                         'view_template_id': paypal_view.id,
                     }, context=context)
@@ -104,7 +106,7 @@ class AcquirerPaypal(osv.Model):
         return fees
 
     def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
 
         paypal_tx_values = dict(tx_values)

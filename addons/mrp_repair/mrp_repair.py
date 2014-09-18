@@ -343,7 +343,7 @@ class mrp_repair(osv.osv):
                         'origin': repair.name,
                         'type': 'out_invoice',
                         'account_id': account_id,
-                        'partner_id': repair.partner_id.id,
+                        'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
                         'fiscal_position': repair.partner_id.property_account_position.id
@@ -519,7 +519,7 @@ class ProductChangeMixin(object):
                 partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
                 result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id)
 
-            result['name'] = product_obj.partner_ref
+            result['name'] = product_obj.display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {

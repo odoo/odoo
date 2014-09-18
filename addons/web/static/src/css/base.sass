@@ -869,17 +869,9 @@ $sheet-padding: 16px
                     text-align: center
                     margin: 10px 0 0
                 .navigation
-                    float: left
-                    width: auto
-                    padding: 0
-                    margin-left: 25%
-                    list-style: none
-                    border: 1px solid $link-color-odoo
                     li
-                        float: left
                         a
-                            padding: 20px 30px
-                            float: left
+                            padding: 10px 20px
                         &.active a
                             background: $link-color-odoo
                             color: #fff
@@ -1579,7 +1571,7 @@ $sheet-padding: 16px
                 padding: 0 16px
     // }}}
     // FormView.header {{{
-    .oe_form > :not(.oe_form_nosheet) header
+    .oe_form > :not(.oe_form_nosheet) header, .oe_form > .oe_form_nosheet header
         padding-left: 2px
         ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
             display: inline-block
@@ -1872,8 +1864,6 @@ $sheet-padding: 16px
             -ms-filter: "alpha(opacity=0)"
             margin: 0
             padding: 0
-    .oe_avatar .oe_hidden_input_file input.oe_form_binary_file
-        width: 90px
     .oe_form
         .oe_form_field_binary
             display: inline-block
@@ -2152,7 +2142,8 @@ $sheet-padding: 16px
                 &.oe_readonly
                     padding: 6px 0px 0px
                     text-align: right
-                    max-width: 100px
+                span
+                    padding: 0px 6px
                 input
                     width: 100% !important
                     text-align: right
@@ -2761,6 +2752,7 @@ body.oe_single_form
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
+        overflow-x: auto
 
 .ui-datepicker
     z-index: 1500 !important

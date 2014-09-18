@@ -389,7 +389,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 var rows = self.build_rows(header.children);
                 var doc_fragment = $(document.createDocumentFragment());
                 rows.map(function (row) {
-                    doc_fragment.append(self.draw_row(row));
+                    doc_fragment.append(self.draw_row(row, 0));
                 });
                 self.$row_clicked.after(doc_fragment);
             } else {
@@ -594,41 +594,52 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
+        var custom_gbs = this.graph_view.get_custom_filter_groupbys(),
+            frozen_rows = custom_gbs.groupby.length,
+            frozen_cols = custom_gbs.col_groupby.length;
+
         var table = this.build_table();
         var doc_fragment = $(document.createDocumentFragment());
-        this.draw_headers(table.headers, doc_fragment);
+        this.draw_headers(table.headers, doc_fragment, frozen_cols);
         this.draw_measure_row(table.measure_row, doc_fragment);
-        this.draw_rows(table.rows, doc_fragment);
+        this.draw_rows(table.rows, doc_fragment, frozen_rows);
         this.table.append(doc_fragment);
     },
 
-    make_header_cell: function (header) {
+    make_header_cell: function (header, frozen) {
         var cell = (_.has(header, 'cells') ? $('<td>') : $('<th>'))
                         .addClass('graph_border')
                         .attr('rowspan', header.height)
                         .attr('colspan', header.width);
-        var $content = $('<span>').addClass('web_graph_click')
-                                 .attr('href','#')
+        var $content = $('<span>').attr('href','#')
                                  .text(' ' + (header.title || _t('Undefined')))
                                  .css('margin-left', header.indent*30 + 'px')
                                  .attr('data-id', header.id);
         if (_.has(header, 'expanded')) {
-            $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+            if (('indent' in header) && header.indent >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
+            if (!('indent' in header) && header.lvl >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
         } else {
             $content.css('font-weight', 'bold');
         }
         return cell.append($content);
     },
 
-    draw_headers: function (headers, doc_fragment) {
+    draw_headers: function (headers, doc_fragment, frozen_cols) {
         var make_cell = this.make_header_cell,
             $empty_cell = $('<th>').attr('rowspan', headers.length),
             $thead = $('<thead>');
 
-        _.each(headers, function (row) {
+        _.each(headers, function (row, lvl) {
             var $row = $('<tr>');
             _.each(row, function (header) {
-                $row.append(make_cell(header));
+                header.lvl = lvl;
+                $row.append(make_cell(header, frozen_cols));
             });
             $thead.append($row);
         });
@@ -647,10 +658,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$thead.append($row);
     },
     
-    draw_row: function (row) {
+    draw_row: function (row, frozen_rows) {
         var $row = $('<tr>')
             .attr('data-indent', row.indent)
-            .append(this.make_header_cell(row));
+            .append(this.make_header_cell(row, frozen_rows));
         
         var cells_length = row.cells.length;
         var cells_list = [];
@@ -671,13 +682,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return $row.append(cells_list.join(''));
     },
 
-    draw_rows: function (rows, doc_fragment) {
+    draw_rows: function (rows, doc_fragment, frozen_rows) {
         var rows_length = rows.length,
             $tbody = $('<tbody>');
 
         doc_fragment.append($tbody);
         for (var i = 0; i < rows_length; i++) {
-            $tbody.append(this.draw_row(rows[i]));
+            $tbody.append(this.draw_row(rows[i], frozen_rows));
         }
     },
 

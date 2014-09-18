@@ -298,9 +298,10 @@ class website_sale(http.Controller):
             'suggested_products': [],
         }
         if order:
+            _order = order
             if not context.get('pricelist'):
-                context['pricelist'] = order.pricelist_id.id
-            values['suggested_products'] = order._cart_accessories(context=context)
+                _order = order.with_context(pricelist=order.pricelist_id.id)
+            values['suggested_products'] = _order._cart_accessories()
 
         return request.website.render("website_sale.cart", values)
 
@@ -699,7 +700,7 @@ class website_sale(http.Controller):
             }
 
         tx_ids = request.registry['payment.transaction'].search(
-            cr, uid, [
+            cr, SUPERUSER_ID, [
                 '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
             ], context=context)
 
@@ -714,7 +715,7 @@ class website_sale(http.Controller):
                 message = ""
                 validation = None
         else:
-            tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+            tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
                 message = '<p>%s</p>' % _('Your payment has been received.')

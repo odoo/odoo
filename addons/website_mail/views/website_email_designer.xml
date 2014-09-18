@@ -5,9 +5,6 @@
 <!-- Template Choice page -->
 <template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
-        </t>
         <div id="wrap" class="container" t-ignore="True">
             <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
                 <a class="mt16 btn btn-default pull-right" 

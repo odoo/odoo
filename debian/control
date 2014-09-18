@@ -1,13 +1,13 @@
-Source: openerp
+Source: odoo
 Section: net
 Priority: optional
-Maintainer: Odoo SA <sle@odoo.com>
+Maintainer: OpenERP SA <sle@odoo.com>
 Build-Depends: debhelper (>= 9.0), python, rsync
 Standards-Version: 3.9.5.0
 Homepage: http://www.odoo.com/
 Vcs-Git: https://github.com/odoo/odoo
 
-Package: openerp
+Package: odoo
 Section: net
 Architecture: all
 Depends:
@@ -45,8 +45,8 @@ Depends:
  python-werkzeug,
  python-xlwt,
  python-yaml,
-Conflicts: tinyerp-server, openerp-server, openerp-web
-Replaces: tinyerp-server, openerp-server, openerp-web
+Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
+Replaces: tinyerp-server, openerp-server, openerp-web, openerp
 Recommends:
  antiword,
  graphviz,

@@ -9,7 +9,7 @@
         </template>
 
         <template id="instant_click_init" inherit_id="website.layout" name="Instant Click Init" groups="base.group_public">
-            <xpath expr="//div[@id='wrapwrap']" position="after">
+            <xpath expr="//body" position="inside">
                 <script data-no-instant="">
                     InstantClick.init();
                 </script>

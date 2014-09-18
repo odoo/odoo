@@ -894,8 +894,8 @@ class share_result_line(osv.osv_memory):
             data = dict(dbname=cr.dbname, login=this.login, password=this.password)
             if this.share_wizard_id and this.share_wizard_id.action_id:
                 data['action_id'] = this.share_wizard_id.action_id.id
-            ctx = dict(context, share_url_template_hash_arguments=['action_id'])
-            result[this.id] = this.share_wizard_id.share_url_template(context=ctx) % data
+            this = this.with_context(share_url_template_hash_arguments=['action_id'])
+            result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 
     _columns = {
