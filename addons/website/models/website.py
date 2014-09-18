@@ -162,13 +162,14 @@ class website(osv.osv):
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
+        'compress_html': fields.boolean('Compress HTML'),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
     }
     _defaults = {
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
-
+        'compress_html': False,
     }
 
     # cf. Wizard hack in website_views.xml
