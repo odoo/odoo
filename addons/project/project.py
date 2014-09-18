@@ -362,18 +362,6 @@ class project(osv.osv):
                 self._message_add_suggested_recipient(cr, uid, recipients, data, partner=data.partner_id, reason= '%s' % reason)
         return recipients
 
-    # TODO: Why not using a SQL contraints ?
-    def _check_dates(self, cr, uid, ids, context=None):
-        for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
-            if leave['date_start'] and leave['date']:
-                if leave['date_start'] > leave['date']:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
-    ]
-
     def set_template(self, cr, uid, ids, context=None):
         return self.setActive(cr, uid, ids, value=False, context=context)
 
@@ -1233,6 +1221,18 @@ class account_analytic_account(osv.osv):
         'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
+
+    # TODO: Why not using a SQL contraints ?
+    def _check_dates(self, cr, uid, ids, context=None):
+        for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
+            if leave['date_start'] and leave['date']:
+                if leave['date_start'] > leave['date']:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+    ]
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
