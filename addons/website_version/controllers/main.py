@@ -15,6 +15,7 @@ class TableExporter(http.Controller):
     def master(self):
         request.session['snapshot_id'] = 0
         request.session['master'] = 1
+        snap = request.registry['website_version.snapshot']
         return 0
 
     @http.route(['/website_version/create_snapshot'], type = 'json', auth = "user", website = True)

@@ -59,5 +59,11 @@
             </xpath>
         </template>
 
+        <template id="assets_frontend_AB_testing" name="website_AB_testing assets" inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_version/static/src/js/AB_testing.js"></script>
+            </xpath>
+        </template>
+
     </data>
 </openerp>

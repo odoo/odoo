@@ -30,6 +30,9 @@ class Experiment(osv.Model):
                 #We must considerate master
                 result[exp.id] += 1
         return result
+
+    # def _get_state(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+    #     return [{'id': 1, 'state': u'draft'}, {'id': 2, 'state': u'running'}, {'id': 3, 'state': u'done'}]
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
@@ -49,6 +52,7 @@ class Experiment(osv.Model):
     _order = 'sequence'
 
     # _group_by_full = {
+    #     'state': _get_state
     #     'state': lambda *args, **kwargs :['draft','running','done'],
     # }
 
