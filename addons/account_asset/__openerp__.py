@@ -33,7 +33,7 @@ track of depreciation's occurred on those assets. And it allows to create Move's
 of the depreciation lines.
 
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'category': 'Accounting & Finance',
     'sequence': 32,
     'demo': [ 'account_asset_demo.xml'],

@@ -1,0 +1,16 @@
+# HG changeset patch
+# Parent 1708c59c9731207e06ca84529c839c571e622481
+diff -r 1708c59c9731 -r c706c2ec2832 academy/templates.xml
+--- a/academy/templates.xml	Thu Aug 14 14:53:52 2014 +0200
++++ b/academy/templates.xml	Thu Aug 14 16:08:10 2014 +0200
+@@ -28,4 +28,10 @@
+       <div class="oe_structure"/>
+     </t>
+   </template>
++
++  <template id="product_item_hide_no_price" inherit_id="website_sale.products_item">
++    <xpath expr="//div[hasclass('product_price')]/b" position="attributes">
++      <attribute name="t-if">product.price &gt; 0</attribute>
++    </xpath>
++  </template>
+ </data></openerp>

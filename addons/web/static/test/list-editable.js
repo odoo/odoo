@@ -6,6 +6,9 @@ openerp.testing.section('editor', {
         mock('test.model:create', function () {
             return 42;
         });
+        mock('test.model:onchange', function () {
+            return {};
+        });
     }
 }, function (test) {
     /**
@@ -203,6 +206,9 @@ openerp.testing.section('list.edition', {
                 arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
             };
         });
+        mock('demo:onchange', function () {
+            return {};
+        });
     }
 }, function (test) {
     test('newrecord', {asserts: 6}, function (instance, $fix, mock) {
@@ -311,6 +317,11 @@ openerp.testing.section('list.edition.onwrite', {
     dependencies: ['web.list_editable'],
     rpc: 'mock',
     templates: true,
+    setup: function (instance, $s, mock) {
+        mock('demo:onchange', function () {
+            return {};
+        });
+    }
 }, function (test) {
     test('record-to-read', {asserts: 4}, function (instance, $fix, mock) {
         mock('demo:fields_view_get', function () {

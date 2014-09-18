@@ -83,9 +83,11 @@ class sale_order_line(osv.osv):
             if so_pricelist.visible_discount and list_price[pricelist] != 0 and new_list_price != 0:
                 if product.company_id and so_pricelist.currency_id.id != product.company_id.currency_id.id:
                     # new_list_price is in company's currency while price in pricelist currency
+                    ctx = context.copy()
+                    ctx['date'] = date_order
                     new_list_price = self.pool['res.currency'].compute(cr, uid,
                         product.company_id.currency_id.id, so_pricelist.currency_id.id,
-                        new_list_price, context=context)
+                        new_list_price, context=ctx)
                 discount = (new_list_price - price) / new_list_price * 100
                 if discount > 0:
                     result['price_unit'] = new_list_price

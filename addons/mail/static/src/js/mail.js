@@ -916,12 +916,63 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_vote_count').on('mouseenter', this.on_hover);
             this.$('.oe_mail_expand').on('click', this.on_expand);
             this.$('.oe_mail_reduce').on('click', this.on_expand);
             this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
             this.$('.oe_mail_action_author').on('click', this.on_record_author_clicked);
         },
-
+        on_hover : function(event){
+            var self = this;
+            var voter = "";
+            var limit = 10;
+            event.stopPropagation();
+            var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
+            //Note: We can set data-content attr on target element once we fetch data so that next time when one moves mouse on element it saves call
+            //But if there is new like comes then we'll not have new likes in popover in that case
+            if ($target.data('liker-list'))
+            {
+                voter = $target.data('liker-list');
+                self.bindTooltipTo($target, voter);
+                $target.tooltip('hide').tooltip('show');
+                $(".tooltip").on("mouseleave", function () {
+                    $(this).remove();
+                });
+            }else{
+                this.ds_message.call('get_likers_list', [this.id, limit])
+                .done(function (data) {
+                    _.each(data, function(people, index) {
+                        voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
+                        if(index != data.length-1) {
+                            voter = voter + "<br/>";
+                        }
+                    });
+                    $target.data('liker-list', voter);
+                    self.bindTooltipTo($target, voter);
+                    $target.tooltip('hide').tooltip('show');
+                    $(".tooltip").on("mouseleave", function () {
+                        $(this).remove();
+                    });
+                });
+            }
+            return true;
+        },
+        bindTooltipTo: function($el, value) {
+            $el.tooltip({
+                'title': value,
+                'placement': 'top',
+                'container': this.el,
+                'html': true,
+                'trigger': 'manual',
+                'animation': false
+             }).on("mouseleave", function () {
+                setTimeout(function () {
+                    if (!$(".tooltip:hover").length) {
+                        $el.tooltip("hide");
+                    }
+                },100);
+            });
+        },
         on_record_clicked: function  (event) {
             event.preventDefault();
             var self = this;
@@ -1124,6 +1175,7 @@ openerp.mail = function (session) {
             this.$(".oe_msg_footer:first .oe_mail_vote_count").remove();
             this.$(".oe_msg_footer:first .oe_msg_vote").replaceWith(vote_element);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_vote_count').on('mouseenter', this.on_hover);
         },
 
         /**

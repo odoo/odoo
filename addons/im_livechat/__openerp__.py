@@ -1,10 +1,11 @@
 {
-    'name' : 'Live Support',
+    'name' : 'Live Chat',
     'author': 'OpenERP SA',
     'version': '1.0',
     'summary': 'Live Chat with Visitors/Customers',
     'category': 'Tools',
     'complexity': 'easy',
+    'website': 'https://www.odoo.com/page/live-chat',
     'description':
         """
 Live Chat Support

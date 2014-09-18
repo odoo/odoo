@@ -122,13 +122,13 @@ class hr_job(osv.Model):
         'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
-                                  help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+                                  help="Set whether the recruitment process is open or closed for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
-        'state': 'open',
+        'state': 'recruit',
     }
 
     _sql_constraints = [
@@ -207,7 +207,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported

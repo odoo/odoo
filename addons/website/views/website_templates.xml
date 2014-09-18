@@ -54,7 +54,6 @@
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
-          t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
@@ -68,7 +67,7 @@
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-if="not title">
-                <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="res_company.name"/></t>
             </t>
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
@@ -78,10 +77,9 @@
             <title><t t-esc="title"/></title>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang">
-                <t t-foreach="languages" t-as="lg">
-                    <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
-                    <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
+            <t t-if="request and request.website_multilang and website">
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
+                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
 
@@ -94,10 +92,10 @@
                     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                    })(window,document,'script','//www.google-analytics.com/analytics.js','_gaw');
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    _gaw('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
-                    _gaw('send','pageview');
+                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
+                    ga('send','pageview');
                 </script>
             </t>
         </head>
@@ -113,7 +111,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="/" t-field="res_company.name"/>
+                                <a class="navbar-brand" href="/">YourCompany</a>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
                                 <ul class="nav navbar-nav navbar-right" id="top_menu">
@@ -145,22 +143,27 @@
                 <footer>
                     <div id="footer_container">
                     </div>
-                    <div class="container mt16 mb8">
-                        <div class="pull-right" t-ignore="true" t-if="not editable">
-                            Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
-                            <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
-                        </div>
-                        <div class="pull-left text-muted">
-                            Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-                        </div>
-                    </div>
                 </footer>
             </div>
         </body>
     </html>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
+<template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+    <xpath expr="//footer" position="inside">
+        <div class="container mt16 mb8">
+            <div class="pull-right" t-ignore="true" t-if="not editable">
+                Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
+                <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+            </div>
+            <div class="pull-left text-muted">
+                Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -223,7 +226,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -237,7 +240,7 @@
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
         <div class="oe_structure" id="footer">
-            <section data-option='three-columns' class="mt16 mb16">
+            <section class="mt16 mb16">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
@@ -265,7 +268,7 @@
     </xpath>
 </template>
 
-<template id="footer_default" inherit_id="website.footer_custom" optional="enabled" name="Automatic Footer">
+<template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div class="container hidden-print">
             <div class="row">
@@ -431,6 +434,66 @@
 </template>
 
 <!-- Error and special pages -->
+
+<template id="info" name="Odoo Information">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure">
+
+            <section class="container">
+                <h1><t t-esc="res_company.name"/>
+                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                </h1>
+                <p>
+                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a href="https://www.odoo.com">Open Source ERP</a>.
+                </p>
+
+                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <p>
+                     Note: To hide this page, uncheck it from the top Customize menu.
+                   </p>
+                </div>
+                <h2>Installed Applications</h2>
+                <dl class="dl-horizontal" t-foreach="apps" t-as="app">
+                    <dt>
+                        <a t-att-href="app.website" t-if="app.website">
+                            <t t-raw="app.shortdesc"/>
+                        </a>
+                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                    </dt>
+                    <dd>
+                        <span t-raw="app.summary"/>
+                    </dd><dd class="text-muted">
+                        Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
+                    </dd>
+                </dl>
+
+                <h2>Installed Modules</h2>
+                <dl class="dl-horizontal">
+                    <t t-foreach="modules" t-as="app">
+                        <dt>
+                            <span t-raw="app.shortdesc"/>
+                        </dt>
+                        <dd t-if="app.summary">
+                            <span t-raw="app.summary"/>
+                        </dd><dd>
+                            Technical name: <span t-field="app.name"/>,
+                            updated: <span t-field="app.write_date"/>
+                            <t t-if="app.author">
+                                , author: <span t-field="app.author"/>
+                            </t>
+                        </dd>
+                    </t>
+                </dl>
+
+
+            </section>
+
+        </div>
+      </div>
+    </t>
+</template>
 
 <template id="default_page">
     <t t-call="website.layout">
@@ -648,7 +711,6 @@
                     <div class="oe_structure">
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                     </div>
-
                     <div class="container" t-if="views">
                         <div class="alert alert-danger" t-if="qweb_exception and editable">
                             <h4>Template fallback</h4>
@@ -700,7 +762,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap t-foreach="pages" t-as="page">
+  <sitemap t-translate="off" t-foreach="pages" t-as="page">
     <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
   </sitemap>
 </sitemapindex>

@@ -30,7 +30,7 @@
         </record>
 
         <record id="action_account_bank_statement_import" model="ir.actions.act_window">
-            <field name="name">Import Bank Statements</field>
+            <field name="name">Import</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement.import</field>
             <field name="view_type">form</field>
@@ -39,7 +39,7 @@
             <field name="view_id" ref="account_bank_statement_import_view"/>
         </record>
 
-        <menuitem parent="account.menu_finance_bank_and_cash" id="menu_account_bank_statement_import" action="action_account_bank_statement_import" sequence="11"/>
+        <menuitem parent="account.periodical_processing_bank_statements" id="menu_account_bank_statement_import" action="action_account_bank_statement_import" sequence="11"/>
 
     </data>
 </openerp>

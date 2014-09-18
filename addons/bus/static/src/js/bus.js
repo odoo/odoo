@@ -1,7 +1,7 @@
 (function() {
     var bus = openerp.bus = {};
 
-    bus.ERROR_DELAY = 30000;
+    bus.ERROR_DELAY = 10000;
 
     bus.Bus = openerp.Widget.extend({
         init: function(){
@@ -24,7 +24,8 @@
                 _.each(result, _.bind(self.on_notification, self));
                 self.poll();
             }, function(unused, e) {
-                setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY);
+                // random delay to avoid massive longpolling
+                setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
             });
         },
         on_notification: function(notification) {

@@ -37,6 +37,7 @@ This module adds several restaurant features to the Point of Sale:
 
 """,
     'author': 'OpenERP SA',
+    'website': 'https://www.odoo.com',
     'depends': ['point_of_sale'],
     'data': [
         'restaurant_view.xml',

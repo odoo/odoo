@@ -44,7 +44,7 @@ Dashboard / Reports for Purchase Management will include:
 * Purchase Analysis
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/purchase',
     'images': ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
     'depends': ['stock_account', 'report'],
     'data': [
@@ -64,6 +64,7 @@ Dashboard / Reports for Purchase Management will include:
         'report/purchase_report_view.xml',
         'edi/purchase_order_action_data.xml',
         'res_config_view.xml',
+        'purchase_tip_data.xml',
 
         'views/report_purchaseorder.xml',
         'views/report_purchasequotation.xml',

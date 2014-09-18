@@ -22,7 +22,6 @@
 from operator import itemgetter
 import time
 
-from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp import api
 
@@ -66,16 +65,16 @@ class account_fiscal_position(osv.osv):
                 result.add(t.id)
         return list(result)
 
-    @api.v8
+    @api.v8     # noqa
     def map_tax(self, taxes):
-        result = taxes.browse()
+        result = self.env['account.tax'].browse()
         for tax in taxes:
-            found = False
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
-                    result |= t.tax_dest_id
-                    found = True
-            if not found:
+                    if t.tax_dest_id:
+                        result |= t.tax_dest_id
+                    break
+            else:
                 result |= tax
         return result
 
@@ -224,8 +223,8 @@ class res_partner(osv.osv):
         account_invoice_report = self.pool.get('account.invoice.report')
         for partner in self.browse(cr, uid, ids, context=context):
             domain = [('partner_id', 'child_of', partner.id)]
-            invoice_ids = account_invoice_report.search(cr, SUPERUSER_ID, domain, context=context)
-            invoices = account_invoice_report.browse(cr, SUPERUSER_ID, invoice_ids, context=context)
+            invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
+            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
             result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
         return result
 

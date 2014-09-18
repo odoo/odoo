@@ -42,6 +42,10 @@ class lazy_property(object):
         setattr(obj, self.fget.__name__, value)
         return value
 
+    @property
+    def __doc__(self):
+        return self.fget.__doc__
+
     @staticmethod
     def reset_all(obj):
         """ Reset all lazy properties on the instance `obj`. """

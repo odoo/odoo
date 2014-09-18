@@ -267,7 +267,6 @@
                 this.set("pending", this.get("pending") + 1);
             }
             this.insert_messages([message]);
-            this._go_bottom();
         },
         send_message: function(message, type) {
             var self = this;
@@ -325,8 +324,18 @@
             });
             // render and set the content of the chatview
             this.$('.oe_im_chatview_content_bubbles').html($(openerp.qweb.render("im_chat.Conversation_content", {"list": res})));
+            this._go_bottom();
         },
         keydown: function(e) {
+            if(e && e.which == 27) {
+                if(this.$el.prev().find('.oe_im_chatview_input').length > 0){
+                    this.$el.prev().find('.oe_im_chatview_input').focus();
+                }else{
+                    this.$el.next().find('.oe_im_chatview_input').focus();
+                }
+                e.stopPropagation();
+                this.update_fold_state('closed');
+            }
             if(e && e.which !== 13) {
                 return;
             }
@@ -471,8 +480,8 @@
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
 
-            this.on("change:current_search", this, this.search_changed);
-            this.search_changed();
+            this.on("change:current_search", this, this.search_users_status);
+            this.search_users_status();
 
             // add a drag & drop listener
             self.c_manager.on("im_session_activated", self, function(conv) {
@@ -505,7 +514,7 @@
         input_change: function() {
             this.set("current_search", this.$(".oe_im_searchbox").val());
         },
-        search_changed: function(e) {
+        search_users_status: function(e) {
             var user_model = new openerp.web.Model("res.users");
             var self = this;
             return this.user_search_dm.add(user_model.call("im_search", [this.get("current_search"),
@@ -531,6 +540,7 @@
             this.calc_box();
             var fct =  _.bind(function(place) {
                 this.set("right_offset", place + this.$el.outerWidth());
+                this.$(".oe_im_searchbox").focus();
             }, this);
             var opt = {
                 step: fct,
@@ -540,10 +550,12 @@
                     right: -this.$el.outerWidth(),
                 }, opt);
             } else {
-                 if (! openerp.bus.bus.activated) {
+                if (! openerp.bus.bus.activated) {
                     this.do_warn("Instant Messaging is not activated on this server. Try later.", "");
                     return;
                 }
+                // update the list of user status when show the IM
+                this.search_users_status();
                 this.$el.animate({
                     right: 0,
                 }, opt);
@@ -580,13 +592,18 @@
         openerp.web.UserMenu.include({
             do_update: function(){
                 var self = this;
-                this.update_promise.then(function() {
-                    var im = new openerp.im_chat.InstantMessaging(self);
-                    openerp.im_chat.single = im;
-                    im.appendTo(openerp.client.$el);
-                    var button = new openerp.im_chat.ImTopButton(this);
-                    button.on("clicked", im, im.switch_display);
-                    button.appendTo(window.$('.oe_systray'));
+                var Users = new openerp.web.Model('res.users');
+                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+                    if (is_employee) {
+                        self.update_promise.then(function() {
+                            var im = new openerp.im_chat.InstantMessaging(self);
+                            openerp.im_chat.single = im;
+                            im.appendTo(openerp.client.$el);
+                            var button = new openerp.im_chat.ImTopButton(this);
+                            button.on("clicked", im, im.switch_display);
+                            button.appendTo(window.$('.oe_systray'));
+                        });
+                    }
                 });
                 return this._super.apply(this, arguments);
             },

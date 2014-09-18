@@ -37,8 +37,8 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="6"/>
-        <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="50"/>
+        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="8"/>
+        <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="8"/>
         <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="20"/>
 
 
@@ -126,7 +126,7 @@
                         </group>
                         <notebook>
                             <page string="Budget Lines">
-                                <field name="crossovered_budget_line" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string="Budget Lines">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                         <field name="general_budget_id"/>

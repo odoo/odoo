@@ -65,40 +65,75 @@ class StockMove(osv.osv):
         """
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
+        prod_obj = self.pool.get("product.product")
+        proc_obj = self.pool.get("procurement.order")
+        uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
         processed_ids = []
         bis = self._check_phantom_bom(cr, uid, move, context=context)
         if bis:
-            factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [])
+            factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
+            
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
             for line in res[0]:
-                valdef = {
-                    'picking_id': move.picking_id.id if move.picking_id else False,
-                    'product_id': line['product_id'],
-                    'product_uom': line['product_uom'],
-                    'product_uom_qty': line['product_qty'],
-                    'product_uos': line['product_uos'],
-                    'product_uos_qty': line['product_uos_qty'],
-                    'state': state,
-                    'name': line['name'],
-                    'procurement_id': move.procurement_id.id,
-                    'split_from': move.id, #Needed in order to keep purchase connection, but will be removed by unlink
-                }
-                mid = move_obj.copy(cr, uid, move.id, default=valdef)
-                to_explode_again_ids.append(mid)
+                product = prod_obj.browse(cr, uid, line['product_id'], context=context)
+                if product.type != 'service':
+                    valdef = {
+                        'picking_id': move.picking_id.id if move.picking_id else False,
+                        'product_id': line['product_id'],
+                        'product_uom': line['product_uom'],
+                        'product_uom_qty': line['product_qty'],
+                        'product_uos': line['product_uos'],
+                        'product_uos_qty': line['product_uos_qty'],
+                        'state': state,
+                        'name': line['name'],
+                        'procurement_id': move.procurement_id.id,
+                        'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
+                    }
+                    mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
+                    to_explode_again_ids.append(mid)
+                else:
+                    if prod_obj.need_procurement(cr, uid, [product.id], context=context):
+                        valdef = {
+                            'name': move.rule_id and move.rule_id.name or "/",
+                            'origin': move.origin,
+                            'company_id': move.company_id and move.company_id.id or False,
+                            'date_planned': move.date,
+                            'product_id': line['product_id'],
+                            'product_qty': line['product_qty'],
+                            'product_uom': line['product_uom'],
+                            'product_uos_qty': line['product_uos_qty'],
+                            'product_uos': line['product_uos'],
+                            'group_id': move.group_id.id,
+                            'priority': move.priority,
+                            'partner_dest_id': move.partner_id.id,
+                            }
+                        if move.procurement_id:
+                            proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
+                        else:
+                            proc = proc_obj.create(cr, uid, valdef, context=context)
+                        proc_obj.run(cr, uid, [proc], context=context) #could be omitted
 
-            #delete the move with original product which is not relevant anymore
-            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+            
             #check if new moves needs to be exploded
             if to_explode_again_ids:
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
                     processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
-        #return list of newly created move or the move id otherwise
-        return processed_ids or [move.id]
+            
+            if not move.split_from and move.procurement_id:
+                # Check if procurements have been made to wait for
+                moves = move.procurement_id.move_ids
+                if len(moves) == 1:
+                    proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
+                
+            #delete the move with original product which is not relevant anymore
+            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+        #return list of newly created move or the move id otherwise, unless there is no move anymore
+        return processed_ids or (not bis and [move.id]) or []
 
     def action_confirm(self, cr, uid, ids, context=None):
         move_ids = []
@@ -194,9 +229,12 @@ class StockMove(osv.osv):
             ids = [ids]
         res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.raw_material_production_id and move.raw_material_production_id.state == 'confirmed':
-                workflow.trg_trigger(uid, 'stock.move', move.id, cr)
+        if vals.get('state') == 'assigned':
+            moves = self.browse(cr, uid, ids, context=context)
+            orders = list(set([x.raw_material_production_id.id for x in moves if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
+            for order_id in orders:
+                if self.pool.get('mrp.production').test_ready(cr, uid, [order_id]):
+                    workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
         return res
 
 class stock_warehouse(osv.osv):

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="account_import_tip_1">
+            <field name="title"><![CDATA[<b>Import Statement</b>]]></field>
+            <field name="description">Click here to import your electronic bank statements. This will import of all movements in and out across all your accounts.</field>
+            <field name="action_id" ref="account.action_invoice_tree1"/>
+            <field name="model">account.invoice</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view:visible, header > button.oe_button:nth-child(8):not(.oe_form_invisible)</field>
+            <field name="highlight_selector">span.oe_menu_text:contains('Import Bank Statements')</field>
+            <field name="placement">right</field>
+        </record>
+    </data>
+</openerp>

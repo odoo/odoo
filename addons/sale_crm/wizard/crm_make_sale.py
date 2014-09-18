@@ -101,6 +101,7 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
+                    'opportunity_id': case.id
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
