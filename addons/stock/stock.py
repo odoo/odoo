@@ -3623,7 +3623,7 @@ class stock_package(osv.osv):
 
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id, 'owner_id': False})
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
@@ -4113,7 +4113,7 @@ class stock_picking_type(osv.osv):
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
-        res = dict.fromkeys(ids, [])
+        res = {}
         for picking_type_id in ids:
             #get last 10 pickings of this type
             picking_ids = picking_obj.search(cr, uid, [('picking_type_id', '=', picking_type_id), ('state', '=', 'done')], order='date_done desc', limit=10, context=context)
