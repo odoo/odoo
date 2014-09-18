@@ -56,7 +56,7 @@
             website.prompt({
                 id: "editor_new_version",
                 window_title: _t("New version"),
-                input: "version name" ,
+                input: "Version name" ,
                 default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
