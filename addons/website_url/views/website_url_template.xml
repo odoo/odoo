@@ -7,6 +7,12 @@
             <script type="text/javascript" src="/website_url/static/src/js/ZeroClipboard.min.js"/>
         </template>
 
+        <template id="assets_nvd3">
+            <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
+            <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+            <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+        </template>
+
         <template id="create_shorten_url">
             <div class="container-fluid jumbotron">
                 <div class="row">
@@ -18,6 +24,59 @@
                     </div>
                 </div>
             </div>
+        </template>
+
+        <template id="graphs">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <t t-call-assets="website_url.assets_website_url"/>
+                    <t t-call-assets="website_url.assets_nvd3"/>
+                </t>
+                <div class="container">
+                <div class="row">
+                <!-- Tabs -->
+                <ul class="nav nav-tabs hidden-print">
+                    <li class="active">
+                        <a href="#all_chart" data-toggle="tab">All</a>
+                    </li>
+                    <li>
+                        <a href="#hour_chart" data-toggle="tab">Last Hour</a>
+                    </li>
+                    <li>
+                        <a href="#today_chart" data-toggle="tab">Today</a>
+                    </li>
+                    <li>
+                        <a href="#week_chart" data-toggle="tab">Week</a>
+                    </li>
+                    <li>
+                        <a href="#month_chart" data-toggle="tab">Month</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="all_chart">
+                        <svg style="height:20em"></svg>
+                    </div>
+                    <div class="tab-pane" id="hour_chart">
+                        <svg style="height:20em"></svg>
+                    </div>
+                    <div class="tab-pane" id="today_chart">
+                        <svg style="height:20em"></svg>
+                    </div>
+                    <div class="tab-pane" id="week_chart">
+                        <svg style="height:20em"></svg>
+                    </div>
+                    <div class="tab-pane" id="month_chart">
+                        <svg style="height:20em"></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                <div id="pie_chart">
+                    <svg style="height:20em"></svg>
+                  </div>
+                </div>
+              </div>
+            </t>
         </template>
 
         <template id="page_shorten_url">
