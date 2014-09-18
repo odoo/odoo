@@ -617,7 +617,7 @@ class website_sale(http.Controller):
         # if tx:
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
-        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
+        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
         values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
         for acquirer in values['acquirers']:
