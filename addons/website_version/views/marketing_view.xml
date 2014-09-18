@@ -39,7 +39,7 @@
                               <field name="name"/>
                             </div>
                             <div class="oe_clear"></div>
-                            <field name="experiment_snapshot_ids"/>
+                            <div> <field name="version_number"/> version </div>
                             <div class="oe_clear"></div>
                           </div>
                         </t> 
@@ -83,6 +83,7 @@
                 <tree string="Experiment tree">
                     <field name="name" />
                     <field name="state"/>
+                    <field name="sequence" widget="handle"/>
                 </tree>
             </field>
         </record>

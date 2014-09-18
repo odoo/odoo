@@ -16,11 +16,11 @@
         })();
 
         var view_id = $('html').attr('data-view-xmlid');
+        console.log(view_id);
         openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
                     console.log(result);
+                    _gaq.push(['_setCustomVar', 4, result['experiment_id'], result['snapshot_id'], 1]);
                 });
-        console.log(view_id);
-        _gaq.push(['_setCustomVar', 4, 'view_id', view_id, 1]);
     });
     
 })();

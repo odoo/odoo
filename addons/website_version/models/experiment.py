@@ -18,12 +18,17 @@ class Experiment_snapshot(osv.Model):
 class Experiment(osv.Model):
     _name = "website_version.experiment"
 
-    def _get_denom(self, cr, uid, ids, name, arg, context=None):
+    def _get_version_number(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for exp in self.browse(cr, uid, ids, context=context):
             result[exp.id] = 0
+            sum_pond = 0
             for exp_snap in exp.experiment_snapshot_ids:
-                    result[exp.id] += exp_snap.ponderation
+                    sum_pond += int(exp_snap.frequency)
+                    result[exp.id] += 1
+            if sum_pond < 100:
+                #We must considerate master
+                result[exp.id] += 1
         return result
     
     _columns = {
@@ -32,12 +37,16 @@ class Experiment(osv.Model):
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False),
         'color': fields.integer('Color Index'),
-        'denominator' : fields.function(_get_denom,type='integer'),
+        'version_number' : fields.function(_get_version_number,type='integer'),
+        'sequence': fields.integer('Sequence', required=True, help="Test."),
     }
 
     _defaults = {
         'state': 'draft',
+        'sequence': 1,
     }
+
+    _order = 'sequence'
 
     # _group_by_full = {
     #     'state': lambda *args, **kwargs :['draft','running','done'],
