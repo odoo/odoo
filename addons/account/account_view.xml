@@ -778,7 +778,8 @@
             parent="account_account_menu"
             groups="account.group_account_manager"
             sequence="4"/>
-        <menuitem action="action_account_operation_template" id="menu_action_account_operation_template" parent="menu_configuration_misc" name="Operation Templates" sequence="22"/>
+        
+        <menuitem action="action_account_operation_template" id="menu_action_account_operation_template" parent="account_template_folder" name="Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">
