@@ -23,6 +23,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.session = session;
+            this.project_timesheet_widget = attributes.project_timesheet_widget;
             this.id = null;
             this.name = null;
             this.project_id = null;
@@ -67,9 +68,23 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.set({
                 projects: new project_timesheet.ProjectCollection()
             });
+            this.screen_data = {};  // see ScreenSelector
         },
         add_new_project: function() {
             //TO Implement, will create new object of model and add it into collection
+        },
+        set_screen_data: function(key,value){
+            if(arguments.length === 2){
+                this.screen_data[key] = value;
+            }else if(arguments.length === 1){
+                for(key in arguments[0]){
+                    this.screen_data[key] = arguments[0][key];
+                }
+            }
+        },
+        //return screen data based on key passed
+        get_screen_data: function(key){
+            return this.screen_data[key];
         },
     });
 

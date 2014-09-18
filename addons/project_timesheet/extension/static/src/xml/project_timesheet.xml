@@ -4,10 +4,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="ProjectTimesheet">
         <div class="pt_application">
-            <div class="content_area"></div>
-            <div class="pt_footer"></div>
+            <div class="screens"></div>
+            <!-- <div class="pt_footer"></div> -->
         </div>
     </t>
+
     <t t-name="ActivityScreen">
         <div class="content_area">
             <div class="container pt_activity">
@@ -15,6 +16,7 @@
                     <span>Heyyy, here content will come...</span>
                 </div>
             </div>
+            <t t-call="Footer"></t>
         </div>
     </t>
 
