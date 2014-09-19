@@ -12,10 +12,12 @@ openerp.account = function (instance) {
     instance.web.account = instance.web.account || {};
 
     // NOTE
-    // "implementation classes" must declare a
-    // this.children_widget = instance.web.account.implementationOfAbstractReconciliationLine
-    // and may specify a template_prefix property (ex : methods in the abstract widget that 
-    // renders templates will try template_prefix_some_template before to try some_template)
+    // - "implementation classes" must declare a
+    //   this.children_widget = instance.web.account.implementationOfAbstractReconciliationLine
+    // - They may specify a template_prefix property (ex : methods in the abstract widget that 
+    //   renders templates will try template_prefix_some_template before to try some_template)
+    // - When a method's body is left empty, it means it should be defined by implementation classes
+
     instance.web.account.abstractReconciliation = instance.web.Widget.extend({
         className: 'oe_reconciliation',
 
@@ -23,30 +25,30 @@ openerp.account = function (instance) {
     
         init: function(parent, context) {
             this._super(parent);
-            this.max_reconciliations_displayed = 10;
-            this.formatCurrencies; // Method that formats the currency ; loaded from the server
+            this.max_reconciliations_displayed = 3;
     
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
     
             // Stuff used by the children reconciliationLine
+            this.crash_manager = new instance.web.CrashManager();
+            this.formatCurrencies; // Method that formats the currency ; loaded from the server
             this.model_res_users = new instance.web.Model("res.users");
             this.model_tax = new instance.web.Model("account.tax");
             this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
             this.map_tax_id_amount = {};
-            // We'll need to get the code of an account selected in a many2one (whose value is the id)
+            // We'll need to get the code of an account selected in a many2one field (which returns the id)
             this.map_account_id_code = {};
-
-            // Description of the fields to initialize in the "create new line" form
             // NB : for presets to work correctly, a field id must be the same string as a preset field
             this.presets = {};
+            // Description of the fields to initialize in the "create new line" form
             this.create_form_fields = {
                 account_id: {
                     id: "account_id",
-                    index: 0,
+                    index: 0, // position in the form
                     corresponding_property: "account_id", // a account.move field name
                     label: _t("Account"),
                     required: true,
@@ -734,7 +736,6 @@ openerp.account = function (instance) {
         updateMatches: function() {
             var self = this;
             var deselected_lines_num = self.mv_lines_deselected.length;
-            var move_lines_num = 0;
             var offset = self.get("pager_index") * self.max_move_lines_displayed - deselected_lines_num;
             if (offset < 0) offset = 0;
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
@@ -851,39 +852,32 @@ openerp.account = function (instance) {
         },
     
         // Persist data, notify parent view and terminate widget
-        persistAndDestroy: function(speed) {
+        persistAndDestroy: function() {
             var self = this;
-            speed = (isNaN(speed) ? self.animation_speed : speed);
-            if (! self.is_consistent) return;
-            
-            // Sliding animation
+            self.persist().then(function(){ self.destroy() });
+        },
+
+        persist: function() {},
+
+        destroy: function(speed) {
+            speed = speed === undefined ? this.animation_speed : speed;
+            var super_destroy = this._super;
+            var self = this;
+            $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
             var height = self.$el.outerHeight();
             var container = $("<div />");
             container.css("height", height)
                      .css("marginTop", self.$el.css("marginTop"))
                      .css("marginBottom", self.$el.css("marginBottom"));
             self.$el.wrap(container);
-            var deferred_animation = self.$el.parent().slideUp(speed*height/150);
-    
-            // RPC
-            return $.when(self.makeRPCForPersisting())
-                .then(function () {
-                    $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
-                    return $.when(deferred_animation).then(function(){
-                        self.$el.parent().remove();
-                        var parent = self.getParent();
-                        return $.when(self.destroy()).then(function() {
-                            parent.childValidated(self);
-                        });
-                    });
-                }, function(){
-                    self.$el.parent().slideDown(speed*height/150, function(){
-                        self.$el.unwrap();
-                    });
+            self.$el.parent().slideUp(speed*height/150, function() {
+                self.$el.parent().remove();
+                var parent = self.getParent();
+                return $.when(super_destroy.call(self)).then(function() {
+                    parent.childValidated(self);
                 });
+            });
         },
-
-        makeRPCForPersisting: function() {},
     });
 
     instance.web.client_actions.add('bank_statement_reconciliation_view', 'instance.web.account.bankStatementReconciliation');
@@ -1058,23 +1052,16 @@ openerp.account = function (instance) {
         persistReconciliations: function(reconciliations) {
             if (reconciliations.length === 0) return;
             var self = this;
-            // Prepare data
-            var data = [];
-            for (var i=0; i<reconciliations.length; i++) {
-                var child = reconciliations[i];
-                data.push([child.st_line_id, child.makeMoveLineDicts()]);
-            }
+            var data = _.collect(reconciliations, function(o) {
+                return [o.st_line_id, o.makeMoveLineDicts()];
+            });
             var deferred_animation = self.$(".reconciliation_lines_container").fadeOut(self.aestetic_animation_speed);
             var deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [data]);
             return $.when(deferred_animation, deferred_rpc)
                 .done(function() {
                     // Remove children
-                    for (var i=0; i<reconciliations.length; i++) {
-                        var child = reconciliations[i];
-                        self.unexcludeMoveLines(child, child.partner_id, child.get("mv_lines_selected"));
-                        $.each(child.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
-                        child.destroy();
-                    }
+                    for (var i=0; i<reconciliations.length; i++)
+                        reconciliations[i].destroy(0);
                     // Update interface
                     self.lines_reconciled_with_ctrl_enter += reconciliations.length;
                     self.reconciled_lines += reconciliations.length;
@@ -1373,7 +1360,7 @@ openerp.account = function (instance) {
             }
     
             this.st_line_id = context.line_id;
-            this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
+            this.model_bank_statement_line = this.getParent().model_bank_statement_line;
             this.presets = this.getParent().presets;
         },
 
@@ -1544,7 +1531,7 @@ openerp.account = function (instance) {
             // Warn the user if he's selecting lines from both a payable and a receivable account
             var last_selected_line = _.last(self.get("mv_lines_selected"));
             if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                new instance.web.CrashManager().show_warning({data: {
+                self.getParent().crash_manager.show_warning({data: {
                     exception_type: "Chair-To-Keyboard Interface",
                     message: _.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type)
                 }});
@@ -1592,7 +1579,6 @@ openerp.account = function (instance) {
         lineOpenBalanceClickHandler: function() {
             var self = this;
             if (self.get("mode") === "create") {
-                self.addLineBeingEdited();
                 self.set("mode", "match");
             } else {
                 self.set("mode", "create");
@@ -1841,11 +1827,15 @@ openerp.account = function (instance) {
             return mv_line_dicts;
         },
     
-        makeRPCForPersisting: function() {
-            var self = this;
-            return self.model_bank_statement_line.call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
-                .done(function(){ self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected")); });
+        persist: function() {
+            if (! this.is_consistent) return;
+            return this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]);
         },
+
+        destroy: function() {
+            this.getParent().unexcludeMoveLines(this, this.partner_id, this.get("mv_lines_selected"));
+            this._super();
+        }
     });
     
     instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
@@ -1861,6 +1851,8 @@ openerp.account = function (instance) {
             this.children_widget = instance.web.account.manualReconciliationLine;
             this.template_prefix = "manual_";
             this.model_aml = new instance.web.Model("account.move.line");
+            this.model_partner = new instance.web.Model("res.partner");
+            this.model_account = new instance.web.Model("account.account");
             this.title = "Journal Items to Reconcile";
             this.max_reconciliations_displayed = 2;
             this.max_move_lines_displayed = 30;
@@ -2035,19 +2027,20 @@ openerp.account = function (instance) {
 
         showDoneMessage: function() {
             this.$(".oe_form_sheet").append(QWeb.render("manual_reconciliation_done_message", {
-                title: "U done !",
+                title: "All done !",
             }));
-            var container = $("<div style='overflow: hidden;' />");
-            this.$(".done_message").wrap(container).css("opacity", 0).css("position", "relative").css("left", "-50%");
-            this.$(".done_message").animate({opacity: 1, left: 0}, this.aestetic_animation_speed*2, "easeOutCubic");
-            this.$(".done_message").animate({opacity: 1}, this.aestetic_animation_speed*3, "easeOutCubic");
+            // var container = $("<div style='overflow: hidden;' />");
+            // this.$(".done_message").wrap(container).css("opacity", 0).css("position", "relative").css("left", "-50%");
+            // this.$(".done_message").animate({opacity: 1, left: 0}, this.aestetic_animation_speed*2, "easeOutCubic");
+            // this.$(".done_message").animate({opacity: 1}, this.aestetic_animation_speed*3, "easeOutCubic");
+            this.$(".done_message").show(this.aestetic_animation_speed);
         },
 
         hideDoneMessage: function() {
-            var self = this;
-            this.$(".done_message").animate({opacity: 0, left: "-50%"}, this.aestetic_animation_speed*2, "easeOutCubic", function(){
-                self.$(".done_message").unwrap().remove();
-            });
+            this.$(".done_message").hide();
+            // this.$(".done_message").animate({opacity: 0, left: "-50%"}, this.aestetic_animation_speed*2, "easeOutCubic", function(){
+            //     self.$(".done_message").unwrap().remove();
+            // });
         },
 
         prepareReconciliationData: function(data) {
@@ -2219,7 +2212,6 @@ openerp.account = function (instance) {
             return self.model_aml
                 .call("get_move_lines_for_manual_reconciliation", [self.data.account_id, self.data.partner_id || undefined, excluded_ids, self.filter, offset, limit])
                 .then(function (lines) {
-                    debugger;
                     _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     callback.call(self, lines);
                 });
@@ -2248,16 +2240,19 @@ openerp.account = function (instance) {
             var id, model;
             if (this.data.account_type === "partner") {
                 id = this.data.partner_id;
-                model = "res.partner";
+                model = this.getParent().model_partner;
             } else if (this.data.account_type === "other") {
                 id = this.data.account_id;
-                model = "account.account";
+                model = this.getParent().model_account;
             }
-            new instance.web.Model(model).call("mark_as_reconciled", [[id]]).then(function() {
+            model.call("mark_as_reconciled", [[id]]).then(function() {
                 self.persistAndDestroy();
             });
         },
 
-        makeRPCForPersisting: function() {},
+        persist: function() {
+            var self = this;
+            if (! self.is_consistent) return;
+        },
     });
 };
