@@ -7,6 +7,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website
 from openerp.addons.website_sale.controllers.main import website_sale
+from cStringIO import StringIO
 from werkzeug.utils import redirect
 
 
@@ -110,13 +111,8 @@ class website_sale_digital(website_sale):
             else:
                 return request.not_found()
         elif attachment["datas"]:
-            data = base64.standard_b64decode(attachment["datas"])
-            headers = [
-                ('Content-Type', attachment['file_type']),
-                ('Content-Length', len(data)),
-                ('Content-Disposition', 'attachment; filename="' + attachment['name'] + '"')
-            ]
-            return request.make_response(data, headers)
+            data = StringIO(base64.standard_b64decode(attachment["datas"]))
+            return http.send_file(data, filename=attachment['name'], as_attachment=True)
         else:
             return request.not_found()
 
