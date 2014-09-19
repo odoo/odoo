@@ -19,5 +19,73 @@
             </form>
         </template>
 
+        <template id="custom_acquirer_button">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+                <t t-if="tx_values.get('return_url')">
+                    <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
+                </t>
+                <input type='hidden' name='reference' t-att-value='reference'/>
+                <input type='hidden' name='amount' t-att-value='amount or "0.0"'/>
+                <input type='hidden' name='currency' t-att-value='currency.name'/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_transfer/static/src/img/transfer_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+        <template id="payment_details" name="Custom Payment Details">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                    <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
+                    <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+                    <t t-raw="head or ''"/>
+                </t>
+                <t t-set="additional_title">Shop - Payment Details</t>
+                <div id="wrap">
+                    <div class="container oe_website_sale">
+                        <h1>Your Payment Details</h1>
+                        <form action="/payment/custom/feedback" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-8 oe_cart">
+                                    <h3 class="page-header mt16" id="form_header"></h3>
+                                    <div class="row">
+                                        <t t-foreach="kwargs" t-as="kwarg">
+                                            <input type="hidden" t-att-name="kwarg[0]" t-att-value="kwarg[1]"/>
+                                        </t>
+                                    </div>
+                                    <a class="btn btn-default btn-primary pull-right mb32 a-submit">Confirm <span class="fa fa-long-arrow-right"/></a>
+                                </div>
+                                <div class="col-lg-offset-1 col-lg-3 col-md-3 text-muted">
+                                    <h3 class="page-header mt16">Your Order</h3>
+                                    <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
+                                    <div class="row">
+                                        <div class="col-sm-6 text-right">Subtotal:</div>
+                                        <div class="col-sm-6"><span t-field="website_sale_order.amount_untaxed" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/></div>
+                                        <div class="col-sm-6 text-right">Taxes:</div>
+                                        <div class="col-sm-6"><span t-field="website_sale_order.amount_tax" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/></div>
+                                        <div class="col-sm-6 text-right"><h4>Total To Pay:</h4></div>
+                                        <div class="col-sm-6"><h4><span t-field="website_sale_order.amount_total" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/></h4></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </t>
+        </template>
+
     </data>
 </openerp>
