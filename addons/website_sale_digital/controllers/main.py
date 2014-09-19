@@ -77,7 +77,7 @@ class website_sale_digital(website_sale):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id"]
+            ["name", "datas", "file_type", "res_model", "res_id", "type", "url"]
         )
         if attachment:
             attachment = attachment[0]
@@ -104,13 +104,21 @@ class website_sale_digital(website_sale):
             return redirect(self.downloads_page)
 
         # The client has bought the product, otherwise it would have been blocked by now
-        data = base64.standard_b64decode(attachment["datas"])
-        headers = [
-            ('Content-Type', attachment['file_type']),
-            ('Content-Length', len(data)),
-            ('Content-Disposition', 'attachment; filename="' + attachment['name'] + '"')
-        ]
-        return request.make_response(data, headers)
+        if attachment["type"] == "url":
+            if attachment["url"]:
+                return redirect(attachment["url"])
+            else:
+                return request.not_found()
+        elif attachment["datas"]:
+            data = base64.standard_b64decode(attachment["datas"])
+            headers = [
+                ('Content-Type', attachment['file_type']),
+                ('Content-Length', len(data)),
+                ('Content-Disposition', 'attachment; filename="' + attachment['name'] + '"')
+            ]
+            return request.make_response(data, headers)
+        else:
+            return request.not_found()
 
 
 class Website_Unpublished_Purchased_Products_Images(Website):
