@@ -172,10 +172,6 @@ class account_asset_asset(osv.osv):
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
-                company_currency = asset.company_id.currency_id.id
-                current_currency = asset.currency_id.id
-                # compute amount into company currency
-                amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -308,6 +304,7 @@ class account_asset_asset(osv.osv):
         asset_categ_obj = self.pool.get('account.asset.category')
         if category_id:
             category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
+            currency_id = category_obj.journal_id.currency and category_obj.journal_id.currency.id or category_obj.company_id.currency_id.id
             res['value'] = {
                             'method': category_obj.method,
                             'method_number': category_obj.method_number,
@@ -316,6 +313,7 @@ class account_asset_asset(osv.osv):
                             'method_progress_factor': category_obj.method_progress_factor,
                             'method_end': category_obj.method_end,
                             'prorata': category_obj.prorata,
+                            'currency_id': currency_id,
             }
         return res
 
