@@ -870,7 +870,7 @@ openerp.mail = function (session) {
         on_expandable: function (event) {
             if (event)event.stopPropagation();
             if (this.flag_used) {
-                return false
+                return false;
             }
             this.flag_used = true;
 
@@ -1266,6 +1266,7 @@ openerp.mail = function (session) {
             this.partner_ids = datasets.partner_ids;
             this.messages = [];
             this.options.flat_mode = (this.options.display_indented_thread - this.thread_level > 0);
+            this.options.fetch_limit = this.options.fetch_limit;
 
             // object compose message
             this.compose_message = false;
@@ -1301,13 +1302,13 @@ openerp.mail = function (session) {
         /* When the expandable object is visible on screen (with scrolling)
          * then the on_expandable function is launch
         */
-        on_scroll: function () {
-            var expandables = 
+        on_scroll: function (event) {
             _.each( _.filter(this.messages, function (val) {return val.max_limit && !val.parent_id;}), function (val) {
-                var pos = val.$el.position();
+                var pos = val.$el.offset();
                 if (pos.top) {
                     /* bottom of the screen */
-                    var bottom = $(window).scrollTop()+$(window).height()+200;
+                    var bottom = $(event && event.target).scrollTop()+$(event && event.target).height()+200;
+
                     if (bottom > pos.top) {
                         val.on_expandable();
                     }
@@ -1467,7 +1468,9 @@ openerp.mail = function (session) {
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
-                    this.context.default_parent_id || undefined
+                    this.context.default_parent_id || undefined, 
+                    // limit
+                    this.options.fetch_limit || undefined
                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
                 ).done(this.proxy('message_fetch_set_read'));
         },
@@ -1561,6 +1564,11 @@ openerp.mail = function (session) {
         switch_new_message: function (records, dom_insert_after) {
             var self=this;
             var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
+
+            if (self.options.display_indented_thread < 0) {
+                records.reverse();
+            }
+
             _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.parent_id, 
@@ -1569,7 +1577,7 @@ openerp.mail = function (session) {
                 // create object and attach to the thread object
                 var message = thread.create_message_object( record );
                 // insert the message on dom
-                thread.insert_message( message, dom_insert_after);
+                thread.insert_message( message, dom_insert_after, self.options.display_indented_thread < 0);
             });
             if (!records.length && this.options.root_thread == this) {
                 this.no_message();
@@ -1714,6 +1722,8 @@ openerp.mail = function (session) {
          *     @param {Boolean} [show_link] Display partner (authors, followers...) on link or not
          *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
          *     @param {Boolean} [readonly] Read only mode, hide all action buttons and composer
+         *     @param {expandable_on_scroll} Load automatically the messages on scroll
+         *...  @param {int} [fetch_limit] number of maximum messages fetch
          */
         init: function (parent, action) {
             this._super(parent, action);
@@ -1737,6 +1747,8 @@ openerp.mail = function (session) {
                 'compose_as_todo' : false,
                 'readonly' : false,
                 'emails_from_on_composer': true,
+                'expandable_on_scroll': true,
+                'fetch_limit': false
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
@@ -1789,10 +1801,13 @@ openerp.mail = function (session) {
         },
 
         bind_events: function () {
-            $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
-            $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
-            this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
-            window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
+            if (this.action.params.expandable_on_scroll) {
+                $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
+                $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
+                this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
+                $(".oe_view_manager_body").scroll( _.bind(this.thread.on_scroll, this.thread) );
+                window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
+            }
         },
     });
 
@@ -1823,6 +1838,8 @@ openerp.mail = function (session) {
                 'show_record_name': false,
                 'show_compact_message': 1,
                 'display_log_button' : true,
+                'expandable_on_scroll': false,
+                'fetch_limit': 25
             }, this.node.params);
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
