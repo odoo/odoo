@@ -199,6 +199,7 @@ $sheet-padding: 16px
     background: white
     &.openerp_webclient_container
         height: calc(100% - 34px)
+        overflow: auto
     @media (max-width: 768px)
         &.openerp_webclient_container
             height: calc(100% - 52px)
@@ -2794,7 +2795,7 @@ div.tour-backdrop
 // }}}
 
 body
-    overflow: auto
+    overflow: hidden
 
 // hack to make IE11 work
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 

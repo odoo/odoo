@@ -167,7 +167,7 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
-        'active': fields.boolean("Active", required=True,
+        'active': fields.boolean("Active",
             help="""If this view is inherited,
 * if True, the view always extends its parent
 * if False, the view currently does not extend its parent but can be enabled
@@ -257,7 +257,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
-        self.read_template.clear_cache(self)
+        self.clear_cache()
         return super(view, self).create(
             cr, uid,
             self._compute_defaults(cr, uid, values, context=context),
@@ -275,7 +275,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        self.read_template.clear_cache(self)
+        self.clear_cache()
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),

@@ -1097,6 +1097,7 @@ class mrp_production(osv.osv):
 
     def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
         stock_move = self.pool.get('stock.move')
+        loc_obj = self.pool.get('stock.location')
         # Internal shipment is created for Stockable and Consumer Products
         if product.type not in ('product', 'consu'):
             return False
@@ -1107,7 +1108,7 @@ class mrp_production(osv.osv):
         if production.bom_id.routing_id and production.bom_id.routing_id.location_id and production.bom_id.routing_id.location_id.id != source_location_id:
             source_location_id = production.bom_id.routing_id.location_id.id
             prev_move = True
-            
+
         destination_location_id = production.product_id.property_stock_production.id
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
@@ -1125,6 +1126,7 @@ class mrp_production(osv.osv):
             #this saves us a browse in create()
             'price_unit': product.standard_price,
             'origin': production.name,
+            'warehouse_id': loc_obj.get_warehouse(cr, uid, production.location_src_id, context=context),
         }, context=context)
         
         if prev_move:

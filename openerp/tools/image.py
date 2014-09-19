@@ -108,6 +108,7 @@ def image_resize_and_sharpen(image, size, factor=2.0):
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
     image.thumbnail(size, Image.ANTIALIAS)
+    size = image.size
     sharpener = ImageEnhance.Sharpness(image)
     resized_image = sharpener.enhance(factor)
     # create a transparent image for background and paste the image on it

@@ -36,6 +36,8 @@ class publisher_warranty_contract(AbstractModel):
             nbr_share_users = user_count([("share", "=", True)])
             nbr_active_share_users = user_count([("share", "=", True), ("login_date", ">=", limit_date_str)])
         user = Users.browse(cr, uid, uid)
+        domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
+        apps = self.pool['ir.module.module'].search_read(cr, uid, domain, ['name'])
 
         web_base_url = get_param('web.base.url')
         msg = {
@@ -49,6 +51,7 @@ class publisher_warranty_contract(AbstractModel):
             "version": release.version,
             "language": user.lang,
             "web_base_url": web_base_url,
+            "apps": [app['name'] for app in apps],
         }
         msg.update(self.pool.get("res.company").read(cr, uid, [1], ["name", "email", "phone"])[0])
         return msg

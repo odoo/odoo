@@ -133,7 +133,7 @@ class project_issue(osv.Model):
         """
         Calendar = self.pool['resource.calendar']
 
-        res = dict.fromkeys(ids, dict())
+        res = dict((res_id, {}) for res_id in ids)
         for issue in self.browse(cr, uid, ids, context=context):
             values = {
                 'day_open': 0.0, 'day_close': 0.0,
