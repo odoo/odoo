@@ -588,7 +588,6 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -600,6 +599,20 @@ class sale_order_line(osv.osv):
         if not product:
             res['value'].update({'product_packaging': False})
             return res
+        # Set the context's UoM to that of the product, so we can compare with virtual stock
+        uom_context = None
+        # If the product's onchange returns an UoM, use it
+        if 'value' in res and 'product_uom' in res['value']:
+            # The superclass changed the UoM, so we should base all further computations on the new UoM
+            uom_context = {'uom': res['value']['product_uom']}
+        # Otherwise, if the use's just selected a new UoM, use it
+        elif uom:
+            uom_context = {'uom': uom}
+        if uom_context is not None:
+            if context is None:
+                context = uom_context
+            else:
+                context.update(uom_context)
 
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
