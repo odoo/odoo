@@ -96,6 +96,21 @@
                         <div t-field="notification.body"/>
                         <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
                     </div>
+                    <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close validation_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <div>
+                            <p>
+                                It appears your email has not been verified.
+                                <a class="send_validation_email" href="#" t-att-forum-id="forum.id">Click here to send a verification email allowing you to participate to the forum.</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div t-if="validation_email_done" class="alert alert-success alert-dismissable">
+                        <button type="button" class="close validated_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <div>
+                            <p>Congratulations! Your email has just been validated. You may now participate to our forums.</p>
+                        </div>
+                    </div>
                     <t t-raw="0"/>
                 </div>
                 <div class="col-sm-3" id="right-column">
