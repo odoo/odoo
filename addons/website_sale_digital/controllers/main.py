@@ -135,6 +135,8 @@ class Website_Unpublished_Purchased_Products_Images(Website):
         if model in ['product.product', 'product.template']:
             # Confirm = False to display images in cart
             purchased_products = util.get_digital_purchases(request.uid, confirmed=False)
+            idsha = id.split('_')
+            id = idsha[0]
             if int(id) in purchased_products:
                 request.uid = SUPERUSER_ID
 
