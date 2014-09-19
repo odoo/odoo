@@ -54,6 +54,9 @@ td {
 .oe_hidden{
     display: none !important;
 }
+.oe_invisible{
+    visibility: hidden !important;
+}
 .clearfix:after {
     content:" ";
     display: block;
@@ -317,6 +320,11 @@ td {
     right:0;
     top:0;
     height:100%;
+    display: -webkit-flex;
+    display: flex;
+}
+.pos .pos-rightheader > * {
+    border-right: 1px solid #292929;
 }
 
 .pos .order-button{
@@ -347,6 +355,8 @@ td {
     height: 45px;
     border-bottom: solid 1px rgb(196, 196, 196);
     box-shadow: none;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .pos .order-button .order-sequence{
@@ -383,12 +393,19 @@ td {
 }
 
 .pos .order-selector {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
 }
 .pos .orders {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
     vertical-align: top;
     margin-left: 8px;
+    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */
