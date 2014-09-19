@@ -237,6 +237,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # transform columns into new-style fields (enables field inheritance)
+        for name, column in self._columns.iteritems():
+            if not hasattr(self, name):
+                setattr(self, name, column.to_field())
+
 
 class NewId(object):
     """ Pseudo-ids for new records. """
@@ -1679,8 +1684,9 @@ class BaseModel(object):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        for i, got_name in enumerate(self.name_get()):
-            self[i].display_name = got_name[1]
+        names = dict(self.name_get())
+        for record in self:
+            record.display_name = names.get(record.id, False)
 
     @api.multi
     def name_get(self):
@@ -1854,7 +1860,8 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys, aggregated_fields,
+    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys,
+                                 aggregated_fields, count_field,
                                  read_group_result, read_group_order=None, context=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
@@ -1888,8 +1895,7 @@ class BaseModel(object):
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
-                count_attr = groupby + '_count'
-                known_values[grouped_value].update({count_attr: left_side[count_attr]})
+                known_values[grouped_value].update({count_field: left_side[count_field]})
         def append_right(right_side):
             grouped_value = right_side[0]
             if not grouped_value in known_values:
@@ -2134,12 +2140,13 @@ class BaseModel(object):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
             count_field = '_'
+        count_field += '_count'
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count %(extra_fields)s
+            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s
@@ -2179,7 +2186,7 @@ class BaseModel(object):
             # method _read_group_fill_results need to be completely reimplemented
             # in a sane way 
             result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
-                                                       aggregated_fields, result, read_group_order=order,
+                                                       aggregated_fields, count_field, result, read_group_order=order,
                                                        context=context)
         return result
 
@@ -3540,6 +3547,7 @@ class BaseModel(object):
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
+        ir_attachment_obj = self.pool.get('ir.attachment')
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
                        'where id IN %s', (sub_ids,))
@@ -3560,6 +3568,13 @@ class BaseModel(object):
                     context=context)
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
+
+            # For the same reason, removing the record relevant to ir_attachment
+            # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
+            cr.execute('select id from ir_attachment where res_model = %s and res_id in %s', (self._name, sub_ids))
+            ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
+            if ir_attachment_ids:
+                ir_attachment_obj.unlink(cr, uid, ir_attachment_ids, context=context)
 
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
@@ -3679,6 +3694,7 @@ class BaseModel(object):
 
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
+        deleted_related = defaultdict(list)
         for field in vals.keys():
             fobj = None
             if field in self._columns:
@@ -3687,6 +3703,10 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
+            if fobj._type in ['one2many', 'many2many'] and vals[field]:
+                for wtuple in vals[field]:
+                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
+                        deleted_related[fobj._obj].append(wtuple[1])
             groups = fobj.write
 
             if groups:
@@ -3890,7 +3910,8 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    todo.append(id)
+                    if id not in deleted_related[model_name]:
+                        todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields

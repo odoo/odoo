@@ -564,7 +564,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         events: {
             'mousedown a.dropdown-toggle': 'load_menu',
-            'click ul a[data-action][data-action!=ace]': 'do_customize',
+            'click ul a[data-view-id]': 'do_customize',
         },
         start: function() {
             var self = this;
@@ -1386,6 +1386,10 @@
             },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
+            },
+            'click .js_disable_optimization': function () {
+                this.$('input[name="disable_optimization"]').val('1');
+                this.$('button.filepicker').click();
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',

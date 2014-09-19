@@ -19,7 +19,7 @@ class website_hr_recruitment(http.Controller):
         '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
         '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
     ], type='http', auth="public", website=True)
-    def jobs(self, country=None, department=None, office_id=None):
+    def jobs(self, country=None, department=None, office_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
         Country = env['res.country']
@@ -36,14 +36,16 @@ class website_hr_recruitment(http.Controller):
         countries = set(o.country_id for o in offices if o.country_id)
 
         # Default search by user country
-        if not (country or department or office_id):
+        if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.session['geoip'].get('country_code')
             if country_code:
                 countries_ = Country.search([('code', '=', country_code)])
                 country = countries_[0] if countries_ else None
+                if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
+                    country = False
 
         # Filter the matching one
-        if country:
+        if country and not kwargs.get('all_countries'):
             jobs = (j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
         if department:
             jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)

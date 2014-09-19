@@ -189,6 +189,16 @@ class stock_location(osv.osv):
         return self._default_removal_strategy(cr, uid, context=context)
 
 
+    def get_warehouse(self, cr, uid, location, context=None):
+        """
+            Returns warehouse id of warehouse that contains location
+            :param location: browse record (stock.location)
+        """
+        wh_obj = self.pool.get("stock.warehouse")
+        whs = wh_obj.search(cr, uid, [('view_location_id.parent_left', '<=', location.parent_left), 
+                                ('view_location_id.parent_right', '>=', location.parent_left)], context=context)
+        return whs and whs[0] or False
+
 #----------------------------------------------------------
 # Routes
 #----------------------------------------------------------
@@ -779,12 +789,12 @@ class stock_picking(osv.osv):
                 * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'priority': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_priority, type='selection', selection=procurement.PROCUREMENT_PRIORITIES, string='Priority',
-                                    store={'stock.move': (_get_pickings, ['priority'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves", 
+                                    store={'stock.move': (_get_pickings, ['priority', 'picking_id'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves",
                                     track_visibility='onchange', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
+                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Creation Date', help="Creation Date, usually the time of the order", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=True),
@@ -928,7 +938,8 @@ class stock_picking(osv.osv):
                 'pack_operation_ids': [],
                 'backorder_id': picking.id,
             })
-            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (picking.name), context=context)
+            backorder = self.browse(cr, uid, backorder_id, context=context)
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (backorder.name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
@@ -1525,12 +1536,6 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    def create(self, cr, uid, vals, context=None):
-        if vals.get('product_id') and not vals.get('price_unit'):
-            prod_obj = self.pool.get('product.product')
-            vals['price_unit'] = prod_obj.browse(cr, uid, vals['product_id'], context=context).standard_price
-        return super(stock_move, self).create(cr, uid, vals, context=context)
-
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -2020,6 +2025,13 @@ class stock_move(osv.osv):
             date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
+    def attribute_price(self, cr, uid, move, context=None):
+        """
+            Attribute price to move, important in inter-company moves or receipts with only one partner
+        """
+        if not move.price_unit:
+            price = move.product_id.standard_price
+            self.write(cr, uid, [move.id], {'price_unit': price})
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move or put it in waiting if it's linked to another move.
@@ -2033,6 +2045,7 @@ class stock_move(osv.osv):
         }
         to_assign = {}
         for move in self.browse(cr, uid, ids, context=context):
+            self.attribute_price(cr, uid, move, context=context)
             state = 'confirmed'
             #if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
@@ -2428,6 +2441,21 @@ class stock_move(osv.osv):
         #returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         #thus the result of action_confirm should always be a list of 1 element length)
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
+
+
+    def get_code_from_locs(self, cr, uid, move, context=None):
+        """
+        Returns the code the picking type should have.  This can easily be used
+        to check if a move is internal or not
+        """
+        code = 'internal'
+        src_loc = move.location_id
+        dest_loc = move.location_dest_id
+        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+            code = 'outgoing'
+        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+            code = 'incoming'
+        return code
 
 
 class stock_inventory(osv.osv):
@@ -3457,6 +3485,7 @@ class stock_warehouse(osv.osv):
             'limit': 20
         }
 
+
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
@@ -3503,6 +3532,21 @@ class stock_location_path(osv.osv):
         'active': True,
     }
 
+    def _prepare_push_apply(self, cr, uid, rule, move, context=None):
+        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return {
+                'location_id': move.location_dest_id.id,
+                'location_dest_id': rule.location_dest_id.id,
+                'date': newdate,
+                'company_id': rule.company_id and rule.company_id.id or False,
+                'date_expected': newdate,
+                'picking_id': False,
+                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
+                'propagate': rule.propagate,
+                'push_rule_id': rule.id,
+                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
+            }
+
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
         newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -3519,18 +3563,8 @@ class stock_location_path(osv.osv):
                 #call again push_apply to see if a next step is defined
                 move_obj._push_apply(cr, uid, [move], context=context)
         else:
-            move_id = move_obj.copy(cr, uid, move.id, {
-                'location_id': move.location_dest_id.id,
-                'location_dest_id': rule.location_dest_id.id,
-                'date': newdate,
-                'company_id': rule.company_id and rule.company_id.id or False,
-                'date_expected': newdate,
-                'picking_id': False,
-                'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'propagate': rule.propagate,
-                'push_rule_id': rule.id,
-                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
-            })
+            vals = self._prepare_push_apply(cr, uid, rule, move, context=context)
+            move_id = move_obj.copy(cr, uid, move.id, vals, context=context)
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })
@@ -3589,7 +3623,7 @@ class stock_package(osv.osv):
 
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id, 'owner_id': False})
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
@@ -4079,7 +4113,7 @@ class stock_picking_type(osv.osv):
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
-        res = dict.fromkeys(ids, [])
+        res = {}
         for picking_type_id in ids:
             #get last 10 pickings of this type
             picking_ids = picking_obj.search(cr, uid, [('picking_type_id', '=', picking_type_id), ('state', '=', 'done')], order='date_done desc', limit=10, context=context)
