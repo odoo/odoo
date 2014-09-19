@@ -1,42 +1,42 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* analytic
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-08 08:19+0000\n"
+"PO-Revision-Date: 2014-09-08 15:34+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:277
+#: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (sao chép)"
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Kiến trúc Tài khoản"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr "Người quản lý Tài Khoản"
+msgstr "Quản lý Tài Khoản"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "Tên Tài khoản/Hợp đồng"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
@@ -44,32 +44,31 @@ msgid "Amount"
 msgstr "Giá trị"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
-#: selection:account.analytic.account,type:0
+#: view:account.analytic.account:0 selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Tài khoản Phân tích"
+msgstr "Tài khoản quản trị"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Kế toán quản trị"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Bút toán quản trị"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Phát sinh quản trị"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "Analytic View"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -82,6 +81,8 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Được tính toán bằng cách chia số lượng và giá thành của Sản phẩm. Luôn luôn "
+"được thể hiện bằng tiền tệ chính của công ty"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -107,64 +108,48 @@ msgstr "Công ty"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
 msgid "Contract Finished"
-msgstr ""
+msgstr "Hợp đồng đã kết thúc"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Contract Information"
-msgstr ""
+msgstr "Thông tin hợp đồng"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
 msgid "Contract Opened"
-msgstr ""
+msgstr "Hợp đồng đã mở"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_closed
 msgid "Contract closed"
-msgstr ""
+msgstr "Hợp đồng đã đóng"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
 msgid "Contract opened"
-msgstr ""
+msgstr "Hợp đồng đã mở"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Contract or Project"
-msgstr ""
+msgstr "Hợp đồng hoặc Dự án"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_pending
 msgid "Contract pending"
-msgstr ""
+msgstr "Hợp đồng đang chờ"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "Hợp đồng cần gia hạn"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:238
+#: code:addons/analytic/analytic.py:230
 #, python-format
 msgid "Contract: "
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.line,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,create_uid:0
-#: field:account.analytic.line,create_uid:0
-msgid "Created by"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,create_date:0
-msgid "Created on"
-msgstr ""
+msgstr "Hợp đồng: "
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -174,12 +159,12 @@ msgstr "Bên có"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Tiền tệ"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Khách hàng"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -189,7 +174,7 @@ msgstr "Ngày"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Ngày của thông điệp gần nhất được vào sổ trên bản ghi."
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -203,35 +188,35 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "Ngày kết thúc"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Lỗi!"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
+msgstr "Lỗi! Bạn không thể tạo tài khoản quản trị lặp đi lặp lại."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "Ngày hết hạn"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Người theo dõi"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Name"
-msgstr ""
+msgstr "Tên đầy đủ"
 
 #. module: analytic
 #: help:account.analytic.account,message_summary:0
@@ -239,17 +224,13 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
-msgid "ID"
-msgstr ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "If checked new messages require your attention."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -263,6 +244,14 @@ msgid ""
 "The special type 'Template of Contract' allows you to define a template with "
 "default data that you can reuse easily."
 msgstr ""
+"Nếu bạn chọn kiểu 'View', có nghĩa là bạn không được phép tạo phát sinh cho "
+"tài khoản đó.\n"
+"Loại 'Tài khoản quản trị' đại diện cho tài khoản thông thường mà bạn chỉ "
+"muốn sử dụng trong kế toán.\n"
+"Nếu bạn chọn loại 'Hợp đồng hoặc Dự án', nó cung cấp cho bạn khả năng quản "
+"lý hiệu lực và tùy chọn xuất hóa đơn cho tài khoản này.\n"
+"Loại đặc biệt 'Mẫu hợp đồng' cho phép bạn định nghĩa một mẫu với dữ liệu mặc "
+"định mà bạn có thể dễ dàng dùng lại."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -274,51 +263,41 @@ msgid ""
 "analytic account of type 'view'. This can be really useful for consolidation "
 "purposes of several companies charts with different currencies, for example."
 msgstr ""
+"Nếu bạn thiết lập một công ty, tiền tệ được chọn phải trùng với tiền tệ của "
+"công ty."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Đang xử lý"
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Là một người theo dõi"
 
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,write_uid:0
-#: field:account.analytic.line,write_uid:0
-msgid "Last Updated by"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.account,write_date:0
-#: field:account.analytic.line,write_date:0
-msgid "Last Updated on"
-msgstr ""
+msgstr "Ngày thông điệp gần nhất"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Thông điệp"
 
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Lịch sử thông điệp và liên lạc"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Mới"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
 "                                        passed or the maximum number of "
@@ -330,21 +309,27 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"Khi ngày kết thúc hợp đồng bị vượt quá\n"
+"                                        hoặc đạt đến số tối đa của đơn vị "
+"dịch vụ (ví dụ: số lần hỗ trợ)\n"
+"                                        người quản lý tài khoản được thông "
+"báo bằng email \n"
+"                                        để gia hạn hợp đồng cho khách hàng."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "Tài khoản quản trị cha"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr ""
+msgstr "Đơn vị dịch vụ trả trước"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Người quản trị dự án"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -353,20 +338,20 @@ msgid "Quantity"
 msgstr "Số lượng"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:263
 #, python-format
 msgid "Quick account creation disallowed."
-msgstr ""
+msgstr "Việc tạo tài khoản tắt không được phép"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Tham chiếu"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Renewal"
-msgstr ""
+msgstr "Gia hạn"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -374,57 +359,59 @@ msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
+"Thiết lập giới hạn cao hơn của thời gian làm việc trên hợp đồng, dựa trên "
+"bảng chấm công (ví dụ: số giờ hỗ trợ giới hạn trong hợp đồng hỗ trợ)"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Specifies the amount of quantity to count."
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Ngày bắt đầu"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tình trạng"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Tóm tắt"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr ""
+msgstr "Mẫu"
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "Mẫu hợp đồng"
 
 #. module: analytic
-#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: view:account.analytic.account:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Điều khoản và điều kiện"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "Chờ gia hạn"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr ""
+msgstr "Loại tài khoản"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Thông điệp chưa đọc"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -432,12 +419,12 @@ msgid "User"
 msgstr "Người dùng"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:263
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Cảnh báo"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "Bạn không thể tạo phát sinh trên tài khoản view."

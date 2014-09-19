@@ -1,24 +1,24 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-10 07:02+0000\n"
+"PO-Revision-Date: 2014-09-10 14:19+0700\n"
+"Last-Translator: Leo Tran <leo.tran@tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation (aka TVTMA) <support@ma.tvtmarine."
+"com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:50+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:261
+#: code:addons/sale_stock/sale_stock.py:289
 #, python-format
 msgid "(n/a)"
 msgstr "(n/a)"
@@ -26,7 +26,7 @@ msgstr "(n/a)"
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Chi phép thêm chi phí vận chuyển"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -35,69 +35,79 @@ msgid ""
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
 msgstr ""
+"Cho phép bạn thêm phương thức vận chuyển vào đơn hàng và phiếu xuất kho.\n"
+"Bạn có thể định nghĩa nhà vận chuyển và hệ thống vân chuyển cho giá .\n"
+"-Việc này sẽ cài đặt phân hệ delivery."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
 msgstr ""
+"Cho phép bạn lựa chọn một tuyến đường vận chuyển trên chi tiết của đơn hàng"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Cho phép bạn tag chi tiết đơn hàng với các thuộc tính."
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Hủy Đơn hàng"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:160
+#: code:addons/sale_stock/sale_stock.py:253
+#, python-format
+msgid "Cannot cancel sales order line!"
+msgstr "Không thể hủy chi tiết đơn hàng!"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:169
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Không thể hủy đơn hàng!"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
 msgid "Choose MTO, drop shipping,... on sales order lines"
-msgstr ""
+msgstr "Choose MTO, drop shipping,... on sales order lines"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Các công ty"
+msgstr "Công ty"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:272
-#: code:addons/sale_stock/sale_stock.py:345
+#: code:addons/sale_stock/sale_stock.py:300
+#: code:addons/sale_stock/sale_stock.py:372
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Lỗi cấu hình!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "Chi tiết liên hệ"
 
 #. module: sale_stock
-#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+#: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Tùy chọn mặc định"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Giao tất cả hàng hóa khi sản phẩm sẵn sàng."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Giao tất cả sản phẩm cùng lúc"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Giao từng sản phẩm mỗi khi sẵn sàng"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -108,27 +118,27 @@ msgstr "Đã giao hàng"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Giao hàng cần xuất hóa đơn"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Kích hoạt xuất hóa đơn cho phiếu xuất kho"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Kích hoạt định tuyến trên Chi tiết đơn hàng"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Tạo hóa đơn sau và dựa trên phiếu xuất kho"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Bỏ qua ngoại lệ"
 
 #. module: sale_stock
 #: field:sale.order,incoterm:0
@@ -141,21 +151,23 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Điều khoản thương mại quốc tế là một chuỗi các điều khoản được định nghĩa "
+"sẵn được sử dụng trong các giao dịch thương mại quốc tế."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Inventory Routes"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Hóa đơn dựa trên giao hàng"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Hóa đơn dựa trên đơn hàng"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -164,8 +176,13 @@ msgid ""
 "the Timesheet line entries for particular date and particular user  with the "
 "effect of creating, editing and deleting either ways and to automatically "
 "creates project tasks from procurement lines.\n"
-"-This installs the modules project_timesheet and sale_service."
+"-This installs the modules project_timesheet and project_mrp."
 msgstr ""
+"Lets you transfer the entries under tasks defined for Project Management to "
+"the Timesheet line entries for particular date and particular user  with the "
+"effect of creating, editing and deleting either ways and to automatically "
+"creates project tasks from procurement lines.\n"
+"-This installs the modules project_timesheet and project_mrp."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -174,12 +191,15 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:340
+#: code:addons/sale_stock/sale_stock.py:367
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Không đủ số lượng ! : "
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -190,7 +210,7 @@ msgstr "Số lượng gói hàng"
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Chỉ Quản trị viên mới có thể thay đổi thiết lập"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -202,67 +222,69 @@ msgstr "Đóng gói"
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Chọn 'Giao hàng mỗi khi sản phẩm sẵn sàng' Nếu bạn cho phép giao hàng từng "
+"phần."
 
 #. module: sale_stock
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
+#: view:sale.report:0
 msgid "Picked"
-msgstr "Chọn"
+msgstr "Đã chọn"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:270
+#: code:addons/sale_stock/sale_stock.py:298
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Thông tin lô hàng xuất kho ! : "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Bảng kê hàng xuất kho"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Hàng xuất kho liên quan tới đơn hàng này"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Chuẩn bị hóa đơn dựa trên các hoạt động của tác vụ"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Thuộc tính sản phẩm trên chi tiết đơn hàng"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_project_mrp:0
+msgid "Project MRP"
+msgstr "Project MRP"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Bảng chấm công dự án"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Tạo lại Phiếu xuất kho"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Route"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr "Đơn chào hàng"
+msgstr "Đơn hàng"
 
 #. module: sale_stock
-#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+#: view:stock.location.route:0
 msgid "Sale Order Lines"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,module_sale_service:0
-msgid "Sale Service"
-msgstr ""
+msgstr "Chi tiết đơn hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -272,7 +294,7 @@ msgstr "Đơn hàng"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Chi tiết đơn hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -286,22 +308,24 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
+"Đơn hàng mặc định sẽ được cấu hình để giao tất cả sản phẩm cùng lức thay vì "
+"giao từng sản phẩm khi sẵn sàng. Điều này có thể ảnh hưởng đến giá vận "
+"chuyển."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "Security Days"
 
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Có thể chọn trên Chi tiết đơn hàng"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr ""
+msgstr "Đã chuyển"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -311,17 +335,17 @@ msgstr "Chính sách vận chuyển"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Dịch chuyển kho"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Phương thức xuất hóa đơn mặc định là"
 
 #. module: sale_stock
-#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
+#: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Chờ hóa đơn"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -329,42 +353,52 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Để cho phép nhân viên bán hàng tạo hóa đơn từ Phiếu xuất kho sử dụng trình "
+"đơn 'Giao hàng cần xuất hóa đơn'."
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Xem Phiếu xuất kho"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: view:sale.report:sale_stock.view_order_product_search_sale_stock_inherit
+#: field:sale.order,warehouse_id:0 view:sale.report:0
 #: field:sale.report,warehouse_id:0
 msgid "Warehouse"
-msgstr "Kho hàng"
+msgstr "Nhà kho"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgid "You can generate invoices based on sales orders or based on shippings."
+msgstr "Bạn có thể tạo hóa đơn dựa trên đơn hàng hoặc dựa trên giao hàng."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:170
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
+"Trước tiên bạn phải hủy tất cả phiếu xuất kho liên quan tới đơn hàng này."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:336
+#: code:addons/sale_stock/sale_stock.py:254
+#, python-format
+msgid "You must first cancel stock moves attached to this sales order line."
+msgstr ""
+"Trước tiên bạn phải hủy các dịch chuyển kho liên quan tới chi tiết đơn hàng."
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:363
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"Bạn dự kiến sẽ bán %.2f %s nhưng bạn chỉ có %.2f %s có thể bán !\n"
+"Tồn kho thực tế là %.2f %s."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
+#: code:addons/sale_stock/sale_stock.py:293
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -372,15 +406,26 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Bạn đã chọn một số lượng của %d Đơn vị.\n"
+"Nhưng nó không tương thích với gói đã chọn.\n"
+"Đây là một đề xuất về số lượng tùy theo gói:\n"
+"EAN: %s Số lượng: %s Loại ul: %s"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "Ngày"
 
 #. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
+#: model:ir.model,name:sale_stock.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: view:sale.order:0
 msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":"
+"\"blue\"}"
 msgstr ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":"
+"\"blue\"}"

@@ -1,37 +1,40 @@
-# Vietnamese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Vietnamese <vi@li.org>\n"
+"Project-Id-Version: OpenERP Server 7.saas~5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-13 03:58+0000\n"
+"PO-Revision-Date: 2014-09-13 11:24+0700\n"
+"Last-Translator: Leo Tran <leo.tran@ma.tvtmarine.com>\n"
+"Language-Team: T.V.T Marine Automation <support@ma.tvtmarine.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Language: Vietnam\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:77
+#: code:addons/hr_payroll/hr_payroll.py:89
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (sao chép)"
 
 #. module: hr_payroll
 #: help:hr.payslip,state:0
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             "
-"\n"
+"* If the payslip is under verification, the status is "
+"'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Khi phiếu lương được tạo, trạng thái là 'Dự thảo'.            \n"
+"* Nếu phiếu lương đang thẩm định, trạng thái là 'Chờ'.             \n"
+"* Nếu phiếu lương được xác nhận, trạng thái là 'Hoàn thành'.            \n"
+"* Khi người dùng hủy phiếu lương, trạng thái là 'Bị từ chối'."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -47,66 +50,69 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new contribution register.\n"
+"              </p><p>\n"
+"                A contribution register is a third party involved in the "
+"salary\n"
+"                payment of the employees. It can be the social security, "
+"the\n"
+"                estate or anyone that collect or inject money on payslips.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Accounting"
-msgstr ""
+msgstr "Kế toán"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Thông tin kế toán"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,active:0
-#: field:hr.salary.rule,active:0
+#: field:hr.payslip.line,active:0 field:hr.salary.rule,active:0
 msgid "Active"
-msgstr "Hoạt động"
+msgstr "Hiệu lực"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Address"
 msgstr "Địa chỉ"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr ""
+msgstr "Tất cả quy tắc con"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
-msgstr ""
+msgstr "Luôn đúng"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,amount:0
-#: field:hr.payslip.line,amount:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0 field:hr.payslip.input,amount:0 field:hr.payslip.line,amount:0
 msgid "Amount"
-msgstr "Số tiền"
+msgstr "Tổng tiền"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
-#: field:hr.payslip.line,amount_select:0
+#: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
 #: field:hr.salary.rule,amount_select:0
 msgid "Amount Type"
-msgstr ""
+msgstr "Loại tổng tiền"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Annually"
-msgstr ""
+msgstr "Hàng năm"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,appears_on_payslip:0
 #: field:hr.salary.rule,appears_on_payslip:0
 msgid "Appears on Payslip"
-msgstr ""
+msgstr "Xuất hiện trong Phiếu lương"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -115,141 +121,129 @@ msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
 msgstr ""
+"Quy tắc này được áp dụng cho việc tính toán nếu điều kiện là đúng. Bạn có "
+"thể chỉ ra điều kiện như 'lương cơ bản' > 10000000."
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Authorized signature"
-msgstr ""
+msgstr "Authorized signature"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Bank Account"
-msgstr "Tài khoản Ngân hàng"
+msgstr "Tài khoản ngân hàng"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr ""
+msgstr "Bi-monthly"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-weekly"
-msgstr ""
+msgstr "Bi-weekly"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+#: view:hr.payslip.line:0
 msgid "Calculations"
-msgstr ""
+msgstr "Tính toán"
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+#: view:payslip.lines.contribution.register:0
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Cancel Payslip"
-msgstr ""
+msgstr "Hủy phiếu lương"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,category_id:0
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: field:hr.payslip.line,category_id:0 view:hr.salary.rule:0
 #: field:hr.salary.rule,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Nhóm"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Child Rules"
-msgstr ""
+msgstr "Quy tắc con"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,child_ids:0
-#: field:hr.salary.rule,child_ids:0
+#: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr ""
+msgstr "Quy tắc con"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,children_ids:0
 #: field:hr.salary.rule.category,children_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Children"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Children Definition"
-msgstr ""
+msgstr "Children Definition"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
-#: selection:hr.payslip.run,state:0
+#: view:hr.payslip.run:0 selection:hr.payslip.run,state:0
 msgid "Close"
 msgstr "Ðóng"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,code:0
-#: field:hr.payslip.line,code:0
-#: field:hr.payslip.worked_days,code:0
-#: field:hr.rule.input,code:0
-#: field:hr.salary.rule,code:0
-#: field:hr.salary.rule.category,code:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0 field:hr.payslip.input,code:0 field:hr.payslip.line,code:0
+#: field:hr.payslip.worked_days,code:0 field:hr.rule.input,code:0
+#: field:hr.salary.rule,code:0 field:hr.salary.rule.category,code:0
 msgid "Code"
 msgstr "Mã"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Companies"
-msgstr "Các công ty"
+msgstr "Công ty"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,company_id:0
-#: field:hr.payroll.structure,company_id:0
-#: field:hr.payslip,company_id:0
-#: field:hr.payslip.line,company_id:0
-#: field:hr.salary.rule,company_id:0
+#: field:hr.payroll.structure,company_id:0 field:hr.payslip,company_id:0
+#: field:hr.payslip.line,company_id:0 field:hr.salary.rule,company_id:0
 #: field:hr.salary.rule.category,company_id:0
 msgid "Company"
 msgstr "Công ty"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Company Contribution"
-msgstr ""
+msgstr "Company Contribution"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Computation"
-msgstr ""
+msgstr "Tính toán"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Compute Sheet"
-msgstr ""
+msgstr "Tính toán bảng lương"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
 #: field:hr.salary.rule,condition_select:0
 msgid "Condition Based on"
-msgstr ""
+msgstr "Điều kiện dựa trên"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Điều kiện"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Confirm"
-msgstr ""
+msgstr "Xác nhận"
 
 #. module: hr_payroll
-#: field:hr.payslip,contract_id:0
-#: field:hr.payslip.input,contract_id:0
+#: field:hr.payslip,contract_id:0 field:hr.payslip.input,contract_id:0
 #: field:hr.payslip.line,contract_id:0
 #: field:hr.payslip.worked_days,contract_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contract
@@ -257,101 +251,60 @@ msgid "Contract"
 msgstr "Hợp đồng"
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
+#: view:hr.contribution.register:0
 msgid "Contribution"
 msgstr "Đóng góp"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
-#: field:hr.payslip.line,register_id:0
+#: view:hr.payslip.line:0 field:hr.payslip.line,register_id:0
 #: field:hr.salary.rule,register_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
-msgstr ""
+msgstr "Contribution Register"
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+#: view:payslip.lines.contribution.register:0
 msgid "Contribution Register's Payslip Lines"
-msgstr ""
+msgstr "Contribution Register's Payslip Lines"
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_tree
+#: view:hr.contribution.register:0
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
 msgid "Contribution Registers"
-msgstr ""
+msgstr "Contribution Registers"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Tạo bút toán sở nhật ký từ phiếu lương"
 
 #. module: hr_payroll
-#: field:hr.contribution.register,create_uid:0
-#: field:hr.payroll.structure,create_uid:0
-#: field:hr.payslip,create_uid:0
-#: field:hr.payslip.employees,create_uid:0
-#: field:hr.payslip.input,create_uid:0
-#: field:hr.payslip.line,create_uid:0
-#: field:hr.payslip.run,create_uid:0
-#: field:hr.payslip.worked_days,create_uid:0
-#: field:hr.rule.input,create_uid:0
-#: field:hr.salary.rule,create_uid:0
-#: field:hr.salary.rule.category,create_uid:0
-#: field:payslip.lines.contribution.register,create_uid:0
-msgid "Created by"
-msgstr ""
-
-#. module: hr_payroll
-#: field:hr.contribution.register,create_date:0
-#: field:hr.payroll.structure,create_date:0
-#: field:hr.payslip,create_date:0
-#: field:hr.payslip.employees,create_date:0
-#: field:hr.payslip.input,create_date:0
-#: field:hr.payslip.line,create_date:0
-#: field:hr.payslip.run,create_date:0
-#: field:hr.payslip.worked_days,create_date:0
-#: field:hr.rule.input,create_date:0
-#: field:hr.salary.rule,create_date:0
-#: field:hr.salary.rule.category,create_date:0
-#: field:payslip.lines.contribution.register,create_date:0
-msgid "Created on"
-msgstr ""
-
-#. module: hr_payroll
-#: field:hr.payslip,credit_note:0
-#: field:hr.payslip.run,credit_note:0
+#: field:hr.payslip,credit_note:0 field:hr.payslip.run,credit_note:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Báo có"
 
 #. module: hr_payroll
-#: field:hr.payslip,date_from:0
-#: field:hr.payslip.run,date_start:0
+#: view:False:0 field:hr.payslip,date_from:0 field:hr.payslip.run,date_start:0
 #: field:payslip.lines.contribution.register,date_from:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Date From"
-msgstr ""
+msgstr "Từ ngày"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "Date From:"
-msgstr ""
+msgstr "Từ ngày:"
 
 #. module: hr_payroll
-#: field:hr.payslip,date_to:0
-#: field:hr.payslip.run,date_end:0
+#: view:False:0 field:hr.payslip,date_to:0 field:hr.payslip.run,date_end:0
 #: field:payslip.lines.contribution.register,date_to:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Date To"
-msgstr ""
+msgstr "Đến ngày"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "Date To:"
-msgstr ""
+msgstr "Đến ngày:"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -361,131 +314,118 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
+"Định nghĩa một quy tắc mà được áp dụng cho phiếu lương này, tùy theo hợp "
+"đồng lao động được chọn. Nếu bạn để trống trường hợp đồng lao động, trường "
+"này sẽ không còn bắt buộc nữa và do đó quy tắc được áp dụng  sẽ là tất cả "
+"quy tắc trên cấu trúc lương của tất cả các hợp đồng lao động của nhân viên "
+"trong kỳ được chọn"
 
 #. module: hr_payroll
-#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
-#: field:hr.contribution.register,note:0
-#: field:hr.payroll.structure,note:0
-#: field:hr.payslip.input,name:0
-#: field:hr.payslip.line,note:0
-#: field:hr.payslip.worked_days,name:0
-#: field:hr.rule.input,name:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
-#: field:hr.salary.rule,note:0
-#: field:hr.salary.rule.category,note:0
+#: view:hr.contribution.register:0 field:hr.contribution.register,note:0
+#: field:hr.payroll.structure,note:0 field:hr.payslip.input,name:0
+#: field:hr.payslip.line,note:0 field:hr.payslip.worked_days,name:0
+#: field:hr.rule.input,name:0 view:hr.salary.rule:0
+#: field:hr.salary.rule,note:0 field:hr.salary.rule.category,note:0
 msgid "Description"
-msgstr "Mô tả"
+msgstr "Miêu tả"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Designation"
-msgstr ""
+msgstr "Designation"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Details By Salary Rule Category"
-msgstr ""
+msgstr "Chi tiết theo nhóm quy tắc lương"
 
 #. module: hr_payroll
-#: field:hr.payslip,details_by_salary_rule_category:0
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0 field:hr.payslip,details_by_salary_rule_category:0
 msgid "Details by Salary Rule Category"
-msgstr ""
+msgstr "Chi tiết theo nhóm quy tắc lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
 msgid "Done"
-msgstr ""
+msgstr "Hoàn thành"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Done Payslip Batches"
-msgstr ""
+msgstr "Hoàn thành Bảng lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Done Slip"
-msgstr ""
+msgstr "Done Slip"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
 #: selection:hr.payslip.run,state:0
 msgid "Draft"
 msgstr "Dự thảo"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Draft Payslip Batches"
-msgstr ""
+msgstr "Bảng lương dự thảo"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Draft Slip"
-msgstr ""
+msgstr "Draft Slip"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Email"
-msgstr "Thư điện tử"
+msgstr "Email"
 
 #. module: hr_payroll
-#: field:hr.payslip,employee_id:0
-#: field:hr.payslip.line,employee_id:0
+#: field:hr.payslip,employee_id:0 field:hr.payslip.line,employee_id:0
 #: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
-msgstr "Người lao động"
+msgstr "Nhân viên"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_list_view
+#: view:hr.payroll.structure:0
 msgid "Employee Function"
-msgstr ""
+msgstr "Employee Function"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Phiếu lương nhân viên"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
-#: field:hr.payslip.employees,employee_ids:0
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip:0 view:hr.payslip.employees:0
+#: field:hr.payslip.employees,employee_ids:0 view:hr.payslip.line:0
 msgid "Employees"
-msgstr "Các nhân viên"
+msgstr "Nhân viên"
 
 #. module: hr_payroll
 #: constraint:hr.payroll.structure:0
 msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr ""
+msgstr "Lỗi ! Bạn không thể tạo một Cấu trúc lương lặp đi lặp lại."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:851
-#: code:addons/hr_payroll/hr_payroll.py:856
-#: code:addons/hr_payroll/hr_payroll.py:862
-#: code:addons/hr_payroll/hr_payroll.py:879
-#: code:addons/hr_payroll/hr_payroll.py:885
+#: code:addons/hr_payroll/hr_payroll.py:869
+#: code:addons/hr_payroll/hr_payroll.py:874
+#: code:addons/hr_payroll/hr_payroll.py:880
+#: code:addons/hr_payroll/hr_payroll.py:897
+#: code:addons/hr_payroll/hr_payroll.py:903
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Lỗi!"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,register_id:0
-#: help:hr.salary.rule,register_id:0
+#: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr ""
+msgstr "Eventual third party involved in the salary payment of the employees."
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_fix:0
+#: selection:hr.payslip.line,amount_select:0 field:hr.salary.rule,amount_fix:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Fixed Amount"
 msgstr "Giá trị cố định"
@@ -494,60 +434,38 @@ msgstr "Giá trị cố định"
 #: help:hr.payslip.line,amount_percentage:0
 #: help:hr.salary.rule,amount_percentage:0
 msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr ""
+msgstr "Ví dụ, nhập 50.0 để sử dụng 50%"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:0
 msgid "General"
-msgstr ""
+msgstr "Tổng quát"
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid "Generate"
-msgstr ""
+msgstr "Tạo"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip.run:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
-msgstr ""
+msgstr "Tạo phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr ""
+msgstr "Tạo phiếu lương cho tất cả nhân viên được chọn"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
-msgid "Group By"
-msgstr ""
+#: view:hr.payslip:0 view:hr.payslip.line:0 view:hr.salary.rule:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
 
 #. module: hr_payroll
-#: field:hr.contribution.register,id:0
-#: field:hr.payroll.structure,id:0
-#: field:hr.payslip,id:0
-#: field:hr.payslip.employees,id:0
-#: field:hr.payslip.input,id:0
-#: field:hr.payslip.line,id:0
-#: field:hr.payslip.run,id:0
-#: field:hr.payslip.worked_days,id:0
-#: field:hr.rule.input,id:0
-#: field:hr.salary.rule,id:0
-#: field:hr.salary.rule.category,id:0
-#: field:payslip.lines.contribution.register,id:0
-#: field:report.hr_payroll.report_contributionregister,id:0
-#: field:report.hr_payroll.report_payslip,id:0
-#: field:report.hr_payroll.report_payslipdetails,id:0
-msgid "ID"
-msgstr ""
-
-#. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Identification No"
-msgstr "Số CMND"
+msgstr "Identification No"
 
 #. module: hr_payroll
 #: help:hr.payslip.run,credit_note:0
@@ -555,37 +473,38 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
 
 #. module: hr_payroll
-#: help:hr.payslip.line,active:0
-#: help:hr.salary.rule,active:0
+#: help:hr.payslip.line,active:0 help:hr.salary.rule,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
+"Nếu bỏ chọn trường Hiệu lực, nó sẽ cho phép bạn ẩn quy tắc tính lương mà "
+"không cần xóa bỏ nó."
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Indicates this payslip has a refund of another"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.payslip:0 view:hr.salary.rule:0
 msgid "Input Data"
-msgstr ""
+msgstr "Dữ liệu nhập ngoài"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,input_ids:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: field:hr.payslip.line,input_ids:0 view:hr.salary.rule:0
 #: field:hr.salary.rule,input_ids:0
 msgid "Inputs"
-msgstr ""
+msgstr "Inputs"
 
 #. module: hr_payroll
 #: field:hr.payslip,note:0
 msgid "Internal Note"
-msgstr ""
+msgstr "Ghi chú nội bộ"
 
 #. module: hr_payroll
 #: help:hr.salary.rule,quantity:0
@@ -594,51 +513,23 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Nó được sử dụng trong việc tính toàn theo phần trăm và số tiền cố định."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
 msgid ""
 "It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
+"basic salary for per product can defined in expression like result = inputs."
+"SALEURO.amount * contract.wage*0.01."
 msgstr ""
-
-#. module: hr_payroll
-#: field:hr.contribution.register,write_uid:0
-#: field:hr.payroll.structure,write_uid:0
-#: field:hr.payslip,write_uid:0
-#: field:hr.payslip.employees,write_uid:0
-#: field:hr.payslip.input,write_uid:0
-#: field:hr.payslip.line,write_uid:0
-#: field:hr.payslip.run,write_uid:0
-#: field:hr.payslip.worked_days,write_uid:0
-#: field:hr.rule.input,write_uid:0
-#: field:hr.salary.rule,write_uid:0
-#: field:hr.salary.rule.category,write_uid:0
-#: field:payslip.lines.contribution.register,write_uid:0
-msgid "Last Updated by"
-msgstr ""
-
-#. module: hr_payroll
-#: field:hr.contribution.register,write_date:0
-#: field:hr.payroll.structure,write_date:0
-#: field:hr.payslip,write_date:0
-#: field:hr.payslip.employees,write_date:0
-#: field:hr.payslip.input,write_date:0
-#: field:hr.payslip.line,write_date:0
-#: field:hr.payslip.run,write_date:0
-#: field:hr.payslip.worked_days,write_date:0
-#: field:hr.rule.input,write_date:0
-#: field:hr.salary.rule,write_date:0
-#: field:hr.salary.rule.category,write_date:0
-#: field:payslip.lines.contribution.register,write_date:0
-msgid "Last Updated on"
-msgstr ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of "
+"basic salary for per product can defined in expression like result = inputs."
+"SALEURO.amount * contract.wage*0.01."
 
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "Liên kết chức năng tính lương với hệ thống kế toán"
 
 #. module: hr_payroll
 #: help:hr.salary.rule.category,parent_id:0
@@ -646,237 +537,221 @@ msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
 msgstr ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
 msgid "Made Payment Order ? "
-msgstr ""
+msgstr "Đã tạo phiếu thanh toán ? "
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_max:0
 #: field:hr.salary.rule,condition_range_max:0
 msgid "Maximum Range"
-msgstr ""
+msgstr "Maximum Range"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_min:0
 #: field:hr.salary.rule,condition_range_min:0
 msgid "Minimum Range"
-msgstr ""
+msgstr "Minimum Range"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Miscellaneous"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Monthly"
-msgstr ""
+msgstr "Hàng tháng"
 
 #. module: hr_payroll
-#: field:hr.contribution.register,name:0
-#: field:hr.payroll.structure,name:0
-#: field:hr.payslip.line,name:0
-#: field:hr.payslip.run,name:0
-#: field:hr.salary.rule,name:0
+#: view:False:0 field:hr.contribution.register,name:0
+#: field:hr.payroll.structure,name:0 field:hr.payslip.line,name:0
+#: field:hr.payslip.run,name:0 field:hr.salary.rule,name:0
 #: field:hr.salary.rule.category,name:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Name"
 msgstr "Tên"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:415
+#: code:addons/hr_payroll/hr_payroll.py:432
 #, python-format
 msgid "Normal Working Days paid at 100%"
-msgstr ""
+msgstr "Normal Working Days paid at 100%"
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
+#: view:hr.salary.rule.category:0
 msgid "Notes"
-msgstr ""
+msgstr "Ghi chú"
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
 msgid "Number of Days"
-msgstr ""
+msgstr "Số ngày"
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_hours:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Số giờ"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Other Inputs"
-msgstr ""
+msgstr "Dữ liệu nhập ngoài khác"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,parent_id:0
 #: field:hr.salary.rule.category,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Parent"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,parent_rule_id:0
 #: field:hr.salary.rule,parent_rule_id:0
 msgid "Parent Salary Rule"
-msgstr ""
+msgstr "Parent Salary Rule"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Đối tác"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,payslip_id:0
-#: field:hr.payslip.line,slip_id:0
-#: field:hr.payslip.worked_days,payslip_id:0
+#: view:False:0 field:hr.payslip.input,payslip_id:0
+#: field:hr.payslip.line,slip_id:0 field:hr.payslip.worked_days,payslip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Pay Slip"
-msgstr ""
+msgstr "Phiếu lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "PaySlip Batch"
-msgstr ""
+msgstr "Bảng lương"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr ""
+msgstr "Chi tiết phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr ""
+msgstr "Chi tiết phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr ""
+msgstr "PaySlip Lines By Conribution Register"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "PaySlip Lines by Contribution Register"
-msgstr ""
+msgstr "PaySlip Lines by Contribution Register"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
+msgstr "PaySlip Lines by Contribution Registers"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "PaySlip Name"
-msgstr ""
+msgstr "Tên phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_root_payroll
 #: model:ir.ui.menu,name:hr_payroll.payroll_configure
 msgid "Payroll"
-msgstr ""
+msgstr "Tính lương"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_filter
+#: view:hr.payroll.structure:0
 msgid "Payroll Structures"
-msgstr ""
+msgstr "Cấu trúc lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 #: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
 msgid "Payslip"
-msgstr ""
+msgstr "Phiếu lương"
 
 #. module: hr_payroll
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr ""
+msgstr "'Từ ngày' của phiếu lương phải trước 'Đến ngày'"
 
 #. module: hr_payroll
-#: field:hr.payslip,payslip_run_id:0
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: field:hr.payslip,payslip_run_id:0 view:hr.payslip.run:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Bảng lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: field:hr.payslip,payslip_count:0
+#: view:hr.payslip:0 field:hr.payslip,payslip_count:0
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr ""
+msgstr "Chi tiết phiếu lương"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr ""
+msgstr "Dữ liệu phiếu lương nhập ngoài"
 
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr ""
+msgstr "Dữ liệu phiếu lương nhập ngoài"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+#: view:hr.payslip:0 view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr ""
+msgstr "Chi tiết phiếu lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: field:hr.payslip,line_ids:0
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip:0 field:hr.payslip,line_ids:0 view:hr.payslip.line:0
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
-msgstr ""
+msgstr "Chi tiết phiếu lương"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Payslip Lines by Contribution Register"
-msgstr ""
+msgstr "Payslip Lines by Contribution Register"
 
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "Tên phiếu lương"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr ""
+msgstr "Payslip Worked Days"
 
 #. module: hr_payroll
-#: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
-#: field:hr.employee,payslip_count:0
-#: field:hr.employee,slip_ids:0
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
-#: view:hr.payslip:hr_payroll.view_hr_payslip_tree
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.employee:0 field:hr.employee,payslip_count:0
+#: field:hr.employee,slip_ids:0 view:hr.payslip:0 view:hr.payslip.run:0
 #: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr ""
+msgstr "Phiếu lương"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_tree
+#: view:hr.payslip.run:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
-msgstr ""
+msgstr "Bảng lương"
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid "Payslips by Employees"
-msgstr ""
+msgstr "Phiếu lương theo Nhân viên"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage:0
@@ -884,24 +759,23 @@ msgstr ""
 #: field:hr.salary.rule,amount_percentage:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Percentage (%)"
-msgstr ""
+msgstr "Phần trăm (%)"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage_base:0
 #: field:hr.salary.rule,amount_percentage_base:0
 msgid "Percentage based on"
-msgstr ""
+msgstr "Phần trăm dựa trên"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip:0 view:hr.payslip.run:0
 msgid "Period"
-msgstr ""
+msgstr "Chu kỳ"
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+#: view:payslip.lines.contribution.register:0
 msgid "Print"
-msgstr ""
+msgstr "In"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_python_compute:0
@@ -909,284 +783,265 @@ msgstr ""
 #: field:hr.salary.rule,amount_python_compute:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Python Code"
-msgstr ""
+msgstr "Mã Python"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_python:0
 #: field:hr.salary.rule,condition_python:0
 msgid "Python Condition"
-msgstr ""
+msgstr "Điều kiện Python"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
-msgstr ""
+msgstr "Biểu thức Python"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,quantity:0
-#: field:hr.salary.rule,quantity:0
+#: field:hr.payslip.line,quantity:0 field:hr.salary.rule,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Số lượng"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "Quantity/Rate"
-msgstr ""
+msgstr "Số lượng/Tỷ lệ"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0
 msgid "Quantity/rate"
-msgstr ""
+msgstr "Số lượng/Tỷ lệ"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Hàng quý"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
-msgstr ""
+msgstr "Phạm vi"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range:0
 #: field:hr.salary.rule,condition_range:0
 msgid "Range Based on"
-msgstr ""
+msgstr "Phạm vi dựa trên"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Tỷ lệ (%)"
 
 #. module: hr_payroll
-#: field:hr.payroll.structure,code:0
-#: field:hr.payslip,number:0
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0 field:hr.payroll.structure,code:0 field:hr.payslip,number:0
 msgid "Reference"
-msgstr ""
+msgstr "Tham chiếu"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Refund"
-msgstr ""
+msgstr "Hoàn tiền"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:334
+#: code:addons/hr_payroll/hr_payroll.py:351
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "Refund Payslip"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:324
+#: code:addons/hr_payroll/hr_payroll.py:341
 #, python-format
 msgid "Refund: "
-msgstr ""
+msgstr "Hoàn tiền: "
 
 #. module: hr_payroll
 #: field:hr.contribution.register,register_line_ids:0
 msgid "Register Line"
-msgstr ""
+msgstr "Register Line"
 
 #. module: hr_payroll
-#: view:website:hr_payroll.report_contributionregister
+#: view:False:0
 msgid "Register Name:"
-msgstr ""
+msgstr "Register Name:"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr ""
+msgstr "Bị từ chối"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,salary_rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Quy tắc"
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
+#: view:hr.salary.rule.category:0
 msgid "Salary Categories"
-msgstr ""
+msgstr "Nhóm lương"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Salary Computation"
-msgstr ""
+msgstr "Tính toán lương"
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree
-#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree_view
-#: view:hr.salary.rule.category:hr_payroll.view_hr_salary_rule_category_filter
+#: view:hr.salary.rule.category:0
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr ""
+msgstr "Nhóm quy tắc lương"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "Cấu trúc nhóm quy tắc"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:False:0 view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: view:website:hr_payroll.report_payslipdetails
 msgid "Salary Rule Category"
-msgstr ""
+msgstr "Nhóm quy tắc"
 
 #. module: hr_payroll
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr ""
+msgstr "Salary Rule Input"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
-#: field:hr.payroll.structure,rule_ids:0
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_list
-#: view:hr.salary.rule:hr_payroll.hr_salary_rule_tree
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: view:hr.payroll.structure:0 field:hr.payroll.structure,rule_ids:0
+#: view:hr.salary.rule:0
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 msgid "Salary Rules"
-msgstr ""
+msgstr "Quy tắc lương"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:658
+#: code:addons/hr_payroll/hr_payroll.py:675
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr ""
+msgstr "Salary Slip of %s for %s"
 
 #. module: hr_payroll
-#: field:hr.contract,struct_id:0
-#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_tree
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_tree
+#: field:hr.contract,struct_id:0 view:hr.payroll.structure:0 view:hr.payslip:0
+#: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
 msgid "Salary Structure"
-msgstr ""
+msgstr "Cấu trúc lương"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr ""
+msgstr "Cấu trúc lương"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
 msgid "Salary Structures Hierarchy"
-msgstr ""
+msgstr "Kiến trúc cấu trúc lương"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "Scheduled Pay"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: view:hr.payslip.run:0
 msgid "Search Payslip Batches"
-msgstr ""
+msgstr "Search Payslip Batches"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.payslip.line:0
 msgid "Search Payslip Lines"
-msgstr ""
+msgstr "Search Payslip Lines"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "Search Payslips"
-msgstr ""
+msgstr "Search Payslips"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: view:hr.salary.rule:0
 msgid "Search Salary Rule"
-msgstr ""
+msgstr "Search Salary Rule"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Semi-annually"
-msgstr ""
+msgstr "Semi-annually"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,sequence:0
-#: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.worked_days,sequence:0
-#: field:hr.salary.rule,sequence:0
+#: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
+#: field:hr.payslip.worked_days,sequence:0 field:hr.salary.rule,sequence:0
 msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
-#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip:0 view:hr.payslip.run:0
 msgid "Set to Draft"
-msgstr "Đặt thành Nháp"
+msgstr "Thiết lập thành Dự thảo"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:0
 msgid "States"
-msgstr ""
+msgstr "States"
 
 #. module: hr_payroll
-#: field:hr.payslip,state:0
-#: field:hr.payslip.run,state:0
+#: field:hr.payslip,state:0 field:hr.payslip.run,state:0
 msgid "Status"
-msgstr ""
+msgstr "Trạng thái"
 
 #. module: hr_payroll
 #: field:hr.payslip,struct_id:0
 msgid "Structure"
-msgstr ""
+msgstr "Cấu trúc"
 
 #. module: hr_payroll
 #: help:hr.employee,total_wage:0
 msgid "Sum of all current contract's wage of employee."
-msgstr ""
+msgstr "Tổng tất cả lương cơ bản trên hợp đồng của nhân viên."
 
 #. module: hr_payroll
-#: help:hr.payslip.line,code:0
-#: help:hr.salary.rule,code:0
+#: help:hr.payslip.line,code:0 help:hr.salary.rule,code:0
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
+"Mã của quy tắc lương có thể được sử dụng như là tham chiếu trong việc tính "
+"toán các quy tắc khác."
 
 #. module: hr_payroll
-#: help:hr.payslip.input,code:0
-#: help:hr.payslip.worked_days,code:0
+#: help:hr.payslip.input,code:0 help:hr.payslip.worked_days,code:0
 #: help:hr.rule.input,code:0
 msgid "The code that can be used in the salary rules"
-msgstr ""
+msgstr "Mã được sử dụng trong quy tắc lương"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,amount_select:0
-#: help:hr.salary.rule,amount_select:0
+#: help:hr.payslip.line,amount_select:0 help:hr.salary.rule,amount_select:0
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "Phương pháp tính toán cho tổng tiền của một quy tắc."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "The contract for which applied this input"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
 #: help:hr.salary.rule,condition_range_max:0
 msgid "The maximum amount, applied for this rule."
-msgstr ""
+msgstr "Tổng tiền tối đa được áp dụng trên quy tắc này."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_min:0
 #: help:hr.salary.rule,condition_range_min:0
 msgid "The minimum amount, applied for this rule."
-msgstr ""
+msgstr "Tổng tiền tối thiểu được áp dụng trên quy tắc này."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range:0
@@ -1196,120 +1051,152 @@ msgid ""
 "but you can also use categories code fields in lowercase as a variable names "
 "(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
+"This will be used to compute the % fields values; in general it is on basic, "
+"but you can also use categories code fields in lowercase as a variable names "
+"(hra, ma, lta, etc.) and the variable basic."
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: view:hr.payslip.employees:0
 msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the "
 "dates and credit note specified on Payslips Run."
 msgstr ""
+"Đồ thuật này sẽ tạo phiếu lương cho tất cả nhân viên được chọn dựa trên ngày "
+"và báo có được chỉ đị trên thao tác 'Chạy phiếu lương'."
 
 #. module: hr_payroll
-#: field:hr.payslip.line,total:0
-#: view:website:hr_payroll.report_contributionregister
-#: view:website:hr_payroll.report_payslip
-#: view:website:hr_payroll.report_payslipdetails
+#: view:False:0 field:hr.payslip.line,total:0
 msgid "Total"
-msgstr "Tổng cộng"
+msgstr "Tổng"
 
 #. module: hr_payroll
 #: field:hr.employee,total_wage:0
 msgid "Total Basic Salary"
-msgstr ""
+msgstr "Tổng lương cơ bản"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Total Working Days"
-msgstr ""
+msgstr "Tổng số ngày làm việc"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,sequence:0
-#: help:hr.salary.rule,sequence:0
+#: help:hr.payslip.line,sequence:0 help:hr.salary.rule,sequence:0
 msgid "Use to arrange calculation sequence"
-msgstr ""
+msgstr "Sử dụng để sắp xếp trình tự tính toán"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "Được sử dụng để hiển thị quy tắc lương trên phiếu lương."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Chờ"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:353
+#: code:addons/hr_payroll/hr_payroll.py:370
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Cảnh báo!"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
-msgstr ""
+msgstr "Hàng tuần"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Day"
-msgstr ""
+msgstr "Ngày đã làm việc"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Days"
-msgstr ""
+msgstr "Ngày đã làm việc"
 
 #. module: hr_payroll
-#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip:0
 msgid "Worked Days & Inputs"
-msgstr ""
+msgstr "Ngày làm việc & Dữ liệu nhập ngoài"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:856
+#: code:addons/hr_payroll/hr_payroll.py:874
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Wrong percentage base or quantity defined for salary rule %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:862
+#: code:addons/hr_payroll/hr_payroll.py:880
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Wrong python code defined for salary rule %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:885
+#: code:addons/hr_payroll/hr_payroll.py:903
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Wrong python condition defined for salary rule %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:851
+#: code:addons/hr_payroll/hr_payroll.py:869
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Sai số lượng được định nghĩa trên quy tắc lương %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:879
+#: code:addons/hr_payroll/hr_payroll.py:897
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "Sai phạm vi điều kiện được định nghĩa trên quy tắc lương %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:353
+#: code:addons/hr_payroll/hr_payroll.py:370
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
+"Bạn không thể xóa một phiếu lương mà không phải là Dự thảo hoặc Hủy bỏ!"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
+msgstr "Bạn phải chọn ít nhất một nhân viên để tạo một hoặc nhiều phiếu lương."
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr "hr.config.settings"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr "hr.salary.rule"
+
+#. module: hr_payroll
+#: view:payslip.lines.contribution.register:0
+msgid "or"
+msgstr "hoặc"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "report.hr_payroll.report_contributionregister"
+msgstr "report.hr_payroll.report_contributionregister"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
+msgid "report.hr_payroll.report_payslip"
+msgstr "report.hr_payroll.report_payslip"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "report.hr_payroll.report_payslipdetails"
+msgstr "report.hr_payroll.report_payslipdetails"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_percentage_base:0
 #: help:hr.salary.rule,amount_percentage_base:0
 msgid "result will be affected to a variable"
-msgstr ""
+msgstr "result will be affected to a variable"
