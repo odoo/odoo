@@ -449,7 +449,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -1290,8 +1290,8 @@ class account_invoice_line(models.Model):
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            context=None, company_id=None):
-        context = context or {}
+            company_id=None):
+        context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
 
@@ -1358,14 +1358,14 @@ class account_invoice_line(models.Model):
 
     @api.multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
-            fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        context = context or {}
+            fposition_id=False, price_unit=False, currency_id=False, company_id=None):
+        context = self._context
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
             product, uom, qty, name, type, partner_id, fposition_id, price_unit,
-            currency_id, context=context, company_id=company_id,
+            currency_id, company_id=company_id,
         )
         warning = {}
         if not uom:

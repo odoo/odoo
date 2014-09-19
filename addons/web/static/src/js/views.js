@@ -1617,7 +1617,12 @@ instance.web.fields_view_get = function(args) {
     if (typeof model === 'string') {
         model = new instance.web.Model(args.model, args.context);
     }
-    return args.model.call('fields_view_get', [args.view_id, args.view_type, args.context, args.toolbar]).then(function(fvg) {
+    return args.model.call('fields_view_get', {
+        view_id: args.view_id,
+        view_type: args.view_type,
+        context: args.context,
+        toolbar: args.toolbar
+    }).then(function(fvg) {
         return postprocess(fvg);
     });
 };

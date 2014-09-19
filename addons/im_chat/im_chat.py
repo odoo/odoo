@@ -52,6 +52,12 @@ class im_chat_session(osv.Model):
         'uuid': lambda *args: '%s' % uuid.uuid4(),
     }
 
+    def is_in_session(self, cr, uid, uuid, user_id, context=None):
+        """ return if the given user_id is in the session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, uid, sids, context=context):
+                return user_id and user_id in [u.id for u in session.user_ids]
+
     def users_infos(self, cr, uid, ids, context=None):
         """ get the user infos for all the user in the session """
         for session in self.pool["im_chat.session"].browse(cr, uid, ids, context=context):
@@ -220,6 +226,17 @@ class im_chat_message(osv.Model):
             self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return message_id
 
+    def get_messages(self, cr, uid, uuid, last_id=False, limit=20, context=None):
+        """ get messages (id desc) from given last_id in the given session """
+        Session = self.pool['im_chat.session']
+        if Session.is_in_session(cr, uid, uuid, uid, context=context):
+            domain = [("to_id.uuid", "=", uuid)]
+            if last_id:
+                domain.append(("id", "<", last_id));
+            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+        return False
+
+
 class im_chat_presence(osv.Model):
     """ im_chat_presence status can be: online, away or offline.
         This model is a one2one, but is not attached to res_users to avoid database concurrence errors
@@ -307,29 +324,57 @@ class res_users(osv.Model):
 
     def im_search(self, cr, uid, name, limit=20, context=None):
         """ search users with a name and return its id, name and im_status """
+        result = [];
         # find the employee group
         group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
-        # built and execute SQL query. Using ORM is slow for big database, so query sql is required.
-        where_clause = "WHERE U.active = 't' AND U.id != %s "
-        query_params = (group_employee, limit)
+
+        where_clause_base = " U.active = 't' "
+        query_params = ()
         if name:
-            where_clause += " AND P.name ILIKE %s "
-            query_params = ('%'+name+'%',) + query_params
-        query_params = (uid,) + query_params
-        query = ''' SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
-                    FROM res_users U
-                    LEFT JOIN res_partner P ON P.id = U.partner_id
+            where_clause_base += " AND P.name ILIKE %s "
+            query_params = query_params + ('%'+name+'%',)
+
+        # first query to find online employee
+        cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id != %s
+                        AND EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id)
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+        ''', query_params + (uid, group_employee, limit))
+        result = result + cr.dictfetchall()
+
+        # second query to find other online people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+
+        # third query to find all other people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM res_users U
                     LEFT JOIN im_chat_presence S ON S.user_id = U.id
-                    ''' +where_clause+ '''
-                    ORDER BY    EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id) DESC,
-                        CASE    WHEN S.status = 'online' THEN 1
-                                WHEN S.status = 'away' THEN 2
-                                ELSE 3
-                        END,
-                        P.name ASC
-                    LIMIT %s'''
-        cr.execute(query, query_params)
-        return cr.dictfetchall()
+                    LEFT JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+        return result
 
 #----------------------------------------------------------
 # Controllers
@@ -371,5 +416,10 @@ class Controller(openerp.addons.bus.bus.Controller):
         headers = [('Content-Type', 'image/png')]
         headers.append(('Content-Length', len(image_data)))
         return request.make_response(image_data, headers)
+
+    @openerp.http.route(['/im_chat/history'], type="json", auth="none")
+    def history(self, uuid, last_id=False, limit=20):
+        registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
+        return registry["im_chat.message"].get_messages(cr, openerp.SUPERUSER_ID, uuid, last_id, limit, context=context)
 
 # vim:et:

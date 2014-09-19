@@ -31,13 +31,15 @@ Packages, tarballs and installers
     Then type:
 
         $ sudo apt-get update
-        $ sudo apt-get install odoo
+        $ sudo apt-get install openerp
 
-* <a href="http://nightly.openerp.com/">Source tarballs</a>
+    If you plan to use Odoo with a local database, please make sure to install PostgreSQL *before* installing the Odoo Debian package.
 
-* <a href="http://nightly.openerp.com/">Windows installer</a>
+* <a href="http://nightly.openerp.com/8.0/nightly/src/">Source tarballs</a>
 
-* <a href="http://nightly.openerp.com/">RPM package</a>
+* <a href="http://nightly.openerp.com/8.0/nightly/exe/">Windows installer</a>
+
+* <a href="http://nightly.openerp.com/8.0/nightly/rpm/">RPM package</a>
 
 
 For Odoo employees

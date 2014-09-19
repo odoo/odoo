@@ -78,10 +78,14 @@ class ir_http(orm.AbstractModel):
             request.session['geoip'] = record
             
         if request.website_enabled:
-            if func:
-                self._authenticate(func.routing['auth'])
-            else:
-                self._auth_method_public()
+            try:
+                if func:
+                    self._authenticate(func.routing['auth'])
+                else:
+                    self._auth_method_public()
+            except Exception as e:
+                return self._handle_exception(e)
+
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             langs = [lg[0] for lg in request.website.get_languages()]
@@ -116,6 +120,8 @@ class ir_http(orm.AbstractModel):
                         # to url without language so google doesn't see duplicate content
                         return request.redirect(path + '?' + request.httprequest.query_string, code=301)
                     return self.reroute(path)
+            # bind modified context
+            request.website = request.website.with_context(request.context)
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):

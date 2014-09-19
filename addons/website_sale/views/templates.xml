@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
 
@@ -76,7 +77,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image{{'' if product_image_big else '/300x300' }}"/>
+          <img itemprop="image" class="img img-responsive" t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')"/>
       </a>
   </div>
   <section>
@@ -123,19 +124,12 @@
 
 <template id="products" name="Products">
   <t t-call="website.layout">
-      <!--t t-set="head">
-          <t t-call="web.jqueryui_conflict">
-            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-          </t>
-          <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-          <t t-raw="head or ''"/>
-      </t-->
       <t t-set="additional_title">Shop</t>
       <div id="wrap" class="js_sale">
         <div class="oe_structure"/>
         <div class="container oe_website_sale">
           <div class="products_pager">
-            <div class="row">
+            <div class="row" style="width: 100%;">
               <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
               <t t-call="website.pager"/>
             </div>
@@ -345,7 +339,6 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -354,7 +347,7 @@
             <div class="col-sm-4">
                 <ol class="breadcrumb">
                     <li><a t-att-href="keep(category=0)" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="category"><a t-att-href="keep()" t-field="category.name"/></li>
+                    <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
@@ -467,7 +460,7 @@
     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-        <input type="radio" name="product_id" t-att-value="variant_id.id"/>
+        <input type="radio" name="product_id" class="js_product_change" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
         <span t-esc="variant_id.name_get()[0][1]"/>
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
@@ -603,7 +596,7 @@
                 <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                            <img class="media-object pull-left oe_msg_avatar" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
@@ -633,7 +626,7 @@
                 </ul>
                 <div class="css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>
@@ -649,7 +642,6 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -837,7 +829,6 @@
 
 <template id="checkout">
   <t t-call="website.layout">
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -1014,7 +1005,6 @@
 
 <template id="payment">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1133,7 +1123,6 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">

@@ -54,6 +54,10 @@ class product_template(osv.osv):
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
     }
 
+    _defaults = {
+        'valuation': 'manual_periodic',
+    }
+
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -120,7 +124,7 @@ class product_template(osv.osv):
                         }
                         move_id = move_obj.create(cr, uid, move_vals, context=context)
     
-                        if diff > 0:
+                        if diff*qty > 0:
                             amount_diff = qty * diff
                             debit_account_id = datas['stock_account_input']
                             credit_account_id = datas['property_stock_valuation_account_id']

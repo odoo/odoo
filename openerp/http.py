@@ -5,6 +5,7 @@
 import ast
 import collections
 import contextlib
+import datetime
 import errno
 import functools
 import getpass
@@ -21,6 +22,7 @@ import time
 import traceback
 import urlparse
 import warnings
+from zlib import adler32
 
 import babel.core
 import psutil
@@ -33,6 +35,7 @@ import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
+from werkzeug.wsgi import wrap_file
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -590,6 +593,12 @@ class HttpRequest(WebRequest):
            be used as response."""
         try:
             return super(HttpRequest, self)._handle_exception(exception)
+        except SessionExpiredException:
+            if not request.params.get('noredirect'):
+                query = werkzeug.urls.url_encode({
+                    'redirect': request.httprequest.url,
+                })
+                return werkzeug.utils.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException, e:
             return e
 
@@ -1096,15 +1105,6 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
-class Retry(RuntimeError):
-    """ Exception raised during QWeb rendering to signal that the rendering
-    should be retried with the provided ``render_updates`` dict merged into
-    the previous rendering context
-    """
-    def __init__(self, name, render_updates=None):
-        super(Retry, self).__init__(name)
-        self.updates = render_updates or {}
-
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
@@ -1154,13 +1154,9 @@ class Response(werkzeug.wrappers.Response):
         """
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        while True:
-            try:
-                return view_obj.render(
-                    request.cr, uid, self.template, self.qcontext,
-                    context=request.context)
-            except Retry, e:
-                self.qcontext.update(e.updates)
+        return view_obj.render(
+            request.cr, uid, self.template, self.qcontext,
+            context=request.context)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result
@@ -1285,7 +1281,7 @@ class Root(object):
         # deduce type of request
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
-        if httprequest.mimetype == "application/json":
+        if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
             return HttpRequest(httprequest)
@@ -1410,6 +1406,103 @@ def db_monodb(httprequest=None):
     if len(dbs) == 1:
         return dbs[0]
     return None
+
+def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
+              add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
+    """This is a modified version of Flask's send_file()
+
+    Sends the contents of a file to the client. This will use the
+    most efficient method available and configured.  By default it will
+    try to use the WSGI server's file_wrapper support.
+
+    By default it will try to guess the mimetype for you, but you can
+    also explicitly provide one.  For extra security you probably want
+    to send certain files as attachment (HTML for instance).  The mimetype
+    guessing requires a `filename` or an `attachment_filename` to be
+    provided.
+
+    Please never pass filenames to this function from user sources without
+    checking them first.
+
+    :param filepath_or_fp: the filename of the file to send.
+                           Alternatively a file object might be provided
+                           in which case `X-Sendfile` might not work and
+                           fall back to the traditional method.  Make sure
+                           that the file pointer is positioned at the start
+                           of data to send before calling :func:`send_file`.
+    :param mimetype: the mimetype of the file if provided, otherwise
+                     auto detection happens.
+    :param as_attachment: set to `True` if you want to send this file with
+                          a ``Content-Disposition: attachment`` header.
+    :param filename: the filename for the attachment if it differs from the file's filename or
+                     if using file object without 'name' attribute (eg: E-tags with StringIO).
+    :param mtime: last modification time to use for contitional response.
+    :param add_etags: set to `False` to disable attaching of etags.
+    :param conditional: set to `False` to disable conditional responses.
+
+    :param cache_timeout: the timeout in seconds for the headers.
+    """
+    if isinstance(filepath_or_fp, (str, unicode)):
+        if not filename:
+            filename = os.path.basename(filepath_or_fp)
+        file = open(filepath_or_fp, 'rb')
+        if not mtime:
+            mtime = os.path.getmtime(filepath_or_fp)
+    else:
+        file = filepath_or_fp
+        if not filename:
+            filename = getattr(file, 'name', None)
+
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+
+    if mimetype is None and filename:
+        mimetype = mimetypes.guess_type(filename)[0]
+    if mimetype is None:
+        mimetype = 'application/octet-stream'
+
+    headers = werkzeug.datastructures.Headers()
+    if as_attachment:
+        if filename is None:
+            raise TypeError('filename unavailable, required for sending as attachment')
+        headers.add('Content-Disposition', 'attachment', filename=filename)
+        headers['Content-Length'] = size
+
+    data = wrap_file(request.httprequest.environ, file)
+    rv = Response(data, mimetype=mimetype, headers=headers,
+                                    direct_passthrough=True)
+
+    if isinstance(mtime, str):
+        try:
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
+        except Exception:
+            mtime = None
+    if mtime is not None:
+        rv.last_modified = mtime
+
+    rv.cache_control.public = True
+    if cache_timeout:
+        rv.cache_control.max_age = cache_timeout
+        rv.expires = int(time.time() + cache_timeout)
+
+    if add_etags and filename and mtime:
+        rv.set_etag('odoo-%s-%s-%s' % (
+            mtime,
+            size,
+            adler32(
+                filename.encode('utf-8') if isinstance(filename, unicode)
+                else filename
+            ) & 0xffffffff
+        ))
+        if conditional:
+            rv = rv.make_conditional(request.httprequest)
+            # make sure we don't send x-sendfile for servers that
+            # ignore the 304 status code for x-sendfile.
+            if rv.status_code == 304:
+                rv.headers.pop('x-sendfile', None)
+    return rv
 
 #----------------------------------------------------------
 # RPC controller

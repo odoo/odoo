@@ -769,9 +769,13 @@ class Field(object):
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
-            except MissingError:
-                # some record is missing, retry on existing records only
-                self._compute_value(records.exists())
+            except (AccessError, MissingError):
+                # some record is forbidden or missing, retry record by record
+                for record in records:
+                    try:
+                        self._compute_value(record)
+                    except Exception as exc:
+                        record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -899,6 +903,9 @@ class Integer(Field):
     type = 'integer'
 
     def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            return value.get('id', False)
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -926,9 +933,16 @@ class Float(Field):
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    def _setup_digits(self, env):
+        """ Setup the digits for `self` and its corresponding column """
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.store:
+            column = env[self.model_name]._columns[self.name]
+            column.digits_change(env.cr)
+
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        self._setup_digits(env)
 
     _related_digits = property(attrgetter('digits'))
 
@@ -1364,7 +1378,11 @@ class Many2one(_Relational):
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            return value.sudo().name_get()[0]
+            try:
+                return value.sudo().name_get()[0]
+            except MissingError:
+                # Should not happen, unless the foreign key is missing.
+                return False
         else:
             return value.id
 
@@ -1434,6 +1452,7 @@ class _RelationalMulti(_Relational):
                         result += result.new(command[2])
                     elif command[0] == 1:
                         result.browse(command[1]).update(command[2])
+                        result += result.browse(command[1]) - result
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
                         result -= result.browse(command[1])
@@ -1548,8 +1567,12 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_fields.append(invf)
-            invf.inverse_fields.append(self)
+            # In some rare cases, a `One2many` field can link to `Int` field
+            # (res_model/res_id pattern). Only inverse the field if this is
+            # a `Many2one` field.
+            if isinstance(invf, Many2one):
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1660,6 +1683,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, MissingError
+from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

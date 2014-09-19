@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from collections import defaultdict
 import logging
 import re
 import time
@@ -94,11 +95,22 @@ class ir_model(osv.osv):
             res[model.id] = self.pool["ir.ui.view"].search(cr, uid, [('model', '=', model.model)])
         return res
 
+    def _inherited_models(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for model in self.browse(cr, uid, ids, context=context):
+            res[model.id] = []
+            inherited_models = [model_name for model_name in self.pool[model.model]._inherits]
+            if inherited_models:
+                res[model.id] = self.search(cr, uid, [('model', 'in', inherited_models)], context=context)
+        return res
+
     _columns = {
         'name': fields.char('Model Description', translate=True, required=True),
         'model': fields.char('Model', required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True, copy=True),
+        'inherited_model_ids': fields.function(_inherited_models, type="many2many", obj="ir.model", string="Inherited models",
+            help="The list of models that extends the current model."),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
@@ -249,7 +261,8 @@ class ir_model_fields(osv.osv):
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
-        'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', help='On delete property for many2one fields'),
+        'on_delete': fields.selection([('cascade', 'Cascade'), ('set null', 'Set NULL'), ('restrict', 'Restrict')],
+                                      'On Delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', help="The optional domain to restrict possible values for relationship fields, "
             "specified as a Python expression defining a list of triplets. "
             "For example: [('color','=','red')]"),
@@ -815,23 +828,26 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
-    def name_get(self, cr, uid, ids, context=None):
-        result = {}
-        result2 = []
-        for res in self.browse(cr, uid, ids, context=context):
-            if res.id:
-                result.setdefault(res.model, {})
-                result[res.model][res.res_id] = res.id
 
-        for model in result:
+    def name_get(self, cr, uid, ids, context=None):
+        bymodel = defaultdict(dict)
+        names = {}
+
+        for res in self.browse(cr, uid, ids, context=context):
+            bymodel[res.model][res.res_id] = res
+            names[res.id] = res.complete_name
+            #result[res.model][res.res_id] = res.id
+
+        for model, id_map in bymodel.iteritems():
             try:
-                r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
-                for key,val in result[model].items():
-                    result2.append((val, r.get(key, False)))
-            except:
-                # some object have no valid name_get implemented, we accept this
+                ng = dict(self.pool[model].name_get(cr, uid, id_map.keys(), context=context))
+            except Exception:
                 pass
-        return result2
+            else:
+                for r in id_map.itervalues():
+                    names[r.id] = ng.get(r.res_id, r.complete_name)
+
+        return [(i, names[i]) for i in ids]
 
     def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}

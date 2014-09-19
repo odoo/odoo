@@ -257,12 +257,6 @@ class QWeb(orm.AbstractModel):
                 uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
                 can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                 if not can_see:
-                    if qwebcontext.get('editable') and not qwebcontext.get('editable_no_editor'):
-                        errmsg = _("Editor disabled because some content can not be seen by a user who does not belong to the groups %s")
-                        raise openerp.http.Retry(
-                            _("User does not belong to groups %s") % attribute_value, {
-                                'editable_no_editor': errmsg % attribute_value
-                            })
                     return ''
 
             attribute_value = attribute_value.encode("utf8")
@@ -271,14 +265,15 @@ class QWeb(orm.AbstractModel):
                 for attribute in self._render_att:
                     if attribute_name[2:].startswith(attribute):
                         att, val = self._render_att[attribute](self, element, attribute_name, attribute_value, qwebcontext)
-                        generated_attributes += val and ' %s="%s"' % (att, escape(val)) or " "
+                        if val:
+                            generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
                     if attribute_name[2:] in self._render_tag:
                         t_render = attribute_name[2:]
                     template_attributes[attribute_name[2:]] = attribute_value
             else:
-                generated_attributes += ' %s="%s"' % (attribute_name, escape(attribute_value))
+                generated_attributes += self.render_attribute(element, attribute_name, attribute_value, qwebcontext)
 
         if 'debug' in template_attributes:
             debugger = template_attributes.get('debug', 'pdb')
@@ -308,7 +303,7 @@ class QWeb(orm.AbstractModel):
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
-                except (QWebException, openerp.http.Retry):
+                except QWebException:
                     raise
                 except Exception:
                     template = qwebcontext.get('__template__')
@@ -333,6 +328,9 @@ class QWeb(orm.AbstractModel):
             )
         else:
             return "<%s%s/>" % (name, generated_attributes)
+
+    def render_attribute(self, element, name, value, qwebcontext):
+        return ' %s="%s"' % (name, escape(value))
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
@@ -875,15 +873,18 @@ class Contact(orm.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if context is None:
+            context = {}
+
         if options is None:
             options = {}
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
-
         if not getattr(record, field_name):
             return None
 
         id = getattr(record, field_name).id
-        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        context.update(show_address=True)
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context=context)
         value = field_browse.name_get()[0][1]
 
         val = {
@@ -1033,6 +1034,7 @@ class AssetsBundle(object):
 
         context = self.context.copy()
         context['inherit_branding'] = False
+        context['rendering_bundle'] = True
         self.html = self.registry['ir.ui.view'].render(self.cr, self.uid, xmlid, context=context)
         self.parse()
 
@@ -1085,10 +1087,13 @@ class AssetsBundle(object):
                 for jscript in self.javascripts:
                     response.append(jscript.to_html())
         else:
+            url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                response.append('<link href="/web/css/%s/%s" rel="stylesheet"/>' % (self.xmlid, self.version))
+                href = '/web/css/%s/%s' % (self.xmlid, self.version)
+                response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
             if js:
-                response.append('<script type="text/javascript" src="/web/js/%s/%s"></script>' % (self.xmlid, self.version))
+                src = '/web/js/%s/%s' % (self.xmlid, self.version)
+                response.append('<script type="text/javascript" src="%s"></script>' % url_for(src))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1150,7 +1155,7 @@ class AssetsBundle(object):
         content = None
         domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
         bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
-        if bundle:
+        if bundle and bundle[0]['datas']:
             content = bundle[0]['datas'].decode('base64')
         return content
 

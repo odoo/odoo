@@ -59,7 +59,6 @@
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
-          t-att-data-editable-no-editor="editable_no_editor or None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
@@ -89,8 +88,8 @@
                 </t>
             </t>
 
-            <t t-call-assets="web.assets_common"/>
-            <t t-call-assets="website.assets_frontend"/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="website.assets_frontend" t-js="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
             <t t-if="website and website.google_analytics_key">
@@ -151,6 +150,9 @@
                     </div>
                 </footer>
             </div>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="website.assets_frontend" t-css="false"/>
         </body>
     </html>
 </template>
@@ -178,8 +180,11 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
-        <t t-call-assets="website.assets_editor"/>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-js]' position="after">
+        <t t-call-assets="website.assets_editor" t-js="false"/>
+    </xpath>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css]' position="after">
+        <t t-call-assets="website.assets_editor" t-css="false"/>
     </xpath>
 </template>
 

@@ -1,63 +1,63 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* marketing
+# German translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-18 07:08+0000\n"
-"Last-Translator: Ferdinand <Unknown>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-15 08:28+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-16 08:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_config_settings
-msgid "marketing.config.settings"
-msgstr "marketing.config.settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
+msgstr "Anwenden"
 
 #. module: marketing
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"                This installs the module marketing_campaign_crm_demo."
-msgstr ""
-"Installiert Demodaten Leads, Kampagnen und Segmente für  "
-"Marketingkampagnen.\n"
-"                Dies installiert das Modul marketing_campaign_crm_demo."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
+msgstr "Abbrechen"
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_configuration
-#: view:marketing.config.settings:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Configure Marketing"
 msgstr "Konfiguriere Marketing"
 
 #. module: marketing
-#: view:crm.lead:0
-#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
-msgid "Marketing"
-msgstr "Marketing"
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Erstellt durch"
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign:0
-msgid "Marketing campaigns"
-msgstr "Marketingkampagnen"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "or"
-msgstr "oder"
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns"
-msgstr "Kampagnen"
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
 
 #. module: marketing
 #: model:res.groups,name:marketing.group_marketing_manager
@@ -65,128 +65,52 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: marketing
-#: model:res.groups,name:marketing.group_marketing_user
-msgid "User"
-msgstr "Benutzer"
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns Settings"
-msgstr "Kampagnen-Konfiguration"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Marketing Campaigns"
+msgstr "Marketing Kampagnen"
 
 #. module: marketing
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
-msgstr "Verfolge das Kundenprofil, um die Kampagnen zu spezifizieren"
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
+msgstr "Marketingkampagnen"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Cancel"
-msgstr "Abbrechen"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
+msgstr "Massenmailing"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Apply"
-msgstr "Anwenden"
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
+msgstr ""
+"Ermögliche die Durchführung von Massenmailings\n"
+"- Es wird das Modul mass_mailing installiert"
 
 #. module: marketing
 #: help:marketing.config.settings,module_marketing_campaign:0
 msgid ""
-"Provides leads automation through marketing campaigns.\n"
-"                Campaigns can in fact be defined on any resource, not just "
-"CRM leads.\n"
-"                This installs the module marketing_campaign."
+"Provides leads automation through marketing campaigns. Campaigns can in fact "
+"be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
 msgstr ""
-"Ermöglicht die Generation von Leads aus Marketingkampagnen .\n"
-"                Kampagnen können auf Basis jeder Resource erstellt werden..\n"
-"                Dies installiert das Modul marketing_campaign."
+"Benutze Marketing Kampagnen für die Generierung neuer Leads. Faktisch können "
+"Kampagnen nicht nur für CRM Leads genutzt werden.\n"
+"- Es wird das Modul marketing_campaign erstellt."
 
 #. module: marketing
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"                This installs the module crm_profiling."
-msgstr ""
-"Erlaubt Segmentierung von Partnern.\n"
-"                Dies installiert das Modul crm_profiling."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
+msgstr "Einstellungen"
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
-msgstr "Demodaten für Marketingkampagnen"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter XML Quellcode für Ansicht!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
-#~ "Sonderzeichen haben!"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Abfolge Konfiguration"
-
-#~ msgid "title"
-#~ msgstr "Bezeichnung"
-
-#~ msgid "Automated E-Mails"
-#~ msgstr "Automat. EMails"
-
-#~ msgid "Image"
-#~ msgstr "Bild"
-
-#~ msgid ""
-#~ "Helps you to manage marketing campaigns and automate actions and "
-#~ "communication steps."
-#~ msgstr ""
-#~ "Hilfe beim Management von Marketing Kampagnen und bei der Automatisierungder "
-#~ "Kommunikation mit Geschäftspartnern"
-
-#~ msgid "Menu for Marketing"
-#~ msgstr "Marketing Menü"
-
-#~ msgid ""
-#~ "Helps you to design templates of emails and integrate them in your different "
-#~ "processes."
-#~ msgstr ""
-#~ "Hilfe für das Design von Email Vorlagen und für die Integration in "
-#~ "verschiedeneProzesse Ihres Marketings"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Fehlerhafte Modellbezeichnung bei der Aktion"
-
-#~ msgid "Profiling Tools"
-#~ msgstr "Kundenzielgruppen Tool"
-
-#~ msgid "Marketing Campaigns"
-#~ msgstr "Marketing Kampagnen"
-
-#~ msgid ""
-#~ "Helps you to perform segmentation of partners and design segmentation "
-#~ "questionnaires"
-#~ msgstr ""
-#~ "Hilft bei der Segmentierung von Partnern und der Erstellung von "
-#~ "Segmentierungsfragen."
-
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "Konfiguration Marketing"
-
-#~ msgid ""
-#~ "OpenERP provides Addons to better manage your sales and marketing processes. "
-#~ "Select the ones you would be interested in."
-#~ msgstr ""
-#~ "OpenERP bietet weitere Funktionen für Vertrieb und Marketing. Treffen Sie "
-#~ "eine Auswahl, der für Sie interessanten Erweiterungen."
-
-#~ msgid "Configure"
-#~ msgstr "Konfigurieren"
-
-#~ msgid "Marketing Application Configuration"
-#~ msgstr "Konfiguration Marketing Anwendungen"
-
-#~ msgid "Configure Your Marketing Application"
-#~ msgstr "Konfigurieren Sie die Marketing Anwendung"
-
-#~ msgid "marketing.installer"
-#~ msgstr "marketing.installer"
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
+msgstr "Benutzer"

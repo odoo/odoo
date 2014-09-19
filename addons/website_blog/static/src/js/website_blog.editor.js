@@ -1,4 +1,4 @@
-(function() {
+$(document).ready(function() {
     "use strict";
 
     var website = openerp.website;
@@ -55,4 +55,4 @@
             },
         });
     }
-})();
+});

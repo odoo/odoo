@@ -132,7 +132,7 @@ class event_event(osv.osv):
         }
 
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
-        res = dict.fromkeys(ids, [])
+        res = dict((res_id, []) for res_id in ids)
         for event in self.browse(cr, uid, ids, context=context):
             for track in event.track_ids:
                 res[event.id] += [tag.id for tag in track.tag_ids]
@@ -193,7 +193,7 @@ class event_sponsors(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
         'url': fields.text('Sponsor Website'),
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
-        'image_medium': fields.related('partner_id', 'image_medium', string='Logo')
+        'image_medium': fields.related('partner_id', 'image_medium', string='Logo', type='binary')
     }
 
     def has_access_to_partner(self, cr, uid, ids, context=None):

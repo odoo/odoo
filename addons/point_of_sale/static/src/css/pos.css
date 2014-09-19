@@ -6,14 +6,18 @@
 }
 
 /* --- Styling of OpenERP Elements --- */
-.ui-dialog{
+.ui-dialog, .modal-dialog {
     background: white;
     padding: 10px;
     border-radius: 3px;
     font-family: sans-serif;
     box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+    position: absolute;
+    top: 30px;
+    height: 400px;
+    overflow: scroll;
 }
-.ui-dialog button{
+.ui-dialog button, .modal-dialog button {
     padding: 8px;
     min-width: 48px;
 }
@@ -1256,15 +1260,47 @@ td {
     float: left;
     margin-right: 16px;
     background: white;
+    position: relative;
 }
-.pos .clientlist-screen .client-picture > img{
-    vertical-align: middle;
+.pos .clientlist-screen .client-picture > img {
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    left: -9999px;
     max-height: 64px;
+    margin: auto;
 }
-.pos .clientlist-screen .client-name{
+.pos .clientlist-screen .client-picture > .fa {
+    line-height: 64px;
+    font-size: 32px;
+}
+.pos .clientlist-screen .client-picture .image-uploader {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.pos .clientlist-screen .client-name {
     font-size: 32px;
     line-height: 64px;
     margin-bottom:16px;
+}
+.pos .clientlist-screen .edit-buttons {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+}
+.pos .clientlist-screen .edit-buttons .button{
+    display: inline-block;
+    margin-left: 16px;
+    color: rgb(128,128,128);
+    cursor: pointer;
+    font-size: 36px;
 }
 .pos .clientlist-screen .client-details-box{
     position: relative;
@@ -1284,9 +1320,29 @@ td {
 .pos .clientlist-screen .client-detail > .label{
     font-weight: bold;
     display: inline-block;
-    width: 64px;
+    width: 75px;
     text-align: right;
     margin-right: 8px;
+}
+.pos .clientlist-screen .client-details input,
+.pos .clientlist-screen .client-details select
+{
+    padding: 4px;
+    border-radius: 3px;
+    border: solid 1px #cecbcb;
+    margin-bottom: 4px;
+    background: white;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    width: 340px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.pos .clientlist-screen .client-details input.client-name {
+    font-size: 24px;
+    line-height: 24px;
+    margin: 18px 6px;
+    width: 340px;
 }
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
@@ -1299,6 +1355,10 @@ td {
 }
 .pos .clientlist-screen .searchbox input{
     width: 120px;
+}
+.pos .clientlist-screen .button.new-customer {
+    left: 50%;
+    margin-left: 120px;
 }
 
 
