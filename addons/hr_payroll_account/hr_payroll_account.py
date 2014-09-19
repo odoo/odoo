@@ -112,6 +112,8 @@ class hr_payslip(osv.osv):
             }
             for line in slip.details_by_salary_rule_category:
                 amt = slip.credit_note and -line.total or line.total
+                if amt == 0.0:
+                    continue
                 partner_id = line.salary_rule_id.register_id.partner_id and line.salary_rule_id.register_id.partner_id.id or default_partner_id
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
