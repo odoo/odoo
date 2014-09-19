@@ -17,6 +17,7 @@ class Experiment_snapshot(osv.Model):
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
+    _inherit = ['mail.thread']
 
     def _get_version_number(self, cr, uid, ids, name, arg, context=None):
         result = {}
@@ -38,7 +39,7 @@ class Experiment(osv.Model):
         'name': fields.char(string="Title", size=256, required=True),
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False, track_visibility='onchange'),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
