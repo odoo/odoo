@@ -423,6 +423,10 @@ class Post(osv.Model):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
+
+        if context is None:
+            context = {}
+
         post = self.browse(cr, SUPERUSER_ID, id, context=context)
         if not post.parent_id:
             return False
