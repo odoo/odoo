@@ -601,6 +601,14 @@ class sale_order_line(osv.osv):
             res['value'].update({'product_packaging': False})
             return res
 
+        # set product uom in context to get virtual stock in current uom
+        if res.get('value', {}).get('product_uom'):
+            # use the uom changed by super call
+            context.update({'uom': res['value']['product_uom']})
+        elif uom:
+            # fallback on selected
+            context.update({'uom': uom})
+
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
