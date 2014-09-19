@@ -2243,7 +2243,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
-        """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
+        """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
         """
         context = context or {}
         picking_obj = self.pool.get("stock.picking")
@@ -2294,6 +2294,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in
+        move_dest_ids = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move_qty[move.id] > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
@@ -2306,23 +2307,23 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain_list=prefered_domain_list, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
 
-            #Check moves that were pushed
-            if move.move_dest_id.state in ('waiting', 'confirmed'):
-                other_upstream_move_ids = self.search(cr, uid, [('id', 'not in', ids), ('state', 'not in', ['done', 'cancel']),
-                                            ('move_dest_id', '=', move.move_dest_id.id)], context=context)
-                #If no other moves for the move that got pushed:
-                if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
+            # If the move has a destination, add it to the list to reserve
+            if move.move_dest_id and move.move_dest_id.state in ('waiting', 'confirmed'):
+                move_dest_ids.add(move.move_dest_id.id)
+
             if move.procurement_id:
                 procurement_ids.append(move.procurement_id.id)
 
-        #unreserve the quants and make them available for other operations/moves
-        quant_obj.quants_unreserve(cr, uid, move, context=context)
+            #unreserve the quants and make them available for other operations/moves
+            quant_obj.quants_unreserve(cr, uid, move, context=context)
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        #assign destination moves
+        if move_dest_ids:
+            self.action_assign(cr, uid, list(move_dest_ids), context=context)
         #check picking state to set the date_done is needed
         done_picking = []
         for picking in picking_obj.browse(cr, uid, list(pickings), context=context):
