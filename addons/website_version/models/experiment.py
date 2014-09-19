@@ -19,6 +19,8 @@ class Experiment(osv.Model):
     _name = "website_version.experiment"
     _inherit = ['mail.thread']
 
+    STATES = [('draft','Draft'),('running','Running'),('done','Done')]
+
     def _get_version_number(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for exp in self.browse(cr, uid, ids, context=context):
@@ -33,13 +35,14 @@ class Experiment(osv.Model):
         return result
 
     # def _get_state(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-    #     return [{'id': 1, 'state': u'draft'}, {'id': 2, 'state': u'running'}, {'id': 3, 'state': u'done'}]
+    #     from pudb import set_trace; set_trace()
+    #     return STATES, {}
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, copy=False, track_visibility='onchange'),
+        'state': fields.selection(STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
@@ -52,8 +55,8 @@ class Experiment(osv.Model):
 
     _order = 'sequence'
 
-    # _group_by_full = {
-    #     'state': _get_state
-    #     'state': lambda *args, **kwargs :['draft','running','done'],
-    # }
+    _group_by_full = {
+        # 'state': _get_state
+        'state': lambda *args, **kwargs : ([('draft','Draft'),('running','Running'),('done','Done')], dict()),
+    }
 
