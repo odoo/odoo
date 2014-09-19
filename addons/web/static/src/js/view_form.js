@@ -3419,9 +3419,14 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
-            self.getParent()._quick_create(self.$("input").val());
-            self.destroy();
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
+            if (self.$("input").val() != ''){
+                self.getParent()._quick_create(self.$("input").val());
+                self.destroy();
+            }else{
+                e.preventDefault();
+                self.$("input").focus();
+            }
         });
         this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
             self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
