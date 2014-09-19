@@ -1082,10 +1082,10 @@ openerp.account = function (instance) {
                     self.doReloadMenuReconciliation();
 
                     // Display new line if there are left
-                    if (self.last_displayed_reconciliation_index < self.st_lines.length) {
+                    if (self.last_displayed_reconciliation_index < self.lines.length) {
                         var begin = self.last_displayed_reconciliation_index;
-                        var end = Math.min((begin+self.max_reconciliations_displayed), self.st_lines.length);
-                        var reconciliations_to_show = self.st_lines.slice(begin, end);
+                        var end = Math.min((begin+self.max_reconciliations_displayed), self.lines.length);
+                        var reconciliations_to_show = self.lines.slice(begin, end);
 
                         return self.model_bank_statement_line
                             .call("get_data_for_reconciliations", [reconciliations_to_show])
@@ -1093,11 +1093,11 @@ openerp.account = function (instance) {
                                 var child_promises = [];
                                 var datum;
                                 while ((datum = data.shift()) !== undefined)
-                                    child_promises.push(displayReconciliation(datum.st_line.id, 'inactive', false, true, datume.st_line, datum.reconciliation_proposition));
+                                    child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
                                 self.last_displayed_reconciliation_index += reconciliations_to_show.length;
                                 return $.when.apply($, child_promises).then(function() {
                                     // Put the first line in match mode
-                                    if (self.reconciled_lines !== self.st_lines.length) {
+                                    if (self.reconciled_lines !== self.lines.length) {
                                         var first_child = self.getChildren()[0];
                                         if (first_child.get("mode") === "inactive") {
                                             first_child.set("mode", "match");
@@ -1108,7 +1108,7 @@ openerp.account = function (instance) {
                             });
                     }
                     // Congratulate the user if the work is done
-                    if (self.reconciled_lines === self.st_lines.length) {
+                    if (self.reconciled_lines === self.lines.length) {
                         self.displayDoneMessage();
                     }
                 }).fail(function() {

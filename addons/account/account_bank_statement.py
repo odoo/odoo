@@ -538,7 +538,6 @@ class account_bank_statement_line(osv.osv):
         sign = 1
         if statement_currency == company_currency:
             amount_field = 'credit'
-            sign = -1
             if st_line.amount > 0:
                 amount_field = 'debit'
         else:
@@ -608,6 +607,9 @@ class account_bank_statement_line(osv.osv):
             'date': st_line.date,
             'account_id': account_id
             }
+    def process_reconciliations(self, cr, uid, data, context=None):
+        for datum in data:
+            self.process_reconciliation(cr, uid, datum[0], datum[1], context=context)
 
     def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
