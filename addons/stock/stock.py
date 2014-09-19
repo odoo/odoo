@@ -2451,9 +2451,9 @@ class stock_move(osv.osv):
         code = 'internal'
         src_loc = move.location_id
         dest_loc = move.location_dest_id
-        if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
+        if src_loc.usage == 'internal' and dest_loc.usage == 'customer':
             code = 'outgoing'
-        if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
+        if src_loc.usage == 'supplier' and dest_loc.usage == 'internal':
             code = 'incoming'
         return code
 
