@@ -16,6 +16,7 @@
             <field name="model">website_version.experiment</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="state" string="Experiments" class="oe_background_grey">
+                    <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="website_id"/>
                     <field name="experiment_snapshot_ids"/>
