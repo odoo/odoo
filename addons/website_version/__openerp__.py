@@ -12,7 +12,6 @@ OpenERP Website CMS
     'depends': ['website','marketing'],
     'installable': True,
     'data': [
-        'data/data.xml',
         'security/ir.model.access.csv',
         'views/website_templates.xml',
         'views/marketing_view.xml',

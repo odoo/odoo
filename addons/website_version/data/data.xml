@@ -8,11 +8,7 @@
             <field name="target">self</field>
         </record>
 
-        <record id="menu_analytic" model="ir.ui.menu">
-            <field name="name">Google analytics</field>
-            <field name="sequence" eval="400"/>
-            <field name="action" ref="action_analytic"/>
-        </record>
+        <menuitem action="action_analytic" id="menu_analytics" parent="website_menu"/>
 
     </data>
 </openerp>
