@@ -169,10 +169,8 @@ class website_sale(http.Controller):
             pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
 
         url = "/shop"
-        if search:
-            post["search"] = search
-        if category:
-            url = "/shop/category/%s" % slug(category)
+        categ = int(category.id) if category and not search else category
+        url = "/shop/category/%s" % categ if categ else "/shop"
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
