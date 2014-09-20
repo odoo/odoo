@@ -1,63 +1,116 @@
 # German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-07-08 18:00+0000\n"
-"PO-Revision-Date: 2012-09-11 11:15+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-15 13:09+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-20 05:38+0000\n"
-"X-Generator: Launchpad (build 16567)\n"
+"X-Launchpad-Export-Date: 2014-09-16 08:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product_extended
-#: model:ir.module.module,shortdesc:product_extended.module_name_translation
-msgid "Product extension to track sales and purchases"
-msgstr ""
+#: code:addons/product_extended/wizard/wizard_price.py:43
+#: code:addons/product_extended/wizard/wizard_price.py:52
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr "Aktuelle ID ist in diesem Kontext nicht definiert"
 
 #. module: product_extended
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: model:ir.model,name:product_extended.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Stückliste"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "Change Price"
+msgstr "Ändere Preis"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "Change Standard Price"
+msgstr "Ändere Anschaffungspreis"
+
+#. module: product_extended
+#: field:wizard.price,recursive:0
+msgid "Change prices of child BoMs too"
+msgstr "Preise in  Sub-Stücklisten ändern"
+
+#. module: product_extended
+#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+msgid "Compute Price Wizard"
+msgstr "Preisberechnungsassistent"
+
+#. module: product_extended
+#: model:ir.model,name:product_extended.model_wizard_price
+msgid "Compute price wizard"
+msgstr "Preisberechnungsassistent"
+
+#. module: product_extended
+#: field:wizard.price,create_uid:0
+msgid "Created by"
+msgstr "Erstellt durch"
+
+#. module: product_extended
+#: field:wizard.price,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: product_extended
+#: field:wizard.price,real_time_accounting:0
+msgid "Generate accounting entries when real-time"
+msgstr "Erstelle Finanzbuchungen in Echtzeit"
+
+#. module: product_extended
+#: field:wizard.price,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: product_extended
+#: field:wizard.price,info_field:0
+msgid "Info"
+msgstr "Info"
+
+#. module: product_extended
+#: field:wizard.price,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: product_extended
+#: field:wizard.price,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: product_extended
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "Produkt"
+
+#. module: product_extended
+#: view:product.product:product_extended.product_product_ext_form_view2
+msgid "Recompute price from BoM"
+msgstr "Neuberechnung Preis von Stückliste"
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "Set price on BoM"
+msgstr "Setze Preis in Stückliste"
 
 #. module: product_extended
 #: field:mrp.bom,standard_price:0
 msgid "Standard Price"
-msgstr ""
-
-#. module: product_extended
-#: field:product.supplierinfo,last_order_date:0
-msgid "Last Order date"
-msgstr ""
-
-#. module: product_extended
-#: field:product.product,qty_dispo:0
-msgid "Stock available"
-msgstr ""
-
-#. module: product_extended
-#: field:product.product,calculate_price:0
-msgid "Compute price"
-msgstr ""
-
-#. module: product_extended
-#: field:product.supplierinfo,last_order:0
-msgid "Last Order"
-msgstr ""
-
-#. module: product_extended
-#: view:product.product:0
-msgid "Compute standard price"
-msgstr ""
-
-#. module: product_extended
-#: field:product.product,orderpoint_ids:0
-msgid "Orderpoints"
-msgstr ""
+msgstr "Anschaffungspreis"

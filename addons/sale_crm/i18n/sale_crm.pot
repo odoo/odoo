@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* sale_crm
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 13:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,40 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
-#, python-format
-msgid "Insufficient Data!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr ""
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr ""
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr ""
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
+#: field:sale.order,medium_id:0
+msgid "Channel"
 msgstr ""
 
 #. module: sale_crm
@@ -58,20 +36,24 @@ msgid "Check this to close the opportunity after having created the sales order.
 msgstr ""
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:124
-#: code:addons/sale_crm/wizard/crm_make_sale.py:135
-#, python-format
-msgid "Quotation"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_crm
@@ -80,60 +62,24 @@ msgid "Customer"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
+#: field:crm.make.sale,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:93
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
+msgid "Insufficient Data!"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:110
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr ""
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr ""
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr ""
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: sale_crm
@@ -142,8 +88,38 @@ msgid "Make Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
 msgstr ""
 
 #. module: sale_crm
@@ -152,7 +128,32 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr ""
+
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid "This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid "This is the source of the link Ex: Search Engine, another domain, or name of email list"
+msgstr ""
+
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
 msgstr ""
 

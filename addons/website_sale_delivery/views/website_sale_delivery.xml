@@ -29,16 +29,18 @@
                 <h4>Choose your Delivery Method</h4>
                     <ul class="list-unstyled">
                         <li t-foreach="deliveries" t-as="delivery">
-                            <label>
-                                <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                    t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
-                                <span t-field="delivery.name"/>
-                                <span class="badge" t-field="delivery.price"
-                                    t-field-options='{
-                                        "widget": "monetary",
-                                        "display_currency": "website.pricelist_id.currency_id"
-                                    }'/>
-                            </label>
+                            <t t-if="delivery.available">
+                                <label>
+                                    <input t-att-value="delivery.id" type="radio" name="delivery_type"
+                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                    <span t-field="delivery.name"/>
+                                    <span class="badge" t-field="delivery.price"
+                                        t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/>
+                                </label>
+                            </t>
                         </li>
                     </ul>
                 </div>

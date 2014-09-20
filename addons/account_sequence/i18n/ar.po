@@ -1,68 +1,32 @@
 # Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-01 18:27+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "قيد الحساب"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "إعدادت تطبيق مسلسل الحساب"
-
-#. module: account_sequence
-#: help:account.move,internal_sequence_number:0
-#: help:account.move.line,internal_sequence_number:0
-msgid "Internal Sequence Number"
-msgstr "رقم التسلسل الداخلي"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr "الرقم التالي لهذا التسلسل"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr "العدد التالي"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr "مقدار الزيادة"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr "سيتم زيادة الرقم التالي للتسلسل بهذا الرقم"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr "إعداد تطبيق مسلسل لحسابك"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "تهيئة"
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
-msgstr "قيمة لاحقة من السجل للمسلسل"
 
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
@@ -70,14 +34,34 @@ msgid "Company"
 msgstr "شركة"
 
 #. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
-msgstr "ملئ العدد"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "تهيئة"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move_line
-msgid "Journal Items"
-msgstr "عناصر اليومية"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "إعداد تطبيق مسلسل لحسابك"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "مقدار الزيادة"
 
 #. module: account_sequence
 #: field:account.move,internal_sequence_number:0
@@ -86,13 +70,35 @@ msgid "Internal Number"
 msgstr "الرقم الداخلي"
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid ""
-"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
-"get the required padding size."
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "مسلسل داخلي"
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "رقم التسلسل الداخلي"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "يومية"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "عناصر اليومية"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
 msgstr ""
-"يضيف OpenERP تلقائيًا بعض ‘0‘ على شمال ‘العدد التالي‘ للحصول على مقاس الحشو "
-"المطلوب."
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -100,9 +106,31 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: account_sequence
-#: field:account.journal,internal_sequence_id:0
-msgid "Internal Sequence"
-msgstr "مسلسل داخلي"
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "العدد التالي"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "الرقم التالي لهذا التسلسل"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "ملئ العدد"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "بادئة"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -110,24 +138,19 @@ msgid "Prefix value of the record for the sequence"
 msgstr "القيمة السابقة من التسجيل للتسلسل"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr "قيد الحساب"
-
-#. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "اللاحقة"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr "الاسم"
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "قيمة لاحقة من السجل للمسلسل"
 
 #. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr "بادئة"
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "سيتم زيادة الرقم التالي للتسلسل بهذا الرقم"
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -139,95 +162,11 @@ msgstr ""
 "بهذه اليومية."
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "account.sequence.installer"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_journal
-msgid "Journal"
-msgstr "يومية"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "يمكنك تعزيز تطبيق تسلسل الحساب بالتثبيت."
 
-#~ msgid "Configuration Progress"
-#~ msgstr "سير الإعدادات"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "لا يمكنك إنشاء حركة سطر علي حساب مغلق."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
-
-#~ msgid "Image"
-#~ msgstr "صورة"
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr "لايمكنك انشاء اكثر من تحرك واحد كل فترة في اليومية المركزية"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    تحتفظ هذه الوحدة برقم التسلسل الداخلي للمدخلات المحاسبية\n"
-#~ "    "
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr "لايمكنك انشاء مدخلات على فترات مختلفة/اليوميات في نفس التحرك"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "لا يمكن إنشاء خط متحرك على عرض الحساب."
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "يجب ان تكون الشركة نفس فترتها وحسابها المتعلق بها."
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "يجب ان يكون الكود لليومية فريد لكل شركة !"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "يجب ان يكون الاسم لليومية فريد لكل شركة!"
-
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "ترقيم مسلسل المدخلات"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
-
-#~ msgid ""
-#~ "You can not create more than one move per period on centralized journal"
-#~ msgstr "لا يمكنك إنشاء أكثر من حركة لكل فترة في يومية مركزية"
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
-#~ "الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
-#~ "اليومية."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية "
-#~ "أيضأً."
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "الاسم"

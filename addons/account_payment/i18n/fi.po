@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-10-30 09:15+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -31,222 +31,98 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,currency:0
-msgid "Partner Currency"
-msgstr "Yhteistyökumppanin valuutta"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Set to draft"
-msgstr "Aseta luonnokseksi"
-
-#. module: account_payment
-#: help:payment.order,mode:0
-msgid "Select the Payment Mode to be applied."
-msgstr "Valitse käytettävä maksutapa."
-
-#. module: account_payment
-#: view:payment.mode:0
-#: view:payment.order:0
-msgid "Group By..."
-msgstr "Ryhmittely.."
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Maksurivit"
-
-#. module: account_payment
-#: view:payment.line:0
-#: field:payment.line,info_owner:0
-#: view:payment.order:0
-msgid "Owner Account"
-msgstr "Omistajan tili"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
+#: model:ir.model,name:account_payment.model_account_payment_populate_statement
+msgid "Account Payment Populate Statement"
 msgstr ""
-"Summa, joka tulisi maksaa tällä päivämäärällä, ja josta\n"
-"on vähennettu jo maksumääräyksessä oleva summa."
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
-#: field:payment.order,company_id:0
-msgid "Company"
-msgstr "Yritys"
+#: model:ir.model,name:account_payment.model_account_payment_make_payment
+msgid "Account make payment"
+msgstr "Tee tilitämaksu"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Kirjanpito / Maksut"
 
 #. module: account_payment
-#: selection:payment.line,state:0
-msgid "Free"
-msgstr "Vapaa"
+#: help:payment.line,info_owner:0
+msgid "Address of the Main Partner"
+msgstr "Pääyhteistyökumppanin osoite"
 
 #. module: account_payment
-#: view:payment.order.create:0
-#: field:payment.order.create,entries:0
-msgid "Entries"
-msgstr "Merkinnät"
+#: help:payment.line,info_partner:0
+msgid "Address of the Ordering Customer."
+msgstr "Tilaavan asiakkaan osoite."
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Used Account"
-msgstr "Käytetty tili"
-
-#. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
-msgid "Due Date"
-msgstr "Eräpäivä"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "_Add to payment order"
-msgstr "_Lisää maksumääräykseen"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
-#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
-msgid "Payment Populate statement"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#, python-format
-msgid ""
-"You cannot cancel an invoice which has already been imported in a payment "
-"order. Remove it from the following payment order : %s."
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_invoice.py:43
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: account_payment
-#: report:payment.order:0
-#: view:payment.order:0
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:website:account_payment.report_paymentorder
 msgid "Amount"
 msgstr "Summa"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Total in Company Currency"
-msgstr "Loppusumma yrityksen valuutassa"
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Amount Total"
+msgstr "Loppusumma"
+
+#. module: account_payment
+#: field:payment.line,amount:0
+msgid "Amount in Company Currency"
+msgstr "Summa yrityksen valuutassa"
+
+#. module: account_payment
+#: field:payment.line,amount_currency:0
+msgid "Amount in Partner Currency"
+msgstr "Summa kumppanin valuutassa"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Are you sure you want to make payment?"
+msgstr "Oletko varma että haluat tehdä maksun"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Bank Account"
+msgstr "Pankkitilinumero"
+
+#. module: account_payment
+#: help:payment.mode,bank_id:0
+msgid "Bank Account for the Payment Mode"
+msgstr "Pankkitili tälle maksutavalle"
+
+#. module: account_payment
+#: field:payment.mode,bank_id:0
+msgid "Bank account"
+msgstr "Pankkitili"
+
+#. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr "Pankki tai käteis päiväkirja maksujen tilalle"
+
+#. module: account_payment
+#: field:payment.line,bank_statement_line_id:0
+msgid "Bank statement line"
+msgstr "Pankkitiliotteen rivi"
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Cancel Payments"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
 msgstr "Peruttu"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
-msgid "New Payment Order"
-msgstr "Uusi maksumääräys"
-
-#. module: account_payment
-#: report:payment.order:0
-#: field:payment.order,reference:0
-msgid "Reference"
-msgstr "Viite"
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
-msgstr "Maksurivin nimen pitää olla uniikki"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
-msgid "Payment Orders"
-msgstr "Maksumääräykset"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Directly"
-msgstr "Heti"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr "Maksurivi"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Amount Total"
-msgstr "Loppusumma"
-
-#. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the status is 'Draft'.\n"
-" Once the bank is confirmed the status is set to 'Confirmed'.\n"
-" Then the order is paid the status is 'Done'."
-msgstr ""
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Confirmed"
-msgstr "Vahvistettu"
-
-#. module: account_payment
-#: help:payment.line,ml_date_created:0
-msgid "Invoice Effective Date"
-msgstr "Laskun voimaantulopäivä"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Execution Type"
-msgstr "Suorituksen tyyppi"
-
-#. module: account_payment
-#: selection:payment.line,state:0
-msgid "Structured"
-msgstr "Jäsennetty"
-
-#. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import Payment Lines"
-msgstr ""
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Transaction Information"
-msgstr "Tapahtuman tiedot"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
-#: model:ir.model,name:account_payment.model_payment_mode
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
-#: view:payment.mode:0
-#: view:payment.order:0
-#: field:payment.order,mode:0
-msgid "Payment Mode"
-msgstr "Maksutapa"
-
-#. module: account_payment
-#: field:payment.line,ml_date_created:0
-msgid "Effective Date"
-msgstr "Toimeenpanopäivä"
-
-#. module: account_payment
-#: field:payment.line,ml_inv_ref:0
-msgid "Invoice Ref."
-msgstr "Laskun viite"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -260,55 +136,14 @@ msgstr ""
 "asettaa toimeenpanolle suunnitellun päivämäärän."
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation Date"
-msgstr ""
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Viestirivi 1"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "Pankki tai käteis päiväkirja maksujen tilalle"
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Fixed date"
-msgstr "Kiinteä päivämäärä"
-
-#. module: account_payment
-#: field:payment.line,info_partner:0
-#: view:payment.order:0
-msgid "Destination Account"
-msgstr "Kohdetili"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Desitination Account"
-msgstr "Kohdetili"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Search Payment Orders"
-msgstr "Hae maksumääräyksiä"
-
-#. module: account_payment
-#: field:payment.line,create_date:0
-msgid "Created"
-msgstr "Luotu"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Valitse maksettavat laskut"
-
-#. module: account_payment
-#: view:payment.line:0
-msgid "Currency Amount Total"
-msgstr "Valuutta loppusumma"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Make Payments"
-msgstr "Suorita maksut"
+#: field:payment.line,communication2:0
+msgid "Communication 2"
+msgstr "Viestirivi 2"
 
 #. module: account_payment
 #: field:payment.line,state:0
@@ -316,16 +151,110 @@ msgid "Communication Type"
 msgstr "Yhteystapa"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Kumppani"
+#: field:payment.line,company_id:0
+#: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
+msgid "Company"
+msgstr "Yritys"
 
 #. module: account_payment
-#: field:payment.line,bank_statement_line_id:0
-msgid "Bank statement line"
-msgstr "Pankkitiliotteen rivi"
+#: field:payment.line,company_currency:0
+msgid "Company Currency"
+msgstr "Yrityksen valuutta"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Company Currency:"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Confirm Payments"
+msgstr "Vahvista maksut"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+#. module: account_payment
+#: field:payment.line,create_date:0
+msgid "Created"
+msgstr "Luotu"
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_uid:0
+#: field:account.payment.populate.statement,create_uid:0
+#: field:payment.line,create_uid:0
+#: field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0
+#: field:payment.order.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,create_date:0
+#: field:account.payment.populate.statement,create_date:0
+#: field:payment.mode,create_date:0
+#: field:payment.order,create_date:0
+#: field:payment.order.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr "Luontipäivä"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_tree
+msgid "Currency Amount Total"
+msgstr "Valuutta loppusumma"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+msgid "Desitination Account"
+msgstr "Kohdetili"
+
+#. module: account_payment
+#: field:payment.line,info_partner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Destination Account"
+msgstr "Kohdetili"
+
+#. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Directly"
+msgstr "Heti"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Done"
+msgstr "Valmis"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Luonnos"
+
+#. module: account_payment
+#: field:payment.line,ml_maturity_date:0
+#: field:payment.order.create,duedate:0
+msgid "Due Date"
+msgstr "Eräpäivä"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -333,24 +262,82 @@ msgid "Due date"
 msgstr "Eräpäivä"
 
 #. module: account_payment
-#: field:account.invoice,amount_to_pay:0
-msgid "Amount to be paid"
-msgstr "Maksettava summa"
+#: field:payment.line,ml_date_created:0
+msgid "Effective Date"
+msgstr "Toimeenpanopäivä"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Currency"
-msgstr "Valuutta"
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+#: field:payment.order.create,entries:0
+msgid "Entries"
+msgstr "Merkinnät"
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Yes"
-msgstr "Kyllä"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Entry Information"
+msgstr "Merkinnän tiedot"
 
 #. module: account_payment
-#: help:payment.line,info_owner:0
-msgid "Address of the Main Partner"
-msgstr "Pääyhteistyökumppanin osoite"
+#: code:addons/account_payment/wizard/account_payment_order.py:113
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.line,move_line_id:0
+msgid "Entry line"
+msgstr "Merkintärivi"
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:42
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Execution:"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Fixed date"
+msgstr "Kiinteä päivämäärä"
+
+#. module: account_payment
+#: selection:payment.line,state:0
+msgid "Free"
+msgstr "Vapaa"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "General Information"
+msgstr "Yleistiedot"
+
+#. module: account_payment
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,id:0
+#: field:account.payment.populate.statement,id:0
+#: field:payment.line,id:0
+#: field:payment.mode,id:0
+#: field:payment.order,id:0
+#: field:payment.order.create,id:0
+#: field:report.account_payment.report_paymentorder,id:0
+msgid "ID"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -362,15 +349,87 @@ msgstr ""
 "välittömästi"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_populate_statement
-msgid "Account Payment Populate Statement"
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Lines"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "There is no partner defined on the entry line."
+#: view:account.bank.statement:account_payment.view_bank_statement_form
+msgid "Import Payment Lines"
 msgstr ""
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Information"
+msgstr "Tiedot"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Lasku"
+
+#. module: account_payment
+#: help:payment.line,ml_date_created:0
+msgid "Invoice Effective Date"
+msgstr "Laskun voimaantulopäivä"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Invoice Ref"
+msgstr "Laskun viite"
+
+#. module: account_payment
+#: field:payment.line,ml_inv_ref:0
+msgid "Invoice Ref."
+msgstr "Laskun viite"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Invoices"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Päiväkirja"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move_line
+msgid "Journal Items"
+msgstr "Päiväkirjan tapahtumat"
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_uid:0
+#: field:account.payment.populate.statement,write_uid:0
+#: field:payment.line,write_uid:0
+#: field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0
+#: field:payment.order.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_payment
+#: field:account.payment.make.payment,write_date:0
+#: field:account.payment.populate.statement,write_date:0
+#: field:payment.line,write_date:0
+#: field:payment.mode,write_date:0
+#: field:payment.order,write_date:0
+#: field:payment.order.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_payment
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
+msgid "Make Payment"
+msgstr "Tee maksu"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Make Payments"
+msgstr "Suorita maksut"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -378,14 +437,111 @@ msgid "Mode of Payment"
 msgstr "Maksumuoto"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Value Date"
-msgstr "Arvopäivä"
+#: field:payment.mode,name:0
+msgid "Name"
+msgstr "Nimi"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Payment Type"
-msgstr "Maksutyyppi"
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
+msgid "New Payment Order"
+msgstr "Uusi maksumääräys"
+
+#. module: account_payment
+#: field:payment.line,order_id:0
+msgid "Order"
+msgstr "Määräys"
+
+#. module: account_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: field:payment.line,info_owner:0
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Owner Account"
+msgstr "Omistajan tili"
+
+#. module: account_payment
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: view:website:account_payment.report_paymentorder
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: account_payment
+#: field:payment.line,currency:0
+msgid "Partner Currency"
+msgstr "Yhteistyökumppanin valuutta"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.menu_main_payment
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment"
+msgstr "Maksu"
+
+#. module: account_payment
+#: field:payment.line,date:0
+msgid "Payment Date"
+msgstr "Maksupäivämäärä"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.line:account_payment.view_payment_line_tree
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Payment Line"
+msgstr "Maksurivi"
+
+#. module: account_payment
+#: field:account.payment.populate.statement,lines:0
+msgid "Payment Lines"
+msgstr "Maksurivit"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
+#: model:ir.model,name:account_payment.model_payment_mode
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_form
+#: view:payment.mode:account_payment.view_payment_mode_search
+#: view:payment.mode:account_payment.view_payment_mode_tree
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,mode:0
+msgid "Payment Mode"
+msgstr "Maksutapa"
+
+#. module: account_payment
+#: model:ir.actions.report.xml,name:account_payment.action_report_payment_order
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Payment Order"
+msgstr "Maksumääräys"
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Order / Payment"
+msgstr "Maksujärjestys / maksu"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
+#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
+msgid "Payment Orders"
+msgstr "Maksumääräykset"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
+#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
+msgid "Payment Populate statement"
+msgstr ""
+
+#. module: account_payment
+#: view:website:account_payment.report_paymentorder
+msgid "Payment Type:"
+msgstr ""
+
+#. module: account_payment
+#: help:payment.line,amount:0
+msgid "Payment amount in the company currency"
+msgstr "Maksun summa yrityksen valuutassa"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -393,31 +549,62 @@ msgid "Payment amount in the partner currency"
 msgstr "Maksun summa kumppanin valuutassa"
 
 #. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Luonnos"
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Maksurivit"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "Status"
+#: view:payment.order:account_payment.view_payment_order_form
+#: view:payment.order:account_payment.view_payment_order_tree
+msgid "Payment order"
+msgstr "Maksumääräys"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
 msgstr ""
 
 #. module: account_payment
-#: help:payment.line,communication2:0
-msgid "The successor message of Communication."
-msgstr "Jatkoa viestiriville 1"
-
-#. module: account_payment
-#: help:payment.line,info_partner:0
-msgid "Address of the Ordering Customer."
-msgstr "Tilaavan asiakkaan osoite."
-
-#. module: account_payment
-#: view:account.payment.populate.statement:0
+#: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
 msgid "Populate Statement:"
 msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,reference:0
+#: view:website:account_payment.report_paymentorder
+msgid "Reference"
+msgstr "Viite"
+
+#. module: account_payment
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+msgid "Search"
+msgstr "Hae"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+msgid "Search Payment Orders"
+msgstr "Hae maksumääräyksiä"
+
+#. module: account_payment
+#: view:payment.order.create:account_payment.view_create_payment_order
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "Search Payment lines"
+msgstr "Etsi maksurivejä"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -426,14 +613,46 @@ msgstr ""
 "Aseta päivämäärä jos olet valinnut suositellun maksupäivän kiinteäksi."
 
 #. module: account_payment
-#: field:account.payment.populate.statement,lines:0
-msgid "Payment Lines"
-msgstr "Maksurivit"
+#: help:payment.order,mode:0
+msgid "Select the Payment Mode to be applied."
+msgstr "Valitse käytettävä maksutapa."
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_account_move_line
-msgid "Journal Items"
-msgstr "Päiväkirjan tapahtumat"
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Set to draft"
+msgstr "Aseta luonnokseksi"
+
+#. module: account_payment
+#: view:payment.order:account_payment.view_payment_order_search
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
+#: selection:payment.line,state:0
+msgid "Structured"
+msgstr "Jäsennetty"
+
+#. module: account_payment
+#: help:payment.line,partner_id:0
+msgid "The Ordering Customer"
+msgstr "Tilaava asiakas"
+
+#. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "Maksurivin nimen pitää olla uniikki"
+
+#. module: account_payment
+#: help:payment.line,communication2:0
+msgid "The successor message of Communication."
+msgstr "Jatkoa viestiriville 1"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:57
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -443,190 +662,31 @@ msgid ""
 msgstr "Tätä riviä käytetään viittaamaan tilaavan asiakkaan tietoihin."
 
 #. module: account_payment
-#: view:payment.order.create:0
-msgid "Search"
-msgstr "Hae"
+#: field:payment.order,total:0
+#: view:website:account_payment.report_paymentorder
+msgid "Total"
+msgstr "Yhteensä"
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "Responsible"
+#: view:website:account_payment.report_paymentorder
+msgid "Total (Currency)"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,date:0
-msgid "Payment Date"
-msgstr "Maksupäivämäärä"
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Total in Company Currency"
+msgstr "Loppusumma yrityksen valuutassa"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Total:"
-msgstr "Summa:"
+#: view:payment.line:account_payment.view_payment_line_form
+#: view:payment.order:account_payment.view_payment_order_form
+msgid "Transaction Information"
+msgstr "Tapahtuman tiedot"
 
 #. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution Date"
+#: view:website:account_payment.report_paymentorder
+msgid "Used Account:"
 msgstr ""
-
-#. module: account_payment
-#: view:account.payment.populate.statement:0
-msgid "ADD"
-msgstr "LISÄÄ"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr ""
-
-#. module: account_payment
-#: field:account.move.line,amount_to_pay:0
-msgid "Amount to pay"
-msgstr "Maksettava summa"
-
-#. module: account_payment
-#: field:payment.line,amount:0
-msgid "Amount in Company Currency"
-msgstr "Summa yrityksen valuutassa"
-
-#. module: account_payment
-#: help:payment.line,partner_id:0
-msgid "The Ordering Customer"
-msgstr "Tilaava asiakas"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment_make_payment
-msgid "Account make payment"
-msgstr "Tee tilitämaksu"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Invoice Ref"
-msgstr "Laskun viite"
-
-#. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
-msgstr "Oma viitteesi"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Payment order"
-msgstr "Maksumääräys"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "General Information"
-msgstr "Yleistiedot"
-
-#. module: account_payment
-#: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Done"
-msgstr "Valmis"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_invoice
-msgid "Invoice"
-msgstr "Lasku"
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Viestirivi 1"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank Account"
-msgstr ""
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Information"
-msgstr "Tiedot"
-
-#. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-#: view:payment.order:0
-msgid "Payment Order"
-msgstr "Maksumääräys"
-
-#. module: account_payment
-#: help:payment.line,amount:0
-msgid "Payment amount in the company currency"
-msgstr "Maksun summa yrityksen valuutassa"
-
-#. module: account_payment
-#: view:payment.order.create:0
-msgid "Search Payment lines"
-msgstr "Etsi maksurivejä"
-
-#. module: account_payment
-#: field:payment.line,amount_currency:0
-msgid "Amount in Partner Currency"
-msgstr "Summa kumppanin valuutassa"
-
-#. module: account_payment
-#: field:payment.line,communication2:0
-msgid "Communication 2"
-msgstr "Viestirivi 2"
-
-#. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled Date"
-msgstr ""
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-msgid "Are you sure you want to make payment?"
-msgstr "Oletko varma että haluat tehdä maksun"
-
-#. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Päiväkirja"
-
-#. module: account_payment
-#: field:payment.mode,bank_id:0
-msgid "Bank account"
-msgstr "Pankkitili"
-
-#. module: account_payment
-#: view:payment.order:0
-msgid "Confirm Payments"
-msgstr "Vahvista maksut"
-
-#. module: account_payment
-#: field:payment.line,company_currency:0
-#: report:payment.order:0
-msgid "Company Currency"
-msgstr "Yrityksen valuutta"
-
-#. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment"
-msgstr "Maksu"
-
-#. module: account_payment
-#: report:payment.order:0
-msgid "Payment Order / Payment"
-msgstr "Maksujärjestys / maksu"
-
-#. module: account_payment
-#: field:payment.line,move_line_id:0
-msgid "Entry line"
-msgstr "Merkintärivi"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -638,183 +698,37 @@ msgstr ""
 "mitä haluat sanoa vastaanottajalle."
 
 #. module: account_payment
-#: field:payment.mode,name:0
-msgid "Name"
-msgstr "Nimi"
+#: view:website:account_payment.report_paymentorder
+msgid "Value Date"
+msgstr "Arvopäivä"
 
 #. module: account_payment
-#: report:payment.order:0
-msgid "Bank Account"
-msgstr "Pankkitilinumero"
-
-#. module: account_payment
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Entry Information"
-msgstr "Merkinnän tiedot"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_order_create
-msgid "payment.order.create"
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,order_id:0
-msgid "Order"
-msgstr "Määräys"
+#: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
+msgid "Yes"
+msgstr "Kyllä"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Yhteensä"
-
-#. module: account_payment
-#: view:account.payment.make.payment:0
-#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
-msgid "Make Payment"
-msgstr "Tee maksu"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred Date"
+#: code:addons/account_payment/account_invoice.py:42
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
 msgstr ""
 
 #. module: account_payment
-#: view:account.payment.make.payment:0
-#: view:account.payment.populate.statement:0
-#: view:payment.order.create:0
-msgid "or"
-msgstr ""
+#: field:payment.line,name:0
+msgid "Your Reference"
+msgstr "Oma viitteesi"
 
 #. module: account_payment
-#: help:payment.mode,bank_id:0
-msgid "Bank Account for the Payment Mode"
-msgstr "Pankkitili tälle maksutavalle"
-
-#~ msgid "Preferred date"
-#~ msgstr "Suositeltu päivämäärä"
-
-#~ msgid "Payment Management"
-#~ msgstr "Maksunhallinta"
-
-#~ msgid "Import payment lines"
-#~ msgstr "Tuo maksurivit"
-
-#~ msgid "Maturity Date"
-#~ msgstr "Eräpäivä"
-
-#~ msgid "Specify the Code for Payment Type"
-#~ msgstr "Anna maksutyypin koodi"
-
-#~ msgid "Payment type"
-#~ msgstr "Maksutyyppi"
-
-#~ msgid "Payment Orders to Validate"
-#~ msgstr "Vahvistettavat maksumääräykset"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
-
-#~ msgid "Scheduled date if fixed"
-#~ msgstr "Suunniteltu päivämäärä jos kiinteä"
-
-#~ msgid "Account Entry Line"
-#~ msgstr "Tilimerkinnän rivi"
-
-#~ msgid "Execution date:"
-#~ msgstr "Toimeenpanopäivä:"
-
-#~ msgid "Suitable bank types"
-#~ msgstr "Soveltuvat pankkityypit"
-
-#~ msgid "Execution date"
-#~ msgstr "Toimeenpanopäivä"
-
-#~ msgid "Total debit"
-#~ msgstr "Debet yhteensä"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Virhe!"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Peruuta"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
-
-#, python-format
-#~ msgid "No partner defined on entry line"
-#~ msgstr "Rivillä ei ole määritetty kumppania"
-
-#~ msgid "Total credit"
-#~ msgstr "Kredit yhteensä"
-
-#~ msgid "Creation date"
-#~ msgstr "Luomispäivämäärä"
-
-#~ msgid "Reference:"
-#~ msgstr "Viite:"
-
-#~ msgid "Date"
-#~ msgstr "Päivämäärä"
-
-#~ msgid "User"
-#~ msgstr "Käyttäjä"
-
-#~ msgid "Populate payment"
-#~ msgstr "Täytä maksu"
-
-#~ msgid "Code"
-#~ msgstr "Koodi"
-
-#~ msgid "Draft Payment Order"
-#~ msgstr "Maksumääräys luonnos"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#~ msgid "Pay"
-#~ msgstr "Maksa"
-
-#~ msgid "Destination Bank account"
-#~ msgstr "Kohde pankkitili"
-
-#~ msgid "_Add"
-#~ msgstr "_Lisää"
-
-#~ msgid "Populate Statement with Payment lines"
-#~ msgstr "Täytä tiliote maksuriveillä"
-
-#, python-format
-#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-#~ msgstr ""
-#~ "Kumppanilla '+ line.partner_id.name+ ' ei ole määritettyä pankkitiliä"
-
-#~ msgid "_Search"
-#~ msgstr "_Etsi"
-
-#~ msgid "Payment mode"
-#~ msgstr "Maksutapa"
-
-#~ msgid "Select the Payment Type for the Payment Mode."
-#~ msgstr "Valitse maksutyyppi tälle maksutavalle."
-
-#~ msgid "Cash Journal for the Payment Mode"
-#~ msgstr "Käteispäiväkirja maksutavalle"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Et voi luoda siirtoriviä suljetulle tilille."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Väärä kredit tai debet arvo tiliviennissä"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Yrityksen tulee olla sama liittyvälle tilille ja jaksolle."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Et voi luoda siirtoriviä näkymätilille."
+#: view:payment.order.create:account_payment.view_create_payment_order_lines
+msgid "_Add to payment order"
+msgstr "_Lisää maksumääräykseen"

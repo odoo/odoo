@@ -78,6 +78,15 @@ class ir_translation_import_cursor(object):
         """Feed a translation, as a dictionary, into the cursor
         """
         params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
+
+        if params['type'] == 'view':
+            # ugly hack for QWeb views - pending refactoring of translations in master
+            if params['imd_model'] == 'website':
+                params['imd_model'] = "ir.ui.view"
+            # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
+            elif params['res_id'] is None:
+                params['res_id'] = 0
+
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
                                     %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
@@ -98,15 +107,14 @@ class ir_translation_import_cursor(object):
             FROM ir_model_data AS imd
             WHERE ti.res_id IS NULL
                 AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
-
                 AND ti.module = imd.module AND ti.imd_name = imd.name
                 AND ti.imd_model = imd.model; """ % self._table_name)
 
         if self._debug:
-            cr.execute("SELECT module, imd_model, imd_name FROM %s " \
+            cr.execute("SELECT module, imd_name, imd_model FROM %s " \
                 "WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
             for row in cr.fetchall():
-                _logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
+                _logger.info("ir.translation.cursor: missing res_id for %s.%s <%s> ", *row)
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
         # referencing non-existent data.
@@ -297,7 +305,7 @@ class ir_translation(osv.osv):
                         AND src=%s"""
             params = (lang or '', types, tools.ustr(source))
             if res_id:
-                query += "AND res_id=%s"
+                query += " AND res_id=%s"
                 params += (res_id,)
             if name:
                 query += " AND name=%s"

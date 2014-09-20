@@ -68,7 +68,7 @@ class mail_compose_message(osv.TransientModel):
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
 
         # v6.1 compatibility mode
-        result['composition_mode'] = result.get('composition_mode', context.get('mail.compose.message.mode'))
+        result['composition_mode'] = result.get('composition_mode', context.get('mail.compose.message.mode', 'comment'))
         result['model'] = result.get('model', context.get('active_model'))
         result['res_id'] = result.get('res_id', context.get('active_id'))
         result['parent_id'] = result.get('parent_id', context.get('message_id'))
@@ -97,6 +97,9 @@ class mail_compose_message(osv.TransientModel):
         if result['model'] == 'res.users' and result['res_id'] == uid:
             result['model'] = 'res.partner'
             result['res_id'] = self.pool.get('res.users').browse(cr, uid, uid).partner_id.id
+
+        if fields is not None:
+            [result.pop(field, None) for field in result.keys() if field not in fields]
         return result
 
     def _get_composition_mode_selection(self, cr, uid, context=None):
@@ -248,7 +251,7 @@ class mail_compose_message(osv.TransientModel):
             rendered_values = self.render_message_batch(cr, uid, wizard, res_ids, context=context)
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
-        if mass_mail_mode and wizard.same_thread:
+        if mass_mail_mode and not wizard.no_auto_thread:
             reply_to_value = self.pool['mail.thread'].message_get_reply_to(cr, uid, res_ids, default=wizard.email_from, context=dict(context, thread_model=wizard.model))
 
         for res_id in res_ids:
@@ -262,6 +265,7 @@ class mail_compose_message(osv.TransientModel):
                 'author_id': wizard.author_id.id,
                 'email_from': wizard.email_from,
                 'record_name': wizard.record_name,
+                'no_auto_thread': wizard.no_auto_thread,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and wizard.model:
@@ -274,11 +278,11 @@ class mail_compose_message(osv.TransientModel):
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
-                if wizard.same_thread:
+                if not wizard.no_auto_thread:
                     mail_values.pop('reply_to')
                     if reply_to_value.get(res_id):
                         mail_values['reply_to'] = reply_to_value[res_id]
-                if not wizard.same_thread and not mail_values.get('reply_to'):
+                if wizard.no_auto_thread and not mail_values.get('reply_to'):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')

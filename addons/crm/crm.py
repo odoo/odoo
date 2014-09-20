@@ -71,9 +71,9 @@ class crm_tracking_mixin(osv.AbstractModel):
 
     _columns = {
         'campaign_id': fields.many2one('crm.tracking.campaign', 'Campaign',  # old domain ="['|',('section_id','=',section_id),('section_id','=',False)]"
-                                       help="This is a name that helps you keep track of your different campaign efforts Example: Fall_Drive, Christmas_Special"),
-        'source_id': fields.many2one('crm.tracking.source', 'Source', help="This is the source of the link Example: Search Engine, another domain, or name of email list"),
-        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. EX: Postcard, Email, or Banner Ad"),
+                                       help="This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"),
+        'source_id': fields.many2one('crm.tracking.source', 'Source', help="This is the source of the link Ex: Search Engine, another domain, or name of email list"),
+        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad"),
     }
 
     def tracking_fields(self):
@@ -82,15 +82,17 @@ class crm_tracking_mixin(osv.AbstractModel):
     def tracking_get_values(self, cr, uid, vals, context=None):
         for key, field in self.tracking_fields():
             column = self._all_columns[field].column
-            value = vals.get(field) or (request and request.session.get(key))  # params.get sould be always in session by the dispatch from ir_http
-            if column._type in ['many2one'] and isinstance(value, basestring):  # if we receive a string for a many2one, we search / create  the id
+            value = vals.get(field) or (request and request.httprequest.cookies.get(key))  # params.get should be always in session by the dispatch from ir_http
+            if column._type in ['many2one'] and isinstance(value, basestring):  # if we receive a string for a many2one, we search / create the id
                 if value:
                     Model = self.pool[column._obj]
                     rel_id = Model.name_search(cr, uid, value, context=context)
-                    if not rel_id:
+                    if rel_id:
+                        rel_id = rel_id[0][0]
+                    else:
                         rel_id = Model.create(cr, uid, {'name': value}, context=context)
                 vals[field] = rel_id
-            # Here the code for other cases that many2one
+            # Here the code for others cases that many2one
             else:
                 vals[field] = value
         return vals
@@ -123,17 +125,15 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
         'section_ids': fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', string='Sections',
-                        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
+                                        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Default to New Sales Team',
-                        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+                                       help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
-        'type': fields.selection([('lead', 'Lead'),
-                                    ('opportunity', 'Opportunity'),
-                                    ('both', 'Both')],
-                                    string='Type', required=True,
-                                    help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
+        'type': fields.selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
+                                 string='Type', required=True,
+                                 help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
     _defaults = {
@@ -145,6 +145,7 @@ class crm_case_stage(osv.osv):
         'case_default': True,
     }
 
+
 class crm_case_categ(osv.osv):
     """ Category of Case """
     _name = "crm.case.categ"
@@ -154,15 +155,17 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
+
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
         context = context or {}
         object_id = context.get('object_id', False)
-        ids = self.pool.get('ir.model').search(cr, uid, ['|',('id', '=', object_id),('model', '=', context.get('object_name', False))])
+        ids = self.pool.get('ir.model').search(cr, uid, ['|', ('id', '=', object_id), ('model', '=', context.get('object_name', False))])
         return ids and ids[0] or False
     _defaults = {
-        'object_id' : _find_object_id
+        'object_id': _find_object_id
     }
+
 
 class crm_payment_mode(osv.osv):
     """ Payment Mode for Fund """
@@ -172,6 +175,5 @@ class crm_payment_mode(osv.osv):
         'name': fields.char('Name', required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

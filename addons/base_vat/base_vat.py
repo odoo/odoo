@@ -63,6 +63,7 @@ _ref_vat = {
     'mx': 'MXABC123456T1B',
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
+    'pe': 'PER10254824220 or PED10254824220',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
@@ -144,10 +145,11 @@ class res_partner(osv.osv):
             return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
+        error_partner = self.browse(cr, uid, ids, context=context)
         if default_vat_check(vat_country, vat_number):
             vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
-        #Retrieve the current partner for wich the VAT is not valid
-        error_partner = self.browse(cr, uid, ids, context=context)
+            if self.pool['res.users'].browse(cr, uid, uid).company_id.vat_check_vies:
+                return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (error_partner[0].vat, error_partner[0].name, vat_no)
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (error_partner[0].vat, error_partner[0].name, vat_no)
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
@@ -218,7 +220,7 @@ class res_partner(osv.osv):
             return vat[7] == self._ie_check_char(vat[2:7] + vat[0] + vat[8])
         return False
 
-    # Mexican VAT verification, contributed by <moylop260@hotmail.com>
+    # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
     __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
                                     r"[ \-_]?" \
@@ -275,5 +277,39 @@ class res_partner(osv.osv):
             return False
         return check == int(vat[8])
 
+    # Peruvian VAT validation, contributed by Vauxoo
+    def check_vat_pe(self, vat):
+
+        vat_type,vat = vat and len(vat)>=2 and (vat[0], vat[1:]) or (False, False)
+
+        if vat_type and vat_type.upper() == 'D':
+            #DNI
+            return True
+        elif vat_type and vat_type.upper() == 'R':
+            #verify RUC
+            factor = '5432765432'
+            sum = 0
+            dig_check = False
+            if len(vat) != 11:
+                return False
+            try:
+                int(vat)
+            except ValueError:
+                return False 
+                         
+            for f in range(0,10):
+                sum += int(factor[f]) * int(vat[f])
+                
+            subtraction = 11 - (sum % 11)
+            if subtraction == 10:
+                dig_check = 0
+            elif subtraction == 11:
+                dig_check = 1
+            else:
+                dig_check = subtraction
+            
+            return int(vat[10]) == dig_check
+        else:
+            return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

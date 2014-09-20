@@ -1,41 +1,26 @@
 # Danish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-11-08 10:58+0000\n"
-"Last-Translator: OpenERP Danmark / Mikhael Saxtorph <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
 msgstr "Kontroller format"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"Momsnummer ikke korrekt.\n"
-"Note: det forventede format er %s"
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES Moms kontrol"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -43,24 +28,10 @@ msgid "Companies"
 msgstr "Firmaer"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr "Fejl!"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Afkryds dette felt, hvis kontakten er momsregistreret. Det bruges til moms "
-"afregning."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Kontakt"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -72,56 +43,38 @@ msgstr ""
 "simpel checksum validering."
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Momsbestemmelser"
-
-#~ msgid "VAT"
-#~ msgstr "Moms"
-
-#~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
-#~ msgstr ""
-#~ "Aktiver momsnummer for partneren. Kontrollere gyldigheden af momsnummeret."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ugyldig XML for View Architecture!"
-
-#~ msgid "Base VAT - To check VAT number validity"
-#~ msgstr "Moms grundlag - Til at checke CVR-nr. (momsnr.)  gyldighed"
-
+#: code:addons/base_vat/base_vat.py:130
 #, python-format
-#~ msgid "The VAT is invalid, It should begin with the country code"
-#~ msgstr "CVR-nr. (momsnr.) er ugyldigt. Det skal starte med landekode."
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr ""
 
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Kontakt"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
 #, python-format
-#~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something like "
-#~ "this %s"
-#~ msgstr ""
-#~ "Momsen ser ikke ud til at være korrekt. Der skulle være indtastet noget "
-#~ "svarende til dette %s"
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number.\n"
-#~ "\n"
-#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
-#~ "for\n"
-#~ "    checking the validity of VAT Number assigned to partners in European "
-#~ "countries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Aktiverer CVR-nr. (momsnr.) for kontakten. Checker gyldigheden af CVR-"
-#~ "nr. (momsnr.)\n"
-#~ "\n"
-#~ "    Dette modul bruger metoder beskrevet på http://sima-pc.com/nif.php for "
-#~ "at\n"
-#~ "    checke gyldigheden af CVR-nr. (momsnr.) tilknyttet kontakter i EU-"
-#~ "landene.\n"
-#~ "    "
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
 
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fejl! Man kan ikke oprette rekursuve associerede medlemmer."
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES Moms kontrol"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "f.eks. DK12345678"

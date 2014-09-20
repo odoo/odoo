@@ -23,8 +23,7 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"
-                                    on_change="onchange_pickings(picking_ids, context)"/>
+                                <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"/>
                             </group>
                             <group>
                                 <field name="account_journal_id"/>
@@ -86,11 +85,11 @@
                                             </group>
                                         </group>
                                     </form>
-                                    <tree string="Valuation Adjustments" editable="bottom">
+                                    <tree string="Valuation Adjustments" editable="bottom" create="0">
                                         <field name="cost_line_id" readonly="1"/>
                                         <field name="product_id" readonly="1"/>
-                                        <field name="weight"/>
-                                        <field name="volume"/>
+                                        <field name="weight" readonly="1"/>
+                                        <field name="volume" readonly="1"/>
                                         <field name="quantity" readonly="1"/>
                                         <field name="former_cost_per_unit" readonly="1"/>
                                         <field name="former_cost" readonly="1"/>

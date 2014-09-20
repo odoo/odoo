@@ -1,51 +1,21 @@
 # Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-11 03:25+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Шинжилгээний мөр"
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid "Invoice Price Rate per User"
-msgstr "Нэхэмлэлийн Үнийн ханш хэрэглэгч бүрээр"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,product_id:0
-msgid "Service"
-msgstr "Үйлчилгээ"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Price per User"
-msgstr "Үнэ хэрэглэгч бүрээр"
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,price:0
-msgid "Price"
-msgstr "Үнэ"
-
-#. module: analytic_user_function
-#: help:analytic.user.funct.grid,price:0
-msgid "Price per hour for this user."
-msgstr "Энэ хэрэглэгчийн үнэ цагаар"
+"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -54,24 +24,22 @@ msgid "Analytic Account"
 msgstr "Шинжилгээний Данс"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:106
-#: code:addons/analytic_user_function/analytic_user_function.py:135
-#, python-format
-msgid "Error!"
-msgstr "Алдаа!"
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Шинжилгээний мөр"
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "Invoicing Data"
-msgstr "Нэхэмжлэх өгөгдөл"
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: analytic_user_function
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr "Хэрэглэгч/Барааны холбоо"
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
 "Define a specific service (e.g. Senior Consultant)\n"
 "                            and price for some users to use these data "
@@ -85,16 +53,74 @@ msgstr ""
 "                            үндсэн утгын оронд нэхэмжлэхээр хэрэглэнэ."
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,uom_id:0
-msgid "Unit of Measure"
-msgstr "Хэмжих нэгж"
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
+msgstr "Алдаа!"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:107
-#: code:addons/analytic_user_function/analytic_user_function.py:136
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr "Нэхэмлэлийн Үнийн ханш хэрэглэгч бүрээр"
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr "Нэхэмжлэх өгөгдөл"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for "
+"a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr "Үнэ"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr "Үнэ хэрэглэгч бүрээр"
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr "Энэ хэрэглэгчийн үнэ цагаар"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr "Үйлчилгээ"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
 #, python-format
-msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr "Энэ бараанд зардлын тооцоо тодорхойлогдоогүй байна:  \"%s\" (id:%d)"
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
@@ -102,58 +128,16 @@ msgid "Timesheet Line"
 msgstr "Цаг бүртгэлийн мөр"
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"OpenERP will recursively search on parent accounts\n"
-"                            to check if specific conditions are defined for "
-"a\n"
-"                            specific user. This allows to set invoicing\n"
-"                            conditions for a group of contracts."
-msgstr ""
-"OpenERP нь тусгай хэрэглэгчид тусгай нөхцөл тодорхойлогдсон эсэхийг\n"
-"                            эцэг дансдууд шат дараалан хайдаг.Энэ нь бүлэг "
-"холбогчидод\n"
-"                            нэхэмжлэлийн нөхцөлүүдийг зааж өгөх боломжийг "
-"олгодог."
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr "Хэмжих нэгж"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,user_id:0
 msgid "User"
 msgstr "Хэрэглэгч"
 
-#~ msgid "Relation table between users and products on a analytic account"
-#~ msgstr "Хэрэглэгч болон барааны аналитик дансны хамаарлын хүснэгт"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "Product"
-#~ msgstr "Бараа"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-#~ "болохгүй!"
-
-#~ msgid "Analytic User Function"
-#~ msgstr "Аналитик хэрэглэгчийн үүрэг"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Алдаа !"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr ""
-#~ "Алдаа! Мөнгөн тэмдэгт сонгогдсон компанийн мөнгөн тэмдэгттэй ижил байх ёстой."
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "Батласан/хийгдсэн бичлэгийг өөрчлөх боломжгүй !"
-
-#~ msgid "User's Product for this Analytic Account"
-#~ msgstr "Хэрэглэгчийн барааны шинжилгээний данс"
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Хэрэглэгч/Барааны холбоо"

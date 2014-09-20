@@ -7,7 +7,7 @@
          <field name="arch" type="xml">
              <graph string="Recruitment Analysis" type="pivot">
                  <field name="stage_id" type="row"/>
-                 <field name="date_create" interval="week" type="col"/>
+                 <field name="job_id" type="col"/>
              </graph>
          </field>
     </record>
@@ -16,23 +16,20 @@
     <record id="filter_recruitment_report_recruiter" model="ir.filters">
         <field name="name">By Recruiter</field>
         <field name="model_id">hr.recruitment.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'user_id']}</field>
+        <field name="context">{'group_by': ['date_create:month', 'user_id'], 'col_group_by': ['date_create:month']}</field>
     </record>
     <record id="filter_recruitment_report_job" model="ir.filters">
         <field name="name">By Job</field>
         <field name="model_id">hr.recruitment.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'job_id']}</field>
+        <field name="context">{'group_by': ['date_create:month', 'job_id'], 'col_group_by': ['date_create:month']}</field>
     </record>
     <record id="filter_recruitment_report_departmnet" model="ir.filters">
         <field name="name">By Department</field>
         <field name="model_id">hr.recruitment.report</field>
-        <field name="domain">[]</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date_create:month', 'department_id']}</field>
+        <field name="context">{'group_by': ['date_create:month', 'department_id'], 'col_group_by': ['date_create:month']}</field>
     </record>
 
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
@@ -48,7 +45,7 @@
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="New" domain="[('sequence', '=', 1)]"/>
+                <filter string="New" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
                 <group expand="0" string="Extended Filters">
                     <field name="priority"/>
@@ -60,17 +57,11 @@
                 <group expand="1" string="Group By">
                    <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                   <filter string="Partner" context="{'group_by':'partner_id'}" />
                    <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
-                   <filter string="Degree" name="degree" context="{'group_by':'type_id'}"/>
-                   <filter string="Last Stage" help="Match this group by with a specific stage filter in order to analyse the recruitment process" context="{'group_by':'last_stage_id'}"/>
                    <filter string="Stage" context="{'group_by':'stage_id'}" />
-                   <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" />
-                   <filter string="Creation Date (day)" context="{'group_by':'date_create:day'}" help="Creation Date"/>
-                   <filter string="Creation Date (week)" context="{'group_by':'date_create:week'}" help="Creation Date"/>
-                   <filter string="Creation Date (month)" context="{'group_by':'date_create:month'}" help="Creation Date"/>
-                   <filter string="Creation Date (year)" context="{'group_by':'date_create:year'}" help="Creation Date"/>
+                   <separator/>
+                   <filter string="Creation Week" context="{'group_by':'date_create:week'}" help="Creation Week"/>
                 </group>
             </search>
         </field>
@@ -81,7 +72,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
-        <field name="context">{'search_default_year': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
     <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="0"/>

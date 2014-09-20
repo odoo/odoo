@@ -159,7 +159,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            registry.setup_models(cr)
+            registry.setup_models(cr, partial=True)
             init_module_models(cr, package.name, models)
 
         # Can't put this line out of the loop: ir.module.module will be
@@ -225,7 +225,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry._init_modules.add(package.name)
         cr.commit()
 
-    registry.setup_models(cr)
+    registry.setup_models(cr, partial=True)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
@@ -278,6 +278,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             _logger.info("init db")
             openerp.modules.db.initialize(cr)
+            update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
@@ -360,6 +361,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.execute('select model from ir_model where state=%s', ('manual',))
         for model in cr.dictfetchall():
             registry['ir.model'].instanciate(cr, SUPERUSER_ID, model['model'], {})
+        registry.setup_models(cr)
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:

@@ -1,21 +1,152 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-27 14:33+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:46+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: resource
+#: code:addons/resource/resource.py:685
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: resource
+#: code:addons/resource/faces/resource.py:340
+#, python-format
+msgid "(vacation)"
+msgstr "（假期）"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Define working hours and time table that could be scheduled "
+"to your project members\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                定义工作时间和时间表 以便安排你的项目成员。\n"
+"              </p>\n"
+"            "
+
+#. module: resource
+#: field:resource.resource,active:0
+msgid "Active"
+msgstr "有效"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "休息日"
+
+#. module: resource
+#: field:resource.resource,code:0
+msgid "Code"
+msgstr "编号"
+
+#. module: resource
+#: field:resource.calendar,company_id:0
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,company_id:0
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: resource
+#: code:addons/resource/resource.py:773
+#, python-format
+msgid "Configuration Error!"
+msgstr "设置错误!"
+
+#. module: resource
+#: field:resource.calendar,create_uid:0
+#: field:resource.calendar.attendance,create_uid:0
+#: field:resource.calendar.leaves,create_uid:0
+#: field:resource.resource,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,create_date:0
+#: field:resource.calendar.attendance,create_date:0
+#: field:resource.calendar.leaves,create_date:0
+#: field:resource.resource,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "星期几"
+
+#. module: resource
+#: help:resource.resource,calendar_id:0
+msgid "Define the schedule of resource"
+msgstr "定义资源调度"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+msgid "Duration"
+msgstr "持续时间"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "效率因子"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_to:0
+msgid "End Date"
+msgstr "结束日期"
+
+#. module: resource
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "错误！准假的开始日期必须小于结束日期。"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "周五"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Group By"
+msgstr ""
+
+#. module: resource
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "小时"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "人"
+
+#. module: resource
+#: field:resource.calendar,id:0
+#: field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0
+#: field:resource.resource,id:0
+msgid "ID"
+msgstr ""
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -25,162 +156,65 @@ msgid ""
 msgstr "如果为空，表示公司的一个通用假期，如果设置了一个资源，假期/准假只适用于该资源。"
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "物料"
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
 
 #. module: resource
-#: field:resource.resource,resource_type:0
-msgid "Resource Type"
-msgstr "资源类型"
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Inactive"
+msgstr "不活跃的"
+
+#. module: resource
+#: field:resource.calendar,write_uid:0
+#: field:resource.calendar.attendance,write_uid:0
+#: field:resource.calendar.leaves,write_uid:0
+#: field:resource.resource,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,write_date:0
+#: field:resource.calendar.attendance,write_date:0
+#: field:resource.calendar.leaves,write_date:0
+#: field:resource.resource,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
-#: view:resource.calendar.leaves:0
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
 msgstr "准假详情"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
-msgid "Resources Leaves"
-msgstr "资源准假"
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Leave Month"
+msgstr ""
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "星期几"
+#: field:resource.calendar,leave_ids:0
+msgid "Leaves"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Thursday"
-msgstr "周四"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-msgid "Group By..."
-msgstr "分组..."
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Sunday"
-msgstr "周日"
-
-#. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
-msgstr "效率因子"
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Search Resource"
-msgstr "搜索资源"
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Type"
-msgstr "类型"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
-#: view:resource.resource:0
-msgid "Resources"
-msgstr "资源"
-
-#. module: resource
-#: code:addons/resource/resource.py:455
+#: code:addons/resource/resource.py:773
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr "请确保已经配置好适当的工作日的工作时间！"
 
 #. module: resource
-#: code:addons/resource/resource.py:373
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (副本)"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "搜索工作时间"
-
-#. module: resource
-#: constraint:resource.calendar.leaves:0
-msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "错误！准假的开始日期必须小于结束日期。"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_calendar
-msgid "Resource Calendar"
-msgstr "资源日程表"
-
-#. module: resource
-#: field:resource.calendar,company_id:0
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,company_id:0
-#: view:resource.resource:0
-#: field:resource.resource,company_id:0
-msgid "Company"
-msgstr "公司"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "物料"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "周五"
-
-#. module: resource
-#: view:resource.calendar.attendance:0
-msgid "Hours"
-msgstr "小时"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Reason"
-msgstr "原因"
-
-#. module: resource
-#: view:resource.resource:0
-#: field:resource.resource,user_id:0
-msgid "User"
-msgstr "用户"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Date"
-msgstr "日期"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Search Working Period Leaves"
-msgstr "搜索准假工作周期"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting Date"
-msgstr "开始日期"
-
-#. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
-msgstr "工作组主管"
-
-#. module: resource
-#: field:resource.calendar.leaves,date_to:0
-msgid "End Date"
-msgstr "结束日期"
-
-#. module: resource
-#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
-msgid "Closing Days"
-msgstr "休息日"
-
-#. module: resource
-#: model:ir.ui.menu,name:resource.menu_resource_config
-#: view:resource.calendar.leaves:0
-#: field:resource.calendar.leaves,resource_id:0
-#: view:resource.resource:0
-msgid "Resource"
-msgstr "资源"
+msgid "Monday"
+msgstr "周一"
 
 #. module: resource
 #: field:resource.calendar,name:0
@@ -191,64 +225,11 @@ msgid "Name"
 msgstr "名称"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.calendar.leaves,calendar_id:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "工作时间"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Start and End time of working."
-msgstr "工作开始和结束时间。"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-msgid "Working Period"
-msgstr "工作周期"
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "周三"
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_resource
-msgid "Resource Detail"
-msgstr "资源明细"
-
-#. module: resource
-#: field:resource.resource,active:0
-msgid "Active"
-msgstr "有效"
-
-#. module: resource
-#: help:resource.resource,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr "如果这有效字段设为否，那么可以隐藏此记录且并不删除它。"
-
-#. module: resource
-#: field:resource.calendar.attendance,calendar_id:0
-msgid "Resource's Calendar"
-msgstr "资源日程表"
-
-#. module: resource
-#: field:resource.calendar.attendance,hour_from:0
-msgid "Work from"
-msgstr "工作从"
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid ""
-"Define working hours and time table that could be scheduled to your project "
-"members"
-msgstr "为你的项目成员定义工作时间和安排时间表"
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_form
+#: view:resource.calendar.leaves:resource.resource_calendar_leave_tree
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Reason"
+msgstr "原因"
 
 #. module: resource
 #: help:resource.resource,user_id:0
@@ -256,39 +237,105 @@ msgid "Related user name for the resource to manage its access."
 msgstr "用于管理资源访问权限的用户名"
 
 #. module: resource
-#: help:resource.resource,calendar_id:0
-msgid "Define the schedule of resource"
-msgstr "定义资源调度"
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: view:resource.calendar.leaves:resource.view_resource_calendar
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: field:resource.calendar.leaves,resource_id:0
+#: view:resource.resource:resource.resource_resource_form
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Resource"
+msgstr "资源"
 
 #. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Starting Date of Leave"
-msgstr "假期开始日期"
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "资源日程表"
 
 #. module: resource
-#: field:resource.resource,code:0
-msgid "Code"
-msgstr "编号"
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "资源明细"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "资源准假"
+
+#. module: resource
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "资源类型"
+
+#. module: resource
+#: field:resource.calendar.attendance,calendar_id:0
+msgid "Resource's Calendar"
+msgstr "资源日程表"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: view:resource.resource:resource.resource_resource_tree
+msgid "Resources"
+msgstr "资源"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "资源准假"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr "资源允许你创建和管理资源参与的特定的计划阶段。你还能在其每周工作时间基础上设置其效率和工作量。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
-msgstr "周一"
+msgid "Saturday"
+msgstr "周六"
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_to:0
-msgid "Work to"
-msgstr "工作至"
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "搜索资源"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "工作细节"
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Leaves"
+msgstr "搜索准假工作周期"
+
+#. module: resource
+#: view:resource.calendar:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "搜索工作时间"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_from:0
+msgid "Start Date"
+msgstr "开始日期"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr "工作开始和结束时间。"
+
+#. module: resource
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr "开始日期"
+
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Leave by Month"
+msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Tuesday"
-msgstr "周二"
+msgid "Sunday"
+msgstr "周日"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -302,89 +349,67 @@ msgstr ""
 "100%的负荷，下，但如果我们把效率设置为 200%，他的负荷将只是 50%。"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
-#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
-msgid "Resource Leaves"
-msgstr "资源准假"
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-msgid ""
-"Resources allow you to create and manage resources that should be involved "
-"in a specific project phase. You can also set their efficiency level and "
-"workload based on their weekly working hours."
-msgstr "资源允许你创建和管理资源参与的特定的计划阶段。你还能在其每周工作时间基础上设置其效率和工作量。"
-
-#. module: resource
-#: view:resource.resource:0
-msgid "Inactive"
-msgstr "不活跃的"
-
-#. module: resource
-#: code:addons/resource/faces/resource.py:340
-#, python-format
-msgid "(vacation)"
-msgstr "（假期）"
-
-#. module: resource
-#: code:addons/resource/resource.py:455
-#, python-format
-msgid "Configuration Error!"
-msgstr "设置错误!"
-
-#. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Human"
-msgstr "人"
-
-#. module: resource
-#: view:resource.calendar.leaves:0
-msgid "Duration"
-msgstr "持续时间"
-
-#. module: resource
-#: field:resource.calendar.leaves,date_from:0
-msgid "Start Date"
-msgstr "开始日期"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Thursday"
+msgstr "周四"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
-msgid "Saturday"
-msgstr "周六"
+msgid "Tuesday"
+msgstr "周二"
 
-#~ msgid "Working time will start from"
-#~ msgstr "工作时间开始于"
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Type"
+msgstr "类型"
 
-#~ msgid "Day of week"
-#~ msgstr "星期几"
+#. module: resource
+#: view:resource.resource:resource.view_resource_resource_search
+#: field:resource.resource,user_id:0
+msgid "User"
+msgstr "用户"
 
-#~ msgid "Working time will end at"
-#~ msgstr "工作时间结束于"
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "周三"
 
-#~ msgid "Workgroup manager"
-#~ msgstr "工作组主管"
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "工作细节"
 
-#~ msgid "Starting date"
-#~ msgstr "开始日期"
+#. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr "工作从"
 
-#~ msgid "General Information"
-#~ msgstr "一般信息"
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr "工作至"
 
-#~ msgid "Working time"
-#~ msgstr "工作时间"
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "工作组主管"
 
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-#~ "show a load of 100% for this phase by default, but if we put a efficency of "
-#~ "200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "这字段描述该资源完成任务的效率。例如一个资源在一个任务的阶段单独放5天分配5给它，默认情况下这阶段它将是100%负荷，但如果设为效率是200%那它将只用到"
-#~ "50%的负荷。"
+#. module: resource
+#: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
+#: view:resource.resource:resource.view_resource_resource_search
+msgid "Working Period"
+msgstr "工作周期"
 
-#~ msgid "Efficiency factor"
-#~ msgstr "效率因子"
-
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " (复件)"
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+#: view:resource.calendar:resource.resource_calendar_form
+#: view:resource.calendar:resource.view_resource_calendar_search
+#: view:resource.calendar:resource.view_resource_calendar_tree
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
+#: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_tree
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "工作时间"

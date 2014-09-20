@@ -113,7 +113,7 @@
     </t>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" optional="enabled" name="Left World Map">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" customize_show="True" name="Left World Map">
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <!-- modal for large map -->
         <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -131,8 +131,8 @@
         <!-- modal end -->
         <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
         </ul>
     </xpath>
 </template>

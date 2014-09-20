@@ -6,6 +6,7 @@ import htmlentitydefs
 import itertools
 import logging
 import operator
+import psycopg2
 import re
 from ast import literal_eval
 from openerp.tools import mute_logger
@@ -186,28 +187,29 @@ class MergePartnerAutomatic(osv.TransientModel):
                 for partner_id in partner_ids:
                     cr.execute(query, (dst_partner.id, partner_id, dst_partner.id))
             else:
-                cr.execute("SAVEPOINT recursive_partner_savepoint")
                 try:
-                    query = 'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s' % query_dic
-                    cr.execute(query, (dst_partner.id, partner_ids,))
+                    with mute_logger('openerp.sql_db'), cr.savepoint():
+                        query = 'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s' % query_dic
+                        cr.execute(query, (dst_partner.id, partner_ids,))
 
-                    if column == proxy._parent_name and table == 'res_partner':
-                        query = """
-                            WITH RECURSIVE cycle(id, parent_id) AS (
-                                    SELECT id, parent_id FROM res_partner
-                                UNION
-                                    SELECT  cycle.id, res_partner.parent_id
-                                    FROM    res_partner, cycle
-                                    WHERE   res_partner.id = cycle.parent_id AND
-                                            cycle.id != cycle.parent_id
-                            )
-                            SELECT id FROM cycle WHERE id = parent_id AND id = %s
-                        """
-                        cr.execute(query, (dst_partner.id,))
-                        if cr.fetchall():
-                            cr.execute("ROLLBACK TO SAVEPOINT recursive_partner_savepoint")
-                finally:
-                    cr.execute("RELEASE SAVEPOINT recursive_partner_savepoint")
+                        if column == proxy._parent_name and table == 'res_partner':
+                            query = """
+                                WITH RECURSIVE cycle(id, parent_id) AS (
+                                        SELECT id, parent_id FROM res_partner
+                                    UNION
+                                        SELECT  cycle.id, res_partner.parent_id
+                                        FROM    res_partner, cycle
+                                        WHERE   res_partner.id = cycle.parent_id AND
+                                                cycle.id != cycle.parent_id
+                                )
+                                SELECT id FROM cycle WHERE id = parent_id AND id = %s
+                            """
+                            cr.execute(query, (dst_partner.id,))
+                except psycopg2.Error:
+                    # updating fails, most likely due to a violated unique constraint
+                    # keeping record with nonexistent partner_id is useless, better delete it
+                    query = 'DELETE FROM %(table)s WHERE %(column)s = %%s' % query_dic
+                    cr.execute(query, (partner_id,))
 
     def _update_reference_fields(self, cr, uid, src_partners, dst_partner, context=None):
         _logger.debug('_update_reference_fields for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
@@ -218,7 +220,13 @@ class MergePartnerAutomatic(osv.TransientModel):
                 return
             domain = [(field_model, '=', 'res.partner'), (field_id, '=', src.id)]
             ids = proxy.search(cr, openerp.SUPERUSER_ID, domain, context=context)
-            return proxy.write(cr, openerp.SUPERUSER_ID, ids, {field_id: dst_partner.id}, context=context)
+            try:
+                with mute_logger('openerp.sql_db'), cr.savepoint():
+                    return proxy.write(cr, openerp.SUPERUSER_ID, ids, {field_id: dst_partner.id}, context=context)
+            except psycopg2.Error:
+                # updating fails, most likely due to a violated unique constraint
+                # keeping record with nonexistent partner_id is useless, better delete it
+                return proxy.unlink(cr, openerp.SUPERUSER_ID, ids, context=context)
 
         update_records = functools.partial(update_records, context=context)
 
@@ -377,11 +385,20 @@ class MergePartnerAutomatic(osv.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _generate_query(self, fields, maximum_group=100):
-        group_fields = ', '.join(fields)
+        sql_fields = []
+        for field in fields:
+            if field in ['email', 'name']:
+                sql_fields.append('lower(%s)' % field)
+            elif field in ['vat']:
+                sql_fields.append("replace(%s, ' ', '')" % field)
+            else:
+                sql_fields.append(field)
+
+        group_fields = ', '.join(sql_fields)
 
         filters = []
         for field in fields:
-            if field in ['email', 'name']:
+            if field in ['email', 'name', 'vat']:
                 filters.append((field, 'IS NOT', 'NULL'))
 
         criteria = ' AND '.join('%s %s %s' % (field, operator, value)

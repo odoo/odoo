@@ -19,10 +19,15 @@
 #
 ##############################################################################
 
+import logging
 import threading
+from openerp import SUPERUSER_ID
+from openerp import tools
 
 from openerp.osv import osv
 from openerp.api import Environment
+
+_logger = logging.getLogger(__name__)
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
@@ -39,8 +44,18 @@ class procurement_compute_all(osv.osv_memory):
         with Environment.manage():
             proc_obj = self.pool.get('procurement.order')
             #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-            
+
             new_cr = self.pool.cursor()
+            scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
+            # Avoid to run the scheduler multiple times in the same time
+            try:
+                with tools.mute_logger('openerp.sql_db'):
+                    new_cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron_id,))
+            except Exception:
+                _logger.info('Attempt to run procurement scheduler aborted, as already running')
+                new_cr.rollback()
+                new_cr.close()
+                return {}
             user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
             comps = [x.id for x in user.company_ids]
             for comp in comps:

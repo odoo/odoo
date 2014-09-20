@@ -32,14 +32,10 @@ class hr_expense_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'date': fields.date('Date ', readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
+        'product_qty':fields.float('Product Quantity', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True),
         'date_valid': fields.date('Validation Date', readonly=True),
@@ -52,7 +48,7 @@ class hr_expense_report(osv.osv):
         'delay_confirm':fields.float('Delay to Confirm', readonly=True),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
         'price_average':fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
-        'nbr':fields.integer('# of Lines', readonly=True),
+        'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
         'no_of_products':fields.integer('# of Products', readonly=True),
         'no_of_account':fields.integer('# of Accounts', readonly=True),
         'state': fields.selection([
@@ -70,17 +66,15 @@ class hr_expense_report(osv.osv):
             create or replace view hr_expense_report as (
                  select
                      min(l.id) as id,
-                     date_trunc('day',s.date) as date,
+                     s.date as date,
+                     s.create_date as create_date,
                      s.employee_id,
                      s.journal_id,
                      s.currency_id,
-                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_confirm,
-                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_valid,
+                     s.date_confirm as date_confirm,
+                     s.date_valid as date_valid,
                      s.user_valid as user_id,
                      s.department_id,
-                     to_char(date_trunc('day',s.create_date), 'YYYY') as year,
-                     to_char(date_trunc('day',s.create_date), 'MM') as month,
-                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD') as day,
                      avg(extract('epoch' from age(s.date_valid,s.date)))/(3600*24) as  delay_valid,
                      avg(extract('epoch' from age(s.date_valid,s.date_confirm)))/(3600*24) as  delay_confirm,
                      l.product_id as product_id,
@@ -97,12 +91,10 @@ class hr_expense_report(osv.osv):
                  left join hr_expense_expense s on (s.id=l.expense_id)
                  left join product_uom u on (u.id=l.uom_id)
                  group by
-                     date_trunc('day',s.date),
-                     to_char(date_trunc('day',s.create_date), 'YYYY'),
-                     to_char(date_trunc('day',s.create_date), 'MM'),
-                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD'),
-                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY'),
-                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                     s.date,
+                     s.create_date,
+                     s.date_confirm,
+                     s.date_valid,
                      l.product_id,
                      l.analytic_account,
                      s.currency_id,

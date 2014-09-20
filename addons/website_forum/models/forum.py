@@ -400,8 +400,9 @@ class Post(osv.Model):
             raise KarmaError('Not enough karma to downvote.')
 
         Vote = self.pool['forum.post.vote']
-        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], limit=1, context=context)
-        new_vote = 0
+        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        new_vote = '1' if upvote else '-1'
+        voted_forum_ids = set()
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):
                 if upvote:
@@ -409,9 +410,9 @@ class Post(osv.Model):
                 else:
                     new_vote = '0' if vote.vote == '1' else '-1'
                 Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        else:
+                voted_forum_ids.add(vote.post_id.id)
+        for post_id in set(ids) - voted_forum_ids:
             for post_id in ids:
-                new_vote = '1' if upvote else '-1'
                 Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
         return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]], 'user_vote': new_vote}
 
@@ -419,7 +420,7 @@ class Post(osv.Model):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
-        post = self.browse(cr, uid, id, context=context)
+        post = self.browse(cr, SUPERUSER_ID, id, context=context)
         if not post.parent_id:
             return False
 
@@ -525,6 +526,10 @@ class Vote(osv.Model):
         'user_id': fields.many2one('res.users', 'User', required=True),
         'vote': fields.selection([('1', '1'), ('-1', '-1'), ('0', '0')], 'Vote', required=True),
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
+
+        # TODO master: store these two
+        'forum_id': fields.related('post_id', 'forum_id', type='many2one', relation='forum.forum', string='Forum'),
+        'recipient_id': fields.related('post_id', 'create_uid', type='many2one', relation='res.users', string='To', help="The user receiving the vote"),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,
@@ -543,20 +548,20 @@ class Vote(osv.Model):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         vote = self.browse(cr, uid, vote_id, context=context)
         if vote.post_id.parent_id:
-            karma_value = self._get_karma_value('0', vote.vote, vote.post_id.forum_id.karma_gen_answer_upvote, vote.post_id.forum_id.karma_gen_answer_downvote)
+            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
         else:
-            karma_value = self._get_karma_value('0', vote.vote, vote.post_id.forum_id.karma_gen_question_upvote, vote.post_id.forum_id.karma_gen_question_downvote)
-        self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.create_uid.id], karma_value, context=context)
+            karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
+        self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.recipient_id.id], karma_value, context=context)
         return vote_id
 
     def write(self, cr, uid, ids, values, context=None):
         if 'vote' in values:
             for vote in self.browse(cr, uid, ids, context=context):
                 if vote.post_id.parent_id:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.post_id.forum_id.karma_gen_answer_upvote, vote.post_id.forum_id.karma_gen_answer_downvote)
+                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
                 else:
-                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.post_id.forum_id.karma_gen_question_upvote, vote.post_id.forum_id.karma_gen_question_downvote)
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.create_uid.id], karma_value, context=context)
+                    karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_question_upvote, vote.forum_id.karma_gen_question_downvote)
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.recipient_id.id], karma_value, context=context)
         res = super(Vote, self).write(cr, uid, ids, values, context=context)
         return res
 

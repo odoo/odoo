@@ -15,10 +15,12 @@
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                    <field name="categ_id"/>
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group  expand='0' string='Group by...'>
+                       <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                     </group>
@@ -75,8 +77,8 @@
                                     </group>
                                     <group>
                                         <field name="active"/>
-                                        <field name="ean13"/>
-                                        <field name="default_code"/>
+                                        <field name="ean13" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
+                                        <field name="default_code" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
                                     </group>
                                 </group>
                                 <group colspan="4">
@@ -104,10 +106,10 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="weight" string="Weights">
-                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                    <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
+                                        <field digits="(14, 3)" name="volume"/>
+                                        <field digits="(14, 3)" name="weight"/>
+                                        <field digits="(14, 3)" name="weight_net"/>
                                     </group>
                                 </group>
                             </page>
@@ -181,6 +183,7 @@
             <field name="res_model">product.attribute.value</field>
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="variants_template_tree_view"/>
             <field name="domain">[('product_ids.product_tmpl_id', '=', active_id)]</field>
             <field name="context">{'default_product_tmpl_id': active_id}</field>
         </record>
@@ -192,6 +195,7 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -236,13 +240,13 @@
                         <div class="oe_right">
                             <button class="oe_inline oe_stat_button" string="Variant Prices"  name="%(variants_template_action)d" type="action" icon="fa-strikethrough"/>
                             <button class="oe_inline oe_stat_button" name="%(product.product_variant_action)d" type="action" icon="fa-sitemap">
-                                <field string="Variants" name="product_variant_count" widget="statinfo" />
+                                <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
                         <field name="attribute_line_ids" widget="one2many_list">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
-                                <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
                             </tree>
                         </field>
                     </page>
@@ -270,7 +274,7 @@
                                              <field name="name"/> 
                                         </a>
                                     </h4>
-                                    <a name="%(product.product_variant_action)d" type="action" t-if="record.product_variant_count.raw_value&gt;1" >
+                                    <a name="%(product.product_variant_action)d" type="action">
                                         <t t-esc="record.product_variant_count.value"/> Variants
                                     </a>
                                     <div name="tags"/>
@@ -292,6 +296,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_kanban_view"/>
+            <field name="context">{"search_default_filter_to_sell":1}</field>
         </record>
 
         <menuitem action="product_template_action"

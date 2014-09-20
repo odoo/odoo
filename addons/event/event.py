@@ -147,9 +147,13 @@ class event_event(models.Model):
             ('done', 'Done')
         ], string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
-    email_registration_id = fields.Many2one('email.template', string='Registration Confirmation Email',
+    email_registration_id = fields.Many2one(
+        'email.template', string='Registration Confirmation Email',
+        domain=[('model', '=', 'event.registration')],
         help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.')
-    email_confirmation_id = fields.Many2one('email.template', string='Event Confirmation Email',
+    email_confirmation_id = fields.Many2one(
+        'email.template', string='Event Confirmation Email',
+        domain=[('model', '=', 'event.registration')],
         help="If you set an email template, each participant will receive this email announcing the confirmation of the event.")
     reply_to = fields.Char(string='Reply-To Email',
         readonly=False, states={'done': [('readonly', True)]},
@@ -185,12 +189,15 @@ class event_event(models.Model):
             for reg in self.registration_ids
         )
 
-    @api.one
+    @api.multi
     @api.depends('name', 'date_begin', 'date_end')
-    def _compute_display_name(self):
-        dates = [dt.split(' ')[0] for dt in [self.date_begin, self.date_end] if dt]
-        dates = sorted(set(dates))
-        self.display_name = '%s (%s)' % (self.name, ' - '.join(dates))
+    def name_get(self):
+        result = []
+        for event in self:
+            dates = [dt.split(' ')[0] for dt in [event.date_begin, event.date_end] if dt]
+            dates = sorted(set(dates))
+            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
+        return result
 
     @api.one
     @api.constrains('seats_max', 'seats_available')
@@ -279,8 +286,8 @@ class event_event(models.Model):
 
 
 class event_registration(models.Model):
-    """Event Registration"""
-    _name= 'event.registration'
+    _name = 'event.registration'
+    _description = 'Event Registration'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name, create_date desc'
 
@@ -373,8 +380,9 @@ class event_registration(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner(self):
         if self.partner_id:
-            contact = self.partner_id.address_get().get('default', False)
-            if contact:
+            contact_id = self.partner_id.address_get().get('default', False)
+            if contact_id:
+                contact = self.env['res.partner'].browse(contact_id)
                 self.name = contact.name
                 self.email = contact.email
                 self.phone = contact.phone

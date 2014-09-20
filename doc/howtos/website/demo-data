@@ -1,0 +1,29 @@
+# HG changeset patch
+# Parent c77aa2c3341b9ab3a4e9ed05874e8a278fe69453
+diff -r c77aa2c3341b -r f0a3629abb17 academy/__openerp__.py
+--- a/academy/__openerp__.py	Mon Aug 11 16:50:01 2014 +0200
++++ b/academy/__openerp__.py	Tue Aug 12 11:21:05 2014 +0200
+@@ -11,4 +11,8 @@
+         'ir.model.access.csv',
+         'templates.xml',
+     ],
++    # data files which are only installed in "demonstration mode"
++    'demo': [
++        'demo.xml',
++    ],
+ }
+diff -r c77aa2c3341b -r f0a3629abb17 academy/demo.xml
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/academy/demo.xml	Tue Aug 12 11:21:05 2014 +0200
+@@ -0,0 +1,11 @@
++<openerp><data>
++  <record id="padilla" model="academy.teachers">
++    <field name="name">Diana Padilla</field>
++  </record>
++  <record id="carroll" model="academy.teachers">
++    <field name="name">Jody Carroll</field>
++  </record>
++  <record id="vaughn" model="academy.teachers">
++    <field name="name">Lester Vaughn</field>
++  </record>
++</data></openerp>

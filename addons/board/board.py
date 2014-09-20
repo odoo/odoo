@@ -49,7 +49,6 @@ class board_board(osv.osv):
             ('value', 'in', refs),
         ], context=context)
         menu_ids = map(itemgetter('res_id'), IrValues.read(cr, uid, irv_ids, ['res_id'], context=context))
-        menu_ids = Menus._filter_visible_menus(cr, uid, menu_ids, context=context)
         menu_names = Menus.name_get(cr, uid, menu_ids, context=context)
         return [dict(id=m[0], name=m[1]) for m in menu_names]
 

@@ -23,6 +23,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Ressources',
+    'website' : 'https://www.odoo.com/page/gamification',
     'depends': ['mail', 'email_template', 'web_kanban_gauge'],
     'description': """
 Gamification process
@@ -50,9 +51,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/badge.xml',
         'views/gamification.xml',
     ],
-    'installable': True,
     'application': True,
     'auto_install': False,
-
     'qweb': ['static/src/xml/gamification.xml'],
 }

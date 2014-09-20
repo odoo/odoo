@@ -287,8 +287,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (!remaining--) {
+                        if (self.dataset.index >= records.length){
                             self.dataset.index = self.dataset.size() ? 0 : null;
+                        }
+                        if (!remaining--) {
                             return self.do_add_groups(groups_array);
                         }
                 });
@@ -308,6 +310,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                if (!_.isEmpty(self.dataset.ids) && (self.dataset.index === null || self.dataset.index >= self.dataset.ids.length)) {
+                    self.dataset.index = 0;
+                } else if (_.isEmpty(self.dataset.ids)){
+                    self.dataset.index = null;
+                }
                 self.do_add_groups([kgroup]).done(function() {
                     if (_.isEmpty(records)) {
                         self.no_result();
@@ -429,8 +436,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
                         if (start_index !== stop_index) {
-                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
-                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
+                            var $start_column = self.$('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
+                            var $stop_column = self.$('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
                             var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
                             $start_column[method]($stop_column);
                             var tmp_group = self.groups.splice(start_index, 1)[0];
@@ -1152,7 +1159,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
  */
 instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     template: 'KanbanView.quick_create',
-    
+
     /**
      * close_btn: If true, the widget will display a "Close" button able to trigger
      * a "close" event.
@@ -1295,7 +1302,7 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         this.record_id = self.parent.id;
         this.priorities = self.prepare_priority();
         this.$el = $(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;
@@ -1337,7 +1344,7 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
         this.record_id = self.parent.id;
         this.states = self.prepare_dropdown_selection();;
         this.$el = $(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').click(self.do_action.bind(self));
     },
     do_action: function(e) {
         var self = this;

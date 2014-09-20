@@ -32,7 +32,7 @@ class purchase_requisition(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_po_line(self, cr, uid, ids, field_names, arg=None, context=None):
-        result = {}.fromkeys(ids, [])
+        result = dict((res_id, []) for res_id in ids)
         for element in self.browse(cr, uid, ids, context=context):
             for po in element.purchase_ids:
                 result[element.id] += [po_line.id for po_line in po.order_line]

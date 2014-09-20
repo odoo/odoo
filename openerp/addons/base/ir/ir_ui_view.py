@@ -38,7 +38,7 @@ import openerp
 from openerp import tools, api
 from openerp.http import request
 from openerp.osv import fields, osv, orm
-from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
+from openerp.tools import graph, SKIPPED_ELEMENT_TYPES, SKIPPED_ELEMENTS
 from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
@@ -47,7 +47,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath']
+MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
 def keep_query(*keep_params, **additional_params):
     """
@@ -167,21 +167,15 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
-        'application': fields.selection([
-                ('always', "Always applied"),
-                ('enabled', "Optional, enabled"),
-                ('disabled', "Optional, disabled"),
-            ],
-            required=True, string="Application status",
+        'active': fields.boolean("Active",
             help="""If this view is inherited,
-* if always, the view always extends its parent
-* if enabled, the view currently extends its parent but can be disabled
-* if disabled, the view currently does not extend its parent but can be enabled
+* if True, the view always extends its parent
+* if False, the view currently does not extend its parent but can be enabled
              """),
     }
     _defaults = {
         'mode': 'primary',
-        'application': 'always',
+        'active': True,
         'priority': 16,
     }
     _order = "priority,name"
@@ -263,7 +257,7 @@ class view(osv.osv):
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
-        self.read_template.clear_cache(self)
+        self.clear_cache()
         return super(view, self).create(
             cr, uid,
             self._compute_defaults(cr, uid, values, context=context),
@@ -281,7 +275,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        self.read_template.clear_cache(self)
+        self.clear_cache()
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),
@@ -289,18 +283,10 @@ class view(osv.osv):
         return ret
 
     def toggle(self, cr, uid, ids, context=None):
-        """ Switches between enabled and disabled application statuses
+        """ Switches between enabled and disabled statuses
         """
-        for view in self.browse(cr, uid, ids, context=context):
-            if view.application == 'enabled':
-                view.write({'application': 'disabled'})
-            elif view.application == 'disabled':
-                view.write({'application': 'enabled'})
-            else:
-                raise ValueError(_("Can't toggle view %d with application %r") % (
-                    view.id,
-                    view.application,
-                ))
+        for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
+            view.write({'active': not view.active})
 
     # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
@@ -346,7 +332,7 @@ class view(osv.osv):
             ['inherit_id', '=', view_id],
             ['model', '=', model],
             ['mode', '=', 'extension'],
-            ['application', 'in', ['always', 'enabled']],
+            ['active', '=', True],
         ]
         if self.pool._init:
             # Module init currently in progress, only consider views from
@@ -699,27 +685,30 @@ class view(osv.osv):
         if 'lang' in context:
             Translations = self.pool['ir.translation']
             if node.text and node.text.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.text.strip())
+                term = node.text.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.text = node.text.replace(node.text.strip(), trans)
+                    node.text = node.text.replace(term, trans)
             if node.tail and node.tail.strip():
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.tail.strip())
+                term = node.tail.strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
                 if trans:
-                    node.tail =  node.tail.replace(node.tail.strip(), trans)
+                    node.tail =  node.tail.replace(term, trans)
 
-            if node.get('string') and not result:
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.get('string'))
-                if trans == node.get('string') and ('base_model_name' in context):
+            if node.get('string') and node.get('string').strip() and not result:
+                term = node.get('string').strip()
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
+                if trans == term and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
                     # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
+                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
                 if trans:
                     node.set('string', trans)
 
             for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
-                if attr_value:
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value)
+                if attr_value and attr_value.strip():
+                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
                     if trans:
                         node.set(attr_name, trans)
 
@@ -940,7 +929,7 @@ class view(osv.osv):
         :rtype: boolean
         """
         return any(
-            (attr == 'data-oe-model' or (attr != 't-field' and attr.startswith('t-')))
+            (attr in ('data-oe-model', 'group') or (attr != 't-field' and attr.startswith('t-')))
             for attr in node.attrib
         )
 
@@ -957,7 +946,7 @@ class view(osv.osv):
                 return None
             return Translations._get_source(cr, uid, 'website', 'view', lang, text, id_)
 
-        if arch.tag not in ['script']:
+        if type(arch) not in SKIPPED_ELEMENT_TYPES and arch.tag not in SKIPPED_ELEMENTS:
             text = get_trans(arch.text)
             if text:
                 arch.text = arch.text.replace(arch.text.strip(), text)
@@ -965,7 +954,7 @@ class view(osv.osv):
             if tail:
                 arch.tail = arch.tail.replace(arch.tail.strip(), tail)
 
-            for attr_name in ('title', 'alt', 'placeholder'):
+            for attr_name in ('title', 'alt', 'label', 'placeholder'):
                 attr = get_trans(arch.get(attr_name))
                 if attr:
                     arch.set(attr_name, attr)

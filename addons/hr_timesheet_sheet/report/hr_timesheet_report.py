@@ -26,14 +26,13 @@ class hr_timesheet_report(osv.osv):
     _inherit = "hr.timesheet.report"
     _columns = {
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
-        'nbr': fields.integer('#Nbr',readonly=True),
-        'total_diff': fields.float('#Total Diff',readonly=True),
-        'total_timesheet': fields.float('#Total Timesheet',readonly=True),
-        'total_attendance': fields.float('#Total Attendance',readonly=True),
+        'nbr': fields.integer('# Nbr Timesheet',readonly=True),
+        'total_diff': fields.float('# Total Diff',readonly=True),
+        'total_timesheet': fields.float('# Total Timesheet',readonly=True),
+        'total_attendance': fields.float('# Total Attendance',readonly=True),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
         'date_to': fields.date('Date to',readonly=True),
-        'date_current': fields.date('Current date', required=True),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),
@@ -48,16 +47,16 @@ class hr_timesheet_report(osv.osv):
                         htss.date_to,
                         count(*) as nbr,
                         (SELECT   sum(day.total_difference)
-                            FROM hr_timesheet_sheet_sheet AS sheet 
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            FROM hr_timesheet_sheet_sheet AS sheet
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
                             ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_diff,
                         (SELECT sum(day.total_timesheet)
-                            FROM hr_timesheet_sheet_sheet AS sheet 
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            FROM hr_timesheet_sheet_sheet AS sheet
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
                             ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_timesheet,
                         (SELECT sum(day.total_attendance)
-                            FROM hr_timesheet_sheet_sheet AS sheet 
-                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            FROM hr_timesheet_sheet_sheet AS sheet
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day
                             ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_attendance,
                         aal.to_invoice,
                         htss.department_id,

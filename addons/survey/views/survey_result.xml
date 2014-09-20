@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <template id="assets_frontend_result" inherit_id="website.assets_frontend" name="Survey Results assets">
+        <xpath expr="." position="inside">
+            <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+            <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+            <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+            <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
+            <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+        </xpath>
+    </template>
     <template id="result" name="Survey Result">
         <t t-call="website.layout">
-            <t t-set="head">
-                <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
-                <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
-                <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
-                <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
-                <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
-            </t>
             <div class="oe_structure" />
             <div class="container">
                 <div class="jumbotron mt32">
-                    <t t-set="survey" t-value="survey_dict['survey']"/>
                     <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
@@ -34,6 +35,7 @@
                 <div t-foreach="survey_dict['page_ids']" t-as='page_ids'>
                     <t t-set="page" t-value="page_ids['page']"/>
                     <h1 class="mt16" t-field='page.title'></h1>
+                    <div t-field="page.description" class="oe_no_empty" />
                     <hr/>
                     <div t-foreach="page_ids['question_ids']" t-as='question_ids' class="mt16">
                         <t t-set="input_summary" t-value="question_ids['input_summary']"/>
@@ -56,7 +58,7 @@
                         </h4>
                         <t t-if="input_summary['answered'] != 0">
                             <t t-if="question.description">
-                                <h5><span class="text-muted" t-field="question.description"></span></h5>
+                                <div class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
                             <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
                                 <t t-call="survey.result_text"></t>
@@ -115,6 +117,28 @@
         <t t-call="survey.pagination" />
     </template>
 
+    <!-- Result for comments -->
+    <template id="result_comments" name="Text Result">
+        <!-- a 'comments' variable must be set an must contain a list of browse records of user input lines -->
+        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="comments" t-as="user_input">
+                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                        <td>
+                            <span t-field="user_input.value_text"></span><br/>
+                        </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+
     <!-- Result for simple_choice and multiple_choice -->
     <template id="result_choice" name="Choice Result">
         <div>
@@ -154,7 +178,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="prepare_result" t-as="user_input">
+                            <tr t-foreach="prepare_result['answers']" t-as="user_input">
                                 <td>
                                     <p t-esc="user_input['text']"></p>
                                 </td>
@@ -168,6 +192,14 @@
                     </table>
                 </div>
             </div>
+            <!-- handle comments -->
+            <div>
+                <t t-set="comments" t-value="prepare_result['comments']" />
+                <t t-if="comments">
+                    <t t-call="survey.result_comments" />
+                </t>
+            </div>
+
         </div>
     </template>
 
@@ -217,6 +249,13 @@
                     </tbody>
                 </table>
             </div>
+            <!-- handle comments to matrix -->
+            <div>
+                <t t-set="comments" t-value="matrix_result['comments']" />
+                <t t-if="comments">
+                    <t t-call="survey.result_comments" />
+                </t>
+            </div>
         </div>
     </template>
 
@@ -225,6 +264,7 @@
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
         <span class="pull-right mt8">
+            <span class="label label-default only_left_radius">Sum </span> <span class="label label-info only_right_radius" t-esc="number_result['sum']"></span>
             <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
             <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
             <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
@@ -275,10 +315,7 @@
                     <tbody>
                         <tr class="hidden" t-foreach="number_result['input_lines']" t-as="user_input">
                             <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
-<!--                             <td><t t-esc="user_input_index+1"></t></td>
- -->                                <td>
-                                    <span t-field="user_input.value_number"></span><br/>
-                                </td>
+                            <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>
                     </tbody>
                 </table>

@@ -356,7 +356,13 @@
             observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
-            editor.destroy();
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
                 .filter('.oe_dirty')
@@ -558,7 +564,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         events: {
             'mousedown a.dropdown-toggle': 'load_menu',
-            'click ul a[data-action!=ace]': 'do_customize',
+            'click ul a[data-view-id]': 'do_customize',
         },
         start: function() {
             var self = this;
@@ -1040,6 +1046,7 @@
         make_link: function (url, new_window, label, classes) {
         },
         bind_data: function () {
+            var self = this;
             var href = this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
             var new_window = this.element
@@ -1047,8 +1054,13 @@
                         : false;
             var text = this.element ? this.element.getText() : '';
             if (!text.length) {
-                var selection = this.editor.getSelection();
-                text = selection.getSelectedText();
+                if (this.editor) {
+                    text = this.editor.getSelection().getSelectedText();
+                } else {
+                    text = this.data.name;
+                    href = this.data.url;
+                    new_window = this.data.new_window;
+                }
             }
 
             this.$('input#link-text').val(text);
@@ -1069,8 +1081,14 @@
                 this.$('input.email-address').val(match[1]).change();
             }
             if (href && !$control) {
-                this.$('input.url').val(href).change();
-                this.$('input.window-new').closest("div").show();
+                this.page_exists(href).then(function (exist) {
+                    if (exist) {
+                        self.$('#link-page').select2('data', {'id': href, 'text': href});
+                    } else {
+                        self.$('input.url').val(href).change();
+                        self.$('input.window-new').closest("div").show();
+                    }
+                });
             }
             this.preview();
         },
@@ -1252,6 +1270,11 @@
         start: function () {
             var self = this;
 
+            if (this.editor.getSelection) {
+                var selection = this.editor.getSelection();
+                this.range = selection.getRanges(true)[0];
+            }
+
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
@@ -1305,11 +1328,9 @@
                     this.videoDialog.clear();
                 }
             } else {
-                var selection = this.editor.getSelection();
-                var range = selection.getRanges(true)[0];
                 this.media = new CKEDITOR.dom.element("img");
-                range.insertNode(this.media);
-                range.selectNodeContents(this.media);
+                self.range.insertNode(this.media);
+                self.range.selectNodeContents(this.media);
                 this.active.media = this.media;
             }
 
@@ -1320,6 +1341,7 @@
             this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
 
             setTimeout(function () {
+                if(self.range) self.range.select();
                 $el.trigger("saved", self.active.media.$);
                 $(document.body).trigger("media-saved", [$el[0], self.active.media.$]);
             },0);
@@ -1364,6 +1386,10 @@
             },
             'click button.filepicker': function () {
                 this.$('input[type=file]').click();
+            },
+            'click .js_disable_optimization': function () {
+                this.$('input[name="disable_optimization"]').val('1');
+                this.$('button.filepicker').click();
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',

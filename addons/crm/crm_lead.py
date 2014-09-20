@@ -29,6 +29,7 @@ from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
+from openerp.tools import email_re
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -67,7 +68,7 @@ class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority,date_action,id desc"
+    _order = "priority desc,date_action,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'crm.tracking.mixin']
 
     _track = {
@@ -89,11 +90,11 @@ class crm_lead(format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def _get_default_section_id(self, cr, uid, context=None):
+    def _get_default_section_id(self, cr, uid, user_id=False, context=None):
         """ Gives default section by checking if present in the context """
         section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
         if not section_id:
-            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+            section_id = self.pool.get('res.users').browse(cr, uid, user_id or uid, context).default_section_id.id or False
         return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
@@ -228,10 +229,12 @@ class crm_lead(format_address, osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_open', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Assign',
+                                    multi='day_open', type="float",
+                                    store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='day_open', type="float",
+                                     store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing
@@ -276,7 +279,7 @@ class crm_lead(format_address, osv.osv):
         'type': 'lead',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
@@ -321,7 +324,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = self._get_default_section_id(cr, uid, context=context) or False
+        section_id = self._get_default_section_id(cr, uid, user_id=user_id, context=context) or False
         if user_id and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
@@ -577,7 +580,7 @@ class crm_lead(format_address, osv.osv):
                 values = {'res_id': opportunity_id,}
                 for attachment_in_first in first_attachments:
                     if attachment.name == attachment_in_first.name:
-                        name = "%s (%s)" % (attachment.name, count,),
+                        values['name'] = "%s (%s)" % (attachment.name, count,),
                 count+=1
                 attachment.write(values)
         return True
@@ -886,6 +889,8 @@ class crm_lead(format_address, osv.osv):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -895,7 +900,9 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # stage change with new stage: update probability
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
@@ -1031,5 +1038,17 @@ class crm_lead(format_address, osv.osv):
             country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
+
+    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
+        res = super(crm_lead, self).message_partner_info_from_emails(cr, uid, id, emails, link_mail=link_mail, context=context)
+        lead = self.browse(cr, uid, id, context=context)
+        for partner_info in res:
+            if not partner_info.get('partner_id') and (lead.partner_name or lead.contact_name):
+                emails = email_re.findall(partner_info['full_name'] or '')
+                email = emails and emails[0] or ''
+                if email and lead.email_from and email.lower() == lead.email_from.lower():
+                    partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
+                    break
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
