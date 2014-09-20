@@ -14,7 +14,7 @@ class NewWebsite(osv.Model):
         snapshot_id=request.context.get('snapshot_id')
         experiment_id=request.context.get('experiment_id')
         if experiment_id:
-            exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running')], context=context)
+            exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
             return (0, 'experiment',len(exp_run_ids))
 
         if not snapshot_id:
