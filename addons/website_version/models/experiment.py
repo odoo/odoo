@@ -14,6 +14,27 @@ class Experiment_snapshot(osv.Model):
         'frequency': '10',
     }
 
+    def _check_page(self, cr, uid, ids, context=None):
+        exp_ids = self.pool["website_version.experiment"].search(cr,uid,[],context=context)
+        exps = self.pool["website_version.experiment"].browse(cr,uid,exp_ids,context=context)
+        check_a = set()
+        check_b = set()
+        for exp in exps:
+            for exp_snap in exp.experiment_snapshot_ids:
+                for view in exp_snap.snapshot_id.view_ids:
+                    x = (view.key,view.website_id.id)
+                    y = (view.key,view.website_id.id,exp_snap.experiment_id)
+                    if x in check_a and not y in check_b:
+                        return False
+                    else:
+                        check_a.add(x)
+                        check_b.add(y)
+        return True
+
+    _constraints = [
+        (_check_page, 'This snapshot contains a page which is already used in another experience', ['snapshot_id','experiment_id']),
+    ]
+
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
@@ -55,8 +76,8 @@ class Experiment(osv.Model):
 
     _order = 'sequence'
 
-    _group_by_full = {
-        # 'state': _get_state
-        'state': lambda *args, **kwargs : ([('draft','Draft'),('running','Running'),('done','Done')], dict()),
-    }
+    # _group_by_full = {
+    #     # 'state': _get_state
+    #     'state': lambda *args, **kwargs : ([('draft','Draft'),('running','Running'),('done','Done')], dict()),
+    # }
 
