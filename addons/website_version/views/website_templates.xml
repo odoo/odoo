@@ -9,6 +9,9 @@
                         <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">
                             Version (
                                         <span><t t-esc="website.get_current_snapshot(context=context)[1]"></t></span>
+                                        <t t-if="website.get_current_snapshot(context=context)[1] == 'experiment'">
+                                            <span class="badge"><t t-esc="website.get_current_snapshot(context=context)[2]"></t></span>
+                                        </t>
                                     )<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu version_menu" role="menu">
