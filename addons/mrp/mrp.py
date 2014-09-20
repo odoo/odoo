@@ -1072,9 +1072,17 @@ class mrp_production(osv.osv):
         loc_obj = self.pool.get("stock.location")
         stock_move = self.pool.get('stock.move')
         type_obj = self.pool.get('stock.picking.type')
+        prev_move_id = stock_move.copy(cr, uid, move_id, default = {
+            'location_id': source_location_id,
+            'location_dest_id': dest_location_id,
+            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
+            'raw_material_production_id': False, 
+            'move_dest_id': move_id,
+        }, context=context)
+
         # Need to search for a picking type
-        move = stock_move.browse(cr, uid, move_id, context=context)
-        code = stock_move.get_code_from_locs(cr, uid, move, context=context)
+        prev_move = stock_move.browse(cr, uid, prev_move_id, context=context)
+        code = stock_move.get_code_from_locs(cr, uid, prev_move, context=context)
         if code == 'outgoing':
             check_loc_id = source_location_id
         else:
@@ -1082,18 +1090,12 @@ class mrp_production(osv.osv):
         check_loc = loc_obj.browse(cr, uid, check_loc_id, context=context)
         wh = loc_obj.get_warehouse(cr, uid, check_loc, context=context)
         domain = [('code', '=', code)]
-        if wh: 
+        if wh:
             domain += [('warehouse_id', '=', wh)]
         types = type_obj.search(cr, uid, domain, context=context)
-        move = stock_move.copy(cr, uid, move_id, default = {
-            'location_id': source_location_id,
-            'location_dest_id': dest_location_id,
-            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
-            'raw_material_production_id': False, 
-            'move_dest_id': move_id,
-            'picking_type_id': types and types[0] or False,
-        }, context=context)
-        return move
+        prev_move.write({'picking_type_id': types and types[0] or False,})
+
+        return prev_move_id
 
     def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
         stock_move = self.pool.get('stock.move')
