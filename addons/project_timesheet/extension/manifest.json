@@ -18,12 +18,12 @@
   "permissions": [
     "activeTab"
   ],
-  "content_scripts": [
-   {
-      "matches": ["http://*/*", "https://*/"],
-      "css": ["static/lib/bootstrap/css/bootstrap.css", "static/src/css/project_timesheet.css"],
-      "js": ["static/lib/underscore/underscore.js", "static/lib/underscore/underscore.string.js", "static/lib/jquery/jquery.js", "static/lib/jquery.placeholder/jquery.placeholder.js", "static/lib/datejs/core.js", "static/lib/bootstrap/js/bootstrap.js", "static/lib/backbone/backbone.js", "static/lib/qweb/qweb2.js", "static/src/js/openerpframework.js", "static/src/js/project_timesheet.js"]
-    }
-  ],
+  //"content_scripts": [
+  // {
+  //    "matches": ["http://*/*", "https://*/"],
+  //    "css": ["static/lib/bootstrap/css/bootstrap.css", "static/src/css/project_timesheet.css"],
+  //    "js": ["static/lib/underscore/underscore.js", "static/lib/underscore/underscore.string.js", "static/lib/jquery/jquery.js", "static/lib/jquery.placeholder/jquery.placeholder.js", "static/lib/datejs/core.js", "static/lib/bootstrap/js/bootstrap.js", "static/lib/backbone/backbone.js", "static/lib/qweb/qweb2.js", "static/src/js/openerpframework.js", "static/src/js/project_timesheet.js"]
+  //  }
+  //],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

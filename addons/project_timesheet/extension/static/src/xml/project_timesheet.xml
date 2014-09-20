@@ -3,21 +3,80 @@
 -->
 <templates id="template" xml:space="preserve">
     <t t-name="ProjectTimesheet">
-        <div class="pt_application">
-            <div class="screens"></div>
-            <!-- <div class="pt_footer"></div> -->
+        <div class="container-fluid pt_application">
+            <div class="row screens"></div>
         </div>
     </t>
 
     <t t-name="ActivityScreen">
-        <div class="content_area">
-            <div class="container pt_activity">
-                <div class="row">
-                    <span>Heyyy, here content will come...</span>
-                </div>
-            </div>
-            <t t-call="Footer"></t>
-        </div>
+        <table class="table table-responsive activity_screen" style="height: 100%;">
+            <tbody>
+            <tr>
+                <td class="pt_activity_header">
+                    <div class="row">
+                        <div class="pt_duration col-md-8 col-xs-8">
+                            <span>00:00:00</span>
+                        </div>
+                        <div class="pt_timer_button col-md-4 col-xs-4">
+                            <button class="btn btn-primary pull-right">Start</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pt_activity_col">
+                    <div class="pt_activity_body">
+                        <table class="table table-responsive table-striped">
+                            <tbody>
+                                <tr>
+                                    <td><span class="pt_add_activity">+ Add Activity</span></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                <tr class="activity_row">
+                                    <td></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pt_footer">
+                    <t t-call="Footer"></t>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </t>
 
     <t t-name="ModifyActivityScreen">
@@ -50,28 +109,24 @@
         </div>
     </t>
 
-
-
-    <!-- TO REMOVE -->
     <t t-name="Footer">
-        <div class="pt_footer">
-            <div class="container pt_footer">
-                <div class="row">
-                    <div class="col-md-4 col-xs-4">
-                        <span class="pt_stat_icon"></span>Stats
-                    </div>
-                    <div class="col-md-4 col-xs-4">
-                        <span class="pt_rocket_icon"></span>Sync now
-                    </div>
-                    <div class="col-md-4 col-xs-4">
-                        <span class="pt_total_duration">6h 30min</span>
-                    </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
+                    <i></i><span>Stats</span>
+                </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync">
+                    <i></i><span>Sync now</span>
+                </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
+                    <i></i><span>6h 30min</span>
                 </div>
             </div>
         </div>
     </t>
 
 
+    <!-- TO REMOVE -->
     <t t-name="InfoModal">
         <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">

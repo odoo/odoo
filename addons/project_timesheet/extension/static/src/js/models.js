@@ -45,7 +45,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.session = session;
-            this.id = null;
+            this.id = null; //If no real id, we will have virtual id, at sync time virtual id will be skipped while sending data to server
             this.name = null;
             this.tasks = new project_timesheet.TaskCollection();
         },
@@ -61,6 +61,9 @@ function odoo_project_timesheet_models(project_timesheet) {
         model: project_timesheet.project_model,
     });
 
+    //Once data has been sync, read project, then task and activities and store it into localstorage also
+    //While sync read model, this following model's save_to_server will fetch project, and project will fetch task in format such that its one2many
+
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
         initialize: function(session, attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
@@ -68,10 +71,14 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.set({
                 projects: new project_timesheet.ProjectCollection()
             });
+            this.project_timesheet_db = new project_timesheet.project_timesheet_db();
             this.screen_data = {};  // see ScreenSelector
         },
         add_new_project: function() {
             //TO Implement, will create new object of model and add it into collection
+        },
+        load_stored_data: function() {
+            //TO Implement, this will load localstorage data and call add project, add project will call add task, add task will call add activity
         },
         set_screen_data: function(key,value){
             if(arguments.length === 2){
@@ -86,6 +93,14 @@ function odoo_project_timesheet_models(project_timesheet) {
         get_screen_data: function(key){
             return this.screen_data[key];
         },
+        save_to_server: function() {
+            //TO Implement, this method will save data to server
+        },
+        flush_data: function() {
+            //TO Implement, this method will flush localstorage data once it has been sync
+        },
+        //Note here
+        //Here we will have logic of add projects, which will add project models' instance in this.get('projects').add(project)
     });
 
 }

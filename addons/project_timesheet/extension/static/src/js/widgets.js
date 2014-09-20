@@ -1,5 +1,6 @@
 function odoo_project_timesheet_widgets(project_timesheet) {
-    var QWeb = openerp.qweb,
+    //var QWeb = openerp.qweb,
+    var QWeb = project_timesheet.qweb,
     _t = openerp._t;
 
     project_timesheet.project_timesheet_widget = openerp.Widget.extend({
@@ -21,17 +22,17 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         build_widgets: function() {
             //Creates all widgets instances and add into this object
             /*----------------Screen------------------*/
-            this.activity_screen = new project_timesheet.ActivityScreen(this,{});
+            this.activity_screen = new project_timesheet.ActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             //Append all screen widget in screen element of this.$el, by default all will be hidden and then current screen will be visible
             this.activity_screen.appendTo(this.$('.screens'));
              
-            this.modify_activity_screen = new project_timesheet.ModifyActivityScreen(this, {});
+            this.modify_activity_screen = new project_timesheet.ModifyActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.modify_activity_screen.appendTo(this.$('.screens'));
 
-            this.sync_screen = new project_timesheet.SyncScreen(this, {});
+            this.sync_screen = new project_timesheet.SyncScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.sync_screen.appendTo(this.$('.screens'));
 
-            this.stat_screen = new project_timesheet.StatisticScreen(this, {});
+            this.stat_screen = new project_timesheet.StatisticScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.stat_screen.appendTo(this.$('.screens'));
 
             /*----------------Screen Selector------------------*/
@@ -48,6 +49,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
     });
 
+    //TO REMOVE
     project_timesheet.FooterWidget = openerp.Widget.extend({
         template: "Footer",
         init: function() {

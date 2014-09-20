@@ -4,6 +4,7 @@ project_timesheet = {};
 
     openerp.project_timesheet = project_timesheet;
 
+    //project_timesheet.qweb = new QWeb2.Engine();
     odoo_project_timesheet_db(project_timesheet); //Import db.js
     odoo_project_timesheet_models(project_timesheet); //Import model.js
     odoo_project_timesheet_screens(project_timesheet); // Import screens.js
@@ -31,7 +32,6 @@ project_timesheet = {};
         };
         App.prototype.initialize = function($element) {
             this.$el = $element;
-            project_timesheet.qweb = new QWeb2.Engine();
     
             var Connect = new XMLHttpRequest();
             // Define which file to open and
@@ -53,6 +53,6 @@ project_timesheet = {};
 
     jQuery(document).ready(function() {
         //var project_timesheet = {};
-        var app = new project_timesheet.App($(".oe_project_timesheet_application"));
+        var app = new project_timesheet.App($(".odoo_project_timesheet"));
     });
 })();

@@ -1,5 +1,8 @@
 function odoo_project_timesheet_screens(project_timesheet) {
 
+    var QWeb = openerp.qweb,
+    _t = openerp._t;
+
     project_timesheet.ScreenSelector = openerp.Class.extend({
         init: function(options){
             this.project_timesheet_model = options.project_timesheet_model;
@@ -113,17 +116,25 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.ActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "ActivityScreen",
-        init: function() {
+        init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
+            this.activities = options.project_timesheet_model.project_timesheet_db.get_activities();
         },
         start: function() {
             this._super.apply(this, arguments);
-        }
+            this.pad_table_to(11);
+        },
+        pad_table_to: function(count) {
+            
+        },
+        render: function() {
+            QWeb.render('ActivityScreen', {widget: this, activities: this.activities});
+        },
     });
 
     project_timesheet.ModifyActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "ModifyActivityScreen",
-        init: function() {
+        init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
         },
         start: function() {
@@ -133,7 +144,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.SyncScreen = project_timesheet.ScreenWidget.extend({
         template: "SyncScreen",
-        init: function() {
+        init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
         },
         start: function() {
@@ -143,7 +154,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.StatisticScreen = project_timesheet.ScreenWidget.extend({
         template: "StatisticScreen",
-        init: function() {
+        init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
         },
         start: function() {
