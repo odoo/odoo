@@ -153,7 +153,7 @@ class hr_applicant(osv.Model):
         return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        res = dict.fromkeys(ids, dict())
+        res = dict((res_id, {}) for res_id in ids)
         for issue in self.browse(cr, uid, ids, context=context):
             values = {
                 'day_open': 0.0,

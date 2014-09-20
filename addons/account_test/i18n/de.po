@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-09 09:17+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:52+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-10 08:13+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -25,29 +26,36 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Prüfung der Plausibilität Ihrer "
+"Buchhaltung.\n"
+"              </p>\n"
+"            "
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Plausibilitätsprüfungen der Buchhaltung"
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Plausibilitätsprüfung auf"
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid ""
 "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"Überprüfung, ob der Buchungssaldo ausgeglichen ist und ob Datum und Periode "
+"übereinstimmen."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -55,11 +63,13 @@ msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
 msgstr ""
+"Überprüfung, ob der Saldo der Eröffnung im neuen Geschäftsjahr mit dem "
+"Abschluss des Vorjahres übereinstimmt."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr ""
+msgstr "Überprüfung, ob der Saldo aller Ausgleichsbuchungen übereinstimmt."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -67,16 +77,19 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of "
 "statement lines"
 msgstr ""
+"Überprüfung, ob der Endsaldo im Bankauszug =  Startsaldo + Saldo der "
+"laufenden Buchungen"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
-msgstr ""
+msgstr "Überprüfung, ob gebuchte Sachkonten und Partner aktiv sind."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
+"Überprüfung, ob bezahlte Rechnungen nicht im Status \"Offen\" verbleiben."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -84,6 +97,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Überprüfung, ob Ausgleichsbuchungen, die neue Kreditoren und Debitoren "
+"erstellen, zu offenen Rechnungen gehören."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -91,21 +106,23 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for "
 "Payable and Receivable Accounts"
 msgstr ""
+"Überprüfung, ob ein direkter Rechnungsausgleich im Verkauf/Einkauf zu "
+"übereinstimmenden Buchungen auf den Kreditoren- und Debitorenkonten führt."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
-msgstr ""
+msgstr "Überprüfung, ob keine Buchungen auf « Ansicht » Konten erfolgt sind."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Überprüfe den Saldo: Summe im Soll = Summe im Haben"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Eingabehilfe"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -137,52 +154,78 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Code sollte immer eine Variable namens 'Ergebnis' mit dem Ergebnis Ihres "
+"Tests erstellen. Das kann eine Liste oder\n"
+"ein Wörterbuch sein. Wenn 'Ergebnis' eine leere Liste ist, war der Test "
+"erfolgreich. Ansonsten wird\n"
+"versucht zu übersetzen und zu drucken, was in 'Ergebnis' steht.\n"
+"\n"
+"Wenn das Ergebnis Ihres Tests ein Wörterbuch ist, können Sie eine Variable "
+"namens 'Spalte_Bestellung' erstellen um auszuwählen\n"
+"in welcher Reihenfolge Sie die Inhalte von 'Ergebnis\" drucken wollen.\n"
+"\n"
+"Wenn Sie sie benötigen, können Sie auch die folgenden Variablen in Ihrem "
+"Code verwenden:\n"
+"    *cr: cursor to the database\n"
+"    *uid: ID of the current user\n"
+"\n"
+"In jeder Hinsicht muss der Code gültige Python-Anweisungen mit der richtigen "
+"Vertiefung haben (wenn nötig).\n"
+"\n"
+"Beispiel: \n"
+"    sql='''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE "
+"type='view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result=cr.dictfetchall()"
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt von"
 
 #. module: account_test
 #: field:accounting.assert.test,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Description"
-msgstr ""
+msgstr "Buchungstext"
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
 msgid "Description:"
-msgstr ""
+msgstr "Buchungstext:"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Expression"
-msgstr ""
+msgstr "Ausdruck"
 
 #. module: account_test
 #: field:accounting.assert.test,id:0
 #: field:report.account_test.report_accounttest,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_test
 #: field:accounting.assert.test,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: account_test
 #: field:accounting.assert.test,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: account_test
 #: view:website:account_test.report_accounttest
 msgid "Name:"
-msgstr ""
+msgstr "Bezeichnung:"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -197,12 +240,12 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Reihenfolge"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Test 1:  Saldenabstimmung"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
@@ -212,62 +255,63 @@ msgstr "Test2: Eröffnung eines Geschäftsjahres"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Test 3: Buchungspositionen"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr ""
+msgstr "Test 4:  Ausgleichsbuchungen"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"Test 5.1 : Kreditoren und Debitoren Buchungen der Rechnungsausgleiche"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Test 5.2 : Rechnungsausgleiche und Kreditoren / Debitoren"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Test 6 : Rechnungsstatus"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr ""
+msgstr "Test 7: « Ansicht  » Kontotyp"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr ""
+msgstr "Test 8 : Endsalden von Bankauszügen"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr ""
+msgstr "Test 9 : Gebuchte Konten und Partner"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr ""
+msgstr "Testbeschreibung"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr ""
+msgstr "Testbezeichnung"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 #: view:accounting.assert.test:account_test.account_assert_tree
 msgid "Tests"
-msgstr ""
+msgstr "Buchhaltungstests"
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:78
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Die Prüfung war erfolgreich"

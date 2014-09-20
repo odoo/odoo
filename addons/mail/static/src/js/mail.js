@@ -970,8 +970,8 @@ openerp.mail = function (session) {
 
         on_expand: function (event) {
             event.stopPropagation();
-            this.$('.oe_msg_body_short:first').toggle();
-            this.$('.oe_msg_body_long:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_long:first').toggle();
             return false;
         },
 

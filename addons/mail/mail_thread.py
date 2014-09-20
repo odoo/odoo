@@ -111,7 +111,7 @@ class mail_thread(osv.AbstractModel):
         model = context.get('empty_list_help_model')
         res_id = context.get('empty_list_help_id')
         ir_config_parameter = self.pool.get("ir.config_parameter")
-        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        catchall_domain = ir_config_parameter.get_param(cr, SUPERUSER_ID, "mail.catchall.domain", context=context)
         document_name = context.get('empty_list_help_document_name', _('document'))
         alias = None
 
@@ -1388,7 +1388,7 @@ class mail_thread(osv.AbstractModel):
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         """ Returns suggested recipients for ids. Those are a list of
             tuple (partner_id, partner_name, reason), to be managed by Chatter. """
-        result = dict.fromkeys(ids, list())
+        result = dict((res_id, []) for res_id in ids)
         if self._all_columns.get('user_id'):
             for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:

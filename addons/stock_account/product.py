@@ -124,7 +124,7 @@ class product_template(osv.osv):
                         }
                         move_id = move_obj.create(cr, uid, move_vals, context=context)
     
-                        if diff > 0:
+                        if diff*qty > 0:
                             amount_diff = qty * diff
                             debit_account_id = datas['stock_account_input']
                             credit_account_id = datas['property_stock_valuation_account_id']

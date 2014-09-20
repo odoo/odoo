@@ -1,6 +1,7 @@
 (function(){
 
     "use strict";
+
     var _t = openerp._t;
     var _lt = openerp._lt;
     var QWeb = openerp.qweb;
@@ -99,10 +100,7 @@
                 if(session.state !== 'closed'){
                     conv = new im_chat.Conversation(this, this, session, this.options);
                     conv.appendTo($("body"));
-                    conv.on("destroyed", this, function() {
-                        delete this.sessions[session.uuid];
-                        this.calc_positions();
-                    });
+                    conv.on("destroyed", this, _.bind(this.delete_session, this));
                     this.sessions[session.uuid] = conv;
                     this.calc_positions();
                 }
@@ -123,6 +121,10 @@
                 conv.update_fold_state('open');
             }
             return conv;
+        },
+        delete_session: function(uuid){
+            delete this.sessions[uuid];
+            this.calc_positions();
         },
         received_message: function(message) {
             var self = this;
@@ -250,12 +252,17 @@
         load_history: function(){
             var self = this;
             if(this.loading_history){
-                var domain = [["to_id.uuid", "=", this.get("session").uuid]];
-                _.first(this.get("messages")) && domain.push(['id','<', _.first(this.get("messages")).id]);
-                new openerp.Model("im_chat.message").call("search_read", [domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], 0, NBR_LIMIT_HISTORY]).then(function(messages){
-                    self.insert_messages(messages);
-					if(messages.length != NBR_LIMIT_HISTORY){
-                        self.loading_history = false;
+                var data = {uuid: self.get("session").uuid, limit: NBR_LIMIT_HISTORY};
+                var lastid = _.first(this.get("messages")) ? _.first(this.get("messages")).id : false;
+                if(lastid){
+                    data["last_id"] = lastid;
+                }
+                openerp.session.rpc("/im_chat/history", data).then(function(messages){
+                    if(messages){
+                        self.insert_messages(messages);
+    					if(messages.length != NBR_LIMIT_HISTORY){
+                            self.loading_history = false;
+                        }
                     }
                 });
             }
@@ -410,7 +417,7 @@
             this.update_fold_state('closed');
         },
         destroy: function() {
-            this.trigger("destroyed");
+            this.trigger("destroyed", this.get('session').uuid);
             return this._super();
         }
     });
@@ -436,7 +443,7 @@
         update_status: function(){
             this.$(".oe_im_user_online").toggle(this.get('im_status') !== 'offline');
             var img_src = (this.get('im_status') == 'away' ? '/im_chat/static/src/img/yellow.png' : '/im_chat/static/src/img/green.png');
-            this.$(".oe_im_user_online").attr('src', openerp.session.server + img_src);
+            this.$(".oe_im_user_online").attr('src', img_src);
         },
         activate_user: function() {
             this.trigger("activate_user", this.get("id"));
@@ -556,7 +563,7 @@
             var self = this;
             var sessions = new openerp.web.Model("im_chat.session");
             return sessions.call("session_get", [user_id]).then(function(session) {
-               self.c_manager.activate_session(session, true);
+                self.c_manager.activate_session(session, true);
             });
         },
         update_users_status: function(users_list){

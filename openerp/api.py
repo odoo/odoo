@@ -191,6 +191,8 @@ def depends(*args):
     """
     if args and callable(args[0]):
         args = args[0]
+    elif any('id' in arg.split('.') for arg in args):
+        raise NotImplementedError("Compute method cannot depend on field 'id'.")
     return lambda method: decorate(method, '_depends', args)
 
 

@@ -88,8 +88,8 @@
                 </t>
             </t>
 
-            <t t-call-assets="web.assets_common"/>
-            <t t-call-assets="website.assets_frontend"/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="website.assets_frontend" t-js="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
             <t t-if="website and website.google_analytics_key">
@@ -150,6 +150,9 @@
                     </div>
                 </footer>
             </div>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="website.assets_frontend" t-css="false"/>
         </body>
     </html>
 </template>
@@ -177,8 +180,11 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
-        <t t-call-assets="website.assets_editor"/>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-js]' position="after">
+        <t t-call-assets="website.assets_editor" t-js="false"/>
+    </xpath>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css]' position="after">
+        <t t-call-assets="website.assets_editor" t-css="false"/>
     </xpath>
 </template>
 
