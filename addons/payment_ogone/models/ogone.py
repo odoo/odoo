@@ -69,8 +69,66 @@ class PaymentAcquirerOgone(osv.Model):
             if inout == 'in':
                 return True
             else:
-                keys = "ORDERID CURRENCY AMOUNT PM ACCEPTANCE STATUS CARDNO ALIAS ED CN TRXDATE PAYID NCERROR BRAND ECI IP COMPLUS".split()
-                return key.upper() in keys
+                # SHA-OUT keys
+                # source https://viveum.v-psp.com/Ncol/Viveum_e-Com-BAS_EN.pdf
+                return [
+                    'AAVADDRESS',
+                    'AAVCHECK',
+                    'AAVMAIL',
+                    'AAVNAME',
+                    'AAVPHONE',
+                    'AAVZIP',
+                    'ACCEPTANCE',
+                    'ALIAS',
+                    'AMOUNT',
+                    'BIC',
+                    'BIN',
+                    'BRAND',
+                    'CARDNO',
+                    'CCCTY',
+                    'CN',
+                    'COMPLUS',
+                    'CREATION_STATUS',
+                    'CURRENCY',
+                    'CVCCHECK',
+                    'DCC_COMMPERCENTAGE',
+                    'DCC_CONVAMOUNT',
+                    'DCC_CONVCCY',
+                    'DCC_EXCHRATE',
+                    'DCC_EXCHRATESOURCE',
+                    'DCC_EXCHRATETS',
+                    'DCC_INDICATOR',
+                    'DCC_MARGINPERCENTAGE',
+                    'DCC_VALIDHOURS',
+                    'DIGESTCARDNO',
+                    'ECI',
+                    'ED',
+                    'ENCCARDNO',
+                    'FXAMOUNT',
+                    'FXCURRENCY',
+                    'IBAN',
+                    'IP',
+                    'IPCTY',
+                    'NBREMAILUSAGE',
+                    'NBRIPUSAGE',
+                    'NBRIPUSAGE_ALLTX',
+                    'NBRUSAGE',
+                    'NCERROR',
+                    'NCERRORCARDNO',
+                    'NCERRORCN',
+                    'NCERRORCVC',
+                    'NCERRORED',
+                    'ORDERID',
+                    'PAYID',
+                    'PM',
+                    'SCO_CATEGORY',
+                    'SCORING',
+                    'STATUS',
+                    'SUBBRAND',
+                    'SUBSCRIPTION_ID',
+                    'TRXDATE',
+                    'VC'
+                ]
 
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
