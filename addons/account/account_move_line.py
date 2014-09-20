@@ -576,7 +576,7 @@ class account_move_line(osv.osv):
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
-            if l.account_id.type == 'view':
+            if l.account_id.type in ('view', 'consolidation'):
                 return False
         return True
 
@@ -628,7 +628,7 @@ class account_move_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You cannot create journal items on an account of type view.', ['account_id']),
+        (_check_no_view, 'You cannot create journal items on an account of type view or consolidation.', ['account_id']),
         (_check_no_closed, 'You cannot create journal items on closed account.', ['account_id']),
         (_check_company_id, 'Account and Period must belong to the same company.', ['company_id']),
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
@@ -805,11 +805,14 @@ class account_move_line(osv.osv):
         if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        }, context=context)
-        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
+        }, context=reconcile_context)
+        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
         return True
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
@@ -934,11 +937,14 @@ class account_move_line(osv.osv):
                 writeoff_line_ids = [writeoff_line_ids[1]]
             ids += writeoff_line_ids
 
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
-        })
+        }, context=reconcile_context)
         wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
@@ -1032,6 +1038,8 @@ class account_move_line(osv.osv):
         all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
+                raise osv.except_osv(_('Warning!'),
+                    _('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
             if len(all_moves) >= 2:

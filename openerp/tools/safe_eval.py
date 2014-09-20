@@ -42,6 +42,9 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # lp:703841), does import time.
 _ALLOWED_MODULES = ['_strptime', 'time']
 
+_UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
+                      'co_code', 'func_globals']
+
 _CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
     'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
@@ -67,7 +70,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
-    'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST',
+    'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
     ] if x in opmap))
 
@@ -113,7 +116,7 @@ def assert_no_dunder_name(code_obj, expr):
     .. note:: actually forbids every name containing 2 underscores
     """
     for name in code_obj.co_names:
-        if "__" in name:
+        if "__" in name or name in _UNSAFE_ATTRIBUTES:
             raise NameError('Access to forbidden name %r (%r)' % (name, expr))
 
 def assert_valid_codeobj(allowed_codes, code_obj, expr):
@@ -278,7 +281,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'filter': filter,
                 'round': round,
                 'len': len,
-                'set' : set
+                'set' : set,
+                'Exception': Exception,
             }
     )
     try:

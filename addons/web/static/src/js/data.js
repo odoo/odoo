@@ -430,12 +430,30 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     read_ids: function (ids, fields, options) {
         if (_.isEmpty(ids))
             return $.Deferred().resolve([]);
-            
+
         options = options || {};
-        // TODO: reorder results to match ids list
-        return this._model.call('read',
-            [ids, fields || false],
-            {context: this.get_context(options.context)});
+        var method = 'read';
+        var ids_arg = ids;
+        var context = this.get_context(options.context);
+        if (options.check_access_rule === true){
+            method = 'search_read';
+            ids_arg = [['id', 'in', ids]];
+            context = new instance.web.CompoundContext(context, {active_test: false});
+        }
+        return this._model.call(method,
+                [ids_arg, fields || false],
+                {context: context})
+            .then(function (records) {
+                if (records.length <= 1) { return records; }
+                var indexes = {};
+                for (var i = 0; i < ids.length; i++) {
+                    indexes[ids[i]] = i;
+                }
+                records.sort(function (a, b) {
+                    return indexes[a.id] - indexes[b.id];
+                });
+                return records;
+        });
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -880,6 +898,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                             sign = -1;
                             field = field.slice(1);
                         }
+                        if(!a[field] && a[field] !== 0){ return sign}
+                        if(!b[field] && b[field] !== 0){ return (sign == -1) ? 1 : -1}
                         //m2o should be searched based on value[1] not based whole value(i.e. [id, value])
                         if(_.isArray(a[field]) && a[field].length == 2 && _.isString(a[field][1])){
                             return sign * compare(a[field][1], b[field][1]);

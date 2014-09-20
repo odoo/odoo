@@ -301,8 +301,6 @@ class hr_expense_expense(osv.osv):
             if not mres:
                 continue
             res.append(mres)
-            current_product_line_pos = len(res) - 1
-            tax_code_found= False
             
             #Calculate tax according to default tax on product
             taxes = []
@@ -320,45 +318,40 @@ class hr_expense_expense(osv.osv):
                         a = product.categ_id.property_account_expense_categ.id
                     a = fpos_obj.map_account(cr, uid, fpos, a)
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
-                tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
             if not taxes:
                 continue
+            tax_l = []
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
                     line.unit_quantity, line.product_id,
                     exp.user_id.partner_id)['taxes']:
                 tax_code_id = tax['base_code_id']
-                tax_amount = line.total_amount * tax['base_sign']
-                if tax_code_found:
-                    if not tax_code_id:
-                        continue
-                    res.append(self.move_line_get_item(cr, uid, line, context))
-                    res[-1]['price'] = 0.0
-                    res[-1]['account_analytic_id'] = False
-                elif not tax_code_id:
+                if not tax_code_id:
                     continue
-                tax_code_found = True
                 res[-1]['tax_code_id'] = tax_code_id
-                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
                 ## 
                 is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
                 if is_price_include:
                     ## We need to deduce the price for the tax
-                    res[current_product_line_pos]['price'] = res[current_product_line_pos]['price']  - (-(tax['amount'] * tax['base_sign'] or 0.0))
-                #Will create the tax here as we don't have the access
-                if (tax['amount'] * tax['base_sign'] or 0.0) or (tax['tax_code_id'] != False ): 
-                    assoc_tax = {
-                                 'type':'tax',
-                                 'name':tax['name'],
-                                 'price_unit': tax['price_unit'],
-                                 'quantity': 1,
-                                 'price':  -(tax['amount'] * tax['base_sign'] or 0.0),
-                                 'account_id': tax['account_collected_id'] or mres['account_id'],
-                                 'tax_code_id': tax['tax_code_id'],
-                                 'tax_amount': tax['amount'] * tax['base_sign'],
-                                 }
-                    res.append(assoc_tax)
+                    res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
+                    # tax amount countains base amount without the tax
+                    tax_amount = (line.total_amount - tax['amount']) * tax['base_sign']
+                else:
+                    tax_amount = line.total_amount * tax['base_sign']
+                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
+                assoc_tax = {
+                             'type':'tax',
+                             'name':tax['name'],
+                             'price_unit': tax['price_unit'],
+                             'quantity': 1,
+                             'price':  tax['amount'] * tax['base_sign'] or 0.0,
+                             'account_id': tax['account_collected_id'] or mres['account_id'],
+                             'tax_code_id': tax['tax_code_id'],
+                             'tax_amount': tax['amount'] * tax['base_sign'],
+                             }
+                tax_l.append(assoc_tax)
+            res += tax_l
         return res
 
     def move_line_get_item(self, cr, uid, line, context=None):

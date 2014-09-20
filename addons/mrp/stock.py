@@ -160,9 +160,11 @@ class StockPicking(osv.osv):
     def action_explode(self, cr, uid, move_ids, *args):
         """Explodes moves by expanding kit components"""
         move_obj = self.pool.get('stock.move')
-        todo = move_ids[:]
+        todo = list(super(StockPicking, self).action_explode(cr, uid, move_ids, *args))
         for move in move_obj.browse(cr, uid, move_ids):
-            todo.extend(move_obj._action_explode(cr, uid, move))
+            result = move_obj._action_explode(cr, uid, move)
+            moves = move_obj.browse(cr, uid, result)
+            todo.extend(move.id for move in moves if move.state not in ['confirmed', 'assigned', 'done'])
         return list(set(todo))
 
 StockPicking()

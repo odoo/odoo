@@ -325,6 +325,7 @@ class pos_session(osv.osv):
                 if not cashids:
                     cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
+            journal_proxy.write(cr, uid, cashids, {'journal_user': True})
             jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
@@ -757,12 +758,12 @@ class pos_order(osv.osv):
             'amount': data['amount'],
             'date': data.get('payment_date', time.strftime('%Y-%m-%d')),
             'name': order.name + ': ' + (data.get('payment_name', '') or ''),
+            'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
         }
 
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
                              and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
-        args['partner_id'] = order.partner_id and order.partner_id.id or None
 
         if not args['account_id']:
             if not args['partner_id']:

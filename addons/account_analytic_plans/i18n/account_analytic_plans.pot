@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -110,6 +110,11 @@ msgid "Distribution Code"
 msgstr ""
 
 #. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
@@ -206,11 +211,6 @@ msgid "Journal Items"
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
-msgid "analytic.plan.create.model"
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
 msgstr ""
@@ -221,8 +221,8 @@ msgid "Maximum Allowed (%)"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -243,8 +243,10 @@ msgid "Distribution Models"
 msgstr ""
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid "Ok"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:481
+#, python-format
+msgid "No Analytic Journal!"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -342,16 +344,14 @@ msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
+#: code:addons/account_analytic_plans/account_analytic_plans.py:481
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal."
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
-#, python-format
-msgid "No Analytic Journal !"
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
 msgstr ""
 
 #. module: account_analytic_plans

@@ -46,7 +46,7 @@
                         <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     </xpath>
                     <field name="state" position="attributes">
-                        <attribute name="statusbar_colors">{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}</attribute>
+                        <attribute name="statusbar_colors" t-translate="off">{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}</attribute>
                     </field>
                    <field name="shop_id" position="replace">
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>

@@ -389,6 +389,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 fields: exported_fields,
                 ids: ids_to_export,
                 domain: this.dataset.domain,
+                context: this.dataset.context,
                 import_compat: !!this.$el.find("#import_compat").val(),
             })},
             complete: instance.web.unblockUI,

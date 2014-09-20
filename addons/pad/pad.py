@@ -5,6 +5,7 @@ import re
 import string
 import urllib2
 import logging
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
@@ -19,7 +20,7 @@ class pad_common(osv.osv_memory):
         return bool(user.company_id.pad_server)
 
     def pad_generate_url(self, cr, uid, context=None):
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
+        company = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).company_id
 
         pad = {
             "server" : company.pad_server,
@@ -57,7 +58,7 @@ class pad_common(osv.osv_memory):
             #get content of the real field
             for record in model.browse(cr, uid, [context["object_id"]]):
                 if record[real_field]:
-                    myPad.setText(path, html2plaintext(record[real_field]))
+                    myPad.setText(path, (html2plaintext(record[real_field]).encode('utf-8')))
                     #Etherpad for html not functional
                     #myPad.setHTML(path, record[real_field])
 

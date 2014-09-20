@@ -965,9 +965,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         context: {
                             'bin_size': true,
                             'future_display_name': true
-                        }
+                        },
+                        check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);
+                    }).fail(function (){
+                        self.do_action('history_back');
                     });
             }
         });
@@ -1975,8 +1978,10 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
 
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
-            this.view.dataset, this.view.datarecord.id, function () {
-                self.view.recursive_reload();
+            this.view.dataset, this.view.datarecord.id, function (reason) {
+                if (!_.isObject(reason)) {
+                    self.view.recursive_reload();
+                }
             });
     },
     check_disable: function() {
@@ -5197,6 +5202,20 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.render_value();
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // By default, on binary images read, the server returns the binary size
+        // This is possible that two images have the exact same size
+        // Therefore we trigger the change in case the image value hasn't changed
+        // So the image is re-rendered correctly
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 

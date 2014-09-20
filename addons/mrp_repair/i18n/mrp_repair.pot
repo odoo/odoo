@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,12 +28,6 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
 
 #. module: mrp_repair
@@ -69,7 +63,7 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
 msgstr ""
@@ -144,9 +138,9 @@ msgid "Taxes"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:391
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -228,9 +222,9 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:341
+#: code:addons/mrp_repair/mrp_repair.py:354
+#: code:addons/mrp_repair/mrp_repair.py:441
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -248,7 +242,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr ""
@@ -276,7 +270,7 @@ msgid "Repairs order"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -527,6 +521,12 @@ msgid "Date"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
 msgstr ""
@@ -557,8 +557,8 @@ msgid "End Repair"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr ""
@@ -582,15 +582,19 @@ msgid "Product Information"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
@@ -652,6 +656,8 @@ msgid "The warranty expiration limit is computed as: last move date + warranty d
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr ""
@@ -711,7 +717,7 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr ""
@@ -787,11 +793,5 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "No partner !"
 msgstr ""
 

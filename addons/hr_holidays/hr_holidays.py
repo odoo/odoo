@@ -305,10 +305,14 @@ class hr_holidays(osv.osv):
         if context is None:
             context = {}
         context = dict(context, mail_create_nolog=True)
+        if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
         return super(hr_holidays, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         check_fnct = self.pool.get('hr.holidays.status').check_access_rights
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
         for  holiday in self.browse(cr, uid, ids, context=context):
             if holiday.state in ('validate','validate1') and not check_fnct(cr, uid, 'write', raise_exception=False):
                 raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
@@ -492,7 +496,7 @@ class hr_employee(osv.osv):
         if diff > 0:
             leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
         elif diff < 0:
-            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+            raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
         else:
             return False
         wf_service = netsvc.LocalService("workflow")
@@ -511,8 +515,8 @@ class hr_employee(osv.osv):
             where
                 h.state='validate' and
                 s.limit=False and
-                h.employee_id in (%s)
-            group by h.employee_id"""% (','.join(map(str,ids)),) )
+                h.employee_id in %s
+            group by h.employee_id""", (tuple(ids),))
         res = cr.dictfetchall()
         remaining = {}
         for r in res:

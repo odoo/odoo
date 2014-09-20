@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+import pytz
 import datetime
 from lxml import etree
 import os
@@ -156,7 +157,7 @@ class survey_question_wiz(osv.osv_memory):
                         title = sur_rec.title
                     xml_form = etree.Element('form', {'string': tools.ustr(title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
+                        context.update({'page_id' : p_id,'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
                         etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
@@ -171,7 +172,10 @@ class survey_question_wiz(osv.osv_memory):
                         # TODO: l10n, cleanup this code to make it readable. Or template?
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_('Answer Of :- ') + record.user_id.name + _(',  Date :- ') + record.date_create.split('.')[0]  )), 'align':"0.0"})
+                        timezone = pytz.timezone(context.get('tz') or 'UTC')
+                        response_date = pytz.UTC.localize(datetime.datetime.strptime(record['date_create'].split('.')[0], tools.DEFAULT_SERVER_DATETIME_FORMAT))
+                        localized_response_date = response_date.astimezone(timezone)
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_('Answer Of :- ') + record.user_id.name + _(',  Date :- ') + localized_response_date.strftime("%Y-%m-%d %H:%M:%S")  )), 'align':"0.0"})
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(_(" Answer :- ") + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
                         if context.get('response_no',0) > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})

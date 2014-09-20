@@ -561,7 +561,7 @@
             <br />
             <t t-esc="widget.company.name"/><br />
             Phone: <t t-esc="widget.company.phone || ''"/><br />
-            User: <t t-esc="widget.user.name"/><br />
+            User: <t t-esc="widget.pos.get('cashier') and widget.pos.get('cashier').name or widget.user.name"/><br />
             Shop: <t t-esc="widget.shop_obj.name"/><br />
             <br />
             <table>
