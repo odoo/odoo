@@ -65,7 +65,7 @@ class Experiment(osv.Model):
                     y = (view.key,view.website_id.id,exp_snap.experiment_id.id)
                     if x in check_a and not y in check_b and exp.state == 'running':
                         return False
-                    else:
+                    elif exp.state == 'running':
                         check_a.add(x)
                         check_b.add(y)
         return True

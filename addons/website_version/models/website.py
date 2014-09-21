@@ -9,13 +9,14 @@ import json
 class NewWebsite(osv.Model):
     _inherit = "website"
 
+    def get_running_experiment_number(self,cr,uid,context=None):
+       
+        exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
+        return len(exp_run_ids)
+
     def get_current_snapshot(self,cr,uid,context=None):
         snap = request.registry['website_version.snapshot']
         snapshot_id=request.context.get('snapshot_id')
-        experiment_id=request.context.get('experiment_id')
-        if experiment_id:
-            exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
-            return (0, 'experiment',len(exp_run_ids))
 
         if not snapshot_id:
             request.context['snapshot_id'] = 0
@@ -60,11 +61,10 @@ class NewWebsite(osv.Model):
 
         if request.session.get('snapshot_id'):
             request.context['snapshot_id'] = request.session.get('snapshot_id')
-        elif request.session.get('master'):
+        elif request.session.get('master') or self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
             request.context['snapshot_id'] = 0
         else:
             request.context['experiment_id'] = 1        
-
         return website
 
 
