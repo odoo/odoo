@@ -1010,6 +1010,7 @@ class _rml_template(object):
             story_cnt += 1
         try:
             if self.localcontext and self.localcontext.get('internal_header',False):
+                fis.pop()
                 self.doc_tmpl.afterFlowable(fis)
                 self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
             else:
