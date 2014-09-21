@@ -71,7 +71,7 @@ class Experiment(osv.Model):
         return True
 
     _constraints = [
-        (_check_page, 'This experiment contains a page which is already used in another experience', ['state']),
+        (_check_page, 'This experiment contains a page which is already used in another running experience', ['state']),
     ]
 
     _order = 'sequence'
