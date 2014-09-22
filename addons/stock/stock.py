@@ -1787,7 +1787,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or "/")
         group_id = move.group_id and move.group_id.id or False
         if move.rule_id:
             if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
@@ -2155,6 +2155,7 @@ class stock_move(osv.osv):
                 move = record.move_id
                 if move.id in main_domain:
                     domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                    qty = record.qty
                     if qty:
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)

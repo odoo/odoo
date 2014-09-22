@@ -152,7 +152,7 @@ class StockMove(osv.osv):
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
         """ Consumed product with specific quantity from specific source location.
-        @param product_qty: Consumed product quantity
+        @param product_qty: Consumed/produced product quantity (= in quantity of UoM of product)
         @param location_id: Source location
         @param restrict_lot_id: optionnal parameter that allows to restrict the choice of quants on this specific lot
         @param restrict_partner_id: optionnal parameter that allows to restrict the choice of quants to this specific partner
@@ -176,28 +176,29 @@ class StockMove(osv.osv):
                 ids2.append(move.id)
 
         toassign_move_ids = []
+        prod_orders = set()
         for move in self.browse(cr, uid, ids2, context=context):
+            prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
             move_qty = move.product_qty
             if move_qty <= 0:
                 raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move_qty - product_qty
             if quantity_rest > 0:
-                ctx = context.copy()
-                if location_id:
-                    ctx['source_location_id'] = location_id
-                new_mov = self.split(cr, uid, move, quantity_rest, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=ctx)
-                self.write(cr, uid, new_mov, {'consumed_for': consumed_for}, context=context)
-                toassign_move_ids.append(new_mov)
+                new_mov = self.split(cr, uid, move, quantity_rest, context=context)
+                if move.location_id.usage == 'internal':
+                    toassign_move_ids.append(new_mov)
             res.append(move.id)
+            vals = {'restrict_lot_id': restrict_lot_id,
+                    'restrict_partner_id': restrict_partner_id,
+                    'consumed_for': consumed_for}
             if location_id:
-                self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id,
-                                                'restrict_partner_id': restrict_partner_id,
-                                                'consumed_for': consumed_for}, context=context)
-            self.action_done(cr, uid, res, context=context)
-            if toassign_move_ids:
-                self.action_assign(cr, uid, toassign_move_ids, context=context)
-            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')
+                vals.update({'location_id': location_id})
+            self.write(cr, uid, [move.id], vals, context=context)
+        self.action_done(cr, uid, res, context=context)
+        if toassign_move_ids:
+            self.action_assign(cr, uid, toassign_move_ids, context=context)
+        if prod_orders:
+            production_obj.signal_workflow(cr, uid, list(prod_orders), 'button_produce')
         return res
 
     def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):

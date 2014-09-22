@@ -378,9 +378,9 @@
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
                                     <field name="type"/>
                                     <field name="product_qty"/>
+                                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="product_rounding"/>
                                     <field name="product_efficiency"/>
-                                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
                                     <field name="attribute_value_ids" widget="many2many_tags"/>

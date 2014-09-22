@@ -279,8 +279,8 @@ class mrp_bom(osv.osv):
         """
         uom_obj = self.pool.get("product.uom")
         routing_obj = self.pool.get('mrp.routing')
-        all_prod = [] + (previous_products or [])
         master_bom = master_bom or bom
+
 
         def _factor(factor, product_efficiency, product_rounding):
             factor = factor / (product_efficiency or 1.0)
@@ -318,7 +318,7 @@ class mrp_bom(osv.osv):
                 if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
                     continue
 
-            if bom_line_id.product_id.id in all_prod:
+            if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
@@ -335,7 +335,7 @@ class mrp_bom(osv.osv):
                     'product_uos': bom_line_id.product_uos and bom_line_id.product_uos.id or False,
                 })
             elif bom_id:
-                all_prod.append(bom_line_id.product_id.id)
+                all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
                 # We need to convert to units/UoM of chosen BoM
                 factor2 = uom_obj._compute_qty(cr, uid, bom_line_id.product_uom.id, quantity, bom2.product_uom.id)
@@ -345,7 +345,7 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" don\'t have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
         return result, result2
 
@@ -824,6 +824,7 @@ class mrp_production(osv.osv):
     def _calculate_qty(self, cr, uid, production, product_qty=0.0, context=None):
         """
             Calculates the quantity still needed to produce an extra number of products
+            product_qty is in the uom of the product
         """
         quant_obj = self.pool.get("stock.quant")
         uom_obj = self.pool.get("product.uom")
@@ -832,19 +833,27 @@ class mrp_production(osv.osv):
 
         #In case no product_qty is given, take the remaining qty to produce for the given production
         if not product_qty:
-            product_qty = production.product_qty - produced_qty
+            product_qty = uom_obj._compute_qty(cr, uid, production.uom_id.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
 
-        dicts = {}
-        # Find product qty to be consumed and consume it
+        scheduled_qty = {}
         for scheduled in production.product_lines:
             if scheduled.product_id.type == 'service':
                 continue
-            product_id = scheduled.product_id.id
+            qty = uom_obj._compute_qty(cr, uid, scheduled.product_uom.id, scheduled.product_qty, scheduled.product_id.uom_id.id)
+            if scheduled_qty.get(scheduled.product_id.id):
+                scheduled_qty[scheduled.product_id.id] += qty
+            else:
+                scheduled_qty[scheduled.product_id.id] = qty
+        dicts = {}
+        # Find product qty to be consumed and consume it
+        quants_taken = []
+        for product_id in scheduled_qty.keys():
 
             consumed_qty = consumed_data.get(product_id, 0.0)
             
             # qty available for consume and produce
-            qty_avail = scheduled.product_qty - consumed_qty
+            sched_product_qty = scheduled_qty[product_id]
+            qty_avail = sched_product_qty - consumed_qty
             if qty_avail <= 0.0:
                 # there will be nothing to consume for this raw material
                 continue
@@ -854,13 +863,10 @@ class mrp_production(osv.osv):
 
             # total qty of consumed product we need after this consumption
             if product_qty + produced_qty <= production.product_qty: 
-                total_consume = ((product_qty + produced_qty) * scheduled.product_qty / production.product_qty)
+                total_consume = ((product_qty + produced_qty) * sched_product_qty / production.product_qty)
             else:
-                total_consume = (production.product_qty * scheduled.product_qty / production.product_qty)
+                total_consume = sched_product_qty
             qty = total_consume - consumed_qty
-
-            # Convert to UoM of product itself
-            qty = uom_obj._compute_qty(cr, uid, scheduled.product_uom.id, qty, scheduled.product_id.uom_id.id, round=False)
 
             # Search for quants related to this related move
             for move in production.move_lines:
@@ -870,8 +876,8 @@ class mrp_production(osv.osv):
                     continue
 
                 q = min(move.product_qty, qty)
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, q, domain=[('qty', '>', 0.0)],
-                                                     prefered_domain_list=[[('reservation_id', '=', move.id)], [('reservation_id', '=', False)]], context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, q, domain=[('qty', '>', 0.0)],
+                                                     prefered_domain_list=[[('reservation_id', '=', move.id)]], context=context)
                 for quant, quant_qty in quants:
                     if quant:
                         lot_id = quant.lot_id.id
@@ -900,14 +906,15 @@ class mrp_production(osv.osv):
         If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
         and stock move lines of final product will be also done/produced.
         @param production_id: the ID of mrp.production object
-        @param production_qty: specify qty to produce
+        @param production_qty: specify qty to produce in the uom of the production order
         @param production_mode: specify production mode (consume/consume&produce).
         @param wiz: the mrp produce product wizard, which will tell the amount of consumed products needed
         @return: True
         """
         stock_mov_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get("product.uom")
         production = self.browse(cr, uid, production_id, context=context)
-
+        production_qty_uom = uom_obj._compute_qty(cr, uid, production.product_uom.id, production_qty, production.product_id.uom_id.id)
 
         main_production_move = False
         if production_mode == 'consume_produce':
@@ -927,7 +934,8 @@ class mrp_production(osv.osv):
                 lot_id = False
                 if wiz:
                     lot_id = wiz.lot_id.id
-                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
+                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty_uom),
+                                                         location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
                 if produce_product.product_id.id == production.product_id.id and new_moves:
                     main_production_move = new_moves[0]
@@ -938,7 +946,7 @@ class mrp_production(osv.osv):
                 for cons in wiz.consume_lines:
                     consume_lines.append({'product_id': cons.product_id.id, 'lot_id': cons.lot_id.id, 'product_qty': cons.product_qty})
             else:
-                consume_lines = self._calculate_qty(cr, uid, production, production_qty, context=context)
+                consume_lines = self._calculate_qty(cr, uid, production, production_qty_uom, context=context)
             for consume in consume_lines:
                 remaining_qty = consume['product_qty']
                 for raw_material_line in production.move_lines:
