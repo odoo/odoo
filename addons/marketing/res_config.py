@@ -16,4 +16,7 @@ class marketing_config_settings(osv.TransientModel):
             help='Provides leads automation through marketing campaigns. '
                  'Campaigns can in fact be defined on any resource, not just CRM leads.\n'
                  '-This installs the module marketing_campaign.'),
+        'module_website_version': fields.boolean(
+            'AB testing',
+            help='-This installs the module website_version.'),
     }
