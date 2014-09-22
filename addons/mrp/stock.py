@@ -175,6 +175,7 @@ class StockMove(osv.osv):
             else:
                 ids2.append(move.id)
 
+        toassign_move_ids = []
         for move in self.browse(cr, uid, ids2, context=context):
             move_qty = move.product_qty
             if move_qty <= 0:
@@ -184,22 +185,19 @@ class StockMove(osv.osv):
                 ctx = context.copy()
                 if location_id:
                     ctx['source_location_id'] = location_id
-                new_mov = self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=ctx)
+                new_mov = self.split(cr, uid, move, quantity_rest, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=ctx)
                 self.write(cr, uid, new_mov, {'consumed_for': consumed_for}, context=context)
-                res.append(new_mov)
-            else:
-                res.append(move.id)
-                if location_id:
-                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id,
-                                                    'restrict_partner_id': restrict_partner_id,
-                                                    'consumed_for': consumed_for}, context=context)
+                toassign_move_ids.append(new_mov)
+            res.append(move.id)
+            if location_id:
+                self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id,
+                                                'restrict_partner_id': restrict_partner_id,
+                                                'consumed_for': consumed_for}, context=context)
             self.action_done(cr, uid, res, context=context)
+            if toassign_move_ids:
+                self.action_assign(cr, uid, toassign_move_ids, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')
-            for new_move in res:
-                if new_move != move.id:
-                    #This move is not already there in move lines of production order
-                    production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
         return res
 
     def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
