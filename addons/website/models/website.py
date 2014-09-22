@@ -257,7 +257,7 @@ class website(osv.osv):
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
         website_id = 1
         if request:
-            ids = self.search(cr, uid, [('name', '=', domain_name)], context=context)
+            ids = self.search(cr, uid, [('domain', '=', domain_name)], context=context)
             if ids:
                 website_id = ids[0]
         return website_id
