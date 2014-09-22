@@ -3,6 +3,7 @@
     var instance = openerp;
 
     // add the button in the webclient menu bar
+    /* FP don't this for now
     instance.web.UserMenu.include({
         do_update: function(){
             var self = this;
@@ -13,6 +14,7 @@
             return this._super.apply(this, arguments);
         },
     });
+    */
 
     // add the button to the header of the conversation
     instance.im_chat.Conversation.include({
