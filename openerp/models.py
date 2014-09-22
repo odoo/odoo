@@ -2998,7 +2998,9 @@ class BaseModel(object):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
             if partial and field.manual and \
-                    field.relational and field.comodel_name not in self.pool:
+                    field.relational and \
+                    (field.comodel_name not in self.pool or \
+                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
                 # do not set up manual fields that refer to unknown models
                 continue
             field.setup(self.env)
