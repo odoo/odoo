@@ -202,6 +202,7 @@ class im_chat_session(osv.Model):
                 return True
             else:
                 return super(im_chat_session, self).is_in_session(cr, uid, uuid, user_id, context=context)
+        return False
 
     def users_infos(self, cr, uid, ids, context=None):
         """ add the anonymous user in the user of the session """
