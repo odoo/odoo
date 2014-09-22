@@ -707,6 +707,7 @@ class mrp_production(osv.osv):
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
             # product_lines, workcenter_lines
             results, results2 = bom_obj._bom_explode(cr, uid, bom_point, production.product_id, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id, context=context)
+
             # reset product_lines in production order
             for line in results:
                 line['production_id'] = production.id
@@ -825,6 +826,7 @@ class mrp_production(osv.osv):
             Calculates the quantity still needed to produce an extra number of products
         """
         quant_obj = self.pool.get("stock.quant")
+        uom_obj = self.pool.get("product.uom")
         produced_qty = self._get_produced_qty(cr, uid, production, context=context)
         consumed_data = self._get_consumed_data(cr, uid, production, context=context)
 
@@ -856,6 +858,9 @@ class mrp_production(osv.osv):
             else:
                 total_consume = (production.product_qty * scheduled.product_qty / production.product_qty)
             qty = total_consume - consumed_qty
+
+            # Convert to UoM of product itself
+            qty = uom_obj._compute_qty(cr, uid, scheduled.product_uom.id, qty, scheduled.product_id.uom_id.id, round=False)
 
             # Search for quants related to this related move
             for move in production.move_lines:
@@ -902,11 +907,7 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-        if not production.move_lines and production.state == 'ready':
-            # trigger workflow if not products to consume (eg: services)
-            self.signal_workflow(cr, uid, [production_id], 'button_produce')
 
-        produced_qty = self._get_produced_qty(cr, uid, production, context=context)
 
         main_production_move = False
         if production_mode == 'consume_produce':
