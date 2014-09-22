@@ -1,0 +1,154 @@
+// Wall List
+//----------------------------------------------
+
+// Display Walls
+.odoo-tw-wall {
+    height: 307px;
+
+    .odoo-tw-wall-image {
+        height: 200px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .odoo-tw-wall-archive {
+        border: 0px !important;
+        border-radius: 0px !important;
+        position: absolute;
+        right: 30px;
+        top: 15px;
+    }
+
+    .odoo-tw-wall-padding {
+        padding: 5px;
+    }
+
+    .odoo-tw-wall-ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+// Storify View
+//----------------------------------------------
+
+// Cover
+.odoo-tw-view-cover {
+    background-attachment: fixed;
+    position: relative;
+
+    .odoo-tw-view-cover-info {
+        height: 500px;
+        background: -webkit-linear-gradient(top,rgba(0,0,0,0.1) 0,rgba(0,0,0,.3) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,.7) 100%);
+        background: -moz-linear-gradient(top,rgba(0,0,0,0.1) 0,rgba(0,0,0,.3) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,.7) 100%);
+        background: -ms-linear-gradient(top,rgba(0,0,0,0.1) 0,rgba(0,0,0,.3) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,.7) 100%);
+        background: -o-linear-gradient(top,rgba(0,0,0,0.1) 0,rgba(0,0,0,.3) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,.7) 100%);
+        background: linear-gradient(top,rgba(0,0,0,0.1) 0,rgba(0,0,0,.3) 30%,rgba(0,0,0,.5) 70%,rgba(0,0,0,.7) 100%);
+
+        .odoo-tw-view-cover-info-nav {
+            color: #FFF;
+            position: absolute;
+            width: 100%;
+            bottom: 0px;
+        }
+
+        .odoo-tw-view-cover-info-title {
+            color: #FFF;
+            left: 0;
+            right: 0;
+            top: 20%;
+            text-align: center;
+            position: absolute;
+        }
+    }
+}
+
+// Delete Tweet Button
+.odoo-tw-view-tweet-delete {
+    position: absolute;
+    cursor: pointer;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.odoo-tw-tweet:hover .odoo-tw-view-tweet-delete {
+    opacity: 1;
+}
+
+@media (min-width: 768px) {
+    .odoo-tw-view-tweet-delete {
+        margin-left: 35%;
+    }
+}
+
+@media (min-width: 992px) {
+    .odoo-tw-view-tweet-delete {
+        margin-left: 27%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .odoo-tw-view-tweet-delete {
+        margin-left: 22%;
+    }
+}
+
+
+// Live View
+//----------------------------------------------
+
+.odoo-tw-view-live-remove-border .odoo-tw-tweet iframe {
+    border-width: 0px !important;
+    box-shadow: none !important;
+}
+
+.odoo-tw-view-live-nav {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.odoo-tw-view-live-options {
+    opacity: 0;
+    transition: 1s;
+}
+
+nav.odoo-tw-hide-onlive:hover .odoo-tw-view-live-options {
+    opacity: 1;
+}
+
+.odoo-tw-view-live-option-single {
+    margin-bottom: 1000px;
+}
+
+.odoo-tw-view-live-option-color {
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0px 3px;
+    border-radius: 50%;
+}
+
+// Generic
+//----------------------------------------------
+
+.button-inverted {
+    background: transparent;
+    color: #FFF;
+    transition: 0.3s;
+    &:hover {
+        background: #fff;
+        color: #333;
+    }
+}
+
+.white-color {
+    color: #FFF;
+    &:hover {
+        color: #CECECE;
+    }
+}
+
+.odoo-color {
+    color: #A24689;
+}
