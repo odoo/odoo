@@ -10,7 +10,7 @@ class NewWebsite(osv.Model):
     _inherit = "website"
 
     def get_running_experiment_number(self,cr,uid,context=None):
-       
+        print context
         exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
         return len(exp_run_ids)
 

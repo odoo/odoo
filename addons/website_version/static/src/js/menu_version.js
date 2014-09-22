@@ -23,11 +23,11 @@
             });
 
             this.$el.find('#version-menu-button').click(function() {
-                openerp.jsonRpc( '/website_version/all_snapshots', 'call', {}).then(function (result) {
+                var view_id = $('html').attr('data-view-xmlid');
+                openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
                     self.$el.find(".snapshot").remove();
                     self.$el.find(".version_menu").append(QWeb.render("all_versions", {snapshots:result}));
 
-                    var view_id = $('html').attr('data-view-xmlid');
                     openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
                         .then(function (result) {
                             self.$el.find(".publish").remove();

@@ -49,11 +49,13 @@ class TableExporter(http.Controller):
         return snapshot_id
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
-    def get_all_snapshots(self):
+    def get_all_snapshots(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        view = request.registry['ir.ui.view']
+        v = view.browse(cr,uid,[int(view_id)],context=context)
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
-        ids = snap.search(cr, uid, [('website_id','=',website_id)],context=context)
+        ids = snap.search(cr, uid, [('website_id','=',website_id),('view_ids.key','=',v.key)],context=context)
         result = snap.read(cr, uid, ids,['id','name'],context=context)
         return result
 

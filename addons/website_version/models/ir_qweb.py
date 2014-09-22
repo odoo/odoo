@@ -24,7 +24,8 @@ class QWeb(orm.AbstractModel):
             qwebcontext = QWebContext(cr, uid, qwebcontext, loader=loader, context=context)
 
 
-        context = context or qwebcontext.context          
+        if context is None:
+            context = {}         
         website_id=context.get('website_id')
 
         if website_id:
