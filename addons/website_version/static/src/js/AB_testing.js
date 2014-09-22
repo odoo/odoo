@@ -3,7 +3,7 @@
     $(document).ready(function() {
 
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-7333765-1']);
+        _gaq.push(['_setAccount', 'UA-55031254-1']);
         _gaq.push(['_setDomainName', '.openerp.com']);
 
         (function() {
@@ -19,7 +19,9 @@
         //console.log(view_id);
         openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
                     //console.log(result);
-                    _gaq.push(['_setCustomVar', 4, result['experiment_id'], result['snapshot_id'], 1]);
+                    _gaq.push(['_setCustomVar', 4, "exp_"+result['experiment_id'], result['snapshot_id'], 1]);
+                    var dimensionValue = 'SOME_DIMENSION_VALUE';
+                    ga('set', 'dimension1', dimensionValue);
                 });
     });
     
