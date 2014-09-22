@@ -319,7 +319,7 @@ class sale_order_line(osv.osv):
                         break
             else:
                 try:
-                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context)
+                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context=context)
                 except:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     mto_route_id = False
