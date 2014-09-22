@@ -57,6 +57,7 @@ class im_chat_session(osv.Model):
         sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
         for session in self.browse(cr, uid, sids, context=context):
                 return user_id and user_id in [u.id for u in session.user_ids]
+        return False
 
     def users_infos(self, cr, uid, ids, context=None):
         """ get the user infos for all the user in the session """
@@ -419,7 +420,7 @@ class Controller(openerp.addons.bus.bus.Controller):
 
     @openerp.http.route(['/im_chat/history'], type="json", auth="none")
     def history(self, uuid, last_id=False, limit=20):
-        registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
-        return registry["im_chat.message"].get_messages(cr, openerp.SUPERUSER_ID, uuid, last_id, limit, context=context)
+        registry, cr, uid, context = request.registry, request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context
+        return registry["im_chat.message"].get_messages(cr, uid, uuid, last_id, limit, context=context)
 
 # vim:et:
