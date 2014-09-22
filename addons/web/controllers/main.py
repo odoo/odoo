@@ -1762,14 +1762,14 @@ class Reports(openerpweb.Controller):
                 file_name = action['report_name']
         file_name = '%s.%s' % (file_name, report_struct['format'])
 
-        if action['attachment']:
+        if action.get('attachment', False):
             try:
                 model = context['active_model']
                 cr = openerp.pooler.get_db(req.session._db).cursor()
                 uid = context['uid']
                 ids = context['active_ids']
-                objects=openerp.pooler.get_pool(req.session._db).get(model).browse(cr,uid,ids,context=context)
-                file_name=str([eval(action['attachment'],{'object':x, 'time':time}) for x in objects][0])
+                objects = openerp.pooler.get_pool(req.session._db).get(model).browse(cr, uid, ids, context=context)
+                file_name = str([eval(action['attachment'], {'object':x, 'time':time}) for x in objects][0])
             except:
                 pass
 
