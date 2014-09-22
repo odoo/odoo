@@ -33,8 +33,8 @@
                             self.$el.find(".publish").remove();
                             self.$el.find("#last_divider").remove();
                             if(!result){
-                                self.$el.find(".version_menu").append('<li class="divider" id="last_divider"> </li>');
-                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish" data-view_id='+view_id+'>Publish this page</a></li>');
+                                self.$el.find(".version_menu").prepend('<li class="divider" id="last_divider"> </li>');
+                                self.$el.find(".version_menu").prepend('<li class="publish"><a href="#" data-action="publish" data-view_id='+view_id+'>Publish this page</a></li>');
                                 
                             }
                         });
