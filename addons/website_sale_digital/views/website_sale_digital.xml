@@ -82,5 +82,11 @@
     </t>
 </template>
 
+<template id="downloads_page_link" name="Download Page Link from User Account" inherit_id="website.layout">
+    <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'My Account')]" position="after">
+        <li><a href="/shop/downloads" role="menuitem">My Downloads</a></li>
+    </xpath>
+</template>
+
 </data>
 </openerp>
