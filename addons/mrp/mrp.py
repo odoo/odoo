@@ -1053,8 +1053,9 @@ class mrp_production(osv.osv):
 
     def _get_raw_material_procure_method(self, cr, uid, product, context=None):
         '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
+        warehouse_obj = self.pool['stock.warehouse']
         try:
-            mto_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
+            mto_route = warehouse_obj._get_mto_route(cr, uid, context)
         except:
             return "make_to_stock"
         routes = product.route_ids + product.categ_id.total_route_ids

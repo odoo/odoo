@@ -288,6 +288,7 @@ class sale_order_line(osv.osv):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
+        warehouse_obj = self.pool['stock.warehouse']
         warning = {}
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -311,14 +312,14 @@ class sale_order_line(osv.osv):
             #determine if the product is MTO or not (for a further check)
             isMto = False
             if warehouse_id:
-                warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+                warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
                 for product_route in product_obj.route_ids:
                     if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
                         isMto = True
                         break
             else:
                 try:
-                    mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context)
                 except:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     mto_route_id = False
