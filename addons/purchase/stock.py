@@ -128,14 +128,23 @@ class stock_partial_picking(osv.osv_memory):
     # Overridden to inject the purchase price as true 'cost price' when processing
     # incoming pickings.
     def _product_cost_for_average_update(self, cr, uid, move):
-        if move.purchase_line_id and move.purchase_line_id and move.purchase_line_id.invoice_lines:
-            cost = move.price_unit
-            for inv_line in move.purchase_line_id.invoice_lines:
-                if inv_line.invoice_id.state not in ('draft', 'cancel'):
-                    inv_currency = inv_line.invoice_id.currency_id.id
-                    company_currency = inv_line.invoice_id.company_id.currency_id.id
-                    cost = self.pool.get('res.currency').compute(cr, uid, inv_currency, company_currency, inv_line.price_unit, round=False, context={'date': inv_line.invoice_id.date_invoice})
-                    return {'cost': cost, 'currency': company_currency}
+        purchase_line = move.purchase_line_id
+        if move.picking_id.purchase_id and purchase_line:
+            if any([x.invoice_id.state not in ('draft', 'cancel') for x in purchase_line.invoice_lines]):
+                # use price set on validated invoices
+                cost = move.price_unit
+                for inv_line in purchase_line.invoice_lines:
+                    if inv_line.invoice_id.state not in ('draft', 'cancel'):
+                        inv_currency = inv_line.invoice_id.currency_id.id
+                        company_currency = inv_line.invoice_id.company_id.currency_id.id
+                        cost = self.pool.get('res.currency').compute(cr, uid, inv_currency, company_currency, inv_line.price_unit, round=False, context={'date': inv_line.invoice_id.date_invoice})
+                        return {'cost': cost, 'currency': company_currency}
+            else:
+                # use price set on the purchase order
+                pur_currency = purchase_line.order_id.currency_id.id
+                company_currency = purchase_line.company_id.currency_id.id
+                cost = self.pool.get('res.currency').compute(cr, uid, pur_currency, company_currency, purchase_line.price_unit, round=False, context={'date': purchase_line.date_order})
+                return {'cost': cost, 'currency': company_currency}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
     def __get_help_text(self, cursor, user, picking_id, context=None):
