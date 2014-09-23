@@ -5,8 +5,15 @@ import xmlrpclib
 
 import openerp.tests.common
 
+
 DB = openerp.tests.common.DB
 
+
+## In case auth is modified (as auth_crypt), these tests should be
+## run after all test are loaded.
+
+@openerp.tests.common.at_install(False)
+@openerp.tests.common.post_install(True)
 class test_xmlrpc(openerp.tests.common.HttpCase):
 
     def test_01_xmlrpc_login(self):
