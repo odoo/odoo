@@ -70,6 +70,12 @@ class stock_picking(osv.osv):
                 invoice_vals['date_due'] = self.pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [], picking.purchase_id.payment_term_id.id, context.get('date_inv'))['value'].get('date_due')
         return invoice_vals
 
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=None):
+        invoice_line_vals = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
+        if invoice_vals['type'] in ('in_invoice', 'in_refund'):
+            invoice_line_vals['uos_id'] = move_line.product_uom.id
+        return invoice_line_vals
+
     def get_currency_id(self, cursor, user, picking):
         if picking.purchase_id:
             return picking.purchase_id.pricelist_id.currency_id.id
