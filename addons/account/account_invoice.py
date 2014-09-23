@@ -165,7 +165,7 @@ class account_invoice(models.Model):
             elif data_line.reconcile_partial_id:
                 lines = data_line.reconcile_partial_id.line_partial_ids
             else:
-                lines = self.env['account_move_line']
+                lines = self.env['account.move.line']
             partial_lines += data_line
             self.move_lines = lines - partial_lines
 
