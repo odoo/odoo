@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-13 00:49+0000\n"
+"PO-Revision-Date: 2014-09-21 21:11+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-13 08:45+0000\n"
+"X-Launchpad-Export-Date: 2014-09-22 08:02+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
+"Language: tr\n"
 
 #. module: sale
 #: field:product.product,sales_count:0
@@ -53,6 +54,8 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Teklif' or 'Sipariş'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -406,17 +409,17 @@ msgstr "Belirli bir ürün tahsis edilmesi gereken bir iş ortağı."
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Satış Siparişinde  Adresler"
+msgstr "Satış Siparişinde Adresler"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr "Peşinat"
+msgstr "Avans"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr "Peşinat Tutarı"
+msgstr "Avans Tutarı"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:203
@@ -433,7 +436,7 @@ msgstr "Ürün Avansı"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:107
 #, python-format
 msgid "Advance of %s %%"
-msgstr "%s %% Avans"
+msgstr "%s %% Avansı"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:114
@@ -577,6 +580,7 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"satış siprişlerin de farklı teslimat ve fatura adresi belirlemenizi sağlar."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -805,7 +809,7 @@ msgstr "Fatura oluştur"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -813,7 +817,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturuldu"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -1099,7 +1103,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr "Grup İle"
+msgstr "Grupla İle"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1334,7 +1338,7 @@ msgstr "Son Mesaj Tarihi"
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1343,7 +1347,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1605,7 +1609,7 @@ msgstr "Satınalma"
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Tedarik grubu"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
@@ -1858,7 +1862,7 @@ msgstr "Satış Siparişi Satırı"
 #: view:sale.order.line:sale.view_order_line_form2
 #: view:sale.order.line:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Satış Siparişi Satırları"
+msgstr "Satış Sipariş Satırları"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -2003,7 +2007,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr "Epostayla Gönder"
+msgstr "Mail Gönder"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
