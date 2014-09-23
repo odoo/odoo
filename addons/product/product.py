@@ -902,7 +902,7 @@ class product_product(osv.osv):
 
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes"),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
