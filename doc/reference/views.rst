@@ -146,6 +146,11 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+``default_order``
+    allows changing to override default sort order in views
+    for example we can use
+    `<tree string="Product Variants" default_order="name">...</tree>`
+    where name is field name for sorting
 ``colors``
     allows changing the color of a row's text based on the corresponding
     record's attributes.
