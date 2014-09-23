@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 
+import os
 import re
 import time
 import base64
@@ -381,35 +382,41 @@ class Report(osv.Model):
 
         # Execute WKhtmltopdf
         pdfdocuments = []
-        for index, reporthtml in enumerate(bodies):
-            local_command_args = []
-            pdfreport = tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', mode='w+b')
-
-            # Directly load the document if we already have it
-            if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
-                pdfreport.write(save_in_attachment['loaded_documents'].get(reporthtml[0]))
-                pdfreport.seek(0)
-                pdfdocuments.append(pdfreport)
-                continue
-
-            # Wkhtmltopdf handles header/footer as separate pages. Create them if necessary.
-            if headers:
-                head_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.', dir=tmp_dir, mode='w+')
-                head_file.write(headers[index])
-                head_file.seek(0)
-                local_command_args.extend(['--header-html', head_file.name])
-            if footers:
-                foot_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.', dir=tmp_dir, mode='w+')
-                foot_file.write(footers[index])
-                foot_file.seek(0)
-                local_command_args.extend(['--footer-html', foot_file.name])
-
-            # Body stuff
-            content_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.', dir=tmp_dir, mode='w+')
-            content_file.write(reporthtml[1])
-            content_file.seek(0)
-
-            try:
+        file_to_del = []
+        try:
+            for index, reporthtml in enumerate(bodies):
+                local_command_args = []
+                pdfreport = tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', mode='w+b', delete=False)
+                file_to_del.append(pdfreport.name)
+    
+                # Directly load the document if we already have it
+                if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
+                    pdfreport.write(save_in_attachment['loaded_documents'].get(reporthtml[0]))
+                    pdfreport.seek(0)
+                    pdfdocuments.append(pdfreport)
+                    continue
+    
+                # Wkhtmltopdf handles header/footer as separate pages. Create them if necessary.
+                if headers:
+                    with tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.',
+                                                     dir=tmp_dir, mode='w+', delete=False) as head_file:
+                        head_file.write(headers[index])
+                    file_to_del.append(head_file.name)
+                    local_command_args.extend(['--header-html', head_file.name])
+                if footers:
+                    with tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.',
+                                                     dir=tmp_dir, mode='w+', delete=False) as foot_file:
+                        foot_file.write(footers[index])
+                    file_to_del.append(foot_file.name)
+                    local_command_args.extend(['--footer-html', foot_file.name])
+    
+                # Body stuff
+                with tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.',
+                                                 dir=tmp_dir, mode='w+', delete=False) as content_file:
+                    content_file.write(reporthtml[1])
+                file_to_del.append(content_file.name)
+    
+                pdfreport.close()
                 wkhtmltopdf = command + command_args + local_command_args
                 wkhtmltopdf += [content_file.name] + [pdfreport.name]
 
@@ -420,7 +427,7 @@ class Report(osv.Model):
                     raise osv.except_osv(_('Report (PDF)'),
                                          _('Wkhtmltopdf failed (error code: %s). '
                                            'Message: %s') % (str(process.returncode), err))
-
+                pdfreport = open(pdfreport.name, 'rb')
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
                     attachment = {
@@ -436,20 +443,21 @@ class Report(osv.Model):
 
                 pdfreport.seek(0)
                 pdfdocuments.append(pdfreport)
-
-                if headers:
-                    head_file.close()
-                if footers:
-                    foot_file.close()
-            except:
-                raise
-
-        # Return the entire document
-        if len(pdfdocuments) == 1:
-            content = pdfdocuments[0].read()
-            pdfdocuments[0].close()
-        else:
-            content = self._merge_pdf(pdfdocuments)
+    
+            # Return the entire document
+            if len(pdfdocuments) == 1:
+                content = pdfdocuments[0].read()
+                pdfdocuments[0].close()
+            else:
+                content = self._merge_pdf(pdfdocuments)
+        except:
+            raise
+        finally:
+            for f_to_del in file_to_del:
+                try:
+                    os.unlink(f_to_del)
+                except (OSError, IOError), exc:
+                    _logger.error('cannot remove file %s: %s', f_to_del, exc)
 
         return content
 
@@ -514,13 +522,14 @@ class Report(osv.Model):
         """
         writer = PdfFileWriter()
         for document in documents:
-            reader = PdfFileReader(file(document.name, "rb"))
+            reader = PdfFileReader(document)
             for page in range(0, reader.getNumPages()):
                 writer.addPage(reader.getPage(page))
-            document.close()
         merged = cStringIO.StringIO()
         writer.write(merged)
         merged.seek(0)
         content = merged.read()
         merged.close()
+        for document in documents:
+            document.close()
         return content
