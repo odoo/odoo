@@ -1096,7 +1096,7 @@ openerp.account = function (instance) {
                                     self.$(".reconciliation_lines_container").fadeIn(self.aestetic_animation_speed);
                                 });
                             });
-                    } else if (self.reconciled_lines === self.st_lines.length) {
+                    } else if (self.reconciled_lines === self.lines.length) {
                         // Congratulate the user if the work is done
                         self.displayDoneMessage();
                     } else {
@@ -1551,15 +1551,8 @@ openerp.account = function (instance) {
                 return;
             }
 
-            // If statement line has no partner, give it the partner of the selected move line
-            if (!this.st_line.partner_id && line.partner_id) {
-                self.changePartner(line.partner_id, function() {
-                    self.selectMoveLine(mv_line);
-                });
-            } else {
-                $(mv_line).attr('data-selected','true');
-                self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
-            }
+            $(mv_line).attr('data-selected','true');
+            self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
         },
 
         deselectMoveLine: function(mv_line) {
@@ -1886,6 +1879,8 @@ openerp.account = function (instance) {
             this.model_account = new instance.web.Model("account.account");
             this.title = "Journal Items to Reconcile";
             this.max_reconciliations_displayed = 2;
+            this.partner_id = context.context.partner_id;
+            this.account_id = context.context.account_id;
             this.max_move_lines_displayed = 30;
             this.show_partner_accounts = true;
             this.show_other_accounts = true;
@@ -1917,11 +1912,15 @@ openerp.account = function (instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
-                // Get data for all reconciliations
-                return $.when(self.model_aml.call("get_data_for_manual_reconciliation", [])).then(function(data){
+                // If partner_id or account_id is undefined, the server will send data for all reconciliable partners or accounts
+                var deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation", [self.partner_id]);
+                var deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation", [self.account_id]);
+                return $.when(deferred_partner, deferred_account).then(function(data_partner, data_account){
+                    var data_partner_len = data_partner ? data_partner.length : 0;
+                    var data_account_len = data_account ? data_account.length : 0;
 
                     // If nothing to reconcile, stop here
-                    if (data[0].length + data[1].length === 0) {
+                    if (data_partner_len + data_account_len === 0) {
                         self.$el.prepend(QWeb.render("manual_reconciliation_nothing_to_reconcile"));
                         return;
                     }
@@ -1932,24 +1931,28 @@ openerp.account = function (instance) {
                         total_lines: 0,
                         show_partner_accounts: self.show_partner_accounts,
                         show_other_accounts: self.show_other_accounts,
-                        show_accounts_type_controller: data[0].length !== 0 && data[1].length !== 0
+                        show_accounts_type_controller: data_partner_len !== 0 && data_account_len !== 0
                     }));
                     
                     // Process data
-                    self.num_total_items_partner_accounts = data[0].length;
-                    self.num_total_items_other_accounts = data[1].length;
+                    self.num_total_items_partner_accounts = data_partner_len;
+                    self.num_total_items_other_accounts = data_account_len;
                     self.items_partner_accounts = {};
                     self.items_other_accounts = {};
-                    _.each(data[0], function(o) {
-                        o.account_type = 'partner';
-                        self.prepareReconciliationData(o);
-                        self.items_partner_accounts['' + o.partner_id*10000 + o.account_id] = o;
-                    });
-                    _.each(data[1], function(o) {
-                        o.account_type = 'other';
-                        self.prepareReconciliationData(o);
-                        self.items_other_accounts[o.account_id] = o;
-                    });
+                    if (data_partner_len !== 0) {
+                        _.each(data_partner, function(o) {
+                            o.account_type = 'partner';
+                            self.prepareReconciliationData(o);
+                            self.items_partner_accounts['' + o.partner_id*10000 + o.account_id] = o;
+                        });
+                    }
+                    if (data_account_len !== 0) {
+                        _.each(data_account, function(o) {
+                            o.account_type = 'other';
+                            self.prepareReconciliationData(o);
+                            self.items_other_accounts[o.account_id] = o;
+                        });
+                    }
 
                     // Instanciate reconciliations
                     self.$(".reconciliation_lines_container").css("opacity", 0);
