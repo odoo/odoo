@@ -29,8 +29,8 @@ def _float_check_precision(precision_digits=None, precision_rounding=None):
         return 10 ** -precision_digits
     return precision_rounding
 
-def float_round(value, precision_digits=None, precision_rounding=None):
-    """Return ``value`` rounded to ``precision_digits``
+def float_round(value, precision_digits=None, precision_rounding=None, rounding_method='HALF-UP'):
+    """Return ``value`` rounded to ``precision_digits`` using ``rounding_method`` parameter
        decimal digits, minimizing IEEE-754 floating point representation
        errors, and applying HALF-UP (away from zero) tie-breaking rule.
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
@@ -41,6 +41,9 @@ def float_round(value, precision_digits=None, precision_rounding=None):
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
+       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
+           one rounding up to the closest number with the rule that number>=0.5 is 
+           round up to 1, and the latest one always rounding up.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -66,8 +69,16 @@ def float_round(value, precision_digits=None, precision_rounding=None):
     normalized_value = value / rounding_factor # normalize
     epsilon_magnitude = math.log(abs(normalized_value), 2)
     epsilon = 2**(epsilon_magnitude-53)
-    normalized_value += cmp(normalized_value,0) * epsilon
-    rounded_value = round(normalized_value) # round to integer
+    if rounding_method == 'HALF-UP':
+        normalized_value += cmp(normalized_value,0) * epsilon
+        rounded_value = round(normalized_value) # round to integer
+    elif rounding_method == 'UP':
+        #in case where we want to round up the value, we need to remove
+        #the epsilon because in some case, the normalized_value is just
+        #above the unit and this will result in rounding up to the next number
+        #which we don't want.
+        normalized_value -= cmp(normalized_value,0) * epsilon
+        rounded_value = math.ceil(normalized_value) # ceil to integer
     result = rounded_value * rounding_factor # de-normalize
     return result
 
