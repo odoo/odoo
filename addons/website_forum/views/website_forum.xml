@@ -715,7 +715,7 @@
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
-                    <li t-if="question.type != 'question'">
+                    <li t-if="question.type != 'question' and not answer.parent_id or answer.parent_id and not answer.parent_id.parent_id">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                             style="cursor: pointer" data-toggle="collapse"

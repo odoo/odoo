@@ -42,7 +42,7 @@ class WebsiteForum(http.Controller):
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
                   'searches': kwargs.get('searches', dict()),
-                  'no_introduction_message': request.session.get('no_introduction_message', False),
+                  'no_introduction_message': request.httprequest.cookies.get('no_introduction_message', False),
                   }
         if forum:
             values['forum'] = forum
@@ -180,11 +180,6 @@ class WebsiteForum(http.Controller):
     def get_url_title(self, **kwargs):
         arch = lxml.html.parse(urlopen(kwargs.get('url')))
         return arch.find(".//title").text
-
-    @http.route('/forum/remove_introduction_message', type='json', auth="public", methods=['POST'], website=True)
-    def remove_introduction_message(self, **kwargs):
-        request.session['no_introduction_message'] = True
-        return True
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):

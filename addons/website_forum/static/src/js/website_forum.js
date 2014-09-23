@@ -111,8 +111,7 @@ $(document).ready(function () {
 
         $('.close_introduction_message').on('click', function (ev) {
             ev.preventDefault();
-            var $link = $(ev.currentTarget);
-            openerp.jsonRpc("/forum/remove_introduction_message", 'call', {})
+            document.cookie = "no_introduction_message = false";
             return true;
         });
 
