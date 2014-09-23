@@ -28,7 +28,11 @@
                             </t>
                         </ul>
                     </li>
-            </xpath>    
+            </xpath>
+            <xpath expr="//ul[contains(@class, 'dropdown-menu oe_content_menu')]/li" position="after">
+                <li class="divider"> </li>
+                <li id="show_experiments"><a href="/web#return_label=Website&amp;action=website_version.action_experiment">A/B testing</a></li>
+            </xpath>   
         </template>
 
         <!-- <templates id="template_version" inherit_id="website.template" xml:space="preserve">
