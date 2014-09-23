@@ -2174,7 +2174,7 @@ class BaseModel(object):
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
-        if lazy and groupby_fields[0] in self._group_by_full:
+        if lazy and groupby_fields[0] in self._group_by_full and not context.get('no_group_by_full'):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
