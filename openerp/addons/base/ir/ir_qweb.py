@@ -455,7 +455,7 @@ class QWeb(orm.AbstractModel):
         record = self.eval_object(record, qwebcontext)
 
         column = record._all_columns[field_name].column
-        options = json.loads(template_attributes.get('field-options') or '{}')
+        options = self.eval_object(template_attributes.get('field-options', '{}'), qwebcontext)
         field_type = get_field_type(column, options)
 
         converter = self.get_converter_for(field_type)

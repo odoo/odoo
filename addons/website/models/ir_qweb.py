@@ -283,6 +283,13 @@ class HTML(orm.AbstractModel):
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
 
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if options.get("nofollow") and value:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', context=context)
+            for match in re.findall(r'<a\s.*href="(?!%s).*".*</a>' % base_url, value):
+                value = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], value)
+        return super(HTML, self).value_to_html(cr, uid, value, column, options, context=context)
+
 
 class Image(orm.AbstractModel):
     """
