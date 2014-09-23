@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-22 14:19+0000\n"
+"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:43+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:26+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
@@ -49,18 +49,18 @@ msgstr ""
 #: code:addons/purchase/stock.py:135
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr " Kupno"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "# Zamówienia"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr ""
+msgstr "# Faktury dostawców"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
@@ -76,6 +76,7 @@ msgstr "# Zamówień zakupu"
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} Zamówienie (Odn. ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
@@ -580,7 +581,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:129
 #, python-format
 msgid "Buy"
-msgstr ""
+msgstr "Kupno"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_calendar
@@ -659,7 +660,7 @@ msgstr "Firma"
 #: code:addons/purchase/purchase.py:506
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Utwórz wiadomość e-mail"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
@@ -704,7 +705,7 @@ msgstr "Utwórz faktury"
 #: field:purchase.order.line,create_uid:0
 #: field:purchase.order.line_invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Utworzone przez"
 
 #. module: purchase
 #: field:purchase.config.settings,create_date:0
@@ -713,7 +714,7 @@ msgstr ""
 #: field:purchase.order.line,create_date:0
 #: field:purchase.order.line_invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Utworzono"
 
 #. module: purchase
 #: field:purchase.order,currency_id:0
@@ -917,7 +918,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Rozszerzone filtry"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:681
@@ -946,7 +947,7 @@ msgstr "Wymuś dwa poziomy akceptacji"
 #: view:purchase.order.line:purchase.purchase_order_line_search
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupuj wg"
 
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
@@ -971,7 +972,7 @@ msgstr ""
 #: field:purchase.order.line_invoice,id:0
 #: field:purchase.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: purchase
 #: help:purchase.order,message_unread:0
@@ -1021,7 +1022,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: purchase
 #: help:purchase.order,incoterm_id:0
@@ -1029,6 +1030,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Międzynarodowe warunki handlowe są zestawem predefiniowanych procedur "
+"używanych w międzynarodowych transakcjach."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:328
@@ -1056,7 +1059,7 @@ msgstr "Wyjątek faktury"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Pozycja faktury"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -1072,7 +1075,7 @@ msgstr "fakturę otrzymano"
 #: code:addons/purchase/purchase.py:1479
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktua zapłacona"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1459
@@ -1146,7 +1149,7 @@ msgstr "Dziennik"
 #. module: purchase
 #: field:purchase.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data ostatniej wiadomości"
 
 #. module: purchase
 #: field:purchase.config.settings,write_uid:0
@@ -1155,7 +1158,7 @@ msgstr ""
 #: field:purchase.order.line,write_uid:0
 #: field:purchase.order.line_invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ostatnio zmienione przez"
 
 #. module: purchase
 #: field:purchase.config.settings,write_date:0
@@ -1164,12 +1167,12 @@ msgstr ""
 #: field:purchase.order.line,write_date:0
 #: field:purchase.order.line_invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ostatnia zmiana"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
-msgstr ""
+msgstr "Strefy i Magazyn"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
@@ -1242,7 +1245,7 @@ msgstr "Cena netto"
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Nowa wiadomość email"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1202
@@ -1308,7 +1311,7 @@ msgstr "Data zamówienia"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder
 msgid "Order Date:"
-msgstr ""
+msgstr "Data zamówienia:"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -1318,7 +1321,7 @@ msgstr "Pozycje zamówienia"
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "Order Month"
-msgstr ""
+msgstr "Miesiąc zamówienia"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -1377,7 +1380,7 @@ msgstr "Partner"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
 msgid "Partner Tags"
-msgstr ""
+msgstr "Tagi partnera"
 
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
@@ -1457,7 +1460,7 @@ msgstr "Zapotrzebowanie"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Reguła zapotrzebowania"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1830,7 +1833,7 @@ msgstr "Odpowiedzialny"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Routes"
-msgstr ""
+msgstr "Ścieżki"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -2095,7 +2098,7 @@ msgstr "Suma kwot netto"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Suma netto"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -2179,7 +2182,7 @@ msgstr "Użytkownik"
 #: view:website:purchase.report_purchaseorder
 #: view:website:purchase.report_purchasequotation
 msgid "VAT:"
-msgstr ""
+msgstr "VAT:"
 
 #. module: purchase
 #: field:purchase.report,validator:0
@@ -2189,7 +2192,7 @@ msgstr "Zatwierdzone przez"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder
 msgid "Validated By:"
-msgstr ""
+msgstr "Zatwierdzone przez:"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -2226,17 +2229,17 @@ msgstr "Ostrzeżenie !"
 #. module: purchase
 #: field:purchase.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. module: purchase
 #: help:purchase.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Historia komunikacji"
 
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Kiedy produkty są kupowane, mogą być dostarczane do tego magazynu."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:529
