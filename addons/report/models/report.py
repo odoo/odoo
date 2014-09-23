@@ -36,7 +36,9 @@ import cStringIO
 import subprocess
 from distutils.version import LooseVersion
 from functools import partial
+from os import name as OsName
 from pyPdf import PdfFileWriter, PdfFileReader
+from shutil import rmtree
 
 
 _logger = logging.getLogger(__name__)
@@ -353,7 +355,7 @@ class Report(osv.Model):
         """
         command = ['wkhtmltopdf']
         command_args = []
-        tmp_dir = tempfile.gettempdir()
+        tmp_dir = tempfile.mkdtemp(prefix='report.tmp.')
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         try:
@@ -381,9 +383,13 @@ class Report(osv.Model):
 
         # Execute WKhtmltopdf
         pdfdocuments = []
+        todel = True
+        if OsName == 'nt':
+            todel = False
+
         for index, reporthtml in enumerate(bodies):
             local_command_args = []
-            pdfreport = tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', mode='w+b')
+            pdfreport = tempfile.NamedTemporaryFile(delete=todel, suffix='.pdf', prefix='report.tmp.', dir=tmp_dir, mode='w+b')
 
             # Directly load the document if we already have it
             if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
@@ -394,18 +400,18 @@ class Report(osv.Model):
 
             # Wkhtmltopdf handles header/footer as separate pages. Create them if necessary.
             if headers:
-                head_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.', dir=tmp_dir, mode='w+')
+                head_file = tempfile.NamedTemporaryFile(delete=todel, suffix='.html', prefix='report.header.tmp.', dir=tmp_dir, mode='w+')
                 head_file.write(headers[index])
                 head_file.seek(0)
                 local_command_args.extend(['--header-html', head_file.name])
             if footers:
-                foot_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.', dir=tmp_dir, mode='w+')
+                foot_file = tempfile.NamedTemporaryFile(delete=todel, suffix='.html', prefix='report.footer.tmp.', dir=tmp_dir, mode='w+')
                 foot_file.write(footers[index])
                 foot_file.seek(0)
                 local_command_args.extend(['--footer-html', foot_file.name])
 
             # Body stuff
-            content_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.', dir=tmp_dir, mode='w+')
+            content_file = tempfile.NamedTemporaryFile(delete=todel, suffix='.html', prefix='report.body.tmp.', dir=tmp_dir, mode='w+')
             content_file.write(reporthtml[1])
             content_file.seek(0)
 
@@ -437,6 +443,8 @@ class Report(osv.Model):
                 pdfreport.seek(0)
                 pdfdocuments.append(pdfreport)
 
+                content_file.close()
+
                 if headers:
                     head_file.close()
                 if footers:
@@ -448,6 +456,7 @@ class Report(osv.Model):
         if len(pdfdocuments) == 1:
             content = pdfdocuments[0].read()
             pdfdocuments[0].close()
+            rmtree(tmp_dir, ignore_errors=True)
         else:
             content = self._merge_pdf(pdfdocuments)
 
@@ -486,7 +495,11 @@ class Report(osv.Model):
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
             command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
         elif paperformat.dpi:
-            command_args.extend(['--dpi', str(paperformat.dpi)])
+            if OsName == 'nt' and int(paperformat.dpi) <= 95:
+                _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
+                command_args.extend(['--dpi', '96'])
+            else:
+                command_args.extend(['--dpi', str(paperformat.dpi)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
             command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
