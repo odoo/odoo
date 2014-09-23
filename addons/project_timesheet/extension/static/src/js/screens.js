@@ -3,6 +3,179 @@ function odoo_project_timesheet_screens(project_timesheet) {
     var QWeb = openerp.qweb,
     _t = openerp._t;
 
+    //Move it in lib code, may be in openerpframework.js
+    $.fn.openerpClass = function(additionalClass) {
+        // This plugin should be applied on top level elements
+        additionalClass = additionalClass || '';
+        if (!!$.browser.msie) {
+            additionalClass += ' openerp_ie';
+        }
+        return this.each(function() {
+            $(this).addClass('openerp ' + additionalClass);
+        });
+    };
+
+    var opened_modal = [];
+    project_timesheet.Dialog = openerp.Widget.extend({
+        //template: "ProjectTimesheetDialog",
+        init: function(parent, options, content) {
+            this._super();
+            this.content_to_set = content;
+            this.dialog_options = {
+                destroy_on_close: true,
+                size: 'large', //'medium', 'small'
+                buttons: null,
+            };
+            if (options) {
+                _.extend(this.dialog_options, options);
+            }
+            this.on("closing", this, this._closing);
+            this.$buttons = $('<div class="modal-footer"><span class="oe_dialog_custom_buttons"/></div>');
+        },
+        renderElement: function() {
+            if (this.content_to_set) {
+                this.setElement(this.content_to_set);
+            } else if (this.template) {
+                this._super();
+            }
+        },
+        /**
+            Opens the popup. Inits the dialog if it is not already inited.
+    
+            @return this
+        */
+        open: function() {
+            if (!this.dialog_inited) {
+                this.init_dialog();
+            }
+            this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
+            $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal is opened
+            //add to list of currently opened modal
+            opened_modal.push(this.$dialog_box);
+            return this;
+        },
+        _add_buttons: function(buttons) {
+            var self = this;
+            var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
+            _.each(buttons, function(fn, text) {
+                // buttons can be object or array
+                var pre_text  = fn.pre_text || "";
+                var post_text = fn.post_text || "";
+                var oe_link_class = fn.oe_link_class;
+                if (!_.isFunction(fn)) {
+                    text = fn.text;
+                    fn = fn.click;
+                }
+                var $but = $(QWeb.render('WidgetButton', { widget : { pre_text: pre_text, post_text: post_text, string: text, node: { attrs: {'class': oe_link_class} }}}));
+                $customButons.append($but);
+                $but.filter('button').on('click', function(ev) {
+                    fn.call(self.$el, ev);
+                });
+            });
+        },
+        /**
+            Initializes the popup.
+    
+            @return The result returned by start().
+        */
+        init_dialog: function() {
+            var self = this;
+            var options = _.extend({}, this.dialog_options);
+            options.title = options.title || this.dialog_title;
+            if (options.buttons) {
+                this._add_buttons(options.buttons);
+                delete(options.buttons);
+            }
+            this.renderElement();
+            this.$dialog_box = $(QWeb.render('ProjectTimesheetDialog', options)).appendTo("body");
+            this.$el.modal({
+                'backdrop': false,
+                'keyboard': true,
+            });
+            if (options.size !== 'large'){
+                var dialog_class_size = this.$dialog_box.find('.modal-lg').removeClass('modal-lg');
+                if (options.size === 'small'){
+                    dialog_class_size.addClass('modal-sm');
+                }
+            }
+    
+            this.$el.appendTo(this.$dialog_box.find(".modal-body"));
+            var $dialog_content = this.$dialog_box.find('.modal-content');
+            if (options.dialogClass){
+                $dialog_content.find(".modal-body").addClass(options.dialogClass);
+            }
+            $dialog_content.openerpClass();
+    
+            this.$dialog_box.on('hidden.bs.modal', this, function() {
+                self.close();
+            });
+            this.$dialog_box.modal('show');
+    
+            this.dialog_inited = true;
+            var res = this.start();
+            return res;
+        },
+        /**
+            Closes (hide) the popup, if destroy_on_close was passed to the constructor, it will be destroyed instead.
+        */
+        close: function(reason) {
+            if (this.dialog_inited && !this.__tmp_dialog_hiding) {
+                $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
+                if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
+                    this.__tmp_dialog_hiding = true;
+                    this.$dialog_box.modal('hide');
+                    this.__tmp_dialog_hiding = undefined;
+                }
+                this.trigger("closing", reason);
+            }
+        },
+        _closing: function() {
+            if (this.__tmp_dialog_destroying)
+                return;
+            if (this.dialog_options.destroy_on_close) {
+                this.__tmp_dialog_closing = true;
+                this.destroy();
+                this.__tmp_dialog_closing = undefined;
+            }
+        },
+        /**
+            Destroys the popup, also closes it.
+        */
+        destroy: function (reason) {
+            this.$buttons.remove();
+            var self = this;
+            _.each(this.getChildren(), function(el) {
+                el.destroy();
+            });
+            if (! this.__tmp_dialog_closing) {
+                this.__tmp_dialog_destroying = true;
+                this.close(reason);
+                this.__tmp_dialog_destroying = undefined;
+            }
+            if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(bs.modal)")) {
+                //we need this to put the instruction to remove modal from DOM at the end
+                //of the queue, otherwise it might already have been removed before the modal-backdrop
+                //is removed when pressing escape key
+                var $element = this.$dialog_box;
+                setTimeout(function () {
+                    //remove modal from list of opened modal since we just destroy it
+                    var modal_list_index = $.inArray($element, opened_modal);
+                    if (modal_list_index > -1){
+                        opened_modal.splice(modal_list_index,1)[0].remove();
+                    }
+                    if (opened_modal.length > 0){
+                        //we still have other opened modal so we should focus it
+                        opened_modal[opened_modal.length-1].focus();
+                        //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                        //to allow scrolling inside the modal
+                        $('body').addClass('modal-open');
+                    }
+                },0);
+            }
+            this._super();
+        }
+    });
+
     project_timesheet.ScreenSelector = openerp.Class.extend({
         init: function(options){
             this.project_timesheet_model = options.project_timesheet_model;
@@ -112,23 +285,95 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
             }
         },
+        rpc_error: function(error) {
+            if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
+                this.show_warning(error);
+            } else {
+                this.show_error(error);
+            }
+        },
+        show_warning: function(error) {
+            var self = this;
+            if (error.data.exception_type === "except_osv") {
+                error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
+            }
+            new project_timesheet.Dialog(this, {
+                size: 'medium',
+                title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
+                buttons: [
+                    {text: _t("Ok"), click: function() { $("body").find('.modal').modal('hide'); }}
+                ],
+            }, $('<div>' + QWeb.render('ProjectTimesheet.warning', {error: error}) + '</div>')).open();
+        },
+        show_error: function(error) {
+            var self = this;
+            var buttons = {};
+            buttons[_t("Ok")] = function() {
+                console.log("$(body).find('.modal') is ::: ",$("body").find('.modal'));
+                $("body").find('.modal').modal('hide');
+            };
+            new project_timesheet.Dialog(this, {
+                title: "Odoo " + _.str.capitalize(error.type),
+                buttons: buttons
+            }, QWeb.render('ProjectTimesheet.error', {widget: this, error: error})).open();
+        },
     });
 
     project_timesheet.ActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "ActivityScreen",
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
             this.activities = options.project_timesheet_model.project_timesheet_db.get_activities();
         },
         start: function() {
+            var self = this;
             this._super.apply(this, arguments);
             this.pad_table_to(11);
+            this.$el.find(".pt_timer_button").on("click", this.on_button_timer);
+            this.$el.find(".pt_add_activity").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
+            });
+            this.$el.find(".pt_stat").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("stat");
+            });
+            this.$el.find(".pt_sync").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("sync");
+            });
+        },
+        show: function() {
+            var self = this;
+            this._super();
+            //When Cancel is clicked it should move user to Activity List screen
+            $(".pt_btn_cancel").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("activity");
+            });
         },
         pad_table_to: function(count) {
             
         },
         render: function() {
             QWeb.render('ActivityScreen', {widget: this, activities: this.activities});
+        },
+        on_button_timer: function() {
+            //TO Implement
+        }
+    });
+
+    //TODO: Modify and Add activity will use same template, special option is passed, show and render method will be overridden
+    project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
+        template: "AddActivityScreen",
+        init: function(project_timesheet_widget, options) {
+            this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
+        },
+        start: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
+        },
+        on_activity_add: function() {
+            //TO Implement
         },
     });
 
@@ -142,14 +387,77 @@ function odoo_project_timesheet_screens(project_timesheet) {
         }
     });
 
+    //TODO: We can override show method, when user document's cookie is already set with session_id then do not ask for server name, db, username, and password, directy give Synchronize button
+    //When Sync screen is displayed check session first whether session_id exist then call reload session and do not display db, username, password elements
+    //May be give message in template that you are already logged in, login with other user ?
     project_timesheet.SyncScreen = project_timesheet.ScreenWidget.extend({
         template: "SyncScreen",
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
         },
         start: function() {
+            var self = this;
             this._super.apply(this, arguments);
-        }
+            this.$el.find(".pt_select_protocol").on("click", function() {
+                self.$el.find(".pt_button_protocol span:first").text($(this).text());
+            });
+            this.$el.find("#pt_new_user").on("click", function() {
+                window.open("https://www.odoo.com/","_blank");
+            });
+            this.$el.find(".pt_btn_synchronize").on("click", this.on_authenticate_and_sync)
+        },
+        on_authenticate_and_sync: function() {
+            var self = this;
+            var def = $.Deferred();
+            var protocol = self.$el.find(".pt_button_protocol span:first").text();
+            var origin = protocol + this.$el.find(".pt_input_server_address").val(); //May be store origin in localstorage to keep session persistent for that origin
+            var db = this.$el.find(".pt_input_db").val();
+            var username = this.$el.find(".pt_input_username").val();
+            var password = this.$el.find(".pt_input_password").val();
+            console.log("openerp.get_cookie(session_id) is ::: ",openerp.get_cookie("session_id"));
+            if(!_.all([origin, db, username, password])) {
+                this.set_required();
+                return;
+            }
+            var session = new openerp.Session(undefined, origin);
+            this.project_timesheet_widget.session = session;
+            if (!openerp.get_cookie("session_id")) { //use check_session_id
+                def = session.session_authenticate(db, username, password).then(function() {
+                    //TODO: Create generic method set_cookie
+                    document.cookie = ["session_id="+session.session_id,'path='+origin,
+                        'max-age=' + (24*60*60*365),
+                        'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';')
+                }).fail(function(error, event) {
+                    if (error) {
+                        self.rpc_error(error);
+                    } else {
+                        alert("Something went wrong, please check your username or password");
+                    }
+                });
+            } else {
+                def.resolve();
+            }
+            $.when(def).done(function() {
+                console.log("You can go ahead to sync data and retrieve data");
+                //Get Model data and sync with Server and then Retrieve data and store in localstorage
+            });
+        },
+        set_required: function() {
+            var origin = this.$el.find(".pt_input_server_address"); //May be store origin in localstorage to keep session persistent for that origin
+            var db = this.$el.find(".pt_input_db");
+            var username = this.$el.find(".pt_input_username");
+            var password = this.$el.find(".pt_input_password");
+            var first_elem = _.find([origin, db, username, password], function(ele) {return !ele.val();});
+            first_elem.focus();
+            _([origin, db, username, password]).each(function($element) {
+                $element.removeClass('oe_form_required');
+                if (!$element.val()) {
+                    $element.addClass('pt_required');
+                }
+            });
+            
+        },
     });
 
     project_timesheet.StatisticScreen = project_timesheet.ScreenWidget.extend({

@@ -1,9 +1,9 @@
 function odoo_project_timesheet_models(project_timesheet) {
 
     project_timesheet.task_activity_model = Backbone.Model.extend({
-        initialize: function(session, attributes) {
+        initialize: function(attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.session = session;
+            //this.session = session;
             this.id = null;
             this.date = null;
             this.task_id = null;
@@ -20,14 +20,17 @@ function odoo_project_timesheet_models(project_timesheet) {
     });
 
     project_timesheet.task_model = Backbone.Model.extend({
-        initialize: function(session, attributes) {
+        initialize: function(attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.session = session;
+            //this.session = session;
             this.project_timesheet_widget = attributes.project_timesheet_widget;
             this.id = null;
             this.name = null;
             this.project_id = null;
-            this.task_activities = new project_timesheet.TaskActivityCollection();
+            this.set({
+                task_activities: new project_timesheet.TaskActivityCollection(),
+            });
+            //this.task_activities = new project_timesheet.TaskActivityCollection();
         },
         export_as_json: function() {
             //TO Implement, will return task record along with its activities collection
@@ -42,12 +45,15 @@ function odoo_project_timesheet_models(project_timesheet) {
     });
 
     project_timesheet.project_model = Backbone.Model.extend({
-        initialize: function(session, attributes) {
+        initialize: function(attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.session = session;
+            //this.session = session;
             this.id = null; //If no real id, we will have virtual id, at sync time virtual id will be skipped while sending data to server
             this.name = null;
-            this.tasks = new project_timesheet.TaskCollection();
+            this.set({
+                tasks: new project_timesheet.TaskCollection(),
+            });
+            //this.tasks = new project_timesheet.TaskCollection();
         },
         export_as_json: function() {
             //TO Implement, will return project record along with its task collection
@@ -65,20 +71,27 @@ function odoo_project_timesheet_models(project_timesheet) {
     //While sync read model, this following model's save_to_server will fetch project, and project will fetch task in format such that its one2many
 
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
-        initialize: function(session, attributes) {
+        //initialize: function(session, attributes) {
+        initialize: function(attributes) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            this.session = session;
+            //this.session = session;
             this.set({
                 projects: new project_timesheet.ProjectCollection()
             });
             this.project_timesheet_db = new project_timesheet.project_timesheet_db();
             this.screen_data = {};  // see ScreenSelector
+            //TODO: Check if user is already logged in then load server data and update stored data else use old stored data
+            
+            this.load_stored_data();
         },
         add_new_project: function() {
-            //TO Implement, will create new object of model and add it into collection
+            //TO Implement, will create new object of model and add it into collection, then it will call add task for that collection model
         },
         load_stored_data: function() {
             //TO Implement, this will load localstorage data and call add project, add project will call add task, add task will call add activity
+        },
+        load_server_data: function() {
+            //TO Implement, load last 30 days data and updated localstorage and then reload models
         },
         set_screen_data: function(key,value){
             if(arguments.length === 2){

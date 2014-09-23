@@ -7,7 +7,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         template: "ProjectTimesheet",
         init: function() {
             this._super.apply(this, arguments);
-            project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model(this.session, {project_timesheet_widget: this}); //May be store in this
+            /** Setup default session */
+            //openerp.session = new instance.web.Session(); //May be store in this object, no need to store in openerp global
+            //project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model(openerp.session, {project_timesheet_widget: this}); //May be store in this
+            project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model({project_timesheet_widget: this}); //May be store in this, we'll not have session initially, need to discuss how to manage session
         },
         start: function() {
             this._super.apply(this, arguments);
@@ -25,7 +28,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.activity_screen = new project_timesheet.ActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             //Append all screen widget in screen element of this.$el, by default all will be hidden and then current screen will be visible
             this.activity_screen.appendTo(this.$('.screens'));
-             
+
+            this.add_activity_screen = new project_timesheet.AddActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
+            this.add_activity_screen.appendTo(this.$('.screens'));
+
             this.modify_activity_screen = new project_timesheet.ModifyActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.modify_activity_screen.appendTo(this.$('.screens'));
 
@@ -41,6 +47,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 screen_set:{
                     'activity': this.activity_screen,
                     'sync' : this.sync_screen,
+                    'add_activity': this.add_activity_screen,
                     'modify_screen':    this.modify_activity_screen,
                     'stat' : this.stat_screen,
                 },

@@ -32,7 +32,17 @@
                                     <td><span class="pt_add_activity">+ Add Activity</span></td>
                                 </tr>
                                 <tr class="activity_row">
-                                    <td></td>
+                                    <td>
+                                        <div>
+                                            <div>
+                                                <strong>Project 1</strong>
+                                                <span class="pull-right">02h 05min</span>
+                                            </div>
+                                            <div>
+                                                Testing Task Project Timesheet
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr class="activity_row">
                                     <td></td>
@@ -79,6 +89,54 @@
         </table>
     </t>
 
+    <t t-name="AddActivityScreen">
+        <div class="content_area" style="height: 100%;">
+            <div class="container-fluid" style="height: 100%;">
+              <div class="row well" style="height: 100%;">
+                  <h4><strong>Add an Activity</strong></h4>
+                <div>
+                    <div>Project</div>
+                    <input class="pt_input_project"/>
+                </div>
+                <div>
+                    <div>Task</div>
+                  <input class="pt_input_task"/>
+                </div>
+                <div class="pt_duration">
+                    <div>Duration</div>
+                    <div class="input-group col-md-2">
+                      <input class="form-control pt_input_hour"/>
+                      <span class="input-group-addon">h</span>
+                      <input class="form-control col-md-offset-1 pt_input_minute"/>
+                      <span class="input-group-addon">min</span>
+                    </div>
+                </div>
+                <div class="pt_description">
+                  <div>Notes</div>
+                  <textarea class="pt_input_description"></textarea>
+                </div>
+                <div>
+                  <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button> 
+                  or
+                  <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                </div>
+                <hr/>
+                <h2>Quick Select</h2>
+                <table class="table table-responsive table-hover">
+                    <tbody>
+                      <tr>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ModifyActivityScreen">
         <div class="content_area">
             <div class="container pt_activity">
@@ -90,11 +148,54 @@
     </t>
 
     <t t-name="SyncScreen">
-        <div class="content_area">
-            <div class="container pt_activity">
-                <div class="row">
-                    <span>Heyyy, here content will come...</span>
+        <div class="content_area" style="height: 100%;">
+            <div class="container-fluid" style="height: 100%;">
+              <div class="row well" style="height: 100%;">
+                <h4><strong>Synchronize your tasks online</strong></h4>
+                <div>
+                    <input type="radio" name="pt_radio" id="pt_new_user"/> <span>I'm a new Odoo user</span>
                 </div>
+                <div>
+                    <input type="radio" name="pt_radio" id="pt_existing_user" checked="true"/> <span>I already have an account</span>
+                </div>
+                <hr/>
+                <div>
+                    <div>Enter your address</div>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle pt_button_protocol" data-toggle="dropdown"><span>http://</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#" class="pt_select_protocol">http://</a></li>
+                              <li><a href="#" class="pt_select_protocol">https://</a></li>
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control pt_input_server_address" placeholder="Your Server Address"/>
+                    </div>
+                </div>
+                <div>
+                    <div>Database</div>
+                    <div>
+                        <input type="text" class="pt_input_db"/>
+                    </div>
+                </div>
+                <div>
+                    <div>User Name</div>
+                    <div>
+                        <input type="text" class="pt_input_username"/>
+                    </div>
+                </div>
+                <div>
+                    <div>Password</div>
+                    <div>
+                        <input type="password" class="pt_input_password"/>
+                    </div>
+                </div>
+                <div class="pt_mt_5">
+                  <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
+                  or
+                  <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                </div>
+              </div>
             </div>
         </div>
     </t>
@@ -113,10 +214,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
-                    <i></i><span>Stats</span>
+                    <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3">Stats</span>
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_sync">
-                    <i></i><span>Sync now</span>
+                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
                     <i></i><span>6h 30min</span>
@@ -125,21 +226,55 @@
         </div>
     </t>
 
-
-    <!-- TO REMOVE -->
-    <t t-name="InfoModal">
+    <t t-name="ProjectTimesheetDialog">
         <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 class="modal-title"><t t-raw="title"/></h3>
-                    </div>
-                    <div class="modal-body">
-                        Hurreyyyy, this my first Chrome Extension!
-                    </div>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title"><t t-raw="title"/></h3>
+                </div>
+                <div class="modal-body">
                 </div>
             </div>
+        </div>
+    </div>
+    </t>
+    <t t-name="WidgetButton">
+        <span t-if="widget.pre_text"> <t t-esc="widget.pre_text"/> </span>
+        <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
+            t-att-style="widget.node.attrs.style"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-accesskey="widget.node.attrs.accesskey">
+            <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
+            <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
+            <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
+            <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
+        </button>
+        <span t-if="widget.post_text"> <t t-esc="widget.post_text"/> </span>
+    </t>
+    <t t-name="ProjectTimesheet.warning">
+        <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
+        <tr>
+            <td>
+                <p>
+                    <t t-js="d">
+                        var message = d.message ? d.message : d.error.data.message;
+                        d.html_error = context.engine.tools.html_escape(message)
+                            .replace(/\n/g, '<br/>');
+                    </t>
+                    <t t-raw="html_error"/>
+                </p>
+            </td>
+        </tr>
+        </table>
+    </t>
+    <t t-name="ProjectTimesheet.error">
+        <div class="oe_error_detail">
+            <pre><t t-esc="error.message"/></pre>
+            <hr/>
+            <pre><t t-esc="error.data.debug"/></pre>
         </div>
     </t>
 </templates>
