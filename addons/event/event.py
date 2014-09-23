@@ -370,7 +370,7 @@ class event_registration(osv.osv):
             else:
                 template_id = registration.event_id.email_registration_id.id
                 if template_id:
-                    mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
+                    self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id, context=context)
         return True
 
     def mail_user_confirm(self, cr, uid, ids, context=None):
@@ -380,7 +380,7 @@ class event_registration(osv.osv):
         for registration in self.browse(cr, uid, ids, context=context):
             template_id = registration.event_id.email_confirmation_id.id
             if template_id:
-                mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
+                self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id, context=context)
         return True
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):

@@ -1204,7 +1204,9 @@ class stock_picking(osv.osv):
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
-                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
+                # retrieve the string value of field in user's language
+                state = dict(self.fields_get(cr, uid, context=context)['state']['selection']).get(pick.state, pick.state)
+                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(state,))
             else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
