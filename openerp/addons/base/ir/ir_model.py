@@ -181,7 +181,6 @@ class ir_model(osv.osv):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
             cr.commit() # must be committed before reloading registry in new cursor
-            openerp.modules.registry.RegistryManager.new(cr.dbname)
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -205,8 +204,6 @@ class ir_model(osv.osv):
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
             model = self.pool[vals['model']]
-            model._prepare_setup_fields(cr, SUPERUSER_ID)
-            model._setup_fields(cr, SUPERUSER_ID)
             ctx = dict(context,
                 field_name=vals['name'],
                 field_state='manual',
@@ -385,8 +382,6 @@ class ir_model_fields(osv.osv):
                     cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
                     self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
                 model.__init__(self.pool, cr)
-                model._prepare_setup_fields(cr, SUPERUSER_ID)
-                model._setup_fields(cr, SUPERUSER_ID)
 
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
@@ -488,6 +483,7 @@ class ir_model_fields(osv.osv):
                 del vals[column_name]
 
         res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
+        registry_changed = False
 
         if column_rename:
             cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename[1])
@@ -495,6 +491,7 @@ class ir_model_fields(osv.osv):
             # we want to change the key of column in obj._columns dict
             col = column_rename[0]._columns.pop(column_rename[1][1]) # take object out, w/o copy
             column_rename[0]._columns[column_rename[1][2]] = col
+            registry_changed = True
 
         if models_patch:
             # We have to update _columns of the model(s) and then call their
@@ -504,14 +501,17 @@ class ir_model_fields(osv.osv):
             # the model into ir.model.fields (db).
             ctx = dict(context, select=vals.get('select_level', '0'),
                        update_custom_fields=True)
-
             for __, patch_struct in models_patch.items():
                 obj = patch_struct[0]
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
                 obj._auto_end(cr, ctx) # actually create FKs!
+            registry_changed = True
+
+        if registry_changed:
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+
         return res
 
 class ir_model_constraint(Model):

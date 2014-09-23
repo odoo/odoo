@@ -64,6 +64,9 @@ class Registry(Mapping):
         # Indicates that the registry is 
         self.ready = False
 
+        # Flag indicating whether registry must be reloaded (single process)
+        self.dirty = False
+
         # Inter-process signaling (used only when openerp.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
@@ -385,8 +388,8 @@ class RegistryManager(object):
         :returns: True if changes has been detected in the database and False otherwise.
         """
         changed = False
+        registry = cls.get(db_name)
         if openerp.multi_process and db_name in cls.registries:
-            registry = cls.get(db_name)
             cr = registry.cursor()
             try:
                 cr.execute("""
@@ -424,10 +427,17 @@ class RegistryManager(object):
                 registry.base_cache_signaling_sequence = c
             finally:
                 cr.close()
+        elif registry.dirty:
+            changed = True
+            _logger.info("Reloading the model registry after a change.")
+            registry = cls.new(db_name)
         return changed
 
     @classmethod
     def signal_caches_change(cls, db_name):
+        """ In a multi-process context, signal the other processes that the orm
+            cache for the given database must be cleared.
+        """
         if openerp.multi_process and db_name in cls.registries:
             # Check the registries if any cache has been cleared and signal it
             # through the database to other processes.
@@ -446,16 +456,18 @@ class RegistryManager(object):
 
     @classmethod
     def signal_registry_change(cls, db_name):
+        """ Force the registry for the given database to be reloaded at the next
+            request. In a multi-process context, this applies to all processes.
+        """
+        registry = cls.get(db_name)
         if openerp.multi_process and db_name in cls.registries:
             _logger.info("Registry changed, signaling through the database")
-            registry = cls.get(db_name)
             cr = registry.cursor()
-            r = 1
             try:
                 cr.execute("select nextval('base_registry_signaling')")
-                r = cr.fetchone()[0]
             finally:
                 cr.close()
-            registry.base_registry_signaling_sequence = r
+        else:
+            registry.dirty = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
