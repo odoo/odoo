@@ -249,7 +249,7 @@ class users(osv.osv):
             return user_id
         registry = RegistryManager.get(db)
         with registry.cursor() as cr:
-            cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
+            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
             res = cr.fetchone()
             if res:
                 return False

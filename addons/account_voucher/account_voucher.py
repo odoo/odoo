@@ -909,7 +909,7 @@ class account_voucher(osv.osv):
             currency_id = journal.currency.id
         else:
             currency_id = journal.company_id.currency_id.id
-        vals['value'].update({'currency_id': currency_id})
+        vals['value'].update({'currency_id': currency_id, 'payment_rate_currency_id': currency_id})
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.

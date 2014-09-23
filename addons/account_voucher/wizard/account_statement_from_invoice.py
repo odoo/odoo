@@ -78,10 +78,11 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                             'invoice_id': line.invoice.id})
             type = 'general'
             ttype = amount < 0 and 'payment' or 'receipt'
-            sign = 1
+            sign = 1 if ttype == 'receipt' else -1
             if line.journal_id.type in ('sale', 'sale_refund'):
                 type = 'customer'
                 ttype = 'receipt'
+                sign = 1
             elif line.journal_id.type in ('purchase', 'purchase_refund'):
                 type = 'supplier'
                 ttype = 'payment'
