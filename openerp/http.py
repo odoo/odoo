@@ -1376,7 +1376,7 @@ def db_filter(dbs, httprequest=None):
     if d == "www" and r:
         d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
-    dbs = [i for i in dbs if re.match(r, i)]
+    dbs = [i for i in dbs if i and re.match(r, i)]
     return dbs
 
 def db_monodb(httprequest=None):
