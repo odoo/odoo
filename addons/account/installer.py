@@ -69,6 +69,10 @@ class account_installer(osv.osv_memory):
         charts.insert(0, ('configurable', _('Custom')))
         return charts
 
+    def _has_unconfigured_company(self, cr, uid, ids, fields, arg, context=None):
+        company_ids = self.get_unconfigured_cmp(cr, uid, context=context)
+        return dict.fromkeys(ids, bool(company_ids))
+
     _columns = {
         # Accounting
         'charts': fields.selection(_get_charts, 'Accounting Package',
@@ -78,9 +82,10 @@ class account_installer(osv.osv_memory):
                  "country."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months', 'Quarterly')], 'Periods', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has Default Company', readonly=True),
+        'has_unconfigured_cmp': fields.function(_has_unconfigured_company, string="Unconfigured Company", type='boolean'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -97,7 +102,8 @@ class account_installer(osv.osv_memory):
         'period': 'month',
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'charts': 'configurable'
+        'charts': 'configurable',
+        'has_unconfigured_cmp': lambda s, cr, uid, c: s.get_unconfigured_cmp(cr, uid, context=c),
     }
 
     def get_unconfigured_cmp(self, cr, uid, context=None):

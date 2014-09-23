@@ -156,8 +156,13 @@ class account_config_settings(osv.osv_memory):
         return res
 
     def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.id
+        if context is None:
+            context = {}
+        company_id = context.get('company_id')
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_id = user.company_id.id
+        return company_id
 
     def _default_has_default_company(self, cr, uid, context=None):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
@@ -231,7 +236,6 @@ class account_config_settings(osv.osv_memory):
                 'company_footer': company.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
                 'has_fiscal_year': bool(fiscalyear_count),
-                'chart_template_id': False,
                 'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
                 'date_start': date_start,
                 'date_stop': date_stop,
@@ -382,4 +386,15 @@ class account_config_settings(osv.osv_memory):
                 'module_account_accountant': True,
                 }}
         return {}
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(account_config_settings, self).default_get(cr, uid, fields, context=context)
+        account_chart_template = self.pool['account.chart.template']
+        ids = account_chart_template.search(cr, uid, [('visible', '=', True)], context=context)
+        if ids:
+            chart_id = max(ids)
+            if 'chart_template_id' in fields:
+                res.update({'chart_template_id': chart_id})
+        return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

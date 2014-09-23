@@ -41,6 +41,8 @@
 
         <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="2"/>
         <menuitem id="menu_account_reports" name="Reports" parent="account.account_account_menu" sequence="4" />
+        <menuitem id="menu_finance_products" name="Product" parent="account.menu_finance_configuration" sequence="56" groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_product" action="product.product_normal_action_sell" parent="menu_finance_products" groups="base.group_no_one"/>
 
         <menuitem id="account.menu_finance_recurrent_entries" name="Recurring Entries"
             parent="menu_finance_periodical_processing" sequence="15"/>
