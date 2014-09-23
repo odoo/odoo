@@ -162,6 +162,13 @@
         <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23"/>
 
         <!-- Accounts -->
+
+        <record id="action_reconcile_account" model="ir.actions.client">
+            <field name="name">Account Reconciliation</field>
+            <field name="tag">manual_reconciliation_view</field>
+            <field name="context">{'account_id': active_id}</field>
+        </record>
+
         <record id="view_account_form" model="ir.ui.view">
             <field name="name">account.account.form</field>
             <field name="model">account.account</field>
@@ -193,6 +200,9 @@
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
+                        <button string="Reconcile" type="action" class="oe_highlight"
+                            name="%(action_reconcile_partner)d"
+                            attrs="{'invisible':['|',('reconcile','=',False),'|',('type','=','payable'),('type','=','receivable')]}"/>
                         <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
