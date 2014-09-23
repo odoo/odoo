@@ -3000,7 +3000,7 @@ class BaseModel(object):
             if partial and field.manual and \
                     field.relational and \
                     (field.comodel_name not in self.pool or \
-                     field.inverse_name not in self.pool[field.comodel_name]._fields):
+                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
                 # do not set up manual fields that refer to unknown models
                 continue
             field.setup(self.env)
