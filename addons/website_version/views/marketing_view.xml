@@ -66,7 +66,8 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done" clickable="True"/>
                     </header>
                     <sheet string="Exp">
-                        <button type="action" 
+                        <button 
+                            type="action" 
                             class="oe_inline oe_stat_button"
                             id="my_button"
                             icon="fa-book"
@@ -87,6 +88,15 @@
                                 </field>
                             </page>
                         </notebook>
+
+                        <!-- <div attrs="{'invisible' : [('experiment_snapshot_ids', '!=', False)]}" class="oe_view_nocontent">
+                            <p class="oe_view_nocontent_create">
+                              Click to start a session.
+                            </p><p>
+                              You may have to control your cash amount in your cash register, before
+                              being able to start selling through the touchscreen interface.
+                            </p>
+                        </div>  -->
                     </sheet>
                 </form>
             </field>

@@ -54,5 +54,17 @@
         },
 
     });
+
+    website.EditorBarContent.include({
+        start: function() {
+            
+            return this._super();
+        },
+
+        ab_testing: function() {
+            window.location.href = '/web#return_label=Website&action=website_version.action_experiment';
+        }
+    });
+
     
 })();
