@@ -27,24 +27,122 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
-    module.FloorScreenWidget = module.ScreenWidget.extend({
-        template: 'FloorScreenWidget',
-        show_leftpane: false,
-
-        init: function(parent, options) {
-            this._super(parent, options);
-            this.floor = this.pos.floors[0];
+    module.TableWidget = instance.web.Widget.extend({
+        template: 'TableWidget',
+        init: function(parent, options){
+            this._super(parent);
+            this.table    = options.table;
+            this.selected = false;
+            this.moved    = false;
+            this.dragpos  = {x:0, y:0};
+            this.handle_dragging = false;
+            this.handle   = null;
         },
-        click_floor_button: function(event,$el){
-            var floor = this.pos.floors_by_id[$el.data('id')];
-            if (floor !== this.floor) {
-                this.floor = floor;
-                this.renderElement();
+        event_position: function(event){
+            if(event.touches && event.touches[0]){
+                return {x: event.touches[0].screenX, y: event.touches[0].screenY};
+            }else{
+                return {x: event.screenX, y: event.screenY};
             }
         },
-        table_style: function(table){
-            function unit(val){ return Math.floor(val * 10) + 'px'; }
-            var str = "";
+        click_handler: function(){
+            var self = this;
+            setTimeout(function(){  // in a setTimeout to debounce with drag&drop
+                if (!self.dragging) {
+                    if (self.moved) {
+                        self.moved = false;
+                    } else if (!self.selected) {
+                        self.getParent().select_table(self);
+                    } else {
+                        self.getParent().deselect_tables();
+                    }
+                } 
+            },50);
+        },
+        dragstart_handler: function(event,$el,drag){
+            if (this.selected && !this.handle_dragging) {
+                this.dragging = true;
+                this.dragpos  = { x: drag.offsetX, y: drag.offsetY };
+            } 
+        },
+        dragend_handler:   function(event,$el){
+            this.dragging = false;
+        },
+        dragmove_handler: function(event,$el,drag){
+            if (this.dragging) {
+                var dx   = drag.offsetX - this.dragpos.x;
+                var dy   = drag.offsetY - this.dragpos.y;
+
+                this.dragpos = { x: drag.offsetX, y: drag.offsetY };
+                this.moved   = true;
+
+                this.table.position_v += dy;
+                this.table.position_h += dx;
+
+                $el.css(this.table_style());
+            } 
+        },
+        handle_dragstart_handler: function(event, $el, drag) {
+            if (this.selected && !this.dragging) {
+                this.handle_dragging = true;
+                this.handle_dragpos  = this.event_position(event);
+                this.handle          = drag.target;
+            } 
+        },
+        handle_dragend_handler: function(event, $el, drag) {
+            this.handle_dragging = false;
+        },
+        handle_dragmove_handler: function(event, $el, drag) {
+            if (this.handle_dragging) {
+                var pos  = this.event_position(event);
+                var dx   = pos.x - this.handle_dragpos.x;
+                var dy   = pos.y - this.handle_dragpos.y;
+
+                this.handle_dragpos = pos;
+                this.moved   = true;
+
+                var cl     = this.handle.classList;
+
+                var tw = this.table.width;
+                var th = this.table.height;
+                var tx = this.table.position_h;
+                var ty = this.table.position_v;
+
+                var MIN_SIZE = 40;
+
+                if (cl.contains('left') && tw - dx >= MIN_SIZE) {
+                    tw -= dx;
+                    tx += dx;
+                } else if (cl.contains('right') && tw + dx >= MIN_SIZE) {
+                    tw += dx;
+                }
+
+                if (cl.contains('top') && th - dy >= MIN_SIZE) {
+                    th -= dy;
+                    ty += dy;
+                } else if (cl.contains('bottom') && th + dy >= MIN_SIZE) {
+                    th += dy;
+                }
+
+                this.table.width  = tw;
+                this.table.height = th;
+                this.table.position_h = tx;
+                this.table.position_v = ty;
+
+                this.$el.css(this.table_style());
+            }
+        },
+        set_table_color: function(color){
+            this.table.color = color;
+            this.renderElement();
+        },
+        set_table_name: function(name){
+            this.table.name = name;
+            this.renderElement();
+        },
+        table_style: function(){
+            var table = this.table;
+            function unit(val){ return '' + val + 'px'; }
             var style = {
                 'width':        unit(table.width),
                 'height':       unit(table.height),
@@ -56,17 +154,234 @@ function openerp_restaurant_floors(instance,module){
                 'border-radius': table.shape === 'round' ? 
                         unit(Math.max(table.width,table.height)/2) : '3px',
             };
+            if (table.color) {
+                style['background-color'] = table.color;
+            }
+            if (table.height >= 150 && table.width >= 150) {
+                style['font-size'] = '32px';
+            } 
+
+            return style;
+        },
+        table_style_str: function(){
+            var style = this.table_style();
+            var str = "";
             for (s in style) {
                 str += s + ":" + style[s] + "; ";
             }
             return str;
         },
+        select: function() {
+            this.selected = true;
+            this.renderElement();
+        },
+        deselect: function() {
+            this.selected = false;
+            this.renderElement();
+        },
         renderElement: function(){
             var self = this;
             this._super();
+
+            this.$el.on('mouseup',      function(event){ self.click_handler(event,$(this)); });
+            this.$el.on('touchend',     function(event){ self.click_handler(event,$(this)); });
+            this.$el.on('touchcancel',  function(event){ self.click_handler(event,$(this)); });
+            this.$el.on('dragstart', function(event,drag){ self.dragstart_handler(event,$(this),drag); });
+            this.$el.on('drag',      function(event,drag){ self.dragmove_handler(event,$(this),drag); });
+            this.$el.on('dragend',   function(event,drag){ self.dragend_handler(event,$(this),drag); });
+            
+            var handles = this.$el.find('.table-handle');
+            handles.on('dragstart',  function(event,drag){ self.handle_dragstart_handler(event,$(this),drag); });
+            handles.on('drag',       function(event,drag){ self.handle_dragmove_handler(event,$(this),drag); });
+            handles.on('dragend',    function(event,drag){ self.handle_dragend_handler(event,$(this),drag); });
+        },
+    });
+
+    module.FloorScreenWidget = module.ScreenWidget.extend({
+        template: 'FloorScreenWidget',
+        show_leftpane: false,
+        init: function(parent, options) {
+            this._super(parent, options);
+            this.floor = this.pos.floors[0];
+            this.table_widgets = [];
+            this.selected_table = null;
+        },
+        show: function(){
+            this._super();
+            this.pos_widget.$('.order-selector').addClass('oe_invisible');
+        },
+        hide: function(){
+            this._super();
+            this.pos_widget.$('.order-selector').removeClass('oe_invisible');
+        },
+        click_floor_button: function(event,$el){
+            var floor = this.pos.floors_by_id[$el.data('id')];
+            if (floor !== this.floor) {
+                this.floor = floor;
+                this.selected_table = null;
+                this.renderElement();
+            }
+        },
+        background_image_url: function(floor) { 
+            return '/website/image/restaurant.floor/'+floor.id+'/background_image';
+        },
+        deselect_tables: function(){
+            for (var i = 0; i < this.table_widgets.length; i++) {
+                var table = this.table_widgets[i];
+                if (table.selected) {
+                    table.selected = false;
+                    table.renderElement();
+                }
+            }
+            this.selected_table = null;
+            this.update_toolbar();
+        },
+        select_table: function(table_widget){
+            if (!table_widget.selected) {
+                this.deselect_tables();
+                table_widget.select();
+                this.selected_table = table_widget;
+                this.update_toolbar();
+            }
+        },
+        tool_shape_action: function(){
+            if (this.selected_table) {
+                var table = this.selected_table.table;
+                if (table.shape === 'square') {
+                    table.shape = 'round';
+                } else {
+                    table.shape = 'square';
+                }
+                this.selected_table.renderElement();
+                this.update_toolbar();
+            }
+        },
+        tool_colorpicker_open: function(){
+            if (this.selected_table) {
+                this.$('.color-picker').removeClass('oe_hidden');
+            }
+        },
+        tool_colorpicker_pick: function(event,$el){
+            if (this.selected_table) {
+                this.selected_table.set_table_color($el[0].style['background-color']);
+            }
+        },
+        tool_colorpicker_close: function(){
+            this.$('.color-picker').addClass('oe_hidden');
+        },
+        tool_duplicate_table: function(){
+            if (this.selected_table) {
+                var tw = this.create_table(this.selected_table.table);
+                tw.table.position_h += 10;
+                tw.table.position_v += 10;
+                this.select_table(tw);
+            }
+        },
+        tool_new_table: function(){
+            var tw = this.create_table({
+                'position_v': 50,
+                'position_h': 50,
+                'width': 50,
+                'height': 50,
+                'name': 'T1',
+                'shape': 'square',
+            });
+            this.select_table(tw);
+        },
+        create_table: function(params) {
+            var table = {};
+            for (var p in params) {
+                table[p] = params[p];
+            }
+
+            table.floor_id = this.floor.id;
+            
+            this.floor.tables.push(table);
+            var tw = new module.TableWidget(this,{table: table});
+                tw.appendTo('.floor-map');
+            this.table_widgets.push(tw);
+            return tw;
+        },
+        update_toolbar: function(){
+            if (this.selected_table) {
+                this.$('.needs-selection').removeClass('disabled');
+                var table = this.selected_table.table;
+                if (table.shape === 'square') {
+                    this.$('.button-option.square').addClass('oe_hidden');
+                    this.$('.button-option.round').removeClass('oe_hidden');
+                } else {
+                    this.$('.button-option.square').removeClass('oe_hidden');
+                    this.$('.button-option.round').addClass('oe_hidden');
+                }
+            } else {
+                this.$('.needs-selection').addClass('disabled');
+            }
+            this.tool_colorpicker_close();
+        },
+        renderElement: function(){
+            var self = this;
+
+            // cleanup table widgets from previous renders
+            for (var i = 0; i < this.table_widgets.length; i++) { 
+                this.table_widgets[i].destroy();
+            }
+
+            this.table_widgets = [];
+
+            this._super();
+
+            for (var i = 0; i < this.floor.tables.length; i++) {
+                var tw = new module.TableWidget(this,{
+                    table: this.floor.tables[i],
+                });
+                tw.appendTo(this.$('.floor-map'));
+                this.table_widgets.push(tw);
+            }
+
             this.$('.floor-selector .button').click(function(event){
                 self.click_floor_button(event,$(this));
             });
+
+            this.$('.edit-button.shape').click(function(event){
+                self.tool_shape_action();
+            });
+
+            this.$('.edit-button.color').click(function(event){
+                self.tool_colorpicker_open();
+            });
+
+            this.$('.edit-button.dup-table').click(function(event){
+                self.tool_duplicate_table();
+            });
+
+            this.$('.edit-button.new-table').click(function(event){
+                self.tool_new_table();
+            });
+            
+            this.$('.color-picker .close-picker').click(function(event){
+                self.tool_colorpicker_close();
+                event.stopPropagation();
+            });
+
+            this.$('.color-picker .color').click(function(event){
+                self.tool_colorpicker_pick(event,$(this));
+                self.tool_colorpicker_close();
+                event.stopPropagation();
+            });
+
+            this.$('.floor-map').click(function(event){
+                if (event.target === self.$('.floor-map')[0]) {
+                    self.deselect_tables();
+                }
+            });
+
+            this.$('.color-picker .close-picker').click(function(event){
+                self.tool_colorpicker_close();
+                event.stopPropagation();
+            });
+
+            this.update_toolbar();
+
         },
     });
 

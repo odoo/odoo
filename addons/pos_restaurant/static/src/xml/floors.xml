@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+    <t t-name="TableWidget">
+        <t t-if='!widget.selected'>
+            <div class='table' t-att-style='widget.table_style_str()'><t t-esc='widget.table.name' /></div>
+        </t>
+        <t t-if='widget.selected'>
+            <div class='table selected' t-att-style='widget.table_style_str()'>
+                <t t-esc='widget.table.name' />
+                <span class='table-handle top'></span>
+                <span class='table-handle bottom'></span>
+                <span class='table-handle left'></span>
+                <span class='table-handle right'></span>
+                <span class='table-handle top right'></span>
+                <span class='table-handle top left'></span>
+                <span class='table-handle bottom right'></span>
+                <span class='table-handle bottom left'></span>
+            </div>
+        </t>
+    </t>
+
     <t t-name="FloorScreenWidget">
         <div class='floor-screen screen'>
             <div class='screen-content-flexbox'>
@@ -14,10 +33,44 @@
                         </t>
                     </t>
                 </div>
-                <div class='floor-map'>
-                    <t t-foreach="widget.floor.tables" t-as="table">
-                        <div class='table' t-att-style='widget.table_style(table)'><t t-esc='table.name' /></div>
-                    </t>
+                <div class='floor-map' t-att-style='widget.floor.background_image ? ("background-image:url("+widget.background_image_url(widget.floor)+");") :"" '>
+                    <span class='edit-button editing'><i class='fa fa-pencil'></i></span>
+                    <div class='edit-bar'>
+                        <span class='edit-button new-table'>
+                            <i class='fa fa-plus'></i>
+                        </span>
+                        <span class='edit-button dup-table needs-selection'>
+                            <i class='fa fa-copy'></i>
+                        </span>
+                        <span class='edit-button text needs-selection'>
+                            <i class='fa fa-font'></i>
+                        </span>
+                        <span class='edit-button shape needs-selection'>
+                            <span class='button-option square'><i class='fa fa-square-o'></i></span>
+                            <span class='button-option round oe_hidden'><i class='fa fa-circle-o'></i></span>
+                        </span> 
+                        <span class='edit-button color needs-selection'>
+                            <i class='fa fa-tint'></i>
+                            <div class='color-picker oe_hidden'>
+                                <div  class='close-picker'>
+                                    <i class='fa fa-times' />
+                                </div>
+                                <span class='color tl'  style='background-color:#EB6D6D'    />
+                                <span class='color'     style='background-color:#35D374'  />
+                                <span class='color tr'  style='background-color:#6C6DEC'   />
+                                <span class='color'     style='background-color:#EBBF6D' />
+                                <span class='color'     style='background-color:#EBEC6D' />
+                                <span class='color'     style='background-color:#AC6DAD' />
+                                <span class='color bl'  style='background-color:#6C6D6D'  />
+                                <span class='color'     style='background-color:#ACADAD'   />
+                                <span class='color br'  style='background-color:#4ED2BE'   />
+                            </div>
+                        </span>
+                        <span class='edit-button remove needs-selection'>
+                            <i class='fa fa-trash'></i>
+                        </span>
+                    </div>
+                    
                 </div>
             </div>
         </div>

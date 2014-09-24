@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -2022,6 +2023,10 @@
 .openerp .oe_form .oe_form_field_image:hover .oe_form_field_image_controls {
   display: block;
 }
+.openerp .oe_form .oe_form_field_image img {
+  max-width: 256px;
+  max-height: 256px;
+}
 .openerp .oe_fileupload {
   display: inline-block;
   clear: both;
@@ -2760,6 +2765,7 @@
     top: 0px;
   }
 }
+
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;

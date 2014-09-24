@@ -394,6 +394,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                         .then(function(){ load_model(index + 1); },
                                               function(err){ loaded.reject(err); });
                                 }catch(err){
+                                    console.error(err.stack);
                                     loaded.reject(err);
                                 }
                             },function(err){
