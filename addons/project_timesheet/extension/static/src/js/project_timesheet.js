@@ -1,8 +1,8 @@
-project_timesheet = {};
+project_timesheet = _.clone(openerp);;
 (function() {
 'use strict';
 
-    openerp.project_timesheet = project_timesheet;
+    //openerp.project_timesheet = project_timesheet;
 
     //project_timesheet.qweb = new QWeb2.Engine();
     odoo_project_timesheet_db(project_timesheet); //Import db.js

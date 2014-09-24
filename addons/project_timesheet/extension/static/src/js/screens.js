@@ -15,6 +15,39 @@ function odoo_project_timesheet_screens(project_timesheet) {
         });
     };
 
+    // jquery autocomplete tweak to allow html and classnames
+    (function() {
+        var proto = $.ui.autocomplete.prototype,
+            initSource = proto._initSource;
+    
+        function filter( array, term ) {
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+            return $.grep( array, function(value_) {
+                return matcher.test( $( "<div>" ).html( value_.label || value_.value || value_ ).text() );
+            });
+        }
+    
+        $.extend( proto, {
+            _initSource: function() {
+                if ( this.options.html && $.isArray(this.options.source) ) {
+                    this.source = function( request, response ) {
+                        response( filter( this.options.source, request.term ) );
+                    };
+                } else {
+                    initSource.call( this );
+                }
+            },
+    
+            _renderItem: function( ul, item) {
+                return $( "<li></li>" )
+                    .data( "item.autocomplete", item )
+                    .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
+                    .appendTo( ul )
+                    .addClass(item.classname);
+            }
+        });
+    })();
+
     var opened_modal = [];
     project_timesheet.Dialog = openerp.Widget.extend({
         //template: "ProjectTimesheetDialog",
@@ -246,6 +279,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
+            this.project_timesheet_model = project_timesheet.project_timesheet_model;
+            this.project_timesheet_db = this.project_timesheet_model.project_timesheet_db;
         },
         // this method shows the screen and sets up all the widget related to this screen. Extend this method
         // if you want to alter the behavior of the screen.
@@ -371,9 +406,84 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             this._super.apply(this, arguments);
             this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
+            this.$project_input = this.$el.find(".pt_input_project");
+            this.$task_input = this.$el.find(".pt_input_task");
+            this.prepare_autocomplete(this.$project_input, "project");
+            this.prepare_autocomplete(this.$task_input, "task");
         },
         on_activity_add: function() {
-            //TO Implement
+            //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
+            //Simply generate value such that project model can accept it, we will then call add project, now project will have logic
+            //which finds project model based project_id from project's collection and for that model call add_task....
+        },
+        get_search_result: function(term, model) {
+            var def = $.Deferred();
+            var data = [[1, "Item 1"], [2, "Item 2"], [3, "Item 3"]];
+            var values = _.map(data, function(x) {
+                x[1] = x[1].split("\n")[0];
+                return {
+                    label: _.str.escapeHTML(x[1]),
+                    value: x[1],
+                    name: x[1],
+                    id: x[0],
+                };
+            });
+            // quick create
+            //var raw_result = _(data.result).map(function(x) {return x[1];});
+            var raw_result = data.map(function(x) {return x[1];});
+            if (term.length > 0 && !_.include(raw_result, term)) {
+                values.push({
+                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                        $('<span />').text(term).html()),
+                    action: function() {
+                        self._quick_create(term, model);
+                    },
+                    classname: 'oe_m2o_dropdown_option'
+                });
+            }
+            return def.resolve(values);
+        },
+        _quick_create: function(term, model) {
+            //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
+        },
+        prepare_autocomplete: function($input, model) {
+            var self = this;
+            $input.autocomplete({
+                source: function(req, resp) {
+                    self.get_search_result(req.term, model).done(function(result) {
+                        resp(result);
+                    });
+                },
+                select: function(event, ui) {
+                    isSelecting = true;
+                    var item = ui.item;
+                    
+                    if (item.id) {
+                        $input.data("id", item.id);
+                        $input.val(item.name);
+                        return false;
+                    } else if (item.action) {
+                        
+                    }
+                },
+                focus: function(e, ui) {
+                    e.preventDefault();
+                },
+                html: true,
+                minLength: 0,
+                delay: 250
+            });
+            // set position for list of suggestions box
+            $input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
+            $input.autocomplete("widget").openerpClass();
+            // used to correct a bug when selecting an element by pushing 'enter' in an editable list
+            $input.keyup(function(e) {
+                if (e.which === 13) { // ENTER
+                    if (isSelecting)
+                        e.stopPropagation();
+                }
+                isSelecting = false;
+            });
         },
     });
 
@@ -415,19 +525,22 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var db = this.$el.find(".pt_input_db").val();
             var username = this.$el.find(".pt_input_username").val();
             var password = this.$el.find(".pt_input_password").val();
-            console.log("openerp.get_cookie(session_id) is ::: ",openerp.get_cookie("session_id"));
             if(!_.all([origin, db, username, password])) {
                 this.set_required();
                 return;
             }
             var session = new openerp.Session(undefined, origin);
-            this.project_timesheet_widget.session = session;
-            if (!openerp.get_cookie("session_id")) { //use check_session_id
-                def = session.session_authenticate(db, username, password).then(function() {
+            project_timesheet.session = session;
+            //if (!openerp.get_cookie("session_id")) { //use check_session_id
+                def = session.session_authenticate(db, username, password).done(function() {
                     //TODO: Create generic method set_cookie
                     document.cookie = ["session_id="+session.session_id,'path='+origin,
                         'max-age=' + (24*60*60*365),
                         'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';')
+
+                        //Store session object in local storage, we need it, so that user don't have to enter login detail each time while sync
+                        //Note that, session_id is created new each time for cross domain policy
+                        self.project_timesheet_db.save("session", session);
                 }).fail(function(error, event) {
                     if (error) {
                         self.rpc_error(error);
@@ -435,9 +548,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         alert("Something went wrong, please check your username or password");
                     }
                 });
-            } else {
-                def.resolve();
-            }
+            //} else {
+            //    def.resolve();
+            //}
             $.when(def).done(function() {
                 console.log("You can go ahead to sync data and retrieve data");
                 //Get Model data and sync with Server and then Retrieve data and store in localstorage
