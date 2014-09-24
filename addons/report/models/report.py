@@ -40,12 +40,11 @@ from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
 
 
-_logger = logging.getLogger(__name__)
-
-
 #--------------------------------------------------------------------------
 # Helpers
 #--------------------------------------------------------------------------
+_logger = logging.getLogger(__name__)
+
 def _get_wkhtmltopdf_bin():
     defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
     return which('wkhtmltopdf', path=os.pathsep.join(defpath))
@@ -98,6 +97,8 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
+        context.update(inherit_branding=True)  # Tell QWeb to brand the generated html
+
         view_obj = self.pool['ir.ui.view']
 
         def translate_doc(doc_id, model, lang_field, template):
@@ -133,7 +134,7 @@ class Report(osv.Model):
         values.update(
             time=time,
             translate_doc=translate_doc,
-            editable=True,  # Will active inherit_branding
+            editable=True,
             user=user,
             res_company=user.company_id,
             website=website,
@@ -226,23 +227,20 @@ class Report(osv.Model):
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
                 # attribute with the value of the current report model and read its oe-id attribute
-                oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
-                if oemodelnode is not None:
-                    reportid = oemodelnode.get('data-oe-id')
-                    if reportid:
-                        reportid = int(reportid)
-                else:
-                    reportid = False
-
-                body = lxml.html.tostring(node)
-                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
-
-                # FIXME: imo the best way to extract record id from html reports is by using the
-                # qweb branding. As website editor is not yet splitted in a module independant from
-                # website, when we print a unique report we can use the id passed in argument to
-                # identify it.
                 if ids and len(ids) == 1:
                     reportid = ids[0]
+                else:
+                    oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
+                    if oemodelnode is not None:
+                        reportid = oemodelnode.get('data-oe-id')
+                        if reportid:
+                            reportid = int(reportid)
+                    else:
+                        reportid = False
+
+                # Extract the body
+                body = lxml.html.tostring(node)
+                reportcontent = render_minimal(dict(css=css, subst=False, body=body, base_url=base_url))
 
                 contenthtml.append(tuple([reportid, reportcontent]))
 
@@ -315,31 +313,37 @@ class Report(osv.Model):
         this one now. Else, mark save it.
         """
         save_in_attachment = {}
-        if report.attachment_use is True:
-            save_in_attachment['model'] = report.model
-            save_in_attachment['loaded_documents'] = {}
+        save_in_attachment['model'] = report.model
+        save_in_attachment['loaded_documents'] = {}
 
-            for record_id in ids:
-                obj = self.pool[report.model].browse(cr, uid, record_id)
-                filename = eval(report.attachment, {'object': obj, 'time': time})
+        for record_id in ids:
+            obj = self.pool[report.model].browse(cr, uid, record_id)
+            filename = eval(report.attachment, {'object': obj, 'time': time})
 
-                if filename is False:  # May be false if, for instance, the record is in draft state
+            # If the user has checked 'Reload from Attachment'
+            if report.attachment_use:
+                alreadyindb = [('datas_fname', '=', filename),
+                               ('res_model', '=', report.model),
+                               ('res_id', '=', record_id)]
+                attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
+                if attach_ids:
+                    # Add the loaded pdf in the loaded_documents list
+                    pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
+                    pdf = base64.decodestring(pdf)
+                    save_in_attachment['loaded_documents'][record_id] = pdf
+                    _logger.info('The PDF document %s was loaded from the database' % filename)
+
+                    continue  # Do not save this document as we already ignore it
+
+            # If the user has checked 'Save as Attachment Prefix'
+            if report.attachment:
+                if filename is False:
+                    # May be false if, for instance, the 'attachment' field contains a condition
+                    # preventing to save the file.
                     continue
                 else:
-                    alreadyindb = [('datas_fname', '=', filename),
-                                   ('res_model', '=', report.model),
-                                   ('res_id', '=', record_id)]
+                    save_in_attachment[record_id] = filename  # Mark current document to be saved
 
-                    attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
-                    if attach_ids:
-                        # Add the loaded pdf in the loaded_documents list
-                        pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
-                        pdf = base64.decodestring(pdf)
-                        save_in_attachment['loaded_documents'][record_id] = pdf
-                        _logger.info('The PDF document %s was loaded from the database' % filename)
-                    else:
-                        # Mark current document to be saved
-                        save_in_attachment[record_id] = filename
         return save_in_attachment
 
     @api.v8
