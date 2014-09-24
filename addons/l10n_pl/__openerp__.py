@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009 Grzegorz Grzelak grzegorz.grzelak@cirrus.pl
+#    Copyright (C) 2009 - now Grzegorz Grzelak grzegorz.grzelak@openglobe.pl
 #    All Rights Reserved
 #    $Id$
 #
@@ -22,7 +22,7 @@
 ##############################################################################
 {
     'name' : 'Poland - Accounting',
-    'version' : '1.0',
+    'version' : '1.02',
     'author' : 'Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
     'category' : 'Localization/Account Charts',
@@ -35,7 +35,7 @@ rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów
 zakładając, że wszystkie towary są w obrocie hurtowym.
 
 Niniejszy moduł jest przeznaczony dla odoo 8.0.
-Wewnętrzny numer wersji OpenGLOBE 1.01
+Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends' : ['account', 'base_iban', 'base_vat', 'account_chart'],
     'demo' : [],
