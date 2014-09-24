@@ -869,6 +869,7 @@ class survey_user_input(osv.Model):
         # Displaying data
         'last_displayed_page_id': fields.many2one('survey.page',
                                               'Last displayed page'),
+        'reverse': fields.boolean('Last Direction'),
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
                                                'user_input_id', 'Answers'),
@@ -887,6 +888,7 @@ class survey_user_input(osv.Model):
         'state': 'new',
         'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
         'quizz_score': 0.0,
+        'reverse': False
     }
 
     _sql_constraints = [
