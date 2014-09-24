@@ -38,10 +38,12 @@
                 </div>
             </div>
             <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
-                <a class="mt16 btn btn-primary pull-right" 
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Save and Continue
-                </a>
+                <div class="css_editable_mode_hidden">
+                    <a class="mt16 btn btn-primary pull-right" 
+                      t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
+                        Save and Continue
+                    </a>
+                </div>
                 <h1 class="page-header mt16">
                     Design Your Email
                 </h1>
