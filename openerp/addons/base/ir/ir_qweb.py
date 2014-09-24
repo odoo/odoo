@@ -969,6 +969,10 @@ class QwebWidgetNum2Words(osv.AbstractModel):
         if options.has_key('case'):
             if options['case'] == 'upper':
                 res = res.upper()
+            if options['case'] == 'capital':
+                res = res.title()
+            if options['case'] == 'lower':
+                res = res.lower()
         return res
 
 class HTMLSafe(object):
