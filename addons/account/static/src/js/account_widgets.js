@@ -1912,10 +1912,11 @@ openerp.account = function (instance) {
             this.model_partner = new instance.web.Model("res.partner");
             this.model_account = new instance.web.Model("account.account");
             this.title = "Journal Items to Reconcile";
-            this.max_reconciliations_displayed = 2;
+            this.max_reconciliations_displayed = 10;
             this.partner_id = context.context.partner_id;
             this.account_id = context.context.account_id;
-            this.max_move_lines_displayed = 30;
+            this.reconciling_specified_item = this.partner_id || this.account_id; // TODO : better semantic
+            this.max_move_lines_displayed = 20;
             this.show_partner_accounts = true;
             this.show_other_accounts = true;
             this.items_partner_accounts = [];
@@ -1946,9 +1947,17 @@ openerp.account = function (instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
-                // If partner_id or account_id is undefined, the server will send data for all reconciliable partners or accounts
-                var deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation", [self.partner_id]);
-                var deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation", [self.account_id]);
+                // Get data for a partner, an account or all partners/accounts that can be reconciled
+                var deferred_partner, deferred_account;
+                if (self.partner_id !== undefined)
+                    deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation", [self.partner_id]);
+                if (self.account_id !== undefined)
+                    deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation", [self.account_id]);
+                if (self.partner_id === undefined && self.account_id === undefined) {
+                    deferred_partner = self.model_aml.call("get_partner_data_for_manual_reconciliation");
+                    deferred_account = self.model_aml.call("get_account_data_for_manual_reconciliation");
+                }
+
                 return $.when(deferred_partner, deferred_account).then(function(data_partner, data_account){
                     var data_partner_len = data_partner ? data_partner.length : 0;
                     var data_account_len = data_account ? data_account.length : 0;
@@ -1959,6 +1968,12 @@ openerp.account = function (instance) {
                         return;
                     }
 
+                    // If reconciling a specified account/partner, adapt title to the use case
+                    if (self.partner_id !== undefined)
+                        self.title = "Reconciling "+data_partner[0].partner_name;
+                    if (self.account_id !== undefined)
+                        self.title = "Reconciling "+data_account[0].account_code;
+
                     // Display interface
                     self.$el.prepend(QWeb.render("manual_reconciliation", {
                         title: self.title,
@@ -1967,6 +1982,10 @@ openerp.account = function (instance) {
                         show_other_accounts: self.show_other_accounts,
                         show_accounts_type_controller: data_partner_len !== 0 && data_account_len !== 0
                     }));
+
+                    // TODO : not very MVC
+                    if (self.reconciling_specified_item)
+                        self.$(".progress").hide();
                     
                     // Process data
                     self.num_total_items_partner_accounts = data_partner_len;
@@ -2136,6 +2155,7 @@ openerp.account = function (instance) {
     
         init: function(parent, context) {
             this._super(parent, context);
+            this.reconciling_specified_item = this.getParent().reconciling_specified_item;
             this.template_prefix = this.getParent().template_prefix;
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
@@ -2197,7 +2217,8 @@ openerp.account = function (instance) {
                     if (lines[i].debit !== 0) mmkay = true;
                     if (mkay && mmkay) break;
                 }
-                if (!(mkay && mmkay)) {
+                // Only make the reconciliation disappear if we're not reconciling a given partner/account
+                if (!self.reconciling_specified_item && !(mkay && mmkay)) {
                     self.persist_action = "leave_open";
                     self.persistAndBowOut();
                 }
