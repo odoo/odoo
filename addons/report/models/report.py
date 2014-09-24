@@ -21,7 +21,7 @@
 
 from openerp import api
 from openerp.osv import osv
-from openerp.tools import config
+from openerp.tools import config, which
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -32,8 +32,9 @@ import base64
 import logging
 import tempfile
 import lxml.html
-import cStringIO
+import os
 import subprocess
+from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
@@ -42,19 +43,30 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 
-"""Check the presence of wkhtmltopdf and return its version at OpnerERP start-up."""
+#--------------------------------------------------------------------------
+# Helpers
+#--------------------------------------------------------------------------
+def _get_wkhtmltopdf_bin():
+    defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
+    return which('wkhtmltopdf', path=os.pathsep.join(defpath))
+
+
+#--------------------------------------------------------------------------
+# Check the presence of Wkhtmltopdf and return its version at Odoo start-up
+#--------------------------------------------------------------------------
 wkhtmltopdf_state = 'install'
 try:
     process = subprocess.Popen(
-        ['wkhtmltopdf', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-except OSError:
-    _logger.info('You need wkhtmltopdf to print a pdf version of the reports.')
+except (OSError, IOError):
+    _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
 else:
+    _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
     version = re.search('([0-9.]+)', out).group(0)
     if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.info('Upgrade wkhtmltopdf to (at least) 0.12.0')
+        _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
         wkhtmltopdf_state = 'upgrade'
     else:
         wkhtmltopdf_state = 'ok'
@@ -351,9 +363,7 @@ class Report(osv.Model):
         :param save_in_attachment: dict of reports to save/load in/from the db
         :returns: Content of the pdf as a string
         """
-        command = ['wkhtmltopdf']
         command_args = []
-        tmp_dir = tempfile.gettempdir()
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         try:
@@ -381,37 +391,45 @@ class Report(osv.Model):
 
         # Execute WKhtmltopdf
         pdfdocuments = []
+        temporary_files = []
+
         for index, reporthtml in enumerate(bodies):
             local_command_args = []
-            pdfreport = tempfile.NamedTemporaryFile(suffix='.pdf', prefix='report.tmp.', mode='w+b')
+            pdfreport_fd, pdfreport_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
+            temporary_files.append(pdfreport_path)
 
             # Directly load the document if we already have it
             if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
-                pdfreport.write(save_in_attachment['loaded_documents'].get(reporthtml[0]))
-                pdfreport.seek(0)
-                pdfdocuments.append(pdfreport)
+                with closing(os.fdopen(pdfreport_fd, 'w')) as pdfreport:
+                    pdfreport.write(save_in_attachment['loaded_documents'][reporthtml[0]])
+                pdfdocuments.append(pdfreport_path)
                 continue
+            else:
+                os.close(pdfreport_fd)
 
             # Wkhtmltopdf handles header/footer as separate pages. Create them if necessary.
             if headers:
-                head_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.', dir=tmp_dir, mode='w+')
-                head_file.write(headers[index])
-                head_file.seek(0)
-                local_command_args.extend(['--header-html', head_file.name])
+                head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
+                temporary_files.append(head_file_path)
+                with closing(os.fdopen(head_file_fd, 'w')) as head_file:
+                    head_file.write(headers[index])
+                local_command_args.extend(['--header-html', head_file_path])
             if footers:
-                foot_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.', dir=tmp_dir, mode='w+')
-                foot_file.write(footers[index])
-                foot_file.seek(0)
-                local_command_args.extend(['--footer-html', foot_file.name])
+                foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+                temporary_files.append(foot_file_path)
+                with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
+                    foot_file.write(footers[index])
+                local_command_args.extend(['--footer-html', foot_file_path])
 
             # Body stuff
-            content_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.', dir=tmp_dir, mode='w+')
-            content_file.write(reporthtml[1])
-            content_file.seek(0)
+            content_file_fd, content_file_path = tempfile.mkstemp(suffix='.html', prefix='report.body.tmp.')
+            temporary_files.append(content_file_path)
+            with closing(os.fdopen(content_file_fd, 'w')) as content_file:
+                content_file.write(reporthtml[1])
 
             try:
-                wkhtmltopdf = command + command_args + local_command_args
-                wkhtmltopdf += [content_file.name] + [pdfreport.name]
+                wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + local_command_args
+                wkhtmltopdf += [content_file_path] + [pdfreport_path]
 
                 process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
@@ -423,33 +441,38 @@ class Report(osv.Model):
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
-                    attachment = {
-                        'name': save_in_attachment.get(reporthtml[0]),
-                        'datas': base64.encodestring(pdfreport.read()),
-                        'datas_fname': save_in_attachment.get(reporthtml[0]),
-                        'res_model': save_in_attachment.get('model'),
-                        'res_id': reporthtml[0],
-                    }
-                    self.pool['ir.attachment'].create(cr, uid, attachment)
+                    with open(pdfreport_path, 'rb') as pdfreport:
+                        attachment = {
+                            'name': save_in_attachment.get(reporthtml[0]),
+                            'datas': base64.encodestring(pdfreport.read()),
+                            'datas_fname': save_in_attachment.get(reporthtml[0]),
+                            'res_model': save_in_attachment.get('model'),
+                            'res_id': reporthtml[0],
+                        }
+                        self.pool['ir.attachment'].create(cr, uid, attachment)
                     _logger.info('The PDF document %s is now saved in the '
                                  'database' % attachment['name'])
 
-                pdfreport.seek(0)
-                pdfdocuments.append(pdfreport)
-
-                if headers:
-                    head_file.close()
-                if footers:
-                    foot_file.close()
+                pdfdocuments.append(pdfreport_path)
             except:
                 raise
 
         # Return the entire document
         if len(pdfdocuments) == 1:
-            content = pdfdocuments[0].read()
-            pdfdocuments[0].close()
+            entire_report_path = pdfdocuments[0]
         else:
-            content = self._merge_pdf(pdfdocuments)
+            entire_report_path = self._merge_pdf(pdfdocuments)
+            temporary_files.append(entire_report_path)
+
+        with open(entire_report_path, 'rb') as pdfdocument:
+            content = pdfdocument.read()
+
+        # Manual cleanup of the temporary files
+        for temporary_file in temporary_files:
+            try:
+                os.unlink(temporary_file)
+            except (OSError, IOError):
+                _logger.error('Error when trying to remove file %s' % temporary_file)
 
         return content
 
@@ -486,7 +509,11 @@ class Report(osv.Model):
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
             command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
         elif paperformat.dpi:
-            command_args.extend(['--dpi', str(paperformat.dpi)])
+            if os.name == 'nt' and int(paperformat.dpi) <= 95:
+                _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
+                command_args.extend(['--dpi', '96'])
+            else:
+                command_args.extend(['--dpi', str(paperformat.dpi)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
             command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
@@ -509,18 +536,23 @@ class Report(osv.Model):
     def _merge_pdf(self, documents):
         """Merge PDF files into one.
 
-        :param documents: list of pdf files
-        :returns: string containing the merged pdf
+        :param documents: list of path of pdf files
+        :returns: path of the merged pdf
         """
         writer = PdfFileWriter()
+        streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
         for document in documents:
-            reader = PdfFileReader(file(document.name, "rb"))
+            pdfreport = file(document, 'rb')
+            streams.append(pdfreport)
+            reader = PdfFileReader(pdfreport)
             for page in range(0, reader.getNumPages()):
                 writer.addPage(reader.getPage(page))
-            document.close()
-        merged = cStringIO.StringIO()
-        writer.write(merged)
-        merged.seek(0)
-        content = merged.read()
-        merged.close()
-        return content
+
+        merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
+        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
+            writer.write(merged_file)
+
+        for stream in streams:
+            stream.close()
+
+        return merged_file_path
