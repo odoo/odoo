@@ -255,7 +255,7 @@ class survey_survey(osv.Model):
         If page_id == 0, it will always return the first page of the survey.
 
         If all the pages have been displayed and go_back == False, it will
-        return None
+        return the last page
 
         If go_back == True, it will return the *previous* page instead of the
         next page.
@@ -275,7 +275,7 @@ class survey_survey(osv.Model):
 
         # All the pages have been displayed
         if current_page_index == len(pages) - 1 and not go_back:
-            return (None, -1, False)
+            return (pages[current_page_index][1], current_page_index, True)
         # Let's get back, baby!
         elif go_back and survey.users_can_go_back:
             return (pages[current_page_index - 1][1], current_page_index - 1, False)
