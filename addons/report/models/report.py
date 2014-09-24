@@ -316,27 +316,27 @@ class Report(osv.Model):
         save_in_attachment['model'] = report.model
         save_in_attachment['loaded_documents'] = {}
 
-        for record_id in ids:
-            obj = self.pool[report.model].browse(cr, uid, record_id)
-            filename = eval(report.attachment, {'object': obj, 'time': time})
+        if report.attachment:
+            for record_id in ids:
+                obj = self.pool[report.model].browse(cr, uid, record_id)
+                filename = eval(report.attachment, {'object': obj, 'time': time})
 
-            # If the user has checked 'Reload from Attachment'
-            if report.attachment_use:
-                alreadyindb = [('datas_fname', '=', filename),
-                               ('res_model', '=', report.model),
-                               ('res_id', '=', record_id)]
-                attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
-                if attach_ids:
-                    # Add the loaded pdf in the loaded_documents list
-                    pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
-                    pdf = base64.decodestring(pdf)
-                    save_in_attachment['loaded_documents'][record_id] = pdf
-                    _logger.info('The PDF document %s was loaded from the database' % filename)
+                # If the user has checked 'Reload from Attachment'
+                if report.attachment_use:
+                    alreadyindb = [('datas_fname', '=', filename),
+                                   ('res_model', '=', report.model),
+                                   ('res_id', '=', record_id)]
+                    attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
+                    if attach_ids:
+                        # Add the loaded pdf in the loaded_documents list
+                        pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
+                        pdf = base64.decodestring(pdf)
+                        save_in_attachment['loaded_documents'][record_id] = pdf
+                        _logger.info('The PDF document %s was loaded from the database' % filename)
 
-                    continue  # Do not save this document as we already ignore it
+                        continue  # Do not save this document as we already ignore it
 
-            # If the user has checked 'Save as Attachment Prefix'
-            if report.attachment:
+                # If the user has checked 'Save as Attachment Prefix'
                 if filename is False:
                     # May be false if, for instance, the 'attachment' field contains a condition
                     # preventing to save the file.
