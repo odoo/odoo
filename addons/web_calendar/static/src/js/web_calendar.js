@@ -700,6 +700,13 @@ openerp.web_calendar = function(instance) {
                         domain: self.get_range_domain(domain, start, end),
                         context: context,
                     }).done(function(events) {
+                        if (self.dataset.index === null) {
+                            if (events.length) {
+                                self.dataset.index = 0;
+                            }
+                        } else if (self.dataset.index >= events.length) {
+                            self.dataset.index = events.length ? 0 : null;
+                        }
 
                         if (self.event_source !== current_event_source) {
                             console.log("Consecutive ``do_search`` called. Cancelling.");
