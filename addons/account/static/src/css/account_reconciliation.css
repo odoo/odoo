@@ -330,8 +330,14 @@
     vertical-align: bottom !important; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead td:nth-child(2) {
     padding-left: 0; }
+  .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead .cell_partner_name {
+    display: inline-block;
+    min-width: 135px; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead .cell_last_reconciliation_date {
-    font-weight: normal; }
+    font-weight: normal;
+    display: inline-block; }
+  .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead .cell_partner_name + .cell_last_reconciliation_date {
+    padding-left: 20px; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead .cell_title_account_code {
     text-align: center; }
   .openerp .oe_manual_reconciliation .oe_manual_reconciliation_line .accounting_view thead tr:first-child td {

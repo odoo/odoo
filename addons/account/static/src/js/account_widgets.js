@@ -272,6 +272,11 @@ openerp.account = function (instance) {
             this.is_consistent = true; // Used to prevent bad server requests
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
             this.filter = "";
+
+            // Kind of a hack. Let's say : set("prop"), on("change:prop", dostuff), dostuff(){ return $.Deferred() }
+            // If you set("prop", value), you don't get the deferred back. So this is for the cases where you want
+            // to wait until move lines (in the "match" pannel) are loaded after you set("mode", "match") for instance.
+            this.finishedLoadingMoveLines;
         
             this.set("mode", undefined);
             this.on("change:mode", this, this.modeChanged);
@@ -681,6 +686,18 @@ openerp.account = function (instance) {
             else
                 self.$(".pager_control_right").removeClass("disabled");
         },
+
+
+        /** Display */
+
+        lineOpenBalanceClickHandler: function() {
+            var self = this;
+            if (self.get("mode") === "create") {
+                self.set("mode", "match");
+            } else {
+                self.set("mode", "create");
+            }
+        },
     
     
         /** Properties changed */
@@ -691,6 +708,9 @@ openerp.account = function (instance) {
         modeChanged: function(o, val) {
             var self = this;
 
+            console.log(self.finishedLoadingMoveLines);
+            console.log(self.get("mode"));
+
             self.$(".action_pane.active").removeClass("active");
 
             if (val.oldValue === "create")
@@ -700,23 +720,19 @@ openerp.account = function (instance) {
                 self.$(".match").slideUp(self.animation_speed);
                 self.$(".create").slideUp(self.animation_speed);
                 self.el.dataset.mode = "inactive";
+                if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
             
             } else if (self.get("mode") === "match") {
-                // TODO : remove this old_animation_speed / new_animation_speed hack
-                // when .on handler's returned deferred's no longer lost
-                var old_animation_speed = self.animation_speed;
-                return $.when(self.updateMatches()).then(function() {
-                    var new_animation_speed = self.animation_speed;
-                    self.animation_speed = old_animation_speed;
+                self.updateMatches().then(function() {
                     if (self.$el.hasClass("no_match")) {
-                        self.animation_speed = 0;
+                        self.$(".create").stop(true, false); // Visual hack
                         self.set("mode", "create");
                         return;
                     }
                     self.$(".match").slideDown(self.animation_speed);
                     self.$(".create").slideUp(self.animation_speed);
                     self.el.dataset.mode = "match";
-                    self.animation_speed = new_animation_speed;
+                    if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
                 });
             
             } else if (self.get("mode") === "create") {
@@ -724,8 +740,8 @@ openerp.account = function (instance) {
                 self.$(".match").slideUp(self.animation_speed);
                 self.$(".create").slideDown(self.animation_speed);
                 self.el.dataset.mode = "create";
+                if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
             }
-
         },
     
         pagerChanged: function() {
@@ -883,22 +899,10 @@ openerp.account = function (instance) {
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
             return dict;
         },
-    
-        // Persist data, notify parent view and terminate widget
-        persistAndBowOut: function() {
-            var self = this;
-            var postMortemProcess = self.getPostMortemProcess();
-            self.persist().then(function() {
-                self.bowOut().then(function() {
-                    postMortemProcess.call(self);
-                });
-            });
-        },
-
-        persist: function() {},
 
         bowOut: function(speed) {
             speed = speed === undefined ? this.animation_speed : speed;
+            var postMortemProcess = this.getPostMortemProcess();
             var self = this;
             var height = self.$el.outerHeight();
             var container = $("<div />");
@@ -910,7 +914,9 @@ openerp.account = function (instance) {
                 $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                 _.each(self.getChildren(), function(o){ o.destroy() });
                 self.$el.parent().remove();
-                return self.destroy();
+                return $.when(self.destroy()).then(function(){
+                    postMortemProcess.call(self);
+                });
             });
         },
 
@@ -1029,11 +1035,12 @@ openerp.account = function (instance) {
                         .call("get_data_for_reconciliations", [reconciliations_to_show])
                         .then(function (data) {
                             var child_promises = [];
-                            var datum;
+                            var datum = data.shift();
+                            if (datum !== undefined)
+                                child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
                             while ((datum = data.shift()) !== undefined)
                                 child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
                             $.when.apply($, child_promises).then(function(){
-                                self.getChildren()[0].set("mode", "match");
                                 self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                             });
                         });
@@ -1468,10 +1475,9 @@ openerp.account = function (instance) {
                 self.$el.addClass("no_partner");
             }
             
-            // TODO : the .on handler's returned deferred is lost
-            // This is visually unpleasant since set("mode", "match") calls self.updateMatches
-            // and we'd like to wait since it's done before to show the widget (and set animation_speed back to normal)
-            return $.when(self.set("mode", self.context.mode)).then(function(){
+            self.finishedLoadingMoveLines = $.Deferred();
+            self.set("mode", self.context.mode);
+            return $.when(self.finishedLoadingMoveLines).then(function(){
                 // Make sure the display is OK
                 self.balanceChanged();
                 self.createdLinesChanged();
@@ -1623,15 +1629,6 @@ openerp.account = function (instance) {
                 self.set("mode", "inactive");
             } else {
                 self.set("mode", "match");
-            }
-        },
-    
-        lineOpenBalanceClickHandler: function() {
-            var self = this;
-            if (self.get("mode") === "create") {
-                self.set("mode", "match");
-            } else {
-                self.set("mode", "create");
             }
         },
     
@@ -1880,9 +1877,13 @@ openerp.account = function (instance) {
             return mv_line_dicts;
         },
     
-        persist: function() {
+        // Persist data, notify parent view and terminate widget
+        persistAndBowOut: function() {
+            var self = this;
             if (! this.is_consistent) return;
-            return this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]);
+            this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]).then(function() {
+                self.bowOut();
+            });
         },
 
         getPostMortemProcess: function() {
@@ -2131,7 +2132,6 @@ openerp.account = function (instance) {
         },
 
         prepareReconciliationData: function(data) {
-            var self = this;
             data.displayed = false;
         },
 
@@ -2179,7 +2179,9 @@ openerp.account = function (instance) {
             self.createFormWidgets();
             self.updateBalance();
             self.updateAccountingViewMatchedLines();
+            self.finishedLoadingMoveLines = $.Deferred();
             self.set("mode", "match");
+            return self.finishedLoadingMoveLines;
         },
 
 
@@ -2207,9 +2209,9 @@ openerp.account = function (instance) {
             var self = this;
             self._super();
 
-            // If we're displaying all remaining move lines and there's not at least a debit and a credit,
-            // consider that the reconciliation is done
-            if (!self.can_fetch_more_move_lines && self.get("mv_lines_selected").length === 0 && self.filter === '') {
+            // If we're not reconciling a specific account/partner, we're displaying all remaining
+            // move lines and there's not at least a debit and a credit, consider that the reconciliation is done
+            if (!self.reconciling_specified_item && self.get("pager_index") === 0 && !self.can_fetch_more_move_lines && self.get("mv_lines_selected").length === 0 && self.filter === '') {
                 var mkay, mmkay = false;
                 var lines = self.get("mv_lines").concat(self.mv_lines_deselected);
                 for (var i=0; i<lines.length; i++) {
@@ -2217,13 +2219,12 @@ openerp.account = function (instance) {
                     if (lines[i].debit !== 0) mmkay = true;
                     if (mkay && mmkay) break;
                 }
-                // Only make the reconciliation disappear if we're not reconciling a given partner/account
-                if (!self.reconciling_specified_item && !(mkay && mmkay)) {
-                    self.persist_action = "leave_open";
-                    self.persistAndBowOut();
+                if (!(mkay && mmkay)) {
+                    self.markAsReconciled();
                 }
             }
 
+            // TODO y u do dat ?
             _.each(self.get("mv_lines"), function(line) {
                 for (var i=0; i<line.partial_reconciliation_siblings.length; i++)
                     if (self.excluded_move_lines_ids.indexOf(line.partial_reconciliation_siblings[i].id) === -1)
@@ -2236,15 +2237,6 @@ openerp.account = function (instance) {
         headerClickHandler: function() {
             if (this.get("mode") !== "match")
                 this.set("mode", "match");
-        },
-
-        lineOpenBalanceClickHandler: function() {
-            if (this.get("mode") === "create") {
-                this.addLineBeingEdited();
-                this.set("mode", "match");
-            } else {
-                this.set("mode", "create");
-            }
         },
 
         buttonReconcileClickHandler: function() {
@@ -2300,7 +2292,6 @@ openerp.account = function (instance) {
                 }));
                 self.$(".tbody_open_balance").append($line);
             }
-
         },
 
 
@@ -2325,6 +2316,7 @@ openerp.account = function (instance) {
 
         processReconciliation: function() {
             var self = this;
+            if (! self.is_consistent) return $.Deferred().rejectWith({reason: "Reconciliation widget is not in a consistent state."});
             var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
             var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
             // TODO : animation
@@ -2337,6 +2329,7 @@ openerp.account = function (instance) {
 
         markAsReconciled: function() {
             var self = this;
+            if (! self.is_consistent) return $.Deferred().rejectWith({reason: "Reconciliation widget is not in a consistent state."});
             var id, model;
             if (this.data.account_type === "partner") {
                 id = this.data.partner_id;
@@ -2346,17 +2339,13 @@ openerp.account = function (instance) {
                 model = this.getParent().model_account;
             }
             model.call("mark_as_reconciled", [[id]]).then(function() {
-                self.persistAndBowOut();
+                self.bowOut();
             });
-        },
-
-        persist: function() {
-            var self = this;
-            if (! self.is_consistent) return;
         },
 
         getPostMortemProcess: function() {
             var account_type = this.data.account_type;
+            var parent = this.getParent();
             return function() {
                 parent.childValidated(account_type);
             };

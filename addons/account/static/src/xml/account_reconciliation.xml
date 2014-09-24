@@ -219,7 +219,7 @@
 
     <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
 
-    <!-- accounts reconciliation -->
+    <!-- manual reconciliation -->
     
     <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
         <t t-jquery=".oe_view_nocontent" t-operation="inner">
@@ -262,8 +262,10 @@
         <t t-jquery=".accounting_view caption" t-operation="replace">
             <thead><tr>
                 <td class="cell_action"></td>
-                <td t-if="data.partner_name" class="cell_partner_name"><t t-esc="data.partner_name" /></td>
-                <td t-att-colspan="(data.partner_name ? undefined : '2')" class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></td>
+                <td class="cell-title" colspan="2">
+                    <span class="cell_partner_name" t-if="data.partner_name"><t t-esc="data.partner_name" /></span>
+                    <span class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></span>
+                </td>
                 <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
                 <td class="cell_info_popover"></td>
             </tr></thead>

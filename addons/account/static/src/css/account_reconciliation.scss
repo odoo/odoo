@@ -553,9 +553,18 @@ $aestetic_animation_speed: 300ms;
                 td:nth-child(2) {
                     padding-left: 0;
                 }
+                
+                .cell_partner_name {
+                    display: inline-block;
+                    min-width: 135px;
+                }
 
                 .cell_last_reconciliation_date {
                     font-weight: normal;
+                    display: inline-block;
+                }
+                .cell_partner_name + .cell_last_reconciliation_date {
+                    padding-left: 20px;
                 }
 
                 .cell_title_account_code {
