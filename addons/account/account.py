@@ -3585,15 +3585,25 @@ class account_operation_template(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
         'journal_id': fields.many2one('account.journal', 'Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation."),
         'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
+        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')], 'Amount type', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
         'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
+        'has_second_line': fields.boolean('Second line'),
+        'second_account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
+        'second_journal_id': fields.many2one('account.journal', 'Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation."),
+        'second_label': fields.char('Label'),
+        'second_amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')], 'Amount type', required=True),
+        'second_amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
+        'second_tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
+        'second_analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
     }
     _defaults = {
         'amount_type': 'percentage_of_balance',
-        'amount': 100.0
+        'amount': 100.0,
+        'second_account_id': False,
+        'second_amount_type': 'percentage_of_balance',
+        'second_amount': 100.0,
     }
 
 

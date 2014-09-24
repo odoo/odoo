@@ -143,10 +143,37 @@ openerp.account = function (instance) {
 
                 // Get operation templates
                 deferred_promises.push(new instance.web.Model("account.operation.template")
-                    .query(['id','name','account_id','journal_id','label','amount_type','amount','tax_id','analytic_account_id'])
+                    .query(['id','name',
+                        'account_id','journal_id','label','amount_type','amount','tax_id','analytic_account_id',
+                        'has_second_line',
+                        'second_account_id','second_journal_id','second_label','second_amount_type','second_amount','second_tax_id','second_analytic_account_id'])
                     .all().then(function (data) {
-                        _(data).each(function(preset){
-                            self.presets[preset.id] = preset;
+                        _(data).each(function(datum){
+                            var preset = {
+                                id: datum.id,
+                                name: datum.name,
+                                lines: [{
+                                    account_id: datum.account_id,
+                                    journal_id: datum.journal_id,
+                                    label: datum.label,
+                                    amount_type: datum.amount_type,
+                                    amount: datum.amount,
+                                    tax_id: datum.tax_id,
+                                    analytic_account_id: datum.analytic_account_id
+                                }]
+                            };
+                            if (datum.has_second_line) {
+                                preset.lines.push({
+                                    account_id: datum.second_account_id,
+                                    journal_id: datum.second_journal_id,
+                                    label: datum.second_label,
+                                    amount_type: datum.second_amount_type,
+                                    amount: datum.second_amount,
+                                    tax_id: datum.second_tax_id,
+                                    analytic_account_id: datum.second_analytic_account_id
+                                });
+                            }
+                            self.presets[datum.id] = preset;
                         });
                     })
                 );
@@ -543,26 +570,34 @@ openerp.account = function (instance) {
 
         presetClickHandler: function(e) {
             var self = this;
+            var preset = this.presets[e.currentTarget.dataset.presetid];
+            _.each(preset.lines, function(line) {
+                self.addLineBeingEdited();
+                self.applyPresetLine(line);
+            });
+        },
+
+        applyPresetLine: function(preset_line) {
+            var self = this;
             self.initializeCreateForm();
-            var preset = self.presets[e.currentTarget.dataset.presetid];
             // Hack : set_value of a field calls a handler that returns a deferred because it could make a RPC call
             // to compute the tax before it updates the line being edited. Unfortunately this deferred is lost.
             // Hence this ugly hack to avoid concurrency problem that arose when setting amount (in initializeCreateForm), then tax, then another amount
-            if (preset.tax && self.tax_field) self.tax_field.set_value(false);
-            if (preset.amount && self.amount_field) self.amount_field.set_value(false);
+            if (preset_line.tax && self.tax_field) self.tax_field.set_value(false);
+            if (preset_line.amount && self.amount_field) self.amount_field.set_value(false);
 
-            for (var key in preset) {
-                if (! preset.hasOwnProperty(key) || key === "amount") continue;
-                if (preset[key] && self.hasOwnProperty(key+"_field"))
-                    self[key+"_field"].set_value(preset[key]);
+            for (var key in preset_line) {
+                if (! preset_line.hasOwnProperty(key) || key === "amount") continue;
+                if (preset_line[key] && self.hasOwnProperty(key+"_field"))
+                    self[key+"_field"].set_value(preset_line[key]);
             }
-            if (preset.amount && self.amount_field) {
-                if (preset.amount_type === "fixed")
-                    self.amount_field.set_value(preset.amount);
-                else if (preset.amount_type === "percentage_of_balance") {
+            if (preset_line.amount && self.amount_field) {
+                if (preset_line.amount_type === "fixed")
+                    self.amount_field.set_value(preset_line.amount);
+                else if (preset_line.amount_type === "percentage_of_balance") {
                     self.amount_field.set_value(0);
                     self.updateBalance();
-                    self.amount_field.set_value(-1 * self.get("balance") * preset.amount / 100);
+                    self.amount_field.set_value(-1 * self.get("balance") * preset_line.amount / 100);
                 }
             }
         },
@@ -1573,11 +1608,10 @@ openerp.account = function (instance) {
             if (need_redraw) self.deselectMoveLine(mv_line);
         },
 
-        presetClickHandler: function(e) {
-            this._super(e);
-            var preset = this.presets[e.currentTarget.dataset.presetid];
-            if (preset.amount && this.amount_field && preset.amount_type === "percentage_of_total")
-                    this.amount_field.set_value(this.st_line.amount * preset.amount / 100);
+        applyPresetLine: function(preset_line) {
+            this._super(preset_line);
+            if (preset_line.amount && this.amount_field && preset_line.amount_type === "percentage_of_total")
+                    this.amount_field.set_value(this.st_line.amount * preset_line.amount / 100);
         },
 
     
