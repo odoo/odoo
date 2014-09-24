@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_website_view" model="ir.actions.act_window">
-            <field name="name">AB testing</field>
+            <field name="name">Domains</field>
             <field name="res_model">website</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -30,7 +30,7 @@
 
         <menuitem name="website" id="website_menu" sequence="10"
             parent="base.marketing_menu" />
-        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
+        <menuitem action="action_website_view" id="menu_website_view" parent="website_version.website_menu"/>
 
         <record model="ir.ui.view" id="view_view_form_extend"> 
             <field name="model">ir.ui.view</field>

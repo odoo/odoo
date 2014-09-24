@@ -66,14 +66,14 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,done" clickable="True"/>
                     </header>
                     <sheet string="Exp">
-                        <button 
-                            type="action" 
-                            class="oe_inline oe_stat_button"
-                            id="my_button"
-                            icon="fa-book"
-                            name="Google statistics" 
-                            string="Statistics">
-                        </button>
+                        <div attrs="{'invisible' : [('experiment_snapshot_ids', '!=', False)]}" class="oe_view_nocontent">
+                            <p class="oe_view_nocontent_create">
+                              Click to start a session.
+                            </p><p>
+                              You may have to control your cash amount in your cash register, before
+                              being able to start selling through the touchscreen interface.
+                            </p>
+                        </div>
                         <h1><field name="name"/></h1>
                         <group col="4">
                             <field name="website_id"/>
@@ -86,17 +86,9 @@
                                         <field name="frequency" colspan="4"/>
                                     </tree>
                                 </field>
+                               
                             </page>
                         </notebook>
-
-                        <!-- <div attrs="{'invisible' : [('experiment_snapshot_ids', '!=', False)]}" class="oe_view_nocontent">
-                            <p class="oe_view_nocontent_create">
-                              Click to start a session.
-                            </p><p>
-                              You may have to control your cash amount in your cash register, before
-                              being able to start selling through the touchscreen interface.
-                            </p>
-                        </div>  -->
                     </sheet>
                 </form>
             </field>
