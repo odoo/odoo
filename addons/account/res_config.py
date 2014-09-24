@@ -221,7 +221,6 @@ class account_config_settings(osv.osv_memory):
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         # update related fields
         values = {}
-        values['currency_id'] = False
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
@@ -231,7 +230,6 @@ class account_config_settings(osv.osv_memory):
             date_start, date_stop, period = self._get_default_fiscalyear_data(cr, uid, company_id, context=context)
             values = {
                 'expects_chart_of_accounts': company.expects_chart_of_accounts,
-                'currency_id': company.currency_id.id,
                 'paypal_account': company.paypal_account,
                 'company_footer': company.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
@@ -273,7 +271,8 @@ class account_config_settings(osv.osv_memory):
         if chart_template_id:
             # update complete_tax_set, sale_tax and purchase_tax
             chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
+            currency_id = chart_template.currency_id or self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+            res['value'].update({'complete_tax_set': chart_template.complete_tax_set, 'currency_id': currency_id})
             if chart_template.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid,
