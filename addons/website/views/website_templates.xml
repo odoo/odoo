@@ -96,7 +96,7 @@
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     })(window,document,'script','//www.google-analytics.com/analytics.js','_gaw');
 
-                    _gaw('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
+                    _gaw('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'), {'cookieDomain': 'none'});
                     _gaw('send','pageview');
                 </script>
             </t>
