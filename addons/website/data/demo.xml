@@ -135,6 +135,7 @@ response = request.render("website.template_partner_comment", values)
 
         <record id="website2" model="website">
             <field name="name">0.0.0.0</field>
+            <field name="domain">0.0.0.0</field>
             <field name="social_twitter">https://twitter.com/odooapps</field>
             <field name="social_facebook">https://www.facebook.com/Odoo</field>
             <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
@@ -148,9 +149,7 @@ response = request.render("website.template_partner_comment", values)
             <field name="type">qweb</field>
             <field name="key">website.homepage</field>
             <field name="website_id" ref="website2"/>
-            <field name="priority">29</field>
-            <field name="arch">
-                <![CDATA[
+            <field name="arch" type="xml">
                 <t name="Homepage" priority="29" t-name="website.homepage">
                   <t t-call="website.layout">
                     <div id="wrap" class="oe_structure oe_empty">
@@ -184,7 +183,6 @@ response = request.render("website.template_partner_comment", values)
                     </div>
                   </t>
                 </t>
-                ]]>
             </field>
         </record>
 

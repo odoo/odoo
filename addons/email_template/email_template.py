@@ -34,8 +34,33 @@ from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
-
 _logger = logging.getLogger(__name__)
+
+
+def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
+    context = dict(context or {})
+    if tz:
+        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
+    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+    ts = fields.datetime.context_timestamp(cr, uid, timestamp, context)
+
+    if format:
+        return ts.strftime(format)
+    else:
+        lang = context.get("lang")
+        lang_params = {}
+        if lang:
+            res_lang = pool.get('res.lang')
+            ids = res_lang.search(cr, uid, [("code", "=", lang)])
+            if ids:
+                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
+        format_date = lang_params.get("date_format", '%B-%d-%Y')
+        format_time = lang_params.get("time_format", '%I-%M %p')
+
+        fdate = ts.strftime(format_date)
+        ftime = ts.strftime(format_time)
+        return "%s %s (%s)" % (fdate, ftime, tz)
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -120,7 +145,7 @@ class email_template(osv.osv):
         # - img src -> check URL
         # - a href -> check URL
         for node in root.iter():
-            if node.tag == 'a':
+            if node.tag == 'a' and node.get('href'):
                 node.set('href', _process_link(node.get('href')))
             elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
                 node.set('src', _process_link(node.get('src')))
@@ -165,6 +190,7 @@ class email_template(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
         variables = {
+            'format_tz': lambda dt, tz=False, format=False: format_tz(self.pool, cr, uid, dt, tz, format, context),
             'user': user,
             'ctx': context,  # context kw would clash with mako internals
         }
@@ -460,7 +486,7 @@ class email_template(osv.osv):
                 # body: add user signature, sanitize
                 if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # technical settings

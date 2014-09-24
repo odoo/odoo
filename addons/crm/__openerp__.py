@@ -47,7 +47,7 @@ Dashboard for CRM will include:
 * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
         'base_setup',
@@ -75,7 +75,7 @@ Dashboard for CRM will include:
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
-        
+
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
 
@@ -85,6 +85,7 @@ Dashboard for CRM will include:
         'calendar_event_menu.xml',
 
         'report/crm_lead_report_view.xml',
+        'report/crm_opportunity_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
         'res_partner_view.xml',

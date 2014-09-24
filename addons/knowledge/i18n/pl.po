@@ -1,45 +1,32 @@
 # Polish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-09-29 10:47+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-27 21:12+0000\n"
+"Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
+"<monika.grzelak@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-28 06:35+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Documents"
-msgstr "Dokumenty"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Apply"
+msgstr "Zastosuj"
 
 #. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_config_settings
-msgid "knowledge.config.settings"
-msgstr "knowledge.config.settings"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_webdav:0
-msgid ""
-"Access your documents in OpenERP through WebDAV.\n"
-"                This installs the module document_webdav."
-msgstr ""
-"Dostęp do twoich dokumentów OpenERP przez WebDAV.\n"
-"                To instaluje moduł document_webdav."
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_page:0
-msgid "This installs the module document_page."
-msgstr "To instaluje moduł document_page."
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Cancel"
+msgstr "Anuluj"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -47,78 +34,44 @@ msgid "Collaborative Content"
 msgstr "Wspólna zawartość"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
-#: view:knowledge.config.settings:0
-msgid "Configure Knowledge"
-msgstr "Skonfiguruj bibliotekę"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Knowledge and Documents Management"
-msgstr "Zarządzanie wiedzą i dokumentami"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document:0
-msgid ""
-"This is a complete document management system, with: user authentication,\n"
-"                full document search (but pptx and docx are not supported), "
-"and a document dashboard.\n"
-"                This installs the module document."
-msgstr ""
-"To jest kompletny system zarządzania dokumentami, zawiera: uwierzytelnienie "
-"użytkownika,\n"
-"                pełne przeszukiwanie dokumentów (pliki pptx i docx nie są "
-"obsługiwane) i panel zarządzania plikami.\n"
-"                To instaluje moduł document."
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_page:0
-msgid "Create static web pages"
-msgstr "Utwórz statyczną stronę internetową"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_ftp:0
-msgid "Share repositories (FTP)"
-msgstr "Podziel się ropozytoriami (FTP)"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document:0
-msgid "Manage documents"
-msgstr "Zarządzaj dokumentami"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Cancel"
-msgstr "Anuluj"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Apply"
-msgstr "Zastosuj"
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "Konfiguracja"
 
 #. module: knowledge
-#: help:knowledge.config.settings,module_document_ftp:0
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Configure Knowledge"
+msgstr "Skonfiguruj bibliotekę"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Utworzone przez"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_date:0
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document:0
 msgid ""
-"Access your documents in OpenERP through an FTP interface.\n"
-"                This installs the module document_ftp."
+"Document indexation, full text search of attachements.\n"
+"-This installs the module document."
 msgstr ""
-"Dostęp do twoich dokumentów w OpenERP przez interfejs FTP.\n"
-"                To instaluje moduł document_ftp."
+"Indeksowanie dokumentów, pełne przeszukiwanie tekstu załączników.\n"
+"-Instaluje moduł Dokument."
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "or"
-msgstr "lub"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Documents"
+msgstr "Dokumenty"
 
 #. module: knowledge
-#: field:knowledge.config.settings,module_document_webdav:0
-msgid "Share repositories (WebDAV)"
-msgstr "Udostępnij repozytorium (WebDAV)"
+#: field:knowledge.config.settings,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document
@@ -126,20 +79,22 @@ msgstr "Udostępnij repozytorium (WebDAV)"
 msgid "Knowledge"
 msgstr "Wiedza"
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Postęp konfiguracji"
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Knowledge and Documents Management"
+msgstr "Zarządzanie wiedzą i dokumentami"
 
-#~ msgid "Shared Repositories (FTP)"
-#~ msgstr "Współdzielone repozytoria (FTP)"
+#. module: knowledge
+#: field:knowledge.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Ostatnio modyfikowane przez"
 
-#~ msgid "Knowledge Management System"
-#~ msgstr "System zarządzania wiedzą"
+#. module: knowledge
+#: field:knowledge.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Data ostatniej modyfikacji"
 
-#~ msgid "Quality Manual"
-#~ msgstr "Podręcznik jakości"
-
-#~ msgid "Shared Repositories (WebDAV)"
-#~ msgstr "Współdzielone repozytoria (WebDAV)"
-
-#~ msgid "Image"
-#~ msgstr "Obraz"
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "Zarządzaj dokumentami"

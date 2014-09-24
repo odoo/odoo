@@ -8,6 +8,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
               'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds']
             }</field>
             <field name="params" eval="&quot;{
@@ -38,6 +39,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
               'search_default_message_unread': True,
               'needaction_menu_ref': ['mail.mail_starfeeds', 'mail.mail_inboxfeeds']
             }</field>
@@ -65,6 +67,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
@@ -73,7 +76,8 @@
                 ],
                 'view_mailbox': True,
                 'read_action': 'read',
-                'compose_as_todo': True
+                'compose_as_todo': True,
+                'show_compose_message': False
             }&quot;"/>
             <field name="help" type="html">
                 <p>
@@ -91,6 +95,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'thread_model': 'res.partner',
               'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds', 'mail.mail_inboxfeeds']
             }</field>
             <field name="params" eval="&quot;{

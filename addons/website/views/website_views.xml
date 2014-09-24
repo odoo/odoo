@@ -3,6 +3,7 @@
     <data noupdate="1">
         <record id="default_website" model="website">
             <field name="name">localhost</field>
+            <field name="domain">localhost</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
             <field name="default_lang_id" ref="base.lang_en"/>
@@ -21,11 +22,13 @@
                         or
                         <button string="Cancel" type="object" name="noop" class="oe_link"/>
                     </header>
+
                     <sheet>
                         <div name="domain">
                             <separator string="Domain"/>
                             <group name="domain">
-                                <field name="name" class="oe_inline"/>
+                                <field name="name"/>
+                                <field name="domain"/>
                                 <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
                             </group>
                         </div>
@@ -48,7 +51,8 @@
                                 <field name="default_lang_id" widget="selection"/>
                             </group>
                         </div>
-                </sheet>
+                    </sheet>
+
                 </form>
             </field>
         </record>
@@ -80,6 +84,7 @@
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
             <field name="view_mode">list</field>
+            <field name="context">{'search_default_my_websites':1}</field>
         </record>
 
         <record id="menu_tree" model="ir.ui.view">
@@ -94,6 +99,24 @@
                     <field name="parent_id"/>
                     <field name="sequence"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="menu_search" model="ir.ui.view">
+            <field name="name">website.menu.search</field>
+            <field name="model">website.menu</field>
+            <field name="arch" type="xml">
+                <search string="Search Menus">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="website_id"/>
+                    
+                    <group string="Group By">
+                        <filter string="name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

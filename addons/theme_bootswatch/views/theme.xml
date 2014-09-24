@@ -109,14 +109,14 @@
 -->
 
     <record id="website.option_bootstrap_less" model="ir.ui.view">
-        <field name="application">always</field>
+      <field name="active" eval='True'/>
     </record>
 
 <!--
      All Default Themes
 -->
 
-    <template id="website.theme_amelia" name="Amelia" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_amelia" name="Amelia" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/amelia/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/amelia/variables.less' t-ignore="true"/>
@@ -124,14 +124,14 @@
         </xpath>
     </template>
 
-    <template id="website.theme_cerulean" name="Cerulean" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_cerulean" name="Cerulean" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cerulean/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cerulean/variables.less' t-ignore="true"/>
         </xpath>
     </template>
 
-    <template id="website.theme_cosmo" name="Cosmo" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_cosmo" name="Cosmo" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cosmo/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cosmo/variables.less' t-ignore="true"/>
@@ -139,7 +139,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_cyborg" name="Cyborg" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_cyborg" name="Cyborg" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cyborg/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/cyborg/variables.less' t-ignore="true"/>
@@ -147,7 +147,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_flatly" name="Flatly" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_flatly" name="Flatly" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/flatly/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/flatly/variables.less' t-ignore="true"/>
@@ -155,7 +155,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_journal" name="Journal" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_journal" name="Journal" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/journal/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/journal/variables.less' t-ignore="true"/>
@@ -163,7 +163,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_readable" name="Readable" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_readable" name="Readable" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/readable/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/readable/variables.less' t-ignore="true"/>
@@ -171,7 +171,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_simplex" name="Simplex" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_simplex" name="Simplex" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/simplex/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/simplex/variables.less' t-ignore="true"/>
@@ -179,7 +179,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_slate" name="Slate" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_slate" name="Slate" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/slate/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/slate/variables.less' t-ignore="true"/>
@@ -187,7 +187,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_spacelab" name="Spacelab" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_spacelab" name="Spacelab" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/spacelab/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/spacelab/variables.less' t-ignore="true"/>
@@ -195,7 +195,7 @@
         </xpath>
     </template>
 
-    <template id="website.theme_united" name="United" inherit_id="website.theme" optional="disabled">
+    <template id="website.theme_united" name="United" inherit_id="website.theme" active="False" customize_show="False">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/united/bootswatch.less' t-ignore="true"/>
             <link rel="stylesheet" type="text/less" href='/theme_bootswatch/static/src/less/united/variables.less' t-ignore="true"/>

@@ -1,26 +1,33 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-27 16:41+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:23+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "产品分类"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "发票"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +35,14 @@ msgid "Invoice Line"
 msgstr "发票明细"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "采购订单"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "产品模板"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "装箱单"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +51,19 @@ msgid "Price Difference Account"
 msgstr "价格差异科目"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "发票"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "产品分类"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "装箱单"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "产品模板"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "采购订单"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -60,62 +72,3 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr "这科目将用于采购价格和成本价格之间的差异"
-
-#~ msgid " Accounting Property"
-#~ msgstr " 会计属性"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效XML视图结构!"
-
-#~ msgid "Stock Account"
-#~ msgstr "库存科目"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "单号必须唯一！"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "新美国模式的库存会计"
-
-#~ msgid ""
-#~ "This module will support the Anglo-Saxons accounting methodology by\n"
-#~ "    changing the accounting logic with stock transactions. The difference "
-#~ "between the Anglo-Saxon accounting countries\n"
-#~ "    and the Rhine or also called Continental accounting countries is the "
-#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
-#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
-#~ "created, Continental accounting will take the cost at the moment the goods "
-#~ "are shipped.\n"
-#~ "    This module will add this functionality by using a interim account, to "
-#~ "store the value of shipped goods and will contra book this interim account\n"
-#~ "    when the invoice is created to transfer this amount to the debtor or "
-#~ "creditor account.\n"
-#~ "    Secondly, price differences between actual purchase price and fixed "
-#~ "product standard price are booked on a separate account"
-#~ msgstr ""
-#~ "此模块支持按新美国会计模式更改会计逻辑和库存运作.\n"
-#~ "新美国会计模式和欧洲大陆会计模式的不同在货物销售成本对应的销售成本不同.\n"
-#~ "新美国会计模式的成本在在创建销售发票是完成,欧洲大陆会计模式的成本含货物运送成本.\n"
-#~ "这模块通过使用一个临时性的科目来增加这功能.货物运输时的库存价值将保存在这临时科目,当创建发票时这金额将转借方或贷方科目.\n"
-#~ "其次实际价格和固定的标准价格的差异价格保存在一个独立的科目."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "错误!你不能创建递归的分类"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "BBA传输结构有误！"
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "错误！您不能创建循环分类。"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "采购订单号必须在一个公司范围内唯一"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "编号必须在公司内唯一！"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "发票号必须在公司范围内唯一"

@@ -55,12 +55,21 @@
                         <label for="id" string="Products"/>
                         <div>
                             <div>
-                                <field name="module_product_manufacturer" class="oe_inline"/>
-                                <label for="module_product_manufacturer"/>
-                            </div>
-                            <div>
                                 <field name="group_mrp_properties" class="oe_inline"/>
                                 <label for="group_mrp_properties" />
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Bill of Materials"/>
+                        <div>
+                            <div>
+                                <field name="group_route_line_type" class="oe_inline"/>
+                                <label for="group_route_line_type"/>
+                            </div>
+                            <div>
+                                <field name="group_rounding_efficiency" class="oe_inline"/>
+                                <label for="group_rounding_efficiency" />
                             </div>
                         </div>
                     </group>
@@ -76,7 +85,7 @@
         </record>
 
         <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config"
-            sequence="8" action="action_mrp_configuration"/>
+            sequence="13" action="action_mrp_configuration"/>
 
     </data>
 </openerp>

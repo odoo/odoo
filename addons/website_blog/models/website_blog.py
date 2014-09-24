@@ -71,10 +71,6 @@ class BlogPost(osv.Model):
             string='Website Messages',
             help="Website communication history",
         ),
-        'history_ids': fields.one2many(
-            'blog.post.history', 'post_id',
-            'History', help='Last post modifications',
-        ),
         # creation / update stuff
         'create_date': fields.datetime(
             'Created on',
@@ -157,16 +153,6 @@ class BlogPost(osv.Model):
             self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
         return content
 
-    def create_history(self, cr, uid, ids, vals, context=None):
-        for i in ids:
-            history = self.pool.get('blog.post.history')
-            if vals.get('content'):
-                res = {
-                    'content': vals.get('content', ''),
-                    'post_id': i,
-                }
-                history.create(cr, uid, res)
-
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -174,40 +160,10 @@ class BlogPost(osv.Model):
             vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
-        self.create_history(cr, uid, [post_id], vals, context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'content' in vals:
             vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
-        self.create_history(cr, uid, ids, vals, context)
         return result
-
-class BlogPostHistory(osv.Model):
-    _name = "blog.post.history"
-    _description = "Blog Post History"
-    _order = 'id DESC'
-    _rec_name = "create_date"
-
-    _columns = {
-        'post_id': fields.many2one('blog.post', 'Blog Post'),
-        'summary': fields.char('Summary', select=True),
-        'content': fields.text("Content"),
-        'create_date': fields.datetime("Date"),
-        'create_uid': fields.many2one('res.users', "Modified By"),
-    }
-
-    def getDiff(self, cr, uid, v1, v2, context=None):
-        history_pool = self.pool.get('blog.post.history')
-        text1 = history_pool.read(cr, uid, [v1], ['content'])[0]['content']
-        text2 = history_pool.read(cr, uid, [v2], ['content'])[0]['content']
-        line1 = line2 = ''
-        if text1:
-            line1 = text1.splitlines(1)
-        if text2:
-            line2 = text2.splitlines(1)
-        if (not line1 and not line2) or (line1 == line2):
-            raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
-        diff = difflib.HtmlDiff()
-        return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)

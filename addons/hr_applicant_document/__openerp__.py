@@ -9,7 +9,7 @@
     'description': """This module allows you to search job applications by content
     of resumes and letters.""",
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/recruitment',
     'depends': [
         'hr_recruitment',
         'document'
@@ -22,7 +22,6 @@
     ],
     'installable': True,
     'auto_install': True,
-    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

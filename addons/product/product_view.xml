@@ -11,14 +11,16 @@
             <field name="arch" type="xml">
                 <search string="Product">
                     <field name="name" string="Product"/>
-                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
+                    <filter string="Services" name="services" domain="[('type','=','service')]"/>
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                    <field name="categ_id"/>
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group  expand='0' string='Group by...'>
+                       <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                     </group>
@@ -104,10 +106,10 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="weight" string="Weights">
-                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                    <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
+                                        <field digits="(14, 3)" name="volume"/>
+                                        <field digits="(14, 3)" name="weight"/>
+                                        <field digits="(14, 3)" name="weight_net"/>
                                     </group>
                                 </group>
                             </page>
@@ -181,6 +183,7 @@
             <field name="res_model">product.attribute.value</field>
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="variants_template_tree_view"/>
             <field name="domain">[('product_ids.product_tmpl_id', '=', active_id)]</field>
             <field name="context">{'default_product_tmpl_id': active_id}</field>
         </record>
@@ -192,6 +195,7 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -242,7 +246,7 @@
                         <field name="attribute_line_ids" widget="one2many_list">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
-                                <field name="value_ids" widget="many2many_tags" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
                             </tree>
                         </field>
                     </page>
@@ -292,6 +296,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_kanban_view"/>
+            <field name="context">{"search_default_filter_to_sell":1}</field>
         </record>
 
         <menuitem action="product_template_action"
@@ -300,7 +305,7 @@
 
         <!-- product product -->
 
-        <menuitem id="prod_config_main" name="Product Categories &amp; Attributes" parent="base.menu_base_config" sequence="70" groups="base.group_no_one"/>
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="2" groups="base.group_no_one"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -397,7 +402,7 @@
 
         <menuitem action="attribute_action"
             id="menu_attribute_action"
-            parent="product.prod_config_main" sequence="9" />
+            parent="product.prod_config_main" sequence="4" />
 
         <record id="variants_tree_view" model="ir.ui.view">
             <field name="name">product.attribute.value.tree</field>
@@ -421,7 +426,7 @@
 
         <menuitem action="variants_action"
             id="menu_variants_action"
-            parent="product.prod_config_main" sequence="10" />
+            parent="product.prod_config_main" sequence="5" />
 
         <!--  -->
 
@@ -522,7 +527,7 @@
             parent="base.menu_product"
             sequence="30" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
-            <field name="name">Product Categories</field>
+            <field name="name">Internal Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>
@@ -609,7 +614,7 @@
             </field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30" groups="product.group_uom"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="product.prod_config_main" sequence="6" groups="product.group_uom"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -639,7 +644,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25" groups="base.group_no_one"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.prod_config_main" sequence="7" groups="base.group_no_one"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
@@ -688,7 +693,7 @@
             </field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="5"/>
+            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

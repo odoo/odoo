@@ -84,10 +84,6 @@
     Resource: product.product
     -->
 
-        <record id="product_product_consultant" model="product.product">
-            <field name="categ_id" ref="product.product_category_5"/>
-            <field name="sale_ok" eval="True"/>
-        </record>
 
         <record id="product_product_1" model="product.product">
             <field name="name">On Site Monitoring</field>
@@ -225,11 +221,11 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
         <!-- -->
 
-        <record id="product_product_5" model="product.product">
+        <record id="product_product_5b" model="product.product">
             <field name="name">Bose Mini Bluetooth Speaker</field>
             <field name="categ_id" ref="accessories"/>
-            <field name="standard_price">600.0</field>
-            <field name="list_price">147.0</field>
+            <field name="standard_price">140.0</field>
+            <field name="list_price">247.0</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
@@ -238,6 +234,18 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="default_code">B3423</field>
         </record>
 
+
+        <record id="product_product_5" model="product.product">
+            <field name="name">PC Assemble + Custom (PC on Demand) </field>
+            <field name="categ_id" ref="accessories"/>
+            <field name="standard_price">600.0</field>
+            <field name="list_price">147.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Custom computer assembled on order based on customer's requirement.</field>
+            <field name="default_code">B3423</field>
+        </record>
 
         <record id="product_product_6" model="product.product">
             <field name="name">iPad Mini</field>

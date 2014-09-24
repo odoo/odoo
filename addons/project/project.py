@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
+import calendar
 from datetime import datetime, date
+from dateutil import relativedelta
 from lxml import etree
+import json
 import time
 
 from openerp import SUPERUSER_ID
@@ -65,6 +68,7 @@ class project(osv.osv):
     _inherits = {'account.analytic.account': "analytic_account_id",
                  "mail.alias": "alias_id"}
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _period_number = 5
 
     def _auto_init(self, cr, context=None):
         """ Installation hook: aliases, project.project """
@@ -224,6 +228,46 @@ class project(osv.osv):
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
 
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+        """ Generic method to generate data for bar chart values using SparklineBarWidget.
+            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
+
+            :param obj: the target model (i.e. crm_lead)
+            :param domain: the domain applied to the read_group
+            :param list read_fields: the list of fields to read in the read_group
+            :param str value_field: the field used to compute the value of the bar slice
+            :param str groupby_field: the fields used to group
+
+            :return list section_result: a list of dicts: [
+                                                {   'value': (int) bar_column_value,
+                                                    'tootip': (str) bar_column_tooltip,
+                                                }
+                                            ]
+        """
+        month_begin = date.today().replace(day=1)
+        section_result = [{
+                          'value': 0,
+                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                          } for i in range(self._period_number - 1, -1, -1)]
+        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
+        for group in group_obj:
+            group_begin_date = datetime.strptime(group['__domain'][0][2], pattern)
+            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
+        return section_result
+
+    def _get_project_task_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool['project.task']
+        month_begin = date.today().replace(day=1)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        res = {}
+        for id in ids:
+            created_domain = [('project_id', '=', id), ('create_date', '>=', date_begin ), ('create_date', '<=', date_end ), ('stage_id.fold', '=', False)]
+            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'create_date'], 'create_date_count', 'create_date', context=context))
+        return res
+
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
@@ -231,7 +275,11 @@ class project(osv.osv):
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
+        'analytic_account_id': fields.many2one(
+            'account.analytic.account', 'Contract/Analytic',
+            help="Link this project to an analytic account if you need financial management on projects. "
+                 "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
+            ondelete="cascade", required=True, auto_join=True),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -284,6 +332,8 @@ class project(osv.osv):
                                    ('pending','Pending'),
                                    ('close','Closed')],
                                   'Status', required=True, copy=False),
+        'monthly_tasks': fields.function(_get_project_task_data, type='char', readonly=True,
+                                             string='Project Task By Month'),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
@@ -303,6 +353,14 @@ class project(osv.osv):
         'alias_model': 'project.task',
         'privacy_visibility': 'employees',
     }
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(project, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for data in self.browse(cr, uid, ids, context=context):
+            if data.partner_id:
+                reason = _('Customer Email') if data.partner_id.email else _('Customer')
+                self._message_add_suggested_recipient(cr, uid, recipients, data, partner=data.partner_id, reason= '%s' % reason)
+        return recipients
 
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
@@ -533,12 +591,12 @@ def Project():
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
 
+        ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
+        if ir_values:
+            vals['alias_name'] = vals.get('alias_name') or vals.get('name')
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        ir_values = self.pool.get('ir.values').get_default( cr, uid, 'project.config.settings', 'generate_project_alias' )
-        values = { 'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
-        if ir_values:
-            values = dict(values, alias_name=vals['name'])
+        values = {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
         self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], values, context=context)
         return project_id
 
@@ -703,10 +761,10 @@ class task(osv.osv):
         if default is None:
             default = {}
         if not default.get('name'):
-            current = self.browse(cr, uid, id, context=context)       
+            current = self.browse(cr, uid, id, context=context)
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -725,13 +783,13 @@ class task(osv.osv):
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
-        'description': fields.text('Description'),
+        'description': fields.html('Description'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'In Progress'),('done', 'Ready for next stage'),('blocked', 'Blocked')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -770,7 +828,6 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'reviewer_id': fields.many2one('res.users', 'Reviewer', select=True, track_visibility='onchange'),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
@@ -786,17 +843,17 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '1',
+        'priority': '0',
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'reviewer_id': lambda obj, cr, uid, ctx=None: uid,
         'user_id': lambda obj, cr, uid, ctx=None: uid,
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
+        'date_start': fields.datetime.now,
     }
-    _order = "priority, sequence, date_start, name, id"
-    
+    _order = "priority desc, sequence, date_start, name, id"
+
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()
@@ -1080,11 +1137,6 @@ class task(osv.osv):
     # Mail gateway
     # ---------------------------------------------------
 
-    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=None, context=None):
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id', 'reviewer_id']
-        return super(task, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields, context=context)
-
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
         tasks = self.browse(cr, SUPERUSER_ID, ids, context=context)
@@ -1324,6 +1376,7 @@ class project_task_history_cumulative(osv.osv):
 
     _columns = {
         'end_date': fields.date('End Date'),
+        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
         'project_id': fields.many2one('project.project', 'Project'),
     }
 
@@ -1340,11 +1393,16 @@ class project_task_history_cumulative(osv.osv):
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
                     h.task_id, h.type_id, h.user_id, h.kanban_state,
+                    count(h.task_id) as nbr_tasks,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
                     project_task_history AS h
                     JOIN project_task AS t ON (h.task_id = t.id)
+                GROUP BY
+                  h.id,
+                  h.task_id,
+                  t.project_id
 
             ) AS history
         )

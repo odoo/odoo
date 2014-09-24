@@ -1,50 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* analytic_user_function
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-10-30 10:06+0000\n"
-"Last-Translator: Konki <pavel.konkol@seznam.cz>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid "Invoice Price Rate per User"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,product_id:0
-msgid "Service"
-msgstr ""
-
-#. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Price per User"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic.user.funct.grid,price:0
-msgid "Price"
-msgstr ""
-
-#. module: analytic_user_function
-#: help:analytic.user.funct.grid,price:0
-msgid "Price per hour for this user."
-msgstr ""
+"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic_user_function
 #: field:analytic.user.funct.grid,account_id:0
@@ -53,24 +24,22 @@ msgid "Analytic Account"
 msgstr "Analytický účet"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:106
-#: code:addons/analytic_user_function/analytic_user_function.py:135
-#, python-format
-msgid "Error!"
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: view:analytic.user.funct.grid:0
-msgid "Invoicing Data"
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: analytic_user_function
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr "Uživatelé/Produktové vztahy"
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
 msgid ""
 "Define a specific service (e.g. Senior Consultant)\n"
 "                            and price for some users to use these data "
@@ -80,15 +49,73 @@ msgid ""
 msgstr ""
 
 #. module: analytic_user_function
-#: field:analytic.user.funct.grid,uom_id:0
-msgid "Unit of Measure"
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:107
-#: code:addons/analytic_user_function/analytic_user_function.py:136
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for "
+"a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr ""
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr ""
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr ""
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr ""
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
 #, python-format
-msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function
@@ -97,13 +124,8 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: view:account.analytic.account:0
-msgid ""
-"OpenERP will recursively search on parent accounts\n"
-"                            to check if specific conditions are defined for "
-"a\n"
-"                            specific user. This allows to set invoicing\n"
-"                            conditions for a group of contracts."
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: analytic_user_function
@@ -111,26 +133,7 @@ msgstr ""
 msgid "User"
 msgstr "Uživatel"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalidní XML pro zobrazení architektury!"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Chyba !"
-
-#~ msgid "Product"
-#~ msgstr "Produkt"
-
-#~ msgid "Analytic User Function"
-#~ msgstr "Analytická uživatelská funkce"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
-
-#~ msgid "User's Product for this Analytic Account"
-#~ msgstr "Uživatelský produkt pro tento Analytický Účet"
-
-#~ msgid "Relation table between users and products on a analytic account"
-#~ msgstr "Vztah mezi uživateli a tabulkou produktů na analytickém účtu"
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Uživatelé/Produktové vztahy"

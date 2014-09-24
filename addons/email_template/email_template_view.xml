@@ -10,7 +10,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
                             <group>
-                                <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
+                                <field name="model_id" required="1" on_change="onchange_model_id(model_id)" options="{'no_create': True}"/>
                                 <field name="model" invisible="1"/>
                             </group>
                         </div>

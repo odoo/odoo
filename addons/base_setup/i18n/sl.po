@@ -1,120 +1,41 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_setup
+# Slovenian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2009-11-17 08:51+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Emails Integration"
-msgstr "Integracija elektronske pošte"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Gost"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Contacts"
-msgstr "Stiki"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "Uporaba zunanjih providerjev, prijava z google, facebook, ..."
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid ""
-"OpenERP allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically "
-"synchronize emails with OpenERP\n"
-"                            using regular POP/IMAP accounts, using a direct "
-"email integration script for your\n"
-"                            email server, or by manually pushing emails to "
-"OpenERP using specific\n"
-"                            plugins for your preferred email application."
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "(reload fonts)"
 msgstr ""
-"OpenERP dovoli avtomatično kreiranje možnosti (ali drugih dokumentov)\n"
-"                            iz vhodne elektronske pošte. Elektronsko pošto "
-"lahko avtomatično sinhronizirate z OpenERP\n"
-"                            z uporabo POP/IMAP profila, z uporabo direktne "
-"integracije skriptov za vaš poštni strežni,\n"
-"                            ali z ročnim pošiljanjem elektronske pošte v "
-"OpenERP z uporabo določenih\n"
-"                            vmesnikov za vašo prioritetno aplikacijo za "
-"elektronsko pošto."
 
 #. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "PRODAJA"
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer portal"
+msgstr "Aktiviranje kupčevega portala"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Član"
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr "Dovoli skupno rabo dokumentov"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Portal access"
-msgstr "Dostop preko portala"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Authentication"
-msgstr "Autentikacija"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Quotations and Sales Orders"
-msgstr "Ponudbe in prodajni nalogi"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
-msgid "General Settings"
-msgstr "Splošne nastavitva"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Donator"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Email"
-msgstr "E-pošta"
-
-#. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Bolnik"
+#: field:base.config.settings,module_google_calendar:0
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr ""
 
 #. module: base_setup
 #: field:base.config.settings,module_base_import:0
@@ -122,19 +43,108 @@ msgid "Allow users to import data from CSV files"
 msgstr "Dovolite uporabnikom uvoz podatkov iz CSV datotek"
 
 #. module: base_setup
-#: field:base.config.settings,module_multi_company:0
-msgid "Manage multiple companies"
-msgstr "Več podjetij"
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Apply"
+msgstr "Uporabi"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
-msgstr "Poštni odjemalec"
+#: field:base.config.settings,module_google_drive:0
+msgid "Attach Google documents to any record"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "--db-filter=YOUR_DATABAE"
-msgstr "--db-filter=YOUR_DATABAE"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Authentication"
+msgstr "Autentikacija"
+
+#. module: base_setup
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr "CRM"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Odjemalec"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Nastavitev prodaje"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure outgoing email servers"
+msgstr "Konfiguracija strežnikov izhodne pošte"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure your company data"
+msgstr "Nastavite podatke vašega podjetja"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Contacts"
+msgstr "Stiki"
+
+#. module: base_setup
+#: field:base.config.settings,create_uid:0
+#: field:base.setup.terminology,create_uid:0
+#: field:sale.config.settings,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,create_date:0
+#: field:base.setup.terminology,create_date:0
+#: field:sale.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Kupec"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Customer Features"
+msgstr "Lastnosti kupca"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donator"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Email"
+msgstr "E-pošta"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Emails Integration"
+msgstr "Integracija elektronske pošte"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr "Splošne nastavitva"
+
+#. module: base_setup
+#: help:sale.config.settings,module_mass_mailing:0
+msgid "Get access to statistics with your mass mailing, manage campaigns."
+msgstr ""
 
 #. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
@@ -142,46 +152,139 @@ msgid "Get contacts automatically from linkedIn"
 msgstr "Pridobi kontakte direktno iz linkedin"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_thunderbird:0
-msgid "Enable Thunderbird plug-in"
-msgstr "Omogoči Thunderbird plug-in"
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "Omogočite kupcem dostop do njihovih dokumentov."
 
 #. module: base_setup
-#: view:base.setup.terminology:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Calendar"
+msgstr ""
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Customer Features"
-msgstr "Lastnosti kupca"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr ""
 
 #. module: base_setup
-#: view:base.config.settings:0
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Gost"
+
+#. module: base_setup
+#: field:base.setup.terminology,partner:0
+msgid "How do you call a Customer"
+msgstr ""
+"Kateri izraz želite uporabljati za kupce (stranka,kupec,poslovni partner "
+"...) ?"
+
+#. module: base_setup
+#: field:base.config.settings,id:0
+#: field:base.setup.terminology,id:0
+#: field:sale.config.settings,id:0
+msgid "ID"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid "Import / Export"
 msgstr "Uvoz / Izvoz"
 
 #. module: base_setup
-#: view:sale.config.settings:0
+#: field:base.config.settings,write_uid:0
+#: field:base.setup.terminology,write_uid:0
+#: field:sale.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,write_date:0
+#: field:base.setup.terminology,write_date:0
+#: field:sale.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_mass_mailing:0
+msgid "Manage mass mailing campaigns"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr "Več podjetij"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Član"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid ""
+"Odoo allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with Odoo\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"Odoo using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Options"
+msgstr "Možnosti"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Poslovni partner"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Bolnik"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Portal access"
+msgstr "Dostop preko portala"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Quotations and Sales Orders"
+msgstr "Ponudbe in prodajni nalogi"
+
+#. module: base_setup
+#: field:base.config.settings,font:0
+msgid "Report Font"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr "PRODAJA"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
 msgid "Sale Features"
 msgstr "Lastnosti prodaje"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_outlook:0
-msgid "Enable Outlook plug-in"
-msgstr "Omogoči Outlook plug-in"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
+#: help:base.config.settings,font:0
 msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "Ta čarovnik lahko spremeni izraz \"kupec\" v celotni aplikaciji"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Najemnik"
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr ""
 
 #. module: base_setup
 #: help:base.config.settings,module_share:0
@@ -189,9 +292,41 @@ msgid "Share or embbed any screen of openerp."
 msgstr "Delite ali pripnite katerikoli ekran iz OpenERP."
 
 #. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Social Network Integration"
+msgstr "Integracija socialnega omrežja"
+
+#. module: base_setup
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Določite svoje izraze"
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Kupec"
+msgid "Tenant"
+msgstr "Najemnik"
+
+#. module: base_setup
+#: help:base.config.settings,module_google_calendar:0
+msgid "This installs the module google_calendar."
+msgstr ""
+
+#. module: base_setup
+#: help:base.config.settings,module_google_drive:0
+msgid "This installs the module google_docs."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr ""
+"Kateri izraz uporabljate za Kupca (stranka,kupec,poslovni partner ...) ?"
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr "Uporaba zunanjih providerjev, prijava z google, facebook, ..."
 
 #. module: base_setup
 #: help:sale.config.settings,module_web_linkedin:0
@@ -203,49 +338,7 @@ msgstr ""
 "podatke iz Linkedin (fotografije, naslove, itd.)."
 
 #. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies.\n"
-"                This installs the module multi_company."
-msgstr ""
-"Dolo v načinu multi-company, več podjetij, z ustreznim varnostnim dostopom "
-"med podjetju.\n"
-"                 Instalacija modula multi_company."
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"The public portal is accessible only if you are in a single database mode. "
-"You can\n"
-"                                    launch the OpenERP Server with the option"
-msgstr ""
-"Javni portal je dostopen samo, če imate eno bazo podatkov. Lahko\n"
-"                                    po vzpostavite OpenERP Server z opcijo"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr ""
-"Več možnosti najdete v podrobnostik vašega podjetja: naslov za glave in "
-"noge, besedila za zapadla plačila, itd."
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr ""
-"Kateri izraz želite uporabljati za kupce (stranka,kupec,poslovni partner "
-"...) ?"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
 "                                    (quotation, invoice), your customer will "
@@ -265,539 +358,30 @@ msgstr ""
 "                                    in podobno."
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Odjemalec"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal_anonymous:0
-msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr "Omogoči javni del openerp, openerp postane javna spletna stran."
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_thunderbird:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"The plugin allows you archive email and its attachments to the selected\n"
-"                OpenERP objects. You can select a partner, or a lead and\n"
-"                attach the selected mail as a .eml file in\n"
-"                the attachment of a selected record. You can create "
-"documents for CRM Lead,\n"
-"                Partner from the selected emails.\n"
-"                This installs the module plugin_thunderbird."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"-This installs the module multi_company."
 msgstr ""
-"Vmesnik vam dovoljuje arhiviranje elektronske pošte in priponk k izbranim\n"
-"                OpenERP objektom. Izberete lahko partnerja, priložnost in\n"
-"                pripnete izbrano pošto kot .eml datoteko v\n"
-"                priponke izbranega zapisa. Lahko kreirate dokumente za CRM-"
-"priložnosti,\n"
-"                partnerje iz izbranih elektronskih sporočil.\n"
-"                To omogoči instalacija modula plugin_thunderbird."
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Poslovni partner"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr ""
-"Kateri izraz uporabljate za Kupca (stranka,kupec,poslovni partner ...) ?"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:0
-msgid "Configure Sales"
-msgstr "Nastavitev prodaje"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_outlook:0
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
 msgid ""
-"The Outlook plugin allows you to select an object that you would like to "
-"add\n"
-"                to your email and its attachments from MS Outlook. You can "
-"select a partner,\n"
-"                or a lead object and archive a selected\n"
-"                email into an OpenERP mail message with attachments.\n"
-"                This installs the module plugin_outlook."
-msgstr ""
-"Vmesnik za Outlook vam omogoča izbrati objekte, ki jih želite dodati\n"
-"                k vaši elektronski pošti in priponkam iz MS Outlook-a. "
-"Izberete lahko partnerja\n"
-"                ali določen objekt in arhivirate izbrana\n"
-"                elektronska sporočila v OpenERP elektronsko sporočilo s "
-"priponkami.\n"
-"                To omogoča instalacija modula plugin_outlook."
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr "Ta čarovnik lahko spremeni izraz \"kupec\" v celotni aplikaciji"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Options"
-msgstr "Možnosti"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "Aktiviranje kupčevega portala"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
-"to do so.\n"
-"                                    Once activated, the login page will be "
-"replaced by the public website."
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
 msgstr ""
-"da naredite to.\n"
-"                                    Z aktivacijo bo prijavna stran "
-"nadomeščena z javno spletno stranjo."
+"Več možnosti najdete v podrobnostik vašega podjetja: naslov za glave in "
+"noge, besedila za zapadla plačila, itd."
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "Dovoli skupno rabo dokumentov"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "(company news, jobs, contact form, etc.)"
-msgstr "(novice podjetja, delo, kontaktne forme, itd.)"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal_anonymous:0
-msgid "Activate the public portal"
-msgstr "Aktiviranje javnega portala"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure outgoing email servers"
-msgstr "Konfiguracija strežnikov izhodne pošte"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Social Network Integration"
-msgstr "Integracija socialnega omrežja"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "Omogočite kupcem dostop do njihovih dokumentov."
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Cancel"
-msgstr "Prekliči"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Apply"
-msgstr "Uporabi"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "Specify Your Terminology"
-msgstr "Določite svoje izraze"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "or"
-msgstr "ali"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure your company data"
-msgstr "Nastavite podatke vašega podjetja"
-
-#~ msgid "City"
-#~ msgstr "Mesto"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database "
-#~ "using the default setup."
-#~ msgstr ""
-#~ "Začnete lahko s konfiguracijo sistema ali pa se direktno povežete s "
-#~ "skladiščem podatkov s privzetimi nastavitvami."
-
-#~ msgid "Zip code"
-#~ msgstr "Poštna številka"
-
-#~ msgid "Select a Profile"
-#~ msgstr "Izberi profil"
-
-#~ msgid "Report header"
-#~ msgstr "Glava izpisa"
-
-#~ msgid "Start Configuration"
-#~ msgstr "Začni s konfiguracijo"
-
-#~ msgid ""
-#~ "You'll be able to install more modules later through the Administration menu."
-#~ msgstr ""
-#~ "Kasneje boste lahko namestili še ostale module preko menuja Skrbništvo."
-
-#~ msgid ""
-#~ "A profile sets a pre-selection of modules for specific needs. These profiles "
-#~ "have been setup to help you discover the different aspects of OpenERP. This "
-#~ "is just an overview, we have 300+ available modules."
-#~ msgstr ""
-#~ "Profil nastavi predizbrane module za določene potrebe. Ti profili vam "
-#~ "pomagajo odkriti različne vidike OpenERPa. To je samo kratek pregled, na "
-#~ "voljo je še preko 300 modulov."
-
-#~ msgid "Next"
-#~ msgstr "Naprej"
-
-#~ msgid "E-mail"
-#~ msgstr "E-pošta"
-
-#~ msgid "State"
-#~ msgstr "Zvezna država"
-
-#~ msgid "Your new database is now fully installed."
-#~ msgstr "Vaše skladišče podatkov je sedaj v celoti nameščeno."
-
-#~ msgid "Profile"
-#~ msgstr "Profil"
-
-#~ msgid "Report Footer 1"
-#~ msgstr "Noga izpisa 1"
-
-#~ msgid "Report Footer 2"
-#~ msgstr "Noga izpisa 2"
-
-#~ msgid "Street2"
-#~ msgstr "Naslov 2"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "Define Main Company"
-#~ msgstr "Določi glavno družbo"
-
-#~ msgid "Country"
-#~ msgstr "Država"
-
-#~ msgid "Setup"
-#~ msgstr "Namestitev"
-
-#~ msgid "Summary"
-#~ msgstr "Povzetek"
-
-#~ msgid "Install"
-#~ msgstr "Namesti"
-
-#~ msgid "Installation Done"
-#~ msgstr "Namestitev končana"
-
-#~ msgid "Report Header"
-#~ msgstr "Glava izpisa"
-
-#~ msgid "Currency"
-#~ msgstr "Valuta"
-
-#~ msgid "Use Directly"
-#~ msgstr "Začni zdaj"
-
-#~ msgid "Previous"
-#~ msgstr "Nazaj"
-
-#~ msgid "Base Setup"
-#~ msgstr "Osnovne nastavitve"
-
-#~ msgid "Report Information"
-#~ msgstr "Podatki o poročilu"
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to write legal sentences here:\n"
-#~ "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-#~ msgstr ""
-#~ "Ta stavek se bo izpisal na dnu vaših poročil.\n"
-#~ "Predlagamo da vsebuje pravna obvestila:\n"
-#~ "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-
-#~ msgid "Your Logo - Use a size of about 450x150 pixels."
-#~ msgstr "Vaš logotip - uporabite velikost približno 450x150 pik."
-
-#~ msgid "Logo"
-#~ msgstr "Logotip"
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to put bank information here:\n"
-#~ "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-#~ msgstr ""
-#~ "Ta stavek se bo izpisal na dnu vaših poročil.\n"
-#~ "Predlagamo da vsebuje podatki o banki:\n"
-#~ "IBAN: SI56 1262 0121 6907 123 - SWIFT: CPDF BE71 - ID za DDV: SI12345678"
-
-#~ msgid "General Information"
-#~ msgstr "Splošne informacije"
-
-#~ msgid ""
-#~ "This sentence will appear at the top right corner of your reports.\n"
-#~ "We suggest you to put a slogan here:\n"
-#~ "\"Open Source Business Solutions\"."
-#~ msgstr ""
-#~ "Ta stavek se bo izpisal v zgornjem desnem kotu vaših poročil.\n"
-#~ "Predlagamo da izpišete vaš slogan:\n"
-#~ "\"Open Source Business Solutions\"."
-
-#~ msgid "Human Resources"
-#~ msgstr "Človeški viri"
-
-#~ msgid ""
-#~ "Helps you manage your manufacturing processes and generate reports on those "
-#~ "processes."
-#~ msgstr ""
-#~ "Pomaga vam upravljati proizvodne procese in ustvarjanje poročil o teh "
-#~ "procesih."
-
-#, python-format
-#~ msgid "The following users have been installed : \n"
-#~ msgstr "Naslednji uporabniki so bili nameščeni: \n"
-
-#~ msgid "Invoicing"
-#~ msgstr "Izdajanje računov"
-
-#~ msgid "Bank Account No"
-#~ msgstr "Številka bančnega računa"
-
-#~ msgid "Extra Tools"
-#~ msgstr "Dodatna orodja"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Potek konfiguracije"
-
-#~ msgid "Your database is now created."
-#~ msgstr "Vaša baza je bila ustvarjena."
-
-#~ msgid "Fed. State"
-#~ msgstr "Zvezna država"
-
-#~ msgid "Sales Management"
-#~ msgstr "Upravljanje prodaje"
-
-#~ msgid "Company"
-#~ msgstr "Podjetje"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid "title"
-#~ msgstr "naslov"
-
-#~ msgid "Skip Configuration Wizards"
-#~ msgstr "Preskoči čarovnike konfiguracije"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Upravljanje znanja"
-
-#~ msgid "Company Name"
-#~ msgstr "Ime podjetja"
-
-#~ msgid "base.setup.installer"
-#~ msgstr "base.setup.installer"
-
-#~ msgid "Zip Code"
-#~ msgstr "Poštna številka"
-
-#~ msgid "Auction Houses"
-#~ msgstr "Avkcijska hiša"
-
-#~ msgid "Accounting & Finance"
-#~ msgstr "Računovodstvo & Finance"
-
-#~ msgid "Street 2"
-#~ msgstr "Naslov 2"
-
-#~ msgid "Warehouse Management"
-#~ msgstr "Upravljanje skladišča"
-
-#~ msgid "Installed Users"
-#~ msgstr "Nameščeni uporabniki"
-
-#~ msgid "Purchase Management"
-#~ msgstr "Upravljanje nabave"
-
-#~ msgid "Company Configuration"
-#~ msgstr "Konfiguracija podjetja"
-
-#~ msgid "base.setup.company"
-#~ msgstr "base.setup.company"
-
-#~ msgid "Project Management"
-#~ msgstr "Upravljanje projektov"
-
-#~ msgid "Food Industry"
-#~ msgstr "Prehrambena industrija"
-
-#~ msgid "Manufacturing"
-#~ msgstr "Proizvodnja"
-
-#~ msgid "Image"
-#~ msgstr "Slika"
-
-#~ msgid "Information about your new database"
-#~ msgstr "Informacije o vaši novi zbirki podatkov"
-
-#~ msgid "New Database"
-#~ msgstr "Nova zbirka podatkov"
-
-#~ msgid "Configure Your Company Information"
-#~ msgstr "Konfigurirajte informacije vašega podjetja"
-
-#~ msgid "Company Website"
-#~ msgstr "Spletna stran podjetja"
-
-#~ msgid "Example: http://openerp.com"
-#~ msgstr "Primer: http://openerp.com"
-
-#~ msgid "Install Applications"
-#~ msgstr "Namesti aplikacije"
-
-#~ msgid "Street"
-#~ msgstr "Ulica"
-
-#~ msgid "base.setup.config"
-#~ msgstr "base.setup.config"
-
-#~ msgid "Point of Sales"
-#~ msgstr "Točka Prodaje"
-
-#~ msgid "Advanced Reporting"
-#~ msgstr "Napredno Poročanje"
-
-#~ msgid "Create"
-#~ msgstr "Ustvari"
-
-#~ msgid "Set Company Header and Footer"
-#~ msgstr "Nastavitev \"glave\" in \"noge\" podjetja"
-
-#~ msgid "Import"
-#~ msgstr "Uvoz"
-
-#~ msgid "Define Users's Preferences"
-#~ msgstr "Nastavitve uporabnika"
-
-#~ msgid "Define default users preferences"
-#~ msgstr "Privzete nastavitve uporabnika"
-
-#~ msgid ""
-#~ "If you use OpenERP for the first time we strongly advise you to select the "
-#~ "simplified interface, which has less features but is easier. You can always "
-#~ "switch later from the user preferences."
-#~ msgstr ""
-#~ "Če uporabljate OpenERP prvič,je priporočljivo izbrati poenostavljen vmesnik, "
-#~ "ki ima manj možnosti, ampak je lažji za uporabo. Vedno lahko spremenite "
-#~ "način prikaza   v nastavitvah uporabnika."
-
-#~ msgid "Extended"
-#~ msgstr "Razširjeno"
-
-#~ msgid "Interface"
-#~ msgstr "Vmesnik"
-
-#~ msgid "Language"
-#~ msgstr "Jezik"
-
-#~ msgid "Create Additional Users"
-#~ msgstr "Ustvari nove uporabnike"
-
-#~ msgid "Import Sugarcrm"
-#~ msgstr "Uvozite Sugarcrm"
-
-#~ msgid "Timezone"
-#~ msgstr "Časovni pas"
-
-#~ msgid "Simplified"
-#~ msgstr "Poenostavljen"
-
-#~ msgid "For Sync Google Contact"
-#~ msgstr "Sinhronizacija Google stikov"
-
-#~ msgid "Import Saleforce"
-#~ msgstr "Uvozi Saleforce"
-
-#~ msgid ""
-#~ "Check out this box if you want to always display tips on each menu action"
-#~ msgstr ""
-#~ "Označite to polje, če želite da so namigi prikazani na vsakem dejanju menija"
-
-#~ msgid "Import or create customers"
-#~ msgstr "Uvoz ali dodajanje kupcev"
-
-#~ msgid "Customers"
-#~ msgstr "Kupci"
-
-#~ msgid "Create or Import Customers"
-#~ msgstr "Ustvarite ali uvozite Kupce"
-
-#~ msgid "Display Tips"
-#~ msgstr "Prikaz nasvetov"
-
-#~ msgid "For Import Saleforce"
-#~ msgstr "Uvoz Saleforce"
-
-#~ msgid "For Quickbooks Ippids"
-#~ msgstr "Quickbooks Ippids"
-
-#~ msgid ""
-#~ "Set default for new user's timezone, used to perform timezone conversions "
-#~ "between the server and the client."
-#~ msgstr "Privzeti časovni pas za nove uporabnike"
-
-#~ msgid "For Import Sugarcrm"
-#~ msgstr "Uvozi Sugarcrm"
-
-#~ msgid ""
-#~ "This will set the default preferences for new users and update all existing "
-#~ "ones. Afterwards, users are free to change those values on their own user "
-#~ "preference form."
-#~ msgstr ""
-#~ "Določitev privzetih nastavitev za obstoječe in nove uporabnike.  Uporabnik "
-#~ "lahko nastavitve kasneje spremeni."
-
-#~ msgid "Quickbooks Ippids"
-#~ msgstr "Quickbooks Ippids"
-
-#~ msgid "Sync Google Contact"
-#~ msgstr "Sinhronizacija Google stikov"
-
-#~ msgid ""
-#~ "Fill in your company data (address, logo, bank accounts) so that it's "
-#~ "printed on your reports. You can click on the button 'Preview Header' in "
-#~ "order to check the header/footer of PDF documents."
-#~ msgstr ""
-#~ "Izpolnite podatke podjetja , ki se bodo uporabljali v poročilih. Predogled  "
-#~ "je dostopen s klikom na gumb \"Predogled glave/noge\"."
-
-#~ msgid ""
-#~ "Create or Import Customers  and their contacts manually from this form or "
-#~ "you can import your existing partners by CSV spreadsheet from \"Import "
-#~ "Data\" wizard"
-#~ msgstr ""
-#~ "Ustvarite ali uvozite Kupce in njihove podatke. Kupce lahko uvozite tudi s "
-#~ "pomočjo čarovnika \"Uvozi podatke\" ."
-
-#~ msgid ""
-#~ "Sets default language for the all user interface, when UI translations are "
-#~ "available. If you want to Add new Language, you can add it from 'Load an "
-#~ "Official Translation' wizard  from 'Administration' menu."
-#~ msgstr ""
-#~ "Nastavitev privzetega jezika za vse uporabniške vmesnike. Za dodajanje "
-#~ "novega jezika uporabite čarovnika \"Naloži uradni prevod\"."
-
-#~ msgid "migrade.application.installer.modules"
-#~ msgstr "migrade.application.installer.modules"
-
-#~ msgid "user.preferences.config"
-#~ msgstr "user.preferences.config"
-
-#~ msgid "product.installer"
-#~ msgstr "product.installer"
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "res_config_contents"
+msgstr "res_config_contents"

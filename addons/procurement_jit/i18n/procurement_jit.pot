@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* mrp_jit
+#	* procurement_jit
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:41+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:41+0000\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 13:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,27 +15,8 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: mrp_jit
-#: model:ir.module.module,shortdesc:mrp_jit.module_meta_information
-msgid "MRP JIT"
-msgstr ""
-
-#. module: mrp_jit
-#: model:ir.module.module,description:mrp_jit.module_meta_information
-msgid "\n"
-"    This module allows Just In Time computation of procurement orders.\n"
-"\n"
-"    If you install this module, you will not have to run the regular procurement \n"
-"    scheduler anymore (but you still need to run the minimum order point rule \n"
-"    scheduler, or for example let it run daily.)\n"
-"    All procurement orders will be processed immediately, which could in some\n"
-"    cases entail a small performance impact.\n"
-"\n"
-"    It may also increase your stock size because products are reserved as soon\n"
-"    as possible and the scheduler time range is not taken into account anymore. \n"
-"    In that case, you can not use priorities any more on the different picking.\n"
-"    \n"
-"    \n"
-"    "
+#. module: procurement_jit
+#: model:ir.model,name:procurement_jit.model_procurement_order
+msgid "Procurement"
 msgstr ""
 

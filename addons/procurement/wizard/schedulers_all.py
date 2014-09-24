@@ -21,6 +21,7 @@
 
 import logging
 import threading
+from openerp import SUPERUSER_ID
 from openerp import tools
 
 from openerp.osv import osv
@@ -45,6 +46,7 @@ class procurement_compute_all(osv.osv_memory):
             #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
 
             new_cr = self.pool.cursor()
+            scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
             # Avoid to run the scheduler multiple times in the same time
             try:
                 with tools.mute_logger('openerp.sql_db'):

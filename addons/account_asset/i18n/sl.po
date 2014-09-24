@@ -1,659 +1,31 @@
 # Slovenian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 12:35+0000\n"
-"Last-Translator: Stanko Zvonar <stanko.zvonar@mentis.si>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:46+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in draft and open states"
-msgstr "Osnovna sredstva v stanju \"V pripravi\" ali  \"Odprto\""
+#: field:account.asset.asset,entry_count:0
+msgid "# Asset Entries"
+msgstr ""
 
 #. module: account_asset
-#: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
-msgid "Ending date"
-msgstr "Datum zaključka"
-
-#. module: account_asset
-#: field:account.asset.asset,value_residual:0
-msgid "Residual Value"
-msgstr "Ostanek vrednosti"
-
-#. module: account_asset
-#: field:account.asset.category,account_expense_depreciation_id:0
-msgid "Depr. Expense Account"
-msgstr "Konto stroška amortizacije"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Group By..."
-msgstr "Združeno po..."
-
-#. module: account_asset
-#: field:asset.asset.report,gross_value:0
-msgid "Gross Amount"
-msgstr "Bruto vrednost"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
-#: model:ir.model,name:account_asset.model_account_asset_asset
-msgid "Asset"
-msgstr "Osnovno sredstvo"
-
-#. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
-msgid ""
-"Indicates that the first depreciation entry for this asset have to be done "
-"from the purchase date instead of the first January"
-msgstr "Indikator,da se bo amortizacija računala od datuma nabave"
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Linearno"
-
-#. module: account_asset
-#: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,company_id:0
-msgid "Company"
-msgstr "Podjetje"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Modify"
-msgstr "Spremeni"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Running"
-msgstr "V uporabi"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Nastavi kot osnutek"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
-#: model:ir.model,name:account_asset.model_asset_asset_report
-#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
-msgid "Assets Analysis"
-msgstr "Analize osnovnih sredstvev"
-
-#. module: account_asset
-#: field:asset.modify,name:0
-msgid "Reason"
-msgstr "Vzrok"
-
-#. module: account_asset
-#: field:account.asset.asset,method_progress_factor:0
-#: field:account.asset.category,method_progress_factor:0
-msgid "Degressive Factor"
-msgstr "Degresivni faktor"
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
-msgid "Asset Categories"
-msgstr "Kategorije osnovnih sredstev"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,account_move_line_ids:0
-#: field:account.move.line,entry_ids:0
-#: model:ir.actions.act_window,name:account_asset.act_entries_open
-msgid "Entries"
-msgstr "Vknjižbe"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,depreciation_line_ids:0
-msgid "Depreciation Lines"
-msgstr "Amortizacijske postavke"
-
-#. module: account_asset
-#: help:account.asset.asset,salvage_value:0
-msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Planirana vrednost,ki se ne amortizira"
-
-#. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "The amount of time between two depreciations, in months"
-msgstr "Čas med dvema amortizacijama v mesecih"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
-msgid "Depreciation Date"
-msgstr "Datum amortizacije"
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You cannot create recursive assets."
-msgstr "Napaka! Ne moreš kreirati rekurzivnega osnovnega sredstva"
-
-#. module: account_asset
-#: field:asset.asset.report,posted_value:0
-msgid "Posted Amount"
-msgstr "Knjižen znesek"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_finance_assets
-#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
-msgid "Assets"
-msgstr "Osnovna sredstva"
-
-#. module: account_asset
-#: field:account.asset.category,account_depreciation_id:0
-msgid "Depreciation Account"
-msgstr "Konto amortizacije"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
-msgid "Notes"
-msgstr "Opombe"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_id:0
-msgid "Depreciation Entry"
-msgstr "Postavka amortizacije"
-
-#. module: account_asset
-#: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# amortizacijskih postavk"
-
-#. module: account_asset
-#: field:account.asset.asset,method_period:0
-msgid "Number of Months in a Period"
-msgstr "Število mesecev v obdobju"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in draft state"
-msgstr "Osnovna sredstva s statusom \"V pripravi\""
-
-#. module: account_asset
-#: field:account.asset.asset,method_end:0
-#: selection:account.asset.asset,method_time:0
-#: selection:account.asset.category,method_time:0
-#: selection:account.asset.history,method_time:0
-msgid "Ending Date"
-msgstr "Končni datum"
-
-#. module: account_asset
-#: field:account.asset.asset,code:0
-msgid "Reference"
-msgstr "Sklic"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Account Asset"
-msgstr "Konto osnovnega sredstva"
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
-#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
-msgid "Compute Assets"
-msgstr "Obračunaj"
-
-#. module: account_asset
-#: field:account.asset.category,method_period:0
-#: field:account.asset.history,method_period:0
-#: field:asset.modify,method_period:0
-msgid "Period Length"
-msgstr "Obdobje obračuna"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Draft"
-msgstr "V pripravi"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of asset purchase"
-msgstr "Datum nabave osnovnega sredstva"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
-msgstr "Spremeni trajanje"
-
-#. module: account_asset
-#: help:account.asset.asset,method_number:0
-#: help:account.asset.category,method_number:0
-#: help:account.asset.history,method_number:0
-msgid "The number of depreciations needed to depreciate your asset"
-msgstr "Število amortizacij potrebnih do dokončnega odpisa"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Analytic Information"
-msgstr "Analitika"
-
-#. module: account_asset
-#: field:account.asset.category,account_analytic_id:0
-msgid "Analytic account"
-msgstr "Analitični konto"
-
-#. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
-msgid "Computation Method"
-msgstr "Metoda izračuna"
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid ""
-"Prorata temporis can be applied only for time method \"number of "
-"depreciations\"."
-msgstr ""
-"\"Prorata temporis\" lahko uporabimo le pri metodi \"število amortizacij\""
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Next Period Depreciation"
-msgstr "Naslednje obdobje amortizacije"
-
-#. module: account_asset
-#: help:account.asset.history,method_period:0
-msgid "Time in month between two depreciations"
-msgstr "Čas v mesecih med dvema amortizacijama"
-
-#. module: account_asset
-#: view:asset.modify:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_modify
-#: model:ir.model,name:account_asset.model_asset_modify
-msgid "Modify Asset"
-msgstr "Spremeni Osnovno sredstvo"
-
-#. module: account_asset
-#: field:account.asset.asset,salvage_value:0
-msgid "Salvage Value"
-msgstr "Ostanek vrednosti"
-
-#. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
-msgid "Asset Category"
-msgstr "Kategorija Osnovnega sredstva"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in closed state"
-msgstr "Osnovno sredstvo v statusu \"Izven uporabe\""
-
-#. module: account_asset
-#: field:account.asset.asset,parent_id:0
-msgid "Parent Asset"
-msgstr "Nadrejeno osnovno sredstvo"
-
-#. module: account_asset
-#: view:account.asset.history:0
-#: model:ir.model,name:account_asset.model_account_asset_history
-msgid "Asset history"
-msgstr "Zgodovina osnovnega sredstva"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
-msgstr "Iskanje po kategoriji osnovnega sredstva"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "months"
-msgstr "mesecev"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Postavka računa"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Depreciation Board"
-msgstr "Amortizacijska tabela"
-
-#. module: account_asset
-#: field:asset.asset.report,unposted_value:0
-msgid "Unposted Amount"
-msgstr "Neknjižen znesek"
-
-#. module: account_asset
-#: field:account.asset.asset,method_time:0
-#: field:account.asset.category,method_time:0
-#: field:account.asset.history,method_time:0
-msgid "Time Method"
-msgstr "Časovna metoda"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "or"
-msgstr "ali"
-
-#. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
-#: field:account.asset.history,note:0
-msgid "Note"
-msgstr "Opomba"
-
-#. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Izberi metodo:\n"
-"Število amortizacij\n"
-"ali\n"
-"Končni datum"
-
-#. module: account_asset
-#: help:account.asset.asset,method_time:0
-#: help:account.asset.category,method_time:0
-msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Izberi metodo za izračun datumov in števila amortizacijskih postavk\n"
-"  *Število amortizacij:določi število amortizacij in čas med dvema "
-"amortizacijama\n"
-"  *Končni datum:Čas med dvema amortizacijama in končni datum amortizacije"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in running state"
-msgstr "Osnovna sredstva v uporabi"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Closed"
-msgstr "Izven uporabe"
-
-#. module: account_asset
-#: help:account.asset.asset,state:0
-msgid ""
-"When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Ko kreirate osnovno sredstvo ima status \"V pripravi\".\n"
-"Ko ga potrdite ima status \"V uporabi\".\n"
-"Osnovno sredstvo lahko ročno določite \"Izven uporabe\", ko je amortizacija "
-"zaključena. Ko je knjižena prva amortizacija, dobi osnovno sredstvo "
-"avtomatično status \"V uporabi\"."
-
-#. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: account_asset
-#: field:account.asset.asset,partner_id:0
-#: field:asset.asset.report,partner_id:0
-msgid "Partner"
-msgstr "Poslovni partner"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Posted depreciation lines"
-msgstr "Knjižene amortizacijske postavke"
-
-#. module: account_asset
-#: field:account.asset.asset,child_ids:0
-msgid "Children Assets"
-msgstr "Podrejena osnovna sredstva"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of depreciation"
-msgstr "Datum amortizacije"
-
-#. module: account_asset
-#: field:account.asset.history,user_id:0
-msgid "User"
-msgstr "Uporabnik"
-
-#. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Konto osnovnega sredstva"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Extended Filters..."
-msgstr "Razširjeni filtri..."
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute"
-msgstr "Izračunaj"
-
-#. module: account_asset
-#: view:account.asset.history:0
-msgid "Asset History"
-msgstr "Zgodovina osnovnega sredstva"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
-msgid "asset.depreciation.confirmation.wizard"
-msgstr "osnovno sredstvo.amortizacija.potrditev.čarovnik"
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktivno"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,parent_state:0
-msgid "State of Asset"
-msgstr "Status osnovnega sredstva"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,name:0
-msgid "Depreciation Name"
-msgstr "Ime amortizacije"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
-msgid "History"
-msgstr "Zgodovina"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Izračunaj amortizacijo"
-
-#. module: account_asset
-#: field:asset.depreciation.confirmation.wizard,period_id:0
-msgid "Period"
-msgstr "Obdobje"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "General"
-msgstr "Splošno"
-
-#. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
-msgid "Prorata Temporis"
-msgstr "Prorata Temporis"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr "Nastvi na \"Izven uporabe\""
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "Cancel"
-msgstr "Prekliči"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
-msgid "Close"
-msgstr "Zapri"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr "Postavke"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Asset Durations to Modify"
-msgstr "Življenjska doba osnovnih sredstev , ki jih je treba spremeniti."
-
-#. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,purchase_date:0
-msgid "Purchase Date"
-msgstr "Datum nakupa"
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Degressive"
-msgstr "Degresivno"
-
-#. module: account_asset
-#: help:asset.depreciation.confirmation.wizard,period_id:0
-msgid ""
-"Choose the period for which you want to automatically post the depreciation "
-"lines of running assets"
-msgstr ""
-"Izberi obdobje za katero želiš avtomatsko knjiženje amortizacijskih postavk "
-"osnovnih sredstev"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Current"
-msgstr "Trenutno"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Metoda obračuna amortizacije"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Current Depreciation"
-msgstr "Trenutna amortizacija"
-
-#. module: account_asset
-#: field:account.asset.asset,name:0
-msgid "Asset Name"
-msgstr "Naziv osnovnega sredstva"
-
-#. module: account_asset
-#: field:account.asset.category,open_asset:0
-msgid "Skip Draft State"
-msgstr "Preskoči status \"V pripravi\""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Dates"
-msgstr "Datumi amortizacije"
-
-#. module: account_asset
-#: field:account.asset.asset,currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: account_asset
-#: field:account.asset.category,journal_id:0
-msgid "Journal"
-msgstr "Dnevnik"
-
-#. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr "Naziv"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciated_value:0
-msgid "Amount Already Depreciated"
-msgstr "Že amortizirani znesek"
-
-#. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
-msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "Izberite metodo izračuna amortizacije."
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
-msgid "Posted"
-msgstr "Knjiženo"
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -674,14 +46,160 @@ msgstr ""
 "        "
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_value:0
-msgid "Gross Value"
-msgstr "Bruto vrednost"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Account Asset"
+msgstr "Konto osnovnega sredstva"
 
 #. module: account_asset
-#: field:account.asset.category,name:0
-msgid "Name"
-msgstr "Naziv"
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Add an internal note here..."
+msgstr "Dodajanje internega zaznamka ..."
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciated_value:0
+msgid "Amount Already Depreciated"
+msgstr "Že amortizirani znesek"
+
+#. module: account_asset
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
+msgstr "Vrednost amortizacijskih postavk"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Analytic Information"
+msgstr "Analitika"
+
+#. module: account_asset
+#: field:account.asset.category,account_analytic_id:0
+msgid "Analytic account"
+msgstr "Analitični konto"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.asset:account_asset.view_account_asset_search
+#: field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,asset_id:0
+#: model:ir.model,name:account_asset.model_account_asset_asset
+msgid "Asset"
+msgstr "Osnovno sredstvo"
+
+#. module: account_asset
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Konto osnovnega sredstva"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
+msgid "Asset Categories"
+msgstr "Kategorije osnovnih sredstev"
+
+#. module: account_asset
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:account_asset.view_account_asset_category_search
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Asset Category"
+msgstr "Kategorija Osnovnega sredstva"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Asset Durations to Modify"
+msgstr "Življenjska doba osnovnih sredstev , ki jih je treba spremeniti."
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
+msgid "Asset Hierarchy"
+msgstr "Hierarhija osnovnih sredstev"
+
+#. module: account_asset
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+msgid "Asset History"
+msgstr "Zgodovina osnovnega sredstva"
+
+#. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr "Naziv osnovnega sredstva"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.category:account_asset.view_account_asset_category_tree
+#: field:asset.asset.report,asset_category_id:0
+#: model:ir.model,name:account_asset.model_account_asset_category
+msgid "Asset category"
+msgstr "Kategorija osnovnega sredstva"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
+msgid "Asset depreciation line"
+msgstr "Amortizacijska postavka osnovnega sredstva"
+
+#. module: account_asset
+#: view:account.asset.history:account_asset.view_account_asset_history_tree
+#: model:ir.model,name:account_asset.model_account_asset_history
+msgid "Asset history"
+msgstr "Zgodovina osnovnega sredstva"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_hierarchy_tree
+#: view:account.asset.asset:account_asset.view_account_asset_asset_tree
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_finance_assets
+#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
+msgid "Assets"
+msgstr "Osnovna sredstva"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.action_account_asset_report_graph
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
+#: model:ir.model,name:account_asset.model_asset_asset_report
+#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
+msgid "Assets Analysis"
+msgstr "Analize osnovnih sredstvev"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in closed state"
+msgstr "Osnovno sredstvo v statusu \"Izven uporabe\""
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in draft and open states"
+msgstr "Osnovna sredstva v stanju \"V pripravi\" ali  \"Odprto\""
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in draft state"
+msgstr "Osnovna sredstva s statusom \"V pripravi\""
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in running state"
+msgstr "Osnovna sredstva v uporabi"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Change Duration"
+msgstr "Spremeni trajanje"
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -693,48 +211,401 @@ msgstr ""
 "bila kreirana z računi."
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Leto"
+#: field:account.asset.asset,child_ids:0
+msgid "Children Assets"
+msgstr "Podrejena osnovna sredstva"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
-msgid "Asset depreciation line"
-msgstr "Amortizacijska postavka osnovnega sredstva"
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr "Izberite metodo izračuna amortizacije."
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
-#: model:ir.model,name:account_asset.model_account_asset_category
-msgid "Asset category"
-msgstr "Kategorija osnovnega sredstva"
+#: help:account.asset.asset,method_time:0
+#: help:account.asset.category,method_time:0
+msgid ""
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Izberi metodo za izračun datumov in števila amortizacijskih postavk\n"
+"  *Število amortizacij:določi število amortizacij in čas med dvema "
+"amortizacijama\n"
+"  *Končni datum:Čas med dvema amortizacijama in končni datum amortizacije"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr "Vrednost amortizacijskih postavk"
+#: help:asset.depreciation.confirmation.wizard,period_id:0
+msgid ""
+"Choose the period for which you want to automatically post the depreciation "
+"lines of running assets"
+msgstr ""
+"Izberi obdobje za katero želiš avtomatsko knjiženje amortizacijskih postavk "
+"osnovnih sredstev"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
+msgid "Close"
+msgstr "Zapri"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Closed"
+msgstr "Izven uporabe"
+
+#. module: account_asset
+#: field:account.asset.asset,company_id:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,company_id:0
+msgid "Company"
+msgstr "Podjetje"
+
+#. module: account_asset
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
+msgid "Computation Method"
+msgstr "Metoda izračuna"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute"
+msgstr "Izračunaj"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute Asset"
+msgstr "Izračunaj amortizacijo"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
+#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
+msgid "Compute Assets"
+msgstr "Obračunaj"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Confirm Asset"
+msgstr "Potrdi osnovno sredstvo"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Create Move"
+msgstr "Kreiraj vknjižbo"
+
+#. module: account_asset
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Kreirane vknjižbe osnovnega sredstva"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence"
-msgstr "Zaporedje"
+#: field:account.asset.asset,create_uid:0
+#: field:account.asset.category,create_uid:0
+#: field:account.asset.depreciation.line,create_uid:0
+#: field:account.asset.history,create_uid:0
+#: field:asset.depreciation.confirmation.wizard,create_uid:0
+#: field:asset.modify,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: account_asset
-#: help:account.asset.category,method_period:0
-msgid "State here the time between 2 depreciations, in months"
-msgstr "Čas med dvema amortizacijama v mesecih"
+#: field:account.asset.asset,create_date:0
+#: field:account.asset.category,create_date:0
+#: field:account.asset.depreciation.line,create_date:0
+#: field:account.asset.history,create_date:0
+#: field:asset.depreciation.confirmation.wizard,create_date:0
+#: field:asset.modify,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,currency_id:0
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Current"
+msgstr "Trenutno"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
+msgstr "Trenutna amortizacija"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
 msgid "Date"
 msgstr "Datum"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of asset purchase"
+msgstr "Datum nabave osnovnega sredstva"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of depreciation"
+msgstr "Datum amortizacije"
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Degressive"
+msgstr "Degresivno"
+
+#. module: account_asset
+#: field:account.asset.asset,method_progress_factor:0
+#: field:account.asset.category,method_progress_factor:0
+msgid "Degressive Factor"
+msgstr "Degresivni faktor"
+
+#. module: account_asset
+#: field:account.asset.category,account_expense_depreciation_id:0
+msgid "Depr. Expense Account"
+msgstr "Konto stroška amortizacije"
+
+#. module: account_asset
+#: field:account.asset.category,account_depreciation_id:0
+msgid "Depreciation Account"
+msgstr "Konto amortizacije"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Depreciation Board"
+msgstr "Amortizacijska tabela"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciation_date:0
+#: field:asset.asset.report,depreciation_date:0
+msgid "Depreciation Date"
+msgstr "Datum amortizacije"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Dates"
+msgstr "Datumi amortizacije"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_id:0
+msgid "Depreciation Entry"
+msgstr "Postavka amortizacije"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,depreciation_line_ids:0
+msgid "Depreciation Lines"
+msgstr "Amortizacijske postavke"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Method"
+msgstr "Metoda obračuna amortizacije"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Depreciation Month"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,name:0
+msgid "Depreciation Name"
+msgstr "Ime amortizacije"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Draft"
+msgstr "V pripravi"
+
+#. module: account_asset
+#: field:account.asset.asset,method_end:0
+#: selection:account.asset.asset,method_time:0
+#: selection:account.asset.category,method_time:0
+#: selection:account.asset.history,method_time:0
+msgid "Ending Date"
+msgstr "Končni datum"
+
+#. module: account_asset
+#: field:account.asset.category,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
+msgid "Ending date"
+msgstr "Datum zaključka"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,account_move_line_ids:0
+#: model:ir.actions.act_window,name:account_asset.act_entries_open
+msgid "Entries"
+msgstr "Vknjižbe"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
+msgstr "Napaka! Ne moreš kreirati rekurzivnega osnovnega sredstva"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "Error!"
+msgstr "Napaka!"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Extended Filters..."
+msgstr "Razširjeni filtri..."
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "General"
+msgstr "Splošno"
+
+#. module: account_asset
+#: field:asset.asset.report,gross_value:0
+msgid "Gross Amount"
+msgstr "Bruto vrednost"
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_value:0
+msgid "Gross Value"
+msgstr "Bruto vrednost"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,history_ids:0
+msgid "History"
+msgstr "Zgodovina"
+
+#. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Naziv"
+
+#. module: account_asset
+#: field:account.asset.asset,id:0
+#: field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0
+#: field:account.asset.history,id:0
+#: field:asset.asset.report,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0
+#: field:asset.modify,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
+msgid ""
+"Indicates that the first depreciation entry for this asset have to be done "
+"from the purchase date instead of the first January"
+msgstr "Indikator,da se bo amortizacija računala od datuma nabave"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Postavka računa"
+
+#. module: account_asset
+#: help:account.asset.asset,salvage_value:0
+msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr "Planirana vrednost,ki se ne amortizira"
+
+#. module: account_asset
+#: field:account.asset.category,journal_id:0
+msgid "Journal"
+msgstr "Dnevnik"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:349
+#: model:ir.model,name:account_asset.model_account_move_line
+#, python-format
+msgid "Journal Items"
+msgstr "Postavke"
+
+#. module: account_asset
+#: field:account.asset.asset,write_uid:0
+#: field:account.asset.category,write_uid:0
+#: field:account.asset.depreciation.line,write_uid:0
+#: field:account.asset.history,write_uid:0
+#: field:asset.depreciation.confirmation.wizard,write_uid:0
+#: field:asset.modify,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,write_date:0
+#: field:account.asset.category,write_date:0
+#: field:account.asset.depreciation.line,write_date:0
+#: field:account.asset.history,write_date:0
+#: field:asset.depreciation.confirmation.wizard,write_date:0
+#: field:asset.modify,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Linearno"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Modify"
+msgstr "Spremeni"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+#: model:ir.actions.act_window,name:account_asset.action_asset_modify
+#: model:ir.model,name:account_asset.model_asset_modify
+msgid "Modify Asset"
+msgstr "Spremeni Osnovno sredstvo"
+
+#. module: account_asset
+#: field:account.asset.category,name:0
+msgid "Name"
+msgstr "Naziv"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
+msgstr "Naslednje obdobje amortizacije"
+
+#. module: account_asset
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
+#: field:account.asset.history,note:0
+msgid "Note"
+msgstr "Opomba"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+#: view:asset.modify:account_asset.asset_modify_form
+#: field:asset.modify,note:0
+msgid "Notes"
+msgstr "Opombe"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -748,56 +619,218 @@ msgid "Number of Depreciations"
 msgstr "Število amortizacij"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Create Move"
-msgstr "Kreiraj vknjižbo"
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
+msgstr "Število mesecev v obdobju"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Confirm Asset"
-msgstr "Potrdi osnovno sredstvo"
+#: field:account.asset.asset,parent_id:0
+msgid "Parent Asset"
+msgstr "Nadrejeno osnovno sredstvo"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
-msgid "Asset Hierarchy"
-msgstr "Hierarhija osnovnih sredstev"
+#: field:account.asset.asset,partner_id:0
+#: field:asset.asset.report,partner_id:0
+msgid "Partner"
+msgstr "Poslovni partner"
 
-#~ msgid "Gross value "
-#~ msgstr "Bruto "
+#. module: account_asset
+#: field:asset.depreciation.confirmation.wizard,period_id:0
+msgid "Period"
+msgstr "Obdobje"
 
-#~ msgid "Month"
-#~ msgstr "Mesec"
+#. module: account_asset
+#: field:account.asset.category,method_period:0
+#: field:account.asset.history,method_period:0
+#: field:asset.modify,method_period:0
+msgid "Period Length"
+msgstr "Obdobje obračuna"
 
-#~ msgid "State"
-#~ msgstr "Status"
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_check:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,move_check:0
+msgid "Posted"
+msgstr "Knjiženo"
 
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Številka računa se ne sme ponoviti!"
+#. module: account_asset
+#: field:asset.asset.report,posted_value:0
+msgid "Posted Amount"
+msgstr "Knjižen znesek"
 
-#~ msgid "Month-1"
-#~ msgstr "Mesec-1"
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Posted depreciation lines"
+msgstr "Knjižene amortizacijske postavke"
 
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Konto je zaprt."
+#. module: account_asset
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
+msgid "Prorata Temporis"
+msgstr "Prorata Temporis"
 
-#~ msgid "Depreciation Amount"
-#~ msgstr "Znesek amortizacije"
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid ""
+"Prorata temporis can be applied only for time method \"number of "
+"depreciations\"."
+msgstr ""
+"\"Prorata temporis\" lahko uporabimo le pri metodi \"število amortizacij\""
 
-#~ msgid "Calculates Depreciation within specified interval"
-#~ msgstr "Izračun amortizacije v določenem intervalu"
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: field:asset.asset.report,purchase_date:0
+msgid "Purchase Date"
+msgstr "Datum nakupa"
 
-#~ msgid "State here the time during 2 depreciations, in months"
-#~ msgstr "Čas med dvema amortizacijama( v mesecih)"
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Purchase Month"
+msgstr ""
 
-#~ msgid ""
-#~ "Choose the method to use to compute the amount of depreciation lines.\n"
-#~ "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-#~ "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
-#~ msgstr ""
-#~ "Izberi metodo  za izračun vrednosti amortizacije:\n"
-#~ "  *Linerna: bruto vrednost/št.amortizacij\n"
-#~ "  *Degresivna:ostanek vrednosti*degresivni faktor"
+#. module: account_asset
+#: field:asset.modify,name:0
+msgid "Reason"
+msgstr "Vzrok"
 
-#~ msgid "Amount to Depreciate"
-#~ msgstr "Znesek za amortizacijo"
+#. module: account_asset
+#: field:account.asset.asset,code:0
+msgid "Reference"
+msgstr "Sklic"
+
+#. module: account_asset
+#: field:account.asset.asset,value_residual:0
+msgid "Residual Value"
+msgstr "Ostanek vrednosti"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Running"
+msgstr "V uporabi"
+
+#. module: account_asset
+#: field:account.asset.asset,salvage_value:0
+msgid "Salvage Value"
+msgstr "Ostanek vrednosti"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_search
+msgid "Search Asset Category"
+msgstr "Iskanje po kategoriji osnovnega sredstva"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
+msgstr "Zaporedje"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Close"
+msgstr "Nastvi na \"Izven uporabe\""
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Draft"
+msgstr "Nastavi kot osnutek"
+
+#. module: account_asset
+#: field:account.asset.category,open_asset:0
+msgid "Skip Draft State"
+msgstr "Preskoči status \"V pripravi\""
+
+#. module: account_asset
+#: help:account.asset.category,method_period:0
+msgid "State here the time between 2 depreciations, in months"
+msgstr "Čas med dvema amortizacijama v mesecih"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,parent_state:0
+msgid "State of Asset"
+msgstr "Status osnovnega sredstva"
+
+#. module: account_asset
+#: field:account.asset.asset,state:0
+#: field:asset.asset.report,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr "Čas med dvema amortizacijama v mesecih"
+
+#. module: account_asset
+#: help:account.asset.history,method_time:0
+msgid ""
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Izberi metodo:\n"
+"Število amortizacij\n"
+"ali\n"
+"Končni datum"
+
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr "Število amortizacij potrebnih do dokončnega odpisa"
+
+#. module: account_asset
+#: field:account.asset.asset,method_time:0
+#: field:account.asset.category,method_time:0
+#: field:account.asset.history,method_time:0
+msgid "Time Method"
+msgstr "Časovna metoda"
+
+#. module: account_asset
+#: help:account.asset.history,method_period:0
+msgid "Time in month between two depreciations"
+msgstr "Čas v mesecih med dvema amortizacijama"
+
+#. module: account_asset
+#: field:asset.asset.report,unposted_value:0
+msgid "Unposted Amount"
+msgstr "Neknjižen znesek"
+
+#. module: account_asset
+#: field:account.asset.history,user_id:0
+msgid "User"
+msgstr "Uporabnik"
+
+#. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Ko kreirate osnovno sredstvo ima status \"V pripravi\".\n"
+"Ko ga potrdite ima status \"V uporabi\".\n"
+"Osnovno sredstvo lahko ročno določite \"Izven uporabe\", ko je amortizacija "
+"zaključena. Ko je knjižena prva amortizacija, dobi osnovno sredstvo "
+"avtomatično status \"V uporabi\"."
+
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Leto"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "Ni možno brisati osnovnega sredstva , ki ima vknjižene amortizacije."
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "months"
+msgstr "mesecev"

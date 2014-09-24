@@ -125,7 +125,6 @@ class FSWatcher(object):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent)):
             if not event.is_directory:
                 path = event.src_path
-                # TODO: assets bundle cache invalidation
                 if path.endswith('.py'):
                     try:
                         source = open(path, 'rb').read() + '\n'
@@ -882,21 +881,19 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if watchdog:
-        if config['dev_mode']:
+    watcher = None
+    if config['dev_mode']:
+        if watchdog:
             watcher = FSWatcher()
             watcher.start()
-    else:
-        intro = "'watchdog' module not installed."
-        # _logger.warning("%s Asset Bundles automatic cache invalidation disabled." % intro)
-        if config['dev_mode']:
-            _logger.warning("%s Code autoreload feature is disabled" % intro)
+        else:
+            _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        if watchdog and config['dev_mode']:
+        if watcher:
             watcher.stop()
         _reexec()
 

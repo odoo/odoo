@@ -75,17 +75,15 @@ class AccountInvoice(osv.Model):
         return grouplines(self, ordered_lines, sortkey)
 
 
+import openerp
+
 class AccountInvoiceLine(osv.Model):
     _inherit = 'account.invoice.line'
-    _columns = {
-        'sale_layout_cat_id': fields.many2one('sale_layout.category',
-                                              string='Section'),
-        'categ_sequence': fields.related('sale_layout_cat_id',
-                                         'sequence', type='integer',
-                                         string='Layout Sequence', store=True)
-        #  Store is intentionally set in order to keep the "historic" order.
-    }
     _order = 'invoice_id, categ_sequence, sequence, id'
+
+    sale_layout_cat_id = openerp.fields.Many2one('sale_layout.category', string='Section')
+    categ_sequence = openerp.fields.Integer(related='sale_layout_cat_id.sequence',
+                                            string='Layout Sequence', store=True)
 
 
 class SaleOrder(osv.Model):

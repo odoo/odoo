@@ -69,19 +69,6 @@ class mrp_production(osv.osv):
                         res[production.id] = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
         return res
 
-    def _hook_create_post_procurement(self, cr, uid, production, procurement_id, context=None):
-        def get_parent_move(move):
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id)
-            return move
-
-        res = super(mrp_production, self)._hook_create_post_procurement(cr, uid, production, procurement_id, context)
-        if production.move_prod_id:
-            parent_move_line = get_parent_move(production.move_prod_id)
-            if parent_move_line and parent_move_line.sale_line_id:
-                self.pool.get('procurement.order').write(cr, uid, procurement_id, {'sale_line_id': parent_move_line.sale_line_id.id})
-        return res
-
     _columns = {
         'sale_name': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sales order.'),
         'sale_ref': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sales order.'),
@@ -103,3 +90,13 @@ class sale_order_line(osv.osv):
     _columns = {
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
     }
+    
+
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+    
+    def _prepare_procurement_from_move(self, cr, uid, move, context=None):
+        res = super(stock_move, self)._prepare_procurement_from_move(cr, uid, move, context=context)
+        if res and move.procurement_id and move.procurement_id.property_ids:
+            res['property_ids'] = [(6, 0, [x.id for x in move.procurement_id.property_ids])]
+        return res
