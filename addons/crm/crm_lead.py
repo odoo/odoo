@@ -164,7 +164,23 @@ class crm_lead(base_stage, format_address, osv.osv):
             fold[stage.id] = stage.fold or False
         return result, fold
 
+    def _get_view_id(self, cr, uid, type):
+        """Get the view id suiting the given type.
+
+        :param type: the lead type as a string.
+        :type type: str.
+        :returns: str or bool -- returns the view or False.
+        """
+        view_lead_xml_id = 'crm_case_form_view_oppor' if type == 'opportunity' \
+            else 'crm_case_form_view_leads'
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 
+            'crm', view_lead_xml_id)
+        return res and res[1] or False
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if view_type == 'form' and context and context.get('opportunity_id'):
+            lead_type = self.browse(cr, user, context['opportunity_id'], context=context).type
+            view_id = self._get_view_id(cr, user, lead_type)
         res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
