@@ -385,9 +385,7 @@ class mail_thread(osv.AbstractModel):
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
-        for key, val in context.iteritems():
-            if key.startswith('default_'):
-                create_values[key[8:]] = val
+        create_values = self._add_missing_default_values(cr, uid, create_values, context=context)
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
         # track values
@@ -395,7 +393,7 @@ class mail_thread(osv.AbstractModel):
         if 'lang' not in track_ctx:
             track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
         if not context.get('mail_notrack'):
-            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
+            tracked_fields = self._get_tracked_fields(cr, uid, create_values.keys(), context=track_ctx)
             if tracked_fields:
                 initial_values = {thread_id: dict.fromkeys(tracked_fields, False)}
                 self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
