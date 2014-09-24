@@ -153,11 +153,10 @@ class crm_lead(format_address, osv.osv):
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if view_type == 'form' and context and context.get('opportunity_id'):
-            # TODO: replace by get_formview_action call
-            lead_type = self.browse(cr, user, context['opportunity_id'], context=context).type
-            view_lead_xml_id = 'crm_case_form_view_oppor' if lead_type == 'opportunity' else 'crm_case_form_view_leads'
-            _, view_id = self.pool['ir.model.data'].get_object_reference(cr, user, 'crm', view_lead_xml_id)
+        if context and context.get('opportunity_id'):
+            action = self._get_formview_action(cr, user, context['opportunity_id'], context=context)
+            if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
+                view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
         res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
