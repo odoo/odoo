@@ -2502,8 +2502,8 @@ class BaseModel(object):
                 self._create_table(cr)
                 has_rows = False
             else:
-                cr.execute('SELECT min(id) FROM "%s"' % (self._table,))
-                has_rows = cr.fetchone()[0] is not None
+                cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
+                has_rows = cr.rowcount
 
             cr.commit()
             if self._parent_store:
