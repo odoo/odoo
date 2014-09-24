@@ -30,6 +30,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_escape as escape
 from openerp.tools.translate import _
+from num2words import num2words
 
 _logger = logging.getLogger(__name__)
 
@@ -957,6 +958,18 @@ class QwebWidgetMonetary(osv.AbstractModel):
         return u'{pre}{0}{post}'.format(
             formatted_amount, pre=pre, post=post
         ).format(symbol=display.symbol,)
+        
+class QwebWidgetNum2Words(osv.AbstractModel):
+    _name = 'ir.qweb.widget.num2words'
+    _inherit = 'ir.qweb.widget'
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        lang_code = qwebcontext.context.get('lang') or 'en_US'
+        res = num2words(inner,lang=lang_code)
+        if options.has_key('case'):
+            if options['case'] == 'upper':
+                res = res.upper()
+        return res
 
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
