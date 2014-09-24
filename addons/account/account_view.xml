@@ -201,7 +201,7 @@
                                 widget="many2many_tags"/>
                         </group>
                         <button string="Reconcile" type="action" class="oe_highlight"
-                            name="%(action_reconcile_partner)d"
+                            name="%(action_reconcile_account)d"
                             attrs="{'invisible':['|',('reconcile','=',False),'|',('type','=','payable'),('type','=','receivable')]}"/>
                         <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
@@ -733,6 +733,27 @@
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
                                 </div>
                                 <field name="journal_id"/>
+                            </group>
+                        </group>
+                        <div class="oe_edit_only">
+                            <label for="has_second_line" string="Second line"/>
+                            <field name="has_second_line" />
+                        </div>
+                        <group attrs="{'invisible':[('has_second_line','!=',True)]}">
+                            <group>
+                                <field name="second_account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="second_amount_type"/>
+                                <field name="second_tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
+                            <group>
+                                <field name="second_label"/>
+                                <label for="second_amount"/>
+                                <div>
+                                    <field name="second_amount" class="oe_inline" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                </div>
+                                <field name="second_journal_id"/>
                             </group>
                         </group>
                     </sheet>
