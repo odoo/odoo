@@ -1297,11 +1297,12 @@ class stock_picking(osv.osv):
 
                         product_avail[product.id] += qty
 
-
+            # every line of the picking is empty, do not generate anything
+            empty_picking = not any(q for q in move_product_qty.values() if q > 0)
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
-                if not new_picking:
+                if not new_picking and not empty_picking:
                     new_picking_name = pick.name
                     self.write(cr, uid, [pick.id], 
                                {'name': sequence_obj.get(cr, uid,
@@ -1367,6 +1368,8 @@ class stock_picking(osv.osv):
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 self.message_post(cr, uid, new_picking, body=_("Back order <em>%s</em> has been <b>created</b>.") % (pick.name), context=context)
+            elif empty_picking:
+                delivered_pack_id = pick.id
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
