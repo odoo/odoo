@@ -14,13 +14,82 @@
         </template>
 
         <template id="create_shorten_url">
-            <div class="container-fluid jumbotron">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-6 col-lg-offset-2">
-                        <h3>
-                            <input id="url" type="text" size="50" required="True" placeholder="Enter the URL to shorten"/>
-                        </h3>
-                        <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Shorten</button>
+                    <div class="col-lg-12">
+                        <h2 class="text-center">URL Shortener</h2>
+                        <h3 class="text-muted text-center">Get analytics with short URLs</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- <h1><t t-esc="k"/></h1> -->
+                        <div class="form-group">
+                            <label>Link to shorten</label>
+                            <div class="input-group">
+                                <input type="text" id="url" class="form-control input"  required="True" placeholder="e.g. http://www.odoo.com"/>
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Get short link</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Campaign</label>
+                            <input type="text" id="campaign-dialog" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Channel</label>
+                            <input type="text" id="channel-dialog" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>Source</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2>Recently used links</h2>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-lg-1">
+                        <h2>22</h2>                       
+                    </div>
+                    <div class="col-lg-7">
+                        <h5>Open Source ERP and CRM | Odoo <small>21 April 2014</small></h5>
+                        The Campaign • Newsletter • Email | <a href="#">View stats</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <button class="btn btn-primary">Copy to clipboard</button>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-lg-1">
+                        <h2>28</h2>                       
+                    </div>
+                    <div class="col-lg-7">
+                        <h5>The #1 Inbound Marketing community | inbound.org <small>19 April 2014</small></h5>
+                        Marketing Campaign • Newsletter • Email | <a href="#">View stats</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <button class="btn btn-primary">Copy to clipboard</button>
                     </div>
                 </div>
             </div>

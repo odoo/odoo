@@ -21,7 +21,7 @@ class Website_Url(http.Controller):
 
     @http.route(['/r'] , type='http', auth="none", website=True)
     def shorten_url(self, **post):
-        return request.website.render("website_url.page_shorten_url", {})
+        return request.website.render("website_url.page_shorten_url", {'k':'x'})
 
     """@http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):

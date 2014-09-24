@@ -55,6 +55,20 @@ class crm_tracking_campaign(osv.Model):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
+    def search_campaign(self, cr, uid, query_string, context=None):
+        campaign_ids = self.search(cr, uid, [('name', 'ilike', query_string)], context=context)
+        campaigns = self.browse(cr, uid, campaign_ids, context=context)
+
+        print campaigns
+
+        campaign_list = []
+        for campaign in campaigns:
+            campaign_list.append({'id': campaign.id, 'name': campaign.name})
+
+        print campaign_list
+
+        return campaign_list
+
 
 class crm_tracking_source(osv.Model):
     _name = "crm.tracking.source"
