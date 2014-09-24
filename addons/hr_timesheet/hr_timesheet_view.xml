@@ -11,7 +11,7 @@
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'
                         context="{'default_groups_ref': ['base.group_user']}"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal'),('invoice_on_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
+                    <field domain="[('type','=','normal'),('invoice_on_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'use_contract': True}"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="journal_id" invisible="1"/>

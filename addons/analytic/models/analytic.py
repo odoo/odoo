@@ -175,10 +175,9 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account/Contract Name', required=True, track_visibility='onchange'),
         'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
         'code': fields.char('Reference', select=True, track_visibility='onchange', copy=False),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'), ('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
-                                  "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
                                   "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."),
         'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'description': fields.text('Description'),
@@ -209,6 +208,8 @@ class account_analytic_account(osv.osv):
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
+        'use_contract': fields.boolean('Contract', help="Check this field if this project manages Contracts"),
+        'use_project': fields.boolean('Project',help="if task and/or issue is set, it is also a project. automatically set when task or issues is checked"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

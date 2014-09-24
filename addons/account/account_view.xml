@@ -1140,7 +1140,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
+                                        <field name="analytic_account_id" domain="[('type','=','normal'),('use_contract', '=', True)]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>

@@ -13,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                    <field domain="[('type','=', 'normal'), ('use_contract', '=', True), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount" sum="Total"/>
@@ -120,7 +120,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name" string="Description"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field domain="[('type','=', 'normal'), ('use_contract','=', True)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>

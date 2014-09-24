@@ -41,6 +41,7 @@ class project_project(osv.osv):
         
     _defaults = {
         'invoice_on_timesheets': True,
+        'use_contract': True,
     }
 
     def open_timesheets(self, cr, uid, ids, context=None):

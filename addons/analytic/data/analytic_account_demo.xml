@@ -62,7 +62,7 @@
         </record>
         <record id="analytic_support_internal" model="account.analytic.account">
             <field name="name">Internal</field>
-            <field name="type">contract</field>
+            <field name="use_contract">True</field>
             <field name="parent_id" ref="analytic_support"/>
         </record>
         <record id="analytic_integration" model="account.analytic.account">
@@ -72,12 +72,12 @@
         </record>
         <record id="analytic_consultancy" model="account.analytic.account">
             <field name="name">Consultancy</field>
-            <field name="type">contract</field>
+            <field name="use_contract">True</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_super_product_trainings" model="account.analytic.account">
             <field name="name">Training</field>
-            <field name="type">contract</field>
+            <field name="use_contract">True</field>
             <field name="parent_id" ref="analytic_our_super_product"/>
         </record>
         <record id="analytic_seagate_p1" model="account.analytic.account">

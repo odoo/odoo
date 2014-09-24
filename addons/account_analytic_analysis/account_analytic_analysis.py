@@ -605,7 +605,8 @@ class account_analytic_account(osv.osv):
 
         def fill_remind(key, domain, write_pending=False):
             base_domain = [
-                ('type', '=', 'contract'),
+                ('type', '=', 'normal'),
+                ('use_contract', '=', True),
                 ('partner_id', '!=', False),
                 ('manager_id', '!=', False),
                 ('manager_id.email', '!=', False),
@@ -739,7 +740,7 @@ class account_analytic_account(osv.osv):
         if ids:
             contract_ids = ids
         else:
-            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
+            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('use_contract', '=', True)])
         if contract_ids:
             cr.execute('SELECT company_id, array_agg(id) as ids FROM account_analytic_account WHERE id IN %s GROUP BY company_id', (tuple(contract_ids),))
             for company_id, ids in cr.fetchall():

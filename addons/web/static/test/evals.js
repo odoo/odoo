@@ -474,7 +474,7 @@ openerp.testing.section('eval.edc.nonliterals', {
 }, function (test) {
     test('domain with time', {asserts: 1}, function (instance) {
         return instance.edc([
-            [['type', '=', 'contract']],
+            [['use_contract', '=', 1]],
             { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
               "__eval_context": null,
               "__ref": "compound_domain"
@@ -486,7 +486,7 @@ openerp.testing.section('eval.edc.nonliterals', {
             var today = _.str.sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
             deepEqual(result.domain, [
-                ["type", "=", "contract"],
+                ["use_contract", "=", 1],
                 "|", ["state", "in", ["open", "draft"]],
                      ["state", "=", "pending"],
                 "|",

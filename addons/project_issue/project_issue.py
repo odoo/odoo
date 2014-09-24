@@ -195,7 +195,7 @@ class project_issue(osv.Model):
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
-            if issue.project_id.parent_id.type == 'contract':
+            if issue.project_id.parent_id.use_contract == True:
                 res[issue.id] = True
         return res
 
@@ -529,6 +529,12 @@ class account_analytic_account(osv.Model):
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_issues'] = template.use_issues
+        return res
+    
+    def onchange_use_issues_or_task(self, cr, uid, ids, use_issues, use_tasks, context=None):
+        res= {'value':{'use_project':False}}
+        if (use_issues or use_tasks):
+            res['value']['use_project'] = True
         return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):

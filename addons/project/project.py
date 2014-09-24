@@ -346,11 +346,11 @@ class project(osv.osv):
     _order = "sequence, id"
     _defaults = {
         'active': True,
-        'type': 'contract',
         'state': 'open',
         'sequence': 10,
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
+        'use_project': True,
         'privacy_visibility': 'employees',
     }
 
@@ -587,10 +587,9 @@ def Project():
         create_context = dict(context, project_creation_in_progress=True,
                               alias_model_name=vals.get('alias_model', 'project.task'),
                               alias_parent_model_name=self._name)
-
-        if vals.get('type', False) not in ('template', 'contract'):
-            vals['type'] = 'contract'
-
+        if (vals.get('type', False) !='template') and vals.get('use_contract', False):
+            vals['use_contract'] = True
+            
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
         if ir_values:
             vals['alias_name'] = vals.get('alias_name') or vals.get('name')
@@ -1240,6 +1239,12 @@ class account_analytic_account(osv.osv):
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_tasks'] = template.use_tasks
         return res
+    
+    def onchange_use_tasks(self, cr, uid, ids, use_tasks, context=None):
+        res= {'value':{'use_project':False}}
+        if use_tasks:
+            res['value']['use_project'] = True
+        return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
         '''
@@ -1258,7 +1263,8 @@ class account_analytic_account(osv.osv):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
-                'type': vals.get('type','contract'),
+                'type': vals.get('type','normal'),
+                'use_contract': vals.get('use_contract', False),
             }
             return project_pool.create(cr, uid, project_values, context=context)
         return False

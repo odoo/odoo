@@ -115,6 +115,7 @@
                             <newline/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                         </group>
+                        <group name='align'></group>
                         <group name="group_alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <label for="alias_name" string="Email Alias"/>
@@ -623,7 +624,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks"/>
+                    <field name="use_tasks" on_change="onchange_use_tasks(use_tasks)"/>
                     <label for="use_tasks"/>
                 </xpath>
             </field>

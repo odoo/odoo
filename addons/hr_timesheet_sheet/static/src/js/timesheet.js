@@ -239,14 +239,15 @@ openerp.hr_timesheet_sheet = function(instance) {
                     name: "account",
                     type: "many2one",
                     domain: [
-                        ['type','in',['normal', 'contract']],
+                        ['type','=','normal'],
+                        ['use_contract','=',1],
                         ['state', '<>', 'close'],
                         ['invoice_on_timesheets','=',1],
                         ['id', 'not in', _.pluck(self.accounts, "account")],
                     ],
                     context: {
                         default_invoice_on_timesheets: 1,
-                        default_type: "contract",
+                        use_contract: 1,
                     },
                     modifiers: '{"required": true}',
                 },

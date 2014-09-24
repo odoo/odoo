@@ -356,8 +356,11 @@
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_issues"/>
+            	<xpath expr='//field[@name="use_tasks"]' position='replace'>
+            	    <field name="use_tasks" on_change="onchange_use_issues_or_task(use_issues,use_tasks)"/>
+               </xpath>
+               <xpath expr='//div[@name="project"]' position='inside'>
+                    <field name="use_issues" on_change="onchange_use_issues_or_task(use_issues,use_tasks)"/>
                     <label for="use_issues"/>
                 </xpath>
             </field>

@@ -31,12 +31,16 @@
                 <xpath expr='//div[@name="options_active"]' position='inside'>
                     <field name="invoice_on_timesheets" class="oe_inline"/>
                     <label for="invoice_on_timesheets"/>
+                    <field name="use_contract" class="oe_inline"/>
+                    <label for="use_contract"/>
                 </xpath>
-                <xpath expr='//group[@name="group_alias"]' position='before'>
-                    <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                        To invoice or setup invoicing and renewal options, go to the related contract:
-                        <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
-                    </p>
+                <xpath expr='//group[@name="align"]' position='inside'>
+                    <div attrs="{'invisible': ['|',('use_contract', '=', False),('analytic_account_id', '=', False)]}">
+                        <p>
+                            To invoice or setup invoicing and renewal options, go to the related contract:
+                            <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
+                        </p>
+                    </div>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position="inside">
                     <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
