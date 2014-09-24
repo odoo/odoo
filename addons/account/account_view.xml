@@ -730,7 +730,7 @@
                                 <label for="amount"/>
                                 <div>
                                     <field name="amount" class="oe_inline" />
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
                                 <field name="journal_id"/>
                             </group>
@@ -751,7 +751,7 @@
                                 <label for="second_amount"/>
                                 <div>
                                     <field name="second_amount" class="oe_inline" />
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
                                 <field name="second_journal_id"/>
                             </group>

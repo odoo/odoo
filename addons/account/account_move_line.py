@@ -942,27 +942,36 @@ class account_move_line(osv.osv):
             domain.append(('id', 'not in', excluded_ids))
         if str:
             domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
-            # TODO : store fields amount_residual and amount_residual_currency ? Or add a search function ?
+            # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
             try:
                 amount = float(str)
                 # domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
             except:
                 pass
 
-        # Get move lines
-        line_ids = self.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
-        lines = self.browse(cr, uid, line_ids, context=context)
-        
-        # In case of a partial reconciliation, only consider one line 
-        reconcile_partial_ids = []
+        # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
-        for line in lines:
-            if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
-                continue
-            filtered_lines.append(line)
-            if line.reconcile_partial_id:
-                reconcile_partial_ids.append(line.reconcile_partial_id.id)
-        lines = filtered_lines
+        reconcile_partial_ids = []
+        actual_offset = offset
+        while True:
+            line_ids = self.search(cr, uid, domain, offset=actual_offset, limit=limit, order="date_maturity asc, id asc", context=context)
+            lines = self.browse(cr, uid, line_ids, context=context)
+            make_one_more_loop = False
+            for line in lines:
+                if line.reconcile_partial_id and line.reconcile_partial_id.id in reconcile_partial_ids:
+                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
+                    #in order to get the right number of items in the pager
+                    make_one_more_loop = True
+                    continue
+                filtered_lines.append(line)
+                if line.reconcile_partial_id:
+                    reconcile_partial_ids.append(line.reconcile_partial_id.id)
+
+            if not limit or not make_one_more_loop or len(filtered_lines) >= limit:
+                break
+            actual_offset = actual_offset + limit
+        lines = limit and filtered_lines[:limit] or filtered_lines
+
 
         # Return count or lines
         if count:
@@ -1011,9 +1020,6 @@ class account_move_line(osv.osv):
                 'partial_reconciliation_siblings': partial_reconciliation_siblings,
             }
 
-            # DEBUG
-            ret_line['reconcile_partial_id'] = line.reconcile_partial_id.id
-
             # Amount residual can be negative
             debit = line.debit
             credit = line.credit
@@ -1054,47 +1060,77 @@ class account_move_line(osv.osv):
             ret.append(ret_line)
         return ret
 
-    # TODO : WIP
+    def process_reconciliations(self, cr, uid, data, context=None):
+        """ Used to validate a batch of reconciliations in a single call """
+        account_obj = self.pool.get('account.account')
+        partner_obj = self.pool.get('res.partner')
+        for datum in data:
+            id = datum['id']
+            type = datum['type']
+            mv_line_ids = datum['mv_line_ids']
+            new_mv_line_dicts = datum['new_mv_line_dicts']
+
+            if len(mv_line_ids) >= 1 or len(mv_line_ids) + len(new_mv_line_dicts) >= 2:
+                self.process_reconciliation(cr, uid, mv_line_ids, new_mv_line_dicts, context=context)
+        
+            if type == 'partner':
+                partner_obj.mark_as_reconciled(cr, uid, [id], context=context)
+            if type == 'account':
+                account_obj.mark_as_reconciled(cr, uid, [id], context=context)
+
     def process_reconciliation(self, cr, uid, mv_line_ids, new_mv_line_dicts, context=None):
-        """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on mv_line_ids and new move lines"""
-        if context is None:
-            context = {}
+        """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on mv_line_ids and new move lines """
+
         if len(mv_line_ids) < 1 or len(mv_line_ids) + len(new_mv_line_dicts) < 2:
             raise osv.except_osv(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
         
-        am_obj = self.pool.get('account.move')
-        currency_obj = self.pool.get('res.currency')
-        account = self.browse(cr, uid, mv_line_ids[0], context=context).account_id
-        company_id = account.company_id.id
-        company_currency_id = account.company_id.currency_id.id
-        account_currency_id = account.currency_id or company_currency_id
+        # Create writeoff move lines
+        writeoff_line_ids = []
+        if len(new_mv_line_dicts) > 0:
+            am_obj = self.pool.get('account.move')
+            currency_obj = self.pool.get('res.currency')
+            account = self.browse(cr, uid, mv_line_ids[0], context=context).account_id
+            account_id = account.id
+            company_currency_id = account.company_id.currency_id.id
+            account_currency_id = account.currency_id or company_currency_id
 
-        # Create new move lines
-        new_mv_lines_ids = []
-        for mv_line_dict in new_mv_line_dicts:
-            if mv_line_dict.get('is_tax_line'):
-                continue
-            for field in ['debit', 'credit', 'amount_currency']:
-                if field not in mv_line_dict:
-                    mv_line_dict[field] = 0.0
+            for mv_line_dict in new_mv_line_dicts:
+                if mv_line_dict.get('is_tax_line'):
+                    continue
+                writeoff_dicts = []
 
-            journal_id = mv_line_dict['journal_id']
-            move_vals = am_obj.account_move_prepare(cr, uid, journal_id, context=context)
-            move_id = am_obj.create(cr, uid, move_vals, context=context)
+                # Data for both writeoff lines
+                for field in ['debit', 'credit', 'amount_currency']:
+                    if field not in mv_line_dict:
+                        mv_line_dict[field] = 0.0
+                if account_currency_id != company_currency_id:
+                    mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
+                    mv_line_dict['currency_id'] = account_currency_id
+                    mv_line_dict['debit'] = currency_obj.compute(cr, uid, account_currency_id, company_currency_id, mv_line_dict['debit'], context=context)
+                    mv_line_dict['credit'] = currency_obj.compute(cr, uid, account_currency_id, company_currency_id, mv_line_dict['credit'], context=context)
+                
+                # Writeoff line in specified writeoff account
+                first_line_dict = mv_line_dict.copy()
+                if 'analytic_account_id' in first_line_dict:
+                    del first_line_dict['analytic_account_id']
+                writeoff_dicts.append((0, 0, first_line_dict))
 
-            mv_line_dict['move_id'] = move_id
-            mv_line_dict['period_id'] = move_vals['period_id']
-            mv_line_dict['journal_id'] = journal_id
-            mv_line_dict['company_id'] = company_id
-            if account_currency_id != company_currency_id:
-                mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
-                mv_line_dict['currency_id'] = account_currency_id
-                mv_line_dict['debit'] = currency_obj.compute(cr, uid, account_currency_id, company_currency_id, mv_line_dict['debit'], context=context)
-                mv_line_dict['credit'] = currency_obj.compute(cr, uid, account_currency_id, company_currency_id, mv_line_dict['credit'], context=context)
-            new_aml_id = self.create(cr, uid, mv_line_dict, context=context)
-            new_mv_lines_ids.append(new_aml_id)
+                # Writeoff line in account being reconciled
+                second_line_dict = mv_line_dict.copy()
+                second_line_dict['account_id'] = account_id
+                second_line_dict['debit'] = mv_line_dict['credit']
+                second_line_dict['credit'] = mv_line_dict['debit']
+                if account_currency_id != company_currency_id:
+                    second_line_dict['amount_currency'] = -mv_line_dict['amount_currency']
+                writeoff_dicts.append((0, 0, second_line_dict))
 
-        self.reconcile_partial(cr, uid, mv_line_ids + new_mv_lines_ids, type='manual', context=context)
+                # Create the move
+                move_vals = am_obj.account_move_prepare(cr, uid, mv_line_dict['journal_id'], context=context)
+                move_vals['line_id'] = writeoff_dicts
+                move_id = am_obj.create(cr, uid, move_vals, context=context)
+                writeoff_line_ids += self.search(cr, uid, [('move_id', '=', move_id),('account_id', '=', account_id)], context=context)
+
+        self.reconcile_partial(cr, uid, mv_line_ids + writeoff_line_ids, type='manual', context=context)
     
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
