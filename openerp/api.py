@@ -700,7 +700,7 @@ class Environment(object):
         # if env already exists, return it
         env, envs = None, cls._local.environments
         for env in envs:
-            if env.args == args:
+            if env.args == args and env.registry == RegistryManager.get(cr.dbname):
                 return env
 
         # otherwise create environment, and add it in the set
