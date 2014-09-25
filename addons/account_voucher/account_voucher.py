@@ -187,9 +187,11 @@ class account_voucher(osv.osv):
         debit = credit = 0.0
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
-            debit += l['amount']
+            if isinstance(l, dict):
+                debit += l['amount']
         for l in line_cr_ids:
-            credit += l['amount']
+            if isinstance(l, dict):
+                credit += l['amount']
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
@@ -565,6 +567,8 @@ class account_voucher(osv.osv):
             o2m_to_loop = 'line_dr_ids'
         if o2m_to_loop and 'value' in vals and o2m_to_loop in vals['value']:
             for voucher_line in vals['value'][o2m_to_loop]:
+                if not isinstance(voucher_line, dict):
+                    continue
                 if voucher_line['currency_id'] != currency_id:
                     # we take as default value for the payment_rate_currency_id, the currency of the first invoice that
                     # is not in the voucher currency
@@ -677,13 +681,16 @@ class account_voucher(osv.osv):
 
         #set default values
         default = {
-            'value': {'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
+            'value': {'line_dr_ids': [], 'line_cr_ids': [], 'pre_line': False},
         }
 
-        #drop existing lines
-        line_ids = ids and line_pool.search(cr, uid, [('voucher_id', '=', ids[0])]) or False
-        if line_ids:
-            line_pool.unlink(cr, uid, line_ids)
+        # drop existing lines
+        line_ids = ids and line_pool.search(cr, uid, [('voucher_id', '=', ids[0])])
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            if line.type == 'cr':
+                default['value']['line_cr_ids'].append((2, line.id))
+            else:
+                default['value']['line_dr_ids'].append((2, line.id))
 
         if not partner_id or not journal_id:
             return default
