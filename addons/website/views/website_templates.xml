@@ -99,16 +99,13 @@
 
                     var view_id = $('html').attr('data-view-xmlid');
                     openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
-                                var exp = 'exp_'+result['experiment_id']
-                                var snap = 'snap_'+result['snapshot_id']
-                                console.log(exp+':'+snap);
-                                ga('send', 'pageview', {
-                                  'dimension1':  exp
-                                });
-                                ga('send', 'pageview', {
-                                  'dimension2':  snap
-                                });
-                            });
+                            var exp = result['ExpId']
+                            var snap = result['VarId']
+                            console.log(exp+':'+snap);
+                            ga('set', 'expId', exp); 
+                            ga('set', 'expVar', snap);
+                            ga('send', 'pageview');
+                        });
                 </script>
             </t>
         </head>
