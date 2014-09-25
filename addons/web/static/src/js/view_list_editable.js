@@ -496,6 +496,7 @@ openerp.web.list_editable = function (instance) {
                 }
                 var record = self.records[next_record](
                         saveInfo.record, {wraparound: true});
+                self.dataset.next();
                 return self.start_edition(record, options);
             });
         },
