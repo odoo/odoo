@@ -102,9 +102,13 @@ class TableExporter(http.Controller):
         view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
         exp_ids = request.registry['website_version.experiment'].search(cr, uid, [('experiment_snapshot_ids.snapshot_id.view_ids.key', '=', view.key),('state','=','running')],context=context)
         if exp_ids:
-            result['experiment_id'] = exp_ids[0]
+            x = request.registry['website_version.experiment'].browse(cr, uid, [exp_ids[0]],context)[0]
+            result['ExpId'] = x.google_id
             if view.snapshot_id:
-                result['snapshot_id'] = view.snapshot_id.id
+                exp_snap_ids = request.registry['website_version.experiment_snapshot'].search(cr, uid, [('experiment_id','=',exp_ids[0].id),('snapshot_id','=',view.snapshot_id.id)],context=context)
+                if exp_snap_ids:
+                    y = request.registry['website_version.experiment_snapshot'].browse(cr, uid, [exp_snap_ids[0]],context)[0]
+                    result['VarId'] = y.google_index
         print result  
         return result
 
