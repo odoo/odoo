@@ -115,7 +115,7 @@
                   <div>Notes</div>
                   <textarea class="pt_input_description"></textarea>
                 </div>
-                <div>
+                <div class="pt_mt_5">
                   <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button> 
                   or
                   <a class="btn pt_link pt_btn_cancel">Cancel</a>
@@ -159,7 +159,37 @@
                     <input type="radio" name="pt_radio" id="pt_existing_user" checked="true"/> <span>I already have an account</span>
                 </div>
                 <hr/>
-                <div>
+                <div class="o_new_account">
+                    <div>
+                        Choose an address
+                    </div>
+                    <div class="input-group">
+                        <input class="form-control o_input_new_address"/>
+                        <span class="input-group-addon o_new_address_suffix">.odoo.com</span>
+                    </div>
+                    <div class="pt_mt_5">
+                        <button class="btn btn-default pt_btn pt_btn_add_activity">Add Account</button> 
+                        or
+                        <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    </div>
+                    <div class="pt_mt_5">
+                        <h5>Why create an online account ?</h5>
+                        <div>
+                            <ul>
+                                <li>It's free</li>
+                                <li>Backup &amp; synchronize your tasks entries</li>
+                                <li>Create bills &amp; invoices</li>
+                                <li>Manage multiple users</li>
+                                <li>Modify rules (ex: time increment)</li>
+                                <li>Analyze detailed statistics and create reports</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <a href="https://www.odoo.com/page/project-management" target="_blank">Discover all the features of Odoo Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_existing_account o_active">
                     <div>Enter your address</div>
                     <div class="input-group">
                         <div class="input-group-btn">
@@ -171,29 +201,29 @@
                         </div>
                         <input type="text" class="form-control pt_input_server_address" placeholder="Your Server Address"/>
                     </div>
-                </div>
-                <div>
-                    <div>Database</div>
                     <div>
-                        <input type="text" class="pt_input_db"/>
+                        <div>Database</div>
+                        <div>
+                            <input type="text" class="pt_input_db"/>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div>User Name</div>
                     <div>
-                        <input type="text" class="pt_input_username"/>
+                        <div>User Name</div>
+                        <div>
+                            <input type="text" class="pt_input_username"/>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div>Password</div>
                     <div>
-                        <input type="password" class="pt_input_password"/>
+                        <div>Password</div>
+                        <div>
+                            <input type="password" class="pt_input_password"/>
+                        </div>
                     </div>
-                </div>
-                <div class="pt_mt_5">
-                  <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
-                  or
-                  <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    <div class="pt_mt_5">
+                      <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
+                      or
+                      <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    </div>
                 </div>
               </div>
             </div>

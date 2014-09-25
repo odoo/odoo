@@ -26,6 +26,9 @@ html, body {
 .oe_hidden {
     display: none !important;
 }
+.o_active {
+    display: block !important;
+}
 .odoo_project_timesheet .pt_activity_header {
     background-color: #a24689;
     min-height: 10%;
@@ -72,6 +75,9 @@ html, body {
 }
 .odoo_project_timesheet input.pt_required {
     border-color: red;
+}
+.odoo_project_timesheet .o_new_account, .odoo_project_timesheet .o_existing_account {
+    display: none;
 }
 /*
 jquery-ui autocomplete hack, bootstrap element having more z-index
