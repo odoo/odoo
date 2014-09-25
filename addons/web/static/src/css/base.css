@@ -3259,6 +3259,9 @@ body.oe_single_form .oe_single_form_container {
   .openerp {
     text-shadow: none;
   }
+  .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
+    overflow: visible;
+  }
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;
   }
@@ -3293,6 +3296,10 @@ body.oe_single_form .oe_single_form_container {
   }
   .openerp .openerp div.oe_mail_wall {
     overflow: hidden !important;
+  }
+
+  .openerp.openerp_webclient_container {
+    overflow: visible;
   }
 }
 .tooltip {
@@ -3354,6 +3361,9 @@ body.oe_single_form .oe_single_form_container {
   height: 18px;
   font-size: 20px;
 }
+.modal .modal-body {
+  overflow-x: auto;
+}
 .modal .modal-footer {
   text-align: left;
 }
@@ -3362,7 +3372,6 @@ body.oe_single_form .oe_single_form_container {
 }
 .modal .oe_act_window.modal-body {
   padding: 0;
-  overflow-x: auto;
 }
 
 .ui-datepicker {

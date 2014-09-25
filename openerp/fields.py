@@ -557,7 +557,11 @@ class Field(object):
         return False
 
     def _description_searchable(self, env):
-        return self._description_store(env) or bool(self.search)
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True)) or \
+                   bool(getattr(column, '_fnct_search', False))
+        return bool(self.search)
 
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))

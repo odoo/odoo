@@ -479,6 +479,18 @@ class BaseModel(object):
             cls._columns.pop(name, None)
 
     @classmethod
+    def _pop_field(cls, name):
+        """ Remove the field with the given `name` from the model.
+            This method should only be used for manual fields.
+        """
+        field = cls._fields.pop(name)
+        cls._columns.pop(name, None)
+        cls._all_columns.pop(name, None)
+        if hasattr(cls, name):
+            delattr(cls, name)
+        return field
+
+    @classmethod
     def _add_magic_fields(cls):
         """ Introduce magic fields on the current class
 
