@@ -378,6 +378,38 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.TextInputPopupWidget = module.PopUpWidget.extend({
+        template: 'TextInputPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.comment = options.comment || '';
+            this.value   = options.value   || '';
+            this.renderElement();
+            
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.cancel ){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                var value = self.$('input').val();
+                if( options.confirm ){
+                    options.confirm.call(self,value);
+                }
+            });
+        },
+    });
+
+    module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
+        template: 'ErrorNoClientPopupWidget',
+    });
+
     module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorInvoiceTransferPopupWidget',
     });

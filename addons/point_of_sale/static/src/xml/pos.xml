@@ -919,6 +919,23 @@
         </div>
     </t>
 
+    <t t-name="TextInputPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <input type='text' t-att-value="widget.value || ''"></input>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="UnsentOrdersPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-unsent-orders">
