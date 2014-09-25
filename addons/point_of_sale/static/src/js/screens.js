@@ -45,7 +45,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.popup_set[popup_name].hide();
             }
 
-            this.pos.get('selectedOrder').set_screen_data({
+            this.pos.get_order().set_screen_data({
                 'screen': this.default_screen,
             });
 
@@ -70,11 +70,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.current_popup = null;
             }
         },
-        load_saved_screen:  function(){
+        load_saved_screen:  function(options){
+            options = options || {};
             this.close_popup();
-            var selectedOrder = this.pos.get('selectedOrder');
+            var selectedOrder = this.pos.get_order();
             // FIXME : this changing screen behaviour is sometimes confusing ... 
-            this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
+            this.set_current_screen(selectedOrder.get_screen_data('screen') || options.default_screen || this.default_screen,null,'refresh');
             //this.set_current_screen(this.default_screen,null,'refresh');
             
         },
@@ -96,17 +97,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.close_popup();
 
-            var order = this.pos.get('selectedOrder');
-            var old_screen_name = order.get_screen_data('screen');
+            var order = this.pos.get_order();
+            if (order) {
+                var old_screen_name = order.get_screen_data('screen');
 
-            order.set_screen_data('screen',screen_name);
+                order.set_screen_data('screen',screen_name);
 
-            if(params){
-                order.set_screen_data('params',params);
-            }
+                if(params){
+                    order.set_screen_data('params',params);
+                }
 
-            if( screen_name !== old_screen_name ){
-                order.set_screen_data('previous-screen',old_screen_name);
+                if( screen_name !== old_screen_name ){
+                    order.set_screen_data('previous-screen',old_screen_name);
+                }
             }
 
             if ( refresh || screen !== this.current_screen){
@@ -119,16 +122,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         get_current_screen: function(){
-            return this.pos.get('selectedOrder').get_screen_data('screen') || this.default_screen;
+            return this.pos.get_order().get_screen_data('screen') || this.default_screen;
         },
         back: function(){
-            var previous = this.pos.get('selectedOrder').get_screen_data('previous-screen');
+            var previous = this.pos.get_order().get_screen_data('previous-screen');
             if(previous){
                 this.set_current_screen(previous);
             }
         },
         get_current_screen_param: function(param){
-            var params = this.pos.get('selectedOrder').get_screen_data('params');
+            var params = this.pos.get_order().get_screen_data('params');
             return params ? params[param] : undefined;
         },
         set_default_screen: function(){
@@ -194,7 +197,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         barcode_client_action: function(code){
             var partner = this.pos.db.get_partner_by_ean13(code.code);
             if(partner){
-                this.pos.get('selectedOrder').set_client(partner);
+                this.pos.get_order().set_client(partner);
                 this.pos_widget.username.refresh();
                 return true;
             }
@@ -205,7 +208,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // what happens when a discount barcode is scanned : the default behavior
         // is to set the discount on the last order.
         barcode_discount_action: function(code){
-            var last_orderline = this.pos.get('selectedOrder').getLastOrderline();
+            var last_orderline = this.pos.get_order().getLastOrderline();
             if(last_orderline){
                 last_orderline.set_discount(code.value)
             }
@@ -479,7 +482,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         order_product: function(){
-            this.pos.get('selectedOrder').addProduct(this.get_product(),{ quantity: this.weight });
+            this.pos.get_order().addProduct(this.get_product(),{ quantity: this.weight });
         },
         get_product_name: function(){
             var product = this.get_product();
@@ -536,7 +539,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     if(product.to_weight && self.pos.config.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen('scale',{product: product});
                     }else{
-                        self.pos.get('selectedOrder').addProduct(product);
+                        self.pos.get_order().addProduct(product);
                     }
                 },
                 product_list: this.pos.db.get_product_by_category(0)
@@ -587,7 +590,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.renderElement();
             this.details_visible = false;
-            this.old_client = this.pos.get('selectedOrder').get('client');
+            this.old_client = this.pos.get_order().get_client()
             this.new_client = this.old_client;
 
             this.$('.back').click(function(){
@@ -689,7 +692,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         save_changes: function(){
             if( this.has_client_changed() ){
-                this.pos.get('selectedOrder').set_client(this.new_client);
+                this.pos.get_order().set_client(this.new_client);
             }
         },
         has_client_changed: function(){
@@ -1299,7 +1302,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
 
             if (order.isPaidWithCash() && this.pos.config.iface_cashdrawer) { 
-            
                     this.pos.proxy.open_cashbox();
             }
 

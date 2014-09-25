@@ -49,6 +49,7 @@ class restaurant_table(osv.osv):
         'height':       fields.float('Height', help="The table's height in percentage of the floor's height"),
         'color':        fields.char('Color', size=32, help="The table's color"),
         'active':       fields.boolean('Active',help='If false, the table is deactivated and will not be available in the point of sale'),
+        'pos_order_ids':fields.one2many('pos.order','table_id','Pos Orders', help='The orders served at this table'),
     }
 
     _defaults = {
@@ -105,3 +106,9 @@ class pos_config(osv.osv):
         'iface_printbill': False,
     }
             
+class pos_order(osv.osv):
+    _inherit = 'pos.order'
+    _columns = {
+        'table_id': fields.many2one('restaurant.table','Table', help='The table where this order was served'),
+    }
+

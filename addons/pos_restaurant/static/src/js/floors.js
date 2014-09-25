@@ -1,6 +1,7 @@
 function openerp_restaurant_floors(instance,module){
     var _t = instance.web._t;
 
+    // At POS Startup, load the floors, and add them to the pos model
     module.PosModel.prototype.models.push({
         model: 'restaurant.floor',
         fields: ['name','background_image','table_ids'],
@@ -15,6 +16,8 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    // At POS Startup, after the floors are loaded, load the tables, and associate
+    // them with their floor. 
     module.PosModel.prototype.models.push({
         model: 'restaurant.table',
         fields: ['name','width','height','position_h','position_v','shape','floor_id','color'],
@@ -28,6 +31,7 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    // The Table GUI element, should always be a child of the FloorScreenWidget
     module.TableWidget = module.PosBaseWidget.extend({
         template: 'TableWidget',
         init: function(parent, options){
@@ -39,6 +43,8 @@ function openerp_restaurant_floors(instance,module){
             this.handle_dragging = false;
             this.handle   = null;
         },
+        // computes the absolute position of a DOM mouse event, used
+        // when resizing tables
         event_position: function(event){
             if(event.touches && event.touches[0]){
                 return {x: event.touches[0].screenX, y: event.touches[0].screenY};
@@ -46,11 +52,13 @@ function openerp_restaurant_floors(instance,module){
                 return {x: event.screenX, y: event.screenY};
             }
         },
+        // when a table is clicked, go to the table's orders
+        // but if we're editing, we select/deselect it.
         click_handler: function(){
             var self = this;
             var floorplan = this.getParent();
             if (floorplan.editing) {
-                setTimeout(function(){  // in a setTimeout to debounce with drag&drop
+                setTimeout(function(){  // in a setTimeout to debounce with drag&drop start
                     if (!self.dragging) {
                         if (self.moved) {
                             self.moved = false;
@@ -61,17 +69,23 @@ function openerp_restaurant_floors(instance,module){
                         }
                     } 
                 },50);
+            } else {
+                console.log('set table',this.table);
+                floorplan.pos.set_table(this.table);
             }
         },
+        // drag and drop for moving the table, at drag start
         dragstart_handler: function(event,$el,drag){
             if (this.selected && !this.handle_dragging) {
                 this.dragging = true;
                 this.dragpos  = { x: drag.offsetX, y: drag.offsetY };
             }
         },
+        // drag and drop for moving the table, at drag end
         dragend_handler:   function(event,$el){
             this.dragging = false;
         },
+        // drag and drop for moving the table, at every drop movement.
         dragmove_handler: function(event,$el,drag){
             if (this.dragging) {
                 var dx   = drag.offsetX - this.dragpos.x;
@@ -86,6 +100,7 @@ function openerp_restaurant_floors(instance,module){
                 $el.css(this.table_style());
             } 
         },
+        // drag and dropping the resizing handles
         handle_dragstart_handler: function(event, $el, drag) {
             if (this.selected && !this.dragging) {
                 this.handle_dragging = true;
@@ -107,9 +122,9 @@ function openerp_restaurant_floors(instance,module){
 
                 var cl     = this.handle.classList;
 
-                var MIN_SIZE = 40;
+                var MIN_SIZE = 40;  // smaller than this, and it becomes impossible to edit.
 
-                var tw = Math.max(MIN_SIZE, this.table.width);
+                var tw = Math.max(MIN_SIZE, this.table.width);  
                 var th = Math.max(MIN_SIZE, this.table.height);
                 var tx = this.table.position_h;
                 var ty = this.table.position_v;
@@ -146,6 +161,8 @@ function openerp_restaurant_floors(instance,module){
                 this.renderElement();
             }
         },
+        // The table's positioning is handled via css absolute positioning,
+        // which is handled here.
         table_style: function(){
             var table = this.table;
             function unit(val){ return '' + val + 'px'; }
@@ -169,6 +186,7 @@ function openerp_restaurant_floors(instance,module){
 
             return style;
         },
+        // convert the style dictionary to a ; separated string for inclusion in templates
         table_style_str: function(){
             var style = this.table_style();
             var str = "";
@@ -177,15 +195,18 @@ function openerp_restaurant_floors(instance,module){
             }
             return str;
         },
+        // select the table (should be called via the floorplan)
         select: function() {
             this.selected = true;
             this.renderElement();
         },
+        // deselect the table (should be called via the floorplan)
         deselect: function() {
             this.selected = false;
             this.renderElement();
             this.save_changes();
         },
+        // sends the table's modification to the server
         save_changes: function(){
             var self   = this;
             var model  = new instance.web.Model('restaurant.table');
@@ -200,12 +221,14 @@ function openerp_restaurant_floors(instance,module){
                 });
             });
         },
+        // destroy the table.  We do not really destroy it, we set it 
+        // to inactive so that it doesn't show up anymore, but it still
+        // available on the database for the orders that depend on it.
         trash: function(){
             var self  = this;
             var model = new instance.web.Model('restaurant.table');
             return model.call('create_from_ui',[{'active':false,'id':this.table.id}]).then(function(table_id){
                 // Removing all references from the table and the table_widget in in the UI ... 
-                // This should probably be cleaned. 
                 for (var i = 0; i < self.pos.floors.length; i++) {
                     var floor = self.pos.floors[i];
                     for (var j = 0; j < floor.tables.length; j++) {
@@ -246,6 +269,8 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    // The screen that allows you to select the floor, see and select the table,
+    // as well as edit them.
     module.FloorScreenWidget = module.ScreenWidget.extend({
         template: 'FloorScreenWidget',
         show_leftpane: false,
@@ -495,6 +520,7 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    // Add the FloorScreen to the GUI, and set it as the default screen
     module.PosWidget.include({
         build_widgets: function(){
             var self = this;
@@ -508,4 +534,87 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    // when the floor plan is activated, we need to go back to the floor plan
+    // when an order is completed. Usually on order completion, a new order is
+    // set as the current one. Now, we set the new order to null. 
+    // load_saved_screen() is called whenever the current order is changed, and 
+    // will detect this, and set the current screen to the default_screen, 
+    // which is the floor plan.
+    module.ScreenSelector.include({
+        load_saved_screen: function(){
+            if (!this.pos.get_order()) {
+                this.set_current_screen(this.default_screen,null,'refresh');
+            } else {
+                this._super({default_screen:'products'});
+            }
+        },
+    });
+
+    // New orders are now associated with the current table, if any.
+    var _super_order = module.Order.prototype;
+    module.Order = module.Order.extend({
+        initialize: function(attr) {
+            _super_order.initialize.call(this,attr);
+            this.table = this.pos.table;
+        }
+    });
+
+    // We need to change the way the regular UI sees the orders, it
+    // needs to only see the orders associated with the current table,
+    // and when an order is validated, it needs to go back to the floor map.
+    //
+    // And when we change the table, we must create an order for that table
+    // if there is none. 
+
+    var _super_posmodel = module.PosModel.prototype;
+    module.PosModel = module.PosModel.extend({
+        initialize: function(session, attributes) {
+            this.table = null;
+            return _super_posmodel.initialize.call(this,session,attributes);
+        },
+
+        // changes the current table. 
+        set_table: function(table) {
+            if (!table) { // no table ? go back to the floor plan, see ScreenSelector
+                this.set_order(null);   
+            } else {     // table ? load the associated orders  ...
+                this.table = table;
+                var orders = this.get_order_list();
+                if (orders.length) {   
+                    this.set_order(orders[0]); // and go to the first one ...
+                } else { 
+                    this.add_new_order();  // or create a new order with the current table
+                }
+            }
+        },
+
+        // get the list of unpaid orders (associated to the current table)
+        get_order_list: function() {    
+            var orders = _super_posmodel.get_order_list.call(this);  
+            if (!this.table) {
+                return orders;
+            } else {
+                var t_orders = [];
+                for (var i = 0; i < orders.length; i++) {
+                    if ( orders[i].table === this.table) {
+                        t_orders.push(orders[i]);
+                    }
+                }
+                return t_orders;
+            }
+        },
+
+        // When we validate an order we go back to the floor plan. 
+        // When we cancel an order and there is multiple orders 
+        // on the table, stay on the table.
+        on_removed_order: function(removed_order,index,reason){
+            var order_list = this.get_order_list();
+            if( (reason === 'abandon' || removed_order.temporary) && this.order_list.length > 0){
+                this.set_order(order_list[index] || order_list[order_list.length -1]);
+            }else{
+                // back to the floor plan
+                this.set_table(null);
+            }
+        },
+    });
 }

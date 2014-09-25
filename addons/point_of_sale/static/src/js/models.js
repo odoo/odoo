@@ -446,9 +446,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // this is called when an order is removed from the order collection. It ensures that there is always an existing
         // order and a valid selected order
         on_removed_order: function(removed_order,index,reason){
-            if( (reason === 'abandon' || removed_order.temporary) && this.get('orders').size() > 0){
+            var order_list = this.get_order_list();
+            if( (reason === 'abandon' || removed_order.temporary) && this.order_list.length > 0){
                 // when we intentionally remove an unfinished order, and there is another existing one
-                this.set({'selectedOrder' : this.get('orders').at(index) || this.get('orders').last()});
+                this.set_order(order_list[index] || order_list[order_list.length -1]);
             }else{
                 // when the order was automatically removed after completion, 
                 // or when we intentionally delete the only concurrent order
@@ -461,10 +462,22 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var order = new module.Order({pos:this});
             this.get('orders').add(order);
             this.set('selectedOrder', order);
+            return order;
         },
 
+        // return the current order
         get_order: function(){
             return this.get('selectedOrder');
+        },
+
+        // change the current order
+        set_order: function(order){
+            this.set({ selectedOrder: order });
+        },
+        
+        // return the list of unpaid orders
+        get_order_list: function(){
+            return this.get('orders').models;
         },
 
         //removes the current order
@@ -621,7 +634,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         scan_product: function(parsed_code){
             var self = this;
-            var selectedOrder = this.get('selectedOrder');
+            var selectedOrder = this.get_order();
             if(parsed_code.encoding === 'ean13'){
                 var product = this.db.get_product_by_ean13(parsed_code.base_code);
             }else if(parsed_code.encoding === 'reference'){

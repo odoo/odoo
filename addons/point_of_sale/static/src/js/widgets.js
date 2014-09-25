@@ -109,7 +109,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 if(!self.editable){
                     return;
                 }
-                self.pos.get('selectedOrder').selectLine(this.orderline);
+                self.pos.get_order().selectLine(this.orderline);
                 self.pos_widget.numpad.state.reset();
             };
             this.client_change_handler = function(event){
@@ -138,11 +138,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.enable_numpad();
             }else{
                 this.disable_numpad();
-                this.pos.get('selectedOrder').deselectLine();
+                this.pos.get_order().deselectLine();
             }
         },
         set_value: function(val) {
-        	var order = this.pos.get('selectedOrder');
+        	var order = this.pos.get_order();
         	if (this.editable && order.getSelectedLine()) {
                 var mode = this.numpad_state.get('mode');
                 if( mode === 'quantity'){
@@ -155,12 +155,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         	}
         },
         change_selected_order: function() {
-            this.bind_order_events();
-            this.renderElement();
+            if (this.pos.get_order()) {
+                this.bind_order_events();
+                this.renderElement();
+            }
         },
         bind_order_events: function() {
 
-            var order = this.pos.get('selectedOrder');
+            var order = this.pos.get_order();
                 order.unbind('change:client', this.client_change_handler);
                 order.bind('change:client', this.client_change_handler);
 
@@ -192,7 +194,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return el_node;
         },
         remove_orderline: function(order_line){
-            if(this.pos.get('selectedOrder').get('orderLines').length === 0){
+            if(this.pos.get_order().get('orderLines').length === 0){
                 this.renderElement();
             }else{
                 order_line.node.parentNode.removeChild(order_line.node);
@@ -212,7 +214,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function(scrollbottom){
             this.pos_widget.numpad.state.reset();
 
-            var order  = this.pos.get('selectedOrder');
+            var order  = this.pos.get_order();
             var orderlines = order.get('orderLines').models;
 
             var el_str  = openerp.qweb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
@@ -239,7 +241,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
         },
         update_summary: function(){
-            var order = this.pos.get('selectedOrder');
+            var order = this.pos.get_order();
             var total     = order ? order.getTotalTaxIncluded() : 0;
             var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
 
@@ -261,11 +263,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.bind('change:selectedOrder', this.renderElement,this );
         },
         renderElement:function(){
-            this.selected = ( this.pos.get('selectedOrder') === this.order )
+            this.selected = ( this.pos.get_order() === this.order )
             this._super();
             var self = this;
             this.$el.click(function(){ 
-                if( self.pos.get('selectedOrder') === self.order ){
+                if( self.pos.get_order() === self.order ){
                     var ss = self.pos.pos_widget.screen_selector;
                     if(ss.get_current_screen() === 'clientlist'){
                         ss.back();
@@ -281,9 +283,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
         },
         selectOrder: function(event) {
-            this.pos.set({
-                selectedOrder: this.order
-            });
+            this.pos.set_order(this.order);
         },
         destroy: function(){
             this.order.unbind('destroy', this.destroy, this);
@@ -456,7 +456,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(query){
                 var products = this.pos.db.search_product_in_category(category.id,query)
                 if(buy_result && products.length === 1){
-                        this.pos.get('selectedOrder').addProduct(products[0]);
+                        this.pos.get_order().addProduct(products[0]);
                         this.clear_search();
                 }else{
                     this.product_list_widget.set_product_list(products);
@@ -561,7 +561,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(this.mode === 'cashier'){
                 user = this.pos.cashier || this.pos.user;
             }else{
-                user = this.pos.get('selectedOrder').get_client()  || this.pos.user;
+                user = this.pos.get_order().get_client()  || this.pos.user;
             }
             if(user){
                 return user.name;
@@ -869,7 +869,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 });
 
                 self.$('.deleteorder-button').click(function(){
-                    if( !self.pos.get('selectedOrder').is_empty() ){
+                    if( !self.pos.get_order().is_empty() ){
                         self.screen_selector.show_popup('confirm',{
                             message: _t('Destroy Current Order ?'),
                             comment: _t('You will lose any data associated with the current order'),
