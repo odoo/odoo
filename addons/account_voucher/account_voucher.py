@@ -198,9 +198,9 @@ class account_voucher(osv.osv):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
             return {'value':{'writeoff_amount': 0.0}}
-        line_osv = self.pool.get("account.voucher.line")
-        line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
-        line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
+        # resolve lists of commands into lists of dicts
+        line_dr_ids = self.resolve_2many_commands(cr, uid, 'line_dr_ids', line_dr_ids, ['amount'], context)
+        line_cr_ids = self.resolve_2many_commands(cr, uid, 'line_cr_ids', line_cr_ids, ['amount'], context)
         #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
         #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
@@ -426,7 +426,6 @@ class account_voucher(osv.osv):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
-        line_pool = self.pool.get('account.voucher.line')
         if not line_ids:
             line_ids = []
         res = {
@@ -435,7 +434,8 @@ class account_voucher(osv.osv):
         }
         voucher_total = 0.0
 
-        line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
+        # resolve the list of commands into a list of dicts
+        line_ids = self.resolve_2many_commands(cr, uid, 'line_ids', line_ids, ['amount'], context)
 
         total_tax = 0.0
         for line in line_ids:
@@ -1545,25 +1545,5 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-
-def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
-    results = []
-    for operation in operations:
-        result = None
-        if not isinstance(operation, (list, tuple)):
-            result = target_osv.read(cr, uid, operation, fields, context=context)
-        elif operation[0] == 0:
-            # may be necessary to check if all the fields are here and get the default values?
-            result = operation[2]
-        elif operation[0] == 1:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
-            if not result: result = {}
-            result.update(operation[2])
-        elif operation[0] == 4:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
-        if result != None:
-            results.append(result)
-    return results
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
