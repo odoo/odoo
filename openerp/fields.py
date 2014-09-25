@@ -557,7 +557,11 @@ class Field(object):
         return False
 
     def _description_searchable(self, env):
-        return self._description_store(env) or bool(self.search)
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True)) or \
+                   bool(getattr(column, '_fnct_search', False))
+        return bool(self.search)
 
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
@@ -933,9 +937,16 @@ class Float(Field):
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    def _setup_digits(self, env):
+        """ Setup the digits for `self` and its corresponding column """
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.store:
+            column = env[self.model_name]._columns[self.name]
+            column.digits_change(env.cr)
+
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        self._setup_digits(env)
 
     _related_digits = property(attrgetter('digits'))
 

@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-29 09:24+0000\n"
+"PO-Revision-Date: 2014-09-22 21:34+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-30 08:39+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:27+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -47,25 +47,23 @@ msgstr ""
 "                * Entwurf: Lieferung wurde noch nicht bestätigt, es erfolgt "
 "keine weitere Disposition bevor diese Bestätigung erfolgt ist.\n"
 "\n"
-"             * Warte auf andere Lieferung: Es wird auf eine andere Lieferung "
-"gewartet, bevor dieser Lieferauftrag weiter bearbeitet wird.\n"
+"                * Warte auf andere Lieferung: Es wird auf eine andere "
+"Lieferung gewartet, bevor dieser Lieferauftrag weiter bearbeitet wird.\n"
 "\n"
-"             * Warte auf Verfügbarkeit: Es wird darauf gewartet, dass durch "
-"die Disposition Bestände aktualisiert werden, oder es fehlen noch bestimmte "
-"Produkte z.B. anzufertigende Komponenten, die Bestandteil einer Stückliste "
-"sind.\n"
+"                * Warte auf Verfügbarkeit: Es wird immer noch auf den Zugang "
+"von Produkten zur weiteren Bearbeitung gewartet.\n"
 "\n"
-"              * Teilweise Verfügbar: Einige Produkte sind teilweise "
+"                * Teilweise Verfügbar: Einige Produkte sind teilweise "
 "verfügbar und wurden reserviert.\n"
 "\n"
-"              * Bereit zur Lieferung: Die Produkte wurden bereits "
+"               * Bereit zur Lieferung: Die Produkte wurden bereits "
 "reserviert, es fehlt nur noch die Bestätigung der Lieferung.\n"
 "\n"
-"              * Geliefert: Die Lagerbuchungen wurden durchgeführt und können "
+"               * Geliefert: Die Lieferungen wurden durchgeführt und können "
 "nicht mehr abgebrochen werden.\n"
 "\n"
-"              * Abgebrochen: Der Lieferschein wurde abgebrochen und kann "
-"jetzt nicht mehr weiter bearbeitet werden."
+"               * Abgebrochen: Die Lieferung wurde abgebrochen und kann jetzt "
+"nicht mehr weiter bearbeitet werden."
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
@@ -75,9 +73,8 @@ msgid ""
 "module stock_dropshipping."
 msgstr ""
 "\n"
-"Es kann eine Direktversand Route mit weiteren komplexen Tests erstellt "
-"werden.\n"
-"- Installieren Sie hierzu das Moduls stock_dropshipping"
+"Es kann eine Route für das Streckengeschäft erstellt werden.\n"
+"- Installieren Sie hierzu das Modul stock_dropshipping"
 
 #. module: stock
 #: code:addons/stock/stock.py:1574
@@ -95,7 +92,7 @@ msgstr " (reserviert)"
 #: code:addons/stock/stock.py:2964
 #, python-format
 msgid " MTO"
-msgstr " Beschaffe vom Auftrag (Make to Order)"
+msgstr " MTO"
 
 #. module: stock
 #: code:addons/stock/product.py:174
@@ -137,7 +134,7 @@ msgstr " Nummernfolge Verpackung"
 #: code:addons/stock/stock.py:3371
 #, python-format
 msgid " Sequence picking"
-msgstr " Nummernfolge Abgänge"
+msgstr " Nummernfolge Pickaufträge"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
@@ -245,7 +242,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:260
 #, python-format
 msgid "< Previous"
-msgstr "< Zurück"
+msgstr "< Vorherige"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -291,7 +288,7 @@ msgstr ""
 "              </p><p>\n"
 "                Hier finden Sie die Historie aller bisherigen Lieferungen im "
 "Zusammenhang mit\n"
-"                diesem Produkt, sowie anstehende Lieferungen zu Kunden.\n"
+"                diesem Produkt, sowie anstehende Lieferungen zu Kunden.\n"
 "              </p>\n"
 "            "
 
@@ -358,15 +355,19 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie hier zur Festlegung einer neuen Meldebestand "
-"Regel.\n"
-"              </p><p>Sie können hierbei die Meldebestände so festlegen, dass "
-"immer vor Erstellung eines Fertigungsauftrags oder einer Anfrage an "
-"Lieferanten vorab eine Bestandsprüfung vorgenommen wird. Sobald hierdurch "
-"der verfügbare Bestand < 0 ist \n"
-"(= d.h der aktuelle Bestand minus alle bestätigten Reservierungen) erstellt "
-"Odoo automatisch eine Beschaffungsanfrage, die den Bestand wieder "
-"entsprechend der Regel auffüllt.</p>\n"
+"                Klicken Sie hier zur Festlegung einer neuen "
+"Wiederbeschaffungsregel.</p><p>\n"
+"                Sie können hierbei die Meldebestände so festlegen, dass "
+"immer vor Erstellung \n"
+"                eines Fertigungsauftrags oder einer Anfrage an Lieferanten "
+"vorab eine Bestandsprüfung \n"
+"                vorgenommen wird. Sobald hierdurch der verfügbare Bestand < "
+"0 ist \n"
+"                (= d.h der aktuelle Bestand minus alle bestätigten "
+"Reservierungen) erstellt Odoo \n"
+"                automatisch eine Beschaffungsanfrage, die den Bestand wieder "
+"entsprechend der Regel \n"
+"                auffüllt.</p>\n"
 "            "
 
 #. module: stock
@@ -390,20 +391,20 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie, um eine neue Seriennummer zu generieren.\n"
+"                 Klicken Sie, um eine neue Seriennummer zu generieren.\n"
 "              </p><p>\n"
-"                       Dies ist eine Liste aller erstellten und "
-"aufgezeichneten Seriennummern. \n"
-"                       Wenn Sie aus dieser Liste ein Fertigungslos  "
-"auswählen, können Sie jetzt \n"
-"                       eine Rückverfolgung der Ware vornehmen. Im Standard "
-"wird der Filter \n"
-"                       immer auf die vorhandenen Seriennummern eingestellt. "
-"Sie könnten \n"
-"                       alternativ auch den 'Verfügbar' Filter entfernen, um "
-"alle jemals erstellten \n"
-"                       Fertigungslose , die eingekauft oder produziert "
-"wurden, lückenlos anzuzeigen.  \n"
+"                 Dies ist eine Liste aller erstellten und aufgezeichneten "
+"Seriennummern. \n"
+"                 Wenn Sie aus dieser Liste eine Seriennummer auswählen, "
+"können Sie jetzt \n"
+"                 eine Rückverfolgung der Ware vornehmen. Im Standard wird "
+"der Filter \n"
+"                 immer auf die vorhandenen Seriennummern eingestellt. Sie "
+"könnten \n"
+"                 alternativ auch den 'Verfügbar' Filter entfernen, um alle "
+"jemals erstellten \n"
+"                 Seriennummern , die eingekauft oder produziert wurden, "
+"lückenlos anzuzeigen.  \n"
 "              </p>\n"
 "            "
 
@@ -425,14 +426,14 @@ msgstr ""
 "<p class = \"oe_view_nocontent_create\"> \n"
 "                Klicken sie hier zur Erstellung  eines  Liefertyps. \n"
 "</ p> <p>\n"
-"                 Mit Hilfe dieses Systems können typische Liefervorgänge "
+"                Mit Hilfe dieses Systems können typische Liefervorgänge "
 "angelegt und genauer \n"
-"                 spezifiziert werden. Handelt es sich z.B. um einen "
+"                spezifiziert werden. Handelt es sich z.B. um einen "
 "Liefervorgang an Kunden, der \n"
-"                 für den Kunden sichtbar sein soll sein oder ob eine "
+"                für den Kunden sichtbar sein soll sein oder ob eine "
 "bestimmte Verpackung \n"
-"                 erforderlich ist.\n"
-"                 </ p>\n"
+"                erforderlich ist.\n"
+"               </ p>\n"
 "            "
 
 #. module: stock
@@ -517,17 +518,19 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"   Klicken Sie zur Erstellung einer Eingangslieferung.\n"
+"                Klicken Sie zur Erstellung einer Eingangslieferung.\n"
 "              </p><p>\n"
-"  Hier können Sie Produktzugänge eingeben, auch wenn diese normalerweise "
-"durch eine Bestellung \n"
-"  automatisch generiert werden. Sie finden hier eine Liste sämtlicher noch "
-"nicht empfangener\n"
-"  Produktlieferungen. Sobald Sie eine Lieferung erhalten, können Sie einfach "
-"über den Lieferanten oder\n"
-"  die Bestellnummer filtern. An dieser Stelle können Sie dann einfach den "
-"Zugang zeilenweise bestätigen\n"
-"   indem Sie die Buttons am rechten Rand der Zeilen anwenden. \n"
+"                Hier können Sie Produktzugänge eingeben, auch wenn diese "
+"normalerweise durch \n"
+"                eine Bestellung automatisch generiert werden. Sie finden "
+"hier eine Liste sämtlicher \n"
+"                noch nicht empfangener Produktlieferungen. Sobald Sie eine "
+"Lieferung erhalten, \n"
+"                können Sie einfach über den Lieferanten oder die "
+"Bestellnummer filtern. An dieser \n"
+"                Stelle können Sie dann einfach den Zugang zeilenweise "
+"bestätigen indem Sie die \n"
+"                Buttons am rechten Rand der Zeilen anwenden. \n"
 "   </p>\n"
 "            "
 
@@ -575,9 +578,9 @@ msgstr ""
 "              </p><p>\n"
 "               Inventuren müssen erstellt werden, um den physikalischen "
 "Bestand zu zählen, zu\n"
-"                messen oder zu wiegen.  Um den Bestand bei Bedarf "
-"anzupassen, \n"
-"                können Sie  dann einfach die tatsächlich verfügbaren Mengen "
+"               messen oder zu wiegen.  Um den Bestand einmal pro Jahr oder "
+"bei Bedarf anzupassen, \n"
+"               können Sie  dann die tatsächlich verfügbaren Mengen einfach "
 "übernehmen.  \n"
 "              </p>\n"
 "            "
@@ -605,7 +608,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/widgets.js:649
 #, python-format
 msgid "<p>We could not find a picking to display.</p>"
-msgstr "<p>Es konnte kein Pickvorgang gefunden werden.</p>"
+msgstr "<p>Es konnte kein Pickauftrag gefunden werden.</p>"
 
 #. module: stock
 #: code:addons/stock/stock.py:2443
@@ -662,7 +665,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Erweiterung: Anwenden von Beschaffungsregeln"
+msgstr "Fortgeschritten: Anwenden von Beschaffungsregeln"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_form
@@ -675,7 +678,7 @@ msgstr "Alle Vorgänge"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "Nur Gesamtmengen liefern"
+msgstr "Komplettlieferung"
 
 #. module: stock
 #: code:addons/stock/stock.py:2429
@@ -778,7 +781,7 @@ msgstr "Anfrage neue Produkte"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Assign Owner"
-msgstr "Inhaber zuweisen"
+msgstr "Eigentümer zuweisen"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -820,31 +823,31 @@ msgstr "Verfügbare Produkte"
 #: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Lieferrückstand von"
+msgstr "Rückstand von"
 
 #. module: stock
 #: code:addons/stock/stock.py:931
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Rückstandslieferung<em>%s</em> <b>wurde erstellt</b>."
+msgstr "Rückstand<em>%s</em> <b>wurde erstellt</b>."
 
 #. module: stock
 #: code:addons/stock/stock.py:4058
 #, python-format
 msgid "Backorder exists"
-msgstr "Es existiert ein Lieferrückstand"
+msgstr "Es existiert ein Rückstand"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr "Lieferrückstand"
+msgstr "Rückstände"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders (%)"
-msgstr "Rückstandslieferungen (%)"
+msgstr "Rückstände (%)"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -880,8 +883,8 @@ msgid ""
 "Odoo will not automatically generate a back order."
 msgstr ""
 "Durch eine Änderung der Anzahl an dieser Stelle, wird die Lieferung als "
-"vollständig ausgeführt markiert. Es wird keine automatische "
-"Rückstandslieferung erzeugt."
+"vollständig ausgeführt markiert. Es wird keine automatischer Rückstand "
+"erzeugt."
 
 #. module: stock
 #: help:stock.move,procure_method:0
@@ -951,7 +954,7 @@ msgstr "Verwerfe Verfügbarkeit"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Cancel Inventory"
-msgstr "Bestandsaufnahme Abbrechen"
+msgstr "Bestandsbuchung abbrechen"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -979,7 +982,7 @@ msgstr "Eine gebuchte Lieferung kann nicht storniert werden"
 #. module: stock
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr "Vorfall"
+msgstr "Fach"
 
 #. module: stock
 #: field:stock.return.picking,move_dest_exists:0
@@ -1016,7 +1019,7 @@ msgstr "Ändere die Quelle"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Check Availability"
-msgstr "Prüfe Verfügbarkeit"
+msgstr "Verfügbarkeit prüfen"
 
 #. module: stock
 #: help:stock.location,scrap_location:0
@@ -1207,7 +1210,7 @@ msgstr "Erstelle Beschaffung"
 #: code:addons/stock/static/src/xml/picking.xml:80
 #, python-format
 msgid "Create backorder"
-msgstr "Erstelle Rückstandsauftrag"
+msgstr "Erstelle Rückstand"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1286,7 +1289,7 @@ msgstr "Erstellung am"
 #: field:stock.production.lot,create_date:0
 #: field:stock.quant,create_date:0
 msgid "Creation Date"
-msgstr "Erzeugt am"
+msgstr "Erstellungsdatum"
 
 #. module: stock
 #: code:addons/stock/stock.py:3261
@@ -1314,7 +1317,7 @@ msgstr "Währung in der die Kosten pro Einheit angegeben wird"
 #: model:ir.actions.act_window,name:stock.product_open_quants
 #: view:stock.location:stock.view_location_form
 msgid "Current Stock"
-msgstr "Aktueller Bestand"
+msgstr "Bestand"
 
 #. module: stock
 #: help:product.product,qty_available:0
@@ -1413,7 +1416,7 @@ msgstr "Datum der letzten Lieferung"
 #: help:stock.picking,message_last_post:0
 #: help:stock.production.lot,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Letztes Änderungsdatum"
+msgstr "Datum der zuletzt gesendeten Nachricht"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -1427,7 +1430,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_tree
 msgid "Dates of Inventories"
-msgstr "Datum Bestandserfassung"
+msgstr "Datum der Inventur"
 
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_form
@@ -1478,7 +1481,7 @@ msgstr "Standard Zielort"
 #. module: stock
 #: help:stock.picking,owner_id:0
 msgid "Default Owner"
-msgstr "Standard Inhaber"
+msgstr "Standard Eigentümer"
 
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
@@ -1574,7 +1577,7 @@ msgstr "Lieferung"
 #. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
-msgstr "Auslieferungsmethode"
+msgstr "Liefermethode"
 
 #. module: stock
 #: code:addons/stock/stock.py:3145
@@ -1697,7 +1700,7 @@ msgstr "Entwurf"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Draft Moves"
-msgstr "Entwurf Warenbestand"
+msgstr "Entwurf Lieferung"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -1749,7 +1752,7 @@ msgstr "Bestandsauflösung"
 #: field:stock.move,date_expected:0
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Expected Date"
-msgstr "Voraussichtliche Lieferung"
+msgstr "Erwartetes Lieferdatum"
 
 #. module: stock
 #: field:stock.config.settings,module_product_expiry:0
@@ -1799,7 +1802,7 @@ msgstr "Followers"
 #: view:stock.move:stock.view_move_picking_form
 #: view:stock.picking:stock.view_picking_form
 msgid "Force Availability"
-msgstr "Erzwinge Verfügbarkeit"
+msgstr "Verfügbarkeit erzwingen"
 
 #. module: stock
 #: field:product.category,removal_strategy_id:0
@@ -1836,7 +1839,7 @@ msgstr ""
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Available Products"
-msgstr "Vorschau Produktverfügbarkeit"
+msgstr "Prognose Produktverfügbarkeit"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
@@ -1846,7 +1849,7 @@ msgstr "Prognose Nachbestellung"
 #. module: stock
 #: field:product.product,virtual_available:0
 msgid "Forecast Quantity"
-msgstr "Vorschau Bestand (Anzahl)"
+msgstr "Prognostizierter Bestand"
 
 #. module: stock
 #: help:product.product,virtual_available:0
@@ -1859,7 +1862,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Vorschau Menge (berechnet als verfügbare Menge + Zugänge - Abgänge)\n"
+"Prognostizierter Bestand (berechnet als tatsächlicher Bestand + Zugänge - "
+"Abgänge)\n"
 "Im Kontext mit einem einzigen Lagerort beinhaltet dies die Menge dieses oder "
 "eines untergeordneten Lagerorts.\n"
 "Im Kontext mit einem einzigen Lager, beinhaltet dies den Bestand auf dem "
@@ -1883,7 +1887,7 @@ msgstr "Von"
 #. module: stock
 #: field:product.template,track_all:0
 msgid "Full Lots Traceability"
-msgstr "Verfolgung Losnummern"
+msgstr "Vollständige Verfolgung"
 
 #. module: stock
 #: code:addons/stock/product.py:257
@@ -1977,7 +1981,7 @@ msgstr "Gruppierung"
 #. module: stock
 #: view:procurement.order:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr "Pickgruppe"
+msgstr "Pickaufträge gruppieren"
 
 #. module: stock
 #: field:stock.pack.operation,processed:0
@@ -2088,7 +2092,7 @@ msgstr ""
 #: help:stock.picking,message_unread:0
 #: help:stock.production.lot,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Bei Aktivierung erfordern die Nachrichten Ihre Aufmerksamkeit."
 
 #. module: stock
 #: help:stock.location.path,propagate:0
@@ -2151,8 +2155,8 @@ msgid ""
 "If this is a negative quant, this will be the move that caused this negative "
 "quant."
 msgstr ""
-"Wenn dies ein negatives Quant ist, kann dies bereits der Grund für einen "
-"negativen Wert sein."
+"Wenn dies ein negatives Quant ist, ist dies die Lieferung, die diesen "
+"negativen Wert begründet."
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -2184,8 +2188,7 @@ msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
 msgstr ""
-"Im Fall von Direktversand, müssen wir  mehr über den Bestimmungsort kennen "
-"lernen."
+"Im Fall eines Streckengeschäfts, müssen wir  den Bestimmungsort exakt kennen."
 
 #. module: stock
 #: field:product.product,incoming_qty:0
@@ -2256,8 +2259,8 @@ msgid ""
 "Install the picking wave module which will help you grouping your pickings "
 "and processing them in batch"
 msgstr ""
-"Installieren Sie das Modul Picking Wave zur Gruppierung und Durchführung von "
-"Packvorgängen."
+"Installieren Sie das Modul Kommissionierwellen zur Gruppierung und "
+"Durchführung von Pickaufträgen."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
@@ -2330,7 +2333,7 @@ msgstr "Inventur Los-/Seriennummer"
 #. module: stock
 #: field:stock.inventory,partner_id:0
 msgid "Inventoried Owner"
-msgstr "Inventarisierter Inhaber"
+msgstr "Inventarisierter Eigentümer"
 
 #. module: stock
 #: field:stock.inventory,package_id:0
@@ -2433,7 +2436,7 @@ msgstr "Inventur Routen"
 #. module: stock
 #: field:stock.quant,inventory_value:0
 msgid "Inventory Value"
-msgstr "Inventurbestandswert"
+msgstr "Bestandswert"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2468,7 +2471,7 @@ msgstr "Ist bereits Follower"
 #. module: stock
 #: field:stock.location,scrap_location:0
 msgid "Is a Scrap Location?"
-msgstr "Ist dies ein separates Lager Ausschuss ?"
+msgstr "Lagerort für Ausschuss ?"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -2497,7 +2500,7 @@ msgstr "Zuletzt  erledigte 10 Pickvorgänge"
 #: field:stock.picking,message_last_post:0
 #: field:stock.production.lot,message_last_post:0
 msgid "Last Message Date"
-msgstr "Letzte Aktualisierung"
+msgstr "Datum der letzten Nachricht"
 
 #. module: stock
 #: field:make.procurement,write_uid:0
@@ -2581,7 +2584,7 @@ msgstr "Verspätete Lieferungen"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Latest Inventories & Moves"
-msgstr "Letzte Inventarisierung & Buchung"
+msgstr "Aktuelle Inventur"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -2737,7 +2740,7 @@ msgstr "Logistik"
 #: view:website:stock.report_lot_barcode
 #: view:website:stock.report_package_barcode
 msgid "Lot"
-msgstr "Fertigungslos"
+msgstr "Seriennummer"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
@@ -2763,7 +2766,7 @@ msgstr "Los-/Seriennummer"
 #: view:product.template:stock.view_template_property_form
 #: field:stock.move,lot_ids:0
 msgid "Lots"
-msgstr "Fertigungslose"
+msgstr "Seriennummern"
 
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
@@ -2793,7 +2796,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr "Verwalten Sie verschiedene Lagerinhaber"
+msgstr "Verschiedene Lagereigentümer verwalten"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -2828,22 +2831,22 @@ msgstr "Verwalten Sie verschiedene Mengeneinheiten für Produkte"
 #. module: stock
 #: field:stock.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr "Verwalten Sie Direktversand"
+msgstr "Verwalten Sie Streckengeschäfte"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
 msgid "Manage multiple locations and warehouses"
-msgstr "Verwalte mehrere Lagerorte und Lager"
+msgstr "Verwalten Sie mehrere Läger und Lagerorte"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_owner:0
 msgid "Manage owner on stock"
-msgstr "Verwalten Sie den Inhaber"
+msgstr "Verwalten Sie den Eigentümer eines Lagers"
 
 #. module: stock
 #: field:stock.config.settings,module_stock_picking_wave:0
 msgid "Manage picking wave"
-msgstr "Verwalten Sie Picking Waves"
+msgstr "Verwalten Sie Kommissionierwellen"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -2863,7 +2866,7 @@ msgstr "Als zu erledigen markieren"
 #. module: stock
 #: field:stock.picking,max_date:0
 msgid "Max. Expected Date"
-msgstr "Spätestes erwartetes Datum"
+msgstr "Spätestes Lieferdatum"
 
 #. module: stock
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -2949,17 +2952,17 @@ msgstr "Lagerort Umbuchung"
 #. module: stock
 #: field:stock.quant,negative_move_id:0
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "Lieferung für Negativquant"
 
 #. module: stock
 #: field:stock.move,split_from:0
 msgid "Move Split From"
-msgstr ""
+msgstr "Liefersplit von"
 
 #. module: stock
 #: field:procurement.rule,procure_method:0
 msgid "Move Supply Method"
-msgstr ""
+msgstr "Beschaffungsmethode"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2967,7 +2970,7 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
-"Buchungsdatum: geplantes Datum, solange der Status nicht erledigt ist, dann "
+"Buchungsdatum: geplantes Datum solange der Status nicht erledigt ist, danach "
 "das aktuelle Durchführungsdatum"
 
 #. module: stock
@@ -2992,7 +2995,7 @@ msgstr "Quantlieferungen"
 #: field:stock.quant,history_ids:0
 #: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
-msgstr "Lieferauftragspositionen"
+msgstr "Lieferungen"
 
 #. module: stock
 #: help:procurement.order,move_ids:0
@@ -3006,9 +3009,9 @@ msgid ""
 "If none is given, the moves generated by procurement rules will be grouped "
 "into one big picking."
 msgstr ""
-"Die vom Meldebestand ausgelösten Beschaffungen werden in einer Gruppe "
-"zusammengefasst. Wenn keine Gruppe angegeben wurde, wird alles in einer "
-"einzigen großen Liste zusammengefasst."
+"Die vom Meldebestand ausgelösten Lieferungen werden in einer Gruppe "
+"zusammengefasst. Wenn keine Gruppe angegeben wurde, werden alle Lieferungen "
+"in einer einzigen großen Pickliste zusammengefasst."
 
 #. module: stock
 #: help:stock.pack.operation,linked_move_operation_ids:0
@@ -3020,7 +3023,7 @@ msgstr "Lieferungen durch Restlieferungen"
 #. module: stock
 #: help:stock.quant,history_ids:0
 msgid "Moves that operate(d) on this quant"
-msgstr "Lieferungen auf Basis dieses Quant"
+msgstr "Lieferungen dieses Quants"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -3078,7 +3081,7 @@ msgstr "Es gibt keine Pickliste"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr "Es gibt noch keine Lieferungen"
+msgstr "Noch kein Bestand"
 
 #. module: stock
 #. openerp-web
@@ -3171,13 +3174,13 @@ msgstr "Eine Los-/Seriennummer"
 #: code:addons/stock/stock.py:2438
 #, python-format
 msgid "One owner only"
-msgstr "Alleiniger Besitzer"
+msgstr "Alleiniger Eigentümer"
 
 #. module: stock
 #: code:addons/stock/stock.py:2439
 #, python-format
 msgid "One product for a specific owner"
-msgstr "Ein Produkt für einen alleinigen Besitzer"
+msgstr "Eine Produkt für einen spezifischen Eigentümer"
 
 #. module: stock
 #: code:addons/stock/stock.py:2429
@@ -3242,7 +3245,9 @@ msgstr "Zu erledigende Vorgänge"
 msgid ""
 "Operations that impact this move for the computation of the remaining "
 "quantities"
-msgstr "Vorgänge, die sich auf die Berechnung der Restlieferungen auswirken"
+msgstr ""
+"Diese Vorgänge sind für die Berechnung der Restmenge dieser Lieferung "
+"relevant"
 
 #. module: stock
 #: help:stock.move,partner_id:0
@@ -3283,7 +3288,7 @@ msgstr "Auftrag (Original)"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Order Date"
-msgstr "Auftragsdatum"
+msgstr "Bestelldatum"
 
 #. module: stock
 #: model:stock.location,name:stock.location_order
@@ -3363,7 +3368,7 @@ msgstr "Eigentümer "
 #. module: stock
 #: help:stock.location,partner_id:0
 msgid "Owner of the location if not internal"
-msgstr "Externer Eigentümer des Lagerorts"
+msgstr "Eigentümer eines externen Lagerorts"
 
 #. module: stock
 #: help:stock.pack.operation,owner_id:0
@@ -3545,13 +3550,13 @@ msgstr "Picktyp"
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 #: view:stock.move:stock.view_move_search
 msgid "Picking"
-msgstr "Lieferschein"
+msgstr "Pickauftrag"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "Lieferschein"
+msgstr "Pickliste"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3600,7 +3605,7 @@ msgstr "Picktypen"
 #. module: stock
 #: view:stock.picking:stock.vpicktree
 msgid "Picking list"
-msgstr "Lieferauftrag"
+msgstr "Pickliste"
 
 #. module: stock
 #: view:procurement.group:stock.procurement_group_form_view_herited
@@ -3610,7 +3615,7 @@ msgstr "Pickaufträge"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Lieferscheine Bereits verarbeitet"
+msgstr "Bereits gestartete Pickaufträge"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -3625,7 +3630,7 @@ msgstr "Verspätete Pickaufträge"
 #. module: stock
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr "Datum Planung"
+msgstr "Geplantes Datum"
 
 #. module: stock
 #: code:addons/stock/stock.py:2318
@@ -3652,7 +3657,8 @@ msgstr ""
 #, python-format
 msgid "Please use the Product Variant vue to update the product quantity."
 msgstr ""
-"Bitte benutzen Sie die Variantenansicht für eine Auskunft zur Produktmenge"
+"Bitte benutzen Sie die Variantenansicht für eine Aktualisierung der "
+"Produktmenge"
 
 #. module: stock
 #: field:stock.move,product_packaging:0
@@ -3724,7 +3730,7 @@ msgstr "Bestätigen"
 #. module: stock
 #: view:stock.move:stock.view_move_form
 msgid "Process Entirely"
-msgstr "Komplettlieferung vornehmen"
+msgstr "Lieferung durchführen"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -3839,12 +3845,12 @@ msgstr "Produkt-ID"
 #. module: stock
 #: view:stock.production.lot:stock.search_product_lot_filter
 msgid "Product Lots"
-msgstr "Fertigungslose"
+msgstr "Seriennummern"
 
 #. module: stock
 #: view:stock.production.lot:stock.search_product_lot_filter
 msgid "Product Lots Filter"
-msgstr "Fertigungslos Filter"
+msgstr "Filter Seriennummer"
 
 #. module: stock
 #: view:stock.return.picking.line:stock.stock_return_line_tree_in
@@ -3893,7 +3899,7 @@ msgstr "Fertigungort (virtuelles Lager)"
 #. module: stock
 #: view:website:stock.report_inventory
 msgid "Production Lot"
-msgstr "Fertigungslos"
+msgstr "Seriennummer"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_in_config_stock
@@ -4021,8 +4027,8 @@ msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
 msgstr ""
-"Mengen, Einheiten, Produkte und Lagerorte können nicht mehr geändert werden "
-"für bereits erledigte Lagerbuchungen (außer durch den Administrator)"
+"Mengen, Einheiten, Produkte und Lagerorte können für bereits erledigte "
+"Lagerbuchungen nicht mehr geändert werden (außer durch den Administrator)"
 
 #. module: stock
 #: field:make.procurement,qty:0
@@ -4048,7 +4054,7 @@ msgstr "Menge (VE)"
 #: field:product.template,virtual_available:0
 #: field:stock.move,availability:0
 msgid "Quantity Available"
-msgstr "verfügbare Menge"
+msgstr "Verfügbare Menge"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
@@ -4059,7 +4065,7 @@ msgstr "Vielfaches von"
 #: field:product.product,qty_available:0
 #: field:product.template,qty_available:0
 msgid "Quantity On Hand"
-msgstr "Verfügbarer Bestand"
+msgstr "tatsächlicher Bestand"
 
 #. module: stock
 #: field:stock.pack.operation,qty_done:0
@@ -4139,6 +4145,9 @@ msgid ""
 "pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
 msgstr ""
+"Produktmenge des Packauftrags, die sich auf die Restmenge der gesamten "
+"Lieferung auswirkt (und umgekehrt). Die Mengenangabe   ist in der Standard "
+"Mengeneinheit."
 
 #. module: stock
 #: help:stock.move,reserved_availability:0
@@ -4339,7 +4348,7 @@ msgstr "Modus Meldebestände"
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_tree
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "Meldebestandsregeln"
+msgstr "Meldebestände"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
@@ -4390,12 +4399,12 @@ msgstr "Retoure Ausführen"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Rücklieferschein"
+msgstr "Pickauftrag Rücklieferung"
 
 #. module: stock
 #: view:stock.return.picking.line:stock.stock_return_line_form_in
 msgid "Return Picking Memory"
-msgstr "Retoure Kommissionszwischenlager"
+msgstr "Retoure Kommissionierlager"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -4524,7 +4533,7 @@ msgstr "Geplantes Datum"
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr "Geplantes Verarbeitungsdatum für diese Buchung"
+msgstr "Geplantes Lieferdatum"
 
 #. module: stock
 #: help:stock.picking,min_date:0
@@ -4563,7 +4572,7 @@ msgstr "Lagerort für Ausschuss"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap
 msgid "Scrap Move"
-msgstr "Buchung Ausschuss"
+msgstr "Ausschuss buchen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_scrap
@@ -4733,7 +4742,7 @@ msgstr "Kleiner Kühlschrank"
 #: field:stock.move,origin:0
 #: view:website:stock.report_picking
 msgid "Source"
-msgstr "Quelle"
+msgstr "Referenzbeleg"
 
 #. module: stock
 #: field:stock.picking,origin:0
@@ -4750,7 +4759,7 @@ msgstr "Quelle"
 #. module: stock
 #: help:procurement.rule,location_src_id:0
 msgid "Source location is action=move"
-msgstr ""
+msgstr "Die Quelle für die Buchung der Lieferung"
 
 #. module: stock
 #: help:stock.inventory,lot_id:0
@@ -4814,12 +4823,12 @@ msgstr "Lagerinventur"
 #. module: stock
 #: view:stock.inventory.line:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "Lagerbestandsaufnahme Einzelpositionen"
+msgstr "Bestandsaufnahme Einzelpositionen"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr "Bestandsvorschau"
+msgstr "Bestandsprognose"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -4835,7 +4844,7 @@ msgstr "Lagerorte"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr "Lieferung"
+msgstr "Lagerbuchung"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -4863,7 +4872,7 @@ msgstr "Lagervorgänge"
 #. module: stock
 #: field:stock.pack.operation,picking_id:0
 msgid "Stock Picking"
-msgstr "Lagerpackauftrag"
+msgstr "Kommissionierung"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -4888,7 +4897,7 @@ msgstr "Verarbeitete Lagerbuchungen"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Stockable"
-msgstr "Lagerfähig"
+msgstr "Lagerprodukt"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
@@ -4971,9 +4980,9 @@ msgid ""
 "operation and a stock move. Used at the stock_move_obj.action_done() time to "
 "avoid seeking a matching quant again"
 msgstr ""
-"Datenfeld mit Quant zur Verbindung von Packvorgängen mit Lieferungen. Dieses "
-"Feld wird für die Funktion stock_move_obj.action_done() time zur Vermeidung "
-"nochmaliger Reservierungen benötigt."
+"Datenfeld mit Quant zur Verbindung einzelner Packvorgänge mit Lieferungen. "
+"Dieses Feld wird für die Funktion stock_move_obj.action_done() time zur "
+"Vermeidung nochmaliger Reservierungen benötigt."
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
@@ -5000,8 +5009,9 @@ msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
-"Datenfeld zur Restriktion auf die Lose eines Quants, u.a. zur Ermittlung ob "
-"diese Lieferung als beendet abgeschlossen werden kann oder nicht."
+"Datenfeld zur Restriktion auf die Seriennummer eines Quants, u.a. zur "
+"Ermittlung ob diese Lieferung als beendet abgeschlossen werden kann oder "
+"nicht."
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
@@ -5009,8 +5019,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
-"Datenfeld zur Anzeige einer Quant Eigentümer Restriktion, um zu entscheiden "
-"wann ein Vorgang als erfolgreich abgeschlossen gilt."
+"Datenfeld zur Anzeige von Quant Restriktionen, zur Entscheidung, ob eine "
+"Lieferung abgeschlossen werden kann."
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -5018,8 +5028,7 @@ msgid ""
 "Technical field used to display the correct label on print button in the "
 "picking view"
 msgstr ""
-"Datenfeld für die korrekte Beschriftung des Druck-Button in einem "
-"Packauftrag."
+"Datenfeld für die korrekte Beschriftung des Druck-Button in einer Pickliste."
 
 #. module: stock
 #: help:stock.return.picking,move_dest_exists:0
@@ -5032,8 +5041,8 @@ msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
 msgstr ""
-"Datenfeld zur Aufzeichnung einer Lieferung, die negative Quants verursacht "
-"hat."
+"Datenfeld zur Aufzeichnung der Bestimmungsorte von Lieferungen, die negative "
+"Quants ausgelöst haben."
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -5053,8 +5062,8 @@ msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
 msgstr ""
-"Technisches Feld zur Erfassung einer Split Buchung, der gerne  für den Fall "
-"eines Bug-Fixings erforderlich ist."
+"Datenfeld zur Aufzeichnung der Herkunft von Splitbuchungen, um mögliche "
+"Fehler aufzuklären."
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -5133,7 +5142,7 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,reservation_id:0
 msgid "The move the quant is reserved for"
-msgstr "Das Quant für diese Lieferung ist reserviert für:"
+msgstr "Die Lieferung für die das Quant reserviert wurde"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -5158,7 +5167,7 @@ msgstr "Die Verpackung beinhaltet dieses Quant"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr "Der Picktyp bestimmt die Anzeige des Packauftrags"
+msgstr "Der Picktyp bestimmt die Anzeige der Pickaufträge"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -5168,12 +5177,12 @@ msgstr "Die zu beschaffende Menge wird auf dieses Vielfache aufgerundet."
 #. module: stock
 #: help:stock.move,rule_id:0
 msgid "The pull rule that created this stock move"
-msgstr "Die Lieferung wurde durch diese Pull Regel ausgelöst"
+msgstr "Die Beschaffungsregel, die dieser Lieferung erstellt hat"
 
 #. module: stock
 #: help:stock.move,push_rule_id:0
 msgid "The push rule that created this stock move"
-msgstr "Die Lieferung wurde durch diese Push Regel ausgelöst"
+msgstr "Die Push-Regel, die diese Lieferung ausgelöst hat"
 
 #. module: stock
 #: code:addons/stock/stock.py:1611
@@ -5241,11 +5250,11 @@ msgid ""
 "                This installs the module procurement_jit."
 msgstr ""
 "Sie können Just-In-Time Ihre Beschaffungsaufträge disponieren.\n"
-"                Alle Beschaffungspositionen werden sofort berechnet, was in "
-"einigen Fällen\n"
-"                allerdings einen negativen Effekt für die "
-"Arbeitsgeschwindigkeit haben kann.\n"
-"                Sie installieren an dieser Stelle das Modul procurement_jit."
+"                Alle Beschaffungspositionen werden sofort berechnet, was \n"
+"                in einigen Fällen allerdings einen negativen Effekt für die "
+"\n"
+"               Arbeitsgeschwindigkeit haben kann.\n"
+"               Sie installieren an dieser Stelle das Modul procurement_jit."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -5254,10 +5263,9 @@ msgid ""
 "moves.  This can make it possible to know which production lot was sent to a "
 "certain client, ..."
 msgstr ""
-"Sie können eine Losnummer (oder Seriennummer) zu den Pick- und "
-"Liefervorgängen erfassen und rückverfolgen. Hierdurch können Sie z.B. immer "
-"genau wissen, wann eine bestimmte Losnummer an einen Kunden verpackt und "
-"versendet wurde."
+"Sie können eine Los-/Seriennummer zu Pick- und Lieferaufträgen erfassen und "
+"rückverfolgen. Hierdurch können Sie z.B. immer genau wissen, wann ein "
+"bestimmtes Los an einen Kunden verpackt und versendet wurde."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_lot:0
@@ -5501,7 +5509,7 @@ msgstr "Verfolgen Sie Los- und Seriennummern."
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Transfer"
-msgstr "Umlagern"
+msgstr "Lieferung vornehmen"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -5511,7 +5519,7 @@ msgstr "Geliefert"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr "Umlagerungen"
+msgstr "Lieferungen"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -5634,7 +5642,7 @@ msgstr "Ungelesene Mitteilungen"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
-msgstr ""
+msgstr "Reservierung abbrechen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -5757,7 +5765,7 @@ msgstr "Warten auf Verfügbarkeit"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "Erwarte verfügbare Lieferungen"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -5932,15 +5940,16 @@ msgid ""
 "you want modify a data, please set the checked quantity to 0 and create a "
 "new inventory line."
 msgstr ""
-"Sie können nur die geprüfte Menge einer eingegebenen Inventurpositionen "
-"abändern. Wenn Sie diese Modifikation vornehmen, sollten Sie zuerst den Wert "
-"0 eintragen, bevor Sie anschließend eine neue Inventurposition erstellen."
+"Bei  bereits vorhandenen Inventurpositionen können Sie nur die Anzahl "
+"anpassen. Wenn Daten modifiziert werden sollen, sollten Sie zuerst den Wert "
+"0 als Bestand eintragen, bevor Sie anschließend eine neue Inventurzeile "
+"erstellen."
 
 #. module: stock
 #: code:addons/stock/stock.py:2303
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "Sie können lediglich Lieferungen im Entwurf Status löschen."
+msgstr "Sie können lediglich Bestandsbuchungen im Entwurf Status löschen."
 
 #. module: stock
 #: code:addons/stock/stock.py:2148
@@ -6054,12 +6063,12 @@ msgstr "Zugehörige Lieferung zu dieser Rücklieferung"
 #: code:addons/stock/static/src/xml/picking.xml:243
 #, python-format
 msgid "picking(s)"
-msgstr ""
+msgstr "Pickvorgänge"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
-msgstr ""
+msgstr "Umgekehrt"
 
 #. module: stock
 #: help:stock.inventory,move_ids_exist:0
@@ -6073,13 +6082,15 @@ msgid ""
 "technical field used to know if there is already at least one quant reserved "
 "on moves of a given picking"
 msgstr ""
+"Datenfeld um zu wissen, ob es mindestens eine reservierte Quants für die "
+"Pickaufträge gibt."
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:269
 #, python-format
 msgid "the operations."
-msgstr ""
+msgstr "die Vorgänge"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -6087,6 +6098,8 @@ msgid ""
 "the returned picking in order to avoid logistic rules to be applied again "
 "(which would create duplicated operations)"
 msgstr ""
+"die Rücklieferung zur Vermeidung einer erneuten Anwendung von Lieferregeln "
+"(die z.B. doppelte Lieferungen auslösen könnten)"
 
 #. module: stock
 #: field:product.product,qty_available_text:0

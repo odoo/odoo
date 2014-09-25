@@ -1636,8 +1636,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             'contexts', [this.view.dataset.get_context()]);
         return this.model.call('name_search', [], {
             name: needle,
-            args: instance.web.pyeval.eval(
-                'domains', this.attrs.domain ? [this.attrs.domain] : [], context),
+            args: (typeof this.attrs.domain === 'string') ? [] : this.attrs.domain,
             limit: 8,
             context: context
         }).then(function (results) {

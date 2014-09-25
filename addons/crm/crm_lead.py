@@ -29,7 +29,8 @@ from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
-from openerp.tools import email_re
+from openerp.tools import email_re, email_split
+
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -585,6 +586,37 @@ class crm_lead(format_address, osv.osv):
                 attachment.write(values)
         return True
 
+    def get_duplicated_leads(self, cr, uid, ids, partner_id, include_lost=False, context=None):
+        """
+        Search for opportunities that have the same partner and that arent done or cancelled
+        """
+        lead = self.browse(cr, uid, ids[0], context=context)
+        email = lead.partner_id and lead.partner_id.email or lead.email_from
+        return self.pool['crm.lead']._get_duplicated_leads_by_emails(cr, uid, partner_id, email, include_lost=include_lost, context=context)
+
+    def _get_duplicated_leads_by_emails(self, cr, uid, partner_id, email, include_lost=False, context=None):
+        """
+        Search for opportunities that have   the same partner and that arent done or cancelled
+        """
+        final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
+        partner_match_domain = []
+        for email in set(email_split(email) + [email]):
+            partner_match_domain.append(('email_from', '=ilike', email))
+        if partner_id:
+            partner_match_domain.append(('partner_id', '=', partner_id))
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
+        if not partner_match_domain:
+            return []
+        domain = partner_match_domain
+        if not include_lost:
+            domain += final_stage_domain
+        return self.search(cr, uid, domain, context=context)
+
+    def merge_dependences(self, cr, uid, highest, opportunities, context=None):
+        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_history(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_attachments(cr, uid, highest, opportunities, context=context)
+
     def merge_opportunity(self, cr, uid, ids, user_id=False, section_id=False, context=None):
         """
         Different cases of merge:
@@ -627,14 +659,12 @@ class crm_lead(format_address, osv.osv):
         if section_id:
             merged_data['section_id'] = section_id
 
-        # Merge messages and attachements into the first opportunity
-        self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
-        self._merge_opportunity_attachments(cr, uid, highest.id, tail_opportunities, context=context)
-
         # Merge notifications about loss of information
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, highest.id, opportunities, context=context)
+
+        self.merge_dependences(cr, uid, highest.id, tail_opportunities, context=context)
+
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
             section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)

@@ -617,7 +617,7 @@ class website_sale(http.Controller):
         # if tx:
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
-        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
+        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
         values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
         for acquirer in values['acquirers']:
@@ -757,13 +757,13 @@ class website_sale(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.id == request.session.get('sale_last_order_id')
 
-        if not tx or not order:
+        if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
 
-        if not order.amount_total or tx.state in ['pending', 'done']:
+        if (not order.amount_total and not tx) or tx.state in ['pending', 'done']:
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
-        elif tx.state == 'cancel':
+        elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
 
