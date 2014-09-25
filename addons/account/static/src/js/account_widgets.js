@@ -599,7 +599,7 @@ openerp.account = function (instance) {
             if (preset_line.amount && self.amount_field) {
                 if (preset_line.amount_type === "fixed")
                     self.amount_field.set_value(preset_line.amount);
-                else if (preset_line.amount_type === "percentage_of_balance") {
+                else if (preset_line.amount_type === "percentage") {
                     self.amount_field.set_value(0);
                     self.updateBalance();
                     self.amount_field.set_value(-1 * self.get("balance") * preset_line.amount / 100);
@@ -1612,12 +1612,6 @@ openerp.account = function (instance) {
                 need_redraw = true;
             }
             if (need_redraw) self.deselectMoveLine(mv_line);
-        },
-
-        applyPresetLine: function(preset_line) {
-            this._super(preset_line);
-            if (preset_line.amount && this.amount_field && preset_line.amount_type === "percentage_of_total")
-                    this.amount_field.set_value(this.st_line.amount * preset_line.amount / 100);
         },
 
     
