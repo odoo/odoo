@@ -422,6 +422,13 @@ class hr_applicant(osv.Model):
                 cr, uid, [applicant.job_id.id],
                 body=_('New application from %s') % name,
                 subtype="hr_recruitment.mt_job_applicant_new", context=context)
+            self.message_post(
+                cr, uid, [applicant.id],
+                body = _("%s's Application \n From: %s \n\n %s \n") % (name, vals.get('email_from') or "", vals.get('description',"") or ""),
+                attachments = context.get('attachments'),
+                content_subtype = 'plaintext',
+                subtype = "hr_recruitment.mt_applicant_hired",
+                context = context)
         return obj_id
 
     def write(self, cr, uid, ids, vals, context=None):
