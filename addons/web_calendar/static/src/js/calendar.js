@@ -393,6 +393,13 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             }).done(function(events) {
                 self.dataset_events = events;
                 self.events_loaded(events);
+                if (self.dataset.index === null) {
+                    if (events.length) {
+                        self.dataset.index = 0;
+                    }
+                } else if (self.dataset.index >= events.length) {
+                    self.dataset.index = events.length ? 0 : null;
+                }
             });
         });
     },

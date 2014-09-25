@@ -96,6 +96,7 @@ Dashboard / Reports for Warehouse Management will include:
         'test/shipment.yml',
         'test/stock_report.yml',
         'test/stock_move_chain_validation.yml',
+        'test/setlast_tracking.yml',
     ],
     'installable': True,
     'application': True,

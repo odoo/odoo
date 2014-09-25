@@ -163,7 +163,7 @@ class stock_partial_picking(osv.osv_memory):
             'move_id' : move.id,
             'location_id' : move.location_id.id,
             'location_dest_id' : move.location_dest_id.id,
-            'currency': move.picking_id.company_id.currency_id.id,
+            'currency': move.picking_id and move.picking_id.company_id.currency_id.id or False,
         }
         if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
