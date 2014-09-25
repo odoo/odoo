@@ -550,12 +550,17 @@
                 $zones.remove();
             } while (count > 0);
 
-            // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
+            // Cleaning consecutive zone and up zones placed between floating or inline elements. We do not like these kind of zones.
             var $zones = self.$wrapwrap.find('.oe_drop_zone:not(.oe_vertical)');
             $zones.each(function (){
                 var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
+                // remove consecutive zone
+                if (!zone.hasClass('.oe_vertical') && (prev.is('.oe_drop_zone:not(.oe_vertical)') || next.is('.oe_drop_zone:not(.oe_vertical)'))) {
+                    zone.remove();
+                    return;
+                }
                 var float_prev = prev.css('float')   || 'none';
                 var float_next = next.css('float')   || 'none';
                 var disp_prev  = prev.css('display') ||  null;

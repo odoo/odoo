@@ -169,6 +169,16 @@
                     return def.reject();
                 }
 
+                // if needed, scroll prior to displaying the tip
+                var scroll = _.find(self.$element.parentsUntil('body'), function(el) {
+                    var overflow = $(el).css('overflow-y');
+                    return (overflow === 'auto' || overflow === 'scroll');
+                });
+                if (scroll) {
+                    var offset = self.$element.offset().top;
+                    $(scroll).scrollTop(offset);
+                }
+
                 var _top = self.$element.offset().top -5;
                 var _left = self.$element.offset().left -5;
                 var _width = self.$element.outerWidth() + 10;

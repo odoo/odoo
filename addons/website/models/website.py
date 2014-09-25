@@ -149,7 +149,8 @@ class website(osv.osv):
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
-        'name': fields.char('Domain'),
+        'name': fields.char('Website Name'),
+        'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
@@ -256,7 +257,7 @@ class website(osv.osv):
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
         website_id = 1
         if request:
-            ids = self.search(cr, uid, [('name', '=', domain_name)], context=context)
+            ids = self.search(cr, uid, [('domain', '=', domain_name)], context=context)
             if ids:
                 website_id = ids[0]
         return website_id
