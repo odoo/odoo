@@ -118,21 +118,54 @@ $(document).ready(function () {
         function set_tags(tags) {
             $("input.load_tags").textext({
                 plugins: 'tags focus autocomplete ajax',
+                ext: {
+                    autocomplete: {
+                        onSetSuggestions : function(e, data) {
+                            var self        = this,
+                                val         = self.val(),
+                                suggestions = self._suggestions = data.result;
+                            if(data.showHideDropdown !== false)
+                                self.trigger(suggestions === null || suggestions.length === 0 && val.length === 0 ? "hideDropdown" : "showDropdown");
+                        },
+                        renderSuggestions: function(suggestions) {
+                            var self = this,
+                                val  = self.val();
+                            self.clearItems();
+                            $.each(suggestions || [], function(index, item) {
+                                self.addSuggestion(item);
+                            });
+                            var lowerCasesuggestions = $.map(suggestions, function(n,i){return n.toLowerCase();});
+                            if(jQuery.inArray(val.toLowerCase(), lowerCasesuggestions) ==-1) {
+                                self.addSuggestion("Create '" + val + "'");
+                            }
+                        },
+                    },
+                    tags: {
+                        onEnterKeyPress: function(e) {
+                            var self = this,
+                                val  = self.val(),
+                                tag  = self.itemManager().stringToItem(val);
+
+                            if(self.isTagAllowed(tag)) {
+                                tag = tag.replace(/Create\ '|\'|'/g,'');
+                                self.addTags([ tag ]);
+                                // refocus the textarea just in case it lost the focus
+                                self.core().focusInput();
+                            }
+                        },
+                    }
+                },
                 tagsItems: tags.split(","),
                 //Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
                 keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
-                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
+                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace'},
                 ajax: {
                     url: '/forum/get_tags',
                     dataType: 'json',
                     cacheResults: true
                 }
             });
-            // Adds: create tags on space + blur
-            $("input.load_tags").on('whitespaceKeyDown blur', function () {
-                $(this).textext()[0].tags().addTags([ $(this).val() ]);
-                $(this).val("");
-            });
+
             $("input.load_tags").on('isTagAllowed', function(e, data) {
                 if (_.indexOf($(this).textext()[0].tags()._formData, data.tag) != -1) {
                     data.result = false;

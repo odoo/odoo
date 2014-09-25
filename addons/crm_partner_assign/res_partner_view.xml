@@ -105,26 +105,30 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='geo_location']" position="inside">
-                <group>
+            <data>
+                <xpath expr="//page[@name='geo_location']" position="inside">
                     <group>
-                        <separator string="Partner Activation" colspan="2"/>
-                        <field name="grade_id" widget="selection"/>
-                        <field name="activation" widget="selection"/>
-                        <field name="partner_weight"/>
-                        <field name="assigned_partner_id"/>
+                        <group>
+                            <separator string="Partner Activation" colspan="2"/>
+                            <field name="grade_id" widget="selection"/>
+                            <field name="activation" widget="selection"/>
+                            <field name="partner_weight"/>
+                        </group>
+                        <group>
+                            <separator string="Partner Review" colspan="2"/>
+                            <field name="date_review"/>
+                            <field name="date_review_next"/>
+                            <field name="date_partnership"/>
+                        </group>
+                        <group>
+                            <button name="%(crm.relate_partner_opportunities)d"  string="Assigned Opportunities" type="action" />
+                        </group>
                     </group>
-                    <group>
-                        <separator string="Partner Review" colspan="2"/>
-                        <field name="date_review"/>
-                        <field name="date_review_next"/>
-                        <field name="date_partnership"/>
-                    </group>
-                    <group>
-                        <button name="%(crm.relate_partner_opportunities)d"  string="Assigned Opportunities" type="action" />
-                    </group>
-                </group>
-            </xpath>
+                </xpath>
+                <xpath expr="//group[@name='sale']" position="inside">
+                    <field name="assigned_partner_id"/>
+                </xpath>
+            </data>
         </field>
     </record>
 

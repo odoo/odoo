@@ -288,7 +288,7 @@ class QWeb(orm.AbstractModel):
             result = self.render_element(element, template_attributes, generated_attributes, qwebcontext)
 
         if element.tail:
-            result += element.tail.encode('utf-8')
+            result += self.render_tail(element.tail, element, qwebcontext)
 
         if isinstance(result, unicode):
             return result.encode('utf-8')
@@ -303,7 +303,7 @@ class QWeb(orm.AbstractModel):
         if inner:
             g_inner = inner.encode('utf-8') if isinstance(inner, unicode) else inner
         else:
-            g_inner = [] if element.text is None else [element.text.encode('utf-8')]
+            g_inner = [] if element.text is None else [self.render_text(element.text, element, qwebcontext)]
             for current_node in element.iterchildren(tag=etree.Element):
                 try:
                     g_inner.append(self.render_node(current_node, qwebcontext))
@@ -332,6 +332,12 @@ class QWeb(orm.AbstractModel):
             )
         else:
             return "<%s%s/>" % (name, generated_attributes)
+
+    def render_text(self, text, element, qwebcontext):
+        return text.encode('utf-8')
+
+    def render_tail(self, tail, element, qwebcontext):
+        return tail.encode('utf-8')
 
     # Attributes
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):

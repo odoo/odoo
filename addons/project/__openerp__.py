@@ -44,7 +44,8 @@
         'board',
         'mail',
         'resource',
-        'web_kanban'
+        'web_kanban',
+        'web_kanban_sparkline'
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks

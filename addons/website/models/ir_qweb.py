@@ -45,6 +45,14 @@ class QWeb(orm.AbstractModel):
         'a': 'href',
     }
 
+    re_remove_spaces = re.compile('\s+')
+    PRESERVE_WHITESPACE = [
+        'pre',
+        'textarea',
+        'script',
+        'style',
+    ]
+
     def add_template(self, qcontext, name, node):
         # preprocessing for multilang static urls
         if request.website:
@@ -66,6 +74,19 @@ class QWeb(orm.AbstractModel):
         return self.pool.get(
             'website.qweb.field.' + field_type,
             self.pool['website.qweb.field'])
+
+    def render_text(self, text, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.tag not in self.PRESERVE_WHITESPACE:
+            text = self.re_remove_spaces.sub(' ', text.lstrip())
+        return super(QWeb, self).render_text(text, element, qwebcontext)
+
+    def render_tail(self, tail, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
+            # No need to recurse because those tags children are not html5 parser friendly
+            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
+        return super(QWeb, self).render_tail(tail, element, qwebcontext)
 
 class Field(orm.AbstractModel):
     _name = 'website.qweb.field'
