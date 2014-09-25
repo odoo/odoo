@@ -252,7 +252,7 @@ class product_pricelist(osv.osv):
                             else:
                                 price_tmp = self.price_get(cr, uid,
                                         [res['base_pricelist_id']], product_id,
-                                        qty, context=context)[res['base_pricelist_id']]
+                                        qty, partner, context=context)[res['base_pricelist_id']]
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
                                 uom_price_already_computed = True
                                 price = currency_obj.compute(cr, uid,
