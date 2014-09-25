@@ -626,6 +626,13 @@ class crm_lead(base_stage, format_address, osv.osv):
                 attachment.write(values)
         return True
 
+    def _merge_opportunity_phonecalls(self, cr, uid, opportunity_id, opportunities, context=None):
+        phonecall_obj = self.pool['crm.phonecall']
+        for opportunity in opportunities:
+            for phonecall_id in phonecall_obj.search(cr, uid, [('opportunity_id', '=', opportunity.id)], context=context):
+                phonecall_obj.write(cr, uid, phonecall_id, {'opportunity_id': opportunity_id}, context=context)
+        return True
+
     def merge_opportunity(self, cr, uid, ids, context=None):
         """
         Different cases of merge:
@@ -663,6 +670,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, highest.id, tail_opportunities, context=context)
+        self._merge_opportunity_phonecalls(cr, uid, highest.id, tail_opportunities, context=context)
 
         # Merge notifications about loss of information
         opportunities = [highest]
