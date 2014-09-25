@@ -100,13 +100,12 @@ class TableExporter(http.Controller):
         result = {'snapshot_id': 0, 'experiment_id': 0}
         obj_v = request.registry['ir.ui.view']
         view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
-        if view.snapshot_id:
-            result['snapshot_id'] = view.snapshot_id.id
-            obj_es = request.registry['website_version.experiment_snapshot']
-            exp_snap_id = obj_es.search(cr, uid, [('snapshot_id', '=', view.snapshot_id.id)],context=context)        
-            if exp_snap_id:
-                exp_snap = obj_es.browse(cr, uid, [exp_snap_id[0]],context)[0]
-                result['experiment_id'] = exp_snap.experiment_id.id
+        exp_ids = request.registry['website_version.experiment'].search(cr, uid, [('experiment_snapshot_ids.snapshot_id.view_ids.key', '=', view.key),('state','=','running')],context=context)
+        if exp_ids:
+            result['experiment_id'] = exp_ids[0]
+            if view.snapshot_id:
+                result['snapshot_id'] = view.snapshot_id.id
+        print result  
         return result
 
     @http.route(['/set_context'], type = 'json', auth = "public", website = True)

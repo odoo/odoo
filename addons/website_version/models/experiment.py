@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import osv, fields
+import simplejson
 
 class Experiment_snapshot(osv.Model):
     _name = "website_version.experiment_snapshot"
@@ -79,4 +80,62 @@ class Experiment(osv.Model):
         # 'state': _get_state
         'state': lambda *args, **kwargs : ([s[0] for s in EXPERIMENT_STATES], dict()),
     }
+
+class google_management(osv.AbstractModel):
+    STR_SERVICE = 'management'
+    _name = 'google.%s' % STR_SERVICE
+
+    def generate_data(self, cr, uid, experiment, isCreating=False, context=None):
+        accountId='55031254',
+        webPropertyId='UA-55031254-1',
+        profileId='1',
+        
+        data = {
+            'name': experiment.name,
+            'status': experiment.status,
+            'variations': experiment.variontions
+        }
+
+        return data
+
+    def create_an_experiment(self, cr, uid, experiment, context=None):
+        gs_pool = self.pool['google.service']
+        data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
+
+        accountId='55031254',
+        webPropertyId='UA-55031254-1',
+        profileId='1'
+
+        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments' % (accountId, webPropertyId, profileId)
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        data_json = simplejson.dumps(data)
+
+        return gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
+
+    def update_an_experiment(self, cr, uid, experiment, context=None):
+        gs_pool = self.pool['google.service']
+        data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
+
+        accountId='55031254',
+        webPropertyId='UA-55031254-1',
+        profileId='1'
+
+        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment.id)
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        data_json = simplejson.dumps(data)
+
+        return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
+
+    def delete_an_experiment(self, cr, uid, experiment_id, context=None):
+        gs_pool = self.pool['google.service']
+
+        accountId='55031254',
+        webPropertyId='UA-55031254-1',
+        profileId='1'
+        
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment.id)
+
+        return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
+
 

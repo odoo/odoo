@@ -35,23 +35,6 @@
             </xpath>   
         </template>
 
-        <!-- <templates id="template_version" inherit_id="website.template" xml:space="preserve">
-            <xpath expr="//form['class=navbar-form text-muted']/button" position="after">
-                or
-                <button type="button" data-action="save"
-                            class="btn btn-primary btn-xs">Save as Draft</button>
-            </xpath>
-
-        </templates> -->
-
-
-        <!-- <template id="user_navbar_content" inherit_id="website.user_navbar" groups="base.group_user">
-            <xpath expr="//nav/ul/li/a['id=content-menu-button']" position="after">
-                    <li class="divider" groups="base.group_website_designer"> </li>
-                    <li groups="base.group_website_designer"><a href="#" data-action="AB_testing">AB Testing</a></li>
-            </xpath>
-        </template> -->
-
         <template id="assets_frontend_menu_version" name="website_menu_version assets" inherit_id="website.assets_editor">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/website_version/static/src/js/menu_version.js"></script>
@@ -60,11 +43,22 @@
             </xpath>
         </template>
 
-        <template id="assets_frontend_AB" name="website_AB assets" inherit_id="website.layout">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_version/static/src/js/AB_testing.js"></script>
+        <!-- <template id="assets_frontend_AB" name="website_AB assets" inherit_id="website.layout">
+            <xpath expr="//script" position="inside">
+                var view_id = $('html').attr('data-view-xmlid');
+                openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
+                        var exp = 'exp_'+result['experiment_id']
+                        var snap = 'snap_'+result['snapshot_id']
+                        console.log(exp+':'+snap);
+                        ga('send', 'pageview', {
+                          'dimension1':  exp
+                        });
+                        ga('send', 'pageview', {
+                          'dimension2':  snap
+                        });
+                    });
             </xpath>
-        </template>
+        </template> -->
 
         <template id="assets_frontend_AB_testing" name="website_AB_testing assets" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
