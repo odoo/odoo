@@ -71,7 +71,7 @@ class PaymentAcquirerOgone(osv.Model):
             else:
                 # SHA-OUT keys
                 # source https://viveum.v-psp.com/Ncol/Viveum_e-Com-BAS_EN.pdf
-                return [
+                keys = [
                     'AAVADDRESS',
                     'AAVCHECK',
                     'AAVMAIL',
@@ -129,6 +129,7 @@ class PaymentAcquirerOgone(osv.Model):
                     'TRXDATE',
                     'VC'
                 ]
+                return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
