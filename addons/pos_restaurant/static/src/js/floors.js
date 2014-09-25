@@ -395,8 +395,10 @@ function openerp_restaurant_floors(instance,module){
             
             if (this.editing) {
                 this.$('.edit-bar').removeClass('oe_hidden');
+                this.$('.edit-button.editing').addClass('active');
             } else {
                 this.$('.edit-bar').addClass('oe_hidden');
+                this.$('.edit-button.editing').removeClass('active');
             }
 
             if (this.selected_table) {
