@@ -44,6 +44,7 @@
     position: relative;
     width: auto;
     background: rgba(0,0,0,0.1);
+    background-repeat: no-repeat;
 }
 
 .floor-map .table{
@@ -77,6 +78,10 @@
     border-radius: 5px;
     cursor: pointer;
     border: solid 1px rgba(0,0,0,0.2);
+}
+.floor-map .edit-button.editing.active {
+    background: #444;
+    color: white;
 }
 .floor-map .edit-bar {
     position: absolute;

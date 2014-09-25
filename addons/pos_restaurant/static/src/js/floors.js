@@ -1,4 +1,5 @@
 function openerp_restaurant_floors(instance,module){
+    var _t = instance.web._t;
 
     module.PosModel.prototype.models.push({
         model: 'restaurant.floor',
@@ -27,10 +28,10 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
-    module.TableWidget = instance.web.Widget.extend({
+    module.TableWidget = module.PosBaseWidget.extend({
         template: 'TableWidget',
         init: function(parent, options){
-            this._super(parent);
+            this._super(parent, options)
             this.table    = options.table;
             this.selected = false;
             this.moved    = false;
@@ -47,23 +48,26 @@ function openerp_restaurant_floors(instance,module){
         },
         click_handler: function(){
             var self = this;
-            setTimeout(function(){  // in a setTimeout to debounce with drag&drop
-                if (!self.dragging) {
-                    if (self.moved) {
-                        self.moved = false;
-                    } else if (!self.selected) {
-                        self.getParent().select_table(self);
-                    } else {
-                        self.getParent().deselect_tables();
-                    }
-                } 
-            },50);
+            var floorplan = this.getParent();
+            if (floorplan.editing) {
+                setTimeout(function(){  // in a setTimeout to debounce with drag&drop
+                    if (!self.dragging) {
+                        if (self.moved) {
+                            self.moved = false;
+                        } else if (!self.selected) {
+                            self.getParent().select_table(self);
+                        } else {
+                            self.getParent().deselect_tables();
+                        }
+                    } 
+                },50);
+            }
         },
         dragstart_handler: function(event,$el,drag){
             if (this.selected && !this.handle_dragging) {
                 this.dragging = true;
                 this.dragpos  = { x: drag.offsetX, y: drag.offsetY };
-            } 
+            }
         },
         dragend_handler:   function(event,$el){
             this.dragging = false;
@@ -103,12 +107,12 @@ function openerp_restaurant_floors(instance,module){
 
                 var cl     = this.handle.classList;
 
-                var tw = this.table.width;
-                var th = this.table.height;
+                var MIN_SIZE = 40;
+
+                var tw = Math.max(MIN_SIZE, this.table.width);
+                var th = Math.max(MIN_SIZE, this.table.height);
                 var tx = this.table.position_h;
                 var ty = this.table.position_v;
-
-                var MIN_SIZE = 40;
 
                 if (cl.contains('left') && tw - dx >= MIN_SIZE) {
                     tw -= dx;
@@ -180,6 +184,49 @@ function openerp_restaurant_floors(instance,module){
         deselect: function() {
             this.selected = false;
             this.renderElement();
+            this.save_changes();
+        },
+        save_changes: function(){
+            var self   = this;
+            var model  = new instance.web.Model('restaurant.table');
+            var fields = _.find(this.pos.models,function(model){ return model.model === 'restaurant.table'; }).fields;
+
+            model.call('create_from_ui',[this.table]).then(function(table_id){
+                model.query(fields).filter([['id','=',table_id]]).first().then(function(table){
+                    for (field in table) {
+                        self.table[field] = table[field];
+                    }
+                    self.renderElement();
+                });
+            });
+        },
+        trash: function(){
+            var self  = this;
+            var model = new instance.web.Model('restaurant.table');
+            return model.call('create_from_ui',[{'active':false,'id':this.table.id}]).then(function(table_id){
+                // Removing all references from the table and the table_widget in in the UI ... 
+                // This should probably be cleaned. 
+                for (var i = 0; i < self.pos.floors.length; i++) {
+                    var floor = self.pos.floors[i];
+                    for (var j = 0; j < floor.tables.length; j++) {
+                        if (floor.tables[j].id === table_id) {
+                            floor.tables.splice(j,1);
+                            break;
+                        }
+                    }
+                }
+                var floorplan = self.getParent();
+                for (var i = 0; i < floorplan.table_widgets.length; i++) {
+                    if (floorplan.table_widgets[i] === self) {
+                        floorplan.table_widgets.splice(i,1);
+                    }
+                }
+                if (floorplan.selected_table === self) {
+                    floorplan.selected_table = null;
+                }
+                floorplan.update_toolbar();
+                self.destroy();
+            });
         },
         renderElement: function(){
             var self = this;
@@ -207,6 +254,7 @@ function openerp_restaurant_floors(instance,module){
             this.floor = this.pos.floors[0];
             this.table_widgets = [];
             this.selected_table = null;
+            this.editing = false;
         },
         show: function(){
             this._super();
@@ -214,11 +262,17 @@ function openerp_restaurant_floors(instance,module){
         },
         hide: function(){
             this._super();
+            if (this.editing) { 
+                this.toggle_editing();
+            }
             this.pos_widget.$('.order-selector').removeClass('oe_invisible');
         },
         click_floor_button: function(event,$el){
             var floor = this.pos.floors_by_id[$el.data('id')];
             if (floor !== this.floor) {
+                if (this.editing) {
+                    this.toggle_editing();
+                }
                 this.floor = floor;
                 this.selected_table = null;
                 this.renderElement();
@@ -231,8 +285,7 @@ function openerp_restaurant_floors(instance,module){
             for (var i = 0; i < this.table_widgets.length; i++) {
                 var table = this.table_widgets[i];
                 if (table.selected) {
-                    table.selected = false;
-                    table.renderElement();
+                    table.deselect();
                 }
             }
             this.selected_table = null;
@@ -275,7 +328,7 @@ function openerp_restaurant_floors(instance,module){
             var self = this;
             if (this.selected_table) {
                 this.pos_widget.screen_selector.show_popup('textinput',{
-                    'message':'Table Name ?',
+                    'message':_t('Table Name ?'),
                     'value': this.selected_table.table.name,
                     'confirm': function(value) {
                         self.selected_table.set_table_name(value);
@@ -288,6 +341,7 @@ function openerp_restaurant_floors(instance,module){
                 var tw = this.create_table(this.selected_table.table);
                 tw.table.position_h += 10;
                 tw.table.position_v += 10;
+                tw.save_changes();
                 this.select_table(tw);
             }
         },
@@ -308,7 +362,8 @@ function openerp_restaurant_floors(instance,module){
                 table[p] = params[p];
             }
 
-            table.floor_id = this.floor.id;
+            delete table['id']; 
+            table.floor_id = [this.floor.id,''];
             
             this.floor.tables.push(table);
             var tw = new module.TableWidget(this,{table: table});
@@ -316,7 +371,34 @@ function openerp_restaurant_floors(instance,module){
             this.table_widgets.push(tw);
             return tw;
         },
+        tool_trash_table: function(){
+            var self = this;
+            if (this.selected_table) {
+                this.pos_widget.screen_selector.show_popup('confirm',{
+                    'message':_t('Are you sure ?'),
+                    'comment':_t('Removing a table cannot be undone'),
+                    'confirm': function(){
+                        self.selected_table.trash();
+                    },
+                });
+            }
+        },
+        toggle_editing: function(){
+            this.editing = !this.editing;
+            this.update_toolbar();
+
+            if (!this.editing) {
+                this.deselect_tables();
+            }
+        },
         update_toolbar: function(){
+            
+            if (this.editing) {
+                this.$('.edit-bar').removeClass('oe_hidden');
+            } else {
+                this.$('.edit-bar').addClass('oe_hidden');
+            }
+
             if (this.selected_table) {
                 this.$('.needs-selection').removeClass('disabled');
                 var table = this.selected_table.table;
@@ -375,6 +457,10 @@ function openerp_restaurant_floors(instance,module){
             this.$('.edit-button.rename').click(function(event){
                 self.tool_rename_table();
             });
+
+            this.$('.edit-button.trash').click(function(event){
+                self.tool_trash_table();
+            });
             
             this.$('.color-picker .close-picker').click(function(event){
                 self.tool_colorpicker_close();
@@ -385,6 +471,10 @@ function openerp_restaurant_floors(instance,module){
                 self.tool_colorpicker_pick(event,$(this));
                 self.tool_colorpicker_close();
                 event.stopPropagation();
+            });
+
+            this.$('.edit-button.editing').click(function(){
+                self.toggle_editing();
             });
 
             this.$('.floor-map').click(function(event){
