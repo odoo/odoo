@@ -45,6 +45,14 @@ class QWeb(orm.AbstractModel):
         'a': 'href',
     }
 
+    re_remove_spaces = re.compile('\s+')
+    PRESERVE_WHITESPACE = [
+        'pre',
+        'textarea',
+        'script',
+        'style',
+    ]
+
     def add_template(self, qcontext, name, node):
         # preprocessing for multilang static urls
         if request.website:
@@ -66,6 +74,19 @@ class QWeb(orm.AbstractModel):
         return self.pool.get(
             'website.qweb.field.' + field_type,
             self.pool['website.qweb.field'])
+
+    def render_text(self, text, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.tag not in self.PRESERVE_WHITESPACE:
+            text = self.re_remove_spaces.sub(' ', text.lstrip())
+        return super(QWeb, self).render_text(text, element, qwebcontext)
+
+    def render_tail(self, tail, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
+            # No need to recurse because those tags children are not html5 parser friendly
+            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
+        return super(QWeb, self).render_tail(tail, element, qwebcontext)
 
 class Field(orm.AbstractModel):
     _name = 'website.qweb.field'
@@ -288,19 +309,19 @@ class Image(orm.AbstractModel):
         if options is None: options = {}
         classes = ['img', 'img-responsive'] + options.get('class', '').split()
 
-        url_params = {
+        url_frags = {
+            'classes': ' '.join(itertools.imap(escape, classes)),
             'model': record._model._name,
-            'field': field_name,
             'id': record.id,
+            'field': field_name,
+            'max_size': '',
         }
-        for options_key in ['max_width', 'max_height']:
-            if options.get(options_key):
-                url_params[options_key] = options[options_key]
+        max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
+        if max_width or max_height:
+            url_frags['max_size'] = '/%sx%s' % (max_width, max_height)
 
-        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?%s"/>' % (
-            ' '.join(itertools.imap(escape, classes)),
-            werkzeug.urls.url_encode(url_params)
-        ))
+        img = '<img class="%(classes)s" src="/website/image/%(model)s/%(id)s/%(field)s%(max_size)s"/>'
+        return ir_qweb.HTMLSafe(img % url_frags)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):

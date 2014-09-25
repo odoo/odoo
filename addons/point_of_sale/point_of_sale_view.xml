@@ -60,6 +60,7 @@
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"/>
                             </group>
+                            <div class="oe_clear"/>
                         </page>
                         <page string="Payments">
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -168,6 +169,8 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{}"/>
             <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a new product.
@@ -185,7 +188,7 @@
         <menuitem
             action="product_template_action"
             id="menu_pos_products"
-            parent="menu_point_of_sale_product" sequence="2"/>
+            parent="menu_point_of_sale_product" sequence="0"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -518,9 +521,16 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <menuitem action="product_pos_category_action" id="menu_product_pos_category" parent="menu_point_of_sale_product" sequence="2" />
         <!-- END -->
 
+        <record id="action_edit_ean" model="ir.actions.act_window">
+            <field name="name">Edit Ean</field>
+            <field name="res_model">pos.ean_wizard</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
 
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form.inherit</field>
@@ -537,7 +547,7 @@
                     </group>
                 </group>
                 <field name="ean13" position="after">
-                    <button colspan="2" name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
+                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>
@@ -592,7 +602,7 @@
         </record>
 
         <!--  Miscellaneous Operations/Reporting -->
-        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="50" groups="group_pos_manager"/>
+        <menuitem name="Point of Sale" parent="base.menu_reporting" id="menu_point_rep" sequence="4" groups="group_pos_manager"/>
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
@@ -628,57 +638,81 @@
                         </div>
                     </header>
 
-                    <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group col="4">
-                        <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
-                            on_change="onchange_picking_type_id(picking_type_id)"/>
-                        <field name="stock_location_id" groups="stock.group_locations"/>
-                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="journal_id" widget="selection"/>
-                        <field name="group_by" groups="account.group_account_user"/>
-                        <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
-                    </group>
-                    <separator string="Available Payment Methods" colspan="4"/>
-                    <field name="journal_ids" colspan="4" nolabel="1">
-                        <tree string="Journals">
-                            <field name="code" />
-                            <field name="name" />
-                            <field name="type" />
-                            <field name="cash_control" />
-                        </tree>
-                    </field>
-                    <group string="Features" >
-                        <group>
-                            <field name="iface_vkeyboard" />
-                            <field name="iface_invoicing" />
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group col="4">
+                            <field name="picking_type_id" widget="selection" groups="stock.group_locations" 
+                                on_change="onchange_picking_type_id(picking_type_id)"/>
+                            <field name="stock_location_id" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="journal_id" widget="selection"/>
+                            <field name="group_by" groups="account.group_account_user"/>
+                            <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
-                        <group>
-                            <field name="iface_big_scrollbars" />
+                        <separator string="Available Payment Methods" colspan="4"/>
+                        <field name="journal_ids" colspan="4" nolabel="1">
+                            <tree string="Journals">
+                                <field name="code" />
+                                <field name="name" />
+                                <field name="type" />
+                                <field name="cash_control" />
+                            </tree>
+                        </field>
+                        <group string="Features" >
+                            <group>
+                                <field name="iface_vkeyboard" />
+                                <field name="iface_invoicing" />
+                            </group>
+                            <group>
+                                <field name="iface_fullscreen" />
+                                <field name="iface_big_scrollbars" />
+                            </group>
                         </group>
-                    </group>
-                    <group string="Hardware Proxy" >
-                        <field name="proxy_ip" />
-                        <field name="iface_print_via_proxy" />
-                        <field name="iface_scan_via_proxy" />
-                        <field name="iface_electronic_scale" />
-                        <field name="iface_cashdrawer" />
-                    </group>
-                    <group string="Receipt" >
-                        <field name="receipt_header" placeholder="A custom receipt header message"/>
-                        <field name="receipt_footer" placeholder="A custom receipt header footage"/>
-                    </group>
-                    <group string="Barcode Types" col="4">
-                        <field name="barcode_product" />
-                        <field name="barcode_cashier" />
-                        <field name="barcode_customer" />
-                        <field name="barcode_weight" />
-                        <field name="barcode_discount" />
-                        <field name="barcode_price" />
-                    </group>
+                        <group string="Hardware Proxy" >
+                            <field name="proxy_ip" />
+                            <field name="iface_print_via_proxy" />
+                            <field name="iface_scan_via_proxy" />
+                            <field name="iface_electronic_scale" />
+                            <field name="iface_cashdrawer" />
+                        </group>
+                        <group string="Receipt" >
+                            <field name="receipt_header" placeholder="A custom receipt header message"/>
+                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                        </group>
+                        <group string="Barcode Types" col="1">
+                            <p>
+                                Barcode Patterns allow to match barcodes to actions or to embed information such as price and quantity in the barcode.
+                                Barcode Patterns only work with EAN13 barcodes.
+                            </p>
+                            <p> 
+                                Each type of barcode accepts a list of patterns seprated by commas. A scanned 
+                                barcode will be attributed to a type if it matches one of its patterns. 
+                                The patterns take the form of EAN13 barcodes. Numbers in the pattern must match
+                                the number in the scanned barcode. A 'x' or a '*' in a pattern will match
+                                any one number. If the patterns are shorter than EAN13 barcodes, they are assumed
+                                to be prefixes and match at the beginning. Weight, Price and Discount patterns also
+                                tell how the weight, price or discount is encoded in the barcode. 'N' indicate the
+                                positions where the integer part is en encoded, and 'D' where the decimals are encoded.
+                                If multiple pattern match one barcode, the longest pattern with the less 'x' or '*' is
+                                considered the matching one. If a barcode matches no pattern it will not be found in
+                                the POS.
+                            </p>
+                            <group col="4">
+
+                                <field name="barcode_product" />
+                                <field name="barcode_cashier" />
+                                <field name="barcode_customer" />
+                                <field name="barcode_weight" />
+                                <field name="barcode_discount" />
+                                <field name="barcode_price" />
+                            </group>
+                        </group>
+                    </sheet>
 
                 </form>
             </field>

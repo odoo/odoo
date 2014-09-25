@@ -3,12 +3,15 @@ import cStringIO
 import datetime
 from itertools import islice
 import json
+import xml.etree.ElementTree as ET
+
 import logging
 import re
 
 from sys import maxint
 
 import werkzeug.utils
+import urllib2
 import werkzeug.wrappers
 from PIL import Image
 
@@ -53,8 +56,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-        # allow shortcut for /page/<website_xml_id>
-        if '.' not in page:
+        # /page/website.XXX --> /page/XXX
+        if page.startswith('website.'):
+            return request.redirect('/page/' + page[8:], code=301)
+        elif '.' not in page:
             page = 'website.%s' % page
 
         try:
@@ -136,6 +141,22 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
+    @http.route('/website/info', type='http', auth="public", website=True)
+    def website_info(self):
+        try:
+            request.website.get_template('website.info').name
+        except Exception, e:
+            return request.registry['ir.http']._handle_exception(e, 404)
+        irm = request.env()['ir.module.module'].sudo()
+        apps = irm.search([('state','=','installed'),('application','=',True)])
+        modules = irm.search([('state','=','installed'),('application','=',False)])
+        values = {
+            'apps': apps,
+            'modules': modules,
+            'version': openerp.service.common.exp_version()
+        }
+        return request.render('website.info', values)
+
     #------------------------------------------------------
     # Edit
     #------------------------------------------------------
@@ -143,11 +164,11 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
-            model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
             request.registry['website.menu'].create(request.cr, request.uid, {
                     'name': path,
                     'url': "/page/" + xml_id,
-                    'parent_id': id,
+                    'parent_id': request.website.menu_id.id,
+                    'website_id': request.website.id,
                 }, context=request.context)
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)
@@ -197,13 +218,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         user_groups = set(user.groups_id)
 
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=request.context)
+            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
             if not user_groups.issuperset(v.groups_id):
                 continue
-            if full or (v.application != 'always' and v.inherit_id.id != view_theme_id):
+            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
                 if v.inherit_id not in done:
                     result.append({
                         'name': v.inherit_id.name,
@@ -220,7 +241,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
-                    'active': v.application in ('always', 'enabled'),
+                    'active': v.active,
                 })
         return result
 
@@ -273,46 +294,51 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload=None, url=None):
-        Attachments = request.registry['ir.attachment']
+        # the upload argument doesn't allow us to access the files if more than
+        # one file is uploaded, as upload references the first file
+        # therefore we have to recover the files from the request object
+        Attachments = request.registry['ir.attachment']  # registry for the attachment table
 
-        website_url = message = None
-        if not upload:
-            website_url = url
-            name = url.split("/").pop()
+        uploads = []
+        message = None
+        if not upload: # no image provided, storing the link and the image name
+            uploads.append({'website_url': url})
+            name = url.split("/").pop()                       # recover filename
             attachment_id = Attachments.create(request.cr, request.uid, {
                 'name':name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
-        else:
+        else:                                                  # images provided
             try:
-                image_data = upload.read()
-                image = Image.open(cStringIO.StringIO(image_data))
-                w, h = image.size
-                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                    raise ValueError(
-                        u"Image size excessive, uploaded images must be smaller "
-                        u"than 42 million pixel")
-
-                attachment_id = Attachments.create(request.cr, request.uid, {
-                    'name': upload.filename,
-                    'datas': image_data.encode('base64'),
-                    'datas_fname': upload.filename,
-                    'res_model': 'ir.ui.view',
-                }, request.context)
-
-                [attachment] = Attachments.read(
-                    request.cr, request.uid, [attachment_id], ['website_url'],
-                    context=request.context)
-                website_url = attachment['website_url']
+                for c_file in request.httprequest.files.getlist('upload'):
+                    image_data = c_file.read()
+                    image = Image.open(cStringIO.StringIO(image_data))
+                    w, h = image.size
+                    if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                        raise ValueError(
+                            u"Image size excessive, uploaded images must be smaller "
+                            u"than 42 million pixel")
+    
+                    attachment_id = Attachments.create(request.cr, request.uid, {
+                        'name': c_file.filename,
+                        'datas': image_data.encode('base64'),
+                        'datas_fname': c_file.filename,
+                        'res_model': 'ir.ui.view',
+                    }, request.context)
+    
+                    [attachment] = Attachments.read(
+                        request.cr, request.uid, [attachment_id], ['website_url'],
+                        context=request.context)
+                    uploads.append(attachment)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(website_url), json.dumps(message))
+        </script>""" % (func, json.dumps(uploads), json.dumps(message))
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
@@ -328,6 +354,18 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
+
+    @http.route(['/website/seo_suggest/<keywords>'], type='http', auth="public", website=True)
+    def seo_suggest(self, keywords):
+        url = "http://google.com/complete/search"
+        try:
+            req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords})))
+            request = urllib2.urlopen(req)
+        except (urllib2.HTTPError, urllib2.URLError):
+            return []
+        xmlroot = ET.fromstring(request.read())
+        return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     #------------------------------------------------------
     # Themes
@@ -351,8 +389,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         enable = []
         disable = []
         ids = self.get_view_ids(xml_ids)
-        for v in view.browse(request.cr, request.uid, ids, context=request.context):
-            if v.application != "disabled":
+        context = dict(request.context or {}, active_test=True)
+        for v in view.browse(request.cr, request.uid, ids, context=context):
+            if v.active:
                 enable.append(v.xml_id)
             else:
                 disable.append(v.xml_id)
@@ -364,20 +403,14 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         view = pool["ir.ui.view"]
+        context = dict(request.context or {}, active_test=True)
 
-        def set_application(ids, application):
-            write_ids = []
-            for v in view.browse(cr, uid, self.get_view_ids(ids), context=context):
-                if v.application == 'always':
-                    continue
-                if v.application != application:
-                    write_ids.append(v.id)
+        def set_active(ids, active):
+            if ids:
+                view.write(cr, uid, self.get_view_ids(ids), {'active': active}, context=context)
 
-            if write_ids:
-                view.write(cr, uid, write_ids, {'application': application})
-
-        set_application(disable, 'disabled')
-        set_application(enable, 'enabled')
+        set_active(disable, False)
+        set_active(enable, True)
 
         return True
 
@@ -398,9 +431,12 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route([
         '/website/image',
-        '/website/image/<model>/<id>/<field>'
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=None, max_height=None):
+    def website_image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -414,11 +450,30 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
-        """
-        response = werkzeug.wrappers.Response()
-        return request.registry['website']._image(
-                    request.cr, request.uid, model, id, field, response, max_width, max_height)
 
+        xmlid can be used to load the image. But the field image must by base64-encoded
+        """
+        if xmlid and "." in xmlid:
+            xmlid = xmlid.split(".", 1)
+            try:
+                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+            except:
+                raise werkzeug.exceptions.NotFound()
+            if model == 'ir.attachment':
+                field = "datas"
+
+        if not model or not id or not field:
+            raise werkzeug.exceptions.NotFound()
+
+        try:
+            response = werkzeug.wrappers.Response()
+            return request.registry['website']._image(
+                request.cr, request.uid, model, id, field, response, max_width, max_height)
+        except Exception:
+            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
+                             field, model, id, max_width, max_height)
+            response = werkzeug.wrappers.Response()
+            return self.placeholder(response)
 
     #------------------------------------------------------
     # Server actions

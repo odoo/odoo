@@ -103,6 +103,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.fields_order = [];
         this.datarecord = {};
         this._onchange_specs = {};
+        this.onchanges_defs = [];
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
@@ -508,7 +509,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 def = self.alive(new instance.web.Model(self.dataset.model).call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
-            return def.then(function(response) {
+            var onchange_def = def.then(function(response) {
                 if (widget && widget.field['change_default']) {
                     var fieldname = widget.name;
                     var value_;
@@ -544,6 +545,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).then(function(response) {
                 return self.on_processed_onchange(response);
             });
+            this.onchanges_defs.push(onchange_def);
+            return onchange_def;
         } catch(e) {
             console.error(e);
             instance.webclient.crashmanager.show_message(e);
@@ -584,7 +587,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.mutating_mutex.exec(function() {
             function iterate() {
-                var defs = [];
+                var start = $.Deferred();
+                start.resolve();
+                start = _.reduce(self.onchanges_defs, function(memo, d){
+                    return memo.then(function(){
+                        return d;
+                    }, function(){
+                        return d;
+                    });
+                }, start);
+                var defs = [start];
                 _.each(self.fields, function(field) {
                     defs.push(field.commit_value());
                 });
@@ -643,6 +655,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * if the current record is not yet saved. It will then stay in create mode.
      */
     to_edit_mode: function() {
+        this.onchanges_defs = [];
         this._actualize_mode("edit");
     },
     /**
@@ -792,11 +805,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
-        return this._process_operations().then(function() {
+        return self._process_operations().then(function() {
             if (save_obj.error)
                 return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
-        }).done(function() {
+        }).done(function(result) {
             self.$el.removeClass('oe_form_dirty');
         });
     },
@@ -2337,26 +2350,31 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.states = self.prepare_dropdown_selection();;
+        this.record_id = this.view.datarecord.id;
+        this.states = this.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_kanban_selection.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_kanban_selection: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            self.record_id = self.view.datarecord.id;
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
     },
@@ -2388,27 +2406,34 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.priorities = self.prepare_priority();
+        this.record_id = this.view.datarecord.id;
+        this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_priority.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_priority: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
+
     },
     reload_record: function() {
         this.view.reload();
@@ -2515,13 +2540,9 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this._super.apply(this, arguments);
         this.on("change:effective_readonly", this, function () {
             this.display_field();
-            this.render_value();
         });
         this.display_field();
         return this._super();
-    },
-    render_value: function() {
-        this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
     },
     set_value: function(value_) {
         var self = this;
@@ -2537,7 +2558,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
-                $('button span', self.$el).text(' Change selection');
+                if (self.get('effective_readonly')) {
+                    $('button span', self.$el).text(' See selection');
+                }
+                else {
+                    $('button span', self.$el).text(' Change selection');
+                }
             });
         } else {
             $('.oe_domain_count', this.$el).text('0 record selected');
@@ -2551,8 +2577,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
         this.pop.select_element(
-            model, {title: 'Select records...'},
-            [], this.build_context());
+            model, {
+                title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+                readonly: this.get('effective_readonly'),
+                disable_multiple_selection: this.get('effective_readonly'),
+                no_create: this.get('effective_readonly'),
+            }, [], this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();
@@ -2578,10 +2608,10 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
 
 instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
-    jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
     events: {
-        'change .oe_datepicker_master': 'change_datetime',
+        'dp.change .oe_datepicker_main': 'change_datetime',
+        'dp.show .oe_datepicker_main': 'set_datetime_default',
         'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
@@ -2590,81 +2620,31 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+        var l10n = _t.database.parameters;
+        var options = {
+            pickTime: true,
+            useSeconds: true,
+            startDate: new moment({ y: 1900 }),
+            endDate: new moment().add(200, "y"),
+            calendarWeeks: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down'
+               },
+            language : moment.locale(),
+            format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+        };
         this.$input = this.$el.find('input.oe_datepicker_master');
-        this.$input_picker = this.$el.find('input.oe_datepicker_container');
-
-        $.datepicker.setDefaults({
-            clearText: _t('Clear'),
-            clearStatus: _t('Erase the current date'),
-            closeText: _t('Done'),
-            closeStatus: _t('Close without change'),
-            prevText: _t('<Prev'),
-            prevStatus: _t('Show the previous month'),
-            nextText: _t('Next>'),
-            nextStatus: _t('Show the next month'),
-            currentText: _t('Today'),
-            currentStatus: _t('Show the current month'),
-            monthNames: Date.CultureInfo.monthNames,
-            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
-            monthStatus: _t('Show a different month'),
-            yearStatus: _t('Show a different year'),
-            weekHeader: _t('Wk'),
-            weekStatus: _t('Week of the year'),
-            dayNames: Date.CultureInfo.dayNames,
-            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
-            dayNamesMin: Date.CultureInfo.shortestDayNames,
-            dayStatus: _t('Set DD as first week day'),
-            dateStatus: _t('Select D, M d'),
-            firstDay: Date.CultureInfo.firstDayOfWeek,
-            initStatus: _t('Select a date'),
-            isRTL: false
-        });
-        $.timepicker.setDefaults({
-            timeOnlyTitle: _t('Choose Time'),
-            timeText: _t('Time'),
-            hourText: _t('Hour'),
-            minuteText: _t('Minute'),
-            secondText: _t('Second'),
-            currentText: _t('Now'),
-            closeText: _t('Done')
-        });
-
-        this.picker({
-            onClose: this.on_picker_select,
-            onSelect: this.on_picker_select,
-            changeMonth: true,
-            changeYear: true,
-            showWeek: true,
-            showButtonPanel: true,
-            firstDay: Date.CultureInfo.firstDayOfWeek
-        });
-        // Some clicks in the datepicker dialog are not stopped by the
-        // datepicker and "bubble through", unexpectedly triggering the bus's
-        // click event. Prevent that.
-        this.picker('widget').click(function (e) { e.stopPropagation(); });
-
-        this.$el.find('img.oe_datepicker_trigger').click(function() {
-            if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
-                self.$input.focus();
-                return;
-            }
-            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
-            self.$input_picker.show();
-            self.picker('show');
-            self.$input_picker.hide();
-        });
+        if (this.type_of_date === 'date') {
+            options['pickTime'] = false;
+            options['useSeconds'] = false;
+            options['format'] = instance.web.convert_to_moment_format(l10n.date_format);
+        }
+        this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
         this.set_readonly(false);
         this.set({'value': false});
-    },
-    picker: function() {
-        return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
-    },
-    on_picker_select: function(text, instance_) {
-        var date = this.picker('getDate');
-        this.$input
-            .val(date ? this.format_client(date) : '')
-            .change()
-            .focus();
     },
     set_value: function(value_) {
         this.set({'value': value_});
@@ -2675,12 +2655,11 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     set_value_from_ui_: function() {
         var value_ = this.$input.val() || false;
-        this.set({'value': this.parse_client(value_)});
+        this.set_value(this.parse_client(value_));
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
         this.$input.prop('readonly', this.readonly);
-        this.$el.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid_: function() {
         var value_ = this.$input.val();
@@ -2701,6 +2680,17 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
+    set_datetime_default: function(){
+        //when opening datetimepicker the date and time by default should be the one from
+        //the input field if any or the current day otherwise
+        if (this.type_of_date === 'datetime') {
+            value = new moment().second(0);
+            if (this.$input.val().length !== 0 && this.is_valid_()){
+                var value = this.$input.val();
+            }
+            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+        }
+    },
     change_datetime: function(e) {
         if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
@@ -2713,7 +2703,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
 });
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
-    jqueryui_object: 'datepicker',
     type_of_date: "date"
 });
 
@@ -2875,7 +2864,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || '100%');
+            var width = ((this.node.attrs || {}).editor_width || 'auto');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3162,9 +3151,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this._super(field_manager, node);
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
+        this.uniqueId = _.uniqueId("radio");
     },
     initialize_content: function () {
-        this.uniqueId = _.uniqueId("radio");
         this.on("change:effective_readonly", this, this.render_value);
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
         this.get_selection();
@@ -3341,7 +3330,7 @@ instance.web.form.CompletionFieldMixin = {
                 });
             }
             // create...
-            if (!(self.options && self.options.no_create)){
+            if (!(self.options && (self.options.no_create || self.options.no_create_edit))){
                 values.push({
                     label: _t("Create and Edit..."),
                     action: function() {
@@ -3616,7 +3605,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed && (self.options.no_create === false || self.options.no_create === undefined)) {
+            if (used && self.get("value") === false && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
@@ -3645,10 +3634,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             focusout: anyoneLoosesFocus,
             focus: function () { self.trigger('focused'); },
             autocompleteopen: function () { ignore_blur = true; },
-            autocompleteclose: function () { ignore_blur = false; },
+            autocompleteclose: function () { setTimeout(function() {ignore_blur = false;},0); },
             blur: function () {
                 // autocomplete open
-                if (ignore_blur) { return; }
+                if (ignore_blur) { $(this).focus(); return; }
                 if (_(self.getChildren()).any(function (child) {
                     return child instanceof instance.web.form.AbstractFormPopup;
                 })) { return; }
@@ -4505,9 +4494,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             window.confirm = confirm;
         }
     },
-    reload_record: function (record) {
-        // Evict record.id from cache to ensure it will be reloaded correctly
-        this.dataset.evict_record(record.get('id'));
+    reload_record: function (record, options) {
+        if (!options || !options['do_not_evict']) {
+            // Evict record.id from cache to ensure it will be reloaded correctly
+            this.dataset.evict_record(record.get('id'));
+        }
 
         return this._super(record);
     }
@@ -5704,6 +5695,20 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.render_value();
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // By default, on binary images read, the server returns the binary size
+        // This is possible that two images have the exact same size
+        // Therefore we trigger the change in case the image value hasn't changed
+        // So the image is re-rendered correctly
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 

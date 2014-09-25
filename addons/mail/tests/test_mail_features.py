@@ -448,7 +448,7 @@ class test_mail(TestMail):
                         'message_post: mail.mail notifications should have been auto-deleted!')
 
         # Test: notifications emails: to a and b, c is email only, r is author
-        test_emailto = ['"Administrator" <a@a>', '"Bert Tartopoils" <b@b>']
+        test_emailto = ['Administrator <a@a>', 'Bert Tartopoils <b@b>']
         # test_emailto = ['"Followers of -Pigs-" <a@a>', '"Followers of -Pigs-" <b@b>']
         self.assertEqual(len(sent_emails), 2,
                         'message_post: notification emails wrong number of send emails')
@@ -461,7 +461,7 @@ class test_mail(TestMail):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], '"YourCompany -Pigs-" <group+pigs@schlouby.fr>',
+            self.assertEqual(sent_email['reply_to'], u'"YourCompany \\"Pigs\\" !ù $%-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
@@ -518,7 +518,7 @@ class test_mail(TestMail):
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: emails send by server (to a, b, c, d)
-        test_emailto = [u'"Administrator" <a@a>', u'"Bert Tartopoils" <b@b>', u'"Carine Poilvache" <c@c>', u'"D\xe9d\xe9 Grosbedon" <d@d>']
+        test_emailto = [u'Administrator <a@a>', u'Bert Tartopoils <b@b>', u'Carine Poilvache <c@c>', u'D\xe9d\xe9 Grosbedon <d@d>']
         # test_emailto = [u'"Followers of Pigs" <a@a>', u'"Followers of Pigs" <b@b>', u'"Followers of Pigs" <c@c>', u'"Followers of Pigs" <d@d>']
         # self.assertEqual(len(sent_emails), 3, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
@@ -860,7 +860,7 @@ class test_mail(TestMail):
         # Test: first produced message: no subtype, name change tracked
         last_msg = self.group_pigs.message_ids[-1]
         self.assertFalse(last_msg.subtype_id, 'tracked: message should not have been linked to a subtype')
-        self.assertIn(u'SelectedGroupOnly\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Selectedgroupofusers\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change name as supername, public as private -> 2 subtypes
@@ -876,7 +876,7 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-3]
         self.assertEqual(last_msg.subtype_id.id, mt_name_supername_id, 'tracked: message should be linked to mt_name_supername subtype')
         self.assertIn('Supername name', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Public\u2192Private', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u"Everyone\u2192Invitedpeopleonly", _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
 
         # Test: change public as public, group_public_id -> 2 subtypes, name always tracked
@@ -887,13 +887,13 @@ class test_mail(TestMail):
         last_msg = self.group_pigs.message_ids[-4]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_set_id, 'tracked: message should be linked to mt_group_public_set_id')
         self.assertIn('Group set', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
         # Test: second produced message: mt_group_public_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-5]
         self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
         self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
-        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u"Invitedpeopleonly\u2192Everyone", _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
         # Test: change group_public_id to False -> 1 subtype, name always tracked

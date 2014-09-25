@@ -2,12 +2,19 @@ $(document).ready(function () {
 $('.oe_website_sale').each(function () {
     var oe_website_sale = this;
 
-    var $shippingDifferent = $("input[name='shipping_different']", oe_website_sale);
-    if ($shippingDifferent.is(':checked')) {
-       $(".js_shipping", oe_website_sale).show();
-    }
-    $shippingDifferent.change(function () {
-        $(".js_shipping", oe_website_sale).toggle();
+    var $shippingDifferent = $("select[name='shipping_id']", oe_website_sale);
+    $shippingDifferent.change(function (event) {
+        var value = +$shippingDifferent.val();
+        var data = $shippingDifferent.find("option:selected").data();
+        var $snipping = $(".js_shipping", oe_website_sale);
+        var $inputs = $snipping.find("input,select");
+
+        $snipping.toggle(!!value);
+        $inputs.attr("readonly", value <= 0 ? null : "readonly" ).prop("readonly", value <= 0 ? null : "readonly" );
+
+        $inputs.each(function () {
+            $(this).val( data[$(this).attr("name")] || "" );
+        });
     });
 
     // change for css
@@ -99,7 +106,7 @@ $('.oe_website_sale').each(function () {
 
         var product_id = false;
         for (var k in variant_ids) {
-            if (_.isEqual(variant_ids[k][1], values)) {
+            if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                 $price.html(price_to_str(variant_ids[k][2]));
                 $default_price.html(price_to_str(variant_ids[k][3]));
                 if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
@@ -114,7 +121,7 @@ $('.oe_website_sale').each(function () {
 
         if (product_id) {
             var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img');
-            $img.attr("src", "/website/image?field=image&model=product.product&id="+product_id);
+            $img.attr("src", "/website/image/product.product/" + product_id + "/image");
             $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                 .data('oe-model', 'product.product').data('oe-id', product_id);
         }

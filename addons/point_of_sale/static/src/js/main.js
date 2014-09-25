@@ -19,8 +19,6 @@ openerp.point_of_sale = function(instance) {
     
     openerp_pos_widgets(instance,module);    // import pos_widgets.js
 
-    openerp_pos_tests(instance,module);      // import pos_tests.js
-
     instance.web.client_actions.add('pos.ui', 'instance.point_of_sale.PosWidget');
 };
 

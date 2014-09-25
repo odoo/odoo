@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from collections import defaultdict
 import logging
 import re
 import time
@@ -367,6 +368,10 @@ class ir_model_fields(osv.osv):
                 model = self.pool[vals['model']]
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
+
+                if self.pool.fields_by_model is not None:
+                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
+                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
                 model.__init__(self.pool, cr)
                 model._prepare_setup_fields(cr, SUPERUSER_ID)
                 model._setup_fields(cr, SUPERUSER_ID)
@@ -446,7 +451,7 @@ class ir_model_fields(osv.osv):
                     column_rename = (obj, (obj._table, item.name, vals['name']))
                     final_name = vals['name']
 
-                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                if 'model_id' in vals and vals['model_id'] != item.model_id.id:
                     raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
 
                 if 'ttype' in vals and vals['ttype'] != item.ttype:
@@ -506,6 +511,7 @@ class ir_model_constraint(Model):
     _columns = {
         'name': fields.char('Constraint', required=True, select=1,
             help="PostgreSQL constraint or foreign key name."),
+        'definition': fields.char('Definition', help="PostgreSQL constraint definition"),
         'model': fields.many2one('ir.model', string='Model',
             required=True, select=1),
         'module': fields.many2one('ir.module.module', string='Module',
@@ -811,23 +817,26 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
-    def name_get(self, cr, uid, ids, context=None):
-        result = {}
-        result2 = []
-        for res in self.browse(cr, uid, ids, context=context):
-            if res.id:
-                result.setdefault(res.model, {})
-                result[res.model][res.res_id] = res.id
 
-        for model in result:
+    def name_get(self, cr, uid, ids, context=None):
+        bymodel = defaultdict(dict)
+        names = {}
+
+        for res in self.browse(cr, uid, ids, context=context):
+            bymodel[res.model][res.res_id] = res
+            names[res.id] = res.complete_name
+            #result[res.model][res.res_id] = res.id
+
+        for model, id_map in bymodel.iteritems():
             try:
-                r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
-                for key,val in result[model].items():
-                    result2.append((val, r.get(key, False)))
-            except:
-                # some object have no valid name_get implemented, we accept this
+                ng = dict(self.pool[model].name_get(cr, uid, id_map.keys(), context=context))
+            except Exception:
                 pass
-        return result2
+            else:
+                for r in id_map.itervalues():
+                    names[r.id] = ng.get(r.res_id, r.complete_name)
+
+        return [(i, names[i]) for i in ids]
 
     def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
         result = {}
@@ -913,7 +922,7 @@ class ir_model_data(osv.osv):
             if record.exists():
                 return record
             if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xmlid))
         return None
 
     # OLD API

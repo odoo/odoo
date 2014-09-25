@@ -323,7 +323,7 @@ var Tour = {
     },
     log: function (message, add_user) {
         if (add_user) {
-            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name").text();
+            var user = $(".navbar .dropdown:has(>.js_usermenu) a:first, .navbar .oe_topbar_name, .pos .username").text();
             if (!user && $('a[href*="/login"]')) user = 'Public User';
             message += " (" + (user||"").replace(/^\s*|\s*$/g, '') + ")";
         }
@@ -337,7 +337,7 @@ var Tour = {
             + (all ? '\nreferrer: ' + document.referrer : '' )
             + (step ? '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
             + (step ? '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
-            + (step ? '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' );
+            + (step ? '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
             + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
             + (all ? '\n\n' + $("body").html() : '' );
         Tour.log(message, true);

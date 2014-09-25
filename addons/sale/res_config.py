@@ -44,7 +44,6 @@ class sale_configuration(osv.TransientModel):
                  '(650€/day for a developer), the duration (one year support contract).\n'
                  'You will be able to follow the progress of the contract and invoice automatically.\n'
                  '-It installs the account_analytic_analysis module.'),
-        'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
@@ -83,41 +82,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help="Allows you to specify different delivery and invoice addresses on a sales order."),
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        ir_model_data = self.pool.get('ir.model.data')
-        res = super(sale_configuration, self).default_get(cr, uid, fields, context)
-        if res.get('module_project'):
-            user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            res['time_unit'] = user.company_id.project_time_mode_id.id
-        else:
-            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
-            if product and product.exists():
-                res['time_unit'] = product.uom_id.id
-        res['timesheet'] = res.get('module_account_analytic_analysis')
-        return res
-
-    def _get_default_time_unit(self, cr, uid, context=None):
-        ids = self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=context)
-        return ids and ids[0] or False
-
-    _defaults = {
-        'time_unit': _get_default_time_unit,
-    }
-
     def set_sale_defaults(self, cr, uid, ids, context=None):
-        ir_model_data = self.pool.get('ir.model.data')
-        wizard = self.browse(cr, uid, ids)[0]
-
-        if wizard.time_unit:
-            product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
-            if product and product.exists():
-                product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-            else:
-                _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
-
-        if wizard.module_project and wizard.time_unit:
-            user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):

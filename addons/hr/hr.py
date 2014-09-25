@@ -122,13 +122,13 @@ class hr_job(osv.Model):
         'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
-                                  help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+                                  help="Set whether the recruitment process is open or closed for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
-        'state': 'open',
+        'state': 'recruit',
     }
 
     _sql_constraints = [
@@ -207,7 +207,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
@@ -280,6 +280,11 @@ class hr_employee(osv.osv):
         context = dict(context or {})
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
+
+        if data.get('user_id', False) == SUPERUSER_ID and data.get('name',False) == 'Administrator':
+            user_name = self.pool.get('res.users').browse(cr, uid, data.get('user_id'), context=context).name
+            if data['name'] != user_name:
+                data['name'] = user_name
 
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
 
@@ -446,3 +451,21 @@ class hr_department(osv.osv):
             if employee.user_id:
                 self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
         return super(hr_department, self).write(cr, uid, ids, vals, context=context)
+
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        employee_obj = self.pool.get('hr.employee')
+        if vals.get('name'):
+            for user_id in ids:
+                if user_id == SUPERUSER_ID:
+                    employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
+                    employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
+        return result
+

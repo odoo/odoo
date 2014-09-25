@@ -41,6 +41,9 @@ from openerp.tools.func import lazy_property
 
 _logger = logging.getLogger(__name__)
 
+# 1 week cache for statics as advised by Google Page Speed
+STATIC_CACHE = 60 * 60 * 24 * 7
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
@@ -139,7 +142,7 @@ def redirect_with_hash(url, code=303):
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 class WebRequest(object):
-    """ Parent class for all OpenERP Web request types, mostly deals with
+    """ Parent class for all Odoo Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
     to be handled by the subclasses)
 
@@ -151,60 +154,20 @@ class WebRequest(object):
         the original :class:`werkzeug.wrappers.Request` object provided to the
         request
 
-    .. attribute:: httpsession
-
-        .. deprecated:: 8.0
-
-            Use :attr:`session` instead.
-
     .. attribute:: params
 
         :class:`~collections.Mapping` of request parameters, not generally
         useful as they're provided directly to the handler method as keyword
         arguments
-
-    .. attribute:: session_id
-
-        opaque identifier for the :class:`OpenERPSession` instance of
-        the current request
-
-    .. attribute:: session
-
-        a :class:`OpenERPSession` holding the HTTP session data for the
-        current http session
-
-    .. attribute:: context
-
-        :class:`~collections.Mapping` of context values for the current
-        request
-
-    .. attribute:: db
-
-        ``str``, the name of the database linked to the current request. Can
-        be ``None`` if the current request uses the ``none`` authentication
-        in ``web`` module's controllers.
-
-    .. attribute:: uid
-
-        ``int``, the id of the user related to the current request. Can be
-        ``None`` if the current request uses the ``none`` authentication.
-
-    .. attribute:: env
-
-        an :class:`openerp.api.Environment` bound to the current
-        request's ``cr``, ``uid`` and ``context``
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
-        self.session = httprequest.session
-        self.session_id = httprequest.session.sid
         self.disable_db = False
         self.uid = None
         self.endpoint = None
         self.auth_method = None
-        self._cr_cm = None
         self._cr = None
 
         # prevents transaction commit, use when you catch an exception during handling
@@ -216,43 +179,48 @@ class WebRequest(object):
             threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
-        self.context = dict(self.session.context)
-        self.lang = self.context["lang"]
-
-    @property
-    def registry(self):
-        """
-        The registry to the database linked to this request. Can be ``None``
-        if the current request uses the ``none`` authentication.
-        """
-        return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
-
-    @property
-    def db(self):
-        """
-        The database linked to this request. Can be ``None``
-        if the current request uses the ``none`` authentication.
-        """
-        return self.session.db if not self.disable_db else None
-
-    @property
-    def cr(self):
-        """
-        The cursor initialized for the current method call. If the current
-        request uses the ``none`` authentication trying to access this
-        property will raise an exception.
-        """
-        # some magic to lazy create the cr
-        if not self._cr:
-            self._cr = self.registry.cursor()
-        return self._cr
 
     @lazy_property
     def env(self):
         """
-        The Environment bound to current request.
+        The :class:`~openerp.api.Environment` bound to current request.
         """
         return openerp.api.Environment(self.cr, self.uid, self.context)
+
+    @lazy_property
+    def context(self):
+        """
+        :class:`~collections.Mapping` of context values for the current
+        request
+        """
+        return dict(self.session.context)
+
+    @lazy_property
+    def lang(self):
+        return self.context["lang"]
+
+    @lazy_property
+    def session(self):
+        """
+        a :class:`OpenERPSession` holding the HTTP session data for the
+        current http session
+        """
+        return self.httprequest.session
+
+    @property
+    def cr(self):
+        """
+        :class:`~openerp.sql_db.Cursor` initialized for the current method
+        call.
+
+        Accessing the cursor when the current request uses the ``none``
+        authentication will raise an exception.
+        """
+        # can not be a lazy_property because manual rollback in _call_function
+        # if already set (?)
+        if not self._cr:
+            self._cr = self.registry.cursor()
+        return self._cr
 
     def __enter__(self):
         _request_stack.push(self)
@@ -313,12 +281,56 @@ class WebRequest(object):
 
     @property
     def debug(self):
+        """ Indicates whether the current request is in "debug" mode
+        """
         return 'debug' in self.httprequest.args
 
     @contextlib.contextmanager
     def registry_cr(self):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
+
+    @lazy_property
+    def session_id(self):
+        """
+        opaque identifier for the :class:`OpenERPSession` instance of
+        the current request
+
+        .. deprecated:: 8.0
+
+            Use the ``sid`` attribute on :attr:`.session`
+        """
+        return self.session.sid
+
+    @property
+    def registry(self):
+        """
+        The registry to the database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
+
+        .. deprecated:: 8.0
+
+            use :attr:`.env`
+        """
+        return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
+
+    @property
+    def db(self):
+        """
+        The database linked to this request. Can be ``None``
+        if the current request uses the ``none`` authentication.
+        """
+        return self.session.db if not self.disable_db else None
+
+    @lazy_property
+    def httpsession(self):
+        """ HTTP session data
+
+        .. deprecated:: 8.0
+
+            Use :attr:`.session` instead.
+        """
+        return self.session
 
 def route(route=None, **kw):
     """
@@ -375,7 +387,15 @@ def route(route=None, **kw):
     return decorator
 
 class JsonRequest(WebRequest):
-    """ JSON-RPC2 over HTTP.
+    """ Request handler for `JSON-RPC 2
+    <http://www.jsonrpc.org/specification>`_ over HTTP
+
+    * ``method`` is ignored
+    * ``params`` must be a JSON object (not an array) and is passed as keyword
+      arguments to the handler method
+    * the handler method's result is returned as JSON-RPC ``result`` and
+      wrapped in the `JSON-RPC Response
+      <http://www.jsonrpc.org/specification#response_object>`_
 
     Sucessful request::
 
@@ -487,8 +507,6 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        """ Calls the method asked for by the JSON-RPC2 or JSONP request
-        """
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
@@ -538,7 +556,23 @@ def jsonrequest(f):
     return route([base, base + "/<path:_ignored_path>"], type="json", auth="user", combine=True)(f)
 
 class HttpRequest(WebRequest):
-    """ Regular GET/POST request
+    """ Handler for the ``http`` request type.
+
+    matched routing parameters, query string parameters, form_ parameters
+    and files are passed to the handler method as keyword arguments.
+
+    In case of name conflict, routing parameters have priority.
+
+    The handler method's result can be:
+
+    * a falsy value, in which case the HTTP response will be an
+      `HTTP 204`_ (No Content)
+    * a werkzeug Response object, which is returned as-is
+    * a ``str`` or ``unicode``, will be wrapped in a Response object and
+      interpreted as HTML
+
+    .. _form: http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.2
+    .. _HTTP 204: http://tools.ietf.org/html/rfc7231#section-6.3.5
     """
     _request_type = "http"
 
@@ -556,6 +590,12 @@ class HttpRequest(WebRequest):
            be used as response."""
         try:
             return super(HttpRequest, self)._handle_exception(exception)
+        except SessionExpiredException:
+            if not request.params.get('noredirect'):
+                query = werkzeug.urls.url_encode({
+                    'redirect': request.httprequest.url,
+                })
+                return werkzeug.utils.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException, e:
             return e
 
@@ -593,7 +633,7 @@ class HttpRequest(WebRequest):
         return response
 
     def render(self, template, qcontext=None, lazy=True, **kw):
-        """ Lazy render of QWeb template.
+        """ Lazy render of a QWeb template.
 
         The actual rendering of the given template will occur at then end of
         the dispatching. Meanwhile, the template and/or qcontext can be
@@ -601,7 +641,9 @@ class HttpRequest(WebRequest):
 
         :param basestring template: template to render
         :param dict qcontext: Rendering context to use
-        :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
+        :param bool lazy: whether the template rendering should be deferred
+                          until the last possible moment
+        :param kw: forwarded to werkzeug's Response object
         """
         response = Response(template=template, qcontext=qcontext, **kw)
         if not lazy:
@@ -609,7 +651,9 @@ class HttpRequest(WebRequest):
         return response
 
     def not_found(self, description=None):
-        """ Helper for 404 response, return its result from the method
+        """ Shortcut for a `HTTP 404
+        <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
+        response
         """
         return werkzeug.exceptions.NotFound(description)
 
@@ -1058,25 +1102,23 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
-class Retry(RuntimeError):
-    """ Exception raised during QWeb rendering to signal that the rendering
-    should be retried with the provided ``render_updates`` dict merged into
-    the previous rendering context
-    """
-    def __init__(self, name, render_updates=None):
-        super(Retry, self).__init__(name)
-        self.updates = render_updates or {}
-
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
 
-    In addition to the werkzeug.wrappers.Response parameters, this
-    classe's constructor can take the following additional parameters
+    In addition to the :class:`werkzeug.wrappers.Response` parameters, this
+    class's constructor can take the following additional parameters
     for QWeb Lazy Rendering.
 
     :param basestring template: template to render
     :param dict qcontext: Rendering context to use
-    :param int uid: User id to use for the ir.ui.view render call
+    :param int uid: User id to use for the ir.ui.view render call,
+                    ``None`` to use the request's user (the default)
+
+    these attributes are available as parameters on the Response object and
+    can be altered at any time before rendering
+
+    Also exposes all the attributes and methods of
+    :class:`werkzeug.wrappers.Response`.
     """
     default_mimetype = 'text/html'
     def __init__(self, *args, **kw):
@@ -1105,17 +1147,18 @@ class Response(werkzeug.wrappers.Response):
         return self.template is not None
 
     def render(self):
+        """ Renders the Response's template, returns the result
+        """
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
-        while True:
-            try:
-                return view_obj.render(
-                    request.cr, uid, self.template, self.qcontext,
-                    context=request.context)
-            except Retry, e:
-                self.qcontext.update(e.updates)
+        return view_obj.render(
+            request.cr, uid, self.template, self.qcontext,
+            context=request.context)
 
     def flatten(self):
+        """ Forces the rendering of the response's template, sets the result
+        as response body and unsets :attr:`.template`
+        """
         self.response.append(self.render())
         self.template = None
 
@@ -1192,7 +1235,7 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
         self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
@@ -1235,7 +1278,7 @@ class Root(object):
         # deduce type of request
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
-        if httprequest.mimetype == "application/json":
+        if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
             return HttpRequest(httprequest)

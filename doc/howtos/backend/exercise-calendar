@@ -1,0 +1,84 @@
+# HG changeset patch
+# Parent 85a8d7317b9e13480f39ad739955442d15144451
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-28 13:45:01.987048512 +0200
++++ addons/openacademy/models.py	2014-08-28 13:59:30.387035620 +0200
+@@ -1,5 +1,6 @@
+ # -*- coding: utf-8 -*-
+ 
++from datetime import timedelta
+ from openerp import models, fields, api, exceptions
+ 
+ class Course(models.Model):
+@@ -55,6 +56,8 @@
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 
+     taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
++    end_date = fields.Date(string="End Date", store=True,
++        compute='_get_end_date', inverse='_set_end_date')
+ 
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+@@ -82,6 +85,30 @@
+             }
+ 
+     @api.one
++    @api.depends('start_date', 'duration')
++    def _get_end_date(self):
++        if not (self.start_date and self.duration):
++            self.end_date = self.start_date
++            return
++
++        # Add duration to start_date, but: Monday + 5 days = Saturday, so
++        # subtract one second to get on Friday instead
++        start = fields.Datetime.from_string(self.start_date)
++        duration = timedelta(days=self.duration, seconds=-1)
++        self.end_date = start + duration
++
++    @api.one
++    def _set_end_date(self):
++        if not (self.start_date and self.end_date):
++            return
++
++        # Compute the difference between dates, but: Friday - Monday = 4 days,
++        # so add one day to get 5 days instead
++        start_date = fields.Datetime.from_string(self.start_date)
++        end_date = fields.Datetime.from_string(self.end_date)
++        self.duration = (end_date - start_date).days + 1
++
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 13:45:01.987048512 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 13:54:02.000000000 +0200
+@@ -125,11 +125,24 @@
+             </field>
+         </record>
+ 
++        <!-- calendar view -->
++        <record model="ir.ui.view" id="session_calendar_view">
++            <field name="name">session.calendar</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <calendar string="Session Calendar" date_start="start_date"
++                          date_stop="end_date"
++                          color="instructor_id">
++                    <field name="name"/>
++                </calendar>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form</field>
++            <field name="view_mode">tree,form,calendar</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

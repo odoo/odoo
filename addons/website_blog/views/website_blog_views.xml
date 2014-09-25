@@ -120,46 +120,5 @@
         </record>
         <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
 
-        <!-- History Tree view -->
-        <record model="ir.ui.view" id="view_blog_history_tree">
-            <field name="name">blog.post.history.tree</field>
-            <field name="model">blog.post.history</field>
-            <field name="arch" type="xml">
-                <tree string="Document History">
-                    <field name="create_date"/>
-                    <field name="create_uid"/>
-                    <field name="post_id"/>
-                </tree>
-            </field>
-        </record>
-        <!-- History Form view  -->
-        <record model="ir.ui.view" id="view_blog_history_form">
-            <field name="name">blog.post.history.form</field>
-            <field name="model">blog.post.history</field>
-            <field name="arch" type="xml">
-                <form string="Blog Post History">
-                    <label for="post_id" class="oe_edit_only"/>
-                    <h1><field name="post_id" select="1" /></h1>
-                    <label for="create_date" class="oe_edit_only"/>
-                    <field name="create_date" readonly="1"/>
-                </form>
-            </field>
-        </record>
-        <!-- History Action  -->
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">Page history</field>
-            <field name="res_model">blog.post.history</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
-        <act_window
-            id="action_related_page_history"
-            context="{'search_default_post_id': [active_id], 'default_post_id': active_id}"
-            domain="[('post_id','=',active_id)]"
-            name="Page History"
-            res_model="blog.post.history"
-            src_model="blog.post"/>
-
     </data>
 </openerp>

@@ -128,16 +128,16 @@
         </record>
 
         <menuitem
-             name="Reconcile Invoices &amp; Payments"
+             name="Reconcile"
              action="account.action_account_manual_reconcile"
              parent="menu_finance_followup"
-             sequence="0"
+             sequence="3"
              id="menu_manual_reconcile_followup"/>
        
-       <menuitem id="account_followup_main_menu" parent="account.menu_finance_configuration" name="Follow-up"/>
 
 
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account_followup_main_menu" name="Follow-up Levels"/>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.account_followup_main_menu" name="Levels"
+        sequence="1"/>
 
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>

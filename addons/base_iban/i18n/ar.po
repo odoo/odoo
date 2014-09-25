@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_iban
+# Arabic translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-01 18:14+0000\n"
-"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:57+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -28,30 +29,9 @@ msgstr ""
 "عمليات مقبولة."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
-#, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
-msgstr "لا يتم التحقق من رقم ال IBAN، الرجاء التأكد منه"
-
-#. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr "bank_bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "الرمز البريد"
-
-#. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "رقم الحساب البنكي الدولي"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -59,9 +39,19 @@ msgid "Bank Accounts"
 msgstr "الحسابات المصرفية"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "هوية_البلد"
+#: field:res.partner.bank,iban:0
+msgid "IBAN"
+msgstr "الرقم الدولي للحساب البنكي"
+
+#. module: base_iban
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "حساب الرقم الدولي للحساب البنكي"
+
+#. module: base_iban
+#: help:res.partner.bank,iban:0
+msgid "International Bank Account Number"
+msgstr "رقم الحساب البنكي الدولي"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:138
@@ -72,60 +62,28 @@ msgid ""
 msgstr "يبدو أن رقم ال IBAN غير صحيح. يجب أن تدخل شيئ كهذا %s"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
-msgid "IBAN"
-msgstr "الرقم الدولي للحساب البنكي"
-
-#. module: base_iban
 #: code:addons/base_iban/base_iban.py:142
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "رقم ال IBAN خاطئ، يجب أن تبدأ برمز الدولة"
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "حساب الرقم الدولي للحساب البنكي"
-
+#: code:addons/base_iban/base_iban.py:141
 #, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "رقم الحساب الدولي غير صالح, يجب ان يبدأ بكود البلد"
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "لا يتم التحقق من رقم ال IBAN، الرجاء التأكد منه"
 
-#, python-format
-#~ msgid ""
-#~ "The IBAN does not seems to be correct. You should have entered something "
-#~ "like this %s"
-#~ msgstr ""
-#~ "يبدو ان رقم الحساب الدولي غير صحيح. يتوجب عليك ادخال شيء ما مثل هذا %s"
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr "bank_bic"
 
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "انشيء رقم دولي للحساب البنكي للحسابات البنكية"
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
+msgid "country_id"
+msgstr "هوية_البلد"
 
-#~ msgid "iban"
-#~ msgstr "الرقم الدولي للحساب البنكي"
-
-#~ msgid "bic"
-#~ msgstr ""
-#~ "هي وسيلة لتكون قادرة على تحديد المؤسسات المالية بحيث يتم تسهيل عملية "
-#~ "الاتصالات السلكية واللاسلكية في المؤسسات المالية / البنوك."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module installs the base for IBAN (International Bank Account Number) "
-#~ "bank accounts and checks for its validity.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "تثبت هذه الوحدة الاساس للرقم الدولي للحساب البنكي وتتحقق من صلاحيتها.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid "acc_number"
-#~ msgstr "acc_number"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "هناك خطأ في بيانات الـ XML للعرض!"
-
-#~ msgid "The RIB and/or IBAN is not valid"
-#~ msgstr "رقم الحساب RIB أو IBAN غير صحيح"
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
+msgid "zip"
+msgstr "الرمز البريد"

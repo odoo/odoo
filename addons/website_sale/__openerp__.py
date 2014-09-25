@@ -2,6 +2,7 @@
     'name': 'eCommerce',
     'category': 'Website',
     'summary': 'Sell Your Products Online',
+    'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
     'description': """
 OpenERP E-Commerce
@@ -16,6 +17,7 @@ OpenERP E-Commerce
         'views/templates.xml',
         'views/payment.xml',
         'views/sale_order.xml',
+        'views/snippets.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
     ],

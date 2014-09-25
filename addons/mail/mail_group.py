@@ -49,7 +49,7 @@ class mail_group(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
-        'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
+        'public': fields.selection([('public', 'Everyone'), ('private', 'Invited people only'), ('groups', 'Selected group of users')], 'Privacy', required=True,
             help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
@@ -221,10 +221,12 @@ class mail_group(osv.Model):
     def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
         res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
         group = self.browse(cr, uid, id, context=context)
-        try:
-            headers = eval(res.get('headers', '{}'))
-        except Exception:
-            headers = {}
+        headers = {}
+        if res.get('headers'):
+            try:
+                headers.update(eval(res['headers']))
+            except Exception:
+                pass
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
@@ -236,5 +238,5 @@ class mail_group(osv.Model):
             # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
             list_to = '"%s" <%s@%s>' % (group.name, group.alias_name, group.alias_domain)
             headers['X-Forge-To'] = list_to
-        res['headers'] = '%s' % headers
+        res['headers'] = repr(headers)
         return res

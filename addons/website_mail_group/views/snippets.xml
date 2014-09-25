@@ -37,13 +37,11 @@
 
 
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='subscribe'
+        <div data-js='subscribe'
             data-selector=".js_follow_alias"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
            >
-            <li>
-                <a href="#" class="button js_mailing_list">Change Discussion List</a>
-            </li>
+            <li data-choose_mailing_list=""><a>Change Discussion List</a></li>
         </div>
     </xpath>
 

@@ -1,7 +1,20 @@
 (function () {
     'use strict';
 
-    openerp.website.add_template_file('/website/static/src/xml/website.theme.xml');
+    openerp.jsonRpc('/web/dataset/call', 'call', {
+            'model': 'ir.ui.view',
+            'method': 'read_template',
+            'args': ['website.theme_customize', openerp.website.get_context()]
+        }).done(function (data) {
+        openerp.qweb.add_template(data);
+    });
+    openerp.jsonRpc('/web/dataset/call', 'call', {
+            'model': 'ir.ui.view',
+            'method': 'read_template',
+            'args': ['website.colorpicker', openerp.website.get_context()]
+        }).done(function (data) {
+        openerp.qweb.add_template(data);
+    });
 
     openerp.website.Theme = openerp.Widget.extend({
         template: 'website.theme_customize',
@@ -60,7 +73,8 @@
             return openerp.jsonRpc('/website/theme_customize_get', 'call', {
                     'xml_ids': this.get_xml_ids(this.$inputs)
                 }).done(function (data) {
-                    self.$inputs.filter('[data-xmlid]').each(function () {
+                    self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
+                    self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
                             $(this).prop("checked", false).change();
                         }
@@ -244,14 +258,15 @@
 
     openerp.website.ready().done(function() {
         function theme_customize() {
-            var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
-            if (error && error !== 'none') {
-                return themeError(eval(error));
-            }
             var Theme = openerp.website.Theme;
             if (Theme.open && !Theme.open.isDestroyed()) return;
             Theme.open = new Theme();
             Theme.open.appendTo("body");
+            
+            var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
+            if (error && error !== 'none') {
+                themeError(eval(error));
+            }
         }
         $(document).on('click', "#theme_customize a",theme_customize);
         if ((window.location.hash || "").indexOf("theme=true") !== -1) {

@@ -421,17 +421,33 @@ class product_template(osv.osv):
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{}"
+        if len(ids) == 1 and len(products) == 1:
+            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{}"
         return result
 
 
     def action_view_stock_moves(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{}"
+        if len(ids) == 1 and len(products) == 1:
+            ctx = "{'tree_view_ref':'stock.view_move_tree', \
+                  'default_product_id': %s, 'search_default_product_id': %s}" \
+                  % (products[0], products[0])
+            result['context'] = ctx
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
         return result
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'uom_po_id' in vals:
+            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+            if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
+                raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product.") % ())
+        return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
 
 class product_removal_strategy(osv.osv):

@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor">  <!-- groups="base.group_document_user" -->
+<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor" groups="base.group_website_publisher">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
@@ -46,7 +46,7 @@
                     <t t-set="classname">pull-right</t>
                 </t>
             </section>
-            <section data-snippet-id="title" class="container">
+            <section class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h1>Latest Posts</h1>
@@ -133,7 +133,7 @@
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
 
                   <img class="img-circle pull-right mt16"
-                    t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.author_id.id)"
+                    t-attf-src="/website/image/res.partner/{{ blog_post.author_id.id }}/image_small"
                     style="width: 50px;"/>
 
                   <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
@@ -171,8 +171,8 @@
 
 <!-- Option: Blog Post List: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
-        optional="enabled" inherit_id="website_blog.blog_post_short">
-    <xpath expr="//div[@name='blog_post_data']" position="inside">
+        customize_show="True" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//*[@name='blog_post_data']" position="inside">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="tag">
@@ -215,7 +215,7 @@
             <h2 t-field="blog_post.subtitle"/>
             <p class="post-meta text-muted text-center" name="blog_post_data"/>
             <div>
-                <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(blog_post.author_id.id)" style="width: 30px; margin-right: 10px;"/>
+                <img class="img-circle" t-attf-src="/website/image/res.partner/{{ blog_post.author_id.id }}/image_small" style="width: 30px; margin-right: 10px;"/>
                 <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
                     "widget": "contact",
                     "fields": ["name"]
@@ -234,7 +234,7 @@
         <ul class="media-list" id="comments-list">
             <li t-foreach="comments" t-as="message" class="media">
                 <span class="pull-left">
-                    <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
+                    <img class="media-object img img-circle" t-attf-src="/website/image/mail.message/{{ message.id }}/author_avatar" style="width: 30px"/>
                 </span>
                 <div class="media-body">
                     <t t-call="website.publish_short">
@@ -259,7 +259,7 @@
                 <h1 t-field="next_post.name"/>
                 <h2 t-field="next_post.subtitle"/>
                 <div>
-                    <img class="img-circle" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(next_post.author_id.id)" style="width: 30px; margin-right: 10px;"/>
+                    <img class="img-circle" t-attf-src="'/website/image/res.partner/{{ next_post.author_id.id }}/image_small" style="width: 30px; margin-right: 10px;"/>
                     <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
                             "widget": "contact",
                             "fields": ["name"]
@@ -275,7 +275,7 @@
 
 <!-- Options: Blog Post: breadcrumb -->
 <template id="blog_breadcrumb" name="Breadcrumb"
-        inherit_id="website_blog.blog_post_complete" optional="disabled">
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@id='title']" position="before">
         <div class="container">
           <div class="row">
@@ -295,14 +295,14 @@
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow blog post comment"
-        inherit_id="website_blog.blog_post_complete" optional="disabled"
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True"
         groups="website_mail.group_comment">
     <xpath expr="//ul[@id='comments-list']" position="before">
         <section class="mb32 read_width css_editable_mode_hidden">
             <form id="comment" t-attf-action="/blogpost/comment" method="POST">
                 <div class="media">
                     <span class="pull-left">
-                        <img class="img img-circle media-object" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 30px"/>
+                        <img class="img img-circle media-object" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 30px"/>
                     </span>
                     <div class="media-body">
                         <input name="blog_post_id" t-att-value="blog_post.id" type="hidden"/>
@@ -317,7 +317,7 @@
 
 <!-- Options: Blog Post: user can select text for tweet -->
 <template id="opt_blog_post_select_to_tweet" name="Select to Tweet"
-        inherit_id="website_blog.blog_post_complete" optional="disabled">
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="class">js_tweet mt32</attribute>
     </xpath>
@@ -328,7 +328,7 @@
 
 <!-- Options: Blog Post: user can add Inline Discussion -->
 <template id="opt_blog_post_inline_discussion" name="Allow comment in text"
-        inherit_id="website_blog.blog_post_complete" optional="disabled">
+        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="enable_chatter_discuss">True</attribute>
     </xpath>
@@ -336,7 +336,7 @@
 
 <!-- Options: Blog Post: show tags -->
 <template id="opt_blog_post_complete_tags" name="Tags"
-        optional="enabled" inherit_id="website_blog.blog_post_complete">
+        customize_show="True" inherit_id="website_blog.blog_post_complete">
     <xpath expr="//p[@name='blog_post_data']" position="after">
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
@@ -350,7 +350,7 @@
 <!-- Page -->
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
-        <div id="wrap" class="js_blog">
+        <div id="wrap" class="js_blog website_blog">
             <t t-raw="0"/>
         </div>
     </t>
@@ -359,7 +359,7 @@
 <!-- Option:Right Column for extra info -->
 
 <template id="index_right" name="Right Column"
-        inherit_id="website_blog.blog_post_short" optional="disabled">
+        inherit_id="website_blog.blog_post_short" active="False" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
         <attribute name="class">col-sm-8</attribute>
     </xpath>
@@ -370,7 +370,7 @@
 
 <!-- Option:Right Column: tags -->
 <template id="opt_blog_rc_tags" name="Tags"
-        inherit_id="website_blog.index_right" optional="disabled">
+        inherit_id="website_blog.index_right" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Tags</h4>
@@ -387,7 +387,7 @@
 
 <!-- Option:Right Column: archives -->
 <template id="opt_blog_rc_history" name="Archives"
-        inherit_id="website_blog.index_right" optional="disabled">
+        inherit_id="website_blog.index_right" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>Archives</h4>
@@ -404,7 +404,7 @@
 
 <!-- Option:Right Column: about us -->
 <template id="opt_blog_rc_about_us" name="About Us" priority="2"
-        inherit_id="website_blog.index_right" optional="disabled">
+        inherit_id="website_blog.index_right" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
         <h4>About us</h4>
@@ -421,7 +421,7 @@
 
 <!-- Option:Right Column: follow us -->
 <template id="opt_blog_rc_follow_us" name="Follow us" priority="4"
-        inherit_id="website_blog.index_right" optional="disabled">
+        inherit_id="website_blog.index_right" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
             <h4>Follow us<small t-if="blog">: <t t-esc="blog.name"/></small></h4>
@@ -448,7 +448,7 @@
 
 <!-- Option:Right Column: blogs -->
 <template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
-        inherit_id="website_blog.index_right" optional="disabled">
+        inherit_id="website_blog.index_right" active="False" customize_show="True">
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32">
         <h4>Our Blogs</h4>

@@ -211,13 +211,15 @@
                                     <group col="2">
                                         <separator string="Payment Options" colspan="2"/>
                                         <field name="writeoff_amount" widget='monetary' options='{"currency_field": "currency_id"}'/>
-                                        <field name="payment_option" required="1"/>
+                                        <label for="payment_option" string="Difference of payment amount" class="oe_inline"/>
+                                        <field name="payment_option" widget="radio" required="1" nolabel="1"/>
                                         <field name="writeoff_acc_id"
                                                attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
                                                domain="[('type','=','other')]"/>
                                         <field name="comment"
                                                attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                         <field name="analytic_id"
+                                               attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
                                                groups="analytic.group_analytic_accounting"/>
                                     </group>
                                 </group>
@@ -287,7 +289,7 @@
         </record>
 
 
-        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="12"
+        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="4"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
         <!-- Register Payment Form (old Pay Invoice wizard) -->
@@ -331,7 +333,7 @@
                     </group>
                     <group>
                         <group>
-                                <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="writeoff_amount" widget="monetary" attrs="{'invisible':[('writeoff_amount','=',0)]}" options="{'currency_field': 'currency_id'}"/>
                                 <field name="payment_option" required="1" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
                                 <field name="writeoff_acc_id"
                                         attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff'), ('writeoff_amount','!=',0)]}"
@@ -495,7 +497,7 @@
                                 </group>
                                 <group>
                                     <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="payment_option" required="1" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
+                                    <field name="payment_option" required="1" widget="radio" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff')]}"
                                            domain="[('type','=','other')]"/>

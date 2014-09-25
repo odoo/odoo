@@ -41,7 +41,7 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <label for="partner_ids" class="oe_edit_only"/>
+                        <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
                                 context="{'force_email':True}"
@@ -127,7 +127,7 @@
                                     </group>
                                 </group>
                                 <group>
-                                    <field name="class"/>
+                                    <field name="class" widget="radio"/>
                                     <field name="show_as"/>
                                     <field name="rrule" invisible="1" readonly="0" />                                    
                                     <field name="recurrent_id" invisible="1" />

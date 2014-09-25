@@ -404,7 +404,8 @@ class TestMailgateway(TestMail):
 
         # When 6.1 messages are present, compat mode is available
         # Create a fake 6.1 message
-        tmp_msg_id = self.mail_message.create(cr, uid, {'message_id': False, 'model': 'mail.group', 'res_id': frog_group.id})
+        tmp_msg_id = self.mail_message.create(cr, uid, {'model': 'mail.group', 'res_id': frog_group.id})
+        self.mail_message.write(cr, uid, [tmp_msg_id], {'message_id': False})
         # Do: compat mode accepts partial-matching emails
         frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other5@gmail.com',
                                          msg_id='<1.2.JavaMail.new@agrolait.com>',
@@ -422,7 +423,8 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(frog_group.message_ids), 4, 'message_process: group should contain 4 messages after reply')
 
         # 6.1 compat mode should not work if hostname does not match!
-        tmp_msg_id = self.mail_message.create(cr, uid, {'message_id': False, 'model': 'mail.group', 'res_id': frog_group.id})
+        tmp_msg_id = self.mail_message.create(cr, uid, {'model': 'mail.group', 'res_id': frog_group.id})
+        self.mail_message.write(cr, uid, [tmp_msg_id], {'message_id': False})
         self.assertRaises(ValueError,
                           format_and_process,
                           MAIL_TEMPLATE, email_from='other5@gmail.com',

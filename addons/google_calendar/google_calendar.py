@@ -277,7 +277,7 @@ class google_calendar(osv.AbstractModel):
         url = "/calendar/v3/calendars/primary"
 
         try:
-            st, content = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
+            st, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
         except Exception, e:
 
             if (e.code == 401):  # Token invalid / Acces unauthorized
@@ -290,7 +290,7 @@ class google_calendar(osv.AbstractModel):
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
             raise
 
-        return status_response(st) and content['id'] or False
+        return (status_response(st), content['id'] or False, ask_time)
 
     def get_event_synchro_dict(self, cr, uid, lastSync=False, token=False, nextPageToken=False, context=None):
         if not token:
@@ -315,7 +315,7 @@ class google_calendar(osv.AbstractModel):
         if nextPageToken:
             params['pageToken'] = nextPageToken
 
-        status, content = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
+        status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
 
         google_events_dict = {}
         for google_event in content['items']:
@@ -341,7 +341,7 @@ class google_calendar(osv.AbstractModel):
 
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', google_id)
         try:
-            status, content = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
+            status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
         except:
             _logger.info("Calendar Synchro - In except of get_one_event_synchro")
             pass
@@ -357,7 +357,7 @@ class google_calendar(osv.AbstractModel):
         data['sequence'] = google_event.get('sequence', 0)
         data_json = simplejson.dumps(data)
 
-        status, content = self.pool['google.service']._do_request(cr, uid, url, data_json, headers, type='PATCH', context=context)
+        status, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, data_json, headers, type='PATCH', context=context)
 
         update_date = datetime.strptime(content['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
         calendar_event.write(cr, uid, [oe_event.id], {'oe_update_date': update_date})
@@ -372,7 +372,7 @@ class google_calendar(osv.AbstractModel):
         headers = {}
         data['access_token'] = self.get_token(cr, uid, context)
 
-        status, response = self.pool['google.service']._do_request(cr, uid, url, data, headers, type='GET', context=context)
+        status, response, ask_time = self.pool['google.service']._do_request(cr, uid, url, data, headers, type='GET', context=context)
         #TO_CHECK : , if http fail, no event, do DELETE ?
         return response
 
@@ -482,7 +482,7 @@ class google_calendar(osv.AbstractModel):
         return res
 
     def remove_references(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         reset_data = {
             'google_calendar_rtoken': False,
             'google_calendar_token': False,
@@ -512,10 +512,9 @@ class google_calendar(osv.AbstractModel):
         #     status, response = gs_pool._do_request(cr, uid, url, params, type='GET', context=context)
         #     return int(status) != 410
 
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
 
-        context_with_time = dict(context.copy(), ask_time=True)
-        current_google = self.get_calendar_primary_id(cr, uid, context=context_with_time)
+        st, current_google, ask_time = self.get_calendar_primary_id(cr, uid, context=context)
 
         if current_user.google_calendar_cal_id:
             if current_google != current_user.google_calendar_cal_id:
@@ -545,7 +544,7 @@ class google_calendar(osv.AbstractModel):
 
         res = self.update_events(cr, uid, lastSync, context)
 
-        current_user.write({'google_calendar_last_sync_date': context_with_time.get('ask_time')}, context=context)
+        current_user.write({'google_calendar_last_sync_date': ask_time}, context=context)
         return {
             "status": res and "need_refresh" or "no_new_event_form_google",
             "url": ''
@@ -571,7 +570,7 @@ class google_calendar(osv.AbstractModel):
                                     ], context=context_norecurrent)
         for att in att_obj.browse(cr, uid, my_att_ids, context=context):
             if not att.event_id.recurrent_id or att.event_id.recurrent_id == 0:
-                st, response = self.create_an_event(cr, uid, att.event_id, context=context)
+                st, response, ask_time = self.create_an_event(cr, uid, att.event_id, context=context)
                 if status_response(st):
                     update_date = datetime.strptime(response['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
                     ev_obj.write(cr, uid, att.event_id.id, {'oe_update_date': update_date})
@@ -617,7 +616,7 @@ class google_calendar(osv.AbstractModel):
                 if new_google_internal_event_id:
                     #TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
                     try:
-                        st, response = self.update_recurrent_event_exclu(cr, uid, new_google_internal_event_id, source_attendee_record.google_internal_event_id, att.event_id, context=context)
+                        st, response, ask_time = self.update_recurrent_event_exclu(cr, uid, new_google_internal_event_id, source_attendee_record.google_internal_event_id, att.event_id, context=context)
                         if status_response(st):
                             att_obj.write(cr, uid, [att.id], {'google_internal_event_id': new_google_internal_event_id}, context=context)
                             new_ids.append(new_google_internal_event_id)
@@ -837,7 +836,7 @@ class google_calendar(osv.AbstractModel):
 
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', instance_id)
 
-        st, content = gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
+        st, content, ask_time = gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
         return content.get('sequence', 0)
 #################################
 ##  MANAGE CONNEXION TO GMAIL  ##

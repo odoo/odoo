@@ -40,7 +40,7 @@ class res_users(osv.Model):
     _columns = {
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications.", copy=False),
+                 "emails will appear in the user's notifications.", copy=False, auto_join=True),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 
@@ -118,7 +118,7 @@ class res_users(osv.Model):
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
+        """ Redirect the posting of message on res.users as a private discussion.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id. """
         if isinstance(thread_id, (list, tuple)):
@@ -136,7 +136,9 @@ class res_users(osv.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        return self.pool.get('mail.thread').message_post(cr, uid, False, **kwargs)
+        if context and context.get('thread_model') == 'res.partner':
+            return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
+        return self.pool['mail.thread'].message_post(cr, uid, uid, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         return True

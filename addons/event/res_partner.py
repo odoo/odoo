@@ -25,6 +25,6 @@ from openerp import models, fields
 class res_partner(models.Model):
     _inherit = 'res.partner'
 
-    speaker = fields.Boolean(help="Check this box if this contact is a speaker.")
+    speaker = fields.Boolean(help="Check this box if this contact is a speaker.", string='Event Track Speaker')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

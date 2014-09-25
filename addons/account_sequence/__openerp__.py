@@ -38,7 +38,7 @@ You can customize the following attributes of the sequence:
     * Number Padding
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'images': ['images/internal_sequence_number.jpeg'],
     'depends': ['account'],
     'data': [
