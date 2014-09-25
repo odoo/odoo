@@ -11,6 +11,13 @@
             id="base.menu_base_partner"
             groups="base.group_sale_salesman,base.group_sale_manager"/>
 
+        <menuitem
+            id= "base.menu_sales_config"
+            parent= "base.menu_base_config"
+            sequence= "1"
+            name= "Sales"
+            groups= "base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
+
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
