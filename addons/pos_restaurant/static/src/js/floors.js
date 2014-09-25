@@ -137,8 +137,10 @@ function openerp_restaurant_floors(instance,module){
             this.renderElement();
         },
         set_table_name: function(name){
-            this.table.name = name;
-            this.renderElement();
+            if (name) {
+                this.table.name = name;
+                this.renderElement();
+            }
         },
         table_style: function(){
             var table = this.table;
@@ -269,6 +271,18 @@ function openerp_restaurant_floors(instance,module){
         tool_colorpicker_close: function(){
             this.$('.color-picker').addClass('oe_hidden');
         },
+        tool_rename_table: function(){
+            var self = this;
+            if (this.selected_table) {
+                this.pos_widget.screen_selector.show_popup('textinput',{
+                    'message':'Table Name ?',
+                    'value': this.selected_table.table.name,
+                    'confirm': function(value) {
+                        self.selected_table.set_table_name(value);
+                    },
+                });
+            }
+        },
         tool_duplicate_table: function(){
             if (this.selected_table) {
                 var tw = this.create_table(this.selected_table.table);
@@ -356,6 +370,10 @@ function openerp_restaurant_floors(instance,module){
 
             this.$('.edit-button.new-table').click(function(event){
                 self.tool_new_table();
+            });
+
+            this.$('.edit-button.rename').click(function(event){
+                self.tool_rename_table();
             });
             
             this.$('.color-picker .close-picker').click(function(event){
