@@ -150,19 +150,8 @@
             </tree>
         </field>
     </record>
-
-    <!-- Phonecalls Calendar View -->
-    <record model="ir.ui.view" id="crm_case_phone_calendar_view">
-        <field name="name">CRM - Phone Calls Calendar</field>
-        <field name="model">crm.phonecall</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Phone Calls" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_id"/>
-            </calendar>
-        </field>
-    </record>
+    
+    
 
     <!-- Phonecalls Search View  -->
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
