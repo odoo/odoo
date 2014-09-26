@@ -304,14 +304,6 @@ $aestetic_animation_speed: 300ms;
 
             tbody tr {
                 cursor: pointer;
-
-                &.created_line {
-                    cursor: default !important;
-
-                    .line_remove_button {
-                        cursor: pointer;
-                    }
-                }
             }
 
             td {
@@ -539,7 +531,6 @@ $aestetic_animation_speed: 300ms;
             float: right;
             position: relative;
             top: 1.1em;
-            //margin-right: $actionColWidth;
         }
 
         .accounting_view {
@@ -554,7 +545,7 @@ $aestetic_animation_speed: 300ms;
                     padding-left: 0;
                 }
                 
-                .cell_partner_name {
+                .cell_item_name {
                     display: inline-block;
                     min-width: 135px;
                 }
@@ -563,7 +554,7 @@ $aestetic_animation_speed: 300ms;
                     font-weight: normal;
                     display: inline-block;
                 }
-                .cell_partner_name + .cell_last_reconciliation_date {
+                .cell_item_name + .cell_last_reconciliation_date {
                     padding-left: 20px;
                 }
 
