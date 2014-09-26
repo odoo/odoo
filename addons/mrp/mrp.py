@@ -155,42 +155,6 @@ class mrp_bom(osv.osv):
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
 
-    def _child_compute(self, cr, uid, ids, name, arg, context=None):
-        """ Gets child bom.
-        @param self: The object pointer
-        @param cr: The current row, from the database cursor,
-        @param uid: The current user ID for security checks
-        @param ids: List of selected IDs
-        @param name: Name of the field
-        @param arg: User defined argument
-        @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values
-        """
-        result = {}
-        if context is None:
-            context = {}
-        bom_obj = self.pool.get('mrp.bom')
-        bom_id = context and context.get('active_id', False) or False
-        cr.execute('select id from mrp_bom')
-        if all(bom_id != r[0] for r in cr.fetchall()):
-            ids.sort()
-            bom_id = ids[0]
-        bom_parent = bom_obj.browse(cr, uid, bom_id, context=context)
-        for bom in self.browse(cr, uid, ids, context=context):
-            if (bom_parent) or (bom.id == bom_id):
-                result[bom.id] = map(lambda x: x.id, bom.bom_line_ids)
-            else:
-                result[bom.id] = []
-            if bom.bom_line_ids:
-                continue
-            ok = ((name=='child_complete_ids'))
-            if (bom.type=='phantom' or ok):
-                sids = bom_obj.search(cr, uid, [('product_tmpl_id','=',bom.product_tmpl_id.id)])
-                if sids:
-                    bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
-                    result[bom.id] += map(lambda x: x.id, bom2.bom_line_ids)
-        return result
-
     _columns = {
         'name': fields.char('Name'),
         'code': fields.char('Reference', size=16),
@@ -213,7 +177,6 @@ class mrp_bom(osv.osv):
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% during the production process."),
         'property_ids': fields.many2many('mrp.property', string='Properties'),
-        'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
@@ -385,6 +348,24 @@ class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
     _order = "sequence"
 
+    def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
+        """If the BOM line refers to a BOM, return the ids of the child BOM lines"""
+        bom_obj = self.pool['mrp.bom']
+        res = {}
+        for bom_line in self.browse(cr, uid, ids, context=context):
+            bom_id = bom_obj._bom_find(
+                cr, uid,
+                bom_line.product_id.uom_id.id,
+                product_tmpl_id=bom_line.product_id.product_tmpl_id.id,
+                product_id=bom_line.product_id.id,
+                context=context)
+            if bom_id:
+                child_bom = bom_obj.browse(cr, uid, bom_id, context=context)
+                res[bom_line.id] = [x.id for x in child_bom.bom_line_ids]
+            else:
+                res[bom_line.id] = False
+        return res
+
     _columns = {
         'type': fields.selection([('normal', 'Normal'), ('phantom', 'Phantom')], 'BoM Line Type', required=True,
                 help="Phantom: this product line will not appear in the raw materials of manufacturing orders,"
@@ -407,6 +388,7 @@ class mrp_bom_line(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True, required=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', string='Variants', help="BOM Product Variants needed form apply this line."),
+        'bom_line_ids': fields.function(_get_child_bom_lines, relation="mrp.bom.line", string="BOM lines of the referred bom", type="one2many")
     }
 
     def _get_uom_id(self, cr, uid, *args):
