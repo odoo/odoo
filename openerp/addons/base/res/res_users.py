@@ -163,7 +163,7 @@ class res_users(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'login_date': fields.date('Latest connection', select=1),
+        'login_date': fields.date('Latest connection', select=1, copy=False),
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user', auto_join=True),
@@ -372,12 +372,6 @@ class res_users(osv.osv):
         if 'login' not in default:
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
-
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        if default is None:
-            default = {}
-        default.update({'login_date': False})
-        return super(res_users, self).copy_data(cr, uid, ids, default, context=context)
 
     @tools.ormcache(skiparg=2)
     def context_get(self, cr, uid, context=None):
