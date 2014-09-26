@@ -1,0 +1,147 @@
+.popover{
+    white-space: pre;
+    max-width: none;
+}
+
+
+
+.oe_dial {
+    position: fixed;
+    background-color: #E8EBEF;
+    width: 220px;
+    height: 400px;
+    border-left: 1px solid #AEB9BD;
+    z-index: 500;
+}
+
+@media print {
+    .oe_dial {
+        visibility: hidden;
+    }
+}
+/* button */
+.oe_systray #oe_topbar_dialbutton_icon {
+    color: white;
+}
+.oe_topbar_item.oe_topbar_dialbutton .oe_e {
+    position: relative;
+    top: -8px;
+}
+
+.oe_dial_callbutton{
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: #4c4c4c;
+    margin: 0;
+    padding: 3px 12px;
+    font-size: 13px;
+    text-align: center;
+    background-color: #e3e3e3;
+
+}
+
+.oe_dial_nextcallbutton{
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    color: #4c4c4c;
+    margin: 0;
+    padding: 3px 12px;
+    font-size: 13px;
+    text-align: center;
+    background-color: #e3e3e3;
+    
+}
+
+/* search stuff */
+.oe_dial_frame_header {
+    position: relative;
+    background: #dedede;
+    background: -moz-linear-gradient(#fcfcfc, #dedede);
+    background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
+    border-bottom: 1px solid border-color !important;
+    padding: 5px;
+}
+.oe_dial_frame_header .oe_dial_searchbox {
+    width: 168px;
+    padding: 1px 21px 1px 19px;
+    font-size: 13px;
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;
+    border-radius: 13px;
+}
+.oe_dial_frame_header .oe_dial_search_icon {
+    position: absolute;
+    color: #888;
+    top: -4px;
+    left: 9px;
+    font-size: 28px;
+    font-family: "entypoRegular" !important;
+    font-weight: 300 !important;
+}
+.oe_dial_frame_header .oe_dial_search_clear {
+    display: none;
+    position: absolute;
+    right: 11px;
+    top: 4px;
+    font-size: 26px;
+    color: #b6b6b6;
+    cursor: pointer;
+}
+.oe_dial_frame_header .oe_dial_search_clear:hover {
+    color: #888;
+}
+
+/* users */
+
+.oe_dial_phonecalls {
+    padding-bottom: 38px;
+    
+    overflow-y: scroll;
+    max-height: 200px; 
+    
+}
+.oe_dial_phonecall {
+    position: relative;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-bottom: 3px;
+    width: 100%;
+}
+.oe_dial_phonecall:hover {
+  background: lightGrey;
+}
+.oe_dial_phonecall_clip {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    margin-right: 4px;
+    -moz-box-shadow: 0 0 2px 1px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
+}
+.oe_dial_phonecall_avatar {
+    max-width: 100%;
+    max-height: 100%;
+}
+.oe_dial_phonecall_name {
+    width: 162px;
+    line-height: 26px;
+    padding-right: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.oe_dial_phonecall_online {
+    display: none;
+    position: absolute;
+    top: 9.5px;
+    right: 11px;
+    width: 11px;
+    height: 11px;
+    vertical-align: middle;
+    border: 0;
+}
+

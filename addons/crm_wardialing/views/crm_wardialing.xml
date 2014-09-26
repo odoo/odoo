@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="im_chat assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/crm_wardialing/static/src/css/crm_wardialing.css"/>
+                <script type="text/javascript" src="/crm_wardialing/static/src/js/crm_wardialing.js"></script>
+            </xpath>
+        </template>
+        <template id="dial_top_button" name="dial_chat top button" inherit_id="web.menu">
+             <xpath expr="//ul[contains(@class, 'oe_systray')]" position="inside">
+                <li title='Display Dialing Panel' groups="base.group_user">
+                    <a href="#">
+                        <img class="oe_topbar_dialbutton_icon" src="/web/static/src/img/icons/terp-call-start.png"/>
+                    </a>
+                </li>
+            </xpath>
+        </template>
+    </data>
+</openerp>

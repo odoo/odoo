@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates xml:space="preserve">
+<t t-name="crm_wardialing.PhonecallWidget">
+    <div rel='popover' data-trigger="hover" data-placement='right' class="oe_dial_phonecall ui-draggable">
+        <div>
+            <span class="oe_dial_phonecall_clip">
+                <img t-att-src="'data:image/jpg;base64,'+widget.get('image_small')" class="oe_dial_phonecall_avatar"/>
+            </span>
+            <span  class="oe_dial_phonecall_name"><t t-esc="widget.get('partner')"/></span>
+        </div>
+        
+    </div>
+</t>
+<t t-name="crm_wardialing.DialingPanel">
+    <div class="oe_dial">
+        <div class="oe_dial_frame_header_button">
+            <a href="#">
+                    <img class="oe_dial_header_dialbutton_icon" src="/web/static/src/img/icons/terp-call-start.png"/>
+            </a>
+        </div>
+        <div class="oe_dial_frame_header">
+            <span class="oe_e oe_dial_search_icon">ô</span>
+            <input class="oe_dial_searchbox" t-att-placeholder="_t('Search phonecalls...')"/>
+            <span class="oe_e oe_dial_search_clear">[</span>
+        </div>
+        <div class="oe_dial_phonecalls"></div>
+        <div class="oe_dial_content">
+            
+            <button type="button" class="oe_dial_callbutton">Call</button>
+            <button type="button" class="oe_dial_nextcallbutton">Next Call</button>
+        </div>
+    </div>
+</t>
+
+
+
+
+</templates>

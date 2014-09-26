@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+
+<openerp>
+    <data>
+
+    	<record model="ir.ui.view" id="wizard_to_call_form_view">
+            <field name="name">wizard.form</field>
+            <field name="model">crm.wardialing.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Call Center Calls">
+                    <group class="oe_inline">
+                        <field class="oe_inline" name="opportunity_ids"/>
+                    </group>
+                    <footer>
+                        <button name="save" type="object"
+                                string="Save" class="oe_highlight"/>
+                        or
+                        <button special="Cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_opportunity_to_call"
+            multi="True"
+            key2="client_action_multi" name="Create calls"
+            res_model="crm.wardialing.wizard" src_model="crm.lead"
+            view_mode="form" target="new" />
+    </data>
+</openerp>
+

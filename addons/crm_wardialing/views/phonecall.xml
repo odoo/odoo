@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+
+<openerp>
+    <data>
+
+        <!-- Add the fields to_call and sequence in the form view of the phonecalls-->
+        <record model="ir.ui.view" id="phonecall_tocall_form_view">
+            <field name="name">crm.phonecall.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.crm_case_phone_form_view"/>
+            <field name="arch" type="xml">
+                <group>
+                    <field name="to_call"/>
+                    <field name="sequence"/>
+                </group>
+            </field>
+        </record>
+
+        
+        <!-- Add the filter "Scheduled Calls" to the search bar-->
+        <record model="ir.ui.view" id="crm_phonecall_filter_tocall">
+            <field name="name">crm.phonecall.filter.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.view_crm_case_phonecalls_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Phonecalls">
+                    <filter string="Scheduled Calls" domain="[('to_call','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Add the fields to_call and sequence in the tree view of the phonecalls. 
+            The sequence field is a widget that allows to order the phonecalls-->
+        <record model="ir.ui.view" id="crm_phonecall_tree_tocall">
+            <field name="name">crm.phonecall.tree.tocall</field>
+            <field name="model">crm.phonecall</field>
+            <field name="inherit_id" ref="crm.crm_case_inbound_phone_tree_view"/>
+            <field name="arch" type="xml">
+                <tree string="Phone Calls" editable="top">
+                    <field name="to_call"/>
+                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Add the menu to reach the view of the call center calls-->
+        <record model="ir.actions.act_window" id="crm_phone_callcenter">
+            <field name="name">Call Center</field>
+            <field name="res_model">crm.phonecall</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar</field>
+            <field name="view_id" ref="crm.crm_case_inbound_phone_tree_view"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_state': 'pending', 'default_state': 'pending'}</field>
+            <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to log the summary of a phone call. 
+              </p><p>
+                Odoo allows you to log inbound calls on the fly to track the
+                history of the communication with a customer or to inform another
+                team member.
+              </p><p>
+                In order to follow up on the call, you can trigger a request for
+                another call, a meeting or an opportunity.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Call Center" id="menu_crm_phone_callcenter"
+            parent="crm.menu_crm_case_phone"
+            action="crm_phone_callcenter" />
+    </data>
+</openerp>
