@@ -160,6 +160,10 @@ class crm_lead(format_address, osv.osv):
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context and context.get('opportunity_id'):
+            action = self._get_formview_action(cr, user, context['opportunity_id'], context=context)
+            if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
+                view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
         res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
@@ -586,6 +590,13 @@ class crm_lead(format_address, osv.osv):
                 attachment.write(values)
         return True
 
+    def _merge_opportunity_phonecalls(self, cr, uid, opportunity_id, opportunities, context=None):
+        phonecall_obj = self.pool['crm.phonecall']
+        for opportunity in opportunities:
+            for phonecall_id in phonecall_obj.search(cr, uid, [('opportunity_id', '=', opportunity.id)], context=context):
+                phonecall_obj.write(cr, uid, phonecall_id, {'opportunity_id': opportunity_id}, context=context)
+        return True
+
     def get_duplicated_leads(self, cr, uid, ids, partner_id, include_lost=False, context=None):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
@@ -616,6 +627,7 @@ class crm_lead(format_address, osv.osv):
         self._merge_notify(cr, uid, highest, opportunities, context=context)
         self._merge_opportunity_history(cr, uid, highest, opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_phonecalls(cr, uid, highest, opportunities, context=context)
 
     def merge_opportunity(self, cr, uid, ids, user_id=False, section_id=False, context=None):
         """

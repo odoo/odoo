@@ -32,6 +32,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
+from openerp.tools.float_utils import float_round
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -178,7 +179,10 @@ class product_uom(osv.osv):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
-        amount = qty / from_unit.factor
+        # First round to the precision of the original unit, so that
+        # float representation errors do not bias the following ceil()
+        # e.g. with 1 / (1/12) we could get 12.0000048, ceiling to 13! 
+        amount = float_round(qty/from_unit.factor, precision_rounding=from_unit.rounding)
         if to_unit:
             amount = amount * to_unit.factor
             if round:
