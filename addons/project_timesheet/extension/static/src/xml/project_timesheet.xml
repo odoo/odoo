@@ -18,7 +18,7 @@
                             <span>00:00:00</span>
                         </div>
                         <div class="pt_timer_button col-md-4 col-xs-4">
-                            <button class="btn btn-primary pull-right">Start</button>
+                            <button class="btn btn-primary pull-right">START</button>
                         </div>
                     </div>
                 </td>
@@ -36,9 +36,9 @@
                                         <div>
                                             <div>
                                                 <strong>Project 1</strong>
-                                                <span class="pull-right">02h 05min</span>
+                                                <span class="pull-right pt_duration_line">02h 05min</span>
                                             </div>
-                                            <div>
+                                            <div class="pt_description_task">
                                                 Testing Task Project Timesheet
                                             </div>
                                         </div>
@@ -96,24 +96,24 @@
                   <h4><strong>Add an Activity</strong></h4>
                 <div>
                     <div>Project</div>
-                    <input class="pt_input_project"/>
+                    <input id="project_id" class="pt_input_project pt_required"/>
                 </div>
                 <div>
                     <div>Task</div>
-                  <input class="pt_input_task"/>
+                  <input id="task_id" class="pt_input_task pt_required"/>
                 </div>
                 <div class="pt_duration">
                     <div>Duration</div>
                     <div class="input-group col-md-2">
-                      <input class="form-control pt_input_hour"/>
+                      <input id="hours" class="form-control pt_input_hour"/>
                       <span class="input-group-addon">h</span>
-                      <input class="form-control col-md-offset-1 pt_input_minute"/>
+                      <input id="minutes" class="form-control col-md-offset-1 pt_input_minute"/>
                       <span class="input-group-addon">min</span>
                     </div>
                 </div>
                 <div class="pt_description">
                   <div>Notes</div>
-                  <textarea class="pt_input_description"></textarea>
+                  <textarea id="name" class="pt_input_description"></textarea>
                 </div>
                 <div class="pt_mt_5">
                   <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button> 

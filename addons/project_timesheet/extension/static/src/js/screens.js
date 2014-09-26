@@ -408,18 +408,67 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
             this.$project_input = this.$el.find(".pt_input_project");
             this.$task_input = this.$el.find(".pt_input_task");
-            this.prepare_autocomplete(this.$project_input, "project");
-            this.prepare_autocomplete(this.$task_input, "task");
+            this.prepare_autocomplete(this.$project_input, "projects");
+            this.prepare_autocomplete(this.$task_input, "tasks");
         },
         on_activity_add: function() {
             //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
             //Simply generate value such that project model can accept it, we will then call add project, now project will have logic
             //which finds project model based project_id from project's collection and for that model call add_task....
+            if (!this.is_valid_data()) {
+                return;
+            }
+            var project_activity_data = {};
+            $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
+            //TODO: Simplify this
+            _.each($form_data, function(input) {
+                var $input = $(input);
+                switch(input.id) {
+                    case "project_id":
+                        project_activity_data['project_id'] = [$input.data("id"), $input.val()];
+                        break;
+                    case "task_id":
+                        project_activity_data['task_id'] = [$input.data("id"), $input.val()];
+                        break;
+                    case "hours":
+                        project_activity_data['hours'] = (project_activity_data['hours'] || 0) + parseInt($input.val());
+                        break;
+                    case "minutes":
+                        project_activity_data['hours'] = (project_activity_data['hours'] || 0) + (((parseInt($input.val()) * 100) / 60))/100;
+                        break;
+                    case "name":
+                        project_activity_data['name'] = $input.val();
+                        break;
+                }
+            });
+            var momObj = new moment();
+            var date = project_timesheet.datetime_to_str(momObj._d);
+            project_activity_data['date'] = date; //Current date in accepted format
+            project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            this.project_timesheet_model.add_project(project_activity_data);
+        },
+        is_valid_data: function() {
+            var validity = true;
+            var $required_inputs = this.$el.find("input.pt_required,textarea.pt_required").filter(function() {return $(this).val() == "";});
+            _.each($required_inputs, function(input) {
+                $(input).addClass("pt_invalid");
+                validity = false;
+            });
+            var $duration_field = this.$el.find(".pt_duration input");
+            _.each($duration_field, function(input) {
+                if($(input).val() && (typeof parseInt($(input).val()) !== 'number' || isNaN(parseInt($(input).val())))) {
+                    $(input).addClass("pt_invalid");
+                    validity = false;
+                }
+            });
+            return validity;
         },
         get_search_result: function(term, model) {
+            var self = this;
             var def = $.Deferred();
-            var data = [[1, "Item 1"], [2, "Item 2"], [3, "Item 3"]];
-            var values = _.map(data, function(x) {
+            var data = this.project_timesheet_db.load(model, []);
+            var search_data = _.compact(_(data).map(function(x) {if (_.include(x[1], term)) {return x;}}));
+            var values = _.map(search_data, function(x) {
                 x[1] = x[1].split("\n")[0];
                 return {
                     label: _.str.escapeHTML(x[1]),
@@ -430,21 +479,26 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             // quick create
             //var raw_result = _(data.result).map(function(x) {return x[1];});
-            var raw_result = data.map(function(x) {return x[1];});
+            var raw_result = search_data.map(function(x) {return x[1];});
             if (term.length > 0 && !_.include(raw_result, term)) {
                 values.push({
                     label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
                         $('<span />').text(term).html()),
-                    action: function() {
-                        self._quick_create(term, model);
+                    action: function(e) {
+                        self._quick_create(e, term);
                     },
                     classname: 'oe_m2o_dropdown_option'
                 });
             }
             return def.resolve(values);
         },
-        _quick_create: function(term, model) {
+        _quick_create: function(e, term) {
             //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
+            var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+            console.log("Inside _quick_create ::: ");
+            $target = $(e.target);
+            $target.data("id", virtual_id);
+            $target.val(term);
         },
         prepare_autocomplete: function($input, model) {
             var self = this;
@@ -463,7 +517,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         $input.val(item.name);
                         return false;
                     } else if (item.action) {
-                        
+                        item.action(event);
+                        return false;
                     }
                 },
                 focus: function(e, ui) {
@@ -572,7 +627,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _([origin, db, username, password]).each(function($element) {
                 $element.removeClass('oe_form_required');
                 if (!$element.val()) {
-                    $element.addClass('pt_required');
+                    $element.addClass('pt_invalid');
                 }
             });
             

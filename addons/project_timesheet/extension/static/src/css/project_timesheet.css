@@ -30,15 +30,36 @@ html, body {
     display: block !important;
 }
 .odoo_project_timesheet .pt_activity_header {
-    background-color: #a24689;
-    min-height: 10%;
+    background-color: #f2f2f2;
+    min-height: 15%;
     font-size: 35px;
     position: relative;
     top: 0px;
-    color: #FFFFFF;
+    //color: rgb(129, 128, 128);
+    color: #a24689;
+}
+.odoo_project_timesheet .pt_timer_button button {
+    background-color: #a24689 !important;
+    border-color: #a24689 !important;
+    min-width: 100px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 6px !important;
 }
 .odoo_project_timesheet .pt_activity_col {
-    height: 80%;
+    height: 75%;
+}
+.odoo_project_timesheet .pt_description_task {
+    color: #999999;
+}
+.odoo_project_timesheet .pt_duration_line {
+    color: #666666;
+    font-size: 16px;
+}
+.odoo_project_timesheet .pt_duration_line:hover {
+    color: #A24689;
+    cursor: pointer;
+    text-decoration: underline;
 }
 .odoo_project_timesheet .pt_footer {
     background-color: #a24689;
@@ -73,7 +94,7 @@ html, body {
 .odoo_project_timesheet .pt_input_project, .odoo_project_timesheet .pt_input_task {
     background-color: #D2D2FF;
 }
-.odoo_project_timesheet input.pt_required {
+.odoo_project_timesheet input.pt_invalid {
     border-color: red;
 }
 .odoo_project_timesheet .o_new_account, .odoo_project_timesheet .o_existing_account {
