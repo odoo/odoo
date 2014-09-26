@@ -761,6 +761,10 @@ class website_sale(http.Controller):
             return request.redirect('/shop')
 
         if (not order.amount_total and not tx) or tx.state in ['pending', 'done']:
+            if (not order.amount_total and not tx):
+                # Orders are confirmed by payment transactions, but there is none for free orders,
+                # (e.g. free events), so confirm immediately
+                order.action_button_confirm()
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx and tx.state == 'cancel':
