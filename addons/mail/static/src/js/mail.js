@@ -694,7 +694,7 @@ openerp.mail = function (session) {
                     var thread = thread.parent_message.parent_thread;
                 }
                 // create object and attach to the thread object
-                thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
+                thread.message_fetch([["id", "=", message_id]], false, [message_id], false, function (arg, data) {
                     var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
                     thread.insert_message( message, root ? undefined : self.$el, root );
@@ -835,6 +835,7 @@ openerp.mail = function (session) {
             this.type = 'expandable';
             this.max_limit = datasets.max_limit;
             this.nb_messages = datasets.nb_messages;
+            this.limit = datasets.limit || datasets.nb_messages;
             this.flag_used = false;
         },
         
@@ -877,8 +878,10 @@ openerp.mail = function (session) {
             var self = this;
 
             // read messages
-            self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
+            self.parent_thread.message_fetch(this.domain, this.context, false, this.limit, function (arg, data) {
                 self.id = false;
+                //when display_reverse is true then show msg in last to first seq.
+                data = self.options.display_reverse ? data.reverse() : data
                 // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
                 self.animated_destroy(200);
@@ -1307,7 +1310,7 @@ openerp.mail = function (session) {
                 var pos = val.$el.position();
                 if (pos.top) {
                     /* bottom of the screen */
-                    var bottom = $(window).scrollTop()+$(window).height()+200;
+                    var bottom = $('.oe_view_manager_body').scrollTop()+$('.oe_view_manager_body').height()+200;
                     if (bottom > pos.top) {
                         val.on_expandable();
                     }
@@ -1454,7 +1457,7 @@ openerp.mail = function (session) {
          * @param {Object} replace_context: added to this.context
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
-        message_fetch: function (replace_domain, replace_context, ids, callback) {
+        message_fetch: function (replace_domain, replace_context, ids, limit, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
                     ids === false ? undefined : ids, 
@@ -1467,7 +1470,8 @@ openerp.mail = function (session) {
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
-                    this.context.default_parent_id || undefined
+                    this.context.default_parent_id || undefined,
+                    limit=limit,
                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
                 ).done(this.proxy('message_fetch_set_read'));
         },
@@ -1539,14 +1543,14 @@ openerp.mail = function (session) {
                 this.instantiate_compose_message();
                 this.compose_message.do_show_compact();
             }
-
             this.$('.oe_view_nocontent').remove();
             if (dom_insert_after && dom_insert_after.parent()[0] == self.$el[0]) {
                 message.insertAfter(dom_insert_after);
             } else if (prepend) {
-                message.prependTo(self.$el);
+                message.prependTo((self.options.view_mailbox && message.max_limit) ? self.$el.parent() : self.$el);
             } else {
-                message.appendTo(self.$el);
+                //in wall thread must be add to parent thread
+                message.appendTo((self.options.view_mailbox && message.max_limit) ? self.$el.parent() : self.$el);
             }
             message.$el.hide().fadeIn(500);
 
@@ -1784,13 +1788,13 @@ openerp.mail = function (session) {
                 this.thread.compose_message.do_show_compact();
             }
 
-            this.thread.message_fetch(null, null, this.action.params.message_ids);
+            this.thread.message_fetch(null, null, this.action.params.message_ids, false);
 
         },
 
         bind_events: function () {
-            $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
-            $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
+            $('.oe_view_manager_body').scroll( _.bind(this.thread.on_scroll, this.thread) );
+            $('.oe_view_manager_body').resize( _.bind(this.thread.on_scroll, this.thread) );
             this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
             window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
         },
@@ -1823,6 +1827,7 @@ openerp.mail = function (session) {
                 'show_record_name': false,
                 'show_compact_message': 1,
                 'display_log_button' : true,
+                'display_reverse' : true,
             }, this.node.params);
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
@@ -1947,6 +1952,7 @@ openerp.mail = function (session) {
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
                 'emails_from_on_composer': false,
+                'display_reverse' : false,
             }, this.action.params);
         },
 

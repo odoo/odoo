@@ -187,3 +187,32 @@ class test_mail_access_rights(TestMail):
         self.assertEqual(len(read_msg_list), 9, 'message_read on Pigs should return 9 messages and 0 expandable')
         self.assertEqual([msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0], read_msg_ids,
             'message_read, More on flat, should return all remaning messages')
+
+    def test_10_message_read(self):
+        """ Tests for message_read onscroll. """
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        msg_ids = []
+        pigs_domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)]
+        # Post 27 msg
+        for msg in range(0,27):
+            msg_ids.append(self.group_pigs.message_post(body='test %s' % msg, subtype='mt_comment'))
+        # Test : message_read with limit 10
+        read_msg_list = self.mail_message.message_read(cr, uid,domain=pigs_domain, limit=10)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        self.assertEqual(len(read_msg_list), 11, 'message_read on Pigs should return 10 messages and 1 expandable')
+        new_threads_exp, new_msg_exp = None, None
+        for msg in read_msg_list:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
+                new_threads_exp = msg
+        # Read 10 msg in second thread
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=new_threads_exp['domain'], limit=10)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        self.assertEqual(len(read_msg_list), 11, 'message_read on Pigs should return 10 messages and 1 expandable')
+        new_threads_exp, new_msg_exp = None, None
+        for msg in read_msg_list:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
+                new_threads_exp = msg
+        # Read all remaining 7 msg in third thread
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=new_threads_exp['domain'], limit=10)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        self.assertEqual(len(read_msg_list), 7, 'message_read on Pigs should return 7 messages and 0 expandable')
