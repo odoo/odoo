@@ -22,8 +22,9 @@
             }else{
                 this.set("partner", "There is no contact linked");
             }
+
             if(phonecall.description){
-                this.set("description", phonecall.description);    
+                this.set("description", phonecall.description);
             }else{
                 this.set("description", "There is no description");
             }
@@ -116,6 +117,9 @@
                                     widget.on("to_leads", self, self.to_leads);
                                     self.widgets[phonecall.id] = widget;
                                     self.phonecalls.push(phonecall);
+                                    if(! phonecall.description){
+                                        phonecall.description = "There is no description";
+                                    }
                                     $("[rel='popover']").popover({
                                         placement : 'right', // top, bottom, left or right
                                         title : 'Opportunity: ' + phonecall.opportunity_id[1], 
