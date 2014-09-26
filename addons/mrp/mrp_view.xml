@@ -436,16 +436,13 @@
 
        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
-            <field name="model">mrp.bom</field>
-            <!--field name="field_parent">child_complete_ids</field-->
+            <field name="model">mrp.bom.line</field>
+            <field name="field_parent">child_line_ids</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
-                    <field name="name" invisible="1"/>
-                    <field name="product_tmpl_id"/>
                     <field name="product_id"/>
                     <field name="product_uom" groups="product.group_uom"/>
-                    <field name="code"/>
                     <field name="type"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
@@ -592,8 +589,8 @@
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="domain">[('id', 'in', active_ids)]</field>
+            <field name="res_model">mrp.bom.line</field>
+            <field name="domain">[('bom_id', 'in', active_ids)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
             <field name="view_type">tree</field>
