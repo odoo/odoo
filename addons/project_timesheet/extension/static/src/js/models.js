@@ -156,6 +156,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                     });
                     self.project_timesheet_db.save("projects", projects);
                     self.project_timesheet_db.add_activities(work_activities);
+                    self.load_stored_data();
                 });
             });
         },

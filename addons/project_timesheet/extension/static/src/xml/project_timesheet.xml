@@ -31,50 +31,21 @@
                                 <tr>
                                     <td><span class="pt_add_activity">+ Add Activity</span></td>
                                 </tr>
-                                <tr class="activity_row">
-                                    <td>
-                                        <div>
+                                <t t-foreach="activities" t-as="activity">
+                                    <tr class="activity_row" t-att-data-activity_id="activity.id">
+                                        <td>
                                             <div>
-                                                <strong>Project 1</strong>
-                                                <span class="pull-right pt_duration_line">02h 05min</span>
+                                                <div>
+                                                    <strong><t t-esc="activity.project_id[1]"></t></strong>
+                                                    <span class="pull-right pt_duration_line"><t t-esc="activity.hours"></t></span> <!-- call format_hour method of this screen -->
+                                                </div>
+                                                <div class="pt_description_task">
+                                                    <t t-esc="activity.task_id[1]"></t>
+                                                </div>
                                             </div>
-                                            <div class="pt_description_task">
-                                                Testing Task Project Timesheet
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                <tr class="activity_row">
-                                    <td></td>
-                                </tr>
-                                
+                                        </td>
+                                    </tr>
+                                </t>
                             </tbody>
                         </table>
                     </div>
@@ -96,11 +67,21 @@
                   <h4><strong>Add an Activity</strong></h4>
                 <div>
                     <div>Project</div>
-                    <input id="project_id" class="pt_input_project pt_required"/>
+                    <div class="input-group col-md-2">
+                        <input id="project_id" class="form-control pt_input_project pt_required"/>
+                        <span class="input-group-addon pt_m2o_drop_down_button">
+                            <img src="static/src/img/down-arrow.png" draggable="false"/>
+                        </span>
+                    </div>
                 </div>
                 <div>
                     <div>Task</div>
-                  <input id="task_id" class="pt_input_task pt_required"/>
+                    <div class="input-group col-md-2">
+                        <input id="task_id" class="form-control pt_input_task pt_required"/>
+                        <span class="input-group-addon pt_m2o_drop_down_button">
+                            <img src="static/src/img/down-arrow.png" draggable="false"/>
+                        </span>
+                    </div>
                 </div>
                 <div class="pt_duration">
                     <div>Duration</div>
@@ -246,11 +227,11 @@
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
                     <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3">Stats</span>
                 </div>
-                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync">
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
                     <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
-                    <i></i><span>6h 30min</span>
+                    <span class="pull-right">6h 30min</span>
                 </div>
             </div>
         </div>

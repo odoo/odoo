@@ -21,8 +21,9 @@ function odoo_project_timesheet_db(project_timesheet) {
             localStorage[name] = JSON.stringify(data);
         },
         get_activities: function() {
-            //TO Implement
+            return this.load("activities", []);
         },
+        //TODO: We should handle it better way, if same id activity is there then replace it otherwise add it and then save whole activities list in db
         add_activities: function(activities) {
             //This method will replace activities, inshort reload with new activities
             //var activities = this.load("activities", []);

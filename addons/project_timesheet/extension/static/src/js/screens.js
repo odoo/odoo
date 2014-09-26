@@ -359,7 +359,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
-            this.activities = options.project_timesheet_model.project_timesheet_db.get_activities();
+            this.activities = [];
         },
         start: function() {
             var self = this;
@@ -383,13 +383,27 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
+            //TODO: Re-render template, as it is possible that we have new entries
         },
         pad_table_to: function(count) {
-            
+            if (this.activities.length >= count) {
+                return;
+            }
+            var row = '<tr class="activity_row"><td></td></tr>';
+            $rows = $(new Array(count - this.activities.length + 1).join(row));
+            $rows.appendTo(this.$el.find(".activity_row:last").parent());
         },
+        renderElement: function() {
+            this.activities = this.project_timesheet_model.project_timesheet_db.get_activities();
+            this.replaceElement(QWeb.render('ActivityScreen', {widget: this, activities: this.activities}));
+        },
+        /*
         render: function() {
-            QWeb.render('ActivityScreen', {widget: this, activities: this.activities});
+            var activities = options.project_timesheet_model.project_timesheet_db.get_activities();
+            console.log("activities are :: ",activities);
+            QWeb.render('ActivityScreen', {widget: this, activities: activities});
         },
+        */
         on_button_timer: function() {
             //TO Implement
         }
@@ -446,6 +460,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['date'] = date; //Current date in accepted format
             project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             this.project_timesheet_model.add_project(project_activity_data);
+            this.project_timesheet_widget.screen_selector.set_current_screen("activity");
         },
         is_valid_data: function() {
             var validity = true;
@@ -542,6 +557,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
     });
 
+    //When modified, we will have data-activity_id as a data, we will fetch that id from activity collection using collection.get(id),
+    //we will then change the activity and call add project by collecting all info of form and also replace exisiting activity in localstorage
     project_timesheet.ModifyActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "ModifyActivityScreen",
         init: function(project_timesheet_widget, options) {
