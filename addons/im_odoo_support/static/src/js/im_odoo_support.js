@@ -131,4 +131,11 @@
         });
     }
 
+    openerp.web.UserMenu.include({
+        do_update: function(){
+            $(window).trigger('odoo_support_ready_to_bind', 'usermenu');
+            return this._super.apply(this, arguments);
+        },
+    });
+
 })();
