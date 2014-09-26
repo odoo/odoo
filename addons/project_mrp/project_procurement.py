@@ -67,19 +67,27 @@ class procurement_order(osv.osv):
         return project
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         project_task = self.pool.get('project.task')
         for procurement in self.browse(cr, uid, ids, context=context):
             project = self._get_project(cr, uid, procurement, context=context)
             planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+            manager = procurement.product_id.product_manager
+            partner = procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id or None
+            lang = (manager and manager.lang) or (partner and partner.lang) or False
+            if not lang:
+                lang = self.pool['res.users'].browse(cr, uid, uid, context=context).lang
+            product = self.pool['product.product'].browse(cr, uid, procurement.product_id.id, context=dict(context, lang=lang))
             task_id = project_task.create(cr, uid, {
-                'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
+                'name': '%s:%s' % (procurement.origin or '', product.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours': planned_hours,
                 'remaining_hours': planned_hours,
                 'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
                 'procurement_id': procurement.id,
-                'description': procurement.name + '\n' + (procurement.note or ''),
+                'description': procurement.sale_line_id and procurement.sale_line_id.name or procurement.name,
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
