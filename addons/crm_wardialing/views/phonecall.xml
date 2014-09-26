@@ -26,7 +26,7 @@
             <field name="inherit_id" ref="crm.view_crm_case_phonecalls_filter"/>
             <field name="arch" type="xml">
                 <search string="Search Phonecalls">
-                    <filter string="Scheduled Calls" domain="[('to_call','=',True)]"/>
+                    <filter name="call_center_call_filter" string="Call Center Calls" domain="[('to_call','=',True)]"/>
                 </search>
             </field>
         </record>
@@ -54,7 +54,7 @@
             <field name="view_mode">tree,calendar,form</field>
             <field name="view_id" ref="crm.crm_case_inbound_phone_tree_view"/>
             <field name="domain">[]</field>
-            <field name="context">{'search_default_state': 'pending', 'default_state': 'pending'}</field>
+            <field name="context" eval="{'search_default_call_center_call_filter':1}"/>
             <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
