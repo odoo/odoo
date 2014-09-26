@@ -4,6 +4,9 @@
     <t t-name="TableWidget">
         <t t-if='!widget.selected'>
             <div class='table' t-att-style='widget.table_style_str()'>
+                <t t-if='widget.order_count'>
+                    <span class='order-count'><t t-esc='widget.order_count'/></span>
+                </t>
                 <span class='label'>
                     <t t-esc='widget.table.name' />
                 </span>
@@ -24,6 +27,13 @@
                 <span class='table-handle bottom left'></span>
             </div>
         </t>
+    </t>
+
+    <t t-name="BackToFloorButton">
+        <span class="order-button floor-button">
+            <i class='fa fa-angle-double-left'/>
+            <t t-esc="floor.name"/>
+        </span>
     </t>
 
     <t t-name="FloorScreenWidget">

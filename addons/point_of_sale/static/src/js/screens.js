@@ -24,17 +24,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
             this.pos = options.pos;
-
-            this.screen_set = options.screen_set || {};
-
-            this.popup_set = options.popup_set || {};
-
+            this.screen_set     = options.screen_set || {};
+            this.popup_set      = options.popup_set || {};
             this.default_screen = options.default_screen;
-
-            this.current_popup = null;
-
-            this.current_mode = options.default_mode || 'cashier';
-
+            this.startup_screen = options.startup_screen;
+            this.current_popup  = null;
+            this.current_mode   = options.default_mode || 'cashier';
             this.current_screen = null; 
 
             for(screen_name in this.screen_set){
@@ -45,9 +40,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.popup_set[popup_name].hide();
             }
 
-            this.pos.get_order().set_screen_data({
-                'screen': this.default_screen,
-            });
+            if (this.pos.get_order()) {
+                this.pos.get_order().set_screen_data({
+                    'screen': this.default_screen,
+                });
+            }
 
             this.pos.bind('change:selectedOrder', this.load_saved_screen, this);
         },

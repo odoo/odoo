@@ -115,7 +115,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.client_change_handler = function(event){
                 self.update_summary();
             }
-            this.bind_order_events();
+            if (this.pos.get_order()) {
+                this.bind_order_events();
+            }
         },
         enable_numpad: function(){
             this.disable_numpad();  //ensure we don't register the callbacks twice
@@ -133,12 +135,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
         },
         set_editable: function(editable){
-            this.editable = editable;
-            if(editable){
-                this.enable_numpad();
-            }else{
-                this.disable_numpad();
-                this.pos.get_order().deselectLine();
+            var order = this.pos.get_order();
+            if (order) {
+                this.editable = editable;
+                if (editable) {
+                    this.enable_numpad();
+                }else{
+                    this.disable_numpad();
+                    order.deselectLine();
+                }
             }
         },
         set_value: function(val) {
@@ -215,6 +220,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos_widget.numpad.state.reset();
 
             var order  = this.pos.get_order();
+            if (!order) {
+                return;
+            }
             var orderlines = order.get('orderLines').models;
 
             var el_str  = openerp.qweb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
@@ -248,6 +256,64 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
 
+        },
+    });
+
+    module.OrderSelectorWidget = module.PosBaseWidget.extend({
+        template: 'OrderSelectorWidget',
+        init: function(parent, options) {
+            this._super(parent, options);
+            this.pos.get('orders').bind('add remove change',this.renderElement,this);
+            this.pos.bind('change:selectedOrder',this.renderElement,this);
+        },
+        get_order_by_uid: function(uid) {
+            var orders = this.pos.get_order_list();
+            for (var i = 0; i < orders.length; i++) {
+                if (orders[i].uid === uid) {
+                    return orders[i];
+                }
+            }
+            return undefined;
+        },
+        order_click_handler: function(event,$el) {
+            var order = this.get_order_by_uid($el.data('uid'));
+            if (order) {
+                this.pos.set_order(order);
+            }
+        },
+        neworder_click_handler: function(event, $el) {
+            this.pos.add_new_order();
+        },
+        deleteorder_click_handler: function(event, $el) {
+            var self  = this;
+            var order = this.pos.get_order(); 
+            if (!order) {
+                return;
+            } else if ( !order.is_empty() ){
+                this.screen_selector.show_popup('confirm',{
+                    message: _t('Destroy Current Order ?'),
+                    comment: _t('You will lose any data associated with the current order'),
+                    confirm: function(){
+                        self.pos.delete_current_order();
+                    },
+                });
+            } else {
+                this.pos.delete_current_order();
+            }
+        },
+        renderElement: function(){
+            var self = this;
+            console.log('Re-Rendering Orders...',this.pos.get_order_list());
+            this._super();
+            this.$('.order-button.select-order').click(function(event){
+                self.order_click_handler(event,$(this));
+            });
+            this.$('.neworder-button').click(function(event){
+                self.neworder_click_handler(event,$(this));
+            });
+            this.$('.deleteorder-button').click(function(event){
+                self.deleteorder_click_handler(event,$(this));
+            });
         },
     });
 
@@ -864,34 +930,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.renderElement();
                 
-                self.$('.neworder-button').click(function(){
-                    self.pos.add_new_order();
-                });
-
-                self.$('.deleteorder-button').click(function(){
-                    if( !self.pos.get_order().is_empty() ){
-                        self.screen_selector.show_popup('confirm',{
-                            message: _t('Destroy Current Order ?'),
-                            comment: _t('You will lose any data associated with the current order'),
-                            confirm: function(){
-                                self.pos.delete_current_order();
-                            },
-                        });
-                    }else{
-                        self.pos.delete_current_order();
-                    }
-                });
-                
-                //when a new order is created, add an order button widget
-                self.pos.get('orders').bind('add', function(new_order){
-                    var new_order_button = new module.OrderButtonWidget(null, {
-                        order: new_order,
-                        pos: self.pos
-                    });
-                    new_order_button.appendTo(this.$('.orders'));
-                    new_order_button.selectOrder();
-                }, self);
-
                 self.pos.add_new_order();
 
                 self.build_widgets();
@@ -1017,6 +1055,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.unsent_orders_popup.appendTo(this.$el);
 
             // --------  Misc ---------
+
+            this.order_selector = new module.OrderSelectorWidget(this,{});
+            this.order_selector.replace(this.$('.placeholder-OrderSelectorWidget'));
 
             this.notification = new module.SynchNotificationWidget(this,{});
             this.notification.appendTo(this.$('.pos-rightheader'));

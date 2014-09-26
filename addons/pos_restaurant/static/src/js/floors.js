@@ -1,4 +1,5 @@
 function openerp_restaurant_floors(instance,module){
+    var QWeb = instance.web.qweb;
     var _t = instance.web._t;
 
     // At POS Startup, load the floors, and add them to the pos model
@@ -26,6 +27,7 @@ function openerp_restaurant_floors(instance,module){
                 var floor = self.floors_by_id[tables[i].floor_id[0]];
                 if (floor) {
                     floor.tables.push(tables[i]);
+                    tables[i].floor = floor;
                 }
             }
         },
@@ -212,7 +214,17 @@ function openerp_restaurant_floors(instance,module){
             var model  = new instance.web.Model('restaurant.table');
             var fields = _.find(this.pos.models,function(model){ return model.model === 'restaurant.table'; }).fields;
 
-            model.call('create_from_ui',[this.table]).then(function(table_id){
+            // we need a serializable copy of the table, containing only the fields defined on the server
+            var serializable_table = {};
+            for (var i = 0; i < fields.length; i++) {
+                if (typeof this.table[fields[i]] !== 'undefined') {
+                    serializable_table[fields[i]] = this.table[fields[i]];
+                }
+            }
+            // and the id ...
+            serializable_table.id = this.table.id
+
+            model.call('create_from_ui',[serializable_table]).then(function(table_id){
                 model.query(fields).filter([['id','=',table_id]]).first().then(function(table){
                     for (field in table) {
                         self.table[field] = table[field];
@@ -253,6 +265,7 @@ function openerp_restaurant_floors(instance,module){
         },
         renderElement: function(){
             var self = this;
+            this.order_count = this.pos.get_table_orders(this.table).length;
             this._super();
 
             this.$el.on('mouseup',      function(event){ self.click_handler(event,$(this)); });
@@ -281,16 +294,17 @@ function openerp_restaurant_floors(instance,module){
             this.selected_table = null;
             this.editing = false;
         },
-        show: function(){
-            this._super();
-            this.pos_widget.$('.order-selector').addClass('oe_invisible');
-        },
         hide: function(){
             this._super();
             if (this.editing) { 
                 this.toggle_editing();
             }
-            this.pos_widget.$('.order-selector').removeClass('oe_invisible');
+        },
+        show: function(){
+            this._super();
+            for (var i = 0; i < this.table_widgets.length; i++) { 
+                this.table_widgets[i].renderElement();
+            }
         },
         click_floor_button: function(event,$el){
             var floor = this.pos.floors_by_id[$el.data('id')];
@@ -559,13 +573,35 @@ function openerp_restaurant_floors(instance,module){
         }
     });
 
+    // We need to modify the OrderSelector to hide itself when we're on
+    // the floor plan
+    module.OrderSelectorWidget.include({
+        floor_button_click_handler: function(){
+            this.pos.set_table(null);
+        },
+        renderElement: function(){
+            var self = this;
+            this._super();
+            if (this.pos.get_order()) {
+                if (this.pos.table && this.pos.table.floor) {
+                    this.$('.orders').prepend(QWeb.render('BackToFloorButton',{floor:this.pos.table.floor}));
+                    this.$('.floor-button').click(function(){
+                        self.floor_button_click_handler();
+                    });
+                }
+                this.$el.removeClass('oe_invisible');
+            } else {
+                this.$el.addClass('oe_invisible');
+            }
+        },
+    });
+
     // We need to change the way the regular UI sees the orders, it
     // needs to only see the orders associated with the current table,
     // and when an order is validated, it needs to go back to the floor map.
     //
     // And when we change the table, we must create an order for that table
     // if there is none. 
-
     var _super_posmodel = module.PosModel.prototype;
     module.PosModel = module.PosModel.extend({
         initialize: function(session, attributes) {
@@ -588,6 +624,16 @@ function openerp_restaurant_floors(instance,module){
             }
         },
 
+        // we need to prevent the creation of orders when there is no
+        // table selected.
+        add_new_order: function() {
+            if (this.table) {
+                _super_posmodel.add_new_order.call(this);
+            } else {
+                console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+            }
+        },
+
         // get the list of unpaid orders (associated to the current table)
         get_order_list: function() {    
             var orders = _super_posmodel.get_order_list.call(this);  
@@ -604,12 +650,24 @@ function openerp_restaurant_floors(instance,module){
             }
         },
 
+        // get the list of orders associated to a table. FIXME: should be O(1)
+        get_table_orders: function(table) {
+            var orders   = _super_posmodel.get_order_list.call(this);
+            var t_orders = [];
+            for (var i = 0; i < orders.length; i++) {
+                if (orders[i].table === table) {
+                    t_orders.push(orders[i]);
+                }
+            }
+            return t_orders;
+        },
+
         // When we validate an order we go back to the floor plan. 
         // When we cancel an order and there is multiple orders 
         // on the table, stay on the table.
         on_removed_order: function(removed_order,index,reason){
             var order_list = this.get_order_list();
-            if( (reason === 'abandon' || removed_order.temporary) && this.order_list.length > 0){
+            if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
                 this.set_order(order_list[index] || order_list[order_list.length -1]);
             }else{
                 // back to the floor plan

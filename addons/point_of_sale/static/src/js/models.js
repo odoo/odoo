@@ -447,7 +447,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // order and a valid selected order
         on_removed_order: function(removed_order,index,reason){
             var order_list = this.get_order_list();
-            if( (reason === 'abandon' || removed_order.temporary) && this.order_list.length > 0){
+            if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
                 // when we intentionally remove an unfinished order, and there is another existing one
                 this.set_order(order_list[index] || order_list[order_list.length -1]);
             }else{
@@ -482,7 +482,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         //removes the current order
         delete_current_order: function(){
-            this.get('selectedOrder').destroy({'reason':'abandon'});
+            var order = this.get_order();
+            if (order) {
+                order.destroy({'reason':'abandon'});
+            }
         },
 
         // saves the order locally and try to send it to the backend. 
