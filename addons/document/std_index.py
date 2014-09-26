@@ -82,7 +82,7 @@ class PptxIndex(indexer):
         files = filter(lambda x: x.startswith('ppt/slides/slide'), zip.namelist())
         for i in range(1, len(files) + 1):
             content = xml.dom.minidom.parseString(zip.read('ppt/slides/slide%s.xml' % str(i)))
-            res = toString().encode('ascii','replace')
+            res = toString() #.encode('ascii','replace')
             data.append(res)
 
         return _to_unicode('\n'.join(data))
@@ -127,7 +127,7 @@ class DocxIndex(indexer):
                     buffer += textToString(paragraph) + "\n"
             return buffer
 
-        res = toString().encode('ascii','replace')
+        res = toString() #.encode('ascii','replace')
 
         return _to_unicode(res)
 
@@ -152,7 +152,7 @@ class XlsxIndex(indexer):
                     buffer += textToString(paragraph) + "\n"
             return buffer
 
-        res = toString().encode('ascii','replace')
+        res = toString() #.encode('ascii','replace')
 
         return _to_unicode(res)
 
