@@ -218,15 +218,6 @@
         try_round(457.4554, '457.455')
         try_round(-457.4554, '-457.455')
 
-        # Try some rounding value with rounding method UP instead of HALF-UP
-        # We use 8.175 because when normalizing 8.175 with precision_digits=3 it gives
-        # us 8175,0000000001234 as value, and if not handle correctly the rounding UP
-        # value will be incorrect (should be 8,175 and not 8,176)
-        try_round(8.175, '8.175')
-        try_round(8.1751, '8.176')
-        try_round(-8.175, '-8.175')
-        try_round(-8.1751, '-8.175')
-
         # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
         fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
         expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
