@@ -12,5 +12,23 @@
 
             </field>
         </record>
+
+        <record id="view_analytics_config_settings" model="ir.ui.view">
+            <field name="name">Analytics_settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <div name="google_analytics" position="replace">
+                    <div>                       
+                        <group>
+                            <div class="analytics_settings">
+                                <label for="google_analytics_confirm" string="Google Analytics"/>
+                                <field name="google_analytics_confirm" class="oe_inline" />  
+                            </div>
+                        </group> 
+                    </div>                            
+                </div>                             
+            </field>
+        </record>
     </data>
 </openerp>

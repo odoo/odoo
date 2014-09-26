@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from openerp.exceptions import Warning
+
 from openerp.osv import osv, fields
 import simplejson
 
@@ -36,17 +38,19 @@ class Experiment(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         print vals
-        exp={}
-        exp['name'] = vals['name']
-        exp['state'] = vals['state']
-        exp['variations'] =[]
-        exp['variations'].append({'name':'master'})
-        l =  vals.get('experiment_snapshot_ids')
-        for snap in l:
-            name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
-            exp['variations'].append({'name':name})
-        #google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
-        #vals['google_id'] = google_id
+        # exp={}
+        # exp['name'] = vals['name']
+        # exp['state'] = vals['state']
+        # exp['variations'] =[]
+        # exp['variations'].append({'name':'master'})
+        # l =  vals.get('experiment_snapshot_ids')
+        # for snap in l:
+        #     name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
+        #     exp['variations'].append({'name':name})
+        # google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
+        # if not google_id:
+        #     raise Warning("Please askhkjgjk to check api ...")
+        # vals['google_id'] = google_id
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -169,29 +173,32 @@ class google_management(osv.AbstractModel):
         return data
 
     def create_an_experiment(self, cr, uid, experiment, context=None):
-        from pudb import set_trace; set_trace()
         gs_pool = self.pool['google.service']
         data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
 
-        accountId='55031254',
-        webPropertyId='UA-55031254-1',
+        accountId='55031254'
+        webPropertyId='UA-55031254-1'
         profileId='1'
 
-        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments' % (accountId, webPropertyId, profileId)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?key=AIzaSyB2MIVlaewGk1sPG_UKtLlv4g-LOAzXh-Q' % (accountId, webPropertyId, profileId)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
-        return gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
+        try:
+            x = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
+        except:
+            x = False
+        return x
 
     def update_an_experiment(self, cr, uid, experiment, experiment_id, context=None):
         gs_pool = self.pool['google.service']
         data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
 
-        accountId='55031254',
-        webPropertyId='UA-55031254-1',
+        accountId='55031254'
+        webPropertyId='UA-55031254-1'
         profileId='1'
 
-        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
@@ -200,12 +207,12 @@ class google_management(osv.AbstractModel):
     def delete_an_experiment(self, cr, uid, experiment_id, context=None):
         gs_pool = self.pool['google.service']
 
-        accountId='55031254',
-        webPropertyId='UA-55031254-1',
+        accountId='55031254'
+        webPropertyId='UA-55031254-1'
         profileId='1'
         
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        url = 'analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment_id)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment_id)
 
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
 
