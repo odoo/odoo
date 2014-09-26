@@ -25,6 +25,7 @@ import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
 from openerp.osv import fields, osv, orm
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
@@ -852,7 +853,8 @@ class account_invoice(osv.osv):
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_rounding=precision) == 1:
                     raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if not key in tax_key:
