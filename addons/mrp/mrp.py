@@ -230,7 +230,7 @@ class mrp_bom(osv.osv):
     }
     _order = "sequence"
 
-    def _bom_find(self, cr, uid, product_uom, product_tmpl_id=None, product_id=None, properties=None, context=None):
+    def _bom_find(self, cr, uid, product_tmpl_id=None, product_id=None, properties=None, context=None):
         """ Finds BoM for particular product and product uom.
         @param product_tmpl_id: Selected product.
         @param product_uom: Unit of measure of a product.
@@ -254,16 +254,18 @@ class mrp_bom(osv.osv):
         else:
             # neither product nor template, makes no sense to search
             return False
-        if product_uom:
-            domain += [('product_uom','=',product_uom)]
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         # order to prioritize bom with product_id over the one without
         ids = self.search(cr, uid, domain, order='product_id')
+        bom_empty_prop = False
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids):
             if not set(map(int, bom.property_ids or [])) - set(properties or []):
-                return bom.id
-        return False
+                if not bom.property_ids:
+                    bom_empty_prop = bom.id
+                else:
+                    return bom.id
+        return bom_empty_prop
 
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
@@ -322,7 +324,7 @@ class mrp_bom(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
 
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
-            bom_id = self._bom_find(cr, uid, bom_line_id.product_uom.id, product_id=bom_line_id.product_id.id, properties=properties, context=context)
+            bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
 
             #If BoM should not behave like PhantoM, just add the product, otherwise explode further
             if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
@@ -403,7 +405,7 @@ class mrp_bom_line(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
-        'property_ids': fields.many2many('mrp.property', string='Properties'),
+        'property_ids': fields.many2many('mrp.property', string='Properties'), #Not used
 
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True, required=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', string='Variants', help="BOM Product Variants needed form apply this line."),
@@ -645,7 +647,7 @@ class mrp_production(osv.osv):
             }}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-        bom_id = bom_obj._bom_find(cr, uid, product.uom_id and product.uom_id.id, product_id=product.id, properties=[], context=context)
+        bom_id = bom_obj._bom_find(cr, uid, product_id=product.id, properties=[], context=context)
         routing_id = False
         if bom_id:
             bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
@@ -694,7 +696,7 @@ class mrp_production(osv.osv):
             bom_point = production.bom_id
             bom_id = production.bom_id.id
             if not bom_point:
-                bom_id = bom_obj._bom_find(cr, uid, production.product_uom.id, product_id=production.product_id.id, properties=properties, context=context)
+                bom_id = bom_obj._bom_find(cr, uid, product_id=production.product_id.id, properties=properties, context=context)
                 if bom_id:
                     bom_point = bom_obj.browse(cr, uid, bom_id)
                     routing_id = bom_point.routing_id.id or False

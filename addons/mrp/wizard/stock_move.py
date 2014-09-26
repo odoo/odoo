@@ -62,7 +62,7 @@ class stock_move_consume(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             if move_ids and move_ids[0]:
                 move = move_obj.browse(cr, uid, move_ids[0], context=context)
-            qty = uom_obj._compute_qty(cr, uid, data['product_uom'].id, data.product_qty, data.product_id.uom_id.id, round=False)
+            qty = uom_obj._compute_qty(cr, uid, data['product_uom'].id, data.product_qty, data.product_id.uom_id.id)
             move_obj.action_consume(cr, uid, move_ids,
                              qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
