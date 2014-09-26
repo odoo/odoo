@@ -751,7 +751,7 @@ class fleet_vehicle_log_contract(osv.Model):
     def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
         totalsum = 0.0
         for element in cost_ids:
-            if element and len(element) == 3 and element[2]:
+            if element and len(element) == 3 and isinstance(element[2], dict):
                 totalsum += element[2].get('amount', 0.0)
         return {
             'value': {
