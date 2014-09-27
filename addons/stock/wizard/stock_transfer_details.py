@@ -167,6 +167,15 @@ class stock_transfer_details_items(models.TransientModel):
             return self[0].transfer_id.wizard_view()
 
     @api.multi
+    def put_in_lot(self):
+        for packop in self:
+            if not packop.lot_id:
+                if packop.product_id:
+                    packop.lot_id = self.pool['stock.production.lot'].create(self._cr, self._uid, {'product_id': packop.product_id.id}, self._context)
+        if self and self[0]:
+            return self[0].transfer_id.wizard_view()
+
+    @api.multi
     def product_id_change(self, product, uom=False):
         result = {}
         if product:
