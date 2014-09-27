@@ -38,15 +38,17 @@ class Experiment(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         print vals
-        # exp={}
-        # exp['name'] = vals['name']
-        # exp['state'] = vals['state']
-        # exp['variations'] =[]
-        # exp['variations'].append({'name':'master'})
-        # l =  vals.get('experiment_snapshot_ids')
-        # for snap in l:
-        #     name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
-        #     exp['variations'].append({'name':name})
+        exp={}
+        exp['name'] = vals['name']
+        exp['state'] = vals['state']
+        exp['variations'] =[]
+        exp['variations'].append({'name':'master'})
+        l =  vals.get('experiment_snapshot_ids')
+        if l:
+            for snap in l:
+                name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
+                exp['variations'].append({'name':name})
+        print exp
         # google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
         # if not google_id:
         #     raise Warning("Please askhkjgjk to check api ...")
@@ -72,8 +74,9 @@ class Experiment(osv.Model):
                 index = 0
                 temp['variations'] = ['master']
                 for exp_s in exp.experiment_snapshot_ids:
-                    if not exp_snaps[index][0] == 2:
-                        temp['variations'].append(exp_s.snapshot_id.name)
+                    for li in exp_snaps:
+                        if not li[0] == 2 and li[1] == exp_s.id:
+                            temp['variations'].append(exp_s.snapshot_id.name)
                     index+=1
                 while index< len(exp_snaps):
                     snap_id = exp_snaps[index][2]['snapshot_id']
