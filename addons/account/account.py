@@ -2816,15 +2816,6 @@ class account_tax_template(osv.osv):
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        res = []
-        for record in self.read(cr, uid, ids, ['description','name'], context=context):
-            name = record['description'] and record['description'] or record['name']
-            res.append((record['id'],name ))
-        return res
-
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
@@ -3007,7 +2998,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
-
 
     def _get_chart_parent_ids(self, cr, uid, chart_template, context=None):
         """ Returns the IDs of all ancestor charts, including the chart itself.

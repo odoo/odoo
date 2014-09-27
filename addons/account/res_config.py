@@ -156,8 +156,13 @@ class account_config_settings(osv.osv_memory):
         return res
 
     def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.id
+        if context is None:
+            context = {}
+        company_id = context.get('company_id')
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_id = user.company_id.id
+        return company_id
 
     def _default_has_default_company(self, cr, uid, context=None):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
@@ -216,7 +221,6 @@ class account_config_settings(osv.osv_memory):
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         # update related fields
         values = {}
-        values['currency_id'] = False
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
@@ -226,12 +230,10 @@ class account_config_settings(osv.osv_memory):
             date_start, date_stop, period = self._get_default_fiscalyear_data(cr, uid, company_id, context=context)
             values = {
                 'expects_chart_of_accounts': company.expects_chart_of_accounts,
-                'currency_id': company.currency_id.id,
                 'paypal_account': company.paypal_account,
                 'company_footer': company.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
                 'has_fiscal_year': bool(fiscalyear_count),
-                'chart_template_id': False,
                 'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
                 'date_start': date_start,
                 'date_stop': date_stop,
@@ -269,7 +271,8 @@ class account_config_settings(osv.osv_memory):
         if chart_template_id:
             # update complete_tax_set, sale_tax and purchase_tax
             chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-            res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
+            currency_id = chart_template.currency_id or self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+            res['value'].update({'complete_tax_set': chart_template.complete_tax_set, 'currency_id': currency_id})
             if chart_template.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid,
@@ -382,4 +385,15 @@ class account_config_settings(osv.osv_memory):
                 'module_account_accountant': True,
                 }}
         return {}
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(account_config_settings, self).default_get(cr, uid, fields, context=context)
+        account_chart_template = self.pool['account.chart.template']
+        ids = account_chart_template.search(cr, uid, [('visible', '=', True)], context=context)
+        if ids:
+            chart_id = max(ids)
+            if 'chart_template_id' in fields:
+                res.update({'chart_template_id': chart_id})
+        return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

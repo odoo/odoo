@@ -14,11 +14,11 @@
                         <field name="power"/>
                         <field name="allow_write_off"/>
                     </group>
-                    <group col="4" attrs="{'readonly':[('allow_write_off', '!=', True)]}" string="Write-Off Move">
+                    <group col="4" string="Write-Off Move">
                         <field name="max_amount"/>
-                        <field name="writeoff_acc_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
-                        <field name="journal_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
-                        <field name="period_id" attrs="{ 'required':[('allow_write_off', '=', True)]}"/>
+                        <field name="writeoff_acc_id" attrs="{ 'invisible':[('allow_write_off','=', False)], 'required':[('allow_write_off', '=', True)]}"/>
+                        <field name="journal_id" attrs="{ 'invisible':[('allow_write_off','=', False)], 'required':[('allow_write_off', '=', True)]}"/>
+                        <field name="period_id" attrs="{ 'invisible':[('allow_write_off','=', False )], 'required':[('allow_write_off', '=', True)]}"/>
                     </group>
                     <footer>
                         <button name="reconcile" string="Reconcile" type="object" class="oe_highlight"/>

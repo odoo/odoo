@@ -2188,7 +2188,6 @@
         </record>
         <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="account_template_taxes" sequence="14"/>
 
-
         <!--  Wizard for Multi Charts of Accounts -->
         <record id="view_wizard_multi_chart" model="ir.ui.view">
             <field name="name">Set Your Accounting Options</field>
@@ -2207,7 +2206,7 @@
                         </group>
                         <group>
                             <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                            <field name="currency_id" class="oe_inline"/>
+                            <field name="currency_id" class="oe_inline" invisible="1"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
@@ -2219,7 +2218,7 @@
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%
                             </div>
                         </group>
-                        <group groups="account.group_account_user">
+                        <group groups="account.group_account_user" invisible="1">
                             <field name="code_digits"/>
                         </group>
                     </group>
