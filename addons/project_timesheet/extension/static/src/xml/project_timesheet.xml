@@ -66,22 +66,10 @@
               <div class="row well" style="height: 100%;">
                   <h4><strong>Add an Activity</strong></h4>
                 <div>
-                    <div>Project</div>
-                    <div class="input-group col-md-2">
-                        <input id="project_id" class="form-control pt_input_project pt_required"/>
-                        <span class="input-group-addon pt_m2o_drop_down_button">
-                            <img src="static/src/img/down-arrow.png" draggable="false"/>
-                        </span>
-                    </div>
+                    <div class="project-placeholder"></div>
                 </div>
                 <div>
-                    <div>Task</div>
-                    <div class="input-group col-md-2">
-                        <input id="task_id" class="form-control pt_input_task pt_required"/>
-                        <span class="input-group-addon pt_m2o_drop_down_button">
-                            <img src="static/src/img/down-arrow.png" draggable="false"/>
-                        </span>
-                    </div>
+                    <div class="task-placeholder"></div>
                 </div>
                 <div class="pt_duration">
                     <div>Duration</div>
@@ -116,6 +104,29 @@
               </div>
             </div>
         </div>
+    </t>
+
+    <t t-name="FieldMany2One">
+        <!-- <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.style"> -->
+            <t>
+                <div>
+                    <t t-esc="widget.label"></t>
+                </div>
+                <div class="input-group col-md-2">
+                    <!--
+                    <a t-if="! widget.options.no_open" href="#" tabindex="-1"
+                        class="oe_m2o_cm_button oe_e" draggable="false">/</a>
+                    -->
+                    <input type="text"
+                        t-att-id="widget.id_for_input"
+                        t-attf-class="form-control #{widget.classname}"
+                        t-att-placeholder="widget.placeholder"/>
+                    <span class="input-group-addon pt_m2o_drop_down_button">
+                        <img src="static/src/img/down-arrow.png" draggable="false"/>
+                    </span>
+                </div>
+            </t>
+        <!-- </span> -->
     </t>
 
     <t t-name="ModifyActivityScreen">

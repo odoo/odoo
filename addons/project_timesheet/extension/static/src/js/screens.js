@@ -410,6 +410,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
     });
 
     //TODO: Modify and Add activity will use same template, special option is passed, show and render method will be overridden
+    //TODO: Create many2one widget which takes model name and dataset(i.e. our localstorage data, so that we can use it in any screen)
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "AddActivityScreen",
         init: function(project_timesheet_widget, options) {
@@ -420,10 +421,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             this._super.apply(this, arguments);
             this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
-            this.$project_input = this.$el.find(".pt_input_project");
-            this.$task_input = this.$el.find(".pt_input_task");
-            this.prepare_autocomplete(this.$project_input, "projects");
-            this.prepare_autocomplete(this.$task_input, "tasks");
+            var project_m2o = new project_timesheet.FieldMany2One(this, {model: 'projects', classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
+            project_m2o.replace(this.$el.find(".project-placeholder"));
+            var task_m2o = new project_timesheet.FieldMany2One(this, {model: 'tasks', classname: "pt_input_task pt_required", label: "Task", id_for_input: "task_id"});
+            task_m2o.replace(this.$el.find(".task-placeholder"));
         },
         on_activity_add: function() {
             //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
@@ -477,83 +478,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
             });
             return validity;
-        },
-        get_search_result: function(term, model) {
-            var self = this;
-            var def = $.Deferred();
-            var data = this.project_timesheet_db.load(model, []);
-            var search_data = _.compact(_(data).map(function(x) {if (_.include(x[1], term)) {return x;}}));
-            var values = _.map(search_data, function(x) {
-                x[1] = x[1].split("\n")[0];
-                return {
-                    label: _.str.escapeHTML(x[1]),
-                    value: x[1],
-                    name: x[1],
-                    id: x[0],
-                };
-            });
-            // quick create
-            //var raw_result = _(data.result).map(function(x) {return x[1];});
-            var raw_result = search_data.map(function(x) {return x[1];});
-            if (term.length > 0 && !_.include(raw_result, term)) {
-                values.push({
-                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                        $('<span />').text(term).html()),
-                    action: function(e) {
-                        self._quick_create(e, term);
-                    },
-                    classname: 'oe_m2o_dropdown_option'
-                });
-            }
-            return def.resolve(values);
-        },
-        _quick_create: function(e, term) {
-            //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
-            var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
-            console.log("Inside _quick_create ::: ");
-            $target = $(e.target);
-            $target.data("id", virtual_id);
-            $target.val(term);
-        },
-        prepare_autocomplete: function($input, model) {
-            var self = this;
-            $input.autocomplete({
-                source: function(req, resp) {
-                    self.get_search_result(req.term, model).done(function(result) {
-                        resp(result);
-                    });
-                },
-                select: function(event, ui) {
-                    isSelecting = true;
-                    var item = ui.item;
-                    
-                    if (item.id) {
-                        $input.data("id", item.id);
-                        $input.val(item.name);
-                        return false;
-                    } else if (item.action) {
-                        item.action(event);
-                        return false;
-                    }
-                },
-                focus: function(e, ui) {
-                    e.preventDefault();
-                },
-                html: true,
-                minLength: 0,
-                delay: 250
-            });
-            // set position for list of suggestions box
-            $input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
-            $input.autocomplete("widget").openerpClass();
-            // used to correct a bug when selecting an element by pushing 'enter' in an editable list
-            $input.keyup(function(e) {
-                if (e.which === 13) { // ENTER
-                    if (isSelecting)
-                        e.stopPropagation();
-                }
-                isSelecting = false;
-            });
         },
     });
 
