@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-28 15:43+0000\n"
+"PO-Revision-Date: 2014-09-21 17:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-30 08:38+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-09-22 08:02+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
 msgid "# Emails"
-msgstr "E-Mails"
+msgstr "# E-Mails"
 
 #. module: project_issue
 #: field:res.partner,issue_count:0
@@ -31,7 +31,7 @@ msgstr "# Fälle"
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr "Fälle"
+msgstr "# Fälle"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:299
@@ -54,8 +54,8 @@ msgstr ""
 "p class=\"oe_view_nocontent_create\">\n"
 "                Klicken Sie zur Erstellung einer neuen Version.\n"
 "              </p><p>\n"
-"                Definieren Sie hier die Versionen, die Ihr Produkt "
-"kennzeichnen.\n"
+"                Definieren Sie hier die Versionen Ihres Produktes an denen\n"
+"              Sie Fälle bearbeiten\n"
 "              </p>\n"
 "            "
 
@@ -165,7 +165,7 @@ msgstr "Du. Zeit b. Beend."
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr "D. Dauer b. Eröff."
+msgstr "Durch. Zeit b. Start"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
@@ -317,22 +317,22 @@ msgstr "Datum der zuletzt gesendeten Nachricht"
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr "Tage seit Erzeugung"
+msgstr "Tage seit Erstellung"
 
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr "Tage seit letzter Aktion"
+msgstr "Tage seit letzter Bearbeitung"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Assign"
-msgstr "Dauer bis Zuweisung"
+msgstr "Tage bis Bearbeitungsbeginn"
 
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr "Tage b. Beend."
+msgstr "Tage bis Bearbeitungsende"
 
 #. module: project_issue
 #: field:project.issue,date_deadline:0
@@ -362,7 +362,7 @@ msgstr "Differenz in Tagen zwischen Erstellung und heute"
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr "Differenz in Tagen zwischen letzter Aktion und heute"
+msgstr "Differenz in Tagen zwischen letzter Bearbeitung und heute"
 
 #. module: project_issue
 #: field:project.issue,duration:0
@@ -397,7 +397,7 @@ msgstr "Feature Anfrageliste"
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 msgid "Feature description"
-msgstr "Featurebeschreibung"
+msgstr "Anforderungsbeschreibung"
 
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
@@ -480,12 +480,12 @@ msgstr "Fall wurde erstellt"
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 msgid "Issue Ready for Next Stage"
-msgstr "Fall ist bereit für die weitere Bearbeitung"
+msgstr "Fall ist bereit für die nächste Bearbeitungsstufe"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr "Status des Falls wurde geändert"
+msgstr "Bearbeitungsstufe wurde geändert"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -640,12 +640,12 @@ msgstr "Normal"
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr "Anzahl Tage für Beendigung"
+msgstr "Anzahl Tage bis Erledigung"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr "Anzahl Tage zur Fall Eröffnung"
+msgstr "Anzahl Tage bis zum Bearbeitungsbeginn"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -870,7 +870,7 @@ msgstr "Arbeitszeit zur Zuordnung eines Falls"
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr "Arbeitszeit zur Beendigung eines Falls."
+msgstr "Arbeitszeit zur Beendigung eines Falls"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397

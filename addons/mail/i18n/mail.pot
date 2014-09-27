@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-23 16:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:385
+#: code:addons/mail/mail_thread.py:384
 #, python-format
 msgid "%s created"
 msgstr ""
@@ -54,7 +54,7 @@ msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:135
+#: code:addons/mail/mail_thread.py:134
 #, python-format
 msgid "<p class='oe_view_nocontent_create'>\n"
 "                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>\n"
@@ -63,7 +63,7 @@ msgid "<p class='oe_view_nocontent_create'>\n"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:146
+#: code:addons/mail/mail_thread.py:145
 #, python-format
 msgid "<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s"
 msgstr ""
@@ -121,18 +121,12 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:159
-#, python-format
-msgid "<span class='oe_mail_footer_access'><small>about <a style='color:inherit' href=\"%s\">%s %s</a></small></span>"
-msgstr ""
-
-#. module: mail
 #: help:mail.alias,alias_defaults:0
 msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_message.py:755
+#: code:addons/mail/mail_message.py:763
 #, python-format
 msgid "Access Denied"
 msgstr ""
@@ -443,7 +437,6 @@ msgstr ""
 #: field:mail.message,create_uid:0
 #: field:mail.message.subtype,create_uid:0
 #: field:mail.wizard.invite,create_uid:0
-#: field:publisher_warranty.contract,create_uid:0
 msgid "Created by"
 msgstr ""
 
@@ -455,7 +448,6 @@ msgstr ""
 #: field:mail.message,create_date:0
 #: field:mail.message.subtype,create_date:0
 #: field:mail.wizard.invite,create_date:0
-#: field:publisher_warranty.contract,create_date:0
 msgid "Created on"
 msgstr ""
 
@@ -650,13 +642,13 @@ msgid "Emails"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/update.py:93
+#: code:addons/mail/update.py:91
 #, python-format
 msgid "Error"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/update.py:93
+#: code:addons/mail/update.py:91
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
@@ -899,7 +891,7 @@ msgid "Invalid expression, it must be a literal python dictionary definition e.g
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/wizard/invite.py:96
+#: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
 msgstr ""
@@ -950,7 +942,6 @@ msgstr ""
 #: field:mail.message,write_uid:0
 #: field:mail.message.subtype,write_uid:0
 #: field:mail.wizard.invite,write_uid:0
-#: field:publisher_warranty.contract,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
@@ -962,7 +953,6 @@ msgstr ""
 #: field:mail.message,write_date:0
 #: field:mail.message.subtype,write_date:0
 #: field:mail.wizard.invite,write_date:0
-#: field:publisher_warranty.contract,write_date:0
 msgid "Last Updated on"
 msgstr ""
 
@@ -992,7 +982,7 @@ msgid "Log an internal note"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:323
+#: code:addons/mail/mail_mail.py:330
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr ""
@@ -1188,7 +1178,7 @@ msgid "Never"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:173
+#: code:addons/mail/mail_thread.py:172
 #, python-format
 msgid "New"
 msgstr ""
@@ -1603,7 +1593,7 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/mail_followers.py:155
 #, python-format
-msgid "Sent by %(company)s using %(odoo)s."
+msgid "Sent by %(company)s using %(odoo)s"
 msgstr ""
 
 #. module: mail
@@ -1736,7 +1726,7 @@ msgid "The owner of records created upon receiving emails on this alias. If this
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_message.py:756
+#: code:addons/mail/mail_message.py:764
 #, python-format
 msgid "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
@@ -1937,15 +1927,27 @@ msgid "You cannot delete those groups, as the Whole Company group is required by
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:171
 #, python-format
 msgid "You have %d unread messages"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:172
+#: code:addons/mail/mail_thread.py:171
 #, python-format
 msgid "You have one unread message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:160
+#, python-format
+msgid "about"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:160
+#, python-format
+msgid "access"
 msgstr ""
 
 #. module: mail
@@ -1957,7 +1959,7 @@ msgid "and"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:116
+#: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
 msgstr ""
@@ -2095,5 +2097,11 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:111
 #, python-format
 msgid "uploading"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:162
+#, python-format
+msgid "your messages"
 msgstr ""
 

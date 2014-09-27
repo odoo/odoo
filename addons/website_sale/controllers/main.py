@@ -526,7 +526,7 @@ class website_sale(http.Controller):
 
         order_info = {
             'partner_id': partner_id,
-            'message_follower_ids': [(4, partner_id)],
+            'message_follower_ids': [(4, partner_id), (3, request.website.partner_id.id)],
             'partner_invoice_id': partner_id,
         }
         order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
@@ -757,13 +757,17 @@ class website_sale(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.id == request.session.get('sale_last_order_id')
 
-        if not tx or not order:
+        if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
 
-        if not order.amount_total or tx.state in ['pending', 'done']:
+        if (not order.amount_total and not tx) or tx.state in ['pending', 'done']:
+            if (not order.amount_total and not tx):
+                # Orders are confirmed by payment transactions, but there is none for free orders,
+                # (e.g. free events), so confirm immediately
+                order.action_button_confirm()
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
-        elif tx.state == 'cancel':
+        elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
 

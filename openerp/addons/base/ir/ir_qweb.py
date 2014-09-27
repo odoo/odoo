@@ -556,7 +556,11 @@ class FieldConverter(osv.AbstractModel):
                             field_name, record._name, exc_info=True)
             content = None
 
-        if context and context.get('inherit_branding'):
+        inherit_branding = context and context.get('inherit_branding')
+        if not inherit_branding and context and context.get('inherit_branding_auto'):
+            inherit_branding = self.pool['ir.model.access'].check(cr, uid, record._name, 'write', False, context=context)
+
+        if inherit_branding:
             # add branding attributes
             g_att += ''.join(
                 ' %s="%s"' % (name, escape(value))

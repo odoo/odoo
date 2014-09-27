@@ -482,7 +482,7 @@ class google_calendar(osv.AbstractModel):
         return res
 
     def remove_references(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         reset_data = {
             'google_calendar_rtoken': False,
             'google_calendar_token': False,
@@ -512,7 +512,7 @@ class google_calendar(osv.AbstractModel):
         #     status, response = gs_pool._do_request(cr, uid, url, params, type='GET', context=context)
         #     return int(status) != 410
 
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
 
         st, current_google, ask_time = self.get_calendar_primary_id(cr, uid, context=context)
 

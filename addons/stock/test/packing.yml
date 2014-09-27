@@ -138,13 +138,13 @@
   !python {model: stock.picking}: |
     backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
     assert backorder_ids, "Backorder should have been created"
+    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_prepare_partial(cr, uid, backorder_ids, context=context)
     picking = self.browse(cr, uid, backorder_ids[0])
     assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
     for pack_op in picking.pack_operation_ids:
         assert pack_op.product_qty == 1, "Wrong quantity in pack operation (%s found instead of 1)" % (pack_op.product_qty)
         assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
-    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_transfer(cr, uid, backorder_ids, context=context)
 - 
   Check there are still 0 pieces in stock 
