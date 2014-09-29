@@ -119,7 +119,7 @@ class hr_job(osv.Model):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
+        'state': fields.selection([('recruit', 'Recruitment in Progress'), ('open', 'Recruitment Closed')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
                                   help="Set whether the recruitment process is open or closed for this job position."),
