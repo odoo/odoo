@@ -24,7 +24,7 @@
                     </div>
                     <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
                         <div class="email_preview_border">
-                            <div t-field="template.body_html" class="email_preview js_content"/>
+                            <div t-field="html_sanitize(template.body_html)" class="email_preview js_content"/>
                         </div>
                         <h4 t-field="template.name"/>
                         <button class="btn btn-primary js_template_set">Select</button>
