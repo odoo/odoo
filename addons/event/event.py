@@ -45,6 +45,7 @@ class event_type(models.Model):
 class event_event(models.Model):
     """Event"""
     _name = 'event.event'
+    _description = 'Event'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_begin'
 
