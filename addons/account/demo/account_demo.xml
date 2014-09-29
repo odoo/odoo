@@ -8,7 +8,6 @@
         
         <record id="data_fiscalyear" model="account.fiscalyear">
             <field eval="'Fiscal Year X '+time.strftime('%Y')" name="name"/>
-            <field eval="'FY'+time.strftime('%Y')" name="code"/>
             <field eval="time.strftime('%Y')+'-01-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-12-31'" name="date_stop"/>
             <field name="company_id" ref="base.main_company"/>

@@ -268,9 +268,9 @@ class account_fiscalyear_close(osv.osv_memory):
                    'period_id': period.id
                })]
         cr.execute('UPDATE account_fiscalyear ' \
-                    'SET end_journal_period_id = %s ' \
+                    'SET end_journal_id = %s ' \
                     'WHERE id = %s', (ids[0], old_fyear.id))
-        obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
+        obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_id'], [old_fyear.id], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

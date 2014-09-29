@@ -34,7 +34,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         move_obj = self.pool.get('account.move')
 
         data = self.browse(cr, uid, ids, context=context)[0]
-        period_journal = data.fyear_id.end_journal_period_id or False
+        period_journal = data.fyear_id.end_journal_id or False
         if not period_journal:
             raise osv.except_osv(_('Error!'), _("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
 

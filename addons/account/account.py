@@ -868,14 +868,13 @@ class account_fiscalyear(osv.osv):
     _description = "Fiscal Year"
     _columns = {
         'name': fields.char('Fiscal Year', required=True),
-        'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False),
-        'end_journal_period_id': fields.many2one(
-             'account.journal.period', 'End of Year Entries Journal',
+        'end_journal_id': fields.many2one(
+             'account.journal', 'End of Year Entries Journal',
              readonly=True, copy=False),
     }
     _defaults = {
@@ -949,16 +948,6 @@ class account_fiscalyear(osv.osv):
             else:
                 return []
         return ids
-
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        if args is None:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
 
 
 class account_period(osv.osv):

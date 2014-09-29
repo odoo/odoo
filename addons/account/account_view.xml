@@ -16,9 +16,8 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="code"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="end_journal_period_id"/>
+                            <field name="end_journal_id"/>
                         </group>
                         <group>
                             <field name="date_start"/>
@@ -45,7 +44,6 @@
             <field name="model">account.fiscalyear</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state == 'done' " string="Fiscalyear">
-                    <field name="code"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
@@ -57,7 +55,7 @@
             <field name="model">account.fiscalyear</field>
             <field name="arch" type="xml">
                 <search string="Search Fiscalyear">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Fiscal Year"/>
+                    <field name="name" string="Fiscal Year"/>
                     <filter string="Open" domain="[('state','=','draft')]" icon="terp-camera_test"/>
                     <filter string="Closed" domain="[('state','=','done')]" icon="terp-dialog-close"/>
                     <field name="state"/>
