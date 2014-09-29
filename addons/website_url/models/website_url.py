@@ -22,6 +22,7 @@ class website_alias(models.Model):
     count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
     short_url = fields.Char(string="Short URL", compute='_short_url')
     alias_clicks = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
+    is_archived = fields.Boolean(string='Archived', default=False)
 
     @api.one
     @api.depends('alias_clicks.id')
@@ -60,10 +61,14 @@ class website_alias(models.Model):
         # We use a custom method to convert the record to a dictionnary (instead of .read)
         # because we integreted the names of the UTMs (like source_id.name)
 
-        return {'count':self.count, 'url':self.url, 'write_date':self.write_date, 'short_url':self.short_url,
+        return {'code':self.code, 'count':self.count, 'url':self.url, 'write_date':self.write_date, 'short_url':self.short_url,
                         'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
                         'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
                         'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
+
+    @api.one
+    def archive(self):
+        return self.update({'is_archived':True})
 
     @api.multi
     def action_view_statistics(self):
@@ -82,7 +87,7 @@ class website_alias(models.Model):
 
     @api.model
     def recent_links(self):
-        return self.search([], order='write_date DESC')
+        return self.search([('is_archived', '=', False)], order='write_date ASC')
 
     @api.model
     def create_shorten_url(self, url, tracking_fields):

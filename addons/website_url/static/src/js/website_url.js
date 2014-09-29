@@ -6,12 +6,25 @@
     openerp.website_url = {};
     
     openerp.website_url.RecentLinkBox = openerp.Widget.extend({
-        init: function() {
-            // console.log('init');
+        template: 'website_url.RecentLink',
+        init: function(link_obj) {
+            this.link_obj = link_obj;
         },
-        start: function(link_obj) {
-            // console.log(link_obj);
-            $('#recent_links').prepend(QWeb.render("website_url.RecentLink", link_obj));
+        start: function() {
+            var self = this;
+
+            this.$('.archive').click(function(event) {
+                event.preventDefault();
+                self.archive();
+            });
+        },
+        archive: function() {
+            var self = this;
+
+            openerp.jsonRpc('/r/archive', 'call', {'code' : self.link_obj.code})
+                .then(function(result) {
+                    self.$el.remove();
+                });
         },
     });
 
@@ -21,7 +34,7 @@
             {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
         );
 
-        // Add the RecentLinkBox widget when the user generate the link
+        // Add the RecentLinkBox widget and send the form when the user generate the link
         var client = new ZeroClipboard($("#btn_shorten_url"));
         $("#btn_shorten_url").click( function() {
             if($(this).attr('class').indexOf('btn_copy') === -1) {
@@ -42,7 +55,8 @@
                     })
                     .then(function(link) {
                         console.log(link);
-                        $('#recent_links').prepend(new openerp.website_url.RecentLinkBox().start(link));
+                        var recent_link_box = new openerp.website_url.RecentLinkBox(link);
+                        recent_link_box.prependTo($('#recent_links'));
                     });
             }
         });
@@ -58,9 +72,10 @@
             .then(function() {
                 openerp.jsonRpc('/r/recent_links', 'call')
                     .then(function(result) {
+                        var $recent_links = $('#recent_links');
                         for(var  i = 0 ; i < result.length ; i++) {
-                            // console.log(result[i]);
-                            $('#recent_links').prepend(new openerp.website_url.RecentLinkBox().start(result[i]));
+                            var recent_link_box = new openerp.website_url.RecentLinkBox(result[i]);
+                            recent_link_box.prependTo($recent_links);
                         }
                     });
             });

@@ -6,18 +6,6 @@ from openerp.tools.translate import _
 from openerp.http import request
 
 class Website_Url(http.Controller):
-    @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
-    def full_url_redirect(self, code, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        (ip, country_code) = (request.httprequest.remote_addr, request.session.geoip.get('country_code'))
-
-        redirect_url = request.registry['website.alias'].get_url_from_code(cr, uid, code, ip, country_code, context=context)
-
-        if redirect_url is not None:
-            return werkzeug.utils.redirect(redirect_url, 301)
-        else:
-            return werkzeug.utils.redirect('', 301)
-
     @http.route(['/r/new'], type='json', auth='user', methods=['POST'], website=True)
     def create_shorten_url(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -62,6 +50,19 @@ class Website_Url(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         return request.registry['website.alias'].recent_links(cr, uid, context=context).to_json()
 
+    @http.route(['/r/archive'], type='json', auth='user', methods=['POST'], website=True)
+    def archive_link(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        alias_obj = request.registry['website.alias']
+        alias_id = alias_obj.search(cr, uid, [('code', '=', post['code'])])
+        alias = alias_obj.browse(cr, uid, alias_id, context=context)
+
+        print alias
+
+        return alias.archive()
+
+
     """@http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -84,3 +85,14 @@ class Website_Url(http.Controller):
             
         return 
 
+    @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
+    def full_url_redirect(self, code, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        (ip, country_code) = (request.httprequest.remote_addr, request.session.geoip.get('country_code'))
+
+        redirect_url = request.registry['website.alias'].get_url_from_code(cr, uid, code, ip, country_code, context=context)
+
+        if redirect_url is not None:
+            return werkzeug.utils.redirect(redirect_url, 301)
+        else:
+            return werkzeug.utils.redirect('', 301)
