@@ -126,6 +126,11 @@ class website_hr_recruitment(http.Controller):
                 'datas_fname': post['ufile'].filename,
             }
             env['ir.attachment'].create(attachment_value)
+        job_id = value.get("job_id")
+        if job_id:
+            job = env['hr.job'].search([('id','=',job_id)])
+            if job.survey_id and not job.survey_id.auth_required:
+               return request.redirect("%s" % job.survey_id.public_url)
         return request.render("website_hr_recruitment.thankyou", {})
 
 # vim :et:
