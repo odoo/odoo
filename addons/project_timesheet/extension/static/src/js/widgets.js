@@ -32,9 +32,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.add_activity_screen = new project_timesheet.AddActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.add_activity_screen.appendTo(this.$('.screens'));
 
-            this.modify_activity_screen = new project_timesheet.ModifyActivityScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
-            this.modify_activity_screen.appendTo(this.$('.screens'));
-
             this.sync_screen = new project_timesheet.SyncScreen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.sync_screen.appendTo(this.$('.screens'));
 
@@ -42,13 +39,13 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.stat_screen.appendTo(this.$('.screens'));
 
             /*----------------Screen Selector------------------*/
+            //TODO: change activity screen to activity_list and add_activity to simply activity for proper naming convention
             this.screen_selector = new project_timesheet.ScreenSelector({
                 project_timesheet_model: project_timesheet.project_timesheet_model,
                 screen_set:{
                     'activity': this.activity_screen,
                     'sync' : this.sync_screen,
                     'add_activity': this.add_activity_screen,
-                    'modify_screen':    this.modify_activity_screen,
                     'stat' : this.stat_screen,
                 },
                 default_screen: 'activity',

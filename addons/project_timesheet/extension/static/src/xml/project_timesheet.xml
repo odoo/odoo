@@ -37,7 +37,7 @@
                                             <div>
                                                 <div>
                                                     <strong><t t-esc="activity.project_id[1]"></t></strong>
-                                                    <span class="pull-right pt_duration_line"><t t-esc="activity.hours"></t></span> <!-- call format_hour method of this screen -->
+                                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.hours)"></t></span> <!-- call format_hour method of this screen -->
                                                 </div>
                                                 <div class="pt_description_task">
                                                     <t t-esc="activity.task_id[1]"></t>

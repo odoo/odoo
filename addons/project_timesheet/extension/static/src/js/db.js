@@ -5,6 +5,7 @@ function odoo_project_timesheet_db(project_timesheet) {
     project_timesheet.project_timesheet_db = openerp.Class.extend({
         init: function(options) {
             this.virtual_id_prefix = "virtual_id_";
+            this.virtual_id_regex = /^virtual_id_.*$/;
         },
         //To load data from localstorage
         load: function(name, def) {

@@ -63,9 +63,15 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         add_task: function(data) {
             //TO Implement, will create new model object of task and add it into tasks collection
-            var task = new project_timesheet.task_model({}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
-            task.add_activity(data);
-            this.get('tasks').add(task);
+            tasks_collection = this.get("tasks");
+            if (tasks_collection.get(data.task_id[0])) {
+                var task_model = tasks_collection.get(data.task_id[0]);
+                task_model.add_activity(data);
+            } else {
+                var task = new project_timesheet.task_model({}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
+                task.add_activity(data);
+                this.get('tasks').add(task);
+            }
         },
     });
 
@@ -75,6 +81,7 @@ function odoo_project_timesheet_models(project_timesheet) {
 
     //Once data has been sync, read project, then task and activities and store it into localstorage also
     //While sync read model, this following model's save_to_server will fetch project, and project will fetch task in format such that its one2many
+    //Also add the logic of destroy model
 
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
         //initialize: function(session, attributes) {
@@ -117,15 +124,25 @@ function odoo_project_timesheet_models(project_timesheet) {
             //TO Implement, will create new object of model if data having virtual_id and add it into collection, then it will call add task for that collection model
             //It also finds project model from collection and add task in that model if project_id passed in data is already available
             //We can find model by id, coolection.get(id of model(e.g. id of project model)), id is magic attribute of model
-            var project = new project_timesheet.project_model({}, {id: data['project_id'][0], name: data['project_id'][1]});
-            project.add_task(data);
-            this.get('projects').add(project);
+            var projects_collection = this.get("projects");
+            if(projects_collection.get(data.project_id[0])) {
+                var project_model = projects_collection.get(data.project_id[0]);
+                project_model.add_task(data);
+            } else {
+                var project = new project_timesheet.project_model({}, {id: data['project_id'][0], name: data['project_id'][1]});
+                project.add_task(data);
+                this.get('projects').add(project);
+            }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
-            console.log("project is ::: ", project);
         },
         load_stored_data: function() {
-            //TO Implement, this will load localstorage data and call add project, add project will call add task, add task will call add activity
-            //First do group by project and then task and then call add projects with grouped data, so add new project will have proper data, and it can call add_task and so on
+            //We should simply call add_project method for activity_record which having project and task details, 
+            //project model will call add_task, also check if project model is also available then will not create new model else create new model and push it into projects collection
+            var self = this;
+            var stored_activities = this.project_timesheet_db.load("activities");
+            _.each(stored_activities, function(record) {
+                self.add_project(record);
+            });
         },
         load_server_data: function() {
             var self = this;
@@ -135,6 +152,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
             return new project_timesheet.Model(project_timesheet.session, "project.task.work").call("search_read", {
                 domain: [["date", ">=", start_date], ["date", "<=", end_date]],
+                fields: ["id", "task_id", "name", "hours", "date"]
             }).then(function(work_activities) {
                 var tasks = _.pluck(work_activities, "task_id");
                 tasks = _.pluck(_.groupBy(tasks), 0);
@@ -155,8 +173,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                         });
                     });
                     self.project_timesheet_db.save("projects", projects);
-                    self.project_timesheet_db.add_activities(work_activities);
-                    self.load_stored_data();
                 });
             });
         },

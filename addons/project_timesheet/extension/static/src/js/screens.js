@@ -418,9 +418,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_button_timer: function() {
             //TO Implement
         },
+        format_duration: function(field_val) {
+            var data = field_val.toString().split(".");
+            if (data[1]) {
+                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2);
+            }
+            return data.join(".");
+        },
     });
 
-    //TODO: Modify and Add activity will use same template, special option is passed, show and render method will be overridden
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "AddActivityScreen",
         init: function(project_timesheet_widget, options) {
@@ -486,8 +492,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
             var project_activity_data = this.get_from_data();
             project_activity_data['id'] = this.current_id; //Activity Existing ID
-            console.log("project_activity_data are :::: ", project_activity_data);
-            //this.project_timesheet_model.update_project(project_activity_data);
+            this.project_timesheet_model.add_project(project_activity_data);
         },
         show: function() {
             var self = this;
@@ -523,8 +528,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
             return data;
         },
-        //This method is called when its edit mode(i.e. when row is clicked from Activity Listview)
         set_screen_values: function(screen_data) {
+            //This method is called when its edit mode(i.e. when row is clicked from Activity Listview)
             var self = this;
             this.mode = "edit";
             this.current_id = screen_data['id'];
