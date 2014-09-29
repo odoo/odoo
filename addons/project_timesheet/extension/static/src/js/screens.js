@@ -229,7 +229,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.screen_set[screen_name] = screen;
             return this;
         },
-        set_current_screen: function(screen_name, params, refresh){
+        set_current_screen: function(screen_name, screen_data_set, params, refresh){
             var screen = this.screen_set[screen_name];
             if(!screen){
                 console.error("ERROR: set_current_screen("+screen_name+") : screen not found");
@@ -254,6 +254,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
                 this.current_screen = screen;
                 this.current_screen.show();
+                if(screen_data_set && this.current_screen.set_screen_values) {
+                    this.current_screen.set_screen_values(screen_data_set);
+                }
             }
         },
         get_current_screen: function(){
@@ -269,6 +272,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         get_current_screen_param: function(param){
             var params = this.project_timesheet_model.get_screen_data('params');
             return params ? params[param] : undefined;
+        },
+        set_screen_values: function() {
+            //void method, child will implement if needed
         },
         set_default_screen: function(){
             this.set_current_screen(this.default_screen);
@@ -289,7 +295,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
             this.hidden = false;
             if(this.$el){
-                this.$el.removeClass('oe_hidden');
+                this.$el.removeClass('o_hidden');
             }
         },
 
@@ -304,7 +310,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         hide: function(){
             this.hidden = true;
             if(this.$el){
-                this.$el.addClass('oe_hidden');
+                this.$el.addClass('o_hidden');
             }
         },
 
@@ -316,7 +322,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super();
             if(this.hidden){
                 if(this.$el){
-                    this.$el.addClass('oe_hidden');
+                    this.$el.addClass('o_hidden');
                 }
             }
         },
@@ -364,6 +370,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
+            this.bind_events();
+        },
+        bind_events: function() {
+            var self = this;
             this.pad_table_to(11);
             this.$el.find(".pt_timer_button").on("click", this.on_button_timer);
             this.$el.find(".pt_add_activity").on("click", function() {
@@ -375,6 +385,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
             });
+            this.$el.find(".activity_row").on("click", this.on_row_click);
         },
         show: function() {
             var self = this;
@@ -383,7 +394,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
-            //TODO: Re-render template, as it is possible that we have new entries
+            //Re-render template, as it is possible that we have new entries
+            this.renderElement();
+            this.bind_events();
         },
         pad_table_to: function(count) {
             if (this.activities.length >= count) {
@@ -394,45 +407,39 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $rows.appendTo(this.$el.find(".activity_row:last").parent());
         },
         renderElement: function() {
-            this.activities = this.project_timesheet_model.project_timesheet_db.get_activities();
+            this.activities = this.project_timesheet_db.get_activities();
             this.replaceElement(QWeb.render('ActivityScreen', {widget: this, activities: this.activities}));
         },
-        /*
-        render: function() {
-            var activities = options.project_timesheet_model.project_timesheet_db.get_activities();
-            console.log("activities are :: ",activities);
-            QWeb.render('ActivityScreen', {widget: this, activities: activities});
+        on_row_click: function(event) {
+            var activity_id = $(event.currentTarget).data("activity_id");
+            var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
+            this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
         },
-        */
         on_button_timer: function() {
             //TO Implement
-        }
+        },
     });
 
     //TODO: Modify and Add activity will use same template, special option is passed, show and render method will be overridden
-    //TODO: Create many2one widget which takes model name and dataset(i.e. our localstorage data, so that we can use it in any screen)
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
         template: "AddActivityScreen",
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
+            this.mode = options.mode || 'create';
+            this.current_id = null;
             this.project_timesheet_widget = project_timesheet_widget;
         },
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
             this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
+            this.$el.find(".pt_btn_edit_activity").on("click", this.on_activity_edit);
             var project_m2o = new project_timesheet.FieldMany2One(this, {model: 'projects', classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             project_m2o.replace(this.$el.find(".project-placeholder"));
             var task_m2o = new project_timesheet.FieldMany2One(this, {model: 'tasks', classname: "pt_input_task pt_required", label: "Task", id_for_input: "task_id"});
             task_m2o.replace(this.$el.find(".task-placeholder"));
         },
-        on_activity_add: function() {
-            //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
-            //Simply generate value such that project model can accept it, we will then call add project, now project will have logic
-            //which finds project model based project_id from project's collection and for that model call add_task....
-            if (!this.is_valid_data()) {
-                return;
-            }
+        get_from_data: function() {
             var project_activity_data = {};
             $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             //TODO: Simplify this
@@ -456,12 +463,42 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         break;
                 }
             });
+            return project_activity_data;
+        },
+        on_activity_add: function() {
+            //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
+            //Simply generate value such that project model can accept it, we will then call add project, now project will have logic
+            //which finds project model based project_id from project's collection and for that model call add_task....
+            if (!this.is_valid_data()) {
+                return;
+            }
+            var project_activity_data = this.get_from_data();
             var momObj = new moment();
             var date = project_timesheet.datetime_to_str(momObj._d);
             project_activity_data['date'] = date; //Current date in accepted format
             project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity");
+        },
+        on_activity_edit: function() {
+            if (!this.is_valid_data()) {
+                return;
+            }
+            var project_activity_data = this.get_from_data();
+            project_activity_data['id'] = this.current_id; //Activity Existing ID
+            console.log("project_activity_data are :::: ", project_activity_data);
+            //this.project_timesheet_model.update_project(project_activity_data);
+        },
+        show: function() {
+            var self = this;
+            $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
+            $form_data.val('');
+            this.$el.find(".pt_btn_add_activity").removeClass("o_hidden");
+            if(!this.$el.find(".pt_btn_edit_activity").hasClass("o_hidden")) {
+                this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
+            }
+            $form_data.removeData();
+            this._super();
         },
         is_valid_data: function() {
             var validity = true;
@@ -479,18 +516,41 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             return validity;
         },
-    });
-
-    //When modified, we will have data-activity_id as a data, we will fetch that id from activity collection using collection.get(id),
-    //we will then change the activity and call add project by collecting all info of form and also replace exisiting activity in localstorage
-    project_timesheet.ModifyActivityScreen = project_timesheet.ScreenWidget.extend({
-        template: "ModifyActivityScreen",
-        init: function(project_timesheet_widget, options) {
-            this._super.apply(this, arguments);
+        format_duration: function(field_val) {
+            var data = field_val.toString().split(".");
+            if (data[1]) {
+                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2)
+            }
+            return data;
         },
-        start: function() {
-            this._super.apply(this, arguments);
-        }
+        //This method is called when its edit mode(i.e. when row is clicked from Activity Listview)
+        set_screen_values: function(screen_data) {
+            var self = this;
+            this.mode = "edit";
+            this.current_id = screen_data['id'];
+            self.$el.find(".pt_btn_edit_activity").toggleClass("o_hidden");
+            self.$el.find(".pt_btn_add_activity").toggleClass("o_hidden");
+            _.each(screen_data, function(field_val, field_key) {
+                switch(field_key) {
+                    case "project_id":
+                        self.$el.find("#project_id").val(field_val[1]);
+                        self.$el.find("#project_id").data("id", field_val[0]);
+                        break;
+                    case "task_id":
+                        self.$el.find("#task_id").val(field_val[1]);
+                        self.$el.find("#task_id").data("id", field_val[0]);
+                        break;
+                    case "hours":
+                        var formatted = self.format_duration(field_val);
+                        self.$el.find("#hours").val(formatted[0]);
+                        self.$el.find("#minutes").val(formatted[1]);
+                        break;
+                    case "name":
+                        self.$el.find("#"+field_key).val(field_val);
+                        break;
+                }
+            });
+        },
     });
 
     //TODO: We can override show method, when user document's cookie is already set with session_id then do not ask for server name, db, username, and password, directy give Synchronize button

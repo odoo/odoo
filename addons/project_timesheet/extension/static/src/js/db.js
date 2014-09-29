@@ -23,6 +23,17 @@ function odoo_project_timesheet_db(project_timesheet) {
         get_activities: function() {
             return this.load("activities", []);
         },
+        get_activity_by_id: function(id) {
+            var activities = this.load("activities", []);
+            var activity = {};
+            for(var i=0; i<activities.length; i++) {
+                if (activities[i].id == id) {
+                    activity = activities[i];
+                    break;
+                }
+            }
+            return activity;
+        },
         //TODO: We should handle it better way, if same id activity is there then replace it otherwise add it and then save whole activities list in db
         add_activities: function(activities) {
             //This method will replace activities, inshort reload with new activities
