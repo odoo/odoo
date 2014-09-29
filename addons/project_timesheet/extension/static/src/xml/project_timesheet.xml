@@ -26,28 +26,7 @@
             <tr>
                 <td class="pt_activity_col">
                     <div class="pt_activity_body">
-                        <table class="table table-responsive table-striped">
-                            <tbody>
-                                <tr>
-                                    <td><span class="pt_add_activity">+ Add Activity</span></td>
-                                </tr>
-                                <t t-foreach="activities" t-as="activity">
-                                    <tr class="activity_row" t-att-data-activity_id="activity.id">
-                                        <td>
-                                            <div>
-                                                <div>
-                                                    <strong><t t-esc="activity.project_id[1]"></t></strong>
-                                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.hours)"></t></span> <!-- call format_hour method of this screen -->
-                                                </div>
-                                                <div class="pt_description_task">
-                                                    <t t-esc="activity.task_id[1]"></t>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                        
                     </div>
                 </td>
             </tr>
@@ -56,6 +35,28 @@
                     <t t-call="Footer"></t>
                 </td>
             </tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="ActivityList">
+        <table class="table table-responsive table-striped">
+            <tbody>
+                <t t-foreach="activities" t-as="activity">
+                    <tr class="activity_row" t-att-data-activity_id="activity.id">
+                        <td>
+                            <div>
+                                <div>
+                                    <strong><t t-esc="activity.project_id[1]"></t></strong>
+                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.hours)"></t></span> <!-- call format_hour method of this screen -->
+                                </div>
+                                <div class="pt_description_task">
+                                    <t t-esc="activity.task_id[1]"></t>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </t>
             </tbody>
         </table>
     </t>
@@ -92,16 +93,7 @@
                 </div>
                 <hr/>
                 <h2>Quick Select</h2>
-                <table class="table table-responsive table-hover">
-                    <tbody>
-                      <tr>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                </table>
+                <div class="pt_activity_body"></div>
               </div>
             </div>
         </div>

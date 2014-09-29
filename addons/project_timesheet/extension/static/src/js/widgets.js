@@ -53,6 +53,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
     });
 
+    //TODO: Allow tab key creation, when user enters text and press tab key, it should create many2one record
     project_timesheet.FieldMany2One = openerp.Widget.extend({
         template: "FieldMany2One",
         init: function(parent, options) {
@@ -154,6 +155,31 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             $target = $(e.target);
             $target.data("id", virtual_id);
             $target.val(term);
+        },
+    });
+
+    project_timesheet.ActivityListView = openerp.Widget.extend({
+        template: "ActivityList",
+        init: function() {
+            this._super.apply(this, arguments);
+            this.project_timesheet_model = project_timesheet.project_timesheet_model;
+            this.project_timesheet_db = this.project_timesheet_model.project_timesheet_db;
+            this.activities = [];
+        },
+        start: function() {
+            this._super.apply(this, arguments);
+        },
+        renderElement: function() {
+            this.activities = this.project_timesheet_db.get_activities();
+            console.log("Inside renderElement of ActivityListView :::: ", this.activities);
+            this.replaceElement(QWeb.render(this.template, {widget: this, activities: this.activities}));
+        },
+        format_duration: function(field_val) {
+            var data = field_val.toString().split(".");
+            if (data[1]) {
+                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2);
+            }
+            return data.join(".");
         },
     });
 
