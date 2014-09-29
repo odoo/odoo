@@ -2,7 +2,6 @@
   In order to test Generate Fiscalyear Opening Entries wizard of OpenERP I first create a fiscalyear to which the entries will move
 -
   !record {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0}:
-    code: !eval "'FY%s'% (datetime.now().year+1)"
     company_id: base.main_company
     date_start: !eval "'%s-01-01' %(datetime.now().year-1)"
     date_stop: !eval "'%s-12-31' %(datetime.now().year-1)"
