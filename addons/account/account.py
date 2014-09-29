@@ -1143,29 +1143,6 @@ class account_move(osv.osv):
     _description = "Account Entry"
     _order = 'id desc'
 
-    def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
-        '''
-        Prepares and returns a dictionary of values, ready to be passed to create() based on the parameters received.
-        '''
-        if not date:
-            date = fields.date.today()
-        period_obj = self.pool.get('account.period')
-        if not company_id:
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            company_id = user.company_id.id
-        if context is None:
-            context = {}
-        #put the company in context to find the good period
-        ctx = context.copy()
-        ctx.update({'company_id': company_id})
-        return {
-            'journal_id': journal_id,
-            'date': date,
-            'period_id': period_obj.find(cr, uid, date, context=ctx)[0],
-            'ref': ref,
-            'company_id': company_id,
-        }
-
     def name_get(self, cursor, user, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
