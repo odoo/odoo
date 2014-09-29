@@ -157,13 +157,12 @@ class StockMove(osv.osv):
         @param restrict_lot_id: optionnal parameter that allows to restrict the choice of quants on this specific lot
         @param restrict_partner_id: optionnal parameter that allows to restrict the choice of quants to this specific partner
         @param consumed_for: optionnal parameter given to this function to make the link between raw material consumed and produced product, for a better traceability
-        @return: Consumed lines
+        @return: New lines created if not everything was consumed for this line
         """
         if context is None:
             context = {}
         res = []
         production_obj = self.pool.get('mrp.production')
-        uom_obj = self.pool.get('product.uom')
 
         if product_qty <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
@@ -175,7 +174,6 @@ class StockMove(osv.osv):
             else:
                 ids2.append(move.id)
 
-        toassign_move_ids = []
         prod_orders = set()
         for move in self.browse(cr, uid, ids2, context=context):
             prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
@@ -185,18 +183,17 @@ class StockMove(osv.osv):
             quantity_rest = move_qty - product_qty
             if quantity_rest > 0:
                 new_mov = self.split(cr, uid, move, quantity_rest, context=context)
-                if move.location_id.usage == 'internal':
-                    toassign_move_ids.append(new_mov)
-            res.append(move.id)
+                res.append(new_mov)
             vals = {'restrict_lot_id': restrict_lot_id,
                     'restrict_partner_id': restrict_partner_id,
                     'consumed_for': consumed_for}
             if location_id:
                 vals.update({'location_id': location_id})
             self.write(cr, uid, [move.id], vals, context=context)
-        self.action_done(cr, uid, res, context=context)
-        if toassign_move_ids:
-            self.action_assign(cr, uid, toassign_move_ids, context=context)
+        # Original moves will be the quantities consumed, so they need to be done
+        self.action_done(cr, uid, ids2, context=context)
+        if res:
+            self.action_assign(cr, uid, res, context=context)
         if prod_orders:
             production_obj.signal_workflow(cr, uid, list(prod_orders), 'button_produce')
         return res

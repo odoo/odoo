@@ -220,11 +220,13 @@ class mrp_bom(osv.osv):
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         # order to prioritize bom with product_id over the one without
-        ids = self.search(cr, uid, domain, order='product_id')
+        ids = self.search(cr, uid, domain, order='product_id', context=context)
+        # Search a BoM which has all properties specified, or if you can not find one, you could
+        # pass a BoM without any properties
         bom_empty_prop = False
-        for bom in self.pool.get('mrp.bom').browse(cr, uid, ids):
+        for bom in self.pool.get('mrp.bom').browse(cr, uid, ids, context=context):
             if not set(map(int, bom.property_ids or [])) - set(properties or []):
-                if not bom.property_ids:
+                if properties and not bom.property_ids:
                     bom_empty_prop = bom.id
                 else:
                     return bom.id
@@ -827,7 +829,6 @@ class mrp_production(osv.osv):
                 scheduled_qty[scheduled.product_id.id] = qty
         dicts = {}
         # Find product qty to be consumed and consume it
-        quants_taken = []
         for product_id in scheduled_qty.keys():
 
             consumed_qty = consumed_data.get(product_id, 0.0)
@@ -909,9 +910,7 @@ class mrp_production(osv.osv):
                 produced_products[produced_product.product_id.id] += produced_product.product_qty
 
             for produce_product in production.move_created_ids:
-                produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
-                rest_qty = (subproduct_factor * production.product_qty) - produced_qty
                 lot_id = False
                 if wiz:
                     lot_id = wiz.lot_id.id
