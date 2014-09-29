@@ -336,11 +336,6 @@
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
                                 <field name="currency_id" class="oe_inline"/>
-                                <button name="%(action_account_change_currency)d" type="action"
-                                  class="oe_inline oe_link oe_edit_only"
-                                  string="(change)"
-                                  attrs="{'invisible':[('state','!=','draft')]}"
-                                  groups="account.group_account_user"/>
                             </div>
                         </group>
                     </group>
