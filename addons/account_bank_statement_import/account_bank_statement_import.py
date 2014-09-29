@@ -1,21 +1,35 @@
 # -*- coding: utf-8 -*-
 
-import base64
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 import logging
 _logger = logging.getLogger(__name__)
 
+_IMPORT_FILE_TYPE = [('none', _('No Import Format Available'))]
+
+def add_file_type(selection_value):
+    global _IMPORT_FILE_TYPE
+    if _IMPORT_FILE_TYPE[0][0] == 'none':
+        _IMPORT_FILE_TYPE = [selection_value]
+    else:
+        _IMPORT_FILE_TYPE.append(selection_value)
+
 class account_bank_statement_import(osv.TransientModel):
     _name = 'account.bank.statement.import'
     _description = 'Import Bank Statement'
 
+    def _get_import_file_type(self, cr, uid, context=None):
+        return _IMPORT_FILE_TYPE
+
     _columns = {
         'data_file': fields.binary('Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.'),
+        'file_type': fields.selection(_get_import_file_type, 'File Type', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, help="The journal for which the bank statements will be created"),
     }
+
+    def _get_first_file_type(self, cr, uid, context=None):
+        return self._get_import_file_type(cr, uid, context=context)[0][0]
 
     def _get_default_journal(self, cr, uid, context=None):
         company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement', context=context)
@@ -23,6 +37,7 @@ class account_bank_statement_import(osv.TransientModel):
         return journal_ids and journal_ids[0] or False
 
     _defaults = {
+        'file_type': _get_first_file_type,
         'journal_id': _get_default_journal,
     }
 
@@ -58,10 +73,6 @@ class account_bank_statement_import(osv.TransientModel):
                 bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, bank_account_vals, context=context)
         return bank_account_id, partner_id
 
-    # Each module adding a file support must extends this method. It processes the file if it can, returns super otherwise, resulting in a chain of responsability
-    def _process_file(self, cr, uid, data_file=None, journal_id=False, context=None):
-        raise osv.except_osv(_('Error'), _('Could not make sense of the given file.\nDid you install the module to support this file type ?'))
-
     def import_bank_statement(self, cr, uid, bank_statement_vals=False, context=None):
         """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values"""
         statement_ids = []
@@ -69,20 +80,17 @@ class account_bank_statement_import(osv.TransientModel):
             statement_ids.append(self.pool.get('account.bank.statement').create(cr, uid, vals, context=context))
         return statement_ids
 
+    def process_none(self, cr, uid, data_file, journal_id=False, context=None):
+        raise osv.except_osv(_('Error'), _('No available format for importing bank statement. You can install one of the file format available through the module installation.'))
+
     def parse_file(self, cr, uid, ids, context=None):
         """ Process the file chosen in the wizard and returns a list view of the imported bank statements"""
         data = self.browse(cr, uid, ids[0], context=context)
-        vals = self._process_file(cr, uid, base64.b64decode(data.data_file), data.journal_id.id, context=context)
+        vals = getattr(self, "process_%s" % data.file_type)(cr, uid, data.data_file, data.journal_id.id, context=context)
         statement_ids = self.import_bank_statement(cr, uid, vals, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
-        action = self.pool[model].browse(cr, uid, action_id, context=context)
-        return {
-            'name': action.name,
-            'tag': action.tag,
-            'context': {'statement_ids': statement_ids},
-            'type': 'ir.actions.client',
-        }
-
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
+        action = self.pool[model].read(cr, uid, action_id, context=context)
+        action['domain'] = "[('id', 'in', [" + ', '.join(map(str, statement_ids)) + "])]"
         return action
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
