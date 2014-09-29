@@ -44,7 +44,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'odoo developer documentation'
+project = u'odoo'
 copyright = u'2014, OpenERP s.a.'
 
 # The version info for the project you're documenting, acts as replacement for
