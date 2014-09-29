@@ -816,7 +816,8 @@ class mrp_production(osv.osv):
 
         #In case no product_qty is given, take the remaining qty to produce for the given production
         if not product_qty:
-            product_qty = uom_obj._compute_qty(cr, uid, production.uom_id.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
+            product_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
+        production_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id)
 
         scheduled_qty = {}
         for scheduled in production.product_lines:
@@ -844,8 +845,8 @@ class mrp_production(osv.osv):
                 dicts[product_id] = {}
 
             # total qty of consumed product we need after this consumption
-            if product_qty + produced_qty <= production.product_qty: 
-                total_consume = ((product_qty + produced_qty) * sched_product_qty / production.product_qty)
+            if product_qty + produced_qty <= production_qty:
+                total_consume = ((product_qty + produced_qty) * sched_product_qty / production_qty)
             else:
                 total_consume = sched_product_qty
             qty = total_consume - consumed_qty

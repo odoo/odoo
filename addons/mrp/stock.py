@@ -25,7 +25,7 @@ from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -181,7 +181,9 @@ class StockMove(osv.osv):
             if move_qty <= 0:
                 raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move_qty - product_qty
-            if quantity_rest > 0:
+            # Compare with numbers of move uom as we want to avoid a split with 0 qty
+            quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
+            if float_compare(quantity_rest_uom, 0, precision_rounding=move.product_uom.rounding) != 0:
                 new_mov = self.split(cr, uid, move, quantity_rest, context=context)
                 res.append(new_mov)
             vals = {'restrict_lot_id': restrict_lot_id,
