@@ -74,8 +74,8 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                     AND (am.state IN %s)\
                     AND (account_account.type IN %s)\
                     AND account_account.active\
-                    AND ((reconcile_id IS NULL)\
-                       OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                    AND ((l.reconcile_id IS NULL)\
+                       OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND (l.partner_id=res_partner.id)\
                     AND (l.date <= %s)\
                     AND ' + self.query + ' \
