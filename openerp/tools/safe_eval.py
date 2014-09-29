@@ -267,8 +267,6 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'False': False,
                 'None': None,
                 'str': str,
-                'globals': locals,
-                'locals': locals,
                 'bool': bool,
                 'dict': dict,
                 'list': list,
