@@ -53,7 +53,7 @@ $(document).ready(function () {
                             $(".js_remove .js_items").addClass("hidden");
                             $(".js_remove .js_item").removeClass("hidden");
                         } else {
-                            $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items").text().replace(/[0-9.,]+/, qty));
+                            $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items:first").text().replace(/[0-9.,]+/, qty));
                             $(".js_remove .js_item").addClass("hidden");
                         }
                     });
@@ -65,5 +65,14 @@ $(document).ready(function () {
                 });
             return false;
         });
-
+    
+    
+    $('#cart_products input.js_quantity').change(function () {
+        var value = $(this).val();
+        var $next = $(this).closest('tr').next('.optional_product');
+        while($next.length) {
+            $next.find('.js_quantity').text(value);
+            $next = $next.next('.optional_product');
+        }
+    });
 });
