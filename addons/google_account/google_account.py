@@ -129,7 +129,6 @@ class google_service(osv.osv_memory):
         return res
 
     def _do_request(self, cr, uid, uri, params={}, headers={}, type='POST', preuri="https://www.googleapis.com", context=None):
-        from pudb import set_trace; set_trace()
         if context is None:
             context = {}
 

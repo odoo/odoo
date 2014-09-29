@@ -67,4 +67,8 @@ class NewWebsite(osv.Model):
             request.context['experiment_id'] = 1        
         return website
 
+    def action_authorize(self,cr,uid,ids,context=None):
+        print 'Authorize'
+        self.pool['google.management'].authorize_google_uri(cr, uid, from_url='http://www.openerp.com', context=None)
+
 
