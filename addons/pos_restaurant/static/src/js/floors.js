@@ -14,6 +14,8 @@ function openerp_restaurant_floors(instance,module){
                 floors[i].tables = [];
                 self.floors_by_id[floors[i].id] = floors[i];
             }
+            // Ignore floorplan features if no floor specified, or feature deactivated
+            self.config.iface_floorplan = self.config.iface_floorplan && self.floors.length;
         },
     });
 
@@ -539,7 +541,7 @@ function openerp_restaurant_floors(instance,module){
         build_widgets: function(){
             var self = this;
             this._super();
-            if (this.pos.floors.length > 0) {
+            if (this.pos.config.iface_floorplan) {
                 this.floors_screen = new module.FloorScreenWidget(this,{});
                 this.floors_screen.appendTo(this.$('.screens'));
                 this.screen_selector.add_screen('floors',this.floors_screen);
@@ -556,10 +558,14 @@ function openerp_restaurant_floors(instance,module){
     // which is the floor plan.
     module.ScreenSelector.include({
         load_saved_screen: function(){
-            if (!this.pos.get_order()) {
-                this.set_current_screen(this.default_screen,null,'refresh');
+            if (this.pos.config.iface_floorplan) {
+                if (!this.pos.get_order()) {
+                    this.set_current_screen(this.default_screen,null,'refresh');
+                } else {
+                    this._super({default_screen:'products'});
+                }
             } else {
-                this._super({default_screen:'products'});
+                this._super.apply(this,arguments);
             }
         },
     });
@@ -582,16 +588,18 @@ function openerp_restaurant_floors(instance,module){
         renderElement: function(){
             var self = this;
             this._super();
-            if (this.pos.get_order()) {
-                if (this.pos.table && this.pos.table.floor) {
-                    this.$('.orders').prepend(QWeb.render('BackToFloorButton',{floor:this.pos.table.floor}));
-                    this.$('.floor-button').click(function(){
-                        self.floor_button_click_handler();
-                    });
+            if (this.pos.config.iface_floorplan) {
+                if (this.pos.get_order()) {
+                    if (this.pos.table && this.pos.table.floor) {
+                        this.$('.orders').prepend(QWeb.render('BackToFloorButton',{floor:this.pos.table.floor}));
+                        this.$('.floor-button').click(function(){
+                            self.floor_button_click_handler();
+                        });
+                    }
+                    this.$el.removeClass('oe_invisible');
+                } else {
+                    this.$el.addClass('oe_invisible');
                 }
-                this.$el.removeClass('oe_invisible');
-            } else {
-                this.$el.addClass('oe_invisible');
             }
         },
     });
@@ -627,17 +635,21 @@ function openerp_restaurant_floors(instance,module){
         // we need to prevent the creation of orders when there is no
         // table selected.
         add_new_order: function() {
-            if (this.table) {
-                _super_posmodel.add_new_order.call(this);
+            if (this.config.iface_floorplan) {
+                if (this.table) {
+                    _super_posmodel.add_new_order.call(this);
+                } else {
+                    console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                }
             } else {
-                console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                _super_posmodel.add_new_order.apply(this,arguments);
             }
         },
 
         // get the list of unpaid orders (associated to the current table)
         get_order_list: function() {    
             var orders = _super_posmodel.get_order_list.call(this);  
-            if (!this.table) {
+            if (!this.table || !this.config.iface_floorplan) {
                 return orders;
             } else {
                 var t_orders = [];
@@ -666,12 +678,16 @@ function openerp_restaurant_floors(instance,module){
         // When we cancel an order and there is multiple orders 
         // on the table, stay on the table.
         on_removed_order: function(removed_order,index,reason){
-            var order_list = this.get_order_list();
-            if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
-                this.set_order(order_list[index] || order_list[order_list.length -1]);
-            }else{
-                // back to the floor plan
-                this.set_table(null);
+            if (this.config.iface_floorplan) {
+                var order_list = this.get_order_list();
+                if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
+                    this.set_order(order_list[index] || order_list[order_list.length -1]);
+                }else{
+                    // back to the floor plan
+                    this.set_table(null);
+                }
+            } else {
+                _super_posmodel.on_removed_order.apply(this,arguments);
             }
         },
     });
