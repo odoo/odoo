@@ -25,7 +25,11 @@
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
                 <form string="Event Location">
-                    <field name="name"/>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

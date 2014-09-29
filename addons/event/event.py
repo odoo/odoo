@@ -278,13 +278,6 @@ class event_event(models.Model):
             self.seats_min = self.type.default_registration_min
             self.seats_max = self.type.default_registration_max
 
-    @api.onchange('date_begin')
-    def _onchange_date_begin(self):
-        if self.date_begin and not self.date_end:
-            date_begin = fields.Datetime.from_string(self.date_begin)
-            self.date_end = fields.Datetime.to_string(date_begin + timedelta(hours=1))
-
-
 class event_registration(models.Model):
     _name = 'event.registration'
     _description = 'Event Registration'
