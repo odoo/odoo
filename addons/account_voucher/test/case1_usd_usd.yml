@@ -16,7 +16,7 @@
   !python {model: res.currency.rate}: |
     from datetime import datetime
     curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
-    date = '%s-01-01' %(datetime.now().year)
+    date = '%s-01-01 00:00:00' %(datetime.now().year)
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
     self.write(cr, uid, ids, {'rate': 1.333333})
 -
