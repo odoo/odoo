@@ -106,7 +106,20 @@
         </record>
 
 
-    
+        <!-- Add the button in the kaban view of the opportunities-->
+        <record model="ir.ui.view" id="lead_button_call_kanban_view">
+            <field name="name">crm.lead.tocall</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <div class="oe_kanban_content">
+                     <a href="#" title="Add to call center calls">
+                        
+                        <img  class="oe_dial_lead_to_call_center_button_icon" src="/web/static/src/img/icons/terp-call-start.png" />
+                    </a>
+                </div>
+            </field>
+        </record>
 
         <menuitem name="Call Center" id="menu_crm_phone_callcenter"
             parent="crm.menu_crm_case_phone"

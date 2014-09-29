@@ -18,5 +18,10 @@
                 </li>
             </xpath>
         </template>
+        <template id="assets_backend" name="wardialing assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/crm_wardialing/static/src/js/crm_wardialing_kanban.js"></script>
+            </xpath>
+        </template>
     </data>
 </openerp>

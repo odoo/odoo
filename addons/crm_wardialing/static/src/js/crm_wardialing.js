@@ -80,7 +80,6 @@
             this.on("change:current_search", this, this.search_phonecalls_status);
             this.search_phonecalls_status();
             this.$el.find(".oe_dial_callbutton").click(function() {
-                
                 self.call_button();
             });
             return;
@@ -189,5 +188,7 @@
         });
     }
 
+    
     return crm_wardialing;
 })();
+

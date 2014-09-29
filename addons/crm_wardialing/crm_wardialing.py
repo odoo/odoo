@@ -27,9 +27,14 @@ class crm_phonecall(models.Model):
 class crm_wardialing_wizard(models.TransientModel):
 	_name = 'crm.wardialing.wizard';
 
+	@api.multi
 	def _default_opportunity(self):
-		return self.env['crm.lead'].browse(self._context.get('active_ids'))
-
+		if(self.env['crm.lead'].browse(self._context.get('active_ids'))):
+			return self.env['crm.lead'].browse(self._context.get('active_ids'))
+		else:
+			return self.env['crm.lead'].browse(self._context.get('opportunity_id'))
+		
+	
 	opportunity_ids = fields.Many2many('crm.lead', string="Opportunities", 
 		required=True, default=_default_opportunity)
 
@@ -44,5 +49,3 @@ class crm_wardialing_wizard(models.TransientModel):
 			phonecall.partner_id = opportunity.partner_id
 			phonecall.state = 'pending'
 		return {}
-
-	
