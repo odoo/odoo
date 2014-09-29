@@ -1,45 +1,81 @@
 (function () {
-    'use strict';
+   'use strict';
 
-    openerp.website_url = {}
+    var QWeb = openerp.qweb;
 
-    openerp.website_url.CampaignDialog = openerp.Widget.extend({
-        start: function(element) {
-            var self = this;
-
-            element.select2({
-                minimumInputLength: 1,
-                placeholder: ("Campaign name"),
-                query: function(q) {
-                    $.when(self.fetch_model('crm.tracking.campaign', 'search_campaign', q.term))
-                    .then(function(results) {
-                        var rs = _.map(results, function(r) {
-                            return {id: r.id, text: r.name};
-                        });
-
-                        q.callback({
-                            more: false,
-                            results: rs
-                        });
-                    });
-                },
-            });
+    openerp.website_url = {};
+    
+    openerp.website_url.RecentLinkBox = openerp.Widget.extend({
+        init: function() {
+            // console.log('init');
         },
-        fetch_model: function(model, method, term) {
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: model,
-                method: method,
-                args: [term],
-                kwargs: {context: openerp.website.get_context()},
+        start: function(link_obj) {
+            // console.log(link_obj);
+            $('#recent_links').prepend(QWeb.render("website_url.RecentLink", link_obj));
+        },
+    });
+
+    $(document).ready(function() {
+
+        ZeroClipboard.config(
+            {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
+        );
+
+        // Add the RecentLinkBox widget when the user generate the link
+        var client = new ZeroClipboard($("#btn_shorten_url"));
+        $("#btn_shorten_url").click( function() {
+            if($(this).attr('class').indexOf('btn_copy') === -1) {
+                var url = $("#url").val();
+                var campaign_id = $('#campaign-select').children(":selected").attr('id');
+                var medium_id = $('#channel-select').children(":selected").attr('id');
+                var source_id = $('#source-select').children(":selected").attr('id');
+
+                openerp.jsonRpc("/r/new", 'call', {'url' : url, 'campaign_id':campaign_id, 'medium_id':medium_id, 'source_id':source_id})
+                    .then(function (result) {
+                        console.log(result);
+
+                        var link = result[0];
+
+                        $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
+                        $("#btn_shorten_url").text("Copy").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
+                        return link;
+                    })
+                    .then(function(link) {
+                        console.log(link);
+                        $('#recent_links').prepend(new openerp.website_url.RecentLinkBox().start(link));
+                    });
+            }
+        });
+
+        $("#url").on("change keyup paste mouseup", function() {
+            if ($(this).data("last_result") != $("#url").val()) {
+                $("#btn_shorten_url").text("Shorten").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
+            }
+        });
+
+        // Show the recent links   
+        openerp.website.add_template_file('/website_url/static/src/xml/recent_link.xml')
+            .then(function() {
+                openerp.jsonRpc('/r/recent_links', 'call')
+                    .then(function(result) {
+                        for(var  i = 0 ; i < result.length ; i++) {
+                            // console.log(result[i]);
+                            $('#recent_links').prepend(new openerp.website_url.RecentLinkBox().start(result[i]));
+                        }
+                    });
             });
-        }
+
+        // Select with search on the campaign fields
+        $("#campaign-select").select2();
+        $("#channel-select").select2();
+        $("#source-select").select2();
     });
 })();
 
-$(document).ready(function() {
-  var campaign_dialog = new openerp.website_url.CampaignDialog();
-  campaign_dialog.start($('#campaign-dialog'));
-});
+
+
+
+
 
 // $(document).ready( function() {
 

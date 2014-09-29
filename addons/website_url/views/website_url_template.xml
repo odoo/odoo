@@ -24,7 +24,6 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <!-- <h1><t t-esc="k"/></h1> -->
                         <div class="form-group">
                             <label>Link to shorten</label>
                             <div class="input-group">
@@ -42,21 +41,39 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label>Campaign</label>
-                            <input type="text" id="campaign-dialog" class="form-control" />
+                            <select class="form-control" id="campaign-select">
+                                <option>No campaign attached</option>
+
+                                <t t-foreach="campaigns" t-as="campaign">
+                                    <option t-att-id="campaign.id"><t t-esc="campaign.name"/></option>
+                                </t>
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label>Channel</label>
-                            <input type="text" id="channel-dialog" class="form-control" />
+                            <select class="form-control" id="channel-select">
+                                <option>No channel attached</option>
+
+                                <t t-foreach="channels" t-as="channel">
+                                    <option t-att-id="channel.id"><t t-esc="channel.name"/></option>
+                                </t>
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label>Source</label>
-                            <input type="text" class="form-control" />
+                            <select class="form-control" id="source-select">
+                                <option>No source attached</option>
+
+                                <t t-foreach="sources" t-as="source">
+                                    <option t-att-id="source.id"><t t-esc="source.name"/></option>
+                                </t>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -67,31 +84,7 @@
                     </div>
                 </div>
 
-                <div class="row" style="margin-bottom: 20px;">
-                    <div class="col-lg-1">
-                        <h2>22</h2>                       
-                    </div>
-                    <div class="col-lg-7">
-                        <h5>Open Source ERP and CRM | Odoo <small>21 April 2014</small></h5>
-                        The Campaign • Newsletter • Email | <a href="#">View stats</a>
-                    </div>
-                    <div class="col-lg-4">
-                        <button class="btn btn-primary">Copy to clipboard</button>
-                    </div>
-                </div>
-
-                <div class="row" style="margin-bottom: 20px;">
-                    <div class="col-lg-1">
-                        <h2>28</h2>                       
-                    </div>
-                    <div class="col-lg-7">
-                        <h5>The #1 Inbound Marketing community | inbound.org <small>19 April 2014</small></h5>
-                        Marketing Campaign • Newsletter • Email | <a href="#">View stats</a>
-                    </div>
-                    <div class="col-lg-4">
-                        <button class="btn btn-primary">Copy to clipboard</button>
-                    </div>
-                </div>
+                <div id="recent_links"></div>
             </div>
         </template>
 

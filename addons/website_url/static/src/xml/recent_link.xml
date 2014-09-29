@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="website_url.RecentLink">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-lg-1">
+                        <h3><t t-esc="count"/>
+                        <small>clicks</small></h3>
+                    </div>
+                    <div class="col-lg-7">
+                        <h4><t t-esc="url"/> 
+                        <small><span t-field="write_date" t-field-options='{"format": "d MMMM yyyy"}'/></small></h4>
+                        <span class="label label-success"><t t-esc="campaign_id.name"/></span> 
+                        <span class="label label-success"><t t-esc="medium_id.name"/></span>
+                        <span class="label label-success"><t t-esc="source_id.name"/></span>
+                        <a href="#">View stats</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <h2> </h2>
+                        <button class="btn btn-primary">Copy to clipboard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

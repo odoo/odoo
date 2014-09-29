@@ -13,6 +13,6 @@ To shorten URL and To show url click statistics.
         'views/website_url_template.xml',
         'security/ir.model.access.csv',
     ],
-    'qweb': [],
+    'qweb': ['static/src/xml/*.xml'],
     'auto_install': True,
 }
