@@ -223,6 +223,10 @@
                                 </t>
                             </select>
                             <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
+                            <div style="margin-top: 5px">
+                                <label><input type="radio" name="backup_type" value="odoo"/> Odoo database backup</label><br/>
+                                <label><input type="radio" name="backup_type" value="custom"/> Backup for migration (without file storage)</label>
+                            </div>
                         </td>
                     </tr>
                     <tr>
