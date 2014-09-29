@@ -41,7 +41,6 @@ import account_vat
 import account_open_closed_fiscalyear
 
 import account_invoice_state
-import account_chart
 import account_tax_chart
 import account_financial_report
 #TODO: remove this file no moe used
