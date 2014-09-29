@@ -432,10 +432,10 @@ class website_sale(http.Controller):
 
         return values
 
-    mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id", "zip"]
-    optional_billing_fields = ["street", "state_id", "vat", "vat_subjected"]
-    mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
-    optional_shipping_fields = ["state_id"]
+    mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id"]
+    optional_billing_fields = ["street", "state_id", "vat", "vat_subjected", "zip"]
+    mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id"]
+    optional_shipping_fields = ["state_id", "zip"]
 
     def checkout_parse(self, address_type, data, remove_prefix=False):
         """ data is a dict OR a partner browse record
