@@ -386,6 +386,11 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             node.set('in_quote', '1')
             node.set('tail_remove', '1')
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
+            # here no quote_begin because we want to be able to remove some quoted
+            # text without removing all the remaining context
+            node.set('in_quote', '1')
+        if node.getparent() is not None and node.getparent().get('in_quote'):
+            # inside a block of removed text but not in quote_begin (see above)
             node.set('in_quote', '1')
 
         # shorten:
@@ -505,6 +510,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace(' ' * 2, ' ')
     html = html.replace('&gt;', '>')
     html = html.replace('&lt;', '<')
+    html = html.replace('&amp;', '&')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])
@@ -601,7 +607,7 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # Updated in 7.0 to match the model name as well
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?[^>]*@([^>]*)>", re.UNICODE)
 
 
 def generate_tracking_message_id(res_id):

@@ -32,7 +32,7 @@ When you send or deliver goods, this module automatically launch the invoicing
 wizard if the delivery is to be invoiced.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/warehouse',
     'images': ['images/create_invoice.jpeg'],
     'depends': ['delivery', 'stock'],
     'data': [],

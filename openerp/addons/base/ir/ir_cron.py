@@ -85,7 +85,6 @@ class ir_cron(osv.osv):
         'interval_type' : 'months',
         'numbercall' : 1,
         'active' : 1,
-        'doall' : 1
     }
 
     def _check_args(self, cr, uid, ids, context=None):
@@ -295,5 +294,21 @@ class ir_cron(osv.osv):
         self._try_lock(cr, uid, ids, context)
         res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
         return res
+
+    def try_write(self, cr, uid, ids, values, context=None):
+        try:
+            with cr.savepoint():
+                cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                           (tuple(ids),), log_exceptions=False)
+        except psycopg2.OperationalError:
+            pass
+        else:
+            return super(ir_cron, self).write(cr, uid, ids, values, context=context)
+        return False
+
+    def toggle(self, cr, uid, ids, model, domain, context=None):
+        active = bool(self.pool[model].search_count(cr, uid, domain, context=context))
+
+        return self.try_write(cr, uid, ids, {'active': active}, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

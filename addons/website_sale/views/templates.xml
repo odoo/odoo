@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
 
@@ -35,18 +36,21 @@
 </template>
 
 <template id="search" name="Search hidden fields">
-  <t t-if="attrib_values">
-    <t t-foreach="attrib_values" t-as="a">
-      <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+  <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
+
+    <t t-if="attrib_values">
+      <t t-foreach="attrib_values" t-as="a">
+        <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
+      </t>
     </t>
-  </t>
-  <input t-if="category" type="hidden" name="category" t-att-value="int(category or 0)"/>
-  <div class="input-group">
-    <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
-    <span class="input-group-btn">
-      <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
-    </span>
+    <div class="input-group">
+      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
+      <span class="input-group-btn">
+        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
+      </span>
   </div>
+
+  </form>
 </template>
 
 <template id="404">
@@ -73,7 +77,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-attf-src="/website/image/product.template/#{product.id}/image#{'' if product_image_big else '?max_width=300&amp;max_height=300'}"/>
+          <img itemprop="image" class="img img-responsive" t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')"/>
       </a>
   </div>
   <section>
@@ -101,7 +105,7 @@
   </form>
 </template>
 
-<template id="products_description" inherit_id="website_sale.products_item" optional="disabled" name="Product Description">
+<template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
   <xpath expr="//div[@class='product_price']" position="before">
       <div class="text-info oe_subdescription" contenteditable="false">
         <div itemprop="description" t-field="product.description_sale"></div>
@@ -109,7 +113,7 @@
   </xpath>
 </template>
 
-<template id="products_add_to_cart" inherit_id="website_sale.products_item" optional="disabled" name="Add to Cart">
+<template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
   <xpath expr="//div[@class='product_price']" position="inside">
     <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden"/>
     <a class="btn btn-default btn-xs fa fa-shopping-cart a-submit"/>
@@ -120,22 +124,13 @@
 
 <template id="products" name="Products">
   <t t-call="website.layout">
-      <!--t t-set="head">
-          <t t-call="web.jqueryui_conflict">
-            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-          </t>
-          <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-          <t t-raw="head or ''"/>
-      </t-->
       <t t-set="additional_title">Shop</t>
       <div id="wrap" class="js_sale">
         <div class="oe_structure"/>
         <div class="container oe_website_sale">
           <div class="products_pager">
-            <div class="row">
-              <form t-att-action="keep('/shop',search='')" method="get" class="pagination form-inline col-md-3">
-                <t t-call="website_sale.search"/>
-              </form>
+            <div class="row" style="width: 100%;">
+              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -258,7 +253,7 @@
   </li>
 </template>
 
-<template id="products_categories" inherit_id="website_sale.products" optional="disabled" name="Product Categories">
+<template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Categories">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <ul class="nav nav-pills nav-stacked mt16">
           <li t-att-class=" '' if category else 'active' "><a t-att-href="keep('/shop',category=0)">All Products</a></li>
@@ -275,7 +270,7 @@
   </xpath>
 </template>
 
-<template id="products_attributes" inherit_id="website_sale.products" optional="disabled" name="Product Attribute's Filters">
+<template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <form class="js_attributes" method="get">
           <input type="hidden" name="search" t-att-value="search"/>
@@ -330,7 +325,7 @@
   </xpath>
 </template>
 
-<template id="products_list_view" inherit_id="website_sale.products" optional="disabled" name="List View">
+<template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View">
   <xpath expr="//div[@id='products_grid']//table" position="replace">
     <t t-foreach="products" t-as="product">
       <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
@@ -344,7 +339,6 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -353,14 +347,12 @@
             <div class="col-sm-4">
                 <ol class="breadcrumb">
                     <li><a t-att-href="keep(category=0)" onclick="history.go(-1); return false;">Products</a></li>
-                    <li t-if="category"><a t-att-href="keep()" t-field="category.name"/></li>
+                    <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
             </div>
             <div class="col-sm-3">
-              <form t-att-action="keep(search=0)" method="get" class="pull-right">
-                  <t t-call="website_sale.search"/>
-              </form>
+              <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
             </div>
             <div class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
@@ -415,7 +407,7 @@
   </t>
 </template>
 
-<template id="product_quantity" inherit_id="website_sale.product" optional="enabled" name="Select Quantity">
+<template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
   <xpath expr="//a[@id='add_to_cart']" position="before">
     <div class="css_quantity input-group" style="width: 108px;">
         <span class="input-group-addon">
@@ -463,12 +455,12 @@
   </div>
 </template>
 
-<template id="product_variants" inherit_id="website_sale.product" optional="disabled" name="List View of Variants">
+<template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
   <xpath expr="//t[@t-placeholder='select']" position="replace">
     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-        <input type="radio" name="product_id" t-att-value="variant_id.id"/>
+        <input type="radio" name="product_id" class="js_product_change" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
         <span t-esc="variant_id.name_get()[0][1]"/>
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
@@ -551,7 +543,7 @@
   </ul>
 </template>
 
-<template id="recommended_products" inherit_id="website_sale.product" optional="enabled" name="Alternative Products">
+<template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
   <xpath expr="//div[@id='product_full_description']" position="after">
       <div class="container mt32" t-if="product.alternative_product_ids">
           <h3>Suggested alternatives:</h3>
@@ -573,7 +565,7 @@
   </xpath>
 </template>
 
-<template id="product_attributes" inherit_id="website_sale.product" optional="enabled" name="Product attributes">
+<template id="product_attributes" inherit_id="website_sale.product" customize_show="True" name="Product attributes">
   <xpath expr="//p[@t-field='product.description_sale']" position="after">
     <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
     <p class="text-muted">
@@ -588,7 +580,7 @@
 
 <!-- Product options: OpenChatter -->
 
-<template id="product_comment" inherit_id="website_sale.product" optional="disabled" name="Discussion">
+<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion">
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
         <section class="container">
@@ -604,7 +596,7 @@
                 <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                            <img class="media-object pull-left oe_msg_avatar" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                             <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
@@ -634,7 +626,7 @@
                 </ul>
                 <div class="css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                             <a class="btn btn-primary mt8 a-submit">Post</a>
@@ -650,7 +642,6 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -754,7 +745,7 @@
   </t>
 </template>
 
-<template id="suggested_products_list" inherit_id="website_sale.cart" optional="enabled" name="Suggested Products in my cart">
+<template id="suggested_products_list" inherit_id="website_sale.cart" customize_show="True" name="Suggested Products in my cart">
   <xpath expr="//table[@id='cart_products']" position="after">
       <table t-if="suggested_products" class='table table-striped table-condensed'>
           <colgroup>
@@ -811,13 +802,13 @@
   </xpath>
 </template>
 
-<template id="continue_shopping" inherit_id="website_sale.cart" optional="enabled" name="Continue Shopping Button">
+<template id="continue_shopping" inherit_id="website_sale.cart" customize_show="True" name="Continue Shopping Button">
   <xpath expr="//a[@href='/shop/checkout']" position="before">
     <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
   </xpath>
 </template>
 
-<template id="reduction_code" inherit_id="website_sale.cart" optional="disabled" name="Reduction Code">
+<template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Reduction Code">
   <xpath expr="//div[@id='right_column']" position="inside">
       <h4>Coupon Code</h4>
       <p>
@@ -838,7 +829,6 @@
 
 <template id="checkout">
   <t t-call="website.layout">
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -959,15 +949,6 @@
                       <label class="control-label" for="shipping_zip">Zip / Postal Code</label>
                       <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
-                  <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="shipping_state_id" style="font-weight: normal">State / Province</label>
-                      <select name="shipping_state_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
-                          <option value="">State / Province...</option>
-                          <t t-foreach="states or []" t-as="state">
-                              <option t-att-value="state.id" t-att-selected="state.id == checkout.get('shipping_state_id')"><t t-esc="state.name"/></option>
-                          </t>
-                      </select>
-                  </div>
                   <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_country_id">Country</label>
                       <select name="shipping_country_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
@@ -979,7 +960,7 @@
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_state_id" style="font-weight: normal">State / Province</label>
-                      <select name="shipping_state_id" class="form-control">
+                      <select name="shipping_state_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
                           <option value="">State / Province...</option>
                           <t t-foreach="states or []" t-as="state">
                               <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == checkout.get('shipping_state_id')"><t t-esc="state.name"/></option>
@@ -1024,7 +1005,6 @@
 
 <template id="payment">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1143,7 +1123,6 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
-          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1221,7 +1200,7 @@
         <div class="container mt16 mb8">
             <div class="pull-right" t-ignore="true" t-if="not editable">
                 Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                the #1 <a href="http://www.odoo.com/page/website-builder">Open Source eCommerce</a>.
+                the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
             </div>
             <div class="pull-left text-muted">
                 Copyright &amp;copy; <span t-field="res_company.name">Company name</span>

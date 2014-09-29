@@ -120,7 +120,7 @@ class _column(object):
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
-        if not self._classic_write or self.groups or self.deprecated:
+        if not self._classic_write or self.deprecated:
             self._prefetch = False
 
     def to_field(self):
@@ -293,6 +293,11 @@ class html(text):
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
+
+    def to_field_args(self):
+        args = super(html, self).to_field_args()
+        args['sanitize'] = self._sanitize
+        return args
 
 import __builtin__
 
@@ -666,25 +671,26 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        res = dict((id, []) for id in ids)
-
+        # retrieve the records in the comodel
         comodel = obj.pool[self._obj].browse(cr, user, [], context)
         inverse = self._fields_id
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
+        records = comodel.search(domain, limit=self._limit)
 
-        for record in comodel.search(domain, limit=self._limit):
-            # Note: record[inverse] can be a record or an integer!
-            assert int(record[inverse]) in res
-            res[int(record[inverse])].append(record.id)
+        result = {id: [] for id in ids}
+        # read the inverse of records without prefetching other fields on them
+        for record in records.with_context(prefetch_fields=False):
+            # record[inverse] may be a record or an integer
+            result[int(record[inverse])].append(record.id)
 
-        return res
+        return result
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['no_store_function'] = True
+        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]
@@ -1295,9 +1301,9 @@ class function(_column):
         # if we already have a value, don't recompute it.
         # This happen if case of stored many2one fields
         if values and not multi and name in values[0]:
-            result = {v['id']: v[name] for v in values}
+            result = dict((v['id'], v[name]) for v in values)
         elif values and multi and all(n in values[0] for n in name):
-            result = {v['id']: dict((n, v[n]) for n in name) for v in values}
+            result = dict((v['id'], dict((n, v[n]) for n in name)) for v in values)
         else:
             result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         if multi:
@@ -1561,8 +1567,15 @@ class property(function):
             column = obj._all_columns[prop_name].column
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
             if column._type == 'many2one':
+                # name_get the non-null values as SUPERUSER_ID
+                vals = sum(set(filter(None, values.itervalues())),
+                           obj.pool[column._obj].browse(cr, uid, [], context=context))
+                vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
-                    res[id][prop_name] = value.name_get()[0] if value else False
+                    ng = False
+                    if value and value.id in vals_name:
+                        ng = value.id, vals_name[value.id]
+                    res[id][prop_name] = ng
             else:
                 for id, value in values.iteritems():
                     res[id][prop_name] = value
@@ -1572,12 +1585,12 @@ class property(function):
     def __init__(self, **args):
         if 'view_load' in args:
             _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
-        obj = 'relation' in args and args['relation'] or ''
+        args = dict(args)
+        args['obj'] = args.pop('relation', '') or args.get('obj', '')
         super(property, self).__init__(
             fnct=self._fnct_read,
             fnct_inv=self._fnct_write,
             fnct_search=self._fnct_search,
-            obj=obj,
             multi='properties',
             **args
         )

@@ -40,7 +40,6 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 _logger = logging.getLogger(__name__)
 
-
 class SpecialValue(object):
     """ Encapsulates a value in the cache in place of a normal value. """
     def __init__(self, value):
@@ -237,11 +236,12 @@ class Field(object):
 
         .. rubric:: Incremental definition
 
-        A field is defined as class attribute on a model class. If the model is
-        extended (see :class:`BaseModel`), one can also extend the field
-        definition by redefining a field with the same name and same type on the
-        subclass. In that case, the attributes of the field are taken from the
-        parent class and overridden by the ones given in subclasses.
+        A field is defined as class attribute on a model class. If the model
+        is extended (see :class:`~openerp.models.Model`), one can also extend
+        the field definition by redefining a field with the same name and same
+        type on the subclass. In that case, the attributes of the field are
+        taken from the parent class and overridden by the ones given in
+        subclasses.
 
         For instance, the second class below only adds a tooltip on the field
         ``state``::
@@ -280,6 +280,7 @@ class Field(object):
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
+    related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
     default = None              # default value
 
@@ -298,7 +299,9 @@ class Field(object):
         self._free_attrs = []
 
     def copy(self, **kwargs):
-        """ make a copy of `self`, possibly modified with parameters `kwargs` """
+        """ copy(item) -> test
+
+        make a copy of `self`, possibly modified with parameters `kwargs` """
         field = copy(self)
         field._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         field._free_attrs = list(self._free_attrs)
@@ -425,13 +428,16 @@ class Field(object):
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
-        for record, sudo_record in zip(records, records.sudo()):
-            # bypass access rights check when traversing the related path
-            value = sudo_record if record.id else record
-            # traverse the intermediate fields, and keep at most one record
+        # when related_sudo, bypass access rights checks when reading values
+        others = records.sudo() if self.related_sudo else records
+        for record, other in zip(records, others):
+            if not record.id:
+                # draft record, do not switch to another environment
+                other = record
+            # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+                other = other[name][:1]
+            record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """
@@ -551,8 +557,13 @@ class Field(object):
         return False
 
     def _description_searchable(self, env):
-        return self._description_store(env) or bool(self.search)
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True)) or \
+                   bool(getattr(column, '_fnct_search', False))
+        return bool(self.search)
 
+    _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
@@ -607,6 +618,7 @@ class Field(object):
     # properties used by to_column() to create a column instance
     _column_copy = property(attrgetter('copyable'))
     _column_select = property(attrgetter('index'))
+    _column_manual = property(attrgetter('manual'))
     _column_string = property(attrgetter('string'))
     _column_help = property(attrgetter('help'))
     _column_readonly = property(attrgetter('readonly'))
@@ -761,9 +773,13 @@ class Field(object):
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
-            except MissingError:
-                # some record is missing, retry on existing records only
-                self._compute_value(records.exists())
+            except (AccessError, MissingError):
+                # some record is forbidden or missing, retry record by record
+                for record in records:
+                    try:
+                        self._compute_value(record)
+                    except Exception as exc:
+                        record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -876,7 +892,6 @@ class Field(object):
 
 
 class Boolean(Field):
-    """ Boolean field. """
     type = 'boolean'
 
     def convert_to_cache(self, value, record, validate=True):
@@ -889,10 +904,12 @@ class Boolean(Field):
 
 
 class Integer(Field):
-    """ Integer field. """
     type = 'integer'
 
     def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            return value.get('id', False)
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -908,11 +925,10 @@ class Integer(Field):
 
 
 class Float(Field):
-    """ Float field. The precision digits are given by the attribute
+    """ The precision digits are given by the attribute
 
-        :param digits: a pair (total, decimal), or a function taking a database
-            cursor and returning a pair (total, decimal)
-
+    :param digits: a pair (total, decimal), or a function taking a database
+                   cursor and returning a pair (total, decimal)
     """
     type = 'float'
     _digits = None              # digits argument passed to class initializer
@@ -921,9 +937,16 @@ class Float(Field):
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    def _setup_digits(self, env):
+        """ Setup the digits for `self` and its corresponding column """
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.store:
+            column = env[self.model_name]._columns[self.name]
+            column.digits_change(env.cr)
+
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        self._setup_digits(env)
 
     _related_digits = property(attrgetter('digits'))
 
@@ -950,14 +973,11 @@ class _String(Field):
 
 
 class Char(_String):
-    """ Char field.
+    """ Basic string field, can be length-limited, usually displayed as a
+    single-line string in clients
 
-        :param size: the maximum size of values stored for that field (integer,
-            optional)
-
-        :param translate: whether the value of the field has translations
-            (boolean, by default ``False``)
-
+    :param int size: the maximum size of values stored for that field
+    :param bool translate: whether the values of this field can be translated
     """
     type = 'char'
     size = None
@@ -972,12 +992,10 @@ class Char(_String):
         return ustr(value)[:self.size]
 
 class Text(_String):
-    """ Text field. Very similar to :class:`Char`, but typically for longer
-        contents.
+    """ Text field. Very similar to :class:`~.Char` but used for longer
+     contents and displayed as a multiline text box
 
-        :param translate: whether the value of the field has translations
-            (boolean, by default ``False``)
-
+    :param translate: whether the value of this field can be translated
     """
     type = 'text'
 
@@ -987,17 +1005,22 @@ class Text(_String):
         return ustr(value)
 
 class Html(_String):
-    """ Html field. """
     type = 'html'
+    sanitize = True                     # whether value must be sanitized
+
+    _column_sanitize = property(attrgetter('sanitize'))
+    _related_sanitize = property(attrgetter('sanitize'))
+    _description_sanitize = property(attrgetter('sanitize'))
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
-        return html_sanitize(value)
+        if validate and self.sanitize:
+            return html_sanitize(value)
+        return value
 
 
 class Date(Field):
-    """ Date field. """
     type = 'date'
 
     @staticmethod
@@ -1058,7 +1081,6 @@ class Date(Field):
 
 
 class Datetime(Field):
-    """ Datetime field. """
     type = 'datetime'
 
     @staticmethod
@@ -1129,23 +1151,20 @@ class Datetime(Field):
 
 
 class Binary(Field):
-    """ Binary field. """
     type = 'binary'
 
 
 class Selection(Field):
-    """ Selection field.
+    """
+    :param selection: specifies the possible values for this field.
+        It is given as either a list of pairs (`value`, `string`), or a
+        model method, or a method name.
+    :param selection_add: provides an extension of the selection in the case
+        of an overridden field. It is a list of pairs (`value`, `string`).
 
-        :param selection: specifies the possible values for this field.
-            It is given as either a list of pairs (`value`, `string`), or a
-            model method, or a method name.
-
-        :param selection_add: provides an extension of the selection in the case
-            of an overridden field. It is a list of pairs (`value`, `string`).
-
-        The attribute `selection` is mandatory except in the case of related
-        fields (see :ref:`field-related`) or field extensions
-        (see :ref:`field-incremental-definition`).
+    The attribute `selection` is mandatory except in the case of
+    :ref:`related fields <field-related>` or :ref:`field extensions
+    <field-incremental-definition>`.
     """
     type = 'selection'
     selection = None        # [(value, string), ...], function or method name
@@ -1236,16 +1255,6 @@ class Selection(Field):
 
 
 class Reference(Selection):
-    """ Reference field.
-
-        :param selection: specifies the possible model names for this field.
-            It is given as either a list of pairs (`value`, `string`), or a
-            model method, or a method name.
-
-        The attribute `selection` is mandatory except in the case of related
-        fields (see :ref:`field-related`) or field extensions
-        (see :ref:`field-incremental-definition`).
-    """
     type = 'reference'
     size = 128
 
@@ -1308,28 +1317,28 @@ class _Relational(Field):
 
 
 class Many2one(_Relational):
-    """ Many2one field; the value of such a field is a recordset of size 0 (no
-        record) or 1 (a single record).
+    """ The value of such a field is a recordset of size 0 (no
+    record) or 1 (a single record).
 
-        :param comodel_name: name of the target model (string)
+    :param comodel_name: name of the target model (string)
 
-        :param domain: an optional domain to set on candidate values on the
-            client side (domain or string)
+    :param domain: an optional domain to set on candidate values on the
+        client side (domain or string)
 
-        :param context: an optional context to use on the client side when
-            handling that field (dictionary)
+    :param context: an optional context to use on the client side when
+        handling that field (dictionary)
 
-        :param ondelete: what to do when the referred record is deleted;
-            possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
+    :param ondelete: what to do when the referred record is deleted;
+        possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
 
-        :param auto_join: whether JOINs are generated upon search through that
-            field (boolean, by default ``False``)
+    :param auto_join: whether JOINs are generated upon search through that
+        field (boolean, by default ``False``)
 
-        :param delegate: set it to ``True`` to make fields of the target model
-            accessible from the current model (corresponds to ``_inherits``)
+    :param delegate: set it to ``True`` to make fields of the target model
+        accessible from the current model (corresponds to ``_inherits``)
 
-        The attribute `comodel_name` is mandatory except in the case of related
-        fields or field extensions.
+    The attribute `comodel_name` is mandatory except in the case of related
+    fields or field extensions.
     """
     type = 'many2one'
     ondelete = 'set null'               # what to do when value is deleted
@@ -1373,7 +1382,11 @@ class Many2one(_Relational):
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            return value.sudo().name_get()[0]
+            try:
+                return value.sudo().name_get()[0]
+            except MissingError:
+                # Should not happen, unless the foreign key is missing.
+                return False
         else:
             return value.id
 
@@ -1399,13 +1412,32 @@ class Many2one(_Relational):
                 record[self.name] = record.env[self.comodel_name].new()
 
 
+class UnionUpdate(SpecialValue):
+    """ Placeholder for a value update; when this value is taken from the cache,
+        it returns ``record[field.name] | value`` and stores it in the cache.
+    """
+    def __init__(self, field, record, value):
+        self.args = (field, record, value)
+
+    def get(self):
+        field, record, value = self.args
+        # in order to read the current field's value, remove self from cache
+        del record._cache[field]
+        # read the current field's value, and update it in cache only
+        record._cache[field] = new_value = record[field.name] | value
+        return new_value
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
         for record in records:
-            record._cache[self] = record[self.name] | value
+            if self in record._cache:
+                record._cache[self] = record[self.name] | value
+            else:
+                record._cache[self] = UnionUpdate(self, record, value)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
@@ -1424,6 +1456,7 @@ class _RelationalMulti(_Relational):
                         result += result.new(command[2])
                     elif command[0] == 1:
                         result.browse(command[1]).update(command[2])
+                        result += result.browse(command[1]) - result
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
                         result -= result.browse(command[1])
@@ -1484,6 +1517,15 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value):
         raise NotImplementedError()
 
+    def _compute_related(self, records):
+        """ Compute the related field `self` on `records`. """
+        for record in records:
+            value = record
+            # traverse the intermediate fields, and keep at most one record
+            for name in self.related[:-1]:
+                value = value[name][:1]
+            record[self.name] = value[self.related[-1]]
+
 
 class One2many(_RelationalMulti):
     """ One2many field; the value of such a field is the recordset of all the
@@ -1529,8 +1571,12 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_fields.append(invf)
-            invf.inverse_fields.append(self)
+            # In some rare cases, a `One2many` field can link to `Int` field
+            # (res_model/res_id pattern). Only inverse the field if this is
+            # a `Many2one` field.
+            if isinstance(invf, Many2one):
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1615,12 +1661,17 @@ class Many2many(_RelationalMulti):
 class Id(Field):
     """ Special case for field 'id'. """
     store = True
+    #: Can't write this!
     readonly = True
 
     def __init__(self, string=None, **kwargs):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
+        """ to_column() -> fields._column
+
+        Whatever
+        """
         return fields.integer('ID')
 
     def __get__(self, record, owner):
@@ -1636,6 +1687,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, MissingError
+from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

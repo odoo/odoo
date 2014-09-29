@@ -40,6 +40,7 @@ GENGO_DEFAULT_LIMIT = 20
 
 class base_gengo_translations(osv.osv_memory):
     GENGO_KEY = "Gengo.UUID"
+    GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
     _columns = {
@@ -57,7 +58,7 @@ class base_gengo_translations(osv.osv_memory):
     def init(self, cr):
         icp = self.pool['ir.config_parameter']
         if not icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default=None):
-            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=['base.group_website_designer', 'base.group_website_publisher'])
+            icp.set_param(cr, SUPERUSER_ID, self.GENGO_KEY, str(uuid.uuid4()), groups=self.GROUPS)
 
     def get_gengo_key(self, cr):
         icp = self.pool['ir.config_parameter']
@@ -74,7 +75,7 @@ class base_gengo_translations(osv.osv_memory):
             by the cron) or in a dialog box (if requested by the user), thus it's important to return it
             translated.
         '''
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
         try:

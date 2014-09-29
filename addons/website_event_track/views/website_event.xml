@@ -2,13 +2,14 @@
 <openerp>
 <data>
 
-<template name="Sponsors" id="event_sponsor" optional="enabled" inherit_id="website_event.layout">
-    <xpath expr="//t[@t-call='website.layout']" position="inside">
-        <t t-set="head">
-            <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
-            <t t-raw="head or ''"/>
-        </t>
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Event track front end">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/website_event_track/static/src/css/website_event_track.css"/>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
     </xpath>
+</template>
+
+<template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
             <section data-snippet-id="title">
@@ -42,10 +43,6 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <t t-set="head">
-          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
-          <t t-raw="head or ''"/>
-        </t>
         <section class="container">
             <h1 class="text-center" t-field="event.name"/>
             <div class="form-inline pull-right">
@@ -155,7 +152,7 @@
     </t>
 </template>
 
-<template id="tracks_filter" inherit_id="website_event_track.tracks" optional="enabled" name="Filter on Tags">
+<template id="tracks_filter" inherit_id="website_event_track.tracks" customize_show="True" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
             <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
@@ -176,12 +173,25 @@
 
 
 <template id="track_view">
-    <t t-call="website_event.layout">
+    <t t-call="website.layout">
+        <div id="wrap" class="js_event">
+            <div class="container">
+                <div class="row mt8">
+                    <div class="col-sm-7" id="event_menu">
+                        <ol class="breadcrumb mb0" id="event_menu" t-if="event.menu_id">
+                            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu"/>
+                            </t>
+                        </ol>
+                    </div>
+                    <t t-call="website.publish_management">
+                        <t t-set="object" t-value="track"/>
+                        <t t-set="publish_edit" t-value="True"/>
+                    </t>
+                </div>
+            </div>
+        </div>
         <div class="container">
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="track"/>
-                <t t-set="publish_edit" t-value="True"/>
-            </t>
             <div class="clearfix"/>
 
             <h2 t-field="track.name" class="text-center"/>
@@ -244,7 +254,7 @@
     </t>
 </template>
 
-<template id="event_track_social" name="Social Widgets" inherit_id="website_event_track.track_view" optional="disabled">
+<template id="event_track_social" name="Social Widgets" inherit_id="website_event_track.track_view" active="False" customize_show="True">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="panel panel-default">
             <div class="panel-heading">

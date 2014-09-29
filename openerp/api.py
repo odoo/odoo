@@ -59,6 +59,7 @@ __all__ = [
 ]
 
 import logging
+import operator
 
 from inspect import currentframe, getargspec
 from collections import defaultdict, MutableMapping
@@ -137,18 +138,19 @@ def propagate(from_method, to_method):
 
 
 def constrains(*args):
-    """ Return a decorator that specifies the field dependencies of a method
-        implementing a constraint checker. Each argument must be a field name::
+    """ Decorates a constraint checker. Each argument must be a field name
+    used in the check::
 
-            @api.one
-            @api.constrains('name', 'description')
-            def _check_description(self):
-                if self.name == self.description:
-                    raise ValueError("Fields name and description must be different")
+        @api.one
+        @api.constrains('name', 'description')
+        def _check_description(self):
+            if self.name == self.description:
+                raise ValidationError("Fields name and description must be different")
 
-        The method is invoked on the records where one of the given fields has
-        been modified. It is expected to raise an exception when the constraint
-        is not satisfied.
+    Invoked on the records on which one of the named fields has been modified.
+
+    Should raise :class:`~openerp.exceptions.ValidationError` if the
+    validation failed.
     """
     return lambda method: decorate(method, '_constrains', args)
 
@@ -189,6 +191,8 @@ def depends(*args):
     """
     if args and callable(args[0]):
         args = args[0]
+    elif any('id' in arg.split('.') for arg in args):
+        raise NotImplementedError("Compute method cannot depend on field 'id'.")
     return lambda method: decorate(method, '_depends', args)
 
 
@@ -684,7 +688,7 @@ class Environment(object):
             yield
         else:
             try:
-                cls._local.environments = WeakSet()
+                cls._local.environments = Environments()
                 yield
             finally:
                 release_local(cls._local)
@@ -707,8 +711,6 @@ class Environment(object):
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
         self.dirty = set()                  # set(record)
-        self.todo = {}                      # {field: records, ...}
-        self.mode = env.mode if env else Mode()
         self.all = envs
         envs.add(self)
         return self
@@ -745,14 +747,14 @@ class Environment(object):
 
     @contextmanager
     def _do_in_mode(self, mode):
-        if self.mode.value:
+        if self.all.mode:
             yield
         else:
             try:
-                self.mode.value = mode
+                self.all.mode = mode
                 yield
             finally:
-                self.mode.value = False
+                self.all.mode = False
                 self.dirty.clear()
 
     def do_in_draft(self):
@@ -764,7 +766,7 @@ class Environment(object):
     @property
     def in_draft(self):
         """ Return whether we are in draft mode. """
-        return bool(self.mode.value)
+        return bool(self.all.mode)
 
     def do_in_onchange(self):
         """ Context-switch to 'onchange' draft mode, which is a specialized
@@ -775,7 +777,7 @@ class Environment(object):
     @property
     def in_onchange(self):
         """ Return whether we are in 'onchange' draft mode. """
-        return self.mode.value == 'onchange'
+        return self.all.mode == 'onchange'
 
     def invalidate(self, spec):
         """ Invalidate some fields for some records in the cache of all
@@ -787,7 +789,7 @@ class Environment(object):
         """
         if not spec:
             return
-        for env in list(iter(self.all)):
+        for env in list(self.all):
             c = env.cache
             for field, ids in spec:
                 if ids is None:
@@ -800,11 +802,48 @@ class Environment(object):
 
     def invalidate_all(self):
         """ Clear the cache of all environments. """
-        for env in list(iter(self.all)):
+        for env in list(self.all):
             env.cache.clear()
             env.prefetch.clear()
             env.computed.clear()
             env.dirty.clear()
+
+    def field_todo(self, field):
+        """ Check whether `field` must be recomputed, and returns a recordset
+            with all records to recompute for `field`.
+        """
+        if field in self.all.todo:
+            return reduce(operator.or_, self.all.todo[field])
+
+    def check_todo(self, field, record):
+        """ Check whether `field` must be recomputed on `record`, and if so,
+            returns the corresponding recordset to recompute.
+        """
+        for recs in self.all.todo.get(field, []):
+            if recs & record:
+                return recs
+
+    def add_todo(self, field, records):
+        """ Mark `field` to be recomputed on `records`. """
+        recs_list = self.all.todo.setdefault(field, [])
+        recs_list.append(records)
+
+    def remove_todo(self, field, records):
+        """ Mark `field` as recomputed on `records`. """
+        recs_list = self.all.todo.get(field, [])
+        if records in recs_list:
+            recs_list.remove(records)
+            if not recs_list:
+                del self.all.todo[field]
+
+    def has_todo(self):
+        """ Return whether some fields must be recomputed. """
+        return bool(self.all.todo)
+
+    def get_todo(self):
+        """ Return a pair `(field, records)` to recompute. """
+        for field, recs_list in self.all.todo.iteritems():
+            return field, recs_list[0]
 
     def check_cache(self):
         """ Check the cache consistency. """
@@ -834,9 +873,20 @@ class Environment(object):
             raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
 
-class Mode(object):
-    """ A mode flag shared among environments. """
-    value = False           # False, True (draft) or 'onchange' (onchange draft)
+class Environments(object):
+    """ A common object for all environments in a request. """
+    def __init__(self):
+        self.envs = WeakSet()           # weak set of environments
+        self.todo = {}                  # recomputations {field: [records]}
+        self.mode = False               # flag for draft/onchange
+
+    def add(self, env):
+        """ Add the environment `env`. """
+        self.envs.add(env)
+
+    def __iter__(self):
+        """ Iterate over environments. """
+        return iter(self.envs)
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

@@ -1,81 +1,31 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* report_intrastat
+# Russian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-01-01 12:50+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Cancelled Invoice"
-msgstr "Отмененный счет"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr "Всего (с налогами):"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Disc. (%)"
-msgstr "Скидка (%)"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Invoice"
-msgstr "Счета поставщиков"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Unit Price"
-msgstr "Цена за ед."
-
-#. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Import"
-msgstr "Импорт"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Описание"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "VAT :"
-msgstr "НДС:"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Document"
-msgstr "Документ"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "PRO-FORMA"
-msgstr "Проформа"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes:"
-msgstr "Налоги:"
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Amount"
+msgstr "Количество"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "March"
-msgstr "Март"
+msgid "April"
+msgstr "Апрель"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -83,39 +33,150 @@ msgid "August"
 msgstr "Август"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "May"
-msgstr "Май"
-
-#. module: report_intrastat
-#: field:report.intrastat,type:0
-msgid "Type"
-msgstr "Тип"
-
-#. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
-msgid "Invoice Intrastat"
-msgstr "Счет интрастат"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice Date"
-msgstr "Дата счета-фактуры"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Июнь"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tel. :"
-msgstr "тел.:"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Base"
 msgstr "База"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Cancelled Invoice"
+msgstr "Отмененный счет"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Comment:"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr "Страна"
+
+#. module: report_intrastat
+#: field:report.intrastat,code:0
+msgid "Country code"
+msgstr "Код страны"
+
+#. module: report_intrastat
+#: field:report.intrastat.code,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat.code,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,currency_id:0
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "December"
+msgstr "Декабрь"
+
+#. module: report_intrastat
+#: field:report.intrastat.code,description:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Description"
+msgstr "Описание"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Discount (%)"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Document:"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Draft Invoice"
+msgstr "Черновик счета"
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Export"
+msgstr "Экспорт"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "February"
+msgstr "Февраль"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Fiscal Position:"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,id:0
+#: field:report.intrastat.code,id:0
+msgid "ID"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Import"
+msgstr "Импорт"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Intrastat"
+msgstr "Интрастат"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_form
+#: field:report.intrastat.code,name:0
+msgid "Intrastat Code"
+msgstr "Код интрастат"
+
+#. module: report_intrastat
+#: view:report.intrastat:report_intrastat.view_report_intrastat_search
+#: view:report.intrastat:report_intrastat.view_report_intrastat_tree
+msgid "Intrastat Data"
+msgstr "Данные интрастат"
+
+#. module: report_intrastat
+#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+msgid "Intrastat Invoices"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_tree
+msgid "Intrastat code"
+msgstr "Код интрастат"
+
+#. module: report_intrastat
+#: field:res.country,intrastat:0
+msgid "Intrastat member"
+msgstr "Участник интрастат"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat
+msgid "Intrastat report"
+msgstr "Отчет интрастат"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice"
+msgstr "Счет"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice Date:"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -128,145 +189,29 @@ msgid "July"
 msgstr "Июль"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr "Количество"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Partner Ref."
-msgstr "Ссылка на партнера"
-
-#. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "February"
-msgstr "Февраль"
+msgid "June"
+msgstr "Июнь"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "October"
-msgstr "Октябрь"
+#: field:report.intrastat.code,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat
-msgid "Intrastat report"
-msgstr "Отчет интрастат"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice"
-msgstr "Счет"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_res_country
-msgid "Country"
-msgstr "Страна"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "September"
-msgstr "Сентябрь"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes"
-msgstr "Налоги"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "April"
-msgstr "Апрель"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Amount"
-msgstr "Количество"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "Intrastat Data"
-msgstr "Данные интрастат"
-
-#. module: report_intrastat
-#: field:report.intrastat,value:0
-msgid "Value"
-msgstr "Значение"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-msgid "Intrastat"
-msgstr "Интрастат"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Draft Invoice"
-msgstr "Черновик счета"
-
-#. module: report_intrastat
-#: field:report.intrastat,supply_units:0
-msgid "Supply Units"
+#: field:report.intrastat.code,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "November"
-msgstr "Ноябрь"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Код интрастат"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "Возвраты"
-
-#. module: report_intrastat
-#: field:report.intrastat,ref:0
-msgid "Source document"
-msgstr "Документ - источник"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fiscal Position Remark :"
-msgstr "Замечание о системе налогообложения:"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat,weight:0
-msgid "Weight"
-msgstr "Вес"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_product_template
-msgid "Product Template"
-msgstr "Шаблон ТМЦ"
-
-#. module: report_intrastat
-#: field:res.country,intrastat:0
-msgid "Intrastat member"
-msgstr "Участник интрастат"
+msgid "March"
+msgstr "Март"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "December"
-msgstr "Декабрь"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
-msgstr "Налог"
-
-#. module: report_intrastat
-#: field:report.intrastat,code:0
-msgid "Country code"
-msgstr "Код страны"
+msgid "May"
+msgstr "Май"
 
 #. module: report_intrastat
 #: field:report.intrastat,month:0
@@ -274,86 +219,117 @@ msgid "Month"
 msgstr "Месяц"
 
 #. module: report_intrastat
-#: field:report.intrastat,currency_id:0
-msgid "Currency"
-msgstr "Валюта"
+#: selection:report.intrastat,month:0
+msgid "November"
+msgstr "Ноябрь"
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Export"
-msgstr "Экспорт"
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr "Октябрь"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fax :"
-msgstr "Факс :"
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "PRO-FORMA"
+msgstr "Проформа"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Partner Ref.:"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Payment Term:"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_product_template
+msgid "Product Template"
+msgstr "Шаблон ТМЦ"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Quantity"
+msgstr "Количество"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Refund"
+msgstr "Возвраты"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "September"
+msgstr "Сентябрь"
+
+#. module: report_intrastat
+#: field:report.intrastat,ref:0
+msgid "Source document"
+msgstr "Документ - источник"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Supplier Invoice"
+msgstr "Счета поставщиков"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Supplier Refund"
+msgstr "Возврат средств от поставщика"
+
+#. module: report_intrastat
+#: field:report.intrastat,supply_units:0
+msgid "Supply Units"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Tax"
+msgstr "Налог"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Taxes"
+msgstr "Налоги"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Total"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Total Without Taxes"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,type:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Unit Price"
+msgstr "Цена за ед."
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Unit of measure"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,value:0
+msgid "Value"
+msgstr "Значение"
+
+#. module: report_intrastat
+#: field:report.intrastat,weight:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Weight"
+msgstr "Вес"
 
 #. module: report_intrastat
 #: field:report.intrastat,name:0
 msgid "Year"
 msgstr "Год"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Refund"
-msgstr "Возврат средств от поставщика"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (excl. taxes):"
-msgstr "Всего (до налогов)"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Price"
-msgstr "Цена"
-
-#. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:0
-#: field:report.intrastat.code,name:0
-msgid "Intrastat Code"
-msgstr "Код интрастат"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "All Months"
-#~ msgstr "Все месяцы"
-
-#~ msgid "This Month"
-#~ msgstr "Данный месяц"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Period"
-#~ msgstr "Период"
-
-#~ msgid "Canceled Invoice"
-#~ msgstr "Отмененный счет"
-
-#~ msgid "Origin"
-#~ msgstr "Источник"
-
-#~ msgid "The code of the country must be unique !"
-#~ msgstr "Код страны должен быть уникальным !"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
-#~ "категорию."
-
-#~ msgid "This Year"
-#~ msgstr "Этот год"
-
-#~ msgid "The name of the country must be unique !"
-#~ msgstr "Название страны должно быть уникальным !"

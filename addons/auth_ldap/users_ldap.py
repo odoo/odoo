@@ -237,7 +237,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters', copy=True),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True, groups="base.group_system"),
     }
 
 
@@ -249,6 +249,10 @@ class users(osv.osv):
             return user_id
         registry = RegistryManager.get(db)
         with registry.cursor() as cr:
+            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
+            res = cr.fetchone()
+            if res:
+                return False
             ldap_obj = registry.get('res.company.ldap')
             for conf in ldap_obj.get_ldap_dicts(cr):
                 entry = ldap_obj.authenticate(conf, login, password)

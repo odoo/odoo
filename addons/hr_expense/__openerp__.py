@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Expense Management',
+    'name': 'Expense Tracker',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 29,
@@ -44,7 +44,7 @@ The whole flow is implemented as:
 This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/expenses',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
     'depends': ['hr', 'account_accountant', 'report'],
     'data': [

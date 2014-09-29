@@ -262,7 +262,12 @@ function openerp_picking_widgets(instance){
                 self.getParent().barcode_scanner.disconnect();
             });
             this.$('.js_qty').blur(function(){
-                this.value = "";
+                var op_id = $(this).parents("[data-id]:first").data('id');
+                var value = parseFloat($(this).val());
+                if (value>=0){
+                    self.getParent().set_operation_quantity(value, op_id);
+                }
+                
                 self.getParent().barcode_scanner.connect(function(ean){
                     self.getParent().scan(ean);
                 });
@@ -358,7 +363,7 @@ function openerp_picking_widgets(instance){
             //get all visible element and if none has positive qty, disable put in pack and process button
             var self = this;
             var processed = this.$('.js_pack_op_line.processed');
-            var qties = this.$('.js_pack_op_line:not(.processed):not(.hidden) .js_qty').map(function(){return $(this).attr('placeholder')});
+            var qties = this.$('.js_pack_op_line:not(.processed):not(.hidden) .js_qty').map(function(){return $(this).val()});
             var container = this.$('.js_pack_op_line.container_head:not(.processed):not(.hidden)')
             var disabled = true;
             $.each(qties,function(index, value){
@@ -741,16 +746,6 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_menu').click(function(){ self.menu(); });
             this.$('.js_reload_op').click(function(){ self.reload_pack_operation();});
 
-            this.hotkey_handler = function(event){
-                if(event.keyCode === 37 ){  // Left Arrow
-                    self.picking_prev();
-                }else if(event.keyCode === 39){ // Right Arrow
-                    self.picking_next();
-                }
-            };
-
-            $('body').on('keyup',this.hotkey_handler);
-
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
                 self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
@@ -1022,7 +1017,6 @@ function openerp_picking_widgets(instance){
             this._super();
             // this.disconnect_numpad();
             this.barcode_scanner.disconnect();
-            $('body').off('keyup',this.hotkey_handler);
             instance.webclient.set_content_full_screen(false);
         },
     });

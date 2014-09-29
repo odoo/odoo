@@ -41,7 +41,7 @@ users only have access to the data that has been shared with them.
 This is extremely useful for collaborative work, knowledge sharing,
 synchronization with other companies.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',

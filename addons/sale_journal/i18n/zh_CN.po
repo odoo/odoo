@@ -1,51 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-27 14:24+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "备注"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "有效"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "开票类型"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr "这种开票类型已经被使用，默认开票给当前的合作伙伴"
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "销售&采购"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "基于选择的选项生成发票。"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "开发票"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "已分组"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "入库"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr ""
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -55,19 +55,15 @@ msgid ""
 msgstr "如果设置active为False，你可以隐藏发票类型，不用删除它。"
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "备注"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "开票方式"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "装箱单"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "发票类型"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -75,16 +71,6 @@ msgstr "装箱单"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "发票类型"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "没分组"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "已分组"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -95,28 +81,44 @@ msgid ""
 msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "基于选择的选项生成发票。"
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "开发票"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "发票类型"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "开票类型"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "有效"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "开票方式"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "没分组"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "备注"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "备注"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -124,327 +126,22 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "装箱单"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "销售&采购"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "销售单"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "送货单"
-
-#~ msgid "Set to Draft"
-#~ msgstr "设为草稿"
-
-#~ msgid "All Months"
-#~ msgstr "所有月份"
-
-#~ msgid "This Month"
-#~ msgstr "本月"
-
-#~ msgid "Sale Stats"
-#~ msgstr "销售统计"
-
-#~ msgid "waiting"
-#~ msgstr "等待"
-
-#~ msgid "done"
-#~ msgstr "完成"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid "In progress"
-#~ msgstr "进展"
-
-#~ msgid "Manual in progress"
-#~ msgstr "手动进展"
-
-#~ msgid "Draft"
-#~ msgstr "草稿"
-
-#~ msgid "Validation date"
-#~ msgstr "确认日期"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "运输异常"
-
-#~ msgid "Month"
-#~ msgstr "月"
-
-#~ msgid "Invoice state"
-#~ msgstr "发票状态"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "发票异常"
-
-#~ msgid "cancel"
-#~ msgstr "取消"
-
-#~ msgid "draft"
-#~ msgstr "草稿"
-
-#~ msgid "Draft sales"
-#~ msgstr "销售草稿"
-
-#~ msgid "Quotation"
-#~ msgstr "报价"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "sale_journal.invoice.type.tree"
-
-#~ msgid "Creation date"
-#~ msgstr "创建日期"
-
-#~ msgid "Sales"
-#~ msgstr "销售"
-
-#~ msgid "Done"
-#~ msgstr "完成"
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "取消销售"
-
-#~ msgid "Quantities"
-#~ msgstr "数量"
-
-#~ msgid "States"
-#~ msgstr "状态"
-
-#~ msgid "Monthly sales"
-#~ msgstr "每月销售"
-
-#~ msgid "Assigned packing"
-#~ msgstr "指定的包装"
-
-#~ msgid "assigned"
-#~ msgstr "已指定"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在这动作定义中有无效的模块名"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "等待日程表"
-
-#~ msgid "to be invoiced"
-#~ msgstr "要发票"
-
-#~ msgid "Sale Journal"
-#~ msgstr "销售分类帐"
-
-#~ msgid "Journal date"
-#~ msgstr "分类帐日期"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "按发票包装"
-
-#~ msgid "Packing Journals"
-#~ msgstr "包装分类帐"
-
-#~ msgid "My open journals"
-#~ msgstr "我待处理的分类帐"
-
-#~ msgid "# of Lines"
-#~ msgstr "行号"
-
-#~ msgid "All Open Journals"
-#~ msgstr "所有待处理的分类帐"
-
-#~ msgid "Average Price"
-#~ msgstr "平均价"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效XML视图结构!"
-
-#~ msgid "Total Price"
-#~ msgstr "价格合计"
-
-#~ msgid "Packing journals"
-#~ msgstr "包装分类帐"
-
-#~ msgid "Reporting"
-#~ msgstr "内部报表"
-
-#~ msgid "My open packing journals"
-#~ msgstr "我待处理的包装分类帐"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "销售订单分类帐"
-
-#~ msgid "Open journals"
-#~ msgstr "待处理分类帐"
-
-#~ msgid "Packing"
-#~ msgstr "包装"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "这分类帐类型用于销售和包装"
-
-#~ msgid "None"
-#~ msgstr "空"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "销售分类帐(这月)"
-
-#~ msgid "Packing by journal"
-#~ msgstr "包装分类帐"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "取消包装"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "确认包装"
-
-#~ msgid "Packing by journals"
-#~ msgstr "包装分类帐"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "按发票包装"
-
-#~ msgid "Order State"
-#~ msgstr "订单状态"
-
-#~ msgid "Sales Journals"
-#~ msgstr "销售分类帐"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "确认销售"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "开票方式"
-
-#~ msgid "Code"
-#~ msgstr "代码"
-
-#~ msgid "Open Journal"
-#~ msgstr "待处理分类帐"
-
-#~ msgid "Packing Journal"
-#~ msgstr "包装分类帐"
-
-#~ msgid "Journal Stats"
-#~ msgstr "分类帐统计"
-
-#~ msgid "Open"
-#~ msgstr "待处理"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#~ msgid "Responsible"
-#~ msgstr "有责任"
-
-#~ msgid "My Open Journals"
-#~ msgstr "我待处理的分类帐"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "统计包装到发票"
-
-#~ msgid "invoiced"
-#~ msgstr "已开票"
-
-#~ msgid "confirmed"
-#~ msgstr "确定"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "包装单分类帐"
-
-#~ msgid "Journal"
-#~ msgstr "分类帐"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "销售分类帐"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "开票方式"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "包装到发票"
-
-#~ msgid "Journal Information"
-#~ msgstr "分类帐信息"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "统计按发票包装"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "包装分类帐"
-
-#~ msgid "Close Journal"
-#~ msgstr "关闭分类帐"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "包装到发票"
-
-#~ msgid "Approved sales"
-#~ msgstr "批准销售"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "单号必须唯一！"
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    销售账簿模块允许你对你的销售订单和发货订单（拣货单）的账簿进行分类。\n"
-#~ "    这个模块对按部门核算的大公司非常有用。\n"
-#~ "\n"
-#~ "    你可以把账簿用于不同的目的，比如：\n"
-#~ "    *不同部门的独立销售\n"
-#~ "    *按卡车或UPS发货的账簿\n"
-#~ "\n"
-#~ "    账簿可以在不同的状态之间进行转换：\n"
-#~ "    *草稿，启动，取消，已完成。\n"
-#~ "\n"
-#~ "    可以在不同的账簿上执行批量的操作，以确认所有销售订单，验证或装箱开票，...\n"
-#~ "\n"
-#~ "    它也支持批量开票方式， 可以按业务伙伴或销售订单配置，比如：\n"
-#~ "    *每天开票。\n"
-#~ "    *每月开票，...\n"
-#~ "\n"
-#~ "    同时提供了按账簿的一些统计。\n"
-#~ "    "
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "用于销售和拣货的账簿类型。"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "错误！您不能创建递归的协会会员。"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "管理销售和送货的账簿"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "错误，您不能创建循环引用的会员用户"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "编号必须在公司内唯一！"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "订单号必须在一个公司范围内唯一"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr "这种开票类型已经被使用，默认开票给当前的合作伙伴"

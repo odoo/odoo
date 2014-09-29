@@ -1,703 +1,21 @@
 # German translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 17:56+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-18 13:38+0000\n"
+"Last-Translator: Heike Vocks (openbig.org) <heike.vocks@big-consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:41+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: lunch
-#: field:lunch.product,category_id:0
-#: field:lunch.product.category,name:0
-msgid "Category"
-msgstr "Kategorie"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_order_by_supplier_form
-msgid "Today's Orders by Supplier"
-msgstr "Aktuelles Tagesangebot"
-
-#. module: lunch
-#: view:lunch.order:0
-msgid "My Orders"
-msgstr "Eigene Bestellung"
-
-#. module: lunch
-#: selection:lunch.order,state:0
-msgid "Partially Confirmed"
-msgstr "Teilweise Bestätigt"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order.line:0
-msgid "Group By..."
-msgstr "Gruppierung..."
-
-#. module: lunch
-#: field:lunch.alert,sunday:0
-msgid "Sunday"
-msgstr "Sonntag"
-
-#. module: lunch
-#: field:lunch.order.line,supplier:0
-#: field:lunch.product,supplier:0
-msgid "Supplier"
-msgstr "Lieferant"
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "Today"
-msgstr "Heute"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "March"
-msgstr "März"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-msgid "By Employee"
-msgstr "Nach Mitarbeiter"
-
-#. module: lunch
-#: field:lunch.alert,friday:0
-msgid "Friday"
-msgstr "Freitag"
-
-#. module: lunch
-#: view:lunch.validation:0
-msgid "validate order lines"
-msgstr "bestätige Bestellung"
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "Order lines Tree"
-msgstr "Bestellpositionen"
-
-#. module: lunch
-#: field:lunch.alert,specific_day:0
-#: field:report.lunch.order.line,day:0
-msgid "Day"
-msgstr "Tag"
-
-#. module: lunch
-#: view:lunch.order.line:0
-#: selection:lunch.order.line,state:0
-msgid "Received"
-msgstr "Empfangen"
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "By Supplier"
-msgstr "Nach Lieferant"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_order_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a lunch order. \n"
-"            </p>\n"
-"            <p>\n"
-"                A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note "
-"and a price.\n"
-"                Before selecting your order lines, don't forget to read the "
-"warnings displayed in the reddish area.\n"
-"            </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Bestellung einer Mahlzeit. \n"
-"            </p>\n"
-"            <p>\n"
-"                Ein Mahlzeit Bestellung enthält Benutzer, Datum und "
-"Bestellpositionen.\n"
-"                Jede Bestellposition enthält ein Produkt, eine Anmerkung und "
-"einen Preis.\n"
-"                Bevor Sie Ihre Bestellpositionen eintragen, vergessen Sie "
-"nicht die Hinweise im \n"
-"                rötlich eingefärbten Bereich zu lesen.\n"
-"            </p>\n"
-"            "
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "Not Received"
-msgstr "Nicht erhalten"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_by_supplier_form
-#: model:ir.ui.menu,name:lunch.menu_lunch_control_suppliers
-msgid "Orders by Supplier"
-msgstr "Bestellungen nach Anbieter"
-
-#. module: lunch
-#: view:lunch.validation:0
-msgid "Receive Meals"
-msgstr "Erhalt der Mahlzeiten Lieferung"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-msgid "cashmove form"
-msgstr "Barzahlung Formular"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
-msgid ""
-"<p>\n"
-"                Here you can see your cash moves.<br/>A cash moves can be "
-"either an expense or a payment.\n"
-"                An expense is automatically created when an order is "
-"received while a payment is a reimbursement to the company encoded by the "
-"manager.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Hier finden Sie die Zahlungen Ihrer Barkasse.<br/>Eine "
-"Transaktion kann dabei eine Ein- oder Auszahlung sein.\n"
-"                Eine Ausgabe wird automatisch durch die Bestellung "
-"ausgelöst, hingegen wird die Kasseneinzahlung durch den\n"
-"                Kassenführer eingegeben.\n"
-"              </p>\n"
-"            "
-
-#. module: lunch
-#: field:lunch.cashmove,amount:0
-msgid "Amount"
-msgstr "Betrag"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_products
-#: model:ir.ui.menu,name:lunch.menu_lunch_products
-#: field:lunch.order,order_line_ids:0
-msgid "Products"
-msgstr "Produkte"
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "By Date"
-msgstr "Nach Datum"
-
-#. module: lunch
-#: selection:lunch.order,state:0
-#: view:lunch.order.line:0
-#: selection:lunch.order.line,state:0
-msgid "Cancelled"
-msgstr "Storniert"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-msgid "lunch employee payment"
-msgstr "Mitarbeiter Mahlzeiten Bezahlung"
-
-#. module: lunch
-#: view:lunch.alert:0
-msgid "alert tree"
-msgstr "Alarm Liste"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_report_lunch_order_line
-msgid "Lunch Orders Statistics"
-msgstr "Statistik Mittagessen"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_alert
-msgid "Lunch Alert"
-msgstr "Mahlzeit Alarmierung"
-
-#. module: lunch
-#: code:addons/lunch/lunch.py:183
-#, python-format
-msgid "Select a product and put your order comments on the note."
-msgstr ""
-"Wählen Sie ein Produkt und ergänzen Sie Ihre Kommentare zur Bestellposition"
-
-#. module: lunch
-#: selection:lunch.alert,alter_type:0
-msgid "Every Week"
-msgstr "Wöchentlich"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove
-msgid "Register Cash Moves"
-msgstr "Erfasse Kasseneinzahlung"
-
-#. module: lunch
-#: selection:lunch.order,state:0
-msgid "Confirmed"
-msgstr "Bestätigt"
-
-#. module: lunch
-#: view:lunch.order:0
-msgid "lunch orders"
-msgstr "Mahlzeiten Bestellung"
-
-#. module: lunch
-#: view:lunch.order.line:0
-msgid "Confirm"
-msgstr "Bestätige"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
-msgid "Your Account"
-msgstr "Ihr Konto"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
-msgid "Your Lunch Account"
-msgstr "Ihr Mahlzeiten Konto"
-
-#. module: lunch
-#: field:lunch.alert,active_from:0
-msgid "Between"
-msgstr "Zwischen"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_order
-msgid "Wizard to order a meal"
-msgstr "Assistent zur Mahlzeiten Bestellung"
-
-#. module: lunch
-#: selection:lunch.order,state:0
-#: selection:lunch.order.line,state:0
-msgid "New"
-msgstr "Neu"
-
-#. module: lunch
-#: code:addons/lunch/lunch.py:180
-#, python-format
-msgid "This is the first time you order a meal"
-msgstr "Dieses ist das erste Mal für Ihre Bestellung"
-
-#. module: lunch
-#: field:report.lunch.order.line,price_total:0
-msgid "Total Price"
-msgstr "Gesamtpreis"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_validation
-msgid "lunch validation for order"
-msgstr "Bestätigung des Mittagessen"
-
-#. module: lunch
-#: report:lunch.order.line:0
-msgid "Name/Date"
-msgstr "Name/Datum"
-
-#. module: lunch
-#: report:lunch.order.line:0
-msgid "Total :"
-msgstr "Bruttobetrag:"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "July"
-msgstr "Juli"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_config
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#. module: lunch
-#: field:lunch.order,state:0
-#: field:lunch.order.line,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: lunch
-#: view:lunch.order.order:0
-msgid ""
-"Order a meal doesn't mean that we have to pay it.\n"
-"                        A meal should be paid when it is received."
-msgstr ""
-"Bestellen einer Mahlzeit bedeutet nicht zwingend eine Zahlungsaufforderung.\n"
-"                                         Eine Mahlzeit sollte erst bei "
-"erhalt bezahlt werden."
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
-#: model:ir.ui.menu,name:lunch.menu_lunch_control_accounts
-msgid "Control Accounts"
-msgstr "Steuerung der Konten"
-
-#. module: lunch
-#: selection:lunch.alert,alter_type:0
-msgid "Every Day"
-msgstr "Täglich"
-
-#. module: lunch
-#: field:lunch.order.line,cashmove:0
-msgid "Cash Move"
-msgstr "Einzahlung"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.order_order_lines
-msgid "Order meals"
-msgstr "Mahlzeiten Bestellung"
-
-#. module: lunch
-#: view:lunch.alert:0
-msgid "Schedule Hour"
-msgstr "Terminiere Uhrzeit"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "September"
-msgstr "September"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
-msgid ""
-"<p>\n"
-"                Here you can see every orders grouped by suppliers and by "
-"date.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce "
-"that the order isn't available\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Hier finden Sie alle Mahlzeiten Bestellungen nach Anbieter "
-"und Datum gruppiert.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> um "
-"mitzuteilen, dass die Mahlzeit bestellt wurde <br/>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> um mitzuteilen, "
-"dass die Mahlzeit geliefert wurde <br/>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> das rote X um "
-"mitzuteilen, dass die Mahlzeit noch nicht geliefert wurde\n"
-"              </p>\n"
-"            "
-
-#. module: lunch
-#: field:lunch.alert,tuesday:0
-msgid "Tuesday"
-msgstr "Dienstag"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
-msgid "Your Orders"
-msgstr "Ihre Bestellungen"
-
-#. module: lunch
-#: field:report.lunch.order.line,month:0
-msgid "Month"
-msgstr "Monat"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_products
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a product for lunch. \n"
-"            </p>\n"
-"              <p>\n"
-"                A product is defined by its name, category, price and "
-"supplier.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung von Produkten für Ihre "
-"Mahlzeiten. \n"
-"            </p>\n"
-"              <p>\n"
-"                Ein Produkt definiert sich durch Bezeichnung, Kategorie, "
-"Preis und Lieferant.\n"
-"              </p>\n"
-"            "
-
-#. module: lunch
-#: view:lunch.alert:0
-#: field:lunch.alert,message:0
-msgid "Message"
-msgstr "Nachricht"
-
-#. module: lunch
-#: view:lunch.order.order:0
-msgid "Order Meals"
-msgstr "Mahlzeiten Bestellung"
-
-#. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.order:0
-#: view:lunch.validation:0
-msgid "or"
-msgstr "oder"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_product_categories
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a lunch category. \n"
-"            </p>\n"
-"              <p>\n"
-"                Here you can find every lunch categories for products.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung einer Mahlzeiten Kategorie. \n"
-"            </p>\n"
-"              <p>\n"
-"                Hier finden Sie alle Mahlzeiten Kategorien für Produkte.\n"
-"              </p>\n"
-"            "
-
-#. module: lunch
-#: view:lunch.order.order:0
-msgid "Order meal"
-msgstr "Bestelle Mahlzeit"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_product_categories
-#: model:ir.ui.menu,name:lunch.menu_lunch_product_categories
-msgid "Product Categories"
-msgstr "Kategorien Produkte"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_control_suppliers
-msgid "Control Suppliers"
-msgstr "Steuerung Anbieter"
-
-#. module: lunch
-#: view:lunch.alert:0
-msgid "Schedule Date"
-msgstr "Geplante Zeit"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_alert
-#: model:ir.ui.menu,name:lunch.menu_lunch_alert
-#: field:lunch.order,alerts:0
-msgid "Alerts"
-msgstr "Alarm"
-
-#. module: lunch
-#: field:lunch.order.line,note:0
-#: field:report.lunch.order.line,note:0
-msgid "Note"
-msgstr "Notiz"
-
-#. module: lunch
-#: code:addons/lunch/lunch.py:257
-#, python-format
-msgid "Add"
-msgstr "Hinzufügen"
-
-#. module: lunch
-#: view:lunch.product:0
-#: view:lunch.product.category:0
-msgid "Products Form"
-msgstr "Produkte Formular"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.cancel_order_lines
-msgid "Cancel meals"
-msgstr "Storniere Mahlzeit"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cashmove
-#: view:lunch.cashmove:0
-msgid "lunch cashmove"
-msgstr "Lunch Bezahlung"
-
-#. module: lunch
-#: view:lunch.cancel:0
-msgid "Are you sure you want to cancel these meals?"
-msgstr "Sind Sie sicher, dass Sie Ihre Bestellung stornieren möchten ?"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-msgid "My Account"
-msgstr "Mein Konto"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "August"
-msgstr "August"
-
-#. module: lunch
-#: field:lunch.alert,monday:0
-msgid "Monday"
-msgstr "Montag"
-
-#. module: lunch
-#: field:lunch.order.line,name:0
-msgid "unknown"
-msgstr "unbekannt"
-
-#. module: lunch
-#: model:ir.actions.act_window,name:lunch.validate_order_lines
-msgid "Receive meals"
-msgstr "Empfang der Mahlzeiten"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "June"
-msgstr "Juni"
-
-#. module: lunch
-#: field:lunch.cashmove,user_id:0
-#: field:lunch.order,user_id:0
-#: field:report.lunch.order.line,user_id:0
-msgid "User Name"
-msgstr "Benutzer Name"
-
-#. module: lunch
-#: model:ir.module.category,name:lunch.module_lunch_category
-#: model:ir.ui.menu,name:lunch.menu_lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_title
-msgid "Lunch"
-msgstr "Mittagessen"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_order_line
-msgid "lunch order line"
-msgstr "Mahlzeiten Auftragspositionen"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product
-msgid "lunch product"
-msgstr "Mittagessen Produkt"
-
-#. module: lunch
-#: field:lunch.order.line,user_id:0
-#: model:res.groups,name:lunch.group_lunch_user
-msgid "User"
-msgstr "Benutzer"
-
-#. module: lunch
-#: field:lunch.cashmove,date:0
-#: field:lunch.order,date:0
-#: field:lunch.order.line,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "November"
-msgstr "November"
-
-#. module: lunch
-#: view:lunch.order:0
-msgid "Orders Tree"
-msgstr "Bestellungen Übersicht"
-
-#. module: lunch
-#: view:lunch.order:0
-msgid "Orders Form"
-msgstr "Bestellformular"
-
-#. module: lunch
-#: view:lunch.alert:0
-#: view:lunch.order.line:0
-msgid "Search"
-msgstr "Suche"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "October"
-msgstr "Oktober"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_order_by_supplier_form
-msgid ""
-"<p>\n"
-"                Here you can see today's orders grouped by suppliers.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
-"that the order is ordered <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
-"the order is received <br/>\n"
-"                - Click on the <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that "
-"the order isn't available\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Hier finden Sie alle Mahlzeiten Bestellungen nach Anbieter.\n"
-"              </p>\n"
-"              <p>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> um "
-"mitzuteilen, dass die Mahlzeit bestellt wurde <br/>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> um mitzuteilen, "
-"dass die Mahlzeit geliefert wurde <br/>\n"
-"                - Klicken Sie auf <img "
-"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> das rote X um "
-"mitzuteilen, dass die Mahlzeit nicht ausgeliefert werden konnte\n"
-"              </p>\n"
-"            "
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "January"
-msgstr "Januar"
-
-#. module: lunch
-#: selection:lunch.alert,alter_type:0
-msgid "Specific Day"
-msgstr "Bestimmter Tag"
-
-#. module: lunch
-#: field:lunch.alert,wednesday:0
-msgid "Wednesday"
-msgstr "Mittwoch"
-
-#. module: lunch
-#: view:lunch.product.category:0
-msgid "Product Category: "
-msgstr "Produkt Kategorie: "
-
-#. module: lunch
-#: field:lunch.alert,active_to:0
-msgid "And"
-msgstr "und"
-
-#. module: lunch
-#: selection:lunch.order.line,state:0
-msgid "Ordered"
-msgstr "Bestellt"
-
-#. module: lunch
-#: field:report.lunch.order.line,date:0
-msgid "Date Order"
-msgstr "Datum Auftrag"
-
-#. module: lunch
-#: view:lunch.cancel:0
-msgid "Cancel Orders"
-msgstr "Storno der Bestellung"
+"X-Launchpad-Export-Date: 2014-09-19 08:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_alert
@@ -741,73 +59,52 @@ msgstr ""
 "            "
 
 #. module: lunch
-#: view:lunch.cancel:0
-msgid "A cancelled meal should not be paid by employees."
-msgstr ""
-"Eine stornierte Bestellung soll nicht durch Mitarbeiter bezahlt werden"
-
-#. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_cash
-msgid "Administrate Cash Moves"
-msgstr "Administriere Barkasse"
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_cancel
-msgid "cancel lunch order"
-msgstr "Abbrechen Mahlzeitenbestellung"
-
-#. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "December"
-msgstr "Dezember"
-
-#. module: lunch
-#: view:lunch.cancel:0
-#: view:lunch.order.line:0
-#: view:lunch.order.order:0
-#: view:lunch.validation:0
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove
+#: model:ir.actions.act_window,help:lunch.action_lunch_product_categories
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a payment. \n"
+"                Click to create a lunch category. \n"
 "            </p>\n"
 "              <p>\n"
-"                Here you can see the employees' payment. A payment is a cash "
-"move from the employee to the company.\n"
+"                Here you can find every lunch categories for products.\n"
 "              </p>\n"
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Eingabe einer Zahlung.\n"
+"                Klicken Sie zur Erstellung einer Mahlzeiten Kategorie. \n"
 "            </p>\n"
 "              <p>\n"
-"                Hier können Sie die Zahlung von Mitarbeitern eingeben. Eine "
-"Zahlung ist eine Bargeld Einzahlung durch einen Mitarbeiter des "
-"Unternehmens.\n"
+"                Hier finden Sie alle Mahlzeiten Kategorien für Produkte.\n"
 "              </p>\n"
 "            "
 
 #. module: lunch
-#: code:addons/lunch/lunch.py:186
-#, python-format
-msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
-"Ihre favorisierte Mahlzeit wird auf Basis der letzten Bestellung "
-"vorgeschlagen."
-
-#. module: lunch
-#: model:ir.module.category,description:lunch.module_lunch_category
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_tree
 msgid ""
-"Helps you handle your lunch needs, if you are a manager you will be able to "
-"create new products, cashmoves and to confirm or cancel orders."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch order. \n"
+"            </p>\n"
+"            <p>\n"
+"                A lunch order is defined by its user, date and order lines.\n"
+"                Each order line corresponds to a product, an additional note "
+"and a price.\n"
+"                Before selecting your order lines, don't forget to read the "
+"warnings displayed in the reddish area.\n"
+"            </p>\n"
+"            "
 msgstr ""
-"Unterstützt bei der Abwicklung Ihrer Mahlzeiten Bestellung. Als Mahlzeiten "
-"Manager müssen Sie berechtigt sein, Produkte anzulegen, Barzahlungen zu "
-"erfassen und Bestellungen zu erteilen bzw. zu stornieren."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Bestellung einer Mahlzeit. \n"
+"            </p>\n"
+"            <p>\n"
+"                Ein Mahlzeit Bestellung enthält Benutzer, Datum und "
+"Bestellpositionen.\n"
+"                Jede Bestellposition enthält ein Produkt, eine Anmerkung und "
+"einen Preis.\n"
+"                Bevor Sie Ihre Bestellpositionen eintragen, vergessen Sie "
+"nicht die Hinweise im \n"
+"                rötlich eingefärbten Bereich zu lesen.\n"
+"            </p>\n"
+"            "
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_control_accounts
@@ -838,39 +135,500 @@ msgstr ""
 "            "
 
 #. module: lunch
-#: field:lunch.alert,alter_type:0
-msgid "Recurrency"
-msgstr "Häufigkeit"
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment. \n"
+"            </p>\n"
+"              <p>\n"
+"                Here you can see the employees' payment. A payment is a cash "
+"move from the employee to the company.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Eingabe einer Zahlung.\n"
+"            </p>\n"
+"              <p>\n"
+"                Hier können Sie die Zahlung von Mitarbeitern eingeben. Eine "
+"Zahlung ist eine Bargeld Einzahlung durch einen Mitarbeiter des "
+"Unternehmens.\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
-#: code:addons/lunch/lunch.py:189
+#: model:ir.actions.act_window,help:lunch.action_lunch_products
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a product for lunch. \n"
+"            </p>\n"
+"              <p>\n"
+"                A product is defined by its name, category, price and "
+"supplier.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung von Produkten für Ihre "
+"Mahlzeiten. \n"
+"            </p>\n"
+"              <p>\n"
+"                Ein Produkt definiert sich durch Bezeichnung, Kategorie, "
+"Preis und Lieferant.\n"
+"              </p>\n"
+"            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
+msgid ""
+"<p>\n"
+"                Here you can see every orders grouped by suppliers and by "
+"date.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
+"that the order is ordered <br/>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
+"the order is received <br/>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce "
+"that the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                Hier finden Sie alle Mahlzeiten Bestellungen nach Anbieter "
+"und Datum gruppiert.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> um "
+"mitzuteilen, dass die Mahlzeit bestellt wurde <br/>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> um mitzuteilen, "
+"dass die Mahlzeit geliefert wurde <br/>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> das rote X um "
+"mitzuteilen, dass die Mahlzeit noch nicht geliefert wurde\n"
+"              </p>\n"
+"            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_by_supplier_form
+msgid ""
+"<p>\n"
+"                Here you can see today's orders grouped by suppliers.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce "
+"that the order is ordered <br/>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that "
+"the order is received <br/>\n"
+"                - Click on the <img "
+"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that "
+"the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                Hier finden Sie alle Mahlzeiten Bestellungen nach Anbieter.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> um "
+"mitzuteilen, dass die Mahlzeit bestellt wurde <br/>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> um mitzuteilen, "
+"dass die Mahlzeit geliefert wurde <br/>\n"
+"                - Klicken Sie auf <img "
+"src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> das rote X um "
+"mitzuteilen, dass die Mahlzeit nicht ausgeliefert werden konnte\n"
+"              </p>\n"
+"            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
+msgid ""
+"<p>\n"
+"                Here you can see your cash moves.<br/>A cash moves can be "
+"either an expense or a payment.\n"
+"                An expense is automatically created when an order is "
+"received while a payment is a reimbursement to the company encoded by the "
+"manager.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                Hier finden Sie die Zahlungen Ihrer Barkasse.<br/>Eine "
+"Transaktion kann dabei eine Ein- oder Auszahlung sein.\n"
+"                Eine Ausgabe wird automatisch durch die Bestellung "
+"ausgelöst, hingegen wird die Kasseneinzahlung durch den\n"
+"                Kassenführer eingegeben.\n"
+"              </p>\n"
+"            "
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "A cancelled meal should not be paid by employees."
+msgstr ""
+"Eine stornierte Bestellung soll nicht durch Mitarbeiter bezahlt werden"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:267
+#, python-format
+msgid "Add"
+msgstr "Hinzufügen"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_cash
+msgid "Administrate Cash Moves"
+msgstr "Administriere Barkasse"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_admin
+msgid "Administrate Orders"
+msgstr "Verwalte Bestellungen"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_alert
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert
+#: field:lunch.order,alerts:0
+msgid "Alerts"
+msgstr "Alarm"
+
+#. module: lunch
+#: field:lunch.cashmove,amount:0
+msgid "Amount"
+msgstr "Betrag"
+
+#. module: lunch
+#: field:lunch.alert,active_to:0
+msgid "And"
+msgstr "und"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "April"
+msgstr "April"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Are you sure you want to cancel these meals?"
+msgstr "Sind Sie sicher, dass Sie Ihre Bestellung stornieren möchten ?"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Are you sure you want to order these meals?"
+msgstr "Möchten Sie diese Mahlzeit wirklich bestellen ?"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "August"
+msgstr "August"
+
+#. module: lunch
+#: field:lunch.alert,active_from:0
+msgid "Between"
+msgstr "Zwischen"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+msgid "By Employee"
+msgstr "Nach Mitarbeiter"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "By Supplier"
+msgstr "Nach Lieferant"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "By User"
+msgstr "Nach Benutzer"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: view:lunch.order.order:lunch.order_order_lines_view
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Cancel Orders"
+msgstr "Storno der Bestellung"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Cancel a meal means that we didn't receive it from the supplier."
+msgstr ""
+"Stornierung einer Mahlzeit bedeutet, dass der Anbieter diese Bestellung "
+"nicht liefert."
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.cancel_order_lines
+msgid "Cancel meals"
+msgstr "Storniere Mahlzeit"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+#: selection:lunch.order.line,state:0
+msgid "Cancelled"
+msgstr "Storniert"
+
+#. module: lunch
+#: field:lunch.order.line,cashmove:0
+msgid "Cash Move"
+msgstr "Einzahlung"
+
+#. module: lunch
+#: field:lunch.product,category_id:0
+#: field:lunch.product.category,name:0
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_config
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+msgid "Confirm"
+msgstr "Bestätige"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_accounts
+msgid "Control Accounts"
+msgstr "Steuerung der Konten"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_suppliers
+msgid "Control Suppliers"
+msgstr "Steuerung Anbieter"
+
+#. module: lunch
+#: field:lunch.alert,create_uid:0
+#: field:lunch.cancel,create_uid:0
+#: field:lunch.cashmove,create_uid:0
+#: field:lunch.order,create_uid:0
+#: field:lunch.order.line,create_uid:0
+#: field:lunch.order.order,create_uid:0
+#: field:lunch.product,create_uid:0
+#: field:lunch.product.category,create_uid:0
+#: field:lunch.validation,create_uid:0
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: lunch
+#: field:lunch.alert,create_date:0
+#: field:lunch.cancel,create_date:0
+#: field:lunch.cashmove,create_date:0
+#: field:lunch.order,create_date:0
+#: field:lunch.order.line,create_date:0
+#: field:lunch.order.order,create_date:0
+#: field:lunch.product,create_date:0
+#: field:lunch.product.category,create_date:0
+#: field:lunch.validation,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: lunch
+#: field:lunch.cashmove,date:0
+#: field:lunch.order,date:0
+#: field:lunch.order.line,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: lunch
+#: field:report.lunch.order.line,date:0
+msgid "Date Order"
+msgstr "Datum Auftrag"
+
+#. module: lunch
+#: field:lunch.alert,specific_day:0
+#: field:report.lunch.order.line,day:0
+msgid "Day"
+msgstr "Tag"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "December"
+msgstr "Dezember"
+
+#. module: lunch
+#: field:lunch.cashmove,description:0
+#: field:lunch.product,description:0
+#: view:website:lunch.report_lunchorder
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Did your received these meals?"
+msgstr "Haben Sie diese Mahlzeiten erhalten ?"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:199
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
 msgstr ""
 "Vergessen Sie nicht die Hinweise im rötlich eingefärbten Bereich zu lesen."
 
 #. module: lunch
-#: field:lunch.alert,thursday:0
-msgid "Thursday"
-msgstr "Donnerstag"
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
+msgid "Employee Payments"
+msgstr "Mitarbeiter Einzahlungen"
 
 #. module: lunch
-#: report:lunch.order.line:0
-msgid "Unit Price"
-msgstr "Preis/ME"
+#: selection:lunch.alert,alter_type:0
+msgid "Every Day"
+msgstr "Täglich"
 
 #. module: lunch
-#: field:lunch.order.line,product_id:0
-#: field:lunch.product,name:0
-msgid "Product"
-msgstr "Produkt"
+#: selection:lunch.alert,alter_type:0
+msgid "Every Week"
+msgstr "Wöchentlich"
 
 #. module: lunch
-#: field:lunch.cashmove,description:0
-#: report:lunch.order.line:0
-#: field:lunch.product,description:0
-msgid "Description"
-msgstr "Beschreibung"
+#: selection:report.lunch.order.line,month:0
+msgid "February"
+msgstr "Februar"
+
+#. module: lunch
+#: field:lunch.alert,friday:0
+msgid "Friday"
+msgstr "Freitag"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Group By"
+msgstr "Gruppierung"
+
+#. module: lunch
+#: model:ir.module.category,description:lunch.module_lunch_category
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr ""
+"Unterstützt bei der Abwicklung Ihrer Mahlzeiten Bestellung. Als Mahlzeiten "
+"Manager müssen Sie berechtigt sein, Produkte anzulegen, Barzahlungen zu "
+"erfassen und Bestellungen zu erteilen bzw. zu stornieren."
+
+#. module: lunch
+#: field:lunch.alert,id:0
+#: field:lunch.cancel,id:0
+#: field:lunch.cashmove,id:0
+#: field:lunch.order,id:0
+#: field:lunch.order.line,id:0
+#: field:lunch.order.order,id:0
+#: field:lunch.product,id:0
+#: field:lunch.product.category,id:0
+#: field:lunch.validation,id:0
+#: field:report.lunch.order.line,id:0
+#: field:report.lunch.report_lunchorder,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: lunch
+#: field:lunch.cashmove,state:0
+msgid "Is an order or a Payment"
+msgstr "Es gibt eine Bestellung oder eine Einzahlung"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "January"
+msgstr "Januar"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: lunch
+#: field:lunch.alert,write_uid:0
+#: field:lunch.cancel,write_uid:0
+#: field:lunch.cashmove,write_uid:0
+#: field:lunch.order,write_uid:0
+#: field:lunch.order.line,write_uid:0
+#: field:lunch.order.order,write_uid:0
+#: field:lunch.product,write_uid:0
+#: field:lunch.product.category,write_uid:0
+#: field:lunch.validation,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: lunch
+#: field:lunch.alert,write_date:0
+#: field:lunch.cancel,write_date:0
+#: field:lunch.cashmove,write_date:0
+#: field:lunch.order,write_date:0
+#: field:lunch.order.line,write_date:0
+#: field:lunch.order.order,write_date:0
+#: field:lunch.product,write_date:0
+#: field:lunch.product.category,write_date:0
+#: field:lunch.validation,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_form_view
+msgid "List"
+msgstr "Liste"
+
+#. module: lunch
+#: model:ir.module.category,name:lunch.module_lunch_category
+#: model:ir.ui.menu,name:lunch.menu_lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_title
+msgid "Lunch"
+msgstr "Mittagessen"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_alert
+msgid "Lunch Alert"
+msgstr "Mahlzeit Alarmierung"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:43
+#: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
+#: model:ir.model,name:lunch.model_lunch_order
+#: view:website:lunch.report_lunchorder
+#, python-format
+msgid "Lunch Order"
+msgstr "Auftrag Mittagessen"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_report_lunch_order_line
+msgid "Lunch Orders Statistics"
+msgstr "Statistik Mittagessen"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "March"
+msgstr "März"
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -878,15 +636,41 @@ msgid "May"
 msgstr "Mai"
 
 #. module: lunch
-#: field:lunch.order.line,price:0
-#: field:lunch.product,price:0
-msgid "Price"
-msgstr "Preis"
+#: view:lunch.alert:lunch.alert_form_view
+#: field:lunch.alert,message:0
+msgid "Message"
+msgstr "Nachricht"
 
 #. module: lunch
-#: field:lunch.cashmove,state:0
-msgid "Is an order or a Payment"
-msgstr "Es gibt eine Bestellung oder eine Einzahlung"
+#: field:lunch.alert,monday:0
+msgid "Monday"
+msgstr "Montag"
+
+#. module: lunch
+#: field:report.lunch.order.line,month:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "My Account grouped"
+msgstr "Meine zusammengefassten Konten"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "My Orders"
+msgstr "Eigene Bestellung"
+
+#. module: lunch
+#: view:website:lunch.report_lunchorder
+msgid "Name/Date"
+msgstr "Name/Datum"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+#: selection:lunch.order.line,state:0
+msgid "New"
+msgstr "Neu"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_form
@@ -895,88 +679,180 @@ msgid "New Order"
 msgstr "Neuer Auftrag"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-msgid "cashmove tree"
-msgstr "Liste Barzahlúngen"
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Not Received"
+msgstr "Nicht erhalten"
 
 #. module: lunch
-#: view:lunch.cancel:0
-msgid "Cancel a meal means that we didn't receive it from the supplier."
+#: field:lunch.order.line,note:0
+#: field:report.lunch.order.line,note:0
+msgid "Note"
+msgstr "Notiz"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "November"
+msgstr "November"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "October"
+msgstr "Oktober"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Once a meal is received a new cash move is created for the employee."
 msgstr ""
-"Stornierung einer Mahlzeit bedeutet, dass der Anbieter diese Bestellung "
-"nicht liefert."
+"Sobald eine Mahlzeit in Empfang genommen wird, erfolgt auch die Zahlung des "
+"Mitarbeiters."
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
-msgid "Employee Payments"
-msgstr "Mitarbeiter Einzahlungen"
+#: field:lunch.cashmove,order_id:0
+#: selection:lunch.cashmove,state:0
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: field:lunch.order.line,order_id:0
+#: view:website:lunch.report_lunchorder
+msgid "Order"
+msgstr "Auftrag"
 
 #. module: lunch
-#: view:lunch.cashmove:0
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Order Meals"
+msgstr "Mahlzeiten Bestellung"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Order Month"
+msgstr "Auftragsdatum"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid ""
+"Order a meal doesn't mean that we have to pay it.\n"
+"                        A meal should be paid when it is received."
+msgstr ""
+"Bestellen einer Mahlzeit bedeutet nicht zwingend eine Zahlungsaufforderung.\n"
+"                                         Eine Mahlzeit sollte erst bei "
+"erhalt bezahlt werden."
+
+#. module: lunch
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+msgid "Order lines Tree"
+msgstr "Bestellpositionen"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Order meal"
+msgstr "Bestelle Mahlzeit"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.order_order_lines
+msgid "Order meals"
+msgstr "Mahlzeiten Bestellung"
+
+#. module: lunch
+#: selection:lunch.order.line,state:0
+msgid "Ordered"
+msgstr "Bestellt"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_form_view
+msgid "Orders Form"
+msgstr "Bestellformular"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_tree_view
+msgid "Orders Tree"
+msgstr "Bestellungen Übersicht"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_by_supplier_form
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_suppliers
+msgid "Orders by Supplier"
+msgstr "Bestellungen nach Anbieter"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "Partially Confirmed"
+msgstr "Teilweise Bestätigt"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
 #: selection:lunch.cashmove,state:0
 msgid "Payment"
 msgstr "Zahlung"
 
 #. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "February"
-msgstr "Februar"
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
+msgid "Previous Orders"
+msgstr "Vorherige Bestellungen"
 
 #. module: lunch
-#: field:report.lunch.order.line,year:0
-msgid "Year"
-msgstr "Jahr"
+#: field:lunch.order.line,price:0
+#: field:lunch.product,price:0
+msgid "Price"
+msgstr "Preis"
 
 #. module: lunch
-#: view:lunch.order:0
-msgid "List"
-msgstr "Liste"
+#: field:lunch.order.line,product_id:0
+#: field:lunch.product,name:0
+msgid "Product"
+msgstr "Produkt"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_admin
-msgid "Administrate Orders"
-msgstr "Verwalte Bestellungen"
+#: model:ir.actions.act_window,name:lunch.action_lunch_product_categories
+#: model:ir.ui.menu,name:lunch.menu_lunch_product_categories
+msgid "Product Categories"
+msgstr "Kategorien Produkte"
 
 #. module: lunch
-#: selection:report.lunch.order.line,month:0
-msgid "April"
-msgstr "April"
+#: view:lunch.product.category:lunch.product_category_form_view
+msgid "Product Category:"
+msgstr "Produktkategorie:"
 
 #. module: lunch
-#: view:lunch.order:0
-msgid "Select your order"
-msgstr "Auswahl eigene Bestellung"
+#: model:ir.actions.act_window,name:lunch.action_lunch_products
+#: model:ir.ui.menu,name:lunch.menu_lunch_products
+#: field:lunch.order,order_line_ids:0
+msgid "Products"
+msgstr "Produkte"
 
 #. module: lunch
-#: field:lunch.cashmove,order_id:0
-#: selection:lunch.cashmove,state:0
-#: report:lunch.order.line:0
-#: view:lunch.order.line:0
-#: field:lunch.order.line,order_id:0
-msgid "Order"
-msgstr "Auftrag"
+#: view:lunch.product:lunch.products_form_view
+#: view:lunch.product.category:lunch.product_category_form_view
+msgid "Products Form"
+msgstr "Produkte Formular"
 
 #. module: lunch
-#: model:ir.actions.report.xml,name:lunch.report_lunch_order
-#: model:ir.model,name:lunch.model_lunch_order
-#: report:lunch.order.line:0
-msgid "Lunch Order"
-msgstr "Auftrag Mittagessen"
+#: view:lunch.product:lunch.products_tree_view
+msgid "Products Tree"
+msgstr "Produkt Suche"
 
 #. module: lunch
-#: view:lunch.order.order:0
-msgid "Are you sure you want to order these meals?"
-msgstr "Möchten Sie diese Mahlzeit wirklich bestellen ?"
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Receive Meals"
+msgstr "Erhalt der Mahlzeiten Lieferung"
 
 #. module: lunch
-#: view:lunch.cancel:0
-msgid "cancel order lines"
-msgstr "Abbrechen Auftragszeilen"
+#: model:ir.actions.act_window,name:lunch.validate_order_lines
+msgid "Receive meals"
+msgstr "Empfang der Mahlzeiten"
 
 #. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_category
-msgid "lunch product category"
-msgstr "Mittagessen Produktkategorie"
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+#: selection:lunch.order.line,state:0
+msgid "Received"
+msgstr "Empfangen"
+
+#. module: lunch
+#: field:lunch.alert,alter_type:0
+msgid "Recurrency"
+msgstr "Häufigkeit"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove
+msgid "Register Cash Moves"
+msgstr "Erfasse Kasseneinzahlung"
 
 #. module: lunch
 #: field:lunch.alert,saturday:0
@@ -984,261 +860,243 @@ msgid "Saturday"
 msgstr "Samstag"
 
 #. module: lunch
-#: model:res.groups,name:lunch.group_lunch_manager
-msgid "Manager"
-msgstr "Manager"
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Schedule Date"
+msgstr "Geplante Zeit"
 
 #. module: lunch
-#: view:lunch.validation:0
-msgid "Did your received these meals?"
-msgstr "Haben Sie diese Mahlzeiten erhalten ?"
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Schedule Hour"
+msgstr "Terminiere Uhrzeit"
 
 #. module: lunch
-#: view:lunch.validation:0
-msgid "Once a meal is received a new cash move is created for the employee."
+#: view:lunch.alert:lunch.alert_search_view
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Search"
+msgstr "Suche"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:193
+#, python-format
+msgid "Select a product and put your order comments on the note."
 msgstr ""
-"Sobald eine Mahlzeit in Empfang genommen wird, erfolgt auch die Zahlung des "
-"Mitarbeiters."
+"Wählen Sie ein Produkt und ergänzen Sie Ihre Kommentare zur Bestellposition"
 
 #. module: lunch
-#: view:lunch.product:0
-msgid "Products Tree"
-msgstr "Produkt Suche"
+#: view:lunch.order:lunch.orders_form_view
+msgid "Select your order"
+msgstr "Auswahl eigene Bestellung"
 
 #. module: lunch
-#: view:lunch.cashmove:0
-#: view:lunch.order:0
+#: selection:report.lunch.order.line,month:0
+msgid "September"
+msgstr "September"
+
+#. module: lunch
+#: selection:lunch.alert,alter_type:0
+msgid "Specific Day"
+msgstr "Bestimmter Tag"
+
+#. module: lunch
+#: field:lunch.order,state:0
+#: field:lunch.order.line,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: lunch
+#: field:lunch.alert,sunday:0
+msgid "Sunday"
+msgstr "Sonntag"
+
+#. module: lunch
+#: field:lunch.order.line,supplier:0
+#: field:lunch.product,supplier:0
+msgid "Supplier"
+msgstr "Lieferant"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Supplier Order by Month"
+msgstr "Lieferantenaufträge nach Monat"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:190
+#, python-format
+msgid "This is the first time you order a meal"
+msgstr "Dieses ist das erste Mal für Ihre Bestellung"
+
+#. module: lunch
+#: field:lunch.alert,thursday:0
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Today"
+msgstr "Heute"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_by_supplier_form
+msgid "Today's Orders by Supplier"
+msgstr "Aktuelles Tagesangebot"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_tree
+#: view:lunch.cashmove:lunch.casmove_tree_view
+#: view:lunch.order:lunch.orders_tree_view
 #: field:lunch.order,total:0
-#: view:lunch.order.line:0
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: view:website:lunch.report_lunchorder
 msgid "Total"
 msgstr "Bruttobetrag"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
-msgid "Previous Orders"
-msgstr "Vorherige Bestellungen"
-
-#~ msgid "Reset cashbox"
-#~ msgstr "Zurücksetzen Kasse"
-
-#~ msgid "Lunch Orders"
-#~ msgstr "Aufträge des Tages"
-
-#~ msgid "Are you sure you want to cancel this order ?"
-#~ msgstr "Möchten Sie wirklich die Bestellung stornieren ?"
-
-#~ msgid "Cash Moves"
-#~ msgstr "Einzahlungen"
-
-#~ msgid "confirm Order"
-#~ msgstr "Bestätige Bestellung"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 Tage    "
-
-#~ msgid "Cancel Order"
-#~ msgstr "Storno Bestellung"
-
-#~ msgid "Amount available by user and box"
-#~ msgstr "Kasse nach Benutzer und Mittagskasse"
-
-#~ msgid "   Month   "
-#~ msgstr "   Monat   "
-
-#~ msgid "CashMove"
-#~ msgstr "Einzahlung"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid "Lunch Module"
-#~ msgstr "Modul Mittagessen"
-
-#~ msgid "Search Lunch Order"
-#~ msgstr "Suche Bestellung Mittagessen"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Box Amount by User"
-#~ msgstr "Einzahlung durch Benutzer"
-
-#~ msgid "Creation Date"
-#~ msgstr "Datum Erstellung"
-
-#~ msgid "Description Order"
-#~ msgstr "Beschreibung Bestellung"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Bestätige Bestellung"
-
-#~ msgid "Box"
-#~ msgstr "Kasse"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#~ msgid "  365 Days  "
-#~ msgstr "  365 Tage  "
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Monat-1    "
-
-#~ msgid "Created Date"
-#~ msgstr "Datum erstellt"
-
-#~ msgid " Product Categories "
-#~ msgstr " Produktkategorien "
-
-#~ msgid "Set to Zero"
-#~ msgstr "Setze auf 0"
-
-#~ msgid "Name of box"
-#~ msgstr "Name Kasse"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "  Year  "
-#~ msgstr "  Jahr  "
-
-#~ msgid "No"
-#~ msgstr "Nein"
-
-#~ msgid "Orders Confirmation"
-#~ msgstr "Bestätigung Bestellung"
-
-#~ msgid "Are you sure you want to reset this cashbox ?"
-#~ msgstr "Möchten Sie wirklich die Kasse zurücksetzen?"
-
-#~ msgid "Draft"
-#~ msgstr "Entwurf"
-
-#~ msgid "Lunch Order Analysis"
-#~ msgstr "Auswertung Mittagessen"
-
-#~ msgid "Sales Analysis"
-#~ msgstr "Analyse Verkauf"
-
-#~ msgid "clean cashbox"
-#~ msgstr "Kassenausgleich"
-
-#~ msgid "Active"
-#~ msgstr "Aktiv"
-
-#~ msgid "Cashbox for Lunch "
-#~ msgstr "Mittagskasse "
-
-#~ msgid "Set CashBox to Zero"
-#~ msgstr "Setze Kasse auf 0"
-
-#~ msgid "Box Name"
-#~ msgstr "Name Mittagskasse"
-
-#~ msgid " Cashboxes "
-#~ msgstr " Mittagskasse "
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-#~ "beinhalten!"
-
-#~ msgid "Search CashMove"
-#~ msgstr "Suche Einzahlung"
-
-#~ msgid "Total box"
-#~ msgstr "Summe Mittagskasse"
-
-#~ msgid "Lunch Product"
-#~ msgstr "Produkt Mittagessen"
-
-#~ msgid "Total Remaining"
-#~ msgstr "Restgeld"
-
-#~ msgid "Total price"
-#~ msgstr "Gesamtpreis"
-
-#~ msgid "Name"
-#~ msgstr "Name"
-
-#~ msgid "Total amount"
-#~ msgstr "Gesamtbetrag"
-
-#~ msgid "Category related to Products"
-#~ msgstr "Kategorie Produkte"
-
-#~ msgid "Cashboxes"
-#~ msgstr "Kassen"
-
-#~ msgid "Cash Position by User"
-#~ msgstr "Guthaben nach Benutzer"
-
-#~ msgid "   30 Days   "
-#~ msgstr "   30 Tage   "
-
-#~ msgid "To Confirm"
-#~ msgstr "zu Bestätigen"
-
-#~ msgid ""
-#~ "\n"
-#~ "    The base module to manage lunch\n"
-#~ "\n"
-#~ "    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
-#~ "    Apply Different Category for the product.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Dieses Modul ist ein einfaches Basismodul zur Verwaltung der täglichen "
-#~ "Mitarbeiterverpflegung.\n"
-#~ "\n"
-#~ "    Die Anwendung verfolgt die Bestellungen von Mitarbeitern und prüft Ein- "
-#~ "und Auszahlung aus der\n"
-#~ "    Gemeinschaftskasse. Ausserdem können für den Zweck der Anwendung "
-#~ "Produkte und Kategorien definiert werden.\n"
-#~ "    "
-
-#~ msgid "Define Your Lunch Products"
-#~ msgstr "Definieren Sie Ihre Essensprodukte"
-
-#~ msgid ""
-#~ "Define all products that the employees can order for the lunch time. If you "
-#~ "order lunch at several places, you can use the product categories to split "
-#~ "by supplier. It will be easier for the lunch manager to filter lunch orders "
-#~ "by categories."
-#~ msgstr ""
-#~ "Definieren Sie alle Produkte die Mitarbeiter als Mittagstisch bestellen "
-#~ "können. Wenn Sie das Essen bei verschiedenen Stellen bestellen, dann "
-#~ "verwenden sie am Besten Produktkategorien je Anbieter. Der Manger kann die "
-#~ "Produkte dann je Kategorie bestellen."
-
-#~ msgid "General Information"
-#~ msgstr "Allgemeine Informationen"
-
-#~ msgid "Tasks performed in last 30 days"
-#~ msgstr "Aufgaben erledit in den letzten 30 Tagen"
-
-#~ msgid "Box amount in current month"
-#~ msgstr "Einzahlungen laufendes Monat"
-
-#~ msgid "Box amount in current year"
-#~ msgstr "Kassen Betrag aktuelles Jahr"
-
-#~ msgid ""
-#~ "You can create on cashbox by employee if you want to keep track of the "
-#~ "amount due by employee according to what have been ordered."
-#~ msgstr ""
-#~ "Sie können eine Kasse je Mitarbeiter führen, wenn Sie die Beträge je "
-#~ "Mitarbeiter entsprechend seiner Bestellungen evident halten wollen"
-
-#~ msgid "Tasks performed in last 365 days"
-#~ msgstr "Aufgaben in den letzten 365 Tagen"
-
-#~ msgid "Box amount in last month"
-#~ msgstr "Einzahlungen letztes Monat"
-
-#~ msgid "Tasks during last 7 days"
-#~ msgstr "Aufgaben der letzten 7 Tage"
-
-#~ msgid "Create Lunch Cash Boxes"
-#~ msgstr "Erzeugen Sie Essenskassen"
+#: field:report.lunch.order.line,price_total:0
+msgid "Total Price"
+msgstr "Gesamtpreis"
+
+#. module: lunch
+#: field:lunch.alert,tuesday:0
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#. module: lunch
+#: view:website:lunch.report_lunchorder
+msgid "Unit Price"
+msgstr "Preis/ME"
+
+#. module: lunch
+#: field:lunch.order.line,user_id:0
+#: model:res.groups,name:lunch.group_lunch_user
+msgid "User"
+msgstr "Benutzer"
+
+#. module: lunch
+#: field:lunch.cashmove,user_id:0
+#: field:lunch.order,user_id:0
+#: field:report.lunch.order.line,user_id:0
+msgid "User Name"
+msgstr "Benutzer Name"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "Users"
+msgstr "Benutzer/innen"
+
+#. module: lunch
+#: field:lunch.alert,wednesday:0
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_order
+msgid "Wizard to order a meal"
+msgstr "Assistent zur Mahlzeiten Bestellung"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Write the message you want to display during the defined period..."
+msgstr ""
+"Schreiben Sie bitte eine Mitteilung, die während der definierten Perioden "
+"angezeigt werden kann."
+
+#. module: lunch
+#: field:report.lunch.order.line,year:0
+msgid "Year"
+msgstr "Jahr"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
+msgid "Your Account"
+msgstr "Ihr Konto"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
+msgid "Your Lunch Account"
+msgstr "Ihr Mahlzeiten Konto"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
+msgid "Your Orders"
+msgstr "Ihre Bestellungen"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:196
+#, python-format
+msgid "Your favorite meals will be created based on your last orders."
+msgstr ""
+"Ihre favorisierte Mahlzeit wird auf Basis der letzten Bestellung "
+"vorgeschlagen."
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+#: view:lunch.alert:lunch.alert_tree_view
+msgid "alert tree"
+msgstr "Alarm Liste"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cancel
+msgid "cancel lunch order"
+msgstr "Abbrechen Mahlzeitenbestellung"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "cancel order lines"
+msgstr "Abbrechen Auftragszeilen"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_form_view
+msgid "cashmove form"
+msgstr "Barzahlung Formular"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_tree
+#: view:lunch.cashmove:lunch.casmove_tree_view
+msgid "cashmove tree"
+msgstr "Liste Barzahlúngen"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cashmove
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+msgid "lunch cashmove"
+msgstr "Lunch Bezahlung"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "lunch employee payment"
+msgstr "Mitarbeiter Mahlzeiten Bezahlung"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "lunch order line"
+msgstr "Mahlzeiten Auftragspositionen"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "lunch orders"
+msgstr "Mahlzeiten Bestellung"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "lunch product"
+msgstr "Mittagessen Produkt"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "lunch product category"
+msgstr "Mittagessen Produktkategorie"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_validation
+msgid "lunch validation for order"
+msgstr "Bestätigung des Mittagessen"
+
+#. module: lunch
+#: field:lunch.order.line,name:0
+msgid "unknown"
+msgstr "unbekannt"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "validate order lines"
+msgstr "bestätige Bestellung"

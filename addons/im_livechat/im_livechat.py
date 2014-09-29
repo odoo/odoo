@@ -21,6 +21,7 @@
 
 import random
 import openerp
+import json
 import openerp.addons.im_chat.im_chat
 
 from openerp.osv import osv, fields
@@ -193,6 +194,16 @@ class im_chat_session(osv.Model):
         'fullname' : fields.function(_get_fullname, type="char", string="Complete name"),
     }
 
+    def is_in_session(self, cr, uid, uuid, user_id, context=None):
+        """ return if the given user_id is in the session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, uid, sids, context=context):
+            if session.anonymous_name and user_id == openerp.SUPERUSER_ID:
+                return True
+            else:
+                return super(im_chat_session, self).is_in_session(cr, uid, uuid, user_id, context=context)
+        return False
+
     def users_infos(self, cr, uid, ids, context=None):
         """ add the anonymous user in the user of the session """
         for session in self.browse(cr, uid, ids, context=context):
@@ -223,7 +234,7 @@ class LiveChatController(http.Controller):
         return request.render('im_livechat.loader', info)
 
     @http.route('/im_livechat/get_session', type="json", auth="none")
-    def get_session(self, channel_id, anonymous_name):
+    def get_session(self, channel_id, anonymous_name, **kwargs):
         cr, uid, context, db = request.cr, request.uid or openerp.SUPERUSER_ID, request.context, request.db
         reg = openerp.modules.registry.RegistryManager.get(db)
         # if geoip, add the country name to the anonymous name
@@ -237,3 +248,4 @@ class LiveChatController(http.Controller):
         reg = openerp.modules.registry.RegistryManager.get(db)
         with reg.cursor() as cr:
             return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
+

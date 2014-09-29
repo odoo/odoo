@@ -1623,7 +1623,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: value, value: value}]
+                values: [{label: value, value: value, operator: 'ilike'}]
             },
             expand: this.expand.bind(this),
         }]);
@@ -1636,8 +1636,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             'contexts', [this.view.dataset.get_context()]);
         return this.model.call('name_search', [], {
             name: needle,
-            args: instance.web.pyeval.eval(
-                'domains', this.attrs.domain ? [this.attrs.domain] : [], context),
+            args: (typeof this.attrs.domain === 'string') ? [] : this.attrs.domain,
             limit: 8,
             context: context
         }).then(function (results) {
@@ -1671,9 +1670,13 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return facetValue.get('label');
     },
     make_domain: function (name, operator, facetValue) {
+        operator = facetValue.get('operator') || operator;
+
         switch(operator){
         case this.default_operator:
             return [[name, '=', facetValue.get('value')]];
+        case 'ilike':
+            return [[name, 'ilike', facetValue.get('value')]];
         case 'child_of':
             return [[name, 'child_of', facetValue.get('value')]];
         }
@@ -2363,7 +2366,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             switch (ev.which) {
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
-                    if (self.get_search_string().length) {
+                    if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }
                     break;

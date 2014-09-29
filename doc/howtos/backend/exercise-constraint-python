@@ -1,0 +1,25 @@
+# HG changeset patch
+# Parent 7a7d003fe38426a405ce0657a627a139133ec4dd
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:06.591783274 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:06.587783274 +0200
+@@ -1,6 +1,6 @@
+ # -*- coding: utf-8 -*-
+ 
+-from openerp import models, fields, api
++from openerp import models, fields, api, exceptions
+ 
+ class Course(models.Model):
+     _name = 'openacademy.course'
+@@ -56,3 +56,9 @@
+                     'message': "Increase seats or remove excess attendees",
+                 },
+             }
++
++    @api.one
++    @api.constrains('instructor_id', 'attendee_ids')
++    def _check_instructor_not_in_attendees(self):
++        if self.instructor_id and self.instructor_id in self.attendee_ids:
++            raise exceptions.ValidationError("A session's instructor can't be an attendee")

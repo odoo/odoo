@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_enter_transfer_details" model="ir.ui.view">
+            <field name="name">Enter transfer details</field>
+            <field name="model">stock.transfer_details</field>
+            <field name="arch" type="xml">
+                <form string="Transfer details" version="7">
+                    <field name="picking_source_location_id" invisible="True"/>
+                    <field name="picking_destination_location_id" invisible="True"/>
+                    <group string="Products To Move">
+                        <div class="oe_grey" groups="stock.group_tracking_lot">
+                            Setting a product and a source package means that the product will be taken
+                            out of the package.  
+                        </div>
+                    </group>
+                    <group>
+                        <field name="item_ids"
+                            context="{'default_sourceloc_id':picking_source_location_id,
+                                      'default_destinationloc_id':picking_destination_location_id}" nolabel="1">
+                            <tree string="Inventory Details" editable="bottom" >
+                                <field name="package_id" groups="stock.group_tracking_lot"/>
+                                <field name="product_id" required="True"  context="{'uom':product_uom_id}" on_change="product_id_change(product_id,product_uom_id,context)"/>
+                                <field name="quantity"/>
+                                <button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
+                                <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
+                                <field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+                                <field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
+                                <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': destinationloc_id}"/>
+                                <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
+                                <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Packages To Move" groups="stock.group_tracking_lot">
+                        <div class="oe_grey">
+                            The source package will be moved entirely.  If you specify a destination package, the source package will be put in the destination package.  
+                        </div>
+                    </group>
+                    <group groups="stock.group_tracking_lot">
+                        <field name="packop_ids" 
+                            context="{'default_sourceloc_id':picking_source_location_id,
+                                      'default_destinationloc_id':picking_destination_location_id}" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="package_id" required="True" on_change="source_package_change(package_id)"/>
+                                <field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+                                <field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
+                                <field name="result_package_id"/>
+                                <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="do_detailed_transfer" string="_Apply" type="object" class="oe_highlight"/>
+                        or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

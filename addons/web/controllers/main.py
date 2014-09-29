@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp import http
@@ -123,7 +124,7 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
-    if not db:
+    if not db and request.session.db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
@@ -509,6 +510,8 @@ class Home(http.Controller):
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
+        if not http.db_filter([db]):
+            return werkzeug.utils.redirect('/', 303)
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
     @http.route([
@@ -639,7 +642,8 @@ class Proxy(http.Controller):
         from werkzeug.test import Client
         from werkzeug.wrappers import BaseResponse
 
-        return Client(request.httprequest.app, BaseResponse).get(path).data
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
 class Database(http.Controller):
 
@@ -704,7 +708,7 @@ class Database(http.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        
+
         try:
             if request.session.proxy("db").drop(password, db):
                 return True
@@ -1176,8 +1180,9 @@ class Binary(http.Controller):
         '/logo',
         '/logo.png',
     ], type='http', auth="none")
-    def company_logo(self, dbname=None):
-        # TODO add etag, refactor to use /image code for etag
+    def company_logo(self, dbname=None, **kw):
+        imgname = 'logo.png'
+        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1189,13 +1194,13 @@ class Binary(http.Controller):
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
-            image_data = self.placeholder('logo.png')
+            response = http.send_file(placeholder(imgname))
         else:
             try:
                 # create an empty registry
                 registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web
+                    cr.execute("""SELECT c.logo_web, c.write_date
                                     FROM res_users u
                                LEFT JOIN res_company c
                                       ON c.id = u.company_id
@@ -1203,22 +1208,19 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = str(row[0]).decode('base64')
+                        image_data = StringIO(str(row[0]).decode('base64'))
+                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
                     else:
-                        image_data = self.placeholder('nologo.png')
+                        response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                image_data = self.placeholder('logo.png')
+                response = http.send_file(placeholder(imgname))
 
-        headers = [
-            ('Content-Type', 'image/png'),
-            ('Content-Length', len(image_data)),
-        ]
-        return request.make_response(image_data, headers)
+        return response
 
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
-    def load(self, action_id, do_not_eval=False):
+    def load(self, action_id, do_not_eval=False, additional_context=None):
         Actions = request.session.model('ir.actions.actions')
         value = False
         try:
@@ -1233,11 +1235,12 @@ class Action(http.Controller):
 
         base_action = Actions.read([action_id], ['type'], request.context)
         if base_action:
-            ctx = {}
+            ctx = request.context
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
-            ctx.update(request.context)
+            if additional_context:
+                ctx.update(additional_context)
             action = request.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(action[0])
@@ -1425,7 +1428,7 @@ class ExportFormat(object):
                 params)
 
         Model = request.session.model(model)
-        context = dict(req.context or {}, **params.get('context', {}))
+        context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
 
         field_names = map(operator.itemgetter('name'), fields)
@@ -1617,7 +1620,7 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-        
+
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
