@@ -6,14 +6,6 @@ from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
 
 
-class payment_transaction(orm.Model):
-    _inherit = 'payment.transaction'
-
-    _columns = {
-        # link with the sale order
-        'sale_order_id': fields.many2one('sale.order', 'Sale Order'),
-    }
-
 class sale_order(osv.Model):
     _inherit = "sale.order"
 
