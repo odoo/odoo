@@ -33,7 +33,6 @@ import account_unreconcile
 import account_invoice_refund
 import account_journal_select
 import account_move_bank_reconcile
-import account_subscription_generate
 import account_report_aged_partner_balance
 import account_report_partner_ledger
 import account_report_partner_balance
@@ -51,7 +50,6 @@ import account_financial_report
 # also remove related view fiel
 
 import account_validate_account_move
-import account_use_model
 
 import account_state_open
 
