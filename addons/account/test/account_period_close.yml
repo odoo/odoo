@@ -7,7 +7,6 @@
     date_start: !eval "'%s-01-01' %(datetime.now().year-1)"
     date_stop: !eval "'%s-12-31' %(datetime.now().year-1)"
     name: !eval "'Fiscal Year X %s' %(datetime.now().year-1)"
-    code: !eval "'FY%s' %(datetime.now().year-1)"
 
 -
   I create a period then close it and checked it's state

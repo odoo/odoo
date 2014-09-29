@@ -1,29 +1,3 @@
--
- In order to check the Chart of Accounts wizard  I run the wizard with target move set as all
-
--
-  !record {model: account.chart, id: account_chart_0}:
-    target_move: all
--
-  I clicked on Open chart Button to open the chart
--
-  !python {model: account.chart}: |
-    self.account_chart_open_window(cr, uid, [ref("account_chart_0")], {"lang": 'en_US',
-      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_account_tree2")],
-      "tz": False, "active_id": ref("account.menu_action_account_tree2"), })
-
--
-  I create chart of accounts with target move set as posted
--
-  !record {model: account.chart, id: account_chart_0}:
-    target_move: posted
--
-  I clicked on Open chart Button to open the chart
--
-  !python {model: account.chart}: |
-    self.account_chart_open_window(cr, uid, [ref("account_chart_0")], {"lang": 'en_US',
-      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_account_tree2")],
-      "tz": False, "active_id": ref("account.menu_action_account_tree2"), })
 
 #-
 #  In order to test Account Move Line Wizard I check the move line entries using this wizard
@@ -54,20 +28,4 @@
       {"lang": 'en_US', "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_analytic_account_tree2")],
       "tz": False, "active_id": ref("account.menu_action_analytic_account_tree2"),
       })
-
--
-  In order to test Account Journal Select wizard I open journal entries using this wizard
--
-  !record {model: account.journal.select, id: account_journal_select_0}:
-    {}
--
-  I clicked on Open Journal Button to open the entries
-
--
-  !python {model: account.journal.select}: |
-    self.action_open_window(cr, uid, [ref("account_journal_select_0")], {"lang":
-      'en_US', "active_model": "account.journal.period", "active_ids": [ref("account.a_recv")],
-      "tz": False, "active_id": ref("account.a_recv"), })
--
-  I check that the entries open successfully
 
