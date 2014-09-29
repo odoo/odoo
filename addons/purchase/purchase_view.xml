@@ -265,7 +265,6 @@
                         </page>
                         <page string="RFQ &amp; Bid">
                             <group>
-                                <field name="payment_term_id" widget="selection"/>
                                 <field name="incoterm_id"/>
                                 <field name="bid_date"/>
                                 <field name="bid_validity"/>
@@ -281,7 +280,7 @@
                                 <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                    <field name="payment_term_id" widget="selection"/>
+                                    <field name="payment_term_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
