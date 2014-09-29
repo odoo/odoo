@@ -20,4 +20,17 @@
         evaluated, other content is interpreted as literal strings and
         displayed as-is
 
+    GIS
+    Geographic Information System
+        any computer system or subsystem to capture, store, manipulate,
+        analyze, manage or present spatial and geographical data.
+
+    minified
+    minification
+        process of removing extraneous/non-necessary sections of files
+        (comments, whitespace) and possibly recompiling them using equivalent
+        but shorter structures (`ternary operator`_ instead of ``if/else``) in
+        order to reduce network traffic
+
 .. _jinja variables: http://jinja.pocoo.org/docs/dev/templates/#variables
+.. _ternary operator: http://en.wikipedia.org/wiki/%3F:

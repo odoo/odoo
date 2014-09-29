@@ -350,6 +350,39 @@ it::
 will unbind all DOM events, remove the widget's content from the DOM and
 destroy all widget data.
 
+Development Guidelines
+----------------------
+
+* Identifiers (``id`` attribute) should be avoided. In generic applications
+  and modules, ``id`` limits the re-usability of components and tends to make
+  code more brittle. Most of the time, they can be replaced with nothing,
+  classes or keeping a reference to a DOM node or jQuery element.
+
+  If an ``id`` is absolutely necessary (because a third-party library requires
+  one), the id should be partially generated using ``_.uniqueId()`` e.g.::
+
+      this.id = _.uniqueId('my-widget-')
+* Avoid predictable/common CSS class names. Class names such as "content" or
+  "navigation" might match the desired meaning/semantics, but it is likely an
+  other developer will have the same need, creating a naming conflict and
+  unintended behavior. Generic class names should be prefixed with e.g. the
+  name of the component they belong to (creating "informal" namespaces, much
+  as in C or Objective-C).
+* Global selectors should be avoided. Because a component may be used several
+  times in a single page (an example in Odoo is dashboards), queries should be
+  restricted to a given component's scope. Unfiltered selections such as
+  ``$(selector)`` or ``document.querySelectorAll(selector)`` will generally
+  lead to unintended or incorrect behavior.  Odoo Web's
+  :class:`~openerp.web.Widget` has an attribute providing its DOM root
+  (:attr:`~openerp.web.Widget.$el`), and a shortcut to select nodes directly
+  (:func:`~openerp.web.Widget.$`).
+* More generally, never assume your components own or controls anything beyond
+  its own personal :attr:`~openerp.web.Widget.$el`
+* html templating/rendering should use QWeb unless absolutely trivial.
+* All interactive components (components displaying information to the screen
+  or intercepting DOM events) must inherit from :class:`~openerp.web.Widget`
+  and correctly implement and use its API and life cycle.
+
 .. _.appendTo():
     http://api.jquery.com/appendTo/
 
