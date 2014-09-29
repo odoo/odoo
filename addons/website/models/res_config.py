@@ -8,6 +8,7 @@ class website_config_settings(osv.osv_memory):
     _columns = {
         'website_id': fields.many2one('website', string="website", required=True),
 
+        'use_fontloader': fields.related('website_id', 'use_fontloader', type="boolean", string='Use Fontloader', help='if activated the fonts will be loaded at the end of the page , and default front is shown till font is loaded'),
         'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
         'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
         'default_lang_code': fields.related('website_id', 'default_lang_code', type="char", string="Default language code"),

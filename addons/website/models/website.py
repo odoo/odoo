@@ -150,6 +150,7 @@ class website(osv.osv):
     _description = "Website"
     _columns = {
         'name': fields.char('Domain'),
+        'use_fontloader': fields.boolean('Use Fontloader', help='if activated the fonts will be loaded at the end of the page , and default front is shown till font is loaded'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
@@ -171,6 +172,7 @@ class website(osv.osv):
 
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'use_fontloader': True
     }
 
     # cf. Wizard hack in website_views.xml
