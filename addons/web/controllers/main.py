@@ -748,25 +748,32 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token, **kwargs):
+    def backup(self, backup_db, backup_pwd, token, backup_type='odoo'):
         try:
-            format = kwargs.get('format')
-            ext = "zip" if format == 'zip' else "dump"
+            try:
+                extension = {
+                    'odoo': 'odump',
+                    'custom': 'pgdump',
+                }[backup_type]
+            except KeyError:
+                raise Exception("Not recognized backup type: %s" % backup_type)
             db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db, format))
-            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
+                request.session.proxy("db")\
+                               .dump(backup_pwd, backup_db, backup_type))
+            filename = "%(db)s_%(timestamp)s.%(extension)s" % {
                 'db': backup_db,
                 'timestamp': datetime.datetime.utcnow().strftime(
                     "%Y-%m-%d_%H-%M-%SZ"),
-                'ext': ext
+                'extension': extension,
             }
-            return request.make_response(db_dump,
-               [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', content_disposition(filename))],
-               {'fileToken': token}
-            )
         except Exception, e:
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
+        else:
+            return request.make_response(db_dump,
+                [('Content-Type', 'application/octet-stream; charset=binary'),
+                 ('Content-Disposition', content_disposition(filename))],
+                {'fileToken': token},
+            )
 
     @http.route('/web/database/restore', type='http', auth="none")
     def restore(self, db_file, restore_pwd, new_db, mode):

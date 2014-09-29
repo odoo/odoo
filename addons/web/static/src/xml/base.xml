@@ -222,20 +222,22 @@
                                 </t>
                             </select>
                             <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
+                            <div style="margin-top: 5px">
+                                <label title="Archive containing a dump of your database and your whole filestore">
+                                    <input type="radio" name="backup_type" value="odoo" checked="checked"/>
+                                    Odoo database backup
+                                </label>
+                                <br/>
+                                <label title="PostgreSQL dump of your database (custom dump)">
+                                    <input type="radio" name="backup_type" value="custom"/>
+                                    Backup for migration (without file storage)
+                                </label>
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="backup_pwd">Master Password:</label></td>
                         <td><input type="password" name="backup_pwd" class="required" /></td>
-                    </tr>
-                    <tr>
-                        <td><label>Format:</label></td>
-                        <td>
-                            <input type="radio" name="format" checked="checked" value="zip" />
-                            <label for="format" title="Archive containing a dump of your database and your whole filestore">Zip</label>
-                            <input type="radio" name="format" value="binary" />
-                            <label for="format" title="Binary dump of your database (PostgreSQL dump)">Binary</label>
-                        </td>
                     </tr>
                 </table>
             </form>
