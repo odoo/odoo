@@ -1047,14 +1047,24 @@ class expression(object):
                         cr, uid, datetime.datetime.strptime(
                             right, DEFAULT_SERVER_DATE_FORMAT)
                     )
-                    if operator in ('>', '<='):
-                        right = (date + datetime.timedelta(
-                            hours=23, minutes=59, seconds=59)).strftime(
-                                DEFAULT_SERVER_DATETIME_FORMAT)
-                    else:
-                        right = date.strftime(
+                    day_start = date.strftime(
+                        DEFAULT_SERVER_DATETIME_FORMAT)
+                    day_end = (date + datetime.timedelta(
+                        hours=23, minutes=59, seconds=59)).strftime(
                             DEFAULT_SERVER_DATETIME_FORMAT)
-                    push(create_substitution_leaf(leaf, (left, operator, right), model))
+                    if operator in ('=', 'like'):
+                        push_result(create_substitution_leaf(
+                            leaf, '&', model))
+                        push_result(create_substitution_leaf(
+                            leaf, (left, '<=', day_end), model))
+                        push_result(create_substitution_leaf(
+                            leaf, (left, '>=', day_start), model))
+                    elif operator in ('>', '<='):
+                        push(create_substitution_leaf(
+                            leaf, (left, operator, day_end), model))
+                    else:
+                        push(create_substitution_leaf(
+                            leaf, (left, operator, day_start), model))
 
                 elif column.translate and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
