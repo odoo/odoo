@@ -49,10 +49,10 @@ class Experiment(osv.Model):
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
                 exp['variations'].append({'name':name})
         print exp
-        google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
-        if not google_id:
-            raise Warning("Please verify you give the authorizations to use google analytics api ...")
-        vals['google_id'] = google_id
+        # google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
+        # if not google_id:
+        #     raise Warning("Please verify you give the authorizations to use google analytics api ...")
+        # vals['google_id'] = google_id
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -176,7 +176,7 @@ class google_management(osv.AbstractModel):
         return data
 
     def create_an_experiment(self, cr, uid, experiment, context=None):
-        from pudb import set_trace; set_trace()
+        #from pudb import set_trace; set_trace()
         gs_pool = self.pool['google.service']
         data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
 
@@ -224,7 +224,7 @@ class google_management(osv.AbstractModel):
     def get_analytics_scope(self):
         return 'https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/analytics.edit'
 
-    def authorize_google_uri(self, cr, uid, from_url='http://www.openerp.com', context=None):
+    def authorize_google_uri(self, cr, uid, from_url='http://www.odoo.com', context=None):
         url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_analytics_scope(), context=context)
         return url
 
