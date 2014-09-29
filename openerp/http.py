@@ -41,6 +41,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
+from openerp.tools import ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -522,7 +523,7 @@ def serialize_exception(e):
     tmp = {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
-        "message": u"%s" % e,
+        "message": ustr(e),
         "arguments": to_jsonable(e.args),
     }
     if isinstance(e, openerp.osv.osv.except_osv):
@@ -546,7 +547,7 @@ def to_jsonable(o):
         for k, v in o.items():
             tmp[u"%s" % k] = to_jsonable(v)
         return tmp
-    return u"%s" % o
+    return ustr(o)
 
 def jsonrequest(f):
     """ 
