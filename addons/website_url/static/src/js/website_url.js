@@ -13,9 +13,15 @@
         start: function() {
             var self = this;
 
+            new ZeroClipboard(this.$('.btn_shorten_url_clipboard'));
+
             this.$('.archive').click(function(event) {
                 event.preventDefault();
                 self.archive();
+            });
+
+            this.$('.btn_shorten_url_clipboard').click(function() {
+                self.toggle_copy_button();
             });
         },
         archive: function() {
@@ -26,6 +32,17 @@
                     self.$el.remove();
                 });
         },
+        toggle_copy_button: function() {
+            
+            var self = this;
+
+            this.clipboard_btn = this.$('.btn_shorten_url_clipboard');
+            this.clipboard_btn.text("Copied to clipboard").removeClass("btn-primary").addClass("btn-success");
+
+            setTimeout(function() {
+                self.clipboard_btn.text("Copy link to clipboard").removeClass("btn-success").addClass("btn-primary");
+            }, '5000');
+        },
     });
 
     $(document).ready(function() {
@@ -34,8 +51,9 @@
             {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
         );
 
-        // Add the RecentLinkBox widget and send the form when the user generate the link
         var client = new ZeroClipboard($("#btn_shorten_url"));
+
+        // Add the RecentLinkBox widget and send the form when the user generate the link
         $("#btn_shorten_url").click( function() {
             if($(this).attr('class').indexOf('btn_copy') === -1) {
                 var url = $("#url").val();
@@ -45,8 +63,6 @@
 
                 openerp.jsonRpc("/r/new", 'call', {'url' : url, 'campaign_id':campaign_id, 'medium_id':medium_id, 'source_id':source_id})
                     .then(function (result) {
-                        console.log(result);
-
                         var link = result[0];
 
                         $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
