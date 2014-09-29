@@ -184,7 +184,7 @@ class google_management(osv.AbstractModel):
         webPropertyId='UA-55031254-1'
         profileId='1'
 
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?key=AIzaSyCF7Vo_b4nX_1CAE3vkCJJaTWYKfsXk82Y' % (accountId, webPropertyId, profileId)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?key=AIzaSyAg5l2jeAo6PuTXNIUcPiSQlMzQtCMCHoA' % (accountId, webPropertyId, profileId)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
