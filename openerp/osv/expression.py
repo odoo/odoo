@@ -1038,7 +1038,7 @@ class expression(object):
 
             else:
                 if column._type == 'datetime' and right and len(right) == 10:
-                    if operator in ('>', '<='):
+                    if operator in ('<', '<='):
                         right += ' 23:59:59'
                     else:
                         right += ' 00:00:00'
