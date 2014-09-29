@@ -24,7 +24,6 @@ import account_report_common_partner
 import account_report_common_journal
 import account_report_common_account
 
-import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
 import account_reconcile
