@@ -967,8 +967,9 @@
                   <thead>
                       <tr>
                           <th colspan="2" width="80">Product</th>
-                          <th width="100">Price</th>
-                          <th width="120">Quantity</th>
+                          <th width="50" class="text-center" name="qty_header">Quantity</th>
+                          <th width="150" class="text-center">Tax</th>
+                          <th width="120" class="text-center">Amount <br/>(Tax Included)</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -983,15 +984,18 @@
                           <td t-if="line.product_id.product_tmpl_id">
                              <strong t-field="line.product_id.with_context(display_default_code=False).display_name"/>
                           </td>
+                          <td class="text-center" name="product_qty">
+                              <span t-field="line.product_uom_qty"/>
+                          </td>
+                          <td class="text-center" name="tax_name">
+                              <t t-foreach="line.tax_id" t-as="tax_line">
+                                  <span t-field="tax_line.name"/>
+                                  <br/>
+                              </t>
+                          </td>
                           <td class="text-center">
-                             <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
-                                 "widget": "monetary",
-                                 "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                             }'/>
-                          </td>
-                          <td>
-                             <div t-esc="line.product_uom_qty"/>
-                          </td>
+                              <span t-field="line.price_with_tax"/>
+                          </td>  
                       </tr>
                   </tbody>
               </table>
@@ -1064,6 +1068,17 @@
       </div>
 
   </t>
+</template>
+
+<template id="price_untaxed" inherit_id="payment" active="False" customize_show="True" name="Show Amount without Tax">
+    <xpath expr="//th[@name='qty_header']" position="after">
+        <th width="140" class="text-center">Amount <br/>(Tax Excluded)</th>
+    </xpath>
+    <xpath expr="//td[@name='product_qty']" position="after">
+        <td class="text-center">
+    	    <span t-field="line.price_subtotal"/>
+        </td>
+    </xpath>
 </template>
 
 <template id="confirmation">
@@ -1196,14 +1211,14 @@
 <template id="total">
     <table class='pull-right mb16' id="cart_total" t-if="website_sale_order">
         <thead>
-            <tr width="100" style="border-top: 1px solid #000" id="order_total">
-                <th><h3>Total: </h3></th>
-                <th class="text-right">
-                  <h3><span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options='{
+            <tr width="100" style="border-top: 1px solid #000" class="text-muted" id="order_untaxed_amount">
+                <td>Total tax excluded:</td>
+                <td class="text-right">
+                  <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-field-options='{
                       "widget": "monetary",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                    }'/></h3>
-                </th>
+                    }'/>
+                </td>
             </tr>
             <tr width="120" class="text-muted" id="order_total_taxes">
                 <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
@@ -1213,6 +1228,15 @@
                         "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                     }'/>
                 </td>
+            </tr>
+            <tr width="100" id="order_total">
+                <th><h3>Total: </h3></th>
+                <th class="text-right">
+                  <h3><span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options='{
+                      "widget": "monetary",
+                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                    }'/></h3>
+                </th>
             </tr>
         </thead>
     </table>
