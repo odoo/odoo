@@ -275,7 +275,7 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
-                                             <field name="name"/> 
+                                             <field name="name"/>
                                         </a>
                                     </h4>
                                     <a name="%(product.product_variant_action)d" type="action">
@@ -347,6 +347,12 @@
                 <field name="name" position="replace">
                     <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
+                </field>
+                <field name="ean13" position="replace">
+                 <field name="ean13" />
+                </field>
+                 <field name="default_code" position="replace">
+                 <field name="default_code" />
                 </field>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags"/>
@@ -692,9 +698,9 @@
               <p class="oe_view_nocontent_create">
                 Click to add a new Logistic Unit
               </p><p>
-                The logistic unit defines the container used for the package.  
-                It has a type (e.g. pallet, box, ...) and you can specify its 
-                size. 
+                The logistic unit defines the container used for the package.
+                It has a type (e.g. pallet, box, ...) and you can specify its
+                size.
               </p>
             </field>
         </record>
