@@ -10,10 +10,8 @@ class Website_Url(http.Controller):
     def create_shorten_url(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
-        crm_tracking_mixin = request.registry['crm.tracking.mixin']
-
         tracking_fields = {}
-        for key, field in crm_tracking_mixin.tracking_fields():
+        for key, field in request.registry['crm.tracking.mixin'].tracking_fields():
 
             if field in post:
                 tracking_fields.update({field:post[field]})
@@ -25,10 +23,6 @@ class Website_Url(http.Controller):
     @http.route(['/r'] , type='http', auth='user', website=True)
     def shorten_url(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-
-        alias_obj = request.registry['website.alias']
-        alias_ids = alias_obj.search(cr, uid, [], order="write_date DESC", context=context)
-        alias = alias_obj.browse(cr, uid, alias_ids, context=context)
 
         campaign_obj = request.registry['crm.tracking.campaign']
         campaign_ids = campaign_obj.search(cr, uid, [], context=context)
@@ -43,7 +37,7 @@ class Website_Url(http.Controller):
         sources = source_obj.browse(cr, uid, source_ids, context=context)
 
         return request.website.render("website_url.page_shorten_url", 
-            {'campaigns':campaigns, 'channels':channels, 'sources':sources, 'alias':alias})
+            {'campaigns':campaigns, 'channels':channels, 'sources':sources})
 
     @http.route(['/r/recent_links'], type='json', auth='user', website=True)
     def recent_links(self, **post):
@@ -70,10 +64,13 @@ class Website_Url(http.Controller):
         # perticular url code
         action_id = request.registry['ir.actions.act_window'].for_xml_id(cr, uid, 'website_url', 'action_website_alias_stats', context=context)['id']
         return werkzeug.utils.redirect("/web#view_type=graph&model=website.alias.click&action=%d" % (action_id), 302)"""
+
+
     @http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
         return request.website.render("website_url.graphs", {})
+
     @http.route(['/r/<string:code>/chart'], type="json", auth="user", website=True)
     def chart_data(self, code):
         cr, uid, context = request.cr, request.uid, request.context

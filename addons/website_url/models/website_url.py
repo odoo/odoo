@@ -9,7 +9,11 @@ from openerp import models, fields, api, _
 ALLOWED_SCHEMES = ['http', 'https', 'ftp', 'ftps']
 
 def VALIDATE_URL(url):
-    return urlparse(url)[0] in ALLOWED_SCHEMES and 2048 >= len(url)
+
+    if not url.startswith('http'):
+        return 'http://' + url
+
+    return url
 
 class website_alias(models.Model):
     _name = "website.alias"
@@ -59,12 +63,12 @@ class website_alias(models.Model):
     def to_json(self):
 
         # We use a custom method to convert the record to a dictionnary (instead of .read)
-        # because we integreted the names of the UTMs (like source_id.name)
+        # because we insert the names of the UTMs (like source_id.name)
 
         return {'code':self.code, 'count':self.count, 'url':self.url, 'write_date':self.write_date, 'short_url':self.short_url,
-                        'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
-                        'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
-                        'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
+                    'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
+                    'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
+                    'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
 
     @api.one
     def archive(self):
@@ -92,9 +96,24 @@ class website_alias(models.Model):
     @api.model
     def create_shorten_url(self, url, tracking_fields):
 
-        print tracking_fields
+        url = VALIDATE_URL(url)
 
-        if not VALIDATE_URL(url): return False
+        # Check if there is already an alias with the same URL and UTMs
+        search_domain = [('url', '=', url)]
+
+        for key, field in self.env['crm.tracking.mixin'].tracking_fields():
+            if field in tracking_fields:
+                search_domain.append((field, '=', int(tracking_fields[field])))
+            else:
+                search_domain.append((field, '=', None))
+
+        result = self.search(search_domain, limit=1)
+
+        if len(result) > 0:
+            # Put the old link on top of recently generated links
+            # (recent links are sorted by 'write_date')
+            result.update({'is_archived':False})
+            return result
 
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         alias = self.create(dict({'url':url}.items() + tracking_fields.items()))

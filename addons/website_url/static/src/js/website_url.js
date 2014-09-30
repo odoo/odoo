@@ -33,7 +33,6 @@
                 });
         },
         toggle_copy_button: function() {
-            
             var self = this;
 
             this.clipboard_btn = this.$('.btn_shorten_url_clipboard');
@@ -43,9 +42,55 @@
                 self.clipboard_btn.text("Copy link to clipboard").removeClass("btn-success").addClass("btn-primary");
             }, '5000');
         },
+        remove: function() {
+            this.$el.remove();
+        },
+    });
+
+    openerp.website_url.RecentLinks = openerp.Widget.extend({
+        init: function() {
+            this.links = [];
+        },
+        start: function() {
+            var self = this;
+
+            openerp.website.add_template_file('/website_url/static/src/xml/recent_link.xml')
+                .then(function() {
+                    self.get_recent_links();
+                });
+        },
+        get_recent_links: function() {
+            var self = this;
+
+            openerp.jsonRpc('/r/recent_links', 'call')
+                .then(function(result) {
+                    var $recent_links = $('#recent_links');
+                    for(var  i = 0 ; i < result.length ; i++) {
+                        self.add_link(result[i]);
+                    }
+                });
+        },
+        add_link: function(link) {
+            var self = this;
+
+            // Check if the link is already showed to the user and remove it if it's the case
+            for(var i = 0 ; i < this.links.length ; i++) {
+                if(self.links[i].link_obj.code == link.code) {
+                    self.links[i].remove();
+                }
+            }
+
+            var recent_link_box = new openerp.website_url.RecentLinkBox(link);
+            recent_link_box.prependTo($('#recent_links'));
+
+            this.links.push(recent_link_box);
+        },
     });
 
     $(document).ready(function() {
+
+        var recent_links = new openerp.website_url.RecentLinks;
+        recent_links.start();
 
         ZeroClipboard.config(
             {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
@@ -66,35 +111,20 @@
                         var link = result[0];
 
                         $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
-                        $("#btn_shorten_url").text("Copy").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
+                        $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
                         return link;
                     })
                     .then(function(link) {
-                        console.log(link);
-                        var recent_link_box = new openerp.website_url.RecentLinkBox(link);
-                        recent_link_box.prependTo($('#recent_links'));
+                        recent_links.add_link(link);
                     });
             }
         });
 
         $("#url").on("change keyup paste mouseup", function() {
             if ($(this).data("last_result") != $("#url").val()) {
-                $("#btn_shorten_url").text("Shorten").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
+                $("#btn_shorten_url").text("Get short link").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
             }
         });
-
-        // Show the recent links   
-        openerp.website.add_template_file('/website_url/static/src/xml/recent_link.xml')
-            .then(function() {
-                openerp.jsonRpc('/r/recent_links', 'call')
-                    .then(function(result) {
-                        var $recent_links = $('#recent_links');
-                        for(var  i = 0 ; i < result.length ; i++) {
-                            var recent_link_box = new openerp.website_url.RecentLinkBox(result[i]);
-                            recent_link_box.prependTo($recent_links);
-                        }
-                    });
-            });
 
         // Select with search on the campaign fields
         $("#campaign-select").select2();
@@ -130,6 +160,7 @@
 //             $("#btn_shorten_url").text("Shorten").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
 //         }
 //     });
+//
 //     //Testing Data
 //     var pie_data = [
 //             {
