@@ -503,19 +503,13 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line. """
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, unambiguous=False, context=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line.
+            The unambiguous parameter is used to reconcile the statement line without user intervention (eg. when importing a statement) """
         if excluded_ids is None:
             excluded_ids = []
 
-        match = self.get_reconciliation_proposition_unambiguous_match(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
-        if match:
-            return match
-
-        if not st_line.partner_id.id:
-            return []
-
-        # Look for a set of move line whose amount is <= to the line's amount
+        # How to compare statement line amount and move lines amount
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
         sign = 1
@@ -528,11 +522,37 @@ class account_bank_statement_line(osv.osv):
             if st_line.amount < 0:
                 sign = -1
 
+        # Look for structured communication match
+        if st_line.name:
+            overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
+            additional_domain = [('ref', '=', st_line.name)]
+            if unambiguous:
+                additional_domain += [(amount_field, '=', (sign * st_line.amount)), ('date', '<=', st_line.date)] # TODO : date dans get_move_lines_for_reconciliation
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
+            if match_ids and len(match_ids) == 1:
+                mv_line = match_ids[0]
+                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
+                if (mv_line['partner_id'] and not st_line.partner_id.id):
+                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
+                    mv_line['has_no_partner'] = False
+                return [mv_line]
+
+        if not st_line.partner_id.id:
+            return []
+
+        # Look for a single move line with the same partner, the same amount and an anterior date
+        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount)), ('date', '<=', st_line.date)])
+        if match_ids and len(match_ids) == 1:
+            return match_ids
+
+        if unambiguous:
+            return []
+
+        # Look for a set of move line whose amount is <= to the line's amount
         if sign == -1:
             mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=[(amount_field, '<', 0), (amount_field, '>', (sign * st_line.amount))])
         else:
             mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=[(amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))])
-        
         ret = []
         total = 0
         # get_move_lines_for_bank_reconciliation inverts debit and credit
@@ -544,41 +564,6 @@ class account_bank_statement_line(osv.osv):
             if total >= abs(st_line.amount):
                 break
         return ret
-
-    def get_reconciliation_proposition_unambiguous_match(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns a list of move lines that we can use to reconcile the statement line without user intervention (eg. when importing a statement) """
-        if excluded_ids is None:
-            excluded_ids = []
-
-        # Look for structured communication match
-        if st_line.name:
-            overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[('ref', '=', st_line.name)], overlook_partner=overlook_partner)
-            if match_ids and len(match_ids) == 1:
-                mv_line = match_ids[0]
-                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
-                if (mv_line['partner_id'] and not st_line.partner_id.id):
-                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
-                    mv_line['has_no_partner'] = False
-                return [mv_line]
-
-        # Look for a single move line with the same partner, the same amount and an anterior date
-        if st_line.partner_id.id:
-            company_currency = st_line.journal_id.company_id.currency_id.id
-            statement_currency = st_line.journal_id.currency.id or company_currency
-            sign = 1
-            if statement_currency == company_currency:
-                amount_field = 'credit'
-                if st_line.amount > 0:
-                    amount_field = 'debit'
-            else:
-                amount_field = 'amount_currency'
-                if st_line.amount < 0:
-                    sign = -1
-
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount)), ('date', '<=', st_line.date)])
-            if match_ids and len(match_ids) == 1:
-                return match_ids
 
     def get_move_lines_for_bank_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
         """ Bridge between the web client reconciliation widget and get_move_lines_for_bank_reconciliation (which expects a browse record) """
