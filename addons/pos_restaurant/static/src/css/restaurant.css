@@ -43,8 +43,16 @@
     flex: 1;
     position: relative;
     width: auto;
-    background: rgba(0,0,0,0.1);
+    background: #D8D7D7;
     background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 1024px) {
+    .floor-map {
+        margin: 8px;
+        border-radius: 3px;
+        border: dashed 1px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .floor-map .table{
