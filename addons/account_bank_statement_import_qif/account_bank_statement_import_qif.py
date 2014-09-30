@@ -31,7 +31,7 @@ class account_bank_statement_import(osv.TransientModel):
             header = data_list[0].strip()
             header = header.split(":")[1]
         except:
-            raise osv.except_osv(_('Import Error!'), _('Please check QIF file format is proper or not.'))
+            raise osv.except_osv(_('Import Error!'), _('Could not decipher the QIF file.'))
         line_ids = []
         vals_line = {}
         total = 0
@@ -66,8 +66,9 @@ class account_bank_statement_import(osv.TransientModel):
                 else:
                     pass
         else:
-            raise osv.except_osv(_('Error!'), _('Cannot support this Format !Type:%s.') % (header,))
-        vals_bank_statement.update({'balance_end_real': total,
+            raise osv.except_osv(_('Error!'), _('This file is either not a bank statement or it is not correctly formed.'))
+        vals_bank_statement.update({'unique_import_id': 'QIF-'+str(line_ids[0]['date'])+'-'+str(line_ids[0]['amount'])+'-'+str(hash(file_data)),
+                                    'balance_end_real': total,
                                     'line_ids': line_ids,
                                     'journal_id': journal_id})
         return [vals_bank_statement]

@@ -73,24 +73,67 @@ class account_bank_statement_import(osv.TransientModel):
                 bank_account_id = self.pool.get('res.partner.bank').create(cr, uid, bank_account_vals, context=context)
         return bank_account_id, partner_id
 
-    def import_bank_statement(self, cr, uid, bank_statement_vals=False, context=None):
+    def import_bank_statements(self, cr, uid, bank_statement_vals=False, context=None):
         """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values"""
+        bs_obj = self.pool.get('account.bank.statement')
+        bsl_obj = self.pool.get('account.bank.statement.line')
+        if len(bank_statement_vals) == 0:
+            raise osv.except_osv(_('Error'), _('The file doesn\'t contain any bank statement (or wasn\'t properly processed).'))
+        
         statement_ids = []
         for vals in bank_statement_vals:
-            statement_ids.append(self.pool.get('account.bank.statement').create(cr, uid, vals, context=context))
-        return statement_ids
+            if len(bs_obj.search(cr, uid, [('unique_import_id','=',vals['unique_import_id'])], context=context)) == 0:
+                statement_ids.append(bs_obj.create(cr, uid, vals, context=context))
+        if len(statement_ids) == 0:
+            raise osv.except_osv(_('Error'), _('You have already imported that file.'))
+
+        num_auto_reconciled = 0
+        excluded_ids = []
+        for statement in bs_obj.browse(cr, uid, statement_ids, context=context):
+            for st_line in statement.line_ids:
+                counterpart = bsl_obj.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, unambiguous=True, context=context)
+                if counterpart:
+                    for move_line_dict in counterpart:
+                        excluded_ids.append(move_line_dict['id'])
+                        # process_reconciliation() expects data to create new move lines that will be used to reconcile existing ones
+                        # For instance, we can partially reconcile a move line whose ID is 7 and credit is 500 by passing a dict that contains
+                        # 'counterpart_move_line_id': 7,
+                        # 'debit': 250
+                        move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
+                        move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
+                    bsl_obj.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
+                    num_auto_reconciled += 1
+
+        if num_auto_reconciled > 0:
+            if num_auto_reconciled > 1:
+                feedback = _("%d transactions were automatically reconciled.") % num_auto_reconciled
+            else:
+                feedback = _("1 transaction was automatically reconciled.")
+        else:
+            feedback = False
+
+        return statement_ids, feedback
 
     def process_none(self, cr, uid, data_file, journal_id=False, context=None):
         raise osv.except_osv(_('Error'), _('No available format for importing bank statement. You can install one of the file format available through the module installation.'))
 
     def parse_file(self, cr, uid, ids, context=None):
-        """ Process the file chosen in the wizard and returns a list view of the imported bank statements"""
+        """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         data = self.browse(cr, uid, ids[0], context=context)
         vals = getattr(self, "process_%s" % data.file_type)(cr, uid, data.data_file, data.journal_id.id, context=context)
-        statement_ids = self.import_bank_statement(cr, uid, vals, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool[model].read(cr, uid, action_id, context=context)
-        action['domain'] = "[('id', 'in', [" + ', '.join(map(str, statement_ids)) + "])]"
+        statement_ids, import_feedback = self.import_bank_statements(cr, uid, vals, context=context)
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
+        action = self.pool[model].browse(cr, uid, action_id, context=context)
+        return {
+            'name': action.name,
+            'tag': action.tag,
+            'context': {
+                'statement_ids': statement_ids,
+                'import_feedback': import_feedback
+            },
+            'type': 'ir.actions.client',
+        }
+
         return action
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

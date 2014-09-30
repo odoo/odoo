@@ -157,6 +157,8 @@ class account_bank_statement(osv.osv):
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
         'cash_control': fields.related('journal_id', 'cash_control' , type='boolean', relation='account.journal',string='Cash control'),
         'all_lines_reconciled': fields.function(_all_lines_reconciled, string='All lines reconciled', type='boolean'),
+        # Make sure a statement can be imported only once
+        'unique_import_id': fields.char('Import ID', readonly=True, select=True, copy=False),
     }
 
     _defaults = {

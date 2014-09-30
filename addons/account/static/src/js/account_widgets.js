@@ -965,6 +965,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
+            this.import_feedback = context.context.import_feedback;
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -1033,6 +1034,9 @@ openerp.account = function (instance) {
                     // If there is no statement line to reconcile, stop here
                     if (self.lines.length === 0) {
                         self.$el.prepend(QWeb.render("bank_statement_nothing_to_reconcile"));
+                        if (self.import_feedback) {
+                            self.displayImportFeedback(self.import_feedback);
+                        }
                         return;
                     }
         
@@ -1057,10 +1061,27 @@ openerp.account = function (instance) {
                                 child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
                             while ((datum = data.shift()) !== undefined)
                                 child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
+                            
+                            // When reconciliations are instanciated, make an entrance
                             $.when.apply($, child_promises).then(function(){
-                                self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
+                                self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed, function() {
+                                    if (self.import_feedback) {
+                                        self.displayImportFeedback(self.import_feedback);
+                                    }
+                                });
                             });
                         });
+                });
+            });
+        },
+
+        displayImportFeedback: function(feedback) {
+            var self = this;
+            var notification = $("<div class='import_feedback alert alert-info' role='alert'>"+feedback+"</div>").hide();
+            notification.appendTo(this.$(".notification_area")).slideDown(this.aestetic_animation_speed);
+            this.$(".notification_area").css("cursor", "pointer").click(function() {
+                $(this).slideUp(self.aestetic_animation_speed, function() {
+                    $(this).remove();
                 });
             });
         },

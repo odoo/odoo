@@ -13,6 +13,7 @@
             	</div>
             </div>
             <div class="oe_clear"></div>
+            <div class="notification_area"></div>
             <div class="interface_options oe_form"></div>
             <div class="reconciliation_lines_container"></div>
             <p class='protip'>Tip : Hit ctrl-enter to validate the whole sheet.</p>
@@ -148,6 +149,7 @@
 
     <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
         <t t-jquery=".oe_view_nocontent" t-operation="inner">
+            <div class="notification_area"></div><br/>
             <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
             <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
         </t>
