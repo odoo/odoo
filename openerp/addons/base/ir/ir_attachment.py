@@ -202,13 +202,17 @@ class ir_attachment(osv.osv):
                 res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
 
         ima = self.pool.get('ir.model.access')
+        # Check if we are allowed to perform action on attachment
+        ima.check(cr, uid, 'ir.attachment', mode)
+        # For related models, check if we can write to the model, as linking
+        # or unlinking attachments can be seen as an update to the model
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
             if not self.pool.get(model):
                 continue
             mids = self.pool.get(model).exists(cr, uid, mids)
-            ima.check(cr, uid, model, mode)
+            ima.check(cr, uid, model, 'write')
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
