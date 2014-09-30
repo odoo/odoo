@@ -5,7 +5,7 @@
         <t t-if='!widget.selected'>
             <div class='table' t-att-style='widget.table_style_str()'>
                 <t t-if='widget.order_count'>
-                    <span class='order-count'><t t-esc='widget.order_count'/></span>
+                    <span t-att-class='"order-count " + (widget.notifications.printing ? "notify-printing":"")'><t t-esc='widget.order_count'/></span>
                 </t>
                 <span class='label'>
                     <t t-esc='widget.table.name' />

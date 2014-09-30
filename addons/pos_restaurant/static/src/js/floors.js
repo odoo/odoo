@@ -74,7 +74,6 @@ function openerp_restaurant_floors(instance,module){
                     } 
                 },50);
             } else {
-                console.log('set table',this.table);
                 floorplan.pos.set_table(this.table);
             }
         },
@@ -265,9 +264,21 @@ function openerp_restaurant_floors(instance,module){
                 self.destroy();
             });
         },
+        get_notifications: function(){  //FIXME : Make this faster
+            var orders = this.pos.get_table_orders(this.table);
+            var notifications = {};
+            for (var i = 0; i < orders.length; i++) {
+                if (orders[i].hasChangesToPrint()) {
+                    notifications['printing'] = true;
+                    break;
+                }
+            }
+            return notifications
+        },
         renderElement: function(){
             var self = this;
             this.order_count = this.pos.get_table_orders(this.table).length;
+            this.notifications = this.get_notifications();
             this._super();
 
             this.$el.on('mouseup',      function(event){ self.click_handler(event,$(this)); });
