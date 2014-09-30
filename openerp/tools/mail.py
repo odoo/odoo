@@ -538,6 +538,9 @@ def plaintext2html(text, container_tag=False):
     # 1. replace \n and \r
     text = text.replace('\n', '<br/>')
     text = text.replace('\r', '<br/>')
+    
+    # 1.5. substitute links
+    text = re.sub(r'((https?|ftp):\/\/[\S]+)', r'<a href="\1" target="_blank">\1</a> ', text)
 
     # 2-3: form paragraphs
     idx = 0
