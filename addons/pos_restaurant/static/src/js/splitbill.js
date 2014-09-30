@@ -76,7 +76,7 @@ function openerp_restaurant_splitbill(instance, module){
             this.$('.order-info .subtotal').text(this.format_currency(neworder.getSubtotal()));
         },
 
-        pay: function($el,order,neworder,splitlines,cashregister_id){
+        pay: function(order,neworder,splitlines){
             var orderlines = order.get('orderLines').models;
             var empty = true;
             var full  = true;
@@ -100,15 +100,8 @@ function openerp_restaurant_splitbill(instance, module){
                 return;
             }
 
-            for(var i = 0; i < this.pos.cashregisters.length; i++){
-                if(this.pos.cashregisters[i].id === cashregister_id){
-                    var cashregister = this.pos.cashregisters[i];
-                    break;
-                }
-            }
 
             if(full){
-                order.addPaymentline(cashregister);
                 this.pos_widget.screen_selector.set_current_screen('payment');
             }else{
                 for(var id in splitlines){
@@ -120,7 +113,6 @@ function openerp_restaurant_splitbill(instance, module){
                     }
                     delete splitlines[id];
                 }
-                neworder.addPaymentline(cashregister);
                 neworder.set_screen_data('screen','payment');
 
                 // for the kitchen printer we assume that everything
@@ -159,10 +151,8 @@ function openerp_restaurant_splitbill(instance, module){
                 self.lineselect($el,order,neworder,splitlines,id);
             });
 
-            this.$('.paymentmethod').click(function(){
-                var id = parseInt($(this).data('id'));
-                var $el = $(this);
-                self.pay($el,order,neworder,splitlines,id);
+            this.$('.paymentmethods .button').click(function(){
+                self.pay(order,neworder,splitlines);
             });
         },
     });
