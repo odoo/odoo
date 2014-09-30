@@ -126,11 +126,11 @@
     </t>
 
     <t t-name="ActionpadWidget">
-        <div class='actionpad'>
+        <div class="actionpad">
             <button class='button set-customer'>
                 <i class='fa fa-user' /> Set Customer
             </button>
-            <button class="button pay">
+            <button class='button pay'>
                 <i class='fa fa-chevron-right' /> Payment
             </button>
         </div>
@@ -557,8 +557,9 @@
                 </div>
             </t>
         </div>
+
     </t>
-        
+
     <t t-name="PaymentScreenWidget">
         <div class='payment-screen screen'>
             <div class='screen-content'>
@@ -589,24 +590,23 @@
 
                     <div class='payment-buttons'>
                         <t t-if='widget.pos.config.iface_invoicing'>
-                            <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                <i class='fa fa-file-text-o' /> Invoice
-                            </div>
+                            <t t-if='widget.pos.get_order()'>
+                                <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
+                                    <i class='fa fa-file-text-o' /> Invoice
+                                </div>
+                            </t>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_invoice'>
                                 <i class='fa fa-archive' /> Open Cashbox
                             </div>
                         </t>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-
-    </t>
-
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </t>
+        
     <t t-name="ReceiptScreenWidget">
         <div class='receipt-screen screen'>
             <div class='screen-content'>

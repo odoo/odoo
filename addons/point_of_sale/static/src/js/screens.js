@@ -975,9 +975,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             // 2 seconds is the same as the default timeout for sending orders and so the dialog
             // should have appeared before the timeout... so yeah that's not ultra reliable. 
 
-            this.lock_screen(true);  
+            this.lock_screen(true);
             setTimeout(function(){
-                self.lock_screen(false);  
+                self.lock_screen(false);
             }, 2000);
         },
         lock_screen: function(locked) {
@@ -1156,6 +1156,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         render_paymentlines: function() {
             var self  = this;
             var order = this.pos.get_order();
+            if (!order) {
+                return;
+            }
+
             var lines = order.get('paymentLines').models;
 
             this.$('.paymentlines-container').empty();
@@ -1245,6 +1249,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         watch_order_changes: function() {
             var self = this;
             var order = this.pos.get_order();
+            if (!order) {
+                return;
+            }
             if(this.old_order){
                 this.old_order.unbind(null,null,this);
             }
@@ -1258,7 +1265,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         order_changes: function(){
             var self = this;
             var order = this.pos.get_order();
-            if (order.isPaid()) {
+            if (!order) {
+                return;
+            } else if (order.isPaid()) {
                 self.$('.next').addClass('highlight');
             }else{
                 self.$('.next').removeClass('highlight');
@@ -1271,7 +1280,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             var order = this.pos.get_order();
 
-            if(order.get('orderLines').models.length === 0){
+            // FIXME: this check is there because the backend is unable to
+            // process empty orders. This is not the right place to fix it.
+            if(order.get_orderlines().length === 0){
                 this.pos_widget.screen_selector.show_popup('error',{
                     'message': _t('Empty Order'),
                     'comment': _t('There must be at least one product in your order before it can be validated'),
@@ -1344,3 +1355,4 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
 }
+

@@ -1,7 +1,7 @@
 function openerp_pos_basewidget(instance, module){ //module is instance.point_of_sale
 
     var round_di = instance.web.round_decimals;
-    var round_pr = instance.web.round_precision
+    var round_pr = instance.web.round_precision;
 
     // This is a base class for all Widgets in the POS. It exposes relevant data to the 
     // templates : 
@@ -21,6 +21,17 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         },
         format_currency: function(amount,precision){
             var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
+
+            amount = this.format_currency_no_symbol(amount,precision);
+
+            if (currency.position === 'after') {
+                return amount + ' ' + (currency.symbol || '');
+            } else {
+                return (currency.symbol || '') + ' ' + amount;
+            }
+        },
+        format_currency_no_symbol: function(amount, precision) {
+            var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
             var decimals = currency.decimals;
 
             if (precision && (typeof this.pos.dp[precision]) !== undefined) {
@@ -28,7 +39,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             }
 
             this.format_currency_no_symbol = function(amount){
-                amount = round_pr(amount,this.currency.rounding);
+                amount = round_pr(amount,currency.rounding);
                 amount = amount.toFixed(decimals);
                 return amount;
             };
@@ -37,11 +48,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                 amount = round_di(amount,decimals).toFixed(decimals);
             }
 
-            if (currency.position === 'after') {
-                return amount + ' ' + (currency.symbol || '');
-            } else {
-                return (currency.symbol || '') + ' ' + amount;
-            }
+            return amount;
         },
         show: function(){
             this.$el.removeClass('oe_hidden');

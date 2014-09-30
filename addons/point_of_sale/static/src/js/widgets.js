@@ -83,7 +83,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    // The action pads contains the payment button and the customer selection button.
+    // The action pad contains the payment button and the customer selection button
     module.ActionpadWidget = module.PosBaseWidget.extend({
         template: 'ActionpadWidget',
         renderElement: function() {
@@ -314,48 +314,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.deleteorder-button').click(function(event){
                 self.deleteorder_click_handler(event,$(this));
             });
-        },
-    });
-
-    module.OrderButtonWidget = module.PosBaseWidget.extend({
-        template:'OrderButtonWidget',
-        init: function(parent, options) {
-            this._super(parent,options);
-            var self = this;
-
-            this.order = options.order;
-            this.order.bind('destroy',this.destroy, this );
-            this.order.bind('change', this.renderElement, this );
-            this.pos.bind('change:selectedOrder', this.renderElement,this );
-        },
-        renderElement:function(){
-            this.selected = ( this.pos.get_order() === this.order )
-            this._super();
-            var self = this;
-            this.$el.click(function(){ 
-                if( self.pos.get_order() === self.order ){
-                    var ss = self.pos.pos_widget.screen_selector;
-                    if(ss.get_current_screen() === 'clientlist'){
-                        ss.back();
-                    }else if (ss.get_current_screen() !== 'receipt'){
-                        ss.set_current_screen('clientlist');
-                    }
-                }else{
-                    self.selectOrder();
-                }
-            });
-            if( this.selected){
-                this.$el.addClass('selected');
-            }
-        },
-        selectOrder: function(event) {
-            this.pos.set_order(this.order);
-        },
-        destroy: function(){
-            this.order.unbind('destroy', this.destroy, this);
-            this.order.unbind('change',  this.renderElement, this);
-            this.pos.unbind('change:selectedOrder', this.renderElement, this);
-            this._super();
         },
     });
 
