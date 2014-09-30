@@ -598,7 +598,9 @@ class Field(object):
         assert self.store
         if self._origin:
             assert isinstance(self._origin, fields._column)
-            return self._origin
+            # some columns are registry-dependent, like float fields (digits);
+            # duplicate them to avoid sharing between registries
+            return copy(self._origin)
 
         _logger.debug("Create fields._column for Field %s", self)
         args = {}

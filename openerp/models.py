@@ -39,7 +39,6 @@
 
 """
 
-import copy
 import datetime
 import functools
 import itertools
@@ -652,12 +651,6 @@ class BaseModel(object):
             '_original_module': original_module,
         }
         cls = type(cls._name, (cls,), attrs)
-
-        # float fields are registry-dependent (digit attribute); duplicate them
-        # to avoid issues
-        for key, col in cls._columns.items():
-            if col._type == 'float':
-                cls._columns[key] = copy.copy(col)
 
         # instantiate the model, and initialize it
         model = object.__new__(cls)
