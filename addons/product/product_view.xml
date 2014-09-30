@@ -238,8 +238,8 @@
                     <attribute name="name">Product Template</attribute>
                 </xpath>
                 <field name="active" position="after">
-                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '!=', 1)]}"/>
-                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '!=', 1)]}"/>
+                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 </field>
                 <xpath expr="//page[@string='Sales']" position="after">
                     <page name="variants" string="Variants">
