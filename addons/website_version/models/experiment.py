@@ -184,7 +184,7 @@ class google_management(osv.AbstractModel):
         webPropertyId='UA-55031254-1'
         profileId='1'
 
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?key=AIzaSyAg5l2jeAo6PuTXNIUcPiSQlMzQtCMCHoA' % (accountId, webPropertyId, profileId)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
@@ -221,11 +221,83 @@ class google_management(osv.AbstractModel):
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
 
 
-    def get_analytics_scope(self):
+#################################
+##  MANAGE CONNEXION TO GMAIL  ##
+#################################
+
+    def get_token(self, cr, uid, context=None):
+        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        if not current_user.google_calendar_token_validity or \
+                datetime.strptime(current_user.google_calendar_token_validity.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) < (datetime.now() + timedelta(minutes=1)):
+            self.do_refresh_token(cr, uid, context=context)
+            current_user.refresh()
+        return current_user.google_calendar_token
+
+    def get_last_sync_date(self, cr, uid, context=None):
+        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        return current_user.google_calendar_last_sync_date and datetime.strptime(current_user.google_calendar_last_sync_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(minutes=0) or False
+
+    def do_refresh_token(self, cr, uid, context=None):
+        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        gs_pool = self.pool['google.service']
+
+        all_token = gs_pool._refresh_google_token_json(cr, uid, current_user.google_calendar_rtoken, self.STR_SERVICE, context=context)
+
+        vals = {}
+        vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
+        vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')
+
+        self.pool['res.users'].write(cr, SUPERUSER_ID, uid, vals, context=context)
+
+    def need_authorize(self, cr, uid, context=None):
+        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        return current_user.google_calendar_rtoken is False
+
+    def get_calendar_scope(self):
         return 'https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/analytics.edit'
 
     def authorize_google_uri(self, cr, uid, from_url='http://www.odoo.com', context=None):
-        url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_analytics_scope(), context=context)
+        url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_calendar_scope(), context=context)
         return url
+
+    def can_authorize_google(self, cr, uid, context=None):
+        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
+
+    def set_all_tokens(self, cr, uid, authorization_code, context=None):
+        gs_pool = self.pool['google.service']
+        all_token = gs_pool._get_google_token_json(cr, uid, authorization_code, self.STR_SERVICE, context=context)
+
+        vals = {}
+        vals['google_%s_rtoken' % self.STR_SERVICE] = all_token.get('refresh_token')
+        vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
+        vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')
+        self.pool['res.users'].write(cr, SUPERUSER_ID, uid, vals, context=context)
+
+    def get_minTime(self, cr, uid, context=None):
+        number_of_week = self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13)
+        return datetime.now() - timedelta(weeks=number_of_week)
+
+    def get_need_synchro_attendee(self, cr, uid, context=None):
+        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_synchro_attendee', default=True)
+
+    def get_disable_since_synchro(self, cr, uid, context=None):
+        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_since_synchro', default=False)
+
+    def get_print_log(self, cr, uid, context=None):
+        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.debug_print', default=False)
+
+class res_users(osv.Model):
+    _inherit = 'res.users'
+
+    _columns = {
+        'google_calendar_rtoken': fields.char('Refresh Token'),
+        'google_calendar_token': fields.char('User token'),
+        'google_calendar_token_validity': fields.datetime('Token Validity'),
+        'google_calendar_last_sync_date': fields.datetime('Last synchro date'),
+        'google_calendar_cal_id': fields.char('Calendar ID', help='Last Calendar ID who has been synchronized. If it is changed, we remove \
+all links between GoogleID and Odoo Google Internal ID')
+    }
+
+
 
 
