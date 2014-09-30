@@ -405,6 +405,7 @@ function openerp_restaurant_floors(instance,module){
 
             delete table['id']; 
             table.floor_id = [this.floor.id,''];
+            table.floor = this.floor;
             
             this.floor.tables.push(table);
             var tw = new module.TableWidget(this,{table: table});
