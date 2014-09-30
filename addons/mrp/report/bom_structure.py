@@ -36,20 +36,20 @@ class bom_structure(report_sxw.rml_parse):
         result = []
 
         def _get_rec(object, level):
-            for l in object:
+            for l in object:   #object is bom_line
                 res = {}
-                res['name'] = l.name
+                res['name'] = l.bom_id.name
                 res['pname'] = l.product_id.name
                 res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
                 res['uname'] = l.product_uom.name
-                res['code'] = l.code
+                res['code'] = l.bom_id.code
                 res['level'] = level
                 result.append(res)
-                if l.child_complete_ids:
+                if l.bom_id.child_complete_ids:
                     if level<6:
                         level += 1
-                    _get_rec(l.child_complete_ids,level)
+                    # _get_rec(l.child_complete_ids,level)
                     if level>0 and level<6:
                         level -= 1
             return result
