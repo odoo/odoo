@@ -406,11 +406,12 @@ class website_sale(http.Controller):
         checkout['shipping_id'] = shipping_id
 
         # Default search by user country
-        country_code = request.session['geoip'].get('country_code')
-        if country_code:
-            country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
-            if country_ids:
-                checkout['country_id'] = country_ids[0]
+        if not checkout.get('country_id'):
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+                if country_ids:
+                    checkout['country_id'] = country_ids[0]
 
         values = {
             'countries': countries,
