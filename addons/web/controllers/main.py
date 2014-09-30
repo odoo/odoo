@@ -1475,7 +1475,7 @@ class ExportFormat(object):
             columns_headers = [val['label'].strip() for val in fields]
 
 
-        return request.make_response(self.from_data(columns_headers, import_data, model),
+        return request.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
@@ -1495,7 +1495,7 @@ class CSVExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.csv'
 
-    def from_data(self, fields, rows, model):
+    def from_data(self, fields, rows):
         fp = StringIO()
         writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
@@ -1535,7 +1535,7 @@ class ExcelExport(ExportFormat, http.Controller):
     def filename(self, base):
         return base + '.xls'
 
-    def from_data(self, fields, rows, model):
+    def from_data(self, fields, rows):
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
@@ -1565,19 +1565,37 @@ class ExcelExport(ExportFormat, http.Controller):
         fp.close()
         return data
 
-class XMLExport(ExportFormat, http.Controller):
+class XMLExport(http.Controller):
 
     @http.route('/web/export/xml', type='http', auth="user")
     @serialize_exception
     def index(self, data, token):
-        return self.base(data, token)
+        root = etree.Element("openerp")
+        data_root = etree.SubElement(root, "data")
+        params = simplejson.loads(data)
+        model, fields, ids, domain, import_compat = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain',
+                                'import_compat')(params)
+        file_name = model + '.xml'
+        Model = request.session.model(model)
+        context = dict(request.context or {}, **params.get('context', {}))
+        ids = ids or Model.search(domain, 0, False, False, context)
 
-    @property
-    def content_type(self):
-        return 'text/xml'
-
-    def filename(self, base):
-        return base + '.xml'
+        field_names = map(operator.itemgetter('name'), fields)
+        import_data = Model.export_data(ids, field_names, context=context).get('datas',[])
+        fields = map(fix_import_export_id_paths, field_names)
+        for record, _subinfo in request.session.model(model).extract_records(fields, import_data):
+            self._generate_xml_record(model, data_root, record)
+        xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+        with open('file_name', 'w') as f:        
+            f.write(xml)
+        with open('file_name', 'r') as f:        
+            data = f.read()
+        return request.make_response(data ,
+            headers=[('Content-Disposition',
+                            content_disposition(file_name)),
+                     ('Content-Type', 'text/xml')],
+            cookies={'fileToken': token})
 
     def _generate_xml_record(self, model, root, record, rel_field=None):
         """Generate new Odoo compitable xml records"""
@@ -1612,20 +1630,6 @@ class XMLExport(ExportFormat, http.Controller):
             else:
                 new_record_element.text = value
         return True
-
-    def from_data(self, fields, rows, model):
-        fp = StringIO()
-        root = etree.Element("openerp")
-        data_root = etree.SubElement(root, "data")
-        fields = map(fix_import_export_id_paths, fields)
-        for record, _subinfo in request.session.model(model).extract_records(fields, rows):
-            self._generate_xml_record(model, data_root, record)
-        xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
-        fp.write(xml)
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
 
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
