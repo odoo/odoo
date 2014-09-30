@@ -443,24 +443,20 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
 
-    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, search_reconciliation_proposition=True, context=None):
+    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
         if excluded_ids is None:
             excluded_ids = []
 
         for st_line in self.browse(cr, uid, ids, context=context):
-            reconciliation_data = {}
-            if search_reconciliation_proposition:
-                reconciliation_proposition = self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
-                for mv_line in reconciliation_proposition:
-                    excluded_ids.append(mv_line['id'])
-                reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
-            else:
-                reconciliation_data['reconciliation_proposition'] = []
-            st_line = self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context)
-            reconciliation_data['st_line'] = st_line
-            ret.append(reconciliation_data)
+            st_line_reconciliation_data = {
+                'st_line': self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context),
+                'reconciliation_proposition': self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
+            }
+            for mv_line in st_line_reconciliation_data['reconciliation_proposition']:
+                excluded_ids.append(mv_line['id'])
+            ret.append(st_line_reconciliation_data)
 
         return ret
 
