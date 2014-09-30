@@ -1208,6 +1208,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.$('.js_invoice').removeClass('highlight');
             }
         },
+        click_set_customer: function(){
+            this.pos_widget.screen_selector.set_current_screen('clientlist');
+        },
         renderElement: function() {
             var self = this;
             this._super();
@@ -1228,6 +1231,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.validate_order();
             });
 
+            this.$('.js_set_customer').click(function(){
+                self.click_set_customer();
+            });
             this.$('.js_invoice').click(function(){
                 self.click_invoice();
             });

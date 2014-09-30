@@ -128,7 +128,7 @@
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button class='button set-customer'>
-                <i class='fa fa-user' /> Set Customer
+                <i class='fa fa-user' /> Customer
             </button>
             <button class='button pay'>
                 <i class='fa fa-chevron-right' /> Payment
@@ -589,6 +589,9 @@
                     </section>
 
                     <div class='payment-buttons'>
+                        <div class='button js_set_customer'>
+                            <i class='fa fa-user' />Customer
+                        </div>
                         <t t-if='widget.pos.config.iface_invoicing'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
