@@ -178,7 +178,7 @@ class account_common_report(osv.osv_memory):
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from', 'date_to', 'fiscalyear_id', 'period_from', 'period_to', 'filter', 'chart_account_id', 'target_move'])[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from', 'date_to', 'fiscalyear_id', 'period_from', 'period_to', 'filter', 'chart_account_id', 'target_move'], context=context)[0]
         # The 'active_test' context is used, because reports must
         # return entries created on inactive journals.
         data['form']['journal_ids'] = self.read(
