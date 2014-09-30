@@ -1580,16 +1580,15 @@ class XMLExport(http.Controller):
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
         ids = ids or Model.search(domain, 0, False, False, context)
-
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, context=context).get('datas',[])
         fields = map(fix_import_export_id_paths, field_names)
         for record, _subinfo in request.session.model(model).extract_records(fields, import_data):
             self._generate_xml_record(model, data_root, record)
         xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
-        with open('file_name', 'w') as f:        
+        with open(file_name, 'w') as f:        
             f.write(xml)
-        with open('file_name', 'r') as f:        
+        with open(file_name, 'r') as f:        
             data = f.read()
         return request.make_response(data ,
             headers=[('Content-Disposition',
