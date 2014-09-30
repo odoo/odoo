@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--     BARCODE NOMENCLATURES     -->
+
+        <record model="ir.ui.view" id="view_barcode_nomenclature_form">
+            <field name="name">Barcode Nomenclatures</field>
+            <field name="model">barcode.nomenclature</field>
+            <field name="arch" type="xml">
+                <form string="Barcode Nomenclature">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                        </group>
+                        <field name="rule_ids">
+                            <tree string='Tables'>
+                                <field name="name" />
+                                <field name="type" />
+                                <field name="pattern" />
+                                <field name="priority" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_barcode_nomenclature_tree">
+            <field name="name">Barcode Nomenclatures</field>
+            <field name="model">barcode.nomenclature</field>
+            <field name="arch" type="xml">
+                <tree string="Barcode Nomenclatures">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_barcode_nomenclature_form">
+            <field name="name">Barcode Nomenclatures</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">barcode.nomenclature</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Barcode Nomenclature .
+              </p><p>
+                A barcode nomenclature defines how the point of sale identify and interprets barcodes
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_barcode_rule_form">
+            <field name="name">Barcode Rule</field>
+            <field name="model">barcode.rule</field>
+            <field name="arch" type="xml">
+                <form string="Barcode Rule">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="type" />
+                        <field name="priority" />
+                    </group>
+                    <group col="2">
+                        <field name="pattern" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <menuitem
+            parent="point_of_sale.menu_point_config_product"
+            action="action_barcode_nomenclature_form"
+            id="menu_barcode_nomenclature_all"
+            sequence="30"
+            groups="point_of_sale.group_pos_manager"/>
+
+
+    </data>
+</openerp>

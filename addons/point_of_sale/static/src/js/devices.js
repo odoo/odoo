@@ -635,7 +635,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     if( p === 'N'){
                         value *= 10;
                         value += v;
-                    }else if( p === 'D'){
+                    }else if( p === 'D'){   // FIXME precision ....
                         decimals += 1;
                         value += v * Math.pow(10,-decimals);
                     }
