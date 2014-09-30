@@ -15,7 +15,7 @@ ibs.add_file_type(('ofx', 'OFX'))
 try:
     from ofxparse import OfxParser as ofxparser
 except ImportError:
-    _logger.warning("OFX parser unavailable because the `ofxparse` Python library cannot be found."
+    _logger.error("OFX parser unavailable because the `ofxparse` Python library cannot be found."
                     "It can be downloaded and installed from `https://pypi.python.org/pypi/ofxparse`.")
     ofxparser = None
 
@@ -33,9 +33,13 @@ class account_bank_statement_import(osv.TransientModel):
             tempfile.read()
             pathname = os.path.dirname('temp.ofx')
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
+        except:
+            raise osv.except_osv(_('Import Error!'), _('File handling error.'))
+        try:
             ofx = ofxparser.parse(file(path))
         except:
-            raise osv.except_osv(_('Import Error!'), _('Please check OFX file format is proper or not.'))
+            raise osv.except_osv(_('Import Error!'), _('Could not decipher the OFX file.'))
+
         line_ids = []
         total_amt = 0.00
         try:
@@ -61,6 +65,7 @@ class account_bank_statement_import(osv.TransientModel):
         else:
             period_ids = period_obj.find(cr, uid, st_start_date, context=context)
         vals_bank_statement = {
+            'unique_import_id': 'OFX-'+str(ofx.account.number)+'-'+str(ofx.account.routing_number)+'-'+str(ofx.account.statement.start_date),
             'name': ofx.account.routing_number,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
