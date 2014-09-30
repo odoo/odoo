@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Asterisk Click2dial module for OpenERP
+  Copyright (C) 2010-2012 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+
+  Demo data for the click2dial module
+-->
+
+<openerp>
+    <data noupdate="1">
+        <record id="demo_ast_server" model="asterisk.server">
+            <field name="name">Akretion Asterisk IPBX</field>
+            <field name="ip_address">asterisk.akretion.com</field>
+            <field name="login">click2dial</field>
+            <field name="password">mypassword</field>
+            <field name="context">from-internal</field>
+            <field name="alert_info">info=&lt;Bellcore-dr5&gt;</field>
+            <field name="company_id" ref="base.main_company" />
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="internal_number">11</field>
+            <field name="resource">11</field>
+            <field name="callerid">Administrator &lt;0141981242&gt;</field>
+            <field name="asterisk_server_id" ref="demo_ast_server"/>
+        </record>
+        <record id="base.user_demo" model="res.users">
+            <field name="internal_number">12</field>
+            <field name="resource">12</field>
+            <field name="callerid">Demo user &lt;0141984212&gt;</field>
+            <field name="asterisk_server_id" ref="demo_ast_server"/>
+        </record>
+        <record id="base.main_partner" model="res.partner">
+            <field name="country_id" ref="base.fr"/>
+        </record>
+    </data>
+</openerp>
+

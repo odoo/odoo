@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Base Phone module for OpenERP
+  Copyright (C) 2010-2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="view_partner_simple_form" model="ir.ui.view">
+    <field name="name">base.phone.res.partner.simplified.form</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_simple_form"/>
+    <field name="arch" type="xml">
+        <field name="phone" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </field>
+        <field name="mobile" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </field>
+    </field>
+</record>
+
+<record id="view_partner_form" model="ir.ui.view">
+    <field name="name">base.phone.res.partner.form</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group/group/field[@name='phone']" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </xpath>
+        <xpath expr="//group/group/field[@name='mobile']" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </xpath>
+        <xpath expr="//group/group/field[@name='fax']" position="attributes">
+            <attribute name="widget">fax</attribute>
+        </xpath>
+        <xpath expr="//form[@string='Contact']/sheet/group/field[@name='phone']" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </xpath>
+        <xpath expr="//form[@string='Contact']/sheet/group/field[@name='mobile']" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </xpath>
+    </field>
+</record>
+
+
+</data>
+</openerp>

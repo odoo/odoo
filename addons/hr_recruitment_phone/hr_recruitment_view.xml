@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="crm_case_form_view_job" model="ir.ui.view">
+    <field name="name">hr_recruitment_phone.hr_applicant.form</field>
+    <field name="model">hr.applicant</field>
+    <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+    <field name="arch" type="xml">
+        <field name="partner_phone" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </field>
+        <field name="partner_mobile" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </field>
+    </field>
+</record>
+
+</data>
+</openerp>

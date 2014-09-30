@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="view_users_form" model="ir.ui.view">
+    <field name="name">base_phone_popup.res.users.form</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base_phone.view_users_form"/>
+    <field name="arch" type="xml">
+        <page name="phone" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </page>
+        <group name="phone-preferences" position="inside">
+            <field name="context_incall_popup"/>
+        </group>
+    </field>
+</record>
+
+<record id="view_users_form_simple_modif" model="ir.ui.view">
+    <field name="name">base_phone_popup.users.preferences.view</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base_phone.view_users_form_simple_modif" />
+    <field name="arch" type="xml">
+        <group name="phone" position="inside">
+            <field name="context_incall_popup" readonly="0"/>
+        </group>
+        <group name="phone" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </group>
+    </field>
+</record>
+
+</data>
+</openerp>

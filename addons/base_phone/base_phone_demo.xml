@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright (C) 2014 Alexis de Lattre
+    @author Alexis de Lattre <alexis@via.ecp.fr>
+    The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data noupdate="1">
+
+<!-- I need a country on the company, because otherwize it raises an error -->
+<record id="base.main_company" model="res.company">
+    <field name="country_id" ref="base.fr"/>
+</record>
+
+</data>
+</openerp>

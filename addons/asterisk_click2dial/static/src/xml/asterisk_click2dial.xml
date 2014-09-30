@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Asterisk Click2dial module for OpenERP
+    Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+    The licence is in the file __openerp__.py
+-->
+
+<template>
+
+    <!-- Add phone button in top right menu for "Open Caller" -->
+    <t t-name="asterisk_click2dial.OpenCaller">
+        <li class="oe_topbar_item oe_topbar_open_caller"
+                title="Open Caller">
+            <a id="asterisk-open-caller" href="#" class="fa fa-phone"/>
+        </li>
+    </t>
+
+    <!-- Add Dial button in phone widget for click2dial feature -->
+    <t t-extend="FieldPhone">
+        <t t-jquery="a.oe_form_uri" t-operation="after">
+            <a id="click2dial" href="#" class="oe_bold"/>
+        </t>
+    </t>
+
+</template>

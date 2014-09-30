@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2012-2014 Akretion (http://www.akretion.com/)
+  @author: Alexis de Lattre <alexis.delattre@akretion.com>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<!-- Add option on user form view -->
+<record id="view_users_form" model="ir.ui.view">
+    <field name="name">asterisk.crm.res.users.form</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base_phone.view_users_form"/>
+    <field name="arch" type="xml">
+        <!-- Phone tab is already visible thanks to asterisk_click2dial -->
+        <group name="phone-preferences" position="inside">
+            <field name="context_propose_creation_crm_call"/>
+        </group>
+    </field>
+</record>
+
+<record id="view_users_form_simple_modif" model="ir.ui.view">
+    <field name="name">asterisk.crm.preferences.option.view</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base_phone.view_users_form_simple_modif" />
+    <field name="arch" type="xml">
+        <group name="phone" position="inside">
+            <field name="context_propose_creation_crm_call" readonly="0"/>
+        </group>
+        <group name="phone" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </group>
+    </field>
+</record>
+
+</data>
+</openerp>

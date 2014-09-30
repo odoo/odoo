@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  CRM Claim Phone module for OpenERP
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="crm_case_claims_form_view" model="ir.ui.view">
+    <field name="name">crm_claim_phone.crm_claim.form</field>
+    <field name="model">crm.claim</field>
+    <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+    <field name="arch" type="xml">
+        <field name="partner_phone" position="attributes">
+            <attribute name="widget">phone</attribute>
+        </field>
+    </field>
+</record>
+
+</data>
+</openerp>

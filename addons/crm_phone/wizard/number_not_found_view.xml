@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  CRM Phone module for OpenERP
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="number_not_found_form" model="ir.ui.view">
+    <field name="name">crm_phone.number.not.found.form</field>
+    <field name="model">number.not.found</field>
+    <field name="inherit_id" ref="base_phone.number_not_found_form"/>
+    <field name="arch" type="xml">
+        <group name="create-update" position="inside">
+            <group name="lead" string="Create or Update a Lead"
+                colspan="1" col="2">
+                <button name="create_lead" icon="gtk-new" colspan="2"
+                    string="Create Lead with this Number" type="object"/>
+                <field name="to_update_lead_id"
+                    on_change="onchange_to_update_lead(to_update_lead_id)"/>
+                <field name="current_lead_phone" widget="phone"
+                    options="{'dial_button_invisible': True}"/>
+                <field name="current_lead_mobile" widget="phone"
+                    options="{'dial_button_invisible': True}"/>
+                <button name="update_lead" icon="gtk-convert" colspan="2"
+                    string="Update Lead with this Number" type="object"/>
+            </group>
+        </group>
+    </field>
+</record>
+
+
+</data>
+</openerp>

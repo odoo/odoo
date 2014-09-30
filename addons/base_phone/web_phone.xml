@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Base Phone module for OpenERP
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+
+<template id="assets_backend" name="base_phone assets"
+          inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <script type="text/javascript"
+            src="/base_phone/static/lib/phonenumbers/PhoneFormat.js"></script>
+        <script type="text/javascript"
+            src="/base_phone/static/src/js/phone_widget.js"></script>
+    </xpath>
+</template>
+
+
+</data>
+</openerp>

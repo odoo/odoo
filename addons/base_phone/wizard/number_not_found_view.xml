@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Asterisk Click2dial module for OpenERP
+  Copyright (C) 2012-2013 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+<record id="number_not_found_form" model="ir.ui.view">
+    <field name="name">number.not.found.form</field>
+    <field name="model">number.not.found</field>
+    <field name="arch" type="xml">
+        <form string="Number Not Found" version="7.0">
+            <div class="oe_title">
+                <label string="Number not found:" for="calling_number"/>
+                <h1>
+                    <field name="calling_number" />
+                </h1>
+                <label string="Number converted to international format:"
+                    for="e164_number"/>
+                <h2>
+                    <field name="e164_number" />
+                </h2>
+                <label for="number_type"/>
+                <h3>
+                    <field name="number_type"/>
+                </h3>
+            </div>
+            <group colspan="4" col="2" name="create-update">
+                <group name="partner" string="Create or Update a Partner"
+                    colspan="1" col="2">
+                    <button name="create_partner" icon="gtk-new" colspan="2"
+                        string="Create Partner with this Number" type="object"/>
+                    <field name="to_update_partner_id"
+                        on_change="onchange_to_update_partner(to_update_partner_id)"/>
+                    <field name="current_partner_phone" widget="phone"
+                        options="{'dial_button_invisible': True}"/>
+                    <field name="current_partner_mobile" widget="phone"
+                        options="{'dial_button_invisible': True}"/>
+                    <button name="update_partner" icon="gtk-convert" colspan="2"
+                        string="Update Partner with this Number" type="object"/>
+                </group>
+            </group>
+            <footer>
+                <button special="cancel" string="Close" class="oe_link"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+
+</data>
+</openerp>

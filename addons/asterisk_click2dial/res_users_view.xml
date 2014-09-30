@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Asterisk Click2dial module for OpenERP
+  Copyright (C) 2010-2013 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+
+  Inherit res_users view to add the click2dial-related fields
+-->
+
+<openerp>
+<data>
+
+<record id="view_users_form" model="ir.ui.view">
+    <field name="name">asterisk_click2dial.res.users.form</field>
+    <field name="model">res.users</field>
+    <field name="inherit_id" ref="base_phone.view_users_form"/>
+    <field name="arch" type="xml">
+        <page name="phone" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </page>
+        <group name="phone-preferences" position="after">
+            <group name="asterisk-standard" string="Standard Asterisk Parameters">
+                <field name="asterisk_chan_type"/>
+                <field name="resource"/>
+                <field name="internal_number"/>
+                <field name="callerid"/>
+                <field name="asterisk_server_id"/>
+            </group>
+            <group name="asterisk-optional" string="Optional Asterisk Parameters - for experts only, can be left empty">
+                <field name="cdraccount"/>
+                <field name="dial_suffix"/>
+                <field name="alert_info"/>
+                <field name="variable"/>
+            </group>
+        </group>
+    </field>
+</record>
+
+</data>
+</openerp>

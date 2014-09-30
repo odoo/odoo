@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Asterisk Click2dial module for OpenERP/Odoo
+  Copyright (C) 2014 Alexis de Lattre <alexis@via.ecp.fr>
+  The licence is in the file __openerp__.py
+-->
+
+<openerp>
+<data>
+
+
+<template id="assets_backend" name="asterisk_click2dial assets"
+          inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <script type="text/javascript"
+            src="/asterisk_click2dial/static/src/js/asterisk_click2dial.js"></script>
+    </xpath>
+</template>
+
+
+</data>
+</openerp>
