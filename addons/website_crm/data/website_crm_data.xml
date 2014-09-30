@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="id_form_lead" model="website.form">
+            <field name="model">crm.lead</field>
+            <field name="blacklist_field_ids" eval="[(6,0,[ref('crm.field_crm_lead_probability'),ref('crm.field_crm_lead_report_section_id')])]" />
+            <field name="label_option">Create Lead with CRM</field>
+        </record>
+    </data>
+</openerp>
