@@ -107,7 +107,7 @@ class im_livechat_channel(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = env.get_template("include.html").render({
-                "url": self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),
+                "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
                 "parameters": {"db":cr.dbname, "channel":record.id},
             })
         return res
@@ -115,7 +115,7 @@ class im_livechat_channel(osv.osv):
     def _web_page(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url') + \
+            res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url') + \
                 "/im_livechat/web_page?p=" + json.dumps({"db":cr.dbname, "channel":record.id})
         return res
 
