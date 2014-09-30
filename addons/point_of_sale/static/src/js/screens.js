@@ -955,7 +955,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.refresh();
 
-            if (!this.pos.get('selectedOrder')._printed) {
+            if (!this.pos.get_order()._printed) {
                 this.print();
             }
 
@@ -989,7 +989,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         print: function() {
-            this.pos.get('selectedOrder')._printed = true;
+            this.pos.get_order()._printed = true;
             window.print();
         },
         finish_order: function() {
