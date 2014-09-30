@@ -60,6 +60,7 @@
             "change .oe_dial_searchbox": "input_change",
         },
         init: function(parent) {
+            
             this._super(parent);
             this.shown = false;
             this.set("current_search", "");
@@ -136,7 +137,7 @@
         },
         switch_display: function() {
             this.calc_box();
-            
+            console.log("PANEL");
             if (this.shown) {
                 this.$el.animate({
                     bottom: -this.$el.outerHeight(),
@@ -172,6 +173,7 @@
     if(openerp.web && openerp.web.UserMenu) {
         openerp.web.UserMenu.include({
             do_update: function(){
+                
                 var self = this;
                 if($('.oe_systray .oe_topbar_dialbutton_icon')){
                     self.update_promise.then(function() {

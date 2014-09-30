@@ -3,12 +3,6 @@
 -->
 <openerp>
     <data>
-        <template id="assets_backend" name="im_chat assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/crm_wardialing/static/src/css/crm_wardialing.css"/>
-                <script type="text/javascript" src="/crm_wardialing/static/src/js/crm_wardialing.js"></script>
-            </xpath>
-        </template>
         <template id="dial_top_button" name="dial_chat top button" inherit_id="web.menu">
              <xpath expr="//ul[contains(@class, 'oe_systray')]" position="inside">
                 <li title='Display Dialing Panel' groups="base.group_user">
@@ -18,9 +12,11 @@
                 </li>
             </xpath>
         </template>
-        <template id="assets_backend" name="wardialing assets" inherit_id="web.assets_backend">
+        <template id="assets_backend" name="crm_wardialing assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/crm_wardialing/static/src/js/crm_wardialing_kanban.js"></script>
+                <link rel="stylesheet" href="/crm_wardialing/static/src/css/crm_wardialing.css"/>
+                <script type="text/javascript" src="/crm_wardialing/static/src/js/crm_wardialing.js"></script>
             </xpath>
         </template>
     </data>
