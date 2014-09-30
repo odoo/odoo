@@ -69,18 +69,6 @@ def resolve_all_mro(cls, name, reverse=False):
             yield klass.__dict__[name]
 
 
-def default_compute(field, value):
-    """ Return a compute function for the given default `value`; `value` is
-        either a constant, or a unary function returning the default value.
-    """
-    name = field.name
-    func = value if callable(value) else lambda rec: value
-    def compute(recs):
-        for rec in recs:
-            rec[name] = func(rec)
-    return compute
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -282,7 +270,7 @@ class Field(object):
     related = None              # sequence of field names, for related fields
     related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value
+    default = None              # default value (literal or callable)
 
     string = None               # field label
     help = None                 # field tooltip
@@ -469,10 +457,6 @@ class Field(object):
 
         def make_depends(deps):
             return tuple(deps(recs) if callable(deps) else deps)
-
-        # transform self.default into self.compute
-        if self.default is not None and self.compute is None:
-            self.compute = default_compute(self, self.default)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
@@ -826,7 +810,10 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        if self.compute:
+        if self.default is not None:
+            value = self.default(record) if callable(self.default) else self.default
+            record._cache[self] = self.convert_to_cache(value, record)
+        elif self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
