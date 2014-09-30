@@ -86,13 +86,24 @@
 					</div>
 					<div>
 						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png" />
+							<span class="oe_snippet_thumbnail_title">Input Hidden</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="hidden">
+							<div class="wrap-unwrap">
+								<input type="hidden" class="form-control form-data" name="hidden" value="No Value"/>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
 							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
 							<span class="oe_snippet_thumbnail_title">Textarea</span>
 						</div>
 						<div class="form-group oe_snippet_body form-field" data-form="textarea">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<textarea  class="form-control form-data form-data" name="" style="min-height: 120px"></textarea>
+								<textarea  class="form-control form-data" name="" style="min-height: 120px"></textarea>
 								<p class="help-block">Help exemple.</p>
 							</div>
 						</div>
@@ -105,7 +116,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="checkbox">
 							<label for="checkbox" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<div class="wrap-options form-data">
+								<div class="wrap-options form-data multivalues">
 									<div class="checkbox">
 										<label for="checkbox-0">
 											<input type="checkbox" name="checkbox-0" id="checkbox-0"  value="0" />
@@ -137,7 +148,7 @@
 						<div class="form-group oe_snippet_body form-field" data-form="radio">
 							<label for="radio" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
-								<div class="wrap-options form-data">
+								<div class="wrap-options form-data multivalues">
 									<div class="radio">
 										<label for="radio-0">
 											<input type="radio" name="radio-0" id="radio-0"  value="0" />
@@ -228,21 +239,21 @@
 						data-selector=".editForm"
 						data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
 				>
-					<li class="divider"></li>
+					
 					<li><a href="#" class="button js_action_form_list">Change Form Parameters</a></li>
-					<li><a href="#" class="button js_add_form_field">Add Field</a></li>
+					<li class="divider"></li>
 				</div>
 						
 				<div data-snippet-option-id='input'
-					data-selector=".form-group"
-					data-selector-siblings=".form-group"
+					data-selector=".form-field"
+					data-selector-siblings=".form-field"
 					data-selector-children="form"></div>
 				
 				<div data-snippet-option-id='editFormField'
 					data-selector=".form-field"
 					data-selector-siblings=".form-field"
 				>
-				<li class="divider"></li>
+				
 				<li>
 					<a href="#" class="button js_action_form_list">Change Field Parameters</a>
 				</li>

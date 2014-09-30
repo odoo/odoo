@@ -33,6 +33,7 @@
         'views/website_email_designer.xml',
         'views/email_template_view.xml',
         'data/mail_groups.xml',
+        'data/website_form.xml',
         'security/website_mail.xml',
     ],
     'qweb': [

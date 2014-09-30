@@ -17,16 +17,18 @@
 								<label for="formEditor-select-action" class="col-md-3 col-sm-4 control-label">Action : </label>
 								<div class="col-md-9 col-sm-8">
 									<select class="form-control form-select-action" id="formEditor-select-action">
-										<option value="crm.lead">Create Lead with CRM</option>
+										<t t-raw="options" />
 									</select>
 								</div>
 							</div>
-		<!--				<div class="form-group">
-								<label for="formEditor-mailto" class="col-md-3 col-sm-4 control-label">E-mail : </label>
-								<div class="col-md-9 col-sm-8">
-									<input type="email" class="form-control form-action-mailto" id="formEditor-mailto" />
-								</div>
-						</div> -->
+							<div class="form-group form-action-mailto hidden">						
+								<label for="search" class="col-md-3 col-sm-4 control-label">E-mail :</label>
+								<div class="col-md-7 col-sm-8">
+									<div class="form-control form-data">
+										<textarea class="search" rows="1"></textarea>
+									</div>
+								</div>								
+							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -135,18 +137,17 @@
 		</div>
 	</t>
 	
-	<!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
-	<t t-name="website.form.editor.wizard.template.checkbox">
+	<!-- MODAL HIDDEN WIZARD ADD-ON FORM FOR FORM EDITOR -->
+	<t t-name="website.form.editor.wizard.template.hidden">
 		<div>
 			<div class="form-group">
-				<label for="formFieldEditor-option" class="col-md-3 col-sm-4 control-label">Option :</label>
+				<label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Value :</label>
 				<div class="col-md-9 col-sm-8">
-					<input type="text" class="form-control form-field-option" id="formFieldEditor-option" />
+					<input type="text" class="form-control form-field-value" id="formFieldEditor-value" />
 				</div>
-			</div>			
+			</div>
 		</div>
 	</t>
-	
 		<!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
 	<t t-name="website.form.editor.wizard.template.checkbox">
 		<div>
@@ -158,7 +159,7 @@
 							<tr>
 								<th>Option</th>
 								<th>Value</th>
-								<th class="tb-actions"></th>
+								<th class="tb-actions"><input type="checkbox" /></th>
 							</tr>
 						</thead>
 						<tbody></tbody>
@@ -185,7 +186,7 @@
 							<tr>
 								<th>Option</th>
 								<th>Value</th>
-								<th class="tb-actions"></th>
+								<th class="tb-actions"><input type="checkbox" /></th>
 							</tr>
 						</thead>
 						<tbody></tbody>
@@ -211,7 +212,7 @@
 							<tr>
 								<th>Option</th>
 								<th>Value</th>
-								<th class="tb-actions"></th>
+								<th class="tb-actions"><input type="checkbox" /></th>
 							</tr>
 						</thead>
 						<tbody></tbody>
@@ -244,7 +245,7 @@
 								<tr>
 									<th>Option</th>
 									<th>Value</th>
-									<th class="tb-actions"></th>
+									<th class="tb-actions"><input type="checkbox" /></th>
 								</tr>
 							</thead>
 							<tbody></tbody>
@@ -285,10 +286,10 @@
 		
 	<!-- OPTION TEMPLATE FOR CHECKBOX -->
 	<t t-name="website.form.editor.template.option.checkbox">
-		<div>
+		<div t-att-class="visible">
 			<div class="checkbox">
 				<label t-att-for="id">
-					<input type="checkbox" t-att-id="id" t-att-name="id" t-att-value="value" />
+					<input type="checkbox" t-att-id="id" t-att-name="id_label" t-att-value="value" />
 					<span class="option"><t t-raw="label" /></span>
 				</label>
 			</div>
@@ -296,7 +297,7 @@
 	</t>
 	<!-- OPTION TEMPLATE FOR CHECKBOX -->
 	<t t-name="website.form.editor.template.option.radio">
-		<div>
+		<div t-att-class="visible">
 			<div class="radio">
 				<label t-att-for="id">
 					<input type="radio" t-att-id="id" t-att-name="id_label" t-att-value="value" />
@@ -308,12 +309,12 @@
 		
 		<!-- OPTION TEMPLATE FOR SELECT -->
 	<t t-name="website.form.editor.template.option.select">
-			<option t-att-value="value"><t t-raw="label" /></option>
+			<option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
 	</t>		
 	
 		<!-- OPTION TEMPLATE FOR SEARCH -->
 	<t t-name="website.form.editor.template.option.search">
-			<option t-att-value="value"><t t-raw="label" /></option>
+			<option t-att-value="value" t-att-class="visible"><t t-raw="label" /></option>
 	</t>
 	
 		<!-- OPTION TEMPLATE FOR OPTION WIZARD -->
@@ -321,11 +322,22 @@
 		<tr class="last">
 			<td contenteditable="true" class="option-label">New Option Label</td>
 			<td contenteditable="true" class="option-value">New Option Value</td>
-			<td>
-				<input type="button" class="btn btn-default form-editor-add" value="+" />
+			<td class="option-trash">
+				<a class="delete" href="#"><i class="fa fa-trash-o"></i></a>
+				<input type="checkbox" class="delete" />
 			</td>
 		</tr>
+		<tr class="form-editor-add">
+			<td colspan="3"><input type="button" class="btn btn-default" value="+" /></td>
+		</tr>
 	</t>
-
+	
+		<!-- ALERT MESSAGE FOR FORM BUILDER --> 
+		
+	<t t-name="website.form.editor.error">
+		<div class="alert alert-danger form-builder-error-message" role="alert">
+		  <t t-raw="message"/>
+		</div>	
+	</t>
 
 </templates>

@@ -3,7 +3,62 @@
 
     var website = openerp.website;
     var _t = openerp._t;
-		
+    website.add_template_file('/website_form_builder/static/src/xml/website.form.editor.wizard.template.xml');
+	website.snippet.animationRegistry.editForm = website.snippet.Animation.extend({
+		selector: ".editForm",
+		start: function() {
+			this.$target.find('button').on('click', this.send());
+		},
+		stop: function() {
+			this.$target.find('button').off('click');
+		},
+		send: function() {
+			var self = this;
+			
+			return function(e) {
+				e.preventDefault();
+				var model = self.$target.find('form').data('model');
+				var args = {"context": openerp.website.get_context()};
+				self.$target.find('.form-data').each(function(i,elem){
+					if(($(elem).hasClass('multivalues'))) {
+						var subargs = [];
+						var name = '';
+						$(elem).find('input').each(function (j,subelem) {
+							name = $(subelem).prop('name');
+							if($(subelem).is(':checked')) subargs.push($(subelem).val());
+						});	
+						args[name] = subargs; 	
+					} else args[$(elem).prop('name')] = $(elem).val();
+				});
+				openerp.jsonRpc('/contactus/'+model, 'call', args).then(function (data) {
+				    	if(data) {
+				    		if(data.id) $(location).attr('href',"contactus_success");
+				    		else {
+				    			var i = 0;
+				    			var field_required = null;
+				    			var len = (data.fail_required != null) ? data.fail_required.length:0;
+				    			var name = null;
+				    			if(!len) $(location).attr('href',"contactus_fail");
+				    			else self.$target.find('.form-field').each(function(i,elem){
+				    				if(i < len) field_required = data.fail_required[i];
+				    				name = $(elem).find('.form-data').prop('name');
+				    			
+				    				if(field_required == name){
+				    					$(elem)	.addClass('has-error has-feedback').find('.form-data').parent()
+				    						   	.append('<span class="glyphicon glyphicon-remove form-control-feedback"></span>');
+				    					i= i+1;
+				    				}else
+				    					$(elem)	.addClass('has-success has-feedback').find('.form-data').parent()
+				    							.append('<span class="glyphicon glyphicon-ok form-control-feedback"></span>');
+				    				
+				    			});
+				    		}
+				    	}
+				});
+			};
+		}
+	});
+	
 	website.snippet.animationRegistry.inputFile =  website.snippet.Animation.extend({
 		selector: ".input-file",
 		start: function () {
@@ -43,35 +98,21 @@
 				assocList[$(child).html()] = $(child).val();
 			});
 			
-			this.$target.find('textarea')	.textext({
-														plugins : plugin_list,
-														ext : {
-											                itemManager: {
-											                    itemToString: function(i){
-											                        return i.name;
-											                    },
-											                    stringToItem: function(str) {
-											                        return {name:str,id:assocList[str]};
-											                    }
-											                }
-											               
-											            }
-													})
-        									.bind	('getSuggestions', function(e, data) {
-											            
-											            var textext  = $(e.target).textext()[0],
-                										query 	 = (data ? data.query : '') || '';
-
-											            $(this).trigger(
-											                'setSuggestions',
-											                { result : textext.itemManager().filter(list, query) }
-											            );
-        									});
-    
+			this.$target.find('textarea')	
+				.textext({
+					plugins : plugin_list,
+					ext : {
+						itemManager: {
+							itemToString: function(i)	{return i.name;},
+							stringToItem: function(str) {return {name:str,id:assocList[str]};}
+						}	               
+				}})
+        		.bind('getSuggestions', function(e, data) {
+				 	var textext  = $(e.target).textext()[0],
+                	query 	 = (data ? data.query : '') || '';
+					$(this).trigger('setSuggestions',
+									{ result : textext.itemManager().filter(list, query) });
+        		});
 		}	
 	});		
 })();
-
-
-
- 
