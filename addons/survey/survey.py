@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.addons.website.models.website import slug
 from urlparse import urljoin
@@ -1145,7 +1146,7 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
@@ -1176,7 +1177,7 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         ca = dict_keys_startswith(post, answer_tag)
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
@@ -1207,7 +1208,7 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         no_answers = True
         ca = dict_keys_startswith(post, answer_tag)
