@@ -3637,10 +3637,12 @@ class BaseModel(object):
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
-            if key in self._columns:
-                old_vals[key] = val
-            elif key in self._fields:
-                new_vals[key] = val
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
             else:
                 unknown.append(key)
 
@@ -3936,10 +3938,12 @@ class BaseModel(object):
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
-            if key in self._all_columns:
-                old_vals[key] = val
-            elif key in self._fields:
-                new_vals[key] = val
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
             else:
                 unknown.append(key)
 
