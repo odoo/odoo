@@ -66,7 +66,7 @@ class im_livechat_channel(osv.Model):
 
     def _script_internal(self, cr, uid, ids, name, arg, context=None):
         values = {
-            "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID 'web.base.url'),
+            "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
             "dbname":cr.dbname
         }
         res = {}
