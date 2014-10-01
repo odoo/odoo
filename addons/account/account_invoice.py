@@ -812,7 +812,7 @@ class account_invoice(models.Model):
                     if line.value == 'fixed':
                         total_fixed += line.value_amount
                     if line.value == 'procent':
-                        total_percent += line.value_amount
+                        total_percent += (line.value_amount/100.0)
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
                     raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
