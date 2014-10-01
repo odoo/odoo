@@ -143,6 +143,12 @@ class event_event(osv.osv):
             for event in self.browse(cr, uid, ids, context=context)
         }
 
+    def _count_sponsor(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.sponsor_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
+
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
         res = dict((res_id, []) for res_id in ids)
         for event in self.browse(cr, uid, ids, context=context):
@@ -162,14 +168,13 @@ class event_event(osv.osv):
         'count_tracks': fields.function(_count_tracks, type='integer', string='Tracks'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
         'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
-        'timezone_of_event': fields.selection(_list_tz, 'Event Timezone', size=64),
+        'count_sponsor': fields.function(_count_sponsor, type='integer', string='Sponsors'),
     }
 
     _defaults = {
         'show_track_proposal': False,
         'show_tracks': False,
         'show_blog': False,
-        'timezone_of_event':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
     }
 
     def _get_new_menu_pages(self, cr, uid, event, context=None):

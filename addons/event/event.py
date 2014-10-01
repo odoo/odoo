@@ -42,6 +42,9 @@ class event_event(models.Model):
     seats_max = fields.Integer(string='Maximum Available Seats', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
+    seats_availability = fields.Selection(
+        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        'Available Seat', required=True, default='unlimited')
     seats_min = fields.Integer(string='Minimum Reserved Seats', oldname='register_min',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )")
@@ -66,7 +69,7 @@ class event_event(models.Model):
         if self.ids:
             state_field = {
                 'draft': 'seats_unconfirmed',
-                'open':'seats_reserved',
+                'open': 'seats_reserved',
                 'done': 'seats_used',
             }
             query = """ SELECT event_id, state, sum(nb_register)
@@ -98,8 +101,7 @@ class event_event(models.Model):
     def _tz_get(self):
         return [(x, x) for x in pytz.all_timezones]
 
-    date_tz = fields.Selection('_tz_get', string='Timezone',
-                        default=lambda self: self._context.get('tz', 'UTC'))
+    date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
 
     @api.one
     @api.depends('date_tz', 'date_begin')

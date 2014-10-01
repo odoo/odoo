@@ -96,50 +96,10 @@
                                     <group>
                                         <field name="auto_confirm" invisible="1"/>
                                         <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
-                                        <field name="seats_max"/>
-                                        <label for="seats_reserved" string="Current Registrations" groups="base.group_user"/>
-                                        <div groups="base.group_user">
-                                             <field name="seats_unconfirmed" class="oe_inline"/> (confirmed: <field name="seats_reserved" class="oe_inline"/>)
-                                        </div>
-                                        <field name="seats_used"/>
+                                        <field name="seats_availability" widget='radio'/>
+                                        <field name="seats_max" attrs="{'invisible':[('seats_availability','=','unlimited')]}"/>
                                     </group>
                                 </group>
-                                <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user" context="{'event_id': active_id}">
-                                    <tree string="Registration" editable="top">
-                                        <field name="name" />
-                                        <field name="email" />
-                                        <field name="phone"/>
-                                        <field name="nb_register" />
-                                        <field name="state"/>
-                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                                    </tree>
-                                    <form string="Registration">
-                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
-                                        <field name="name"/>
-                                        <group colspan="4" col="4">
-                                        <field name="email"/>
-                                        <field name="phone"/>
-                                        </group>
-                                        <group colspan="4" col="4">
-                                            <field name="nb_register"/>
-                                        </group>
-                                        <group colspan="4" col="4">
-                                        </group>
-                                            <group col="8" colspan="4">
-                                                <separator string="" colspan="4"/>
-                                                <newline/>
-                                                <field name="state" colspan="2"/>
-                                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                                <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
-                                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                                            </group>
-                                    </form>
-                                </field>
-                            </page>
-                            <page string="Description">
-                                <field name="description" nolabel="1" placeholder="Event Description..."/>
                             </page>
                             <page string='Event Details' groups="base.group_no_one">
                                 <group colspan="4">

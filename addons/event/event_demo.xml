@@ -32,6 +32,7 @@
         <field name="name">Open Days in Los Angeles</field>
         <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 8:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d 18:00:00')" name="date_end"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">500</field>
         <field name="address_id" ref="base.res_partner_6"/>
         <field name="type" ref="event_type_1"/>
@@ -78,6 +79,7 @@
         <field eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d 11:00:00')" name="date_end"/>
         <field name="type" ref="event_type_0"/>
         <field name="address_id" ref="base.res_partner_5"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">350</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
@@ -113,6 +115,7 @@
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
         <field name="address_id" ref="base.res_partner_14"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
@@ -155,6 +158,7 @@
         <field name="type" ref="event_type_4"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="address_id" ref="base.res_partner_2"/>
+        <field name="seats_availability">unlimited</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
     <center><strong>5-days Technical Training</strong></center>
