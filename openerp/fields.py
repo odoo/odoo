@@ -249,7 +249,8 @@ class Field(object):
     _free_attrs = None          # list of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
-    _origin = None              # the column or field interfaced by self, if any
+    inherited = False           # whether the field is inherited (_inherits)
+    column = None               # the column interfaced by the field
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -580,11 +581,10 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
-        if self._origin:
-            assert isinstance(self._origin, fields._column)
+        if self.column:
             # some columns are registry-dependent, like float fields (digits);
             # duplicate them to avoid sharing between registries
-            return copy(self._origin)
+            return copy(self.column)
 
         _logger.debug("Create fields._column for Field %s", self)
         args = {}

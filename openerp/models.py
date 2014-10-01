@@ -813,7 +813,7 @@ class BaseModel(object):
         # inheritance between different models)
         cls._fields = {}
         for attr, field in getmembers(cls, Field.__instancecheck__):
-            if not field._origin:
+            if not field.inherited:
                 cls._add_field(attr, field.copy())
 
         # introduce magic fields
@@ -2950,9 +2950,9 @@ class BaseModel(object):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
                     cls._add_field(attr, field.copy(
+                        inherited=True,
                         related=(parent_field, attr),
                         related_sudo=False,
-                        _origin=field,
                     ))
 
         cls._inherits_reload_src()
