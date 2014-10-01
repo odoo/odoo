@@ -39,6 +39,7 @@ class barcode_nomenclature(osv.osv):
 
 class barcode_rule(osv.osv):
     _name = 'barcode.rule'
+    _order = 'priority desc'
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
         'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
