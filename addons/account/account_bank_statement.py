@@ -448,6 +448,12 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
 
+    def onchange_bank_account_id(self, cr, uid, ids, bank_account_id, context=None):
+        partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+        return {'value': {
+            'partner_id': partner_id,
+        }}
+
     def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, search_reconciliation_proposition=True, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
