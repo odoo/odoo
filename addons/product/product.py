@@ -644,11 +644,13 @@ class product_product(osv.osv):
                 name = name + ' - %s' % (d['variants'],)
             return (d['id'], name)
 
-        partner_id = context.get('partner_id', False)
-
+        partner_obj = self.pool.get('res.partner')
+        partner_id = context.get('partner_id', False) and partner_obj.browse(cr, user, context['partner_id'], context)
+        
         result = []
         for product in self.browse(cr, user, ids, context=context):
-            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            sellers = filter(lambda x: partner_id and ( x.name.id == partner_id.id or 
+                                                        x.name.id == partner_id.commercial_partner_id.id), product.seller_ids)
             if sellers:
                 for s in sellers:
                     mydict = {
