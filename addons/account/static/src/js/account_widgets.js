@@ -1079,7 +1079,7 @@ openerp.account = function (instance) {
             var self = this;
             var notification = $("<div class='import_feedback alert alert-info' role='alert'>"+feedback+"</div>").hide();
             notification.appendTo(this.$(".notification_area")).slideDown(this.aestetic_animation_speed);
-            this.$(".notification_area").css("cursor", "pointer").click(function() {
+            this.$(".import_feedback").css("cursor", "pointer").click(function() {
                 $(this).slideUp(self.aestetic_animation_speed, function() {
                     $(this).remove();
                 });

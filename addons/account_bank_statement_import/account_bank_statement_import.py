@@ -74,7 +74,8 @@ class account_bank_statement_import(osv.TransientModel):
         return bank_account_id, partner_id
 
     def import_bank_statements(self, cr, uid, bank_statement_vals=False, context=None):
-        """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values"""
+        """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values
+            This method will also automatically reconcile transactions for which there is an unambiguous counterpart. """
         bs_obj = self.pool.get('account.bank.statement')
         bsl_obj = self.pool.get('account.bank.statement.line')
         if len(bank_statement_vals) == 0:
@@ -88,17 +89,17 @@ class account_bank_statement_import(osv.TransientModel):
             raise osv.except_osv(_('Error'), _('You have already imported that file.'))
 
         num_auto_reconciled = 0
-        excluded_ids = []
         for statement in bs_obj.browse(cr, uid, statement_ids, context=context):
             for st_line in statement.line_ids:
-                counterpart = bsl_obj.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, unambiguous=True, context=context)
+                counterpart = bsl_obj.get_reconciliation_proposition(cr, uid, st_line, unambiguous=True, context=context)
                 if counterpart:
                     for move_line_dict in counterpart:
-                        excluded_ids.append(move_line_dict['id'])
-                        # process_reconciliation() expects data to create new move lines that will be used to reconcile existing ones
-                        # For instance, we can partially reconcile a move line whose ID is 7 and credit is 500 by passing a dict that contains
+                        # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
+                        # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
+                        # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
                         # 'counterpart_move_line_id': 7,
-                        # 'debit': 250
+                        # 'credit': 500
+                        # This is what the reconciliation widget does.
                         move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
                         move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
                     bsl_obj.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)

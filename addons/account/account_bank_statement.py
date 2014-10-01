@@ -514,22 +514,22 @@ class account_bank_statement_line(osv.osv):
         # How to compare statement line amount and move lines amount
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
-        sign = 1
+        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
         if statement_currency == company_currency:
             amount_field = 'credit'
             if st_line.amount > 0:
                 amount_field = 'debit'
+            else:
+                sign = -1
         else:
             amount_field = 'amount_currency'
-            if st_line.amount < 0:
-                sign = -1
 
         # Look for structured communication match
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
             additional_domain = [('ref', '=', st_line.name)]
             if unambiguous:
-                additional_domain += [(amount_field, '=', (sign * st_line.amount)), ('date', '<=', st_line.date)] # TODO : date dans get_move_lines_for_reconciliation
+                additional_domain += [(amount_field, '=', (sign * st_line.amount))]
             match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
                 mv_line = match_ids[0]
@@ -542,8 +542,8 @@ class account_bank_statement_line(osv.osv):
         if not st_line.partner_id.id:
             return []
 
-        # Look for a single move line with the same partner, the same amount and an anterior date
-        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount)), ('date', '<=', st_line.date)])
+        # Look for a single move line with the same partner, the same amount
+        match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_ids and len(match_ids) == 1:
             return match_ids
 
