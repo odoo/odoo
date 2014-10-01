@@ -110,8 +110,8 @@ openerp.pos_barcodes = function(instance){
             for (var i = 0; i < rules.length; i++) {
                 if (match_pattern(ean,rules[i].pattern)) {
                     parse_result.type      = rules[i].type;
-                    parse_result.value     = get_value(ean,patterns[i].pattern);
-                    parse_result.base_code = get_basecode(ean,patterns[i].pattern);
+                    parse_result.value     = get_value(ean,rules[i].pattern);
+                    parse_result.base_code = get_basecode(ean,rules[i].pattern);
                     return parse_result;
                 }
             }

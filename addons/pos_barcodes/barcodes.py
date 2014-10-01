@@ -44,13 +44,13 @@ class barcode_rule(osv.osv):
         'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
         'priority': fields.float('Priority', help='Rules with a higher priority match first'),
         #'encoding': fields.selection([('any','Any'),('ean13','EAN-13'),('ean8','EAN-8'),('codabar','Codabar'),('upca','UPC-A'),('upce','UPC-E')],'Encoding',help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        'type':     fields.selection([('unit','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier')],'Type', required=True),
+        'type':     fields.selection([('product','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier')],'Type', required=True),
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
         #'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode'),      
     }
 
     _defaults = {
-        'type': 'unit',
+        'type': 'product',
         'pattern': '*',
         #'encoding': 'any',
     }
