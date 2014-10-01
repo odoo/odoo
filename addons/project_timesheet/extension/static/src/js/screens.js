@@ -410,11 +410,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super();
         },
         pad_table_to: function(count) {
-            if (this.activities.length >= count) {
+            if (this.activity_list.activities.length >= count) {
                 return;
             }
             var row = '<tr class="activity_row"><td></td></tr>';
-            $rows = $(new Array(count - this.activities.length + 1).join(row));
+            $rows = $(new Array(count - this.activity_list.activities.length + 1).join(row));
             if (!this.$el.find(".activity_row").length) {
                 $rows.appendTo(this.$el.find(".pt_activity_body > table > tbody").parent());
             } else {
@@ -424,6 +424,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_row_click: function(event) {
             var activity_id = $(event.currentTarget).data("activity_id");
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
+            //TODO: Better to develop modify screen, instead of putting static logic and putting static logic
             this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
         },
         on_button_timer: function() {
@@ -492,7 +493,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['date'] = date; //Current date in accepted format
             project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             this.project_timesheet_model.add_project(project_activity_data);
-            //TODO: Also add the new project and task if it is created using Create option(with virtual_id)
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
         on_activity_edit: function() {
@@ -502,11 +502,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var project_activity_data = this.get_from_data();
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             this.project_timesheet_model.add_project(project_activity_data);
+            this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
         show: function() {
             var self = this;
             $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             $form_data.val('');
+            this.$el.find(".pt_activity_body h2").removeClass("o_hidden");
             this.$el.find(".pt_btn_add_activity").removeClass("o_hidden");
             if(!this.$el.find(".pt_btn_edit_activity").hasClass("o_hidden")) {
                 this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
@@ -519,6 +521,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
             this.activity_list = new project_timesheet.ActivityListView();
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
+            this.activity_list.$el.find(".activity_row").on('click', this.on_click_row);
             this._super();
         },
         hide: function() {
@@ -532,6 +535,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.task_m2o.destroy();
             }
             this._super();
+        },
+        on_click_row: function(event) {
+            var activity_id = $(event.currentTarget).data("activity_id");
+            var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
+            var activity_clone = _.clone(activity);
+            activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            this.project_timesheet_model.add_project(activity_clone);
+            this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
+
         },
         is_valid_data: function() {
             var validity = true;
@@ -561,6 +573,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             this.mode = "edit";
             this.current_id = screen_data['id'];
+            this.$el.find(".pt_activity_body table").remove();
+            this.$el.find(".pt_activity_body h2").addClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity").toggleClass("o_hidden");
             self.$el.find(".pt_btn_add_activity").toggleClass("o_hidden");
             _.each(screen_data, function(field_val, field_key) {
