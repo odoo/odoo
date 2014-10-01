@@ -712,6 +712,7 @@ class sale_order(osv.osv):
                     line.refresh()
                     #run again procurement that are in exception in order to trigger another move
                     proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
+                    procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
@@ -720,7 +721,6 @@ class sale_order(osv.osv):
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow normally ensure proc_ids isn't an empty list
-            procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
             procurement_obj.run(cr, uid, proc_ids, context=context)
 
             #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
