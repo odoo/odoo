@@ -51,6 +51,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             //this.session = session;
+            this.project_timesheet_model = attributes.project_timesheet_model;
             this.id = options.id || null; //If no real id, we will have virtual id, at sync time virtual id will be skipped while sending data to server
             this.name = options.name || null;
             this.set({
@@ -69,6 +70,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 task_model.add_activity(data);
             } else {
                 var task = new project_timesheet.task_model({}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
+                this.project_timesheet_model.project_timesheet_db.add_new_task(data['task_id'])
                 task.add_activity(data);
                 this.get('tasks').add(task);
             }
@@ -129,7 +131,9 @@ function odoo_project_timesheet_models(project_timesheet) {
                 var project_model = projects_collection.get(data.project_id[0]);
                 project_model.add_task(data);
             } else {
-                var project = new project_timesheet.project_model({}, {id: data['project_id'][0], name: data['project_id'][1]});
+                var project = new project_timesheet.project_model({project_timesheet_model: this}, {id: data['project_id'][0], name: data['project_id'][1]});
+                //Project is not available also add, project in projects key in localstorage
+                this.project_timesheet_db.add_new_project(data['project_id'])
                 project.add_task(data);
                 this.get('projects').add(project);
             }

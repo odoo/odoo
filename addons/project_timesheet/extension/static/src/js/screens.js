@@ -378,7 +378,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             this._super();
             this.activity_list = new project_timesheet.ActivityListView();
-            console.log("this.activity_list is ::: ", this.activity_list, this.$el.find(".pt_activity_body"));
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
 
             this.pad_table_to(11);
@@ -453,10 +452,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.$el.find(".pt_btn_add_activity").on("click", this.on_activity_add);
             this.$el.find(".pt_btn_edit_activity").on("click", this.on_activity_edit);
-            var project_m2o = new project_timesheet.FieldMany2One(this, {model: 'projects', classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
-            project_m2o.replace(this.$el.find(".project-placeholder"));
-            var task_m2o = new project_timesheet.FieldMany2One(this, {model: 'tasks', classname: "pt_input_task pt_required", label: "Task", id_for_input: "task_id"});
-            task_m2o.replace(this.$el.find(".task-placeholder"));
         },
         get_from_data: function() {
             var project_activity_data = {};
@@ -517,6 +512,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
             }
             $form_data.removeData();
+            //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
+            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: 'projects', classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
+            this.project_m2o.appendTo(this.$el.find(".project_m2o"));
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: 'tasks', classname: "pt_input_task pt_required", label: "Task", id_for_input: "task_id"});
+            this.task_m2o.appendTo(this.$el.find(".task_m2o"));
             this.activity_list = new project_timesheet.ActivityListView();
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
             this._super();
@@ -524,6 +524,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
         hide: function() {
             if(this.activity_list) {
                 this.activity_list.destroy();
+            }
+            if(this.project_m2o) {
+                this.project_m2o.destroy();
+            }
+            if(this.task_m2o) {
+                this.task_m2o.destroy();
             }
             this._super();
         },

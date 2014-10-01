@@ -102,7 +102,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 },
                 html: true,
                 minLength: 0,
-                delay: 250
+                delay: 0 //We having local data, so no need to apply any delay
             });
             // set position for list of suggestions box
             self.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
@@ -123,7 +123,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             if (!term) {
                 var search_data = data;
             } else {
-                var search_data = _.compact(_(data).map(function(x) {if (_.include(x[1], term)) {return x;}}));
+                var search_data = _.compact(_(data).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
             }
             var values = _.map(search_data, function(x) {
                 x[1] = x[1].split("\n")[0];
@@ -171,7 +171,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
         renderElement: function() {
             this.activities = this.project_timesheet_db.get_activities();
-            console.log("Inside renderElement of ActivityListView :::: ", this.activities);
             this.replaceElement(QWeb.render(this.template, {widget: this, activities: this.activities}));
         },
         format_duration: function(field_val) {

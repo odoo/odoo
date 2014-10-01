@@ -57,5 +57,31 @@ function odoo_project_timesheet_db(project_timesheet) {
             activities.push(activity);
             this.save('activities',activities);
         },
+        add_new_project: function(project) {
+            var projects = this.load("projects", []);
+            for(var i = 0; i < projects.length; i++) {
+                if(projects[i][0] === project[0]) {
+                    projects[i] = project;
+                    this.save('projects', projects);
+                    return projects[i];
+                }
+            }
+
+            projects.push(project);
+            this.save('projects', projects);
+        },
+        add_new_task: function(task) {
+            var tasks = this.load("tasks", []);
+            for(var i = 0; i < tasks.length; i++) {
+                if(tasks[i][0] === task[0]) {
+                    tasks[i] = task;
+                    this.save('tasks', tasks);
+                    return tasks[i];
+                }
+            }
+
+            tasks.push(task);
+            this.save('tasks', tasks);
+        }
     });
 }
