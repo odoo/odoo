@@ -1517,26 +1517,6 @@
         },
     });
 
-    website.snippet.options.demo_blog = website.snippet.Option.extend({
-        set_active: function () {
-            var classes = _.uniq((this.$target.find('.oe_blog_demo_content').attr("class") || '').split(/\s+/));
-            this.$el.find('[data-select_class]')
-                .add(this.$el)
-                .filter('[data-select_class]')
-                .removeClass("active")
-                .filter('[data-select_class="' + classes.join('"], [data-select_class="') + '"]')
-                .addClass("active");
-        },
-        select_class: function (type, value, $li) {
-            var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
-
-            var classes = $lis.map(function () {return $(this).data('select_class');}).get();
-            var $img = this.$target.find('.oe_blog_demo_content');
-            $img.removeClass(classes.join(" "));
-            if(value) $img.addClass(value);
-        },
-    });
-
     website.snippet.Editor = openerp.Class.extend({
         init: function (BuildingBlock, dom) {
             this.BuildingBlock = BuildingBlock;
