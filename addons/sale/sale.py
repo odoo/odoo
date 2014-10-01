@@ -720,6 +720,7 @@ class sale_order(osv.osv):
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
             #note that the workflow normally ensure proc_ids isn't an empty list
+            procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
             procurement_obj.run(cr, uid, proc_ids, context=context)
 
             #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
