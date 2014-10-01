@@ -408,6 +408,7 @@ class Field(object):
         self.compute = self._compute_related
         self.inverse = self._inverse_related
         if field._description_searchable(env):
+            # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
@@ -547,6 +548,15 @@ class Field(object):
             return bool(getattr(column, 'store', True)) or \
                    bool(getattr(column, '_fnct_search', False))
         return bool(self.search)
+
+    def _description_sortable(self, env):
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True))
+        if self.inherited:
+            # self is sortable if the inherited field is itself sortable
+            return self.related_field._description_sortable(env)
+        return False
 
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
