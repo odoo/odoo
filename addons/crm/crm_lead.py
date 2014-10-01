@@ -924,7 +924,12 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_name': opportunity.name,
         }
         return res
-
+    
+    def action_scheduleMeeting(self, cr, uid, ids, context=None):
+        res = self.action_makeMeeting(cr, uid, ids, context=context)
+        res['domain'] = [('opportunity_id', 'in', ids)]
+        return res
+        
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id'):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
