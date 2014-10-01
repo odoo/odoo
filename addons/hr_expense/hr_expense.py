@@ -176,7 +176,7 @@ class hr_expense_expense(osv.osv):
         return {
             'journal_id': journal_id,
             'date': date,
-            'period_id': self.pool.get('account.period').find(cr, uid, date, context=ctx)[0],
+            'period_id': self.pool.get('account.period').find(cr, uid, date, context=context)[0],
             'ref': ref,
             'company_id': company_id,
         }
