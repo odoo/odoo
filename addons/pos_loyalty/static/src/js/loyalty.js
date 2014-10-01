@@ -264,7 +264,7 @@ openerp.pos_loyalty = function(instance){
                     'comment': 'There are no rewards available for this customer as part of the loyalty program',
                 });
                 return;
-            } else if (rewards.length === 1) {
+            } else if (rewards.length === 1 && this.pos.loyalty.rewards.length === 1) {
                 order.apply_reward(rewards[0]);
                 return;
             } else { 
