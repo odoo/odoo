@@ -177,7 +177,10 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            context = dict(context, inherit_branding=qcontext.get('editable', False))
+            if qcontext.get('editable'):
+                context = dict(context, inherit_branding=True)
+            elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+                context = dict(context, inherit_branding_auto=True)
 
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:

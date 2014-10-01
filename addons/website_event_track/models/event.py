@@ -144,7 +144,7 @@ class event_event(osv.osv):
         }
 
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
-        res = dict.fromkeys(ids, [])
+        res = dict((res_id, []) for res_id in ids)
         for event in self.browse(cr, uid, ids, context=context):
             for track in event.track_ids:
                 res[event.id] += [tag.id for tag in track.tag_ids]

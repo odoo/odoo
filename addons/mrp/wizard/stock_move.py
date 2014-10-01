@@ -46,7 +46,7 @@ class stock_move_consume(osv.osv_memory):
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})
         if 'product_qty' in fields:
-            res.update({'product_qty': move.product_qty})
+            res.update({'product_qty': move.product_uom_qty})
         if 'location_id' in fields:
             res.update({'location_id': move.location_id.id})
         return res
@@ -57,10 +57,14 @@ class stock_move_consume(osv.osv_memory):
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get('product.uom')
         move_ids = context['active_ids']
         for data in self.browse(cr, uid, ids, context=context):
+            if move_ids and move_ids[0]:
+                move = move_obj.browse(cr, uid, move_ids[0], context=context)
+            qty = uom_obj._compute_qty(cr, uid, data['product_uom'].id, data.product_qty, data.product_id.uom_id.id)
             move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
+                             qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 

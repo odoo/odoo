@@ -29,6 +29,7 @@ from openerp.exceptions import Warning
 class event_type(models.Model):
     """ Event Type """
     _name = 'event.type'
+    _description = 'Event Type'
 
     name = fields.Char(string='Event Type', required=True)
     default_reply_to = fields.Char(string='Default Reply-To',
@@ -46,6 +47,7 @@ class event_type(models.Model):
 class event_event(models.Model):
     """Event"""
     _name = 'event.event'
+    _description = 'Event'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_begin'
 

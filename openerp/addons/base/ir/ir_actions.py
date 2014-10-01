@@ -128,7 +128,7 @@ class ir_actions_report_xml(osv.osv):
                 else:
                     raise Exception, "Unhandled report type: %s" % r
             else:
-                raise Exception, "Required report does not exist: %s" % r
+                raise Exception, "Required report does not exist: %s" % name
 
         return new_report
 

@@ -71,7 +71,7 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, context=context)
         else:
-            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
+            res = dict((res_id, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}) for res_id in ids)
         return res
 
     _columns = {

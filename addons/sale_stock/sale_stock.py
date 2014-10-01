@@ -230,6 +230,7 @@ class sale_order_line(osv.osv):
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
         'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
     }
 
     _defaults = {
@@ -287,6 +288,7 @@ class sale_order_line(osv.osv):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
+        warehouse_obj = self.pool['stock.warehouse']
         warning = {}
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -299,7 +301,7 @@ class sale_order_line(osv.osv):
 
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
-        res['value']['delay'] = (product_obj.sale_delay or 0.0)
+        res['value'].update({'product_tmpl_id': product_obj.product_tmpl_id.id, 'delay': (product_obj.sale_delay or 0.0)})
 
         # Calling product_packaging_change function after updating UoM
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
@@ -310,14 +312,14 @@ class sale_order_line(osv.osv):
             #determine if the product is MTO or not (for a further check)
             isMto = False
             if warehouse_id:
-                warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+                warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
                 for product_route in product_obj.route_ids:
                     if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
                         isMto = True
                         break
             else:
                 try:
-                    mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
+                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context=context)
                 except:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     mto_route_id = False

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Quote frontend assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
+      <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
+      <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
+    </xpath>
+  </template>
+
   <template id="pricing" name="Price">
       <section>
           <h1 class="page-header">Pricing</h1>
@@ -116,7 +125,7 @@
           <t t-foreach="quotation.message_ids" t-as="message">
               <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
                   <div class="media-body">
-                      <img class="media-object pull-left" t-attf-src="/website/image/res.partner/{{ message.author_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                      <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                       <div class="media-body">
                           <h5 class="media-heading">
                               <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
@@ -134,7 +143,7 @@
       <xpath expr="//h1" position="after">
           <section class="mb32 css_editable_mode_hidden hidden-print">
               <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
-                  <img class="img pull-left img-rounded" t-attf-src="/website/image/res.partner/{{ user_id.partner_id.id }}/image_small" style="width: 50px; margin-right: 10px;"/>
+                  <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                   <div class="pull-left mb32" style="width: 75%%">
                       <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
                       <button type="submit" class="btn btn-primary mt8">Send</button>
@@ -161,14 +170,8 @@
 
   <template id="so_quotation" name="Product Quotation">
       <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <script type="text/javascript" src="/website_quote/static/lib/jSignature/jSignature.min.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container">
+            <div class="container o_website_quote">
               <div class="row mt16">
                   <div class="col-md-3">
                       <div class="bs-sidebar">
@@ -457,13 +460,8 @@
 
   <template id="so_template" name="SO Template">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
-            <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
-            <t t-raw="head or ''"/>
-        </t>
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
-            <div class="container">
+            <div class="container o_website_quote">
                 <div class="row mt16">
                     <div class="col-md-3">
                         <div class="bs-sidebar">

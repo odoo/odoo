@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-23 16:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,6 @@ msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr ""
@@ -155,7 +154,7 @@ msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
-msgid "Create Date"
+msgid "Create Month"
 msgstr ""
 
 #. module: hr_expense
@@ -268,7 +267,6 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Employee"
 msgstr ""
 
@@ -286,8 +284,8 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:167
 #: code:addons/hr_expense/hr_expense.py:230
 #: code:addons/hr_expense/hr_expense.py:232
+#: code:addons/hr_expense/hr_expense.py:341
 #: code:addons/hr_expense/hr_expense.py:345
-#: code:addons/hr_expense/hr_expense.py:349
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -300,7 +298,7 @@ msgid "Expense"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:374
+#: code:addons/hr_expense/hr_expense.py:370
 #, python-format
 msgid "Expense Account Move"
 msgstr ""
@@ -531,7 +529,7 @@ msgid "No expense journal found. Please make sure you have a journal with type '
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:345
+#: code:addons/hr_expense/hr_expense.py:341
 #, python-format
 msgid "No purchase account found for the product %s (or for his category), please configure one."
 msgstr ""
@@ -557,7 +555,7 @@ msgid "Paid"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:345
 #, python-format
 msgid "Please configure Default Expense account for Product purchase: `property_account_expense_categ`."
 msgstr ""
@@ -575,6 +573,11 @@ msgid "Product"
 msgstr ""
 
 #. module: hr_expense
+#: field:hr.expense.report,product_qty:0
+msgid "Product Quantity"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
 msgstr ""
@@ -585,7 +588,6 @@ msgid "Products"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.report,product_qty:0
 #: view:website:hr_expense.report_expense
 msgid "Qty"
 msgstr ""
@@ -623,7 +625,7 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:443
 #, python-format
 msgid "Selected Unit of Measure does not belong to the same category as the product Unit of Measure"
 msgstr ""
@@ -777,7 +779,7 @@ msgid "Waiting confirmation"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:443
 #, python-format
 msgid "Warning"
 msgstr ""
