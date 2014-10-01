@@ -375,6 +375,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }else{
                     var model = self.models[index];
                     self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+
+                    var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
+                    if (!cond) {
+                        load_model(index+1);
+                        return;
+                    }
+
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 

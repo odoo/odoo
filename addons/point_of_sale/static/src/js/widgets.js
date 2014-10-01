@@ -1006,6 +1006,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.fullscreen_popup = new module.FullscreenPopup(this,{});
             this.fullscreen_popup.appendTo(this.$el);
 
+            this.selection_popup = new module.SelectionPopupWidget(this,{});
+            this.selection_popup.appendTo(this.$el);
+
             this.textinput_popup = new module.TextInputPopupWidget(this,{});
             this.textinput_popup.appendTo(this.$el);
 
@@ -1081,6 +1084,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'textinput': this.textinput_popup,
                     'confirm': this.confirm_popup,
                     'fullscreen': this.fullscreen_popup,
+                    'selection': this.selection_popup,
                     'unsent-orders': this.unsent_orders_popup,
                 },
                 default_screen: 'products',

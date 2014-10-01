@@ -378,6 +378,53 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    /**
+     * A popup that allows the user to select one item from a list. 
+     *
+     * show_popup('selection',{
+     *  message: 'Pick an Option',
+     *      message: "Popup Title",
+     *      list: [
+     *          { label: 'foobar',  item: 45 },
+     *          { label: 'bar foo', item: 'stuff' },
+     *      ],
+     *      confirm: function(item) {
+     *          // get the item selected by the user.
+     *      },
+     *      cancel: function(){
+     *          // user chose nothing
+     *      }
+     *  });
+     */
+
+    module.SelectionPopupWidget = module.PopUpWidget.extend({
+        template: 'SelectionPopupWidget',
+        show: function(options){
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.list    = options.list    || [];
+            this.renderElement();
+
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if (options.cancel){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.button.item').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if (options.confirm) {
+                    var item = self.list[parseInt($(this).data('item-index'))];
+                    item = item ? item.item : item;
+                    options.confirm.call(self,item);
+                }
+            });
+        },
+    });
+
     module.TextInputPopupWidget = module.PopUpWidget.extend({
         template: 'TextInputPopupWidget',
         show: function(options){
