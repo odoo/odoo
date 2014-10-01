@@ -1646,7 +1646,7 @@ class account_move_reconcile(osv.osv):
         return True
 
     _constraints = [
-        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id', 'line_partial_ids']),
     ]
     
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
