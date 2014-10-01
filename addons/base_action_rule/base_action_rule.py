@@ -317,8 +317,8 @@ class base_action_rule(osv.osv):
             model = self.pool[action.model_id.model]
             domain = []
             ctx = dict(context)
-            if action.filter_domain:
-                domain = eval(action.context)
+            if action.filter_domain is not False:
+                domain = eval(action.filter_domain)
             elif action.filter_id:
                 domain = eval(action.filter_id.domain)
                 ctx.update(eval(action.filter_id.context))
