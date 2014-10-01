@@ -310,7 +310,7 @@ def test_deb(o):
 def test_rpm(o):
     with docker('centos:centos7', o.build_dir, o.pub) as centos7:
         centos7.release = 'odoo.noarch.rpm'
-        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
+        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
         centos7.system('yum update -y && yum upgrade -y')
         centos7.system('yum install python-pip gcc python-devel -y')
         centos7.system('pip install pydot pyPdf vatnumber xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')

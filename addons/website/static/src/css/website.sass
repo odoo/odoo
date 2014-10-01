@@ -442,3 +442,62 @@ div.media_iframe_video
         -ms-transform: none !important
         -o-transform: none !important
         transform: none !important
+
+
+/* Fix: backward compatibility saas-3 */
+
+div.carousel
+    .container
+        > .carousel-caption
+            position: absolute
+            right: 50%
+            left: 50%
+            bottom: 20px
+            > div
+                position: absolute
+                text-align: left
+                padding: 20px
+                background: rgba(0, 0, 0, 0.4)
+                bottom: 20px
+        > .carousel-image
+            top: 5%
+            bottom: 5%
+            position: absolute
+            max-height: 90%
+            margin: 0 auto
+    .item.text_image
+        .container
+            > .carousel-caption
+                left: 10%
+                > div
+                    right: 50%
+                    margin-right: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 10%
+                left: 50%
+    .item.image_text
+        .container
+            > .carousel-caption
+                right: 10%
+                > div
+                    left: 50%
+                    margin-left: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 50%
+                left: 10%
+    .item.text_only
+        .container
+            > .carousel-caption
+                left: 10%
+                right: 10%
+                top: 10%
+                bottom: auto
+                > div
+                    text-align: center
+                    background: transparent
+                    bottom: auto
+                    width: 100%
+            > .carousel-image
+                display: none !important

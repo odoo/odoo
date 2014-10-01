@@ -4,6 +4,7 @@ from urllib import urlencode
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools.mail import html_sanitize
 
 
 class WebsiteEmailDesigner(http.Controller):
@@ -64,6 +65,7 @@ class WebsiteEmailDesigner(http.Controller):
             tids = tmpl_obj.search(cr, uid, [], context=context)
         templates = tmpl_obj.browse(cr, uid, tids, context=context)
         values['templates'] = templates
+        values['html_sanitize'] = html_sanitize
 
         return request.website.render("website_mail.email_designer", values)
 

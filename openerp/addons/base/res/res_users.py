@@ -163,7 +163,7 @@ class res_users(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'login_date': fields.date('Latest connection', select=1),
+        'login_date': fields.date('Latest connection', select=1, copy=False),
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user', auto_join=True),
@@ -190,8 +190,8 @@ class res_users(osv.osv):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = openerp.fields.Char(related='partner_id.name')
-    email = openerp.fields.Char(related='partner_id.email')
+    name = openerp.fields.Char(related='partner_id.name', inherited=True)
+    email = openerp.fields.Char(related='partner_id.email', inherited=True)
 
     def on_change_login(self, cr, uid, ids, login, context=None):
         if login and tools.single_email_re.match(login):

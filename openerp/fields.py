@@ -69,18 +69,6 @@ def resolve_all_mro(cls, name, reverse=False):
             yield klass.__dict__[name]
 
 
-def default_compute(field, value):
-    """ Return a compute function for the given default `value`; `value` is
-        either a constant, or a unary function returning the default value.
-    """
-    name = field.name
-    func = value if callable(value) else lambda rec: value
-    def compute(recs):
-        for rec in recs:
-            rec[name] = func(rec)
-    return compute
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -261,7 +249,8 @@ class Field(object):
     _free_attrs = None          # list of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
-    _origin = None              # the column or field interfaced by self, if any
+    inherited = False           # whether the field is inherited (_inherits)
+    column = None               # the column interfaced by the field
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -282,7 +271,7 @@ class Field(object):
     related = None              # sequence of field names, for related fields
     related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value
+    default = None              # default value (literal or callable)
 
     string = None               # field label
     help = None                 # field tooltip
@@ -419,6 +408,7 @@ class Field(object):
         self.compute = self._compute_related
         self.inverse = self._inverse_related
         if field._description_searchable(env):
+            # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
@@ -469,10 +459,6 @@ class Field(object):
 
         def make_depends(deps):
             return tuple(deps(recs) if callable(deps) else deps)
-
-        # transform self.default into self.compute
-        if self.default is not None and self.compute is None:
-            self.compute = default_compute(self, self.default)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
@@ -563,6 +549,15 @@ class Field(object):
                    bool(getattr(column, '_fnct_search', False))
         return bool(self.search)
 
+    def _description_sortable(self, env):
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True))
+        if self.inherited:
+            # self is sortable if the inherited field is itself sortable
+            return self.related_field._description_sortable(env)
+        return False
+
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
@@ -596,9 +591,10 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
-        if self._origin:
-            assert isinstance(self._origin, fields._column)
-            return self._origin
+        if self.column:
+            # some columns are registry-dependent, like float fields (digits);
+            # duplicate them to avoid sharing between registries
+            return copy(self.column)
 
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
@@ -824,7 +820,10 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        if self.compute:
+        if self.default is not None:
+            value = self.default(record) if callable(self.default) else self.default
+            record._cache[self] = self.convert_to_cache(value, record)
+        elif self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))

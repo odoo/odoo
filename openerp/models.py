@@ -39,7 +39,6 @@
 
 """
 
-import copy
 import datetime
 import functools
 import itertools
@@ -653,12 +652,6 @@ class BaseModel(object):
         }
         cls = type(cls._name, (cls,), attrs)
 
-        # float fields are registry-dependent (digit attribute); duplicate them
-        # to avoid issues
-        for key, col in cls._columns.items():
-            if col._type == 'float':
-                cls._columns[key] = copy.copy(col)
-
         # instantiate the model, and initialize it
         model = object.__new__(cls)
         model.__init__(pool, cr)
@@ -820,7 +813,7 @@ class BaseModel(object):
         # inheritance between different models)
         cls._fields = {}
         for attr, field in getmembers(cls, Field.__instancecheck__):
-            if not field._origin:
+            if not field.inherited:
                 cls._add_field(attr, field.copy())
 
         # introduce magic fields
@@ -2957,9 +2950,9 @@ class BaseModel(object):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
                     cls._add_field(attr, field.copy(
+                        inherited=True,
                         related=(parent_field, attr),
                         related_sudo=False,
-                        _origin=field,
                     ))
 
         cls._inherits_reload_src()

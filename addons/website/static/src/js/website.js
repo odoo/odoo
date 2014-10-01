@@ -282,8 +282,12 @@
                 return templates_def;
             }).then(function () {
                 // display button if they are at least one editable zone in the page (check the branding)
-                var editable = $('html').data('website-id') && !!$('[data-oe-model]').size();
-                $("#oe_editzone").toggle(editable);
+                if (!!$('[data-oe-model]').size()) {
+                    $("#oe_editzone").show();
+
+                    //backwards compatibility with 8.0RC1 templates - Drop next line in master!
+                    $("#oe_editzone button").show();
+                }
 
                 if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');

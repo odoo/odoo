@@ -13,6 +13,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	init: function (model, domain, fields, options) {
 		this.cells = [];
 		this.domain = domain;
+        this.context = options.context;
 		this.no_data = true;
 		this.updating = false;
 		this.model = model;
@@ -412,6 +413,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         var self = this;
         return this.model.query(_.without(fields, '__count'))
             .filter(domain)
+            .context(this.context)
             .lazy(false)
             .group_by(groupbys)
             .then(function (groups) {

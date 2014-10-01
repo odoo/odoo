@@ -36,7 +36,7 @@ class product_product(osv.osv):
         testdict = {}
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
-            bom_id = bom_obj._bom_find(cr, uid, False, product_id = prod_id, context=context)
+            bom_id = bom_obj._bom_find(cr, uid, product_id = prod_id, context=context)
             if bom_id:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:

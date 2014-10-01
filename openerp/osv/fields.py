@@ -131,7 +131,7 @@ class _column(object):
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         items = [
-            ('_origin', self),                  # field interfaces self
+            ('column', self),                   # field interfaces self
             ('copy', self.copy),
             ('index', self.select),
             ('manual', self.manual),

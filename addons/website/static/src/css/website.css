@@ -543,3 +543,63 @@ div.media_iframe_video .css_editable_mode_display {
     transform: none !important;
   }
 }
+/* Fix: backward compatibility saas-3 */
+div.carousel .container > .carousel-caption {
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 20px;
+}
+div.carousel .container > .carousel-caption > div {
+  position: absolute;
+  text-align: left;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  bottom: 20px;
+}
+div.carousel .container > .carousel-image {
+  top: 5%;
+  bottom: 5%;
+  position: absolute;
+  max-height: 90%;
+  margin: 0 auto;
+}
+div.carousel .item.text_image .container > .carousel-caption {
+  left: 10%;
+}
+div.carousel .item.text_image .container > .carousel-caption > div {
+  right: 50%;
+  margin-right: -20%;
+  max-width: 550px;
+}
+div.carousel .item.text_image .container > .carousel-image {
+  right: 10%;
+  left: 50%;
+}
+div.carousel .item.image_text .container > .carousel-caption {
+  right: 10%;
+}
+div.carousel .item.image_text .container > .carousel-caption > div {
+  left: 50%;
+  margin-left: -20%;
+  max-width: 550px;
+}
+div.carousel .item.image_text .container > .carousel-image {
+  right: 50%;
+  left: 10%;
+}
+div.carousel .item.text_only .container > .carousel-caption {
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: auto;
+}
+div.carousel .item.text_only .container > .carousel-caption > div {
+  text-align: center;
+  background: transparent;
+  bottom: auto;
+  width: 100%;
+}
+div.carousel .item.text_only .container > .carousel-image {
+  display: none !important;
+}

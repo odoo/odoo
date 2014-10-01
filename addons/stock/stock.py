@@ -1787,7 +1787,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or "/")
         group_id = move.group_id and move.group_id.id or False
         if move.rule_id:
             if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
