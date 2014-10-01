@@ -53,23 +53,18 @@ class account_move_line_reconcile(osv.osv_memory):
         return res
 
     def trans_rec_get(self, cr, uid, ids, context=None):
-        account_move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
         credit = debit = 0
-        account_id = False
-        count = 0
-        for line in account_move_line_obj.browse(cr, uid, context['active_ids'], context=context):
-            if not line.reconcile_id and not line.reconcile_id.id:
-                count += 1
-                credit += line.credit
-                debit += line.debit
-                account_id = line.account_id.id
+        lines = self.pool.get('account.move.line').prepare_move_lines_for_reconciliation_widget(cr, uid, context['active_ids'], context)
+        for line in lines:
+            credit += line['credit']
+            debit += line['debit']
         precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
         writeoff = float_round(debit-credit, precision_digits=precision)
         credit = float_round(credit, precision_digits=precision)
         debit = float_round(debit, precision_digits=precision)
-        return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': writeoff}
+        return {'trans_nbr': len(lines), 'credit': credit, 'debit': debit, 'writeoff': writeoff}
 
     def trans_rec_addendum_writeoff(self, cr, uid, ids, context=None):
         return self.pool.get('account.move.line.reconcile.writeoff').trans_rec_addendum(cr, uid, ids, context)
@@ -78,22 +73,9 @@ class account_move_line_reconcile(osv.osv_memory):
         return self.pool.get('account.move.line.reconcile.writeoff').trans_rec_reconcile_partial(cr, uid, ids, context)
 
     def trans_rec_reconcile_full(self, cr, uid, ids, context=None):
-        account_move_line_obj = self.pool.get('account.move.line')
-        period_obj = self.pool.get('account.period')
-        date = False
-        period_id = False
-        journal_id= False
-        account_id = False
-
         if context is None:
             context = {}
-
-        date = time.strftime('%Y-%m-%d')
-        ids = period_obj.find(cr, uid, dt=date, context=context)
-        if ids:
-            period_id = ids[0]
-        account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
-                                        period_id, journal_id, context=context)
+        self.pool.get('account.move.line').reconcile(cr, uid, context['active_ids'], 'manual', context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 

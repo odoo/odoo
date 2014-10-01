@@ -162,6 +162,13 @@
         <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23"/>
 
         <!-- Accounts -->
+
+        <record id="action_reconcile_account" model="ir.actions.client">
+            <field name="name">Account Reconciliation</field>
+            <field name="tag">manual_reconciliation_view</field>
+            <field name="context">{'account_id': active_id}</field>
+        </record>
+
         <record id="view_account_form" model="ir.ui.view">
             <field name="name">account.account.form</field>
             <field name="model">account.account</field>
@@ -188,10 +195,14 @@
                         <group>
                             <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
                             <field name="reconcile"/>
+                            <field name="last_reconciliation_date" readonly="1" attrs="{'invisible':['|',('reconcile','=',False),('last_reconciliation_date','=',False)]}"/>
                             <field name="child_consol_ids"
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
+                        <button string="Reconcile" type="action" class="oe_highlight"
+                            name="%(action_reconcile_account)d"
+                            attrs="{'invisible':['|',('reconcile','=',False),'|',('type','=','payable'),('type','=','receivable')]}"/>
                         <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
@@ -684,13 +695,22 @@
         </record>
         
         <!-- because of the needaction badge, groups needs to be specified -->
-        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconcile" parent="account.periodical_processing_bank_statements" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
+        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
+        
+        <record id="action_manual_reconcile" model="ir.actions.client">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="tag">manual_reconciliation_view</field>
+        </record>
 
-        <record id="view_account_statement_operation_template_form" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.form</field>
-            <field name="model">account.statement.operation.template</field>
+        <menuitem id="menu_bank_manual_reconciliation" name="Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
+
+        <record id="view_account_operation_template_form" model="ir.ui.view">
+            <field name="name">account.operation.template.form</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
-                <form string="Statement Operation Templates">
+                <form string="Operation Templates">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -703,24 +723,46 @@
                                 <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                             </group>
                             <group>
                                 <field name="label"/>
                                 <label for="amount"/>
                                 <div>
                                     <field name="amount" class="oe_inline" />
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
+                        <div class="oe_edit_only">
+                            <label for="has_second_line" string="Second line"/>
+                            <field name="has_second_line" />
+                        </div>
+                        <group attrs="{'invisible':[('has_second_line','!=',True)]}">
+                            <group>
+                                <field name="second_account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="second_amount_type"/>
+                                <field name="second_tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
+                            <group>
+                                <field name="second_label"/>
+                                <label for="second_amount"/>
+                                <div>
+                                    <field name="second_amount" class="oe_inline" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
+                                </div>
+                                <field name="second_journal_id"/>
                             </group>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_tree" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.tree</field>
-            <field name="model">account.statement.operation.template</field>
+        <record id="view_account_operation_template_tree" model="ir.ui.view">
+            <field name="name">account.operation.template.tree</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <tree string="Bank Reconciliation Move Presets">
                     <field name="name"/>
@@ -729,9 +771,9 @@
                 </tree>
             </field>
         </record>
-        <record id="view_account_statement_operation_template_search" model="ir.ui.view">
-            <field name="name">account.statement.operation.template.search</field>
-            <field name="model">account.statement.operation.template</field>
+        <record id="view_account_operation_template_search" model="ir.ui.view">
+            <field name="name">account.operation.template.search</field>
+            <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
                         <filter string="With tax" domain="[('tax_id','!=',False)]"/>
@@ -739,18 +781,18 @@
                 </search>
             </field>
         </record>
-        <record id="action_account_statement_operation_template" model="ir.actions.act_window">
-            <field name="name">Statement Operations</field>
-            <field name="res_model">account.statement.operation.template</field>
+        <record id="action_account_operation_template" model="ir.actions.act_window">
+            <field name="name">Operation Templates</field>
+            <field name="res_model">account.operation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_statement_operation_template_search"/>
+            <field name="search_view_id" ref="view_account_operation_template_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a statement operation template.
+                Click to create an operation template.
               </p><p>
                 Those can be used to quickly create a move line when reconciling
-                your bank statements.
+                a bank statement or an account.
               </p>
             </field>
         </record>
@@ -767,7 +809,8 @@
             parent="account_account_menu"
             groups="account.group_account_manager"
             sequence="4"/>
-        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="account_template_folder" name="Statement Operation Templates" sequence="22"/>
+        
+        <menuitem action="action_account_operation_template" id="menu_action_account_operation_template" parent="account_template_folder" name="Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">
@@ -1301,44 +1344,6 @@
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="view_id" ref="view_move_line_tree"/>
         </record>
-        <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="model">account.move.line</field>
-            <field eval="24" name="priority"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
-                    <field name="date"/>
-                    <field name="move_id"/>
-                    <field name="ref"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="account_id"/>
-                    <field name="period_id" invisible="1"/>
-                    <field name="journal_id" invisible="1"/>
-                    <field name="reconcile_partial_id"/>
-                    <field name="state" invisible="1"/>
-                    <field name="debit" sum="Total debit"/>
-                    <field name="credit" sum="Total credit"/>
-                </tree_account_reconciliation>
-            </field>
-        </record>
-        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
-            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
-            <field name="name">Journal Items to Reconcile</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_account_reconciliation</field>
-            <field name="help" type="html">
-                <p>
-                    No journal items found.
-                </p>
-            </field>
-        </record>
-        <menuitem
-             name="Manual Reconciliation"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile"
-             parent="account.periodical_processing_reconciliation"/>
 
         <!-- Account.Entry Edition -->
         <record id="view_move_tree" model="ir.ui.view">
