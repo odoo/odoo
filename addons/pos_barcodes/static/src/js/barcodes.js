@@ -24,17 +24,19 @@ openerp.pos_barcodes = function(instance){
         fields: ['name','priority','type','pattern'],
         domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
         loaded: function(self,rules){
-            rules = rules.sort(function(a,b){ return b.priority - a.priority; });
-            self.nomenclature.rules = rules;
-            for (var i = 0; i < rules.length; i++) {
-                var pattern = rules[i].pattern;
-                pattern = pattern.replace(/[x\*]/gi,'x');
-                
-                while (pattern.length < 12) {
-                    pattern += 'x';
+            if (self.nomenclature) {
+                rules = rules.sort(function(a,b){ return b.priority - a.priority; });
+                self.nomenclature.rules = rules;
+                for (var i = 0; i < rules.length; i++) {
+                    var pattern = rules[i].pattern;
+                    pattern = pattern.replace(/[x\*]/gi,'x');
+                    
+                    while (pattern.length < 12) {
+                        pattern += 'x';
+                    }
+                 
+                    rules[i].pattern = pattern;
                 }
-             
-                rules[i].pattern = pattern;
             }
         },
     });
