@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import Warning
-
+from openerp import SUPERUSER_ID
+from datetime import datetime, timedelta
 from openerp.osv import osv, fields
 import simplejson
+from openerp.http import request
+
 
 class Experiment_snapshot(osv.Model):
     _name = "website_version.experiment_snapshot"
@@ -163,6 +167,7 @@ class Experiment(osv.Model):
 
 class google_management(osv.AbstractModel):
     STR_SERVICE = 'management'
+    
     _name = 'google.%s' % STR_SERVICE
 
     def generate_data(self, cr, uid, experiment, isCreating=False, context=None):
@@ -220,49 +225,51 @@ class google_management(osv.AbstractModel):
 
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
 
+    def get_list_account(self, cr, uid, context=None):
+        token = self.get_token(cr, uid, context)
 
-#################################
-##  MANAGE CONNEXION TO GMAIL  ##
-#################################
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        params = {'access_token': token}
+
+        url = "/analytics/v3/management/accounts"
+        try:
+            status, content, _ = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
+        except:
+            raise Warning("ho my good, there are a bug")
+            pass
+        return content  # need to check status via returned code (see calendar)
+
 
     def get_token(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        if not current_user.google_calendar_token_validity or \
-                datetime.strptime(current_user.google_calendar_token_validity.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) < (datetime.now() + timedelta(minutes=1)):
-            self.do_refresh_token(cr, uid, context=context)
-            current_user.refresh()
-        return current_user.google_calendar_token
-
-    def get_last_sync_date(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        return current_user.google_calendar_last_sync_date and datetime.strptime(current_user.google_calendar_last_sync_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(minutes=0) or False
+        icp = self.pool['ir.config_parameter']
+        validity = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE)
+        token = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE)
+        if datetime.strptime(validity.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) < (datetime.now() + timedelta(minutes=3)):
+            token = self.do_refresh_token(cr, uid, context=context)
+        return token
 
     def do_refresh_token(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         gs_pool = self.pool['google.service']
+        icp = self.pool['ir.config_parameter']
 
-        all_token = gs_pool._refresh_google_token_json(cr, uid, current_user.google_calendar_rtoken, self.STR_SERVICE, context=context)
+        rtoken = icp.get_param(cr, SUPERUSER_ID, 'google_%s_rtoken' % self.STR_SERVICE)
+        all_token = gs_pool._refresh_google_token_json(cr, uid, rtoken, self.STR_SERVICE, context=context)
 
-        vals = {}
-        vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
-        vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')
+        icp.set_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE, datetime.now() + timedelta(seconds=all_token.get('expires_in')))
+        icp.set_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE, all_token.get('access_token'))
+        return all_token.get('access_token')
 
-        self.pool['res.users'].write(cr, SUPERUSER_ID, uid, vals, context=context)
 
-    def need_authorize(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        return current_user.google_calendar_rtoken is False
 
-    def get_calendar_scope(self):
+    # Should be called at configuration
+    def get_management_scope(self):
         return 'https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/analytics.edit'
 
     def authorize_google_uri(self, cr, uid, from_url='http://www.odoo.com', context=None):
-        url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_calendar_scope(), context=context)
+        url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_management_scope(), context=context)
         return url
 
-    def can_authorize_google(self, cr, uid, context=None):
-        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
-
+    # convert code from authorize into token
     def set_all_tokens(self, cr, uid, authorization_code, context=None):
         gs_pool = self.pool['google.service']
         all_token = gs_pool._get_google_token_json(cr, uid, authorization_code, self.STR_SERVICE, context=context)
@@ -271,33 +278,23 @@ class google_management(osv.AbstractModel):
         vals['google_%s_rtoken' % self.STR_SERVICE] = all_token.get('refresh_token')
         vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
         vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')
-        self.pool['res.users'].write(cr, SUPERUSER_ID, uid, vals, context=context)
 
-    def get_minTime(self, cr, uid, context=None):
-        number_of_week = self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13)
-        return datetime.now() - timedelta(weeks=number_of_week)
+        # write in ICP
+        print all_token
+        
+        icp = self.pool['ir.config_parameter']
+        # TEMP
+        #YOUR_WEBSITE.write(cr, SUPERUSER_ID, uid, vals, context=context)
 
-    def get_need_synchro_attendee(self, cr, uid, context=None):
-        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_synchro_attendee', default=True)
+        icp.set_param(cr, SUPERUSER_ID, 'google_%s_rtoken' % self.STR_SERVICE, all_token.get('refresh_token'))
+        icp.set_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE, datetime.now() + timedelta(seconds=all_token.get('expires_in')))
+        icp.set_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE, all_token.get('access_token'))
 
-    def get_disable_since_synchro(self, cr, uid, context=None):
-        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_since_synchro', default=False)
-
-    def get_print_log(self, cr, uid, context=None):
-        return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.debug_print', default=False)
-
-class res_users(osv.Model):
-    _inherit = 'res.users'
-
-    _columns = {
-        'google_calendar_rtoken': fields.char('Refresh Token'),
-        'google_calendar_token': fields.char('User token'),
-        'google_calendar_token_validity': fields.datetime('Token Validity'),
-        'google_calendar_last_sync_date': fields.datetime('Last synchro date'),
-        'google_calendar_cal_id': fields.char('Calendar ID', help='Last Calendar ID who has been synchronized. If it is changed, we remove \
-all links between GoogleID and Odoo Google Internal ID')
-    }
+        # EXAMPLE OF USE AFTER
+        xxx = self.get_list_account(cr, uid)
+        import pprint; pprint.pprint(xxx)
 
 
+    
 
 

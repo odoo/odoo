@@ -63,5 +63,11 @@
             </xpath>
         </template>
 
+        <template id="assets_backend" name="stock assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_version/static/src/js/widget.js"></script>
+            </xpath>
+        </template>
+
     </data>
 </openerp>

@@ -117,3 +117,25 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snapshot_id = context.get('snapshot_id')
         return snapshot_id
+
+    @http.route(['/website_version/google_access'], type='json', auth="user")
+    def google_authorize(self, **kw):
+        gs_obj = request.registry['google.service']
+        gm_obj = request.registry['google.management']
+
+        client_id = gs_obj.get_client_id(request.cr, request.uid, 'management', context=kw.get('local_context'))
+        if not client_id or client_id == '':
+            dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'website_version', 'action_config_settings_google_management')
+            return {
+                "status": "need_config_from_admin",
+                "url": '',
+                "action": action
+            }
+
+        url = gm_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'), context=kw.get('local_context'))
+        return {
+            "status": "need_auth",
+            "url": url
+        }
+
+        return {"status": "success"}

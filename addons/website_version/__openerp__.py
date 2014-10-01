@@ -20,6 +20,6 @@ OpenERP Website CMS
         'data/demo.xml',
     ],
     'demo': [],
-    'qweb': [],
+    'qweb': ['static/src/xml/*.xml'],
     'application': True,
 }

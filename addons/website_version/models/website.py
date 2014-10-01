@@ -9,6 +9,12 @@ import json
 class NewWebsite(osv.Model):
     _inherit = "website"
 
+    _columns = {
+        'google_management_rtoken': fields.char('Refresh Token'),
+        'google_management_token': fields.char('User token'),
+        'google_management_token_validity': fields.datetime('Token Validity'),
+    }
+
     def get_running_experiment_number(self,cr,uid,context=None):
         print context
         exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
@@ -34,7 +40,7 @@ class NewWebsite(osv.Model):
             if not EXP:
                 EXP = {}
             
-        else:    
+        else:
             EXP = json.loads(request.httprequest.cookies.get('EXP'))
         for exp in exps:
             if not str(exp.id) in EXP:
@@ -64,13 +70,8 @@ class NewWebsite(osv.Model):
         elif request.session.get('master') or self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
             request.context['snapshot_id'] = 0
         else:
-            request.context['experiment_id'] = 1        
+            request.context['experiment_id'] = 1
         return website
 
-    def action_authorize(self, cr, uid, ids, context=None):
-        print 'Authorize'
-        #from pudb import set_trace; set_trace()
-        x=self.pool['google.management'].authorize_google_uri(cr, uid, from_url='http://www.odoo.com', context=None)
-        print x
 
 
