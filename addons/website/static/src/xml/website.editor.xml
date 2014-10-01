@@ -210,6 +210,15 @@
                     <div>
                         <span class="text-muted"> — or — </span>
                         <label for="iamgeurl">Add an image URL</label>
+                        <div class="select_image_quality">
+                            <label>Image Quality</label>
+                            <select class="form-control compress">
+                                <option value="0">Original</option>
+                                <option value="50">Low</option>
+                                <option value="75">Medium</option>
+                                <option value="95">High</option>
+                            </select>
+                        </div>
                         <div class="form-group btn-group">
                             <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
                             <button class="btn btn-default" type="submit">Add</button>
