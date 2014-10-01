@@ -331,7 +331,7 @@ function openerp_restaurant_floors(instance,module){
             }
         },
         background_image_url: function(floor) { 
-            return '/website/image/restaurant.floor/'+floor.id+'/background_image';
+            return '/web/binary/image?model=restaurant.floor&id='+floor.id+'&field=background_image';
         },
         deselect_tables: function(){
             for (var i = 0; i < this.table_widgets.length; i++) {
