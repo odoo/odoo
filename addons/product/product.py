@@ -25,7 +25,7 @@ import re
 from _common import ceiling
 
 from openerp import tools, SUPERUSER_ID
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
@@ -672,10 +672,13 @@ class product_product(osv.osv):
         if not args:
             args = []
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not ids:
+            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
+            ids = []
+            if operator in positive_operators:
+                ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+                if not ids:
+                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+            if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
@@ -686,7 +689,9 @@ class product_product(osv.osv):
                     # we may underrun the limit because of dupes in the results, that's fine
                     ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
                 ids = list(ids)
-            if not ids:
+            elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
+                ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
+            if not ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
