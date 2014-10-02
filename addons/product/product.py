@@ -739,6 +739,10 @@ class product_product(osv.osv):
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -747,7 +751,7 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            sellers = partner_ids and filter(lambda x: x.name.id in partner_ids, product.seller_ids) or []
             if sellers:
                 for s in sellers:
                     mydict = {
