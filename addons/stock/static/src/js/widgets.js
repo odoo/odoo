@@ -267,7 +267,7 @@ function openerp_picking_widgets(instance){
                 if (value>=0){
                     self.getParent().set_operation_quantity(value, op_id);
                 }
-                
+
                 self.getParent().barcode_scanner.connect(function(ean){
                     self.getParent().scan(ean);
                 });
@@ -335,7 +335,7 @@ function openerp_picking_widgets(instance){
                     $('.container_head[data-package-id="'+pack_id+'"]').data('ulid', ul_id);
                 }
             });
-            
+
             //remove navigtion bar from default openerp GUI
             $('td.navbar').html('<div></div>');
         },
@@ -876,7 +876,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             var pack_op_ids = self.picking_editor.get_current_op_selection(false);
             if (pack_op_ids.length !== 0){
-                new instance.web.Model('stock.picking')
+                return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
                     .then(function(){
                         instance.session.user_context.current_package_id = false;
