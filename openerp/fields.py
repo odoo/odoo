@@ -312,10 +312,6 @@ class Field(object):
         attrs.update(self._attrs)       # necessary in case self is not in cls
 
         # initialize `self` with `attrs`
-        if 'default' in attrs and not callable(attrs['default']):
-            # make default callable
-            value = attrs['default']
-            attrs['default'] = lambda recs: value
         if attrs.get('compute'):
             # by default, computed fields are not stored, not copied and readonly
             attrs['store'] = attrs.get('store', False)
@@ -336,7 +332,47 @@ class Field(object):
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
 
+        # determine self.default and cls._defaults in a consistent way
+        self._determine_default(cls, name)
+
         self.reset()
+
+    def _determine_default(self, cls, name):
+        """ Retrieve the default value for `self` in the hierarchy of `cls`, and
+            determine `self.default` and `cls._defaults` accordingly.
+        """
+        self.default = None
+
+        # traverse the class hierarchy upwards, and take the first field
+        # definition with a default or _defaults for self
+        for klass in cls.__mro__:
+            field = klass.__dict__.get(name, self)
+            if not isinstance(field, type(self)):
+                return      # klass contains another value overridden by self
+
+            if 'default' in field._attrs:
+                # take the default in field, and adapt it for cls._defaults
+                value = field._attrs['default']
+                if callable(value):
+                    self.default = value
+                    cls._defaults[name] = lambda model, cr, uid, context: \
+                        self.convert_to_write(value(model.browse(cr, uid, [], context)))
+                else:
+                    self.default = lambda recs: value
+                    cls._defaults[name] = value
+                return
+
+            defaults = klass.__dict__.get('_defaults') or {}
+            if name in defaults:
+                # take the value from _defaults, and adapt it for self.default
+                value = defaults[name]
+                value_func = value if callable(value) else lambda *args: value
+                self.default = lambda recs: self.convert_to_cache(
+                    value_func(recs._model, recs._cr, recs._uid, recs._context),
+                    recs, validate=False,
+                )
+                cls._defaults[name] = value
+                return
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)

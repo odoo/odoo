@@ -17,12 +17,15 @@ class test_inherits(common.TransactionCase):
 
     def test_field_extension(self):
         """ check the extension of a field in an inherited model """
-        # the field mother.name should inherit required=True, and have a default
-        # value
+        # the field mother.name should inherit required=True, and have "Bar" as
+        # a default value
         mother = self.env['test.inherit.mother']
         field = mother._fields['name']
         self.assertTrue(field.required)
-        self.assertEqual(field.default(mother), 'Unknown')
+
+        self.assertEqual(field.default(mother), "Bar")
+        self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
+        self.assertEqual(mother._defaults.get('name'), "Bar")
 
         # the field daugther.template_id should inherit
         # model_name='test.inherit.mother', string='Template', required=True

@@ -7,8 +7,11 @@ class mother(models.Model):
 
     _columns = {
         # check interoperability of field inheritance with old-style fields
-        'name': osv.fields.char('Name', required=True),
+        'name': osv.fields.char('Name'),
         'state': osv.fields.selection([('a', 'A'), ('b', 'B')], string='State'),
+    }
+    _defaults = {
+        'name': 'Foo',
     }
 
     surname = fields.Char(compute='_compute_surname')
@@ -37,8 +40,8 @@ class mother(models.Model):
 
     field_in_mother = fields.Char()
 
-    # extend the name field by adding a default value
-    name = fields.Char(default='Unknown')
+    # extend the name field: make it required and change its default value
+    name = fields.Char(required=True, default='Bar')
 
     # extend the selection of the state field
     state = fields.Selection(selection_add=[('c', 'C')])

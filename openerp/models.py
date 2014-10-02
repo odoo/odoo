@@ -238,8 +238,9 @@ class MetaModel(api.Meta):
 
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
-            if not hasattr(self, name):
-                setattr(self, name, column.to_field())
+            if name in self.__dict__:
+                _logger.warning("Field %r erasing an existing value", name)
+            setattr(self, name, column.to_field())
 
 
 class NewId(object):
@@ -602,9 +603,6 @@ class BaseModel(object):
             )
             columns.update(cls._columns)
 
-            defaults = dict(parent_class._defaults)
-            defaults.update(cls._defaults)
-
             inherits = dict(parent_class._inherits)
             inherits.update(cls._inherits)
 
@@ -629,7 +627,6 @@ class BaseModel(object):
                 '_name': name,
                 '_register': False,
                 '_columns': columns,
-                '_defaults': defaults,
                 '_inherits': inherits,
                 '_depends': depends,
                 '_constraints': constraints,
@@ -643,7 +640,7 @@ class BaseModel(object):
             '_name': name,
             '_register': False,
             '_columns': dict(cls._columns),
-            '_defaults': dict(cls._defaults),
+            '_defaults': {},            # filled by Field._determine_default()
             '_inherits': dict(cls._inherits),
             '_depends': dict(cls._depends),
             '_constraints': list(cls._constraints),
@@ -1369,15 +1366,7 @@ class BaseModel(object):
             self[name] = self.env['ir.property'].get(name, self._name)
             return
 
-        # 4. look up _defaults
-        if name in self._defaults:
-            value = self._defaults[name]
-            if callable(value):
-                value = value(self._model, cr, uid, context)
-            self[name] = value
-            return
-
-        # 5. delegate to field
+        # 4. delegate to field
         field.determine_default(self)
 
     def fields_get_keys(self, cr, user, context=None):
@@ -2413,22 +2402,13 @@ class BaseModel(object):
 
 
     def _set_default_value_on_column(self, cr, column_name, context=None):
-        # ideally should use add_default_value but fails
-        # due to ir.values not being ready
+        # ideally, we should use default_get(), but it fails due to ir.values
+        # not being ready
 
-        # get old-style default
+        # get default value
         default = self._defaults.get(column_name)
         if callable(default):
             default = default(self, cr, SUPERUSER_ID, context)
-
-        # get new_style default if no old-style
-        if default is None:
-            record = self.new(cr, SUPERUSER_ID, context=context)
-            field = self._fields[column_name]
-            field.determine_default(record)
-            defaults = dict(record._cache)
-            if column_name in defaults:
-                default = field.convert_to_write(defaults[column_name])
 
         column = self._columns[column_name]
         ss = column._symbol_set
