@@ -44,19 +44,20 @@ class Experiment(osv.Model):
         print vals
         exp={}
         exp['name'] = vals['name']
-        exp['state'] = vals['state']
+        exp['objectiveMetric'] = "ga:goal3Completions"
+        exp['status'] = vals['state']
         exp['variations'] =[]
-        exp['variations'].append({'name':'master'})
+        exp['variations'].append({'name':'master','url': 'http://domain/master'})
         l =  vals.get('experiment_snapshot_ids')
         if l:
             for snap in l:
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
-                exp['variations'].append({'name':name})
+                exp['variations'].append({'name':name, 'url': 'http://domain/'+name})
         print exp
-        # google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
-        # if not google_id:
-        #     raise Warning("Please verify you give the authorizations to use google analytics api ...")
-        # vals['google_id'] = google_id
+        google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
+        if not google_id:
+            raise Warning("Please verify you give the authorizations to use google analytics api ...")
+        vals['google_id'] = google_id
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -174,7 +175,7 @@ class google_management(osv.AbstractModel):
         
         data = {
             'name': experiment['name'],
-            'status': experiment['state'],
+            'status': experiment['status'],
             'variations': experiment['variations']
         }
 
@@ -197,7 +198,7 @@ class google_management(osv.AbstractModel):
             x = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
         except:
             x = False
-        return x
+        return x['id']
 
     def update_an_experiment(self, cr, uid, experiment, experiment_id, context=None):
         gs_pool = self.pool['google.service']
