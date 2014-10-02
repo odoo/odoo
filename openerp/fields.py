@@ -272,7 +272,7 @@ class Field(object):
     related = None              # sequence of field names, for related fields
     related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value (literal or callable)
+    default = None              # default(recs) returns the default value
 
     string = None               # field label
     help = None                 # field tooltip
@@ -312,6 +312,10 @@ class Field(object):
         attrs.update(self._attrs)       # necessary in case self is not in cls
 
         # initialize `self` with `attrs`
+        if 'default' in attrs and not callable(attrs['default']):
+            # make default callable
+            value = attrs['default']
+            attrs['default'] = lambda recs: value
         if attrs.get('compute'):
             # by default, computed fields are not stored, not copied and readonly
             attrs['store'] = attrs.get('store', False)
@@ -824,8 +828,8 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        if self.default is not None:
-            value = self.default(record) if callable(self.default) else self.default
+        if self.default:
+            value = self.default(record)
             record._cache[self] = self.convert_to_cache(value, record)
         elif self.compute:
             self._compute_value(record)
