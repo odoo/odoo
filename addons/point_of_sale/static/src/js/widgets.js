@@ -1014,6 +1014,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.textinput_popup = new module.TextInputPopupWidget(this,{});
             this.textinput_popup.appendTo(this.$el);
 
+            this.textarea_popup = new module.TextAreaPopupWidget(this,{});
+            this.textarea_popup.appendTo(this.$el);
+
             this.unsent_orders_popup = new module.UnsentOrdersPopupWidget(this,{});
             this.unsent_orders_popup.appendTo(this.$el);
 
@@ -1084,6 +1087,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-barcode': this.error_barcode_popup,
                     'error-traceback': this.error_traceback_popup,
                     'textinput': this.textinput_popup,
+                    'textarea': this.textarea_popup,
                     'confirm': this.confirm_popup,
                     'fullscreen': this.fullscreen_popup,
                     'selection': this.selection_popup,

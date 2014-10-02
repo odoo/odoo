@@ -402,6 +402,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.SelectionPopupWidget = module.PopUpWidget.extend({
         template: 'SelectionPopupWidget',
         show: function(options){
+            options = options || {};
             var self = this;
             this._super();
 
@@ -430,6 +431,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.TextInputPopupWidget = module.PopUpWidget.extend({
         template: 'TextInputPopupWidget',
         show: function(options){
+            options = options || {};
             var self = this;
             this._super();
 
@@ -437,7 +439,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.comment = options.comment || '';
             this.value   = options.value   || '';
             this.renderElement();
-            this.$('input').focus();
+            this.$('input,textarea').focus();
             
             this.$('.button.cancel').click(function(){
                 self.pos_widget.screen_selector.close_popup();
@@ -448,12 +450,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.$('.button.confirm').click(function(){
                 self.pos_widget.screen_selector.close_popup();
-                var value = self.$('input').val();
+                var value = self.$('input,textarea').val();
                 if( options.confirm ){
                     options.confirm.call(self,value);
                 }
             });
         },
+    });
+
+    module.TextAreaPopupWidget = module.TextInputPopupWidget.extend({
+        template: 'TextAreaPopupWidget',
     });
 
     module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({

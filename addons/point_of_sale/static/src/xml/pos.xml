@@ -935,6 +935,23 @@
         </div>
     </t>
 
+    <t t-name="TextAreaPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <textarea rows="15" cols="50" t-att-value="widget.value || ''"></textarea>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="UnsentOrdersPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-unsent-orders">
