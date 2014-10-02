@@ -1511,7 +1511,7 @@ class calendar_event(osv.Model):
             ids = [ids]
 
         context = context or {}
-        self._set_date(cr, uid, values, id=ids[0], context=context)
+        self._set_date(cr, uid, values, id=ids and ids[0] or False, context=context)
 
         for one_ids in ids:
             if isinstance(one_ids, (str, int, long)):
