@@ -80,16 +80,20 @@ class Website_Url(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         return request.website.render("website_url.graphs", {})
 
-    @http.route(['/r/<string:code>/chart'], type="json", auth="user", website=True)
+    @http.route(['/r/<string:code>/chart'], type="json", auth="user")
     def chart_data(self, code):
         cr, uid, context = request.cr, request.uid, request.context
-        Alias = request.registry['website.alias']
-        Alias_clicks = request.registry['website.alias.click']
+        # alias = request.registry['website.alias']
+        click_obj = request.registry['website.alias.click']
 
-        alias_id = Alias.search_read([('code', '=', code)], ['id'])
+        # alias_id = alias.search_read([('code', '=', code)], ['id'])
         #for data in Alias_clicks.sudo().search_read([('alias_id', '=', alias_id)], ['alias_id', 'click_date', 'country_id']):
-            
-        return 
+        click_ids = click_obj.search(cr, uid, [])
+        clicks = click_obj.read(cr, uid, click_ids, ['create_date'], context=context)
+
+        print clicks
+
+        return clicks
 
     @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
     def full_url_redirect(self, code, **post):
