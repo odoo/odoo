@@ -72,36 +72,37 @@ class Experiment(osv.Model):
             else:
                 temp['name'] = exp.name
             if state:
-                temp['state'] = state
+                temp['status'] = state
             else:
-                temp['state'] = exp.state
+                temp['status'] = exp.state
             if exp_snaps:
                 index = 0
-                temp['variations'] = ['master']
+                temp['variations'] = [{'name':'master','url': 'http://domain/master'}]
                 for exp_s in exp.experiment_snapshot_ids:
                     for li in exp_snaps:
                         if not li[0] == 2 and li[1] == exp_s.id:
-                            temp['variations'].append(exp_s.snapshot_id.name)
+                            temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://domain/'+exp_s.snapshot_id.name})
                     index+=1
                 while index< len(exp_snaps):
                     snap_id = exp_snaps[index][2]['snapshot_id']
                     snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
-                    temp['variations'].append(snap_name)
+                    temp['variations'].append({'name':snap_name, 'url': 'http://domain/'+snap_name})
                     index+=1
             else:
-                temp['variations'] = ['master']
+                temp['variations'] = [{'name':'master','url': 'http://domain/master'}]
                 for exp_s in exp.experiment_snapshot_ids:
-                    temp['variations'].append(exp_s.snapshot_id.name)
+                    temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://domain/'+exp_s.snapshot_id.name})
 
             print temp
-            #self.pool['google.management'].update_an_experiment(self, cr, uid, temp, exp.google_id, context=None)
+            self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
         return super(Experiment, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         print ids
         # from pudb import set_trace; set_trace()
-        # for exp in self.browse(cr, uid, ids, context=context):
-        #    self.pool['google.management'].delete_an_experiment(self, cr, uid, exp.google_id, context=context)
+        for exp in self.browse(cr, uid, ids, context=context):
+            print exp.google_id
+            self.pool['google.management'].delete_an_experiment(cr, uid, exp.google_id, context=context)
         return super(Experiment, self).unlink(cr, uid, ids, context=context)
 
 
@@ -181,10 +182,10 @@ class google_management(osv.AbstractModel):
 
         return data
 
-    def create_an_experiment(self, cr, uid, experiment, context=None):
+    def create_an_experiment(self, cr, uid, data, context=None):
         #from pudb import set_trace; set_trace()
         gs_pool = self.pool['google.service']
-        data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
+        #data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
 
         accountId='55031254'
         webPropertyId='UA-55031254-1'
@@ -192,24 +193,23 @@ class google_management(osv.AbstractModel):
 
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data_json = simplejson.dumps(experiment)
+        data_json = simplejson.dumps(data)
 
         try:
             x = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
         except:
             x = False
-        print x[1]['id']
         return x[1]['id']
 
-    def update_an_experiment(self, cr, uid, experiment, experiment_id, context=None):
+    def update_an_experiment(self, cr, uid, data, experiment_id, context=None):
         gs_pool = self.pool['google.service']
-        data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
 
         accountId='55031254'
         webPropertyId='UA-55031254-1'
-        profileId='1'
+        profileId='91492412'
 
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s?access_token=%s' % (accountId, webPropertyId, profileId,experiment_id, self.get_token(cr, uid, context))
+        print data
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
@@ -218,9 +218,13 @@ class google_management(osv.AbstractModel):
     def delete_an_experiment(self, cr, uid, experiment_id, context=None):
         gs_pool = self.pool['google.service']
 
+        params = {
+            'access_token': self.get_token(cr, uid, context)
+        }
+
         accountId='55031254'
         webPropertyId='UA-55031254-1'
-        profileId='1'
+        profileId='91492412'
         
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment_id)
