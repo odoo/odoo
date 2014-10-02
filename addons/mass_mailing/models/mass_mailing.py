@@ -186,7 +186,7 @@ class MassMailingCampaign(osv.Model):
         'color': fields.integer('Color Index'),
         'clicks' : fields.function(
             _get_clicks, string="Number of clicks",
-            type="integer",
+            type="integer", store=True
          ),
         # stat fields
         'total': fields.function(

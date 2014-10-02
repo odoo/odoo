@@ -3,7 +3,6 @@ import random
 import datetime
 from urlparse import urlparse
 from urlparse import urljoin
-from openerp.osv import osv, fields
 from openerp import models, fields, api, _
 
 ALLOWED_SCHEMES = ['http', 'https', 'ftp', 'ftps']
@@ -25,20 +24,13 @@ class website_alias(models.Model):
     code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
     count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
     short_url = fields.Char(string="Short URL", compute='_short_url')
-    alias_clicks = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
+    alias_click_ids = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
     is_archived = fields.Boolean(string='Archived', default=False)
 
     @api.one
-    @api.depends('alias_clicks.id')
+    @api.depends('alias_click_ids')
     def _count_url(self):
-        click_obj = self.env['website.alias.click']
-        self.count = click_obj.search_count([('alias_id', '=', self.id)])
-
-    @api.one
-    def alias_click(self):
-        for click in self.browse():
-            return self.env['website.alias'].search([('id', '=', click.alias_id.id)])
-        return []
+        self.count =  len(self.alias_click_ids)
  
     @api.one
     @api.depends('url')
@@ -109,7 +101,7 @@ class website_alias(models.Model):
 
         result = self.search(search_domain, limit=1)
 
-        if len(result) > 0:
+        if result:
             # Put the old link on top of recently generated links
             # (recent links are sorted by 'write_date')
             result.update({'is_archived':False})
@@ -120,35 +112,33 @@ class website_alias(models.Model):
 
         return alias
 
+    # TO SPLIT : unclear
     @api.model
     def get_url_from_code(self, code, ip, country_code, stat_id=False, context=None):
 
-        record = self.sudo().search([('code', '=', code)])
-        rec = record and record[0] or False
+        rec = self.sudo().search([('code', '=', code)])
 
         if rec:
-            website_alias_click = self.env['website.alias.click']
-            again = website_alias_click.sudo().search_read([('alias_id', '=', rec.id), ('ip', '=', ip)], ['id'])
+            again = rec.alias_click_ids.sudo().search_count([('alias_id', '=', rec.id), ('ip', '=', ip)])
 
             if not again:
                 country_id = self.env['res.country'].sudo().search([('code', '=', country_code)])
                 vals = {
                     'alias_id':rec.id,
-                    'create_date':datetime.datetime.now().date(),
+                    'create_date':datetime.date.today(),
                     'ip':ip,
                     'country_id': country_id and country_id[0] or False,
                     'mail_stat_id': stat_id
                 }
-                website_alias_click.sudo().create(vals) 
-
-            crm_tracking_mixin = self.env['crm.tracking.mixin']
+                self.env['website.alias.click'].sudo().create(vals) 
             
             parsed = urlparse(rec.url)
             utms = ''
 
-            for key, field in crm_tracking_mixin.tracking_fields():
-                if getattr(rec, field).name:
-                    utms += key + '=' + getattr(rec, field).name + '&'
+            for key, field in self.env['crm.tracking.mixin'].tracking_fields():
+                attr = getattr(rec, field).name
+                if attr:
+                    utms += key + '=' + attr + '&'
 
             return '%s://%s%s?%s%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, utms, parsed.query, parsed.fragment)
         else:
@@ -162,7 +152,7 @@ class website_alias_click(models.Model):
     _name = "website.alias.click"
     _rec_name = "alias_id"
 
-    click_date = fields.Date(string='Create Date')
-    alias_id = fields.Many2one('website.alias','Alias')
+    click_date = fields.Date(string='Create Date') # Override create_date
+    alias_id = fields.Many2one('website.alias','Alias', required=True)
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country','Country')

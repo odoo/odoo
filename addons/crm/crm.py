@@ -106,6 +106,7 @@ class crm_tracking_mixin(osv.AbstractModel):
         'medium_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'medium_id', ctx),
     }
 
+
 class crm_case_stage(osv.osv):
     """ Model for case stages. This models the main stages of a document
         management flow. Main CRM objects (leads, opportunities, project

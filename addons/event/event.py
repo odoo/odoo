@@ -221,7 +221,7 @@ class event_event(models.Model):
             if event_reg.state == 'done':
                 raise Warning(_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."))
         self.registration_ids.write({'state': 'cancel'})
-        self.state = 'cancel'
+        self.state = 'cancel'                
 
     @api.one
     def button_done(self):

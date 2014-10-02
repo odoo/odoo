@@ -87,6 +87,73 @@
         },
     });
 
+    openerp.website_url.SelectBox = openerp.Widget.extend({
+        init: function(path) {
+            this.path = path;
+        },
+        start: function($element) {
+            var self = this;
+            this.$element = $element;
+
+            this.fetch_objects().then(function(results) {
+                self.objects = results;
+
+                $element.select2({
+                    initSelection: {id: 0, text: 'Test'},
+                    createSearchChoice:function(term, data) {
+                        if(self.object_exists(term)) { 
+                            return null; 
+                        }
+
+                        return {id:term, text:_.str.sprintf("Create '%s'", term)};
+                    },
+                    createSearchChoicePosition: 'bottom',
+                    multiple: false,
+                    data: self.objects,
+                });
+
+                $element.on('change', function(e) {
+                    self.on_change(e);
+                });
+            });
+        },
+        fetch_objects: function() {
+            return openerp.jsonRpc('/r/' + this.path, 'call').then(function(results) {
+
+                var objects = [];
+                for(var i = 0 ; i < results.length ; i++) {
+                    objects.push({id: results[i].id, text: results[i].name});
+                }
+                return objects;
+            });
+        },
+        object_exists: function(query) {
+            var self = this;
+
+            for(var i = 0 ; i < self.objects.length ; i++) {
+                if(self.objects[i].text.toLowerCase() == query.toLowerCase()) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        on_change: function(e) {
+            var self = this;
+
+            if(_.isString(e.added.id)) {
+                self.create_object(e.added.id);
+            }
+        },
+        create_object: function(name) {
+            var self = this;
+
+            openerp.jsonRpc('/r/' + this.path + '/new', 'call', {name: name})
+                .then(function(result) {
+                        self.$element.attr('value', result);
+                    });
+        },
+    });
+
     $(document).ready(function() {
 
         var recent_links = new openerp.website_url.RecentLinks;
@@ -102,20 +169,37 @@
         $("#btn_shorten_url").click( function() {
             if($(this).attr('class').indexOf('btn_copy') === -1) {
                 var url = $("#url").val();
-                var campaign_id = $('#campaign-select').children(":selected").attr('id');
-                var medium_id = $('#channel-select').children(":selected").attr('id');
-                var source_id = $('#source-select').children(":selected").attr('id');
+                var campaign_id = $('#campaign-select').attr('value');
+                var medium_id = $('#channel-select').attr('value');
+                var source_id = $('#source-select').attr('value');
 
-                openerp.jsonRpc("/r/new", 'call', {'url' : url, 'campaign_id':campaign_id, 'medium_id':medium_id, 'source_id':source_id})
+                var params = {};
+                params.url = $("#url").val();
+                if(campaign_id != '') {
+                    params.campaign_id = campaign_id;
+                }
+
+                if(medium_id != '') {
+                    params.medium_id = medium_id;
+                }
+
+                if(source_id != '') {
+                    params.source_id = source_id;
+                }
+
+                openerp.jsonRpc("/r/new", 'call', params)
                     .then(function (result) {
-                        var link = result[0];
-
-                        $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
-                        $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
-                        return link;
-                    })
-                    .then(function(link) {
-                        recent_links.add_link(link);
+                        
+                        if('error' in result) {
+                            var $url_form_group = $('#url-form-group')
+                            $url_form_group.addClass('has-error');
+                        }
+                        else {
+                            var link = result[0];
+                            $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
+                            $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
+                            recent_links.add_link(link);
+                        }
                     });
             }
         });
@@ -123,13 +207,23 @@
         $("#url").on("change keyup paste mouseup", function() {
             if ($(this).data("last_result") != $("#url").val()) {
                 $("#btn_shorten_url").text("Get short link").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
+                $('#url-form-group').removeClass('has-error');
             }
         });
 
-        // Select with search on the campaign fields
-        $("#campaign-select").select2();
-        $("#channel-select").select2();
-        $("#source-select").select2();
+
+        var campaign_select = new openerp.website_url.SelectBox('campaigns');
+        campaign_select.start($("#campaign-select"));
+
+        var source_select = new openerp.website_url.SelectBox('sources');
+        source_select.start($("#source-select"));
+
+        var medium_select = new openerp.website_url.SelectBox('mediums');
+        medium_select.start($("#channel-select"));
+
+        // $("#campaign-select").select2();
+        // $("#channel-select").select2();
+        // $("#source-select").select2();
     });
 })();
 

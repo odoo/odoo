@@ -1,5 +1,5 @@
 {
-    'name': 'Website URl',
+    'name': 'URL Shortener',
     'category': 'Hidden',
     'description': """
 To shorten URL and To show url click statistics.
@@ -7,7 +7,7 @@ To shorten URL and To show url click statistics.
 
         """,
     'version': '2.0',
-    'depends':['website','marketing'],
+    'depends':['website','marketing', 'crm'],
     'data' : [
         'views/website_url.xml',
         'views/website_url_template.xml',
