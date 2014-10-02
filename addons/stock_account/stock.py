@@ -300,3 +300,13 @@ class stock_picking(osv.osv):
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
+
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Need to pass invoice_state of picking when an extra move is created which is not a copy of a previous
+        """
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        res.update({'invoice_state': op.picking_id.invoice_state})
+        if op.linked_move_operation_ids:
+            res.update({'price_unit': op.linked_move_operation_ids[-1].move_id.price_unit})
+        return res
