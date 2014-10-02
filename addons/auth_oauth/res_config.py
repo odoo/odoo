@@ -34,6 +34,11 @@ class base_config_settings(osv.TransientModel):
         'auth_oauth_facebook_client_id' : fields.char('Client ID'),
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(base_config_settings, self).default_get(cr, uid, fields, context=context)
+        res.update(self.get_oauth_providers(cr, uid, fields, context=context))
+        return res
+
     def get_oauth_providers(self, cr, uid, fields, context=None):
         google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
         facebook_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_facebook')[1]
