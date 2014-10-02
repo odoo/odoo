@@ -19,6 +19,12 @@
             value-autoint='on' 
         >
             <div><t t-esc="changes.name" /></div>
+            <t t-if="changes.floor || changes.table">
+                <br />
+                <div><span><t t-esc="changes.floor" /></span> / <span bold='on'><t t-esc="changes.table"/></span></div>
+            </t>
+            <t t-if="changes.table">
+            </t>
             <br />
             <br />
             <t t-if="changes.cancelled.length > 0">

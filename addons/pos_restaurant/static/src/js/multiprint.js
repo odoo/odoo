@@ -148,7 +148,8 @@ function openerp_restaurant_multiprint(instance,module){
             return {
                 'new': add,
                 'cancelled': rem,
-                'table': json.table || 'unknown table',
+                'table': json.table || false,
+                'floor': json.floor || false,
                 'name': json.name  || 'unknown order',
             };
             

@@ -588,7 +588,13 @@ function openerp_restaurant_floors(instance,module){
         initialize: function(attr) {
             _super_order.initialize.call(this,attr);
             this.table = this.pos.table;
-        }
+        },
+        export_as_JSON: function() {
+            var json = _super_order.export_as_JSON.apply(this,arguments);
+            json.table = this.table.name;
+            json.floor = this.table ? this.table.floor.name : false; 
+            return json;
+        },
     });
 
     // We need to modify the OrderSelector to hide itself when we're on
