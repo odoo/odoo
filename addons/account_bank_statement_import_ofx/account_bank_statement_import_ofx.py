@@ -52,11 +52,12 @@ class account_bank_statement_import(osv.TransientModel):
                     'amount': transaction.amount,
                     'partner_id': partner_id,
                     'bank_account_id': bank_account_id,
+                    'unique_import_id': transaction.id,
                 }
                 total_amt += float(transaction.amount)
                 line_ids.append((0, 0, vals_line))
         except Exception, e:
-            raise osv.except_osv(_('Error!'), _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
+            raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
         st_start_date = ofx.account.statement.start_date or False
         st_end_date = ofx.account.statement.end_date or False
         period_obj = self.pool.get('account.period')
@@ -65,7 +66,6 @@ class account_bank_statement_import(osv.TransientModel):
         else:
             period_ids = period_obj.find(cr, uid, st_start_date, context=context)
         vals_bank_statement = {
-            'unique_import_id': 'OFX-'+str(ofx.account.number)+'-'+str(ofx.account.routing_number)+'-'+str(ofx.account.statement.start_date),
             'name': ofx.account.routing_number,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
