@@ -187,7 +187,7 @@ class google_management(osv.AbstractModel):
 
         accountId='55031254'
         webPropertyId='UA-55031254-1'
-        profileId='1'
+        profileId='91492412'
 
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
