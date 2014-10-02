@@ -126,7 +126,7 @@ class website(orm.Model):
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
-        if not sale_order_id and (force_create or code):  
+        if not sale_order_id and (force_create or code):
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
 
