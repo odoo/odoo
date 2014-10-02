@@ -7,7 +7,8 @@
     
     openerp.website_url.RecentLinkBox = openerp.Widget.extend({
         template: 'website_url.RecentLink',
-        init: function(link_obj) {
+        init: function(parent, link_obj) {
+            this._super(parent);
             this.link_obj = link_obj;
         },
         start: function() {
@@ -29,7 +30,10 @@
 
             openerp.jsonRpc('/r/archive', 'call', {'code' : self.link_obj.code})
                 .then(function(result) {
-                    self.$el.remove();
+                    self.remove();
+                })
+                .fail(function() {
+                    self.notification('Error: Unable to archive this link.');
                 });
         },
         toggle_copy_button: function() {
@@ -43,16 +47,21 @@
             }, '5000');
         },
         remove: function() {
-            this.$el.remove();
+            // this.$el.remove();
+            this.getParent().remove_link(this);
+        },
+        notification: function(message) {
+            this.$el.find('.notification').append('<strong>' + message + '</strong>');
         },
     });
 
     openerp.website_url.RecentLinks = openerp.Widget.extend({
         init: function() {
-            this.links = [];
+            this._super();
         },
-        start: function() {
+        start: function($element) {
             var self = this;
+            this.$el = $element;
 
             openerp.website.add_template_file('/website_url/static/src/xml/recent_link.xml')
                 .then(function() {
@@ -64,27 +73,47 @@
 
             openerp.jsonRpc('/r/recent_links', 'call')
                 .then(function(result) {
-                    var $recent_links = $('#recent_links');
+                    // var $recent_links = $('#recent_links');
                     for(var  i = 0 ; i < result.length ; i++) {
                         self.add_link(result[i]);
                     }
+                })
+                .fail(function() {
+                    self.$el.append("<div class='alert alert-danger'>Unable to get recent links</div>");
                 });
+
+             this.update_notification();
         },
         add_link: function(link) {
             var self = this;
 
             // Check if the link is already showed to the user and remove it if it's the case
-            for(var i = 0 ; i < this.links.length ; i++) {
-                if(self.links[i].link_obj.code == link.code) {
-                    self.links[i].remove();
+            var links = this.getChildren();
+            for(var i = 0 ; i < links.length ; i++) {
+                if(links[i].link_obj.code == link.code) {
+                    links[i].remove();
                 }
             }
 
-            var recent_link_box = new openerp.website_url.RecentLinkBox(link);
-            recent_link_box.prependTo($('#recent_links'));
+            var recent_link_box = new openerp.website_url.RecentLinkBox(this, link);
+            recent_link_box.prependTo(this.$el);
 
-            this.links.push(recent_link_box);
+            this.update_notification();
         },
+        remove_link: function(link) {
+            link.$el.remove();
+            link.destroy();
+
+            this.update_notification();
+        },
+        update_notification: function() {
+            if(this.getChildren().length == 0) {
+                this.$el.find('.notification').append("<div class='alert alert-info'>You don't have any recent links.</div>");
+            }
+            else {
+                this.$el.find('.notification').empty();
+            }
+        }
     });
 
     openerp.website_url.SelectBox = openerp.Widget.extend({
@@ -157,7 +186,16 @@
     $(document).ready(function() {
 
         var recent_links = new openerp.website_url.RecentLinks;
-        recent_links.start();
+        recent_links.start($("#recent_links"));
+
+        var campaign_select = new openerp.website_url.SelectBox('campaigns');
+        campaign_select.start($("#campaign-select"));
+
+        var source_select = new openerp.website_url.SelectBox('sources');
+        source_select.start($("#source-select"));
+
+        var medium_select = new openerp.website_url.SelectBox('mediums');
+        medium_select.start($("#channel-select"));
 
         ZeroClipboard.config(
             {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
@@ -175,17 +213,9 @@
 
                 var params = {};
                 params.url = $("#url").val();
-                if(campaign_id != '') {
-                    params.campaign_id = campaign_id;
-                }
-
-                if(medium_id != '') {
-                    params.medium_id = medium_id;
-                }
-
-                if(source_id != '') {
-                    params.source_id = source_id;
-                }
+                if(campaign_id != '') { params.campaign_id = campaign_id; }
+                if(medium_id != '') { params.medium_id = medium_id; }
+                if(source_id != '') { params.source_id = source_id; }
 
                 openerp.jsonRpc("/r/new", 'call', params)
                     .then(function (result) {
@@ -210,20 +240,6 @@
                 $('#url-form-group').removeClass('has-error');
             }
         });
-
-
-        var campaign_select = new openerp.website_url.SelectBox('campaigns');
-        campaign_select.start($("#campaign-select"));
-
-        var source_select = new openerp.website_url.SelectBox('sources');
-        source_select.start($("#source-select"));
-
-        var medium_select = new openerp.website_url.SelectBox('mediums');
-        medium_select.start($("#channel-select"));
-
-        // $("#campaign-select").select2();
-        // $("#channel-select").select2();
-        // $("#source-select").select2();
     });
 })();
 

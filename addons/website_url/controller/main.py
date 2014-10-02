@@ -103,6 +103,7 @@ class Website_Url(http.Controller):
         else:
             return werkzeug.utils.redirect('', 301)
 
+    # Routes dedicated to the form selects (possibility to create records on the fly)
     @http.route(['/r/campaigns'], type='json', auth='user')
     def campaigns(self):
         cr, uid, context = request.cr, request.uid, request.context
