@@ -1,5 +1,7 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
+    "use strict";
+
 	var _t = instance.web._t;
 
     // the JobQueue schedules a sequence of 'jobs'. each job is
@@ -88,7 +90,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
             options = options || {};
-            url = options.url || 'http://localhost:8069';
+            var url = options.url || 'http://localhost:8069';
 
             this.pos = parent;
             
@@ -129,8 +131,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             window.hw_proxy = this;
         },
         set_connection_status: function(status,drivers){
-            oldstatus = this.get('status');
-            newstatus = {};
+            var oldstatus = this.get('status');
+            var newstatus = {};
             newstatus.status = status;
             newstatus.drivers = status === 'disconnected' ? {} : oldstatus.drivers;
             newstatus.drivers = drivers ? drivers : newstatus.drivers;
@@ -203,20 +205,22 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // starts a loop that updates the connection status
         keepalive: function(){
             var self = this;
+
+            function status(){
+                self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
+                    .then(function(driver_status){
+                        self.set_connection_status('connected',driver_status);
+                    },function(){
+                        if(self.get('status').status !== 'connecting'){
+                            self.set_connection_status('disconnected');
+                        }
+                    }).always(function(){
+                        setTimeout(status,5000);
+                    });
+            }
+
             if(!this.keptalive){
                 this.keptalive = true;
-                function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
-                        .then(function(driver_status){
-                            self.set_connection_status('connected',driver_status);
-                        },function(){
-                            if(self.get('status').status !== 'connecting'){
-                                self.set_connection_status('disconnected');
-                            }
-                        }).always(function(){
-                            setTimeout(status,5000);
-                        });
-                }
                 status();
             };
         },
@@ -468,7 +472,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         add_barcode_patterns: function(patterns){
             this.patterns = this.patterns || {};
-            for(type in patterns){
+            for(var type in patterns){
                 this.patterns[type] = this.patterns[type] || [];
 
                 var patternlist = patterns[type];
@@ -510,7 +514,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         save_callbacks: function(){
             var callbacks = {};
-            for(name in this.action_callback){
+            for(var name in this.action_callback){
                 callbacks[name] = this.action_callback[name];
             }
             this.action_callback_stack.push(callbacks);
@@ -539,7 +543,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 this.action_callback[action] = callback;
             }else{
                 var actions = arguments[0];
-                for(action in actions){
+                for(var action in actions){
                     this.set_action_callback(action,actions[action]);
                 }
             }
@@ -547,7 +551,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //remove all action callbacks 
         reset_action_callbacks: function(){
-            for(action in this.action_callback){
+            for(var action in this.action_callback){
                 this.action_callback[action] = undefined;
             }
         },

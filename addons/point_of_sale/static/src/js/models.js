@@ -1,4 +1,6 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
+    "use strict";
+
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
 
@@ -1213,7 +1215,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if(arguments.length === 2){
                 this.screen_data[key] = value;
             }else if(arguments.length === 1){
-                for(key in arguments[0]){
+                for(var key in arguments[0]){
                     this.screen_data[key] = arguments[0][key];
                 }
             }

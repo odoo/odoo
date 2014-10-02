@@ -1,5 +1,6 @@
 
 openerp.point_of_sale = function(instance) {
+    "use strict";
 
     instance.point_of_sale = {};
 

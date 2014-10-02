@@ -1,4 +1,5 @@
 function openerp_pos_db(instance, module){ 
+    "use strict";
 
     /* The PosDB holds reference to data that is either
      * - static: does not change between pos reloads

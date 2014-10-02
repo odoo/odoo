@@ -16,6 +16,8 @@
 // hide()s
 
 function openerp_pos_screens(instance, module){ //module is instance.point_of_sale
+    "use strict";
+
     var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
@@ -32,11 +34,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.current_mode   = options.default_mode || 'cashier';
             this.current_screen = null; 
 
-            for(screen_name in this.screen_set){
+            for (var screen_name in this.screen_set) {
                 this.screen_set[screen_name].hide();
             }
             
-            for(popup_name in this.popup_set){
+            for (var popup_name in this.popup_set) {
                 this.popup_set[popup_name].hide();
             }
 

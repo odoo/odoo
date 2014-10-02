@@ -1,4 +1,5 @@
 function openerp_pos_basewidget(instance, module){ //module is instance.point_of_sale
+    "use strict";
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision;
