@@ -97,6 +97,10 @@ class Scanner(Thread):
         if status == self.status['status']:
             if message != None and message != self.status['messages'][-1]:
                 self.status['messages'].append(message)
+                if status == 'error' and message:
+                    _logger.error('Barcode Scanner Error: '+message)
+                elif status == 'disconnected' and message:
+                    _logger.warning('Disconnected Barcode Scanner: '+message)
         else:
             self.status['status'] = status
             if message:
@@ -104,14 +108,17 @@ class Scanner(Thread):
             else:
                 self.status['messages'] = []
 
-        if status == 'error' and message:
-            _logger.error('Barcode Scanner Error: '+message)
-        elif status == 'disconnected' and message:
-            _logger.warning('Disconnected Barcode Scanner: '+message)
+            if status == 'error' and message:
+                _logger.error('Barcode Scanner Error: '+message)
+            elif status == 'disconnected' and message:
+                _logger.warning('Disconnected Barcode Scanner: '+message)
 
     def get_device(self):
         try:
             if not evdev:
+                return None
+            if not os.path.exists(self.input_dir):
+                self.set_status('disconnected','Barcode Scanner Not Found')
                 return None
             devices   = [ device for device in listdir(self.input_dir)]
             keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]

@@ -137,6 +137,11 @@ class EscposDriver(Thread):
         if status == self.status['status']:
             if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
                 self.status['messages'].append(message)
+
+                if status == 'error' and message:
+                    _logger.error('ESC/POS Error: '+message)
+                elif status == 'disconnected' and message:
+                    _logger.warning('ESC/POS Device Disconnected: '+message)
         else:
             self.status['status'] = status
             if message:
@@ -144,10 +149,10 @@ class EscposDriver(Thread):
             else:
                 self.status['messages'] = []
 
-        if status == 'error' and message:
-            _logger.error('ESC/POS Error: '+message)
-        elif status == 'disconnected' and message:
-            _logger.warning('ESC/POS Device Disconnected: '+message)
+            if status == 'error' and message:
+                _logger.error('ESC/POS Error: '+message)
+            elif status == 'disconnected' and message:
+                _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
         if not escpos:
