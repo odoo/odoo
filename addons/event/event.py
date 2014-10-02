@@ -12,15 +12,20 @@ class event_type(models.Model):
     _description = 'Event Type'
 
     name = fields.Char(string='Event Type', required=True)
-    default_reply_to = fields.Char(string='Default Reply-To',
+    default_reply_to = fields.Char(
+        string='Default Reply-To',
         help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one.")
-    default_email_event = fields.Many2one('email.template', string='Event Confirmation Email',
+    default_email_event = fields.Many2one(
+        'email.template', string='Event Confirmation Email',
         help="It will select this default confirmation event mail value when you choose this event")
-    default_email_registration = fields.Many2one('email.template', string='Registration Confirmation Email',
+    default_email_registration = fields.Many2one(
+        'email.template', string='Registration Confirmation Email',
         help="It will select this default confirmation registration mail value when you choose this event")
-    default_registration_min = fields.Integer(string='Default Minimum Registration', default=0,
+    default_registration_min = fields.Integer(
+        string='Default Minimum Registration', default=0,
         help="It will select this default minimum value when you choose this event")
-    default_registration_max = fields.Integer(string='Default Maximum Registration', default=0,
+    default_registration_max = fields.Integer(
+        string='Default Maximum Registration', default=0,
         help="It will select this default maximum value when you choose this event")
 
 
@@ -31,31 +36,48 @@ class event_event(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_begin'
 
-    name = fields.Char(string='Event Name', translate=True, required=True,
+    name = fields.Char(
+        string='Name', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
-    user_id = fields.Many2one('res.users', string='Responsible User',
+    user_id = fields.Many2one(
+        'res.users', string='Responsible',
         default=lambda self: self.env.user,
         readonly=False, states={'done': [('readonly', True)]})
-    type = fields.Many2one('event.type', string='Type of Event',
+    company_id = fields.Many2one(
+        'res.company', string='Company', change_default=True,
+        default=lambda self: self.env['res.company']._company_default_get('event.event'),
+        required=False, readonly=False, states={'done': [('readonly', True)]})
+    organizer_id = fields.Many2one(
+        'res.partner', string='Organizer',
+        default=lambda self: self.env.user.company_id.partner_id)
+    type = fields.Many2one(
+        'event.type', string='Category',
         readonly=False, states={'done': [('readonly', True)]})
     color = fields.Integer('Kanban Color Index')
-    seats_max = fields.Integer(string='Maximum Available Seats', oldname='register_max',
+
+    # Seats and computation
+    seats_max = fields.Integer(
+        string='Maximum Available Seats', oldname='register_max',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_availability = fields.Selection(
         [('limited', 'Limited'), ('unlimited', 'Unlimited')],
         'Available Seat', required=True, default='unlimited')
-    seats_min = fields.Integer(string='Minimum Reserved Seats', oldname='register_min',
+    seats_min = fields.Integer(
+        string='Minimum Reserved Seats', oldname='register_min',
         readonly=True, states={'draft': [('readonly', False)]},
         help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )")
-
-    seats_reserved = fields.Integer(oldname='register_current', string='Reserved Seats',
+    seats_reserved = fields.Integer(
+        oldname='register_current', string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
-    seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
+    seats_available = fields.Integer(
+        oldname='register_avail', string='Available Seats',
         store=True, readonly=True, compute='_compute_seats')
-    seats_unconfirmed = fields.Integer(oldname='register_prospect', string='Unconfirmed Seat Reservations',
+    seats_unconfirmed = fields.Integer(
+        oldname='register_prospect', string='Unconfirmed Seat Reservations',
         store=True, readonly=True, compute='_compute_seats')
-    seats_used = fields.Integer(oldname='register_attended', string='Number of Participations',
+    seats_used = fields.Integer(
+        oldname='register_attended', string='Number of Participations',
         store=True, readonly=True, compute='_compute_seats')
 
     @api.multi
@@ -64,7 +86,7 @@ class event_event(models.Model):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
         # initialize fields to 0
         for event in self:
-            event.seats_unconfirmed = event.seats_reserved = event.seats_used = 0
+            event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
         # aggregate registrations by event and by state
         if self.ids:
             state_field = {
@@ -83,25 +105,34 @@ class event_event(models.Model):
                 event[state_field[state]] += num
         # compute seats_available
         for event in self:
-            event.seats_available = \
-                event.seats_max - (event.seats_reserved + event.seats_used) \
-                if event.seats_max > 0 else 0
+            if event.seats_max > 0:
+                event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
 
-    registration_ids = fields.One2many('event.registration', 'event_id', string='Registrations',
+    # Registration fields
+    registration_ids = fields.One2many(
+        'event.registration', 'event_id', string='Registrations',
         readonly=False, states={'done': [('readonly', True)]})
-    count_registrations = fields.Integer(string='Registrations',
-        compute='_count_registrations')
+    count_registrations = fields.Integer(string='Registrations', compute='_count_registrations')
 
-    date_begin = fields.Datetime(string='Start Date', required=True,
+    @api.one
+    @api.depends('registration_ids')
+    def _count_registrations(self):
+        self.count_registrations = len(self.registration_ids)
+
+    # Date fields
+    date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
+    date_begin = fields.Datetime(
+        string='Start Date', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
-    date_end = fields.Datetime(string='End Date', required=True,
+    date_end = fields.Datetime(
+        string='End Date', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
+    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
+    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
     @api.model
     def _tz_get(self):
         return [(x, x) for x in pytz.all_timezones]
-
-    date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
 
     @api.one
     @api.depends('date_tz', 'date_begin')
@@ -123,17 +154,18 @@ class event_event(models.Model):
         else:
             self.date_end_located = False
 
-    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
-
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('confirm', 'Confirmed'),
-            ('done', 'Done')
-        ], string='Status', default='draft', readonly=True, required=True, copy=False,
+        ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
+        ('confirm', 'Confirmed'), ('done', 'Done')],
+        string='Status', default='draft', readonly=True, required=True, copy=False,
         help="If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'.")
     auto_confirm = fields.Boolean(string='Auto Confirmation Activated', compute='_compute_auto_confirm')
+
+    @api.one
+    def _compute_auto_confirm(self):
+        self.auto_confirm = self.env['ir.values'].get_default('marketing.config.settings', 'auto_confirmation')
+
+    # Mailing
     email_registration_id = fields.Many2one(
         'email.template', string='Registration Confirmation Email',
         domain=[('model', '=', 'event.registration')],
@@ -142,43 +174,18 @@ class event_event(models.Model):
         'email.template', string='Event Confirmation Email',
         domain=[('model', '=', 'event.registration')],
         help="If you set an email template, each participant will receive this email announcing the confirmation of the event.")
-    reply_to = fields.Char(string='Reply-To Email',
-        readonly=False, states={'done': [('readonly', True)]},
+    reply_to = fields.Char(
+        string='Reply-To Email', readonly=False, states={'done': [('readonly', True)]},
         help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one.")
-    address_id = fields.Many2one('res.partner', string='Location',
-        default=lambda self: self.env.user.company_id.partner_id,
+    address_id = fields.Many2one(
+        'res.partner', string='Location', default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]})
-    country_id = fields.Many2one('res.country', string='Country', related='address_id.country_id',
+    country_id = fields.Many2one(
+        'res.country', string='Country', related='address_id.country_id',
         store=True, readonly=False, states={'done': [('readonly', True)]})
-    description = fields.Html(string='Description', oldname='note', translate=True,
+    description = fields.Html(
+        string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company', change_default=True,
-        default=lambda self: self.env['res.company']._company_default_get('event.event'),
-        required=False, readonly=False, states={'done': [('readonly', True)]})
-    organizer_id = fields.Many2one('res.partner', string='Organizer',
-        default=lambda self: self.env.user.company_id.partner_id)
-
-    is_subscribed = fields.Boolean(string='Subscribed',
-        compute='_compute_subscribe')
-
-    @api.one
-    def _compute_auto_confirm(self):
-        self.auto_confirm = self.env['ir.values'].get_default('marketing.config.settings', 'auto_confirmation')
-
-    @api.one
-    @api.depends('registration_ids')
-    def _count_registrations(self):
-        self.count_registrations = len(self.registration_ids)
-
-    @api.one
-    @api.depends('registration_ids.user_id', 'registration_ids.state')
-    def _compute_subscribe(self):
-        """ Determine whether the current user is already subscribed to any event in `self` """
-        user = self.env.user
-        self.is_subscribed = any(
-            reg.user_id == user and reg.state in ('open', 'done')
-            for reg in self.registration_ids
-        )
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
@@ -293,33 +300,31 @@ class event_registration(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'name, create_date desc'
 
-    origin = fields.Char(string='Source Document', readonly=True,
-        help="Reference of the sales order which created the registration")
-    nb_register = fields.Integer(string='Number of Participants', required=True, default=1,
+    origin = fields.Char(
+        string='Source Document', readonly=True,
+        help="Reference of the sales order which created the registration")  # funny we refer sale orders... event is not sale related
+    nb_register = fields.Integer(
+        string='Number of Participants', required=True, default=1,
         readonly=True, states={'draft': [('readonly', False)]})
-    event_id = fields.Many2one('event.event', string='Event', required=True,
+    event_id = fields.Many2one(
+        'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
-    partner_id = fields.Many2one('res.partner', string='Partner',
+    partner_id = fields.Many2one(
+        'res.partner', string='Partner',
         states={'done': [('readonly', True)]})
     date_open = fields.Datetime(string='Registration Date', readonly=True)
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
-    reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to',
-        readonly=True)
-    log_ids = fields.One2many('mail.message', 'res_id', string='Logs',
-        domain=[('model', '=', _name)])
-    event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin',
-        readonly=True)
-    event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end',
-        readonly=True)
+    reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to', readonly=True)
+    event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
+    event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     user_id = fields.Many2one('res.users', string='User', states={'done': [('readonly', True)]})
-    company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
-        store=True, readonly=True, states={'draft':[('readonly', False)]})
+    company_id = fields.Many2one(
+        'res.company', string='Company', related='event_id.company_id',
+        store=True, readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
-            ('draft', 'Unconfirmed'),
-            ('cancel', 'Cancelled'),
-            ('open', 'Confirmed'),
-            ('done', 'Attended'),
-        ], string='Status', default='draft', readonly=True, copy=False)
+        ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
+        ('open', 'Confirmed'), ('done', 'Attended')],
+        string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name', select=True)
@@ -353,7 +358,6 @@ class event_registration(models.Model):
         self.event_id.message_post(
             body=_('New registration confirmed: %s.') % (self.name or ''),
             subtype="event.mt_event_registration")
-        self.message_post(body=_('Event Registration confirmed.'))
         self.state = 'open'
 
     @api.one
@@ -383,14 +387,14 @@ class event_registration(models.Model):
         else:
             template = self.event_id.email_registration_id
             if template:
-                mail_message = template.send_mail(self.id)
+                template.send_mail(self.id)
 
     @api.one
     def mail_user_confirm(self):
         """Send email to user when the event is confirmed """
         template = self.event_id.email_confirmation_id
         if template:
-            mail_message = template.send_mail(self.id)
+            template.send_mail(self.id)
 
     @api.onchange('partner_id')
     def _onchange_partner(self):

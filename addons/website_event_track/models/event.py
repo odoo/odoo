@@ -133,10 +133,6 @@ class event_track(osv.osv):
 class event_event(osv.osv):
     _inherit = "event.event"
 
-    def _list_tz(self,cr,uid, context=None):
-        # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-        return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
-
     def _count_tracks(self, cr, uid, ids, field_name, arg, context=None):
         return {
             event.id: len(event.track_ids)
@@ -212,8 +208,3 @@ class event_sponsors(osv.osv):
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
         'image_medium': fields.related('partner_id', 'image_medium', string='Logo', type='binary')
     }
-
-    def has_access_to_partner(self, cr, uid, ids, context=None):
-        partner_ids = [sponsor.partner_id.id for sponsor in self.browse(cr, uid, ids, context=context)]
-        return len(partner_ids) == self.pool.get("res.partner").search(cr, uid, [("id", "in", partner_ids)], count=True, context=context)
-
