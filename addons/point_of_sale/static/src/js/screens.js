@@ -1259,7 +1259,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.screen_selector.set_current_screen('clientlist');
         },
         click_back: function(){
-            this.pos_widget.screen_selector.set_current_screen('product-list');
+            this.pos_widget.screen_selector.set_current_screen('products');
         },
         renderElement: function() {
             var self = this;
