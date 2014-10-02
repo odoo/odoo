@@ -443,6 +443,57 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
 
+    def reconciliation_widget_preprocess(self, cr, uid, statement_ids=None, context=None):
+        """ Get statement lines of the specified statements or all unreconciled statement lines and try to automatically reconcile them.
+            Return ids of statement lines left to reconcile and other data for the reconciliation widget. """
+        bs_obj = self.pool.get('account.bank.statement')
+
+        # Get statement lines
+        st_lines_filter = [('journal_entry_id', '=', False), ('account_id', '=', False)]
+        if statement_ids:
+            st_lines_filter += [('statement_id', 'in', statement_ids)]
+        st_lines = self.search(cr, uid, st_lines_filter, order='statement_id, id')
+
+        # Try to automatically reconcile statement lines
+        num_auto_reconciled = 0
+        for st_line in self.browse(cr, uid, st_lines):
+            counterpart = self.get_reconciliation_proposition(cr, uid, st_line, unambiguous=True, context=context)
+            if counterpart:
+                for move_line_dict in counterpart:
+                    # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
+                    # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
+                    # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
+                    # 'counterpart_move_line_id': 7,
+                    # 'credit': 500
+                    # This is what the reconciliation widget does.
+                    move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
+                    move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
+                self.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
+                num_auto_reconciled += 1
+
+        # Collect various informations for the reconciliation widget
+        notifications = []
+        if num_auto_reconciled > 0:
+            notifications += [{
+                'type': 'info',
+                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled.")
+            }]
+
+        num_already_reconciled_lines = 0
+        if statement_ids:
+            num_already_reconciled_lines = bs_obj.number_of_lines_reconciled(cr, uid, statement_ids, context=context)
+
+        statement_name = False
+        if statement_ids and len(statement_ids) == 1:
+            statement_name = bs_obj.browse(cr, uid, statement_ids[0]).name
+
+        return {
+            'st_lines_ids': self.search(cr, uid, st_lines_filter, order='statement_id, id'),
+            'notifications': notifications,
+            'statement_name': statement_name,
+            'num_already_reconciled_lines': num_already_reconciled_lines,
+        }
+
     def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
