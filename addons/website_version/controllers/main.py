@@ -96,9 +96,9 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
     def get_analytics(self, view_id):
-        from pudb import set_trace; set_trace()
+        #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        result = {'snapshot_id': 0, 'experiment_id': 0}
+        result = {'VarId': 0}
         obj_v = request.registry['ir.ui.view']
         view = obj_v.browse(cr, uid, [int(view_id)],context)[0]
         exp_ids = request.registry['website_version.experiment'].search(cr, uid, [('experiment_snapshot_ids.snapshot_id.view_ids.key', '=', view.key),('state','=','running')],context=context)

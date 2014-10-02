@@ -62,40 +62,41 @@ class Experiment(osv.Model):
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        print vals
         name = vals.get('name')
         state = vals.get('state')
         exp_snaps = vals.get('experiment_snapshot_ids')
-        for exp in self.browse(cr, uid, ids, context=context):
-            temp={}
-            if name:
-                temp['name'] = name
-            else:
-                temp['name'] = exp.name
-            if state:
-                temp['status'] = state
-            else:
-                temp['status'] = exp.state
-            if exp_snaps:
-                index = 0
-                temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
-                for exp_s in exp.experiment_snapshot_ids:
-                    for li in exp_snaps:
-                        if not li[0] == 2 and li[1] == exp_s.id:
-                            temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
-                    index+=1
-                while index< len(exp_snaps):
-                    snap_id = exp_snaps[index][2]['snapshot_id']
-                    snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
-                    temp['variations'].append({'name':snap_name, 'url': 'http://0.0.0.0:8069/'+snap_name})
-                    index+=1
-            else:
-                temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
-                for exp_s in exp.experiment_snapshot_ids:
-                    temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
+        if name or state or exp_snaps:
+            print 'WRITE EXP'
+            for exp in self.browse(cr, uid, ids, context=context):
+                temp={}
+                if name:
+                    temp['name'] = name
+                else:
+                    temp['name'] = exp.name
+                if state:
+                    temp['status'] = state
+                else:
+                    temp['status'] = exp.state
+                if exp_snaps:
+                    index = 0
+                    temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
+                    for exp_s in exp.experiment_snapshot_ids:
+                        for li in exp_snaps:
+                            if not li[0] == 2 and li[1] == exp_s.id:
+                                temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
+                        index+=1
+                    while index< len(exp_snaps):
+                        snap_id = exp_snaps[index][2]['snapshot_id']
+                        snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
+                        temp['variations'].append({'name':snap_name, 'url': 'http://0.0.0.0:8069/'+snap_name})
+                        index+=1
+                else:
+                    temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
+                    for exp_s in exp.experiment_snapshot_ids:
+                        temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
 
-            print temp
-            self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
+                print temp
+                self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
         return super(Experiment, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
