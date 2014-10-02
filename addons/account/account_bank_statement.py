@@ -157,8 +157,6 @@ class account_bank_statement(osv.osv):
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
         'cash_control': fields.related('journal_id', 'cash_control' , type='boolean', relation='account.journal',string='Cash control'),
         'all_lines_reconciled': fields.function(_all_lines_reconciled, string='All lines reconciled', type='boolean'),
-        # Make sure a statement can be imported only once
-        'unique_import_id': fields.char('Import ID', readonly=True, select=True, copy=False),
     }
 
     _defaults = {
@@ -768,6 +766,8 @@ class account_bank_statement_line(osv.osv):
         'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
+        # Ensure transactions can be imported only once (if the import format provides unique transaction ids)
+        'unique_import_id': fields.char('Import ID', readonly=True, copy=False),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),

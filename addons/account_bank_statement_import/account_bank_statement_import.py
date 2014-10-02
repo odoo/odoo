@@ -81,10 +81,17 @@ class account_bank_statement_import(osv.TransientModel):
         if len(bank_statement_vals) == 0:
             raise osv.except_osv(_('Error'), _('The file doesn\'t contain any bank statement (or wasn\'t properly processed).'))
         
+        # Filter out already imported transactions and create statements
         statement_ids = []
-        for vals in bank_statement_vals:
-            if len(bs_obj.search(cr, uid, [('unique_import_id','=',vals['unique_import_id'])], context=context)) == 0:
-                statement_ids.append(bs_obj.create(cr, uid, vals, context=context))
+        num_ignored_statement_lines = 0
+        cr.execute("SELECT unique_import_id FROM account_bank_statement_line")
+        already_imported_lines = [x[0] for x in cr.fetchall()]
+        for st_vals in bank_statement_vals:
+            num_ignored_statement_lines += len(st_vals['line_ids'])
+            st_vals['line_ids'] = [line_vals for line_vals in st_vals['line_ids'] if line_vals[2]['unique_import_id'] not in already_imported_lines]
+            num_ignored_statement_lines -= len(st_vals['line_ids'])
+            if len(st_vals['line_ids']) > 0:
+                statement_ids.append(bs_obj.create(cr, uid, st_vals, context=context))
         if len(statement_ids) == 0:
             raise osv.except_osv(_('Error'), _('You have already imported that file.'))
 
@@ -105,15 +112,20 @@ class account_bank_statement_import(osv.TransientModel):
                     bsl_obj.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
                     num_auto_reconciled += 1
 
+        # Prepare import feedback
+        notifications = []
+        if num_ignored_statement_lines > 1:
+            notifications += [{
+                'type': 'warning', # note : can be success, info, warning or danger
+                'message': _("%d transactions had already been imported and therefore were ignored. You might want to check how your bank exports statements.") % num_ignored_statement_lines
+            }]
         if num_auto_reconciled > 0:
-            if num_auto_reconciled > 1:
-                feedback = _("%d transactions were automatically reconciled.") % num_auto_reconciled
-            else:
-                feedback = _("1 transaction was automatically reconciled.")
-        else:
-            feedback = False
+            notifications += [{
+                'type': 'info',
+                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled.")
+            }]
 
-        return statement_ids, feedback
+        return statement_ids, notifications
 
     def process_none(self, cr, uid, data_file, journal_id=False, context=None):
         raise osv.except_osv(_('Error'), _('No available format for importing bank statement. You can install one of the file format available through the module installation.'))
@@ -122,7 +134,7 @@ class account_bank_statement_import(osv.TransientModel):
         """ Process the file chosen in the wizard, create bank statement(s) and go to reconciliation. """
         data = self.browse(cr, uid, ids[0], context=context)
         vals = getattr(self, "process_%s" % data.file_type)(cr, uid, data.data_file, data.journal_id.id, context=context)
-        statement_ids, import_feedback = self.import_bank_statements(cr, uid, vals, context=context)
+        statement_ids, notifications = self.import_bank_statements(cr, uid, vals, context=context)
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_reconcile_bank_statements')
         action = self.pool[model].browse(cr, uid, action_id, context=context)
         return {
@@ -130,7 +142,7 @@ class account_bank_statement_import(osv.TransientModel):
             'tag': action.tag,
             'context': {
                 'statement_ids': statement_ids,
-                'import_feedback': import_feedback
+                'notifications': notifications
             },
             'type': 'ir.actions.client',
         }

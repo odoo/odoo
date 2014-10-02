@@ -237,7 +237,6 @@ class account_bank_statement_import(osv.TransientModel):
             if not(statement.get('period_id')):
                 raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
             statement_data = {
-                'unique_import_id': 'CODA-'+str(statement['acc_number'])+'-'+str(statement['codaSeqNumber'])+'-'+str(statement['date']),
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
                 'journal_id': statement['journal_id'].id,
@@ -288,6 +287,7 @@ class account_bank_statement_import(osv.TransientModel):
                         'ref': line['ref'],
                         'sequence': line['sequence'],
                         'bank_account_id': bank_account_id,
+                        'unique_import_id': line['transactionRef'],
                     }
                     statement_line.append((0, 0, line_data))
             if statement['coda_note'] != '':

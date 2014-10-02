@@ -67,8 +67,7 @@ class account_bank_statement_import(osv.TransientModel):
                     pass
         else:
             raise osv.except_osv(_('Error!'), _('This file is either not a bank statement or is not correctly formed.'))
-        vals_bank_statement.update({'unique_import_id': 'QIF-' + str(line_ids[0]['date']) + '-' + str(line_ids[0]['amount']) + '-' + str(hash(file_data)),
-                                    'balance_end_real': total,
+        vals_bank_statement.update({'balance_end_real': total,
                                     'line_ids': line_ids,
                                     'journal_id': journal_id})
         return [vals_bank_statement]

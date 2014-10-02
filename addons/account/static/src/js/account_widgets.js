@@ -965,7 +965,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
-            this.import_feedback = context.context.import_feedback;
+            this.notifications = context.context.notifications;
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -1034,8 +1034,8 @@ openerp.account = function (instance) {
                     // If there is no statement line to reconcile, stop here
                     if (self.lines.length === 0) {
                         self.$el.prepend(QWeb.render("bank_statement_nothing_to_reconcile"));
-                        if (self.import_feedback) {
-                            self.displayImportFeedback(self.import_feedback);
+                        if (self.notifications) {
+                            self.displayNotifications(self.notifications);
                         }
                         return;
                     }
@@ -1065,8 +1065,8 @@ openerp.account = function (instance) {
                             // When reconciliations are instanciated, make an entrance
                             $.when.apply($, child_promises).then(function(){
                                 self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed, function() {
-                                    if (self.import_feedback) {
-                                        self.displayImportFeedback(self.import_feedback);
+                                    if (self.notifications) {
+                                        self.displayNotifications(self.notifications);
                                     }
                                 });
                             });
@@ -1075,15 +1075,17 @@ openerp.account = function (instance) {
             });
         },
 
-        displayImportFeedback: function(feedback) {
+        displayNotifications: function(notifications) {
             var self = this;
-            var notification = $("<div class='import_feedback alert alert-info' role='alert'>"+feedback+"</div>").hide();
-            notification.appendTo(this.$(".notification_area")).slideDown(this.aestetic_animation_speed);
-            this.$(".import_feedback").css("cursor", "pointer").click(function() {
-                $(this).slideUp(self.aestetic_animation_speed, function() {
-                    $(this).remove();
+            for (var i=0; i<notifications.length; i++) {
+                var notification = $("<div class='notification alert alert-"+ notifications[i].type +"' role='alert'>"+ notifications[i].message +"</div>").hide();
+                notification.appendTo(this.$(".notification_area")).slideDown(this.aestetic_animation_speed);
+                notification.css("cursor", "pointer").click(function() {
+                    $(this).slideUp(self.aestetic_animation_speed, function() {
+                        $(this).remove();
+                    });
                 });
-            });
+            }
         },
 
         statementNameClickHandler: function() {
