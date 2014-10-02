@@ -2903,7 +2903,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 'auto');
+            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3458,9 +3458,14 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
-            self.getParent()._quick_create(self.$("input").val());
-            self.destroy();
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
+            if (self.$("input").val() != ''){
+                self.getParent()._quick_create(self.$("input").val());
+                self.destroy();
+            } else{
+                e.preventDefault();
+                self.$("input").focus();
+            }
         });
         this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
             self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));

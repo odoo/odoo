@@ -39,6 +39,8 @@ from tempfile import NamedTemporaryFile
 # Utils
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
+version = version.split('-')[0]
+
 timestamp = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
 PUBLISH_DIRS = {
     'tar.gz': 'src',
@@ -103,7 +105,8 @@ def publish(o, releases):
         if release_extension == 'deb':
             temp_path = tempfile.mkdtemp(suffix='debPackages')
             system(['cp', release_path, temp_path])
-            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s' % join(o.pub, 'deb', 'Packages.gz'), shell=True, cwd=temp_path)
+            with open(os.path.join(o.pub, 'deb', 'Packages'), 'w') as out:
+                subprocess.call(['dpkg-scanpackages', '.'], stdout=out, cwd=temp_path)
             shutil.rmtree(temp_path)
 
         # Latest/symlink handler
@@ -307,7 +310,7 @@ def test_deb(o):
 def test_rpm(o):
     with docker('centos:centos7', o.build_dir, o.pub) as centos7:
         centos7.release = 'odoo.noarch.rpm'
-        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm')
+        centos7.system('rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm')
         centos7.system('yum update -y && yum upgrade -y')
         centos7.system('yum install python-pip gcc python-devel -y')
         centos7.system('pip install pydot pyPdf vatnumber xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz')

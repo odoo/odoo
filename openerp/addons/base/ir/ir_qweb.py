@@ -555,7 +555,11 @@ class FieldConverter(osv.AbstractModel):
                             field_name, record._name, exc_info=True)
             content = None
 
-        if context and context.get('inherit_branding'):
+        inherit_branding = context and context.get('inherit_branding')
+        if not inherit_branding and context and context.get('inherit_branding_auto'):
+            inherit_branding = self.pool['ir.model.access'].check(cr, uid, record._name, 'write', False, context=context)
+
+        if inherit_branding:
             # add branding attributes
             g_att += ''.join(
                 ' %s="%s"' % (name, escape(value))
@@ -662,7 +666,10 @@ class DateTimeConverter(osv.AbstractModel):
         if options and 'format' in options:
             pattern = options['format']
         else:
-            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+            if options and options.get('only_date') and options.get('only_date') in ["True", 'true']:
+                strftime_pattern = (u"%s" % (lang.date_format))
+            else:
+                strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
         if options and options.get('hide_seconds'):

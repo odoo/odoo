@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-18 12:12+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:57+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-19 08:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_import
 #. openerp-web
@@ -225,13 +226,16 @@ msgid ""
 "Country/Database ID: the unique Odoo ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Land/Datenbank ID: eine eindeutige OdooID für einen \n"
+"                          Datensatz, definiert durch eine ID postgresql "
+"Spalte."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:159
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Land/Ext. Schlüssel: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -277,7 +281,7 @@ msgstr "Land: Die Bezeichnung oder das Kürzel für das Land"
 #: field:base_import.tests.models.o2m.child,create_uid:0
 #: field:base_import.tests.models.preview,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: base_import
 #: field:base_import.import,create_date:0
@@ -295,7 +299,7 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,create_date:0
 #: field:base_import.tests.models.preview,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: base_import
 #. openerp-web
@@ -316,7 +320,7 @@ msgstr "Datenbank ID"
 #: code:addons/base_import/static/src/js/import.js:288
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "Nicht importieren"
 
 #. module: base_import
 #. openerp-web
@@ -403,6 +407,8 @@ msgid ""
 "                        reference the country of a contact, Odoo proposes \n"
 "                        you 3 different fields to import:"
 msgstr ""
+"Beispielsweise zur Referenzierung auf das Land eines Anpsrechpartners, \n"
+"                schlägt Odoo drei verschiedene Felder für einen Import vor:"
 
 #. module: base_import
 #. openerp-web
@@ -484,6 +490,8 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to Odoo?"
 msgstr ""
+"Wie können verschiedene SQL Tabellen in die Odoo Anwendungen importiert "
+"werden."
 
 #. module: base_import
 #. openerp-web
@@ -566,6 +574,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Wenn eine Datei seine Spaltennamen beinhaltet, kann Odoo eine automatische "
+"Erkennung vornehmen.\n"
+"Dies macht es einfacher den Import von Dateien mit vielen Spalten "
+"vorzunehmen."
 
 #. module: base_import
 #. openerp-web
@@ -576,6 +588,9 @@ msgid ""
 "will set up subscriptions and send notifications                             "
 "during the import, but lead to a slower import."
 msgstr ""
+"Wenn in diesem Datenmodell OpenChatter verwendet wird, abonniert das "
+"Historienmanagement automatische Importbenachrichtigungen zu Lasten einer "
+"geringeren Importgeschwindigkeit."
 
 #. module: base_import
 #. openerp-web
@@ -590,6 +605,15 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Auch wenn Ihre CSV-Datei nicht alle Felder beinhaltet,\n"
+"                         wird Odoo trotzdem einen Standardwert für diese "
+"Felder eintragen. \n"
+"                         Wenn Sie allerdings Felder mit leeren Werten in "
+"Ihrer CSV-Datei\n"
+"                         belassen, trägt Odoo dementsprechend auch die "
+"leeren Werte in \n"
+"                         das Feld ein, anstatt einfach den Standard-Wert zu "
+"übernehmen."
 
 #. module: base_import
 #. openerp-web
@@ -635,6 +659,18 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Wenn Sie eine Datei importieren möchten, die eine der beiden\n"
+"                         Spalten \"External ID\" oder \"Database ID\" "
+"beinhaltet, werden die \n"
+"                         bereits in Odoo vorhandenen Daten geändert anstatt "
+"neu erstellt. \n"
+"                         Dies ist dann sehr nützlich, wenn Sie hierdurch "
+"mehrere Male die gleiche CSV-Datei \n"
+"                         importieren können, nachdem noch Änderungen "
+"vorgenommen wurden. \n"
+"                         Odoo kümmert sich darum, zu prüfen, ob Daten "
+"erstellt oder \n"
+"                         geändert werden sollen."
 
 #. module: base_import
 #. openerp-web
@@ -747,7 +783,7 @@ msgstr "Hierdurch wird folgende .csv Datei erzeugt:"
 #: field:base_import.tests.models.o2m.child,write_uid:0
 #: field:base_import.tests.models.preview,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: base_import
 #: field:base_import.import,write_date:0
@@ -765,14 +801,14 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,write_date:0
 #: field:base_import.tests.models.preview,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:55
 #, python-format
 msgid "Map your data to Odoo"
-msgstr ""
+msgstr "Ihre Daten mit Odoo verbinden"
 
 #. module: base_import
 #. openerp-web
@@ -825,6 +861,11 @@ msgid ""
 "\n"
 "                        See the following question."
 msgstr ""
+"Beachten Sie für den Fall, \n"
+"                          daß Odoo im Falle von Tabulatoren als Feldtrenner, "
+"keine automatische Spaltenaufteilung erkennen\n"
+"                          kann. In diesem Fall muß das Dateiformat in der "
+"Tabellenkalkulation angepasst werden."
 
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
@@ -900,6 +941,18 @@ msgid ""
 "\n"
 "                        per field you want to import."
 msgstr ""
+"Einige Felder referenzieren auf ein anderes Objekt. \n"
+"                         Zum Beispiel ist das Land eines Kontakts ein Link "
+"zu einem Datensatz des 'Country' Objekt. \n"
+"                         Wenn Sie solche Felder importieren möchten, wird "
+"Odoo bei der Erkennung neuer \n"
+"                         Verbindungen zwischen verschiedenen Datensätzen "
+"diese Verknüpfungen automatisch herstellen. \n"
+"                         Um Ihnen beim Importieren solcher Felder zu helfen, "
+"bietet Odoo 3 verschiedene \n"
+"                         Mechanismen an. Sie müssen dann nur noch einen "
+"dieser Mechanismen pro Feld für den beabsichtigen \n"
+"                         Import auswählen."
 
 #. module: base_import
 #. openerp-web
@@ -989,6 +1042,16 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"Die beiden erstellten Dateien sind bereits für einen Re-Import in \n"
+"                        Odoo vorbereitet, ohne dass weitere Modifikationen "
+"erforderlich sind. \n"
+"                        Nachdem Sie diese zwei CSV-Dateien importiert haben, "
+"sollten Sie 4 einzelne \n"
+"                        Kontakte und 3 Unternehmen vorfinden (die beiden "
+"ersten Kontakte sind dabei mit \n"
+"                        dem ersten Unternehmen verbunden). Zuerst "
+"importieren Sie am Besten die \n"
+"                        Unternehmen und dann anschließend die Kontakte."
 
 #. module: base_import
 #. openerp-web
@@ -1009,6 +1072,12 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Diese Funktion \n"
+"                              ermöglicht Ihnen die Anwendung des "
+"Import/Export Features, um Massendaten in einem\n"
+"                              Zug mit einer Tabellenkalkulation zu "
+"überarbeiten, um diese anschließend wieder zu \n"
+"                              importieren."
 
 #. module: base_import
 #. openerp-web
@@ -1043,13 +1112,23 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Um Relationen zwischen Tabellen zu verwalten,\n"
+"können Sie die \"External ID\" Implementierung von  Odoo anwenden.\n"
+"Die \"External ID\" eines Datensatzes ist die eindeutige Kennung\n"
+"des Datensatz in einer anderen Anwendung.  Diese \"External ID \"muss \n"
+"                         für alle Datensätze aller Objekte eindeutig sein, "
+"so wird z.B. \n"
+"                         als gute Praxis eine \"External ID\" mit dem Namen "
+"der Anwendung oder \n"
+"                         der Tabelle vorgeschlagen (z.B. 'firma_1', "
+"'kontakt_1' anstelle einer '1')."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:61
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "Verfolge die Historie während des Imports"
 
 #. module: base_import
 #. openerp-web

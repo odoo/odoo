@@ -880,7 +880,7 @@ openerp.mail = function (session) {
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
                 self.id = false;
                 // insert the message on dom after this message
-                self.parent_thread.switch_new_message( data, self.$el );
+                self.parent_thread.switch_new_message( data, self.$el.parent() );
                 self.animated_destroy(200);
             });
 
@@ -970,8 +970,8 @@ openerp.mail = function (session) {
 
         on_expand: function (event) {
             event.stopPropagation();
-            this.$('.oe_msg_body_short:first').toggle();
-            this.$('.oe_msg_body_long:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_long:first').toggle();
             return false;
         },
 

@@ -2,26 +2,27 @@
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Els Van Vossel <els@foxyconsulting.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
+"PO-Revision-Date: 2014-09-19 16:52+0000\n"
+"Last-Translator: Els Van Vossel (Foxy) <Unknown>\n"
+"Language-Team: Els Van Vossel\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:48+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-20 06:44+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+"Language: nl\n"
 
 #. module: sale
 #: field:product.product,sales_count:0
 #: field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# verkopen"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -44,6 +45,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -51,6 +54,8 @@ msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Offerte' or 'Order'} (Ref. ${object.name or 'onbekend' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -70,6 +75,13 @@ msgid ""
 "             \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
+"* De status 'Concept' betekent dat het een offerte is.\n"
+"* De status 'Bevestigd'  betekent dat de verkooporder is goedgekeurd.\n"
+"* De status 'Uitzondering' betekent dat er iets fouts is met de "
+"verkooporder.\n"
+"* De status 'Gereed' betekent dat de verkooporderlijn is verzonden.\n"
+"* De status 'Geannuleerd' betekent dat gebruiker de verkooporder heeft "
+"geannuleerd."
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -168,6 +180,99 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Beste ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Hierbij uw ${object.state in ('draft', 'sent') and 'offerte' or "
+"'orderbevestiging'} van ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"         <strong>REFERENTIE</strong><br>\n"
+"         Documentnumber: <strong>${object.name}</strong><br>\n"
+"         Totaalbedrag: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br>\n"
+"         Documentdatum: ${object.date_order}<br>\n"
+"       % if object.origin:\n"
+"         Referentie: ${object.origin}<br>\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"         Your reference: ${object.client_order_ref}<br>\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"         Uw contactpersoon: <a href=\"mailto:${object.user_id.email or "
+"''}?subject= ${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        Uw kunt dit document ook online bekijken:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" "
+"href=\"/quote/${object.id}/${object.access_token}\">Bekijk ${object.state in "
+"('draft', 'sent') and 'Offerte' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br>\n"
+"    <p>U kunt ook onmiddellijk betalen via Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\">\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br>\n"
+"    <p>Neem gerust contact met ons op als u vragen heeft.</p>\n"
+"    <p>Bedankt dat u kiest voor ${object.company_id.name or 'ons'}!</p>\n"
+"    <br>\n"
+"    <br>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Tel.:  ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web: <a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -184,6 +289,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een offerte te maken die kan worden omgezet in een "
+"verkooporder.\n"
+"              </p><p>\n"
+"                Met Odoo handelt u de volledige verkoopflow efficiënt af:\n"
+"                offerte, order, levering, facturatie en betaling.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -205,6 +318,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik als u een offerte of verkooporder voor deze klant wilt "
+"maken.\n"
+"              </p><p>\n"
+"                Met Odoo handelt u de volledige verkoopflow efficiënt af:\n"
+"                offerte, order, levering, facturatie en\n"
+"                betaling.\n"
+"              </p><p>\n"
+"                Met de sociale opties kunt u discussies voeren op een order\n"
+"                en zo uw klant een zicht geven op de evolutie van de "
+"verkooporder.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
@@ -220,6 +346,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een offerte te maken die kan worden omgezet in een "
+"verkooporder.\n"
+"              </p><p>\n"
+"                Met Odoo handelt u de volledige verkoopflow efficiënt af:\n"
+"                offerte, order, levering, facturatie en betaling.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -241,6 +375,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een offerte te maken, de eerste stap naar een nieuwe "
+"verkoop.\n"
+"              </p><p>\n"
+"                Met Odoo handelt u de volledige verkoopflow efficiënt af:\n"
+"                offerte, order, levering, facturatie en\n"
+"                betaling.\n"
+"              </p><p>\n"
+"                Met de sociale opties kunt u discussies voeren op een order\n"
+"                en zo uw klant een zicht geven op de evolutie van de "
+"verkooporder.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -269,12 +416,12 @@ msgstr ""
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
 msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
+msgstr "Een relatie aan wie dit product rechtstreeks moet worden geleverd."
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Adressen in verkooporders"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -327,6 +474,8 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"Alle orderlijnen worden gefactureerd. U kunt vanuit een verkooporder ook een "
+"percentage ervan factureren, of een vaste prijs (voorschotten)."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -336,7 +485,7 @@ msgstr "Relatie rechtstr. levering"
 #. module: sale
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Een apart adres voor levering en facturatie toelaten "
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -351,12 +500,12 @@ msgstr "Waarschuwingen instellen per klant of product"
 #. module: sale
 #: field:sale.config.settings,module_website_quote:0
 msgid "Allow online quotations and templates"
-msgstr ""
+msgstr "Online offertes en sjablonen gebruiken"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Mogelijkheid bieden om korting op verkooporderlijn in te stellen"
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -366,11 +515,16 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Hiermee kunt u waarschuwingen instellen voor producten en deze weergeven als "
+"een gebruiker een bepaald product aan een klant wil verkopen.\n"
+"            Voorbeeld: Product: dit product is verouderd, gelieve er maximum "
+"5 te kopen.\n"
+"            Leverancier: vraag om een snelle levering."
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measure"
-msgstr ""
+msgstr "Verschillende meeteenheden toelaten"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -382,6 +536,15 @@ msgid ""
 "automatically.\n"
 "-It installs the account_analytic_analysis module."
 msgstr ""
+"Hiermee kunt u de contractvoorwaarden van een klant instellen: "
+"factuurmethode\n"
+"            (vaste prijs, volgens uurrooster, voorschotfactuur), de juiste "
+"prijs\n"
+"            (650€/dag voor een ontwikkelaar), de duur (supportcontract van "
+"een jaar).\n"
+"            U kunt de vooruitgang van het contract opvolgen en automatisch "
+"factureren.\n"
+"            Hiermee wordt de module account_analytic_analysis geïnstalleerd."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -389,6 +552,10 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Hiermee kunt u verschillende prijzen toepassen volgens regels per "
+"klantencategorie.\n"
+"Voorbeeld: 10% voor kleinhandelaars, promotie van 5 EUR voor een product, "
+"enz."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
@@ -397,11 +564,14 @@ msgid ""
 "Manage Related Stock.\n"
 "-This installs the module sale_stock."
 msgstr ""
+"Hiermee maakt u een offerte, een verkooporder met verschillende bestelwijzen "
+"en voorraadopvolging.\n"
+"- Hiermee wordt de module sale_stock geïnstalleerd."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "Hiermee kunt u een korting per verkooporderlijn toepassen"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -410,6 +580,9 @@ msgid ""
 "different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
 msgstr ""
+"Hiermee kunt u verkopen en leveringen (ontvangsten) in verschillende "
+"journalen plaatsen, en batchbewerkingen uitvoeren per journaal.\n"
+"- Hiermee wordt de module sale_journal geïnstalleerd."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -421,6 +594,12 @@ msgid ""
 "these values is still available.\n"
 "-This installs the module analytic_user_function."
 msgstr ""
+"Hiermee bepaalt u wat de standaardfunctie van een gebruiker is voor een "
+"bepaalde rekening.\n"
+"Doorgaans wordt dit toegepast bij het invoeren van uurroosters. De waarden "
+"worden automatisch in de juiste velden gezet. Natuurlijk kunnen deze waarden "
+"nog worden aangepast.\n"
+"- Hiermee wordt de module analytic_user_function geïnstalleerd."
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
@@ -433,6 +612,7 @@ msgstr ""
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
 msgstr ""
+"Hiermee kunt u een analytische rekening meegeven op een verkooporder."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -440,6 +620,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Hiermee kunt u aparte leverings- en factuuradressen ingeven op een "
+"verkooporder."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -460,7 +642,7 @@ msgstr "Verkopen analytisch boeken"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Voor levering"
 
 #. module: sale
 #: code:addons/sale/sale.py:1042
@@ -475,17 +657,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Per product"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Per verkoper"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Per verkoopteam"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -497,17 +679,17 @@ msgstr "Annuleren"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "Lijn annuleren"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Order"
-msgstr "Annuleer order"
+msgstr "Order annuleren"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Offerte annuleren"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -552,22 +734,22 @@ msgstr "Schakel het vakje in om facturen per klant te groeperen."
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Schakel het vakje in om offertes per verkoopteam te beheren."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Klik voor toegang tot Verkoopanalyse."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "Klik voor een gedetailleerde analyse van de facturen."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "Klik voor een gedetailleerde analyse."
 
 #. module: sale
 #: field:sale.report,delay:0
@@ -598,7 +780,7 @@ msgstr "Configuratiefout"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Verkoop bevestigen"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -613,17 +795,17 @@ msgstr "Bevestigd"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Bevestigde verkooporderlijnen, nog niet geleverd"
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr ""
+msgstr "Contract / Analytisch"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contract Features"
-msgstr ""
+msgstr "Contractopties"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -633,7 +815,7 @@ msgstr "Contractbeheer"
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "Factuur maken en bekijken"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -668,7 +850,7 @@ msgstr "Facturen maken"
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Gemaakt door"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -676,7 +858,7 @@ msgstr ""
 #: field:sale.order.line,create_date:0
 #: field:sale.order.line.make.invoice,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Gemaakt op"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -686,7 +868,7 @@ msgstr "Creatiedatum"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Munt"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -719,12 +901,12 @@ msgstr "Besteldatum"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Besteldatum:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum laatste bericht voor dit record."
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -744,17 +926,17 @@ msgstr "Standaardopties"
 #. module: sale
 #: field:res.company,sale_note:0
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "Algemene voorwaarden"
 
 #. module: sale
 #: view:res.company:sale.view_company_inherit_form2
 msgid "Default terms & conditions..."
-msgstr ""
+msgstr "Algemene voorwaarden"
 
 #. module: sale
 #: help:res.company,sale_note:0
 msgid "Default terms and conditions for quotations."
-msgstr ""
+msgstr "Algemene voorwaarden voor offertes."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -762,11 +944,13 @@ msgid ""
 "Define an invoicing target in the sales team settings to see the period's "
 "achievement and forecast at a glance."
 msgstr ""
+"Stel een facturatiedoelstelling in voor het verkoopteam (via instellingen) "
+"en bekijk wat er is bereikt en wordt verwacht per periode."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Leveringsadres"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -776,7 +960,7 @@ msgstr "Leveringstermijn"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Leveringsadres voor de huidige verkooporder."
 
 #. module: sale
 #: field:sale.order.line,name:0
@@ -843,12 +1027,12 @@ msgstr "E-mailsjablonen"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Assistent voor het maken van e-mails"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Factuur volgens verkooporderlijnen instellen"
 
 #. module: sale
 #: code:addons/sale/sale.py:148
@@ -869,7 +1053,7 @@ msgstr "Uitzondering"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Uitgebreide filters"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type
@@ -905,11 +1089,16 @@ msgid ""
 "analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
 msgstr ""
+"Hiermee past u de analytische weergave aan, zodat belangrijke gegevens "
+"worden getoond voor projectleiders van dienstverlenende bedrijven. U kunt "
+"ook het rapport van de analytische rekeningen per gebruiker of per maand "
+"bekijken.\n"
+"- Hiermee wordt de module account_analytic_analysis geïnstalleerd."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Forecast"
-msgstr ""
+msgstr "Prognose"
 
 #. module: sale
 #: help:crm.case.section,invoiced_forecast:0
@@ -920,6 +1109,10 @@ msgid ""
 "\n"
 " of the current and forecast revenue on the kanban view."
 msgstr ""
+"Prognose van de factuurinkomsten voor de huidige maand. Dit is het bedrag "
+"dat het verkoopteam deze maand zou moeten factureren. Het wordt gebruikt om "
+"de voortgangsratio van de huidige en de verwachte inkomsten te berekenen in "
+"kanbanweergave."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -928,11 +1121,14 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Dit rapport biedt een overzicht van het bedrag gefactureerd aan uw klant. De "
+"zoekfunctie kan worden aangepast om het overzicht van uw facturen te "
+"personaliseren, zodat u de gewenste analyse krijgt."
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Maak facturen op basis van verkooporderlijnen"
 
 #. module: sale
 #: help:sale.order.line,sequence:0
@@ -950,6 +1146,12 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"Geeft de status van de offerte of verkooporder.\n"
+"Status Uitzondering wordt automatisch ingesteld als er een fout optreedt "
+"voor een factuur (Factuuruitzondering) of een zendnota "
+"(Leveringsuitzondering).\n"
+"De 'Wacht op Planner' status wordt ingesteld als de factuur is bevestigd, "
+"maar wacht op de planner die op de 'Bestelde datum' zal lopen."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -957,7 +1159,7 @@ msgstr ""
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: view:sale.report:sale.view_order_product_search
 msgid "Group By"
-msgstr ""
+msgstr "Groeperen op..."
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -987,7 +1189,7 @@ msgstr "Uur"
 #: field:sale.order.line.make.invoice,id:0
 #: field:sale.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -1002,7 +1204,7 @@ msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
 "prices of existing order lines will not be updated."
 msgstr ""
-"Als u de prijslijst van dit order (en eventueel de munt) wijzigt, worden de "
+"Als u de prijslijst van deze order (en eventueel de munt) wijzigt, worden de "
 "prijzen van de bestaande orderlijnen niet bijgewerkt."
 
 #. module: sale
@@ -1021,6 +1223,8 @@ msgstr "In behandeling"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
 msgstr ""
+"U kunt een bevestigde verkooporder pas verwijderen als u deze eerst "
+"annuleert."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
@@ -1063,7 +1267,7 @@ msgstr "Factuuruitzondering"
 #. module: sale
 #: field:crm.case.section,invoiced_forecast:0
 msgid "Invoice Forecast"
-msgstr ""
+msgstr "Factuurprognose"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -1078,12 +1282,12 @@ msgstr "Order factureren"
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Verkooporder factureren"
 
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Factuurdoelstelling"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -1093,12 +1297,12 @@ msgstr "Factuuradres voor de huidige verkooporder."
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "Factuuradres:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Leverings- en factuuradres:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -1118,18 +1322,18 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:97
 #, python-format
 msgid "Invoice created"
-msgstr ""
+msgstr "Factuur gemaakt"
 
 #. module: sale
 #: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Factuur betaald"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Volledige verkooporder factureren"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1141,7 +1345,7 @@ msgstr "Gefactureerd"
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Factuurratio"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1153,12 +1357,12 @@ msgstr "Facturen"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Factuuranalyse"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Factuurstatistieken"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -1178,12 +1382,12 @@ msgstr "Geeft aan dat de factuur is betaald."
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "Geeft aan dat er voor de verkooporder tenminste een factuur bestaat."
 
 #. module: sale
 #: field:sale.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum laatste bericht"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
@@ -1192,7 +1396,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Laatst bijgewerkt door"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1201,7 +1405,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1237,18 +1441,18 @@ msgstr "Mijn verkooporderlijnen"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Nieuwe kopie van offerte"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Nieuwe mail"
 
 #. module: sale
 #: code:addons/sale/sale.py:1042
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Geen klant gedefinieerd"
 
 #. module: sale
 #: code:addons/sale/sale.py:1126
@@ -1268,6 +1472,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Aantal dagen tussen de orderbevestiging en de verzending van de producten "
+"naar de klant."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1277,7 +1483,7 @@ msgstr "Oude offertes"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "Van zendnota"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1294,6 +1500,13 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"Op verzoek: wanneer nodig, kunt u een voorlopige factuur maken vanuit deze "
+"verkooporder. \n"
+"Van zendnota: vanaf de zendnota kan een voorlopige factuur worden gemaakt, "
+"zodra de producten zijn geleverd. \n"
+"Voor levering: er wordt een voorlopige factuur gemaakt vanuit de "
+"verkooporder. De goederen kunnen pas worden geleverd, zodra deze factuur is "
+"betaald."
 
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
@@ -1330,12 +1543,12 @@ msgstr "Te factureren lijnen"
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Order Month"
-msgstr ""
+msgstr "Ordermaand"
 
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Ordernummer"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1356,7 +1569,7 @@ msgstr "De referentie moet uniek zijn."
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Orderstatus"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1393,12 +1606,12 @@ msgstr "Betalingstermijn"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Betalingstermijn:"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal-url"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1454,17 +1667,17 @@ msgstr "Afdrukken"
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
 msgid "Procurement"
-msgstr "Bevoorrading"
+msgstr "Verwerving"
 
 #. module: sale
 #: field:sale.order,procurement_group_id:0
 msgid "Procurement group"
-msgstr ""
+msgstr "Verwervingsgroep"
 
 #. module: sale
 #: field:sale.order.line,procurement_ids:0
 msgid "Procurements"
-msgstr ""
+msgstr "Verwervingen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1484,7 +1697,7 @@ msgstr "Productopties"
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Productsjabloon"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1533,12 +1746,12 @@ msgstr "Offerte / Order"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Offertedatum:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Offertenummer"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1548,7 +1761,7 @@ msgstr "Offertenr."
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Verstuurde offerte"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1558,19 +1771,19 @@ msgstr "Verstuurde offerte"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Bevestigd order"
 
 #. module: sale
 #: code:addons/sale/sale.py:355
 #, python-format
 msgid "Quotation created"
-msgstr ""
+msgstr "Offerte gemaakt"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Verstuurde offerte"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1585,7 +1798,7 @@ msgstr "Offertes"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Offerteanalyse"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1595,17 +1808,17 @@ msgstr "Offertes en verkopen"
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
 msgid "Rate of created quotation per duration"
-msgstr ""
+msgstr "Nieuwe offertes per periode"
 
 #. module: sale
 #: field:crm.case.section,monthly_invoiced:0
 msgid "Rate of sent invoices per duration"
-msgstr ""
+msgstr "Verstuurde facturen per periode"
 
 #. module: sale
 #: field:crm.case.section,monthly_confirmed:0
 msgid "Rate of validate sales orders per duration"
-msgstr ""
+msgstr "Verkooporders per periode"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1626,22 +1839,22 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Referentie/Omschrijving"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of confirmed sales orders per month."
-msgstr ""
+msgstr "Opbrengst van verkooporders per maand"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of created quotations per month."
-msgstr ""
+msgstr "Opbrengst nieuwe offertes per maand"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
-msgstr ""
+msgstr "Opbrengst van verstuurde facturen per maand"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1700,7 +1913,7 @@ msgstr "Verkooporder"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Verkooporder"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1718,7 +1931,7 @@ msgstr "Verkooporderlijnen"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Te factureren verkooporderlijnen"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1731,11 +1944,13 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Verkooporderlijnen in status bevestigd, gereed of uitzondering en die nog "
+"niet zijn gefactureerd"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Afgewerkte verkooporderlijnen"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1783,12 +1998,12 @@ msgstr "Verkooporderstatistieken"
 #: view:sale.report:sale.view_order_product_search
 #: field:sale.report,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Verkoopteam"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Verkoopteams"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1798,12 +2013,12 @@ msgstr "Verkooporders in uitzonderingsstatus"
 #. module: sale
 #: field:procurement.order,sale_line_id:0
 msgid "Sales order line"
-msgstr ""
+msgstr "Verkooporderlijn"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Afgewerkte verkooporderlijnen"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1818,7 +2033,7 @@ msgstr "Verkoper"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Salesperson:"
-msgstr ""
+msgstr "Verkoper:"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1857,7 +2072,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Verzenden via e-mail"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1878,7 +2093,7 @@ msgstr "Verzenduitzondering"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address :"
-msgstr "Verzendadres:"
+msgstr "Leveringsadres:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1921,6 +2136,8 @@ msgid ""
 "sales \n"
 "team estimates to be able to invoice this month."
 msgstr ""
+"Doelstelling factuuropbrengst voor deze maand. Dit is het bedrag dat het "
+"verkoopteam denkt deze maand te kunnen factureren."
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -1937,7 +2154,7 @@ msgstr "Verkoopvoorwaarden"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Verkoopvoorwaarden"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
@@ -1989,7 +2206,7 @@ msgstr ""
 #: code:addons/sale/sale.py:148
 #, python-format
 msgid "There is no default company for the current user!"
-msgstr ""
+msgstr "Deze gebruiker is niet gekoppeld aan een bedrijf"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:93
@@ -2007,7 +2224,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "This Year"
-msgstr ""
+msgstr "Dit jaar"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2017,11 +2234,15 @@ msgid ""
 "Price and Cost Price.\n"
 "-This installs the module sale_margin."
 msgstr ""
+"Hiermee wordt de 'Marge' toegevoegd per verkooporder.\n"
+"Dit toont de winst op basis van het verschil tussen eenheidsprijs en "
+"kostprijs.\n"
+" Hiermee wordt de module sale_margin geïnstalleerd."
 
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "Voegt de online offertes toe"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -2063,6 +2284,10 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Met dit overzicht analyseert u uw offertes. Volg uw inkomsten op, groepeer "
+"volgens verschillende criteria (verkoper, relatie, product, enz.). Gebruik "
+"dit overzicht voor niet-gefactureerde verkopen. Als u uw omzet wilt "
+"analyseren, moet u Factuuranalyse gebruiken in de boekhouding."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2073,6 +2298,10 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Met dit overzicht analyseert u uw verkooporders. Volg uw inkomsten op, "
+"groepeer volgens verschillende criteria (verkoper, relatie, product, enz.). "
+"Gebruik dit overzicht voor niet-gefactureerde verkopen. Als u uw omzet wilt "
+"analyseren, moet u Factuuranalyse gebruiken in de boekhouding."
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2091,6 +2320,8 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
+"Laat uw verkoper toe facturen te maken van orderlijnen vanuit het menu 'Te "
+"factureren lijnen'."
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -2113,12 +2344,12 @@ msgstr "Totaal incl. btw"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Totaal exclusief btw"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "Maak automatisch zendnota's vanuit verkooporder"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -2171,6 +2402,13 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Kies 'Factureer volledige verkooporder' om de eindfactuur te maken.\n"
+"                Kies Percentage als u een percentage van het totale bedrag "
+"wilt factureren.\n"
+"                Kies Vaste prijs als u een bepaald bedrag vooraf wilt "
+"factureren.\n"
+"                Kies Bepaalde orderlijnen als u een selectie van "
+"verkooporderlijnen wilt factureren."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -2192,7 +2430,7 @@ msgstr "Gebruik contractbeheer"
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "Meerdere analytische rekeningen voor verkopen"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
@@ -2202,12 +2440,12 @@ msgstr "Gebruik prijslijsten als u specifieke prijzen per klant wilt"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "VAT:"
-msgstr ""
+msgstr "Btw:"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "View Invoice"
-msgstr ""
+msgstr "Factuur bekijken"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2231,12 +2469,12 @@ msgstr "Waarschuwing"
 #. module: sale
 #: field:sale.order,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Websiteberichten"
 
 #. module: sale
 #: help:sale.order,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Websitecommunicatiehistoriek"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2252,19 +2490,20 @@ msgstr "Wat wilt u factureren?"
 #: code:addons/sale/sale.py:986
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "U kunt geen verkooporderlijn annuleren die al is gefactureerd."
 
 #. module: sale
 #: code:addons/sale/sale.py:612
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "Een verkooporder zonder orderlijnen kan niet worden bevestigd."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
 msgstr ""
+"U kunt geen factuur maken voor een offerte. Bevestig eerst de offerte."
 
 #. module: sale
 #: code:addons/sale/sale.py:516
@@ -2288,12 +2527,12 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "Verkooporder %s mag niet manueel worden gefactureerd."
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
-msgstr ""
+msgstr "Uw referentie:"
 
 #. module: sale
 #: view:res.partner:sale.res_partner_address_type

@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 19:09+0000\n"
+"PO-Revision-Date: 2014-09-21 17:03+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:42+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-22 08:00+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+"Language: tr\n"
 
 #. module: account
 #: help:account.invoice,state:0
@@ -47,7 +48,7 @@ msgstr "Basamak sayısı"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Entries"
-msgstr ""
+msgstr "# nın Girişleri"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -57,12 +58,12 @@ msgstr "Madde Sayısı"
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Lines"
-msgstr "Kalem sayısı"
+msgstr "# nın Satırları"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "# nın Ürün Miktarı"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -79,12 +80,13 @@ msgstr "Kayıt Sayısı"
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
+"${object.company_id.name|safe} Fatura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1834
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopya)"
 
 #. module: account
 #: code:addons/account/account.py:622
@@ -263,6 +265,86 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Merhaba ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>Size Yeni bir fatura oluşturuldu: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"         <strong>REFERENCES</strong><br>\n"
+"         Fatura Numarası: <strong>${object.number}</strong><br>\n"
+"         Fatura Toplamı: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br>\n"
+"         Fatura Tarihi: ${object.date_invoice}<br>\n"
+"       % if object.origin:\n"
+"         Sipariş Referans : ${object.origin}<br>\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"         İletişim: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Invoice ${object.number}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"    \n"
+"    % if object.paypal_url:\n"
+"    <br>\n"
+"    <p>Doğrudan Paypal ile ödeme de mümkündür:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\">\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br>\n"
+"    <p>Herhangi bir sorunuz varsa, bizimle temas kurmaktan çekinmeyin.</p>\n"
+"    <p>Seçtiğiniz için teşekkür ederiz ${object.company_id.name or "
+"'us'}!</p>\n"
+"    <br>\n"
+"    <br>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefon:  ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web : <a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -680,7 +762,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    Hiç yevmiye maddesi bulunamadı.\n"
+"                    Yevmiye maddeleri bulunamadı.\n"
 "                </p>\n"
 "            "
 
@@ -906,7 +988,7 @@ msgstr "Yevmiye Hesabı Seç"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr "Hesap Kalemi"
+msgstr "Hesap Satırı"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -1174,7 +1256,7 @@ msgstr "Hesap dönemi"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Vergi Hesabı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1733,14 +1815,14 @@ msgstr "Analitik Yevmiler"
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analitik Kalem"
+msgstr "Analitik Satır"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Analytic Lines"
-msgstr "Analitik Kalemler"
+msgstr "Analitik Satırlar"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_tree
@@ -1756,7 +1838,7 @@ msgstr "Analitik muhasebe"
 #. module: account
 #: field:account.move.line,analytic_lines:0
 msgid "Analytic lines"
-msgstr "Analitik kalemler"
+msgstr "Analitik Satırlar"
 
 #. module: account
 #: field:account.tax,applicable_type:0
@@ -1772,7 +1854,7 @@ msgstr "Uygulanabilirlik Seçenekleri"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr ""
+msgstr "Uygulanabilir Kodu"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1793,7 +1875,7 @@ msgstr "Uygula"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position."
-msgstr ""
+msgstr "Otomatik olarak bu mali pozisyonu uygulayın."
 
 #. module: account
 #: help:account.fiscal.position,country_group_id:0
@@ -1897,7 +1979,7 @@ msgstr "Ağustos"
 #. module: account
 #: field:account.fiscal.position,auto_apply:0
 msgid "Automatic"
-msgstr ""
+msgstr "Otomatik"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -1961,7 +2043,7 @@ msgstr "Hatalı Hesap!"
 #: code:addons/account/account_invoice.py:812
 #, python-format
 msgid "Bad Total!"
-msgstr ""
+msgstr "Kötü Toplam!"
 
 #. module: account
 #: field:account.account,balance:0
@@ -2481,7 +2563,7 @@ msgstr "Kasa ve Bankalar"
 #. module: account
 #: field:account.bank.statement,cash_control:0
 msgid "Cash control"
-msgstr ""
+msgstr "Nakit kontrolü"
 
 #. module: account
 #: field:account.journal,cashbox_line_ids:0
@@ -2502,7 +2584,7 @@ msgstr "NakitKasa Kalemleri"
 #. module: account
 #: view:product.template:account.product_template_search_view
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
@@ -2545,7 +2627,7 @@ msgstr "Değiştir"
 #: model:ir.actions.act_window,name:account.action_account_change_currency
 #: model:ir.model,name:account.model_account_change_currency
 msgid "Change Currency"
-msgstr "Para Birimi Değiştir"
+msgstr "Para Birimini Değiştir"
 
 #. module: account
 #: field:account.change.currency,currency_id:0
@@ -2617,7 +2699,7 @@ msgstr "Hesap Planı Şablonları"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance
 msgid "Chart of Accounts:"
-msgstr ""
+msgstr "Hesap Tablosu:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -2634,14 +2716,14 @@ msgstr "Vergi Tablosu"
 #. module: account
 #: view:website:account.report_vat
 msgid "Chart of Tax:"
-msgstr ""
+msgstr "Vergi Tablosu:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "Vergiler Tablosu"
+msgstr "Vergi Tabloları"
 
 #. module: account
 #: view:account.account:account.view_account_list
@@ -2652,7 +2734,7 @@ msgstr "Hesap Planı"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "Çizelgeler"
+msgstr "Tablolar"
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_chk
@@ -2929,7 +3011,7 @@ msgstr "Açıklama"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Comment:"
-msgstr ""
+msgstr "Yorum:"
 
 #. module: account
 #: field:account.invoice,commercial_partner_id:0
@@ -3246,12 +3328,12 @@ msgstr "Kontra"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Countries"
-msgstr ""
+msgstr "Ülkeler"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
 msgid "Country Group"
-msgstr ""
+msgstr "Ülke Grubu"
 
 #. module: account
 #: field:account.invoice.report,country_id:0
@@ -3409,7 +3491,7 @@ msgstr "Kayıtları oluştur"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3623,7 +3705,7 @@ msgstr "İlgili muhasebe günlüğünün para birimi."
 #. module: account
 #: view:website:account.report_analyticjournal
 msgid "Currency:"
-msgstr ""
+msgstr "Para Birimi:"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -3655,7 +3737,7 @@ msgstr "Müşteri"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Customer Code:"
-msgstr ""
+msgstr "Müşteri Kodu:"
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -3696,7 +3778,7 @@ msgstr "Müşteri Vergileri"
 #. module: account
 #: view:website:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "Müşteri ref:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -3777,7 +3859,7 @@ msgstr "Tarih Aralığı"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Date from :"
-msgstr ""
+msgstr "Tarihinden itibaren:"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -3818,7 +3900,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Date to :"
-msgstr ""
+msgstr "Tarihine kadar:"
 
 #. module: account
 #: view:website:account.report_analyticcostledger
@@ -3983,7 +4065,7 @@ msgstr "Açıklama"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Description:"
-msgstr ""
+msgstr "Açıklama:"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -4032,7 +4114,7 @@ msgstr "Hesap Görüntüle"
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "Display Account:"
-msgstr ""
+msgstr "Görüntü Hesabı:"
 
 #. module: account
 #: field:account.balance.report,display_account:0
@@ -4098,7 +4180,7 @@ msgstr "Alan"
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr "Yapıldı"
+msgstr "Biten"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -4199,7 +4281,7 @@ msgstr "EXJ"
 #. module: account
 #: field:account.entries.report,date:0
 msgid "Effective Date"
-msgstr ""
+msgstr "Yürürlük Tarihi"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4285,7 +4367,7 @@ msgstr "Dönem Sonu"
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "End Period:"
-msgstr ""
+msgstr "Dönem Sonu:"
 
 #. module: account
 #: field:account.config.settings,date_stop:0
@@ -4645,7 +4727,7 @@ msgstr "Eğer nakit kasaya para eklereniz bu formu doldurun:"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:83
 #, python-format
 msgid "Filter"
-msgstr ""
+msgstr "Filtre"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4657,7 +4739,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filter By:"
-msgstr ""
+msgstr "Göre Filtre:"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -4688,7 +4770,7 @@ msgstr "Buna göre Süz"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by date"
-msgstr ""
+msgstr "Tarihe göre filtre"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4700,7 +4782,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by period"
-msgstr ""
+msgstr "Döneme göre Filtreli"
 
 #. module: account
 #: view:account.common.report:account.account_common_report_view
@@ -4749,7 +4831,7 @@ msgstr "Mali Raporlar Sıradüzeni"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "Mali rapor"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -4788,7 +4870,7 @@ msgstr "Mali Durum Şablonları"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position:"
-msgstr ""
+msgstr "Mali Durumlar:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -4859,7 +4941,7 @@ msgstr "Kapatılacak Mali Yıl"
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "Fiscal Year:"
-msgstr ""
+msgstr "Mali Yıllar:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -5180,14 +5262,14 @@ msgstr "Sonraki İş Ortağına Geç"
 #: code:addons/account/account_move_line.py:547
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Yapılandırma paneline git"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:8
 #, python-format
 msgid "Good Job!"
-msgstr ""
+msgstr "İyi İş"
 
 #. module: account
 #. openerp-web
@@ -5219,12 +5301,12 @@ msgstr "İyi iş!"
 #: view:account.tax.code.template:account.view_tax_code_template_search
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grup Göre"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr "Fatura Kalemlerini Grupla"
+msgstr "Fatura Satırlarını Grupla"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
@@ -5381,7 +5463,7 @@ msgstr ""
 #: field:wizard.multi.charts.accounts,id:0
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -5733,7 +5815,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:692
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "Yetersiz Yapılandırma!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:501
@@ -5750,7 +5832,7 @@ msgstr "İç Tip"
 #. module: account
 #: view:product.template:account.product_template_form_view
 msgid "Internal Category"
-msgstr ""
+msgstr "İç Kategori"
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -5841,7 +5923,7 @@ msgstr "Fatura Tarihi"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Invoice Date:"
-msgstr ""
+msgstr "Fatura Tarihi:"
 
 #. module: account
 #: view:account.invoice.line:account.view_invoice_line_form
@@ -5849,13 +5931,13 @@ msgstr ""
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Fatura Kalemi"
+msgstr "Fatura Satıra"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
-msgstr "Fatura Kalemleri"
+msgstr "Fatura Satırları"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -5942,7 +6024,7 @@ msgstr "Fatura Kısmen ödendi: %s%s nın %s%s (kalan %s%s)."
 #: code:addons/account/account_invoice.py:1627
 #, python-format
 msgid "Invoice sent"
-msgstr ""
+msgstr "fatura gönderildi"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -6293,7 +6375,7 @@ msgstr "Yevmiye-Dönemi Adı"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal:"
-msgstr ""
+msgstr "Yevmiye:"
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -6331,7 +6413,7 @@ msgstr "Yevmiyeler"
 #: view:website:account.report_partnerledger
 #: view:website:account.report_partnerledgerother
 msgid "Journals:"
-msgstr ""
+msgstr "Yevmiyeler:"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6414,7 +6496,7 @@ msgstr "Son Kapanış Bakiyesi"
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Son Mesaj Tarihi"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6511,7 +6593,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_uid:0
 #: field:wizard.multi.charts.accounts,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncellemeye Göre"
 
 #. module: account
 #: field:account.account,write_date:0
@@ -6665,7 +6747,7 @@ msgstr "Borç Görünümü"
 #: field:account.analytic.journal,line_ids:0
 #: field:account.tax.code,line_ids:0
 msgid "Lines"
-msgstr "Kalemler"
+msgstr "Satırlar"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -6904,7 +6986,7 @@ msgstr "Hareket"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Hareket Kalemi"
+msgstr "Hareket Satırı"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -7041,7 +7123,7 @@ msgstr "Sonraki tedarikçi fatura numarası"
 #: code:addons/account/account_move_line.py:192
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "Analitik Yevmiyesi Yok!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -7076,13 +7158,13 @@ msgstr "İzleme Yok"
 #: code:addons/account/account_invoice.py:791
 #, python-format
 msgid "No Invoice Lines!"
-msgstr ""
+msgstr "Fatura Satırı Yok!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1304
 #, python-format
 msgid "No Partner Defined!"
-msgstr ""
+msgstr "Tanımlı İş Ortağı Yok!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1203
@@ -7094,7 +7176,7 @@ msgstr ""
 #: code:addons/account/installer.py:114
 #, python-format
 msgid "No Unconfigured Company!"
-msgstr ""
+msgstr "Yapılandırılmamış Şirket Yok!"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -7119,7 +7201,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:104
 #, python-format
 msgid "No result matching '"
-msgstr ""
+msgstr "Eşleşen sonuç yok '"
 
 #. module: account
 #: help:account.chart.template,code_digits:0
@@ -7297,7 +7379,7 @@ msgstr "Yalnızca Bir Hesap Şablonu Mevcuttur"
 #: code:addons/account/res_config.py:288
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Yalnızca yöneticiler ayarları değiştirebilir"
 
 #. module: account
 #. openerp-web
@@ -7329,7 +7411,7 @@ msgstr "Kasa Kutusunu Aç"
 #: view:account.chart:account.view_account_chart
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Open Charts"
-msgstr "Çizelge Aç"
+msgstr "Tabloları Aç"
 
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
@@ -7527,7 +7609,7 @@ msgstr "Ödendi/Uzlaştırıldı"
 #: field:account.account,parent_id:0
 #: field:account.financial.report,parent_id:0
 msgid "Parent"
-msgstr "Ana"
+msgstr "Üst"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -7538,19 +7620,19 @@ msgstr "Üst Hesap"
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr "Ana Hesap Şablonu"
+msgstr "Üst Hesap Şablonu"
 
 #. module: account
 #: field:account.chart.template,parent_id:0
 msgid "Parent Chart Template"
-msgstr "Ana Hesap Planı Şablonu"
+msgstr "Üst Hesap Planı Şablonu"
 
 #. module: account
 #: field:account.tax.code,parent_id:0
 #: view:account.tax.code.template:account.view_tax_code_template_search
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Ana Kod"
+msgstr "Üst Kod"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -7633,7 +7715,7 @@ msgstr "İş Ortağı Bakiyesi"
 #. module: account
 #: field:account.invoice.report,commercial_partner_id:0
 msgid "Partner Company"
-msgstr ""
+msgstr "İş Ortağı Şirketi"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -7674,7 +7756,7 @@ msgstr "İş Ortağı'nın"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Partner's:"
-msgstr ""
+msgstr "İş Ortak'ları:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -7765,7 +7847,7 @@ msgstr "Ödeme Koşulu Kalemi"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Ödeme Koşulu:"
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -7934,7 +8016,7 @@ msgstr "Dönem Tipi"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Period:"
-msgstr ""
+msgstr "Dönem:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -7974,7 +8056,7 @@ msgstr "Dönemler"
 #. module: account
 #: view:website:account.report_vat
 msgid "Periods:"
-msgstr ""
+msgstr "Dönemler:"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -8392,7 +8474,7 @@ msgstr "Dönemi Yeniden Aç"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Real Closing Balance"
-msgstr ""
+msgstr "Gerçek Kapanış Bakiye"
 
 #. module: account
 #: field:account.invoice.refund,description:0
@@ -8536,7 +8618,7 @@ msgstr "Uzlaştırma İşlemleri"
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr ""
+msgstr "Uzlaşma numarası"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
@@ -8710,7 +8792,7 @@ msgstr "Kalan ödenecek tutar"
 #. module: account
 #: view:account.subscription:account.view_subscription_form
 msgid "Remove Lines"
-msgstr "Kalemleri Kaldır"
+msgstr "Satırları Kaldır"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -9093,7 +9175,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:569
 #, python-format
 msgid "Select Partner"
-msgstr ""
+msgstr "İş Ortağı Seçin"
 
 #. module: account
 #: view:account.analytic.balance:account.account_analytic_balance_view
@@ -9403,7 +9485,7 @@ msgstr "Kaynak Belge"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Source:"
-msgstr ""
+msgstr "Kaynak:"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -9450,7 +9532,7 @@ msgstr "Başlama Tarihi"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Start Date:"
-msgstr ""
+msgstr "Başlama Tarihi:"
 
 #. module: account
 #: field:account.aged.trial.balance,period_from:0
@@ -9482,7 +9564,7 @@ msgstr "Başlangıç Dönemi"
 #: view:website:account.report_trialbalance
 #: view:website:account.report_vat
 msgid "Start Period:"
-msgstr ""
+msgstr "Başlangıç Dönemi:"
 
 #. module: account
 #: field:account.config.settings,date_start:0
@@ -9596,7 +9678,7 @@ msgstr "Durumu"
 #. module: account
 #: field:account.bank.statement.line,ref:0
 msgid "Structured Communication"
-msgstr ""
+msgstr "Yapılandırılmış İletişim"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -9762,7 +9844,7 @@ msgstr "Hedef Hareketler"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance
 msgid "Target Moves:"
-msgstr ""
+msgstr "Hedef Hareketler:"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -11075,7 +11157,7 @@ msgstr "Toplam Borç"
 #. module: account
 #: field:res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Toplam Faturalanan"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -11112,7 +11194,7 @@ msgstr "Vergisiz Toplam"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Vergisiz Toplamlar"
 
 #. module: account
 #: help:account.account,adjusted_balance:0
@@ -11519,7 +11601,7 @@ msgstr ""
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "KVD gerkli"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -11699,7 +11781,7 @@ msgstr "Hareketlerle"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr ""
+msgstr "Vergili"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11742,7 +11824,7 @@ msgstr "Borç silme tutarı"
 #: code:addons/account/account.py:2277
 #, python-format
 msgid "Wrong Model!"
-msgstr ""
+msgstr "Yanlış Model!"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -12191,7 +12273,7 @@ msgstr "'%s' Tipinde bir analitik yevmiye tanımlamalısınız!"
 #: code:addons/account/account_invoice.py:1304
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Önce bir iş ortağı seçmek gerekir!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -12291,7 +12373,7 @@ msgstr "bakiye"
 #: code:addons/account/account_bank_statement.py:695
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "değişim"
 
 #. module: account
 #: selection:account.subscription,period_type:0

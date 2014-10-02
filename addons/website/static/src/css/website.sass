@@ -288,6 +288,48 @@ ul.nav-stacked > li > a
 .hr
     padding: 4px 0
 
+
+.o_image_floating
+    width: 40%
+    margin: 4px
+    div.o_container
+        position: relative
+        mark
+            display: block
+            position: absolute
+            bottom: 0
+            width: 100%
+            background-color: rgba(86,61,124,.25)
+            a
+                color: white
+    &.o_hide_link div.o_container mark
+        display: none
+    &.o_margin_s
+        margin-bottom: 4px
+        &.pull-right
+            margin-left: 8px
+        &.pull-left
+            margin-right: 8px
+    &.o_margin_m
+        margin-bottom: 8px
+        &.pull-right
+            margin-left: 12px
+        &.pull-left
+            margin-right: 12px
+    &.o_margin_l
+        margin-bottom: 12px
+        &.pull-right
+            margin-left: 16px
+        &.pull-left
+            margin-right: 16px
+    &.o_margin_xl
+        margin-bottom: 24px
+        &.pull-right
+            margin-left: 32px
+        &.pull-left
+            margin-right: 32px
+
+
 /* Parallax Theme */
 
 div.carousel
@@ -442,3 +484,62 @@ div.media_iframe_video
         -ms-transform: none !important
         -o-transform: none !important
         transform: none !important
+
+
+/* Fix: backward compatibility saas-3 */
+
+div.carousel
+    .container
+        > .carousel-caption
+            position: absolute
+            right: 50%
+            left: 50%
+            bottom: 20px
+            > div
+                position: absolute
+                text-align: left
+                padding: 20px
+                background: rgba(0, 0, 0, 0.4)
+                bottom: 20px
+        > .carousel-image
+            top: 5%
+            bottom: 5%
+            position: absolute
+            max-height: 90%
+            margin: 0 auto
+    .item.text_image
+        .container
+            > .carousel-caption
+                left: 10%
+                > div
+                    right: 50%
+                    margin-right: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 10%
+                left: 50%
+    .item.image_text
+        .container
+            > .carousel-caption
+                right: 10%
+                > div
+                    left: 50%
+                    margin-left: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 50%
+                left: 10%
+    .item.text_only
+        .container
+            > .carousel-caption
+                left: 10%
+                right: 10%
+                top: 10%
+                bottom: auto
+                > div
+                    text-align: center
+                    background: transparent
+                    bottom: auto
+                    width: 100%
+            > .carousel-image
+                display: none !important

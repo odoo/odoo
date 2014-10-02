@@ -415,10 +415,11 @@ class RegistryManager(object):
                     # One possible reason caches have been invalidated is the
                     # use of decimal_precision.write(), in which case we need
                     # to refresh fields.float columns.
-                    for model in registry.models.values():
-                        for column in model._columns.values():
-                            if hasattr(column, 'digits_change'):
-                                column.digits_change(cr)
+                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+                    for model in registry.values():
+                        for field in model._fields.values():
+                            if field.type == 'float':
+                                field._setup_digits(env)
                 registry.base_registry_signaling_sequence = r
                 registry.base_cache_signaling_sequence = c
             finally:

@@ -52,6 +52,13 @@ class im_chat_session(osv.Model):
         'uuid': lambda *args: '%s' % uuid.uuid4(),
     }
 
+    def is_in_session(self, cr, uid, uuid, user_id, context=None):
+        """ return if the given user_id is in the session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, uid, sids, context=context):
+                return user_id and user_id in [u.id for u in session.user_ids]
+        return False
+
     def users_infos(self, cr, uid, ids, context=None):
         """ get the user infos for all the user in the session """
         for session in self.pool["im_chat.session"].browse(cr, uid, ids, context=context):
@@ -219,6 +226,17 @@ class im_chat_message(osv.Model):
                 notifications.append([(cr.dbname, 'im_chat.session', user.id), data])
             self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return message_id
+
+    def get_messages(self, cr, uid, uuid, last_id=False, limit=20, context=None):
+        """ get messages (id desc) from given last_id in the given session """
+        Session = self.pool['im_chat.session']
+        if Session.is_in_session(cr, uid, uuid, uid, context=context):
+            domain = [("to_id.uuid", "=", uuid)]
+            if last_id:
+                domain.append(("id", "<", last_id));
+            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+        return False
+
 
 class im_chat_presence(osv.Model):
     """ im_chat_presence status can be: online, away or offline.
@@ -399,5 +417,10 @@ class Controller(openerp.addons.bus.bus.Controller):
         headers = [('Content-Type', 'image/png')]
         headers.append(('Content-Length', len(image_data)))
         return request.make_response(image_data, headers)
+
+    @openerp.http.route(['/im_chat/history'], type="json", auth="none")
+    def history(self, uuid, last_id=False, limit=20):
+        registry, cr, uid, context = request.registry, request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context
+        return registry["im_chat.message"].get_messages(cr, uid, uuid, last_id, limit, context=context)
 
 # vim:et:

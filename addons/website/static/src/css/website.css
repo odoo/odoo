@@ -140,7 +140,7 @@ header a.navbar-brand img {
 }
 
 .css_non_editable_mode_hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ----- BOOTSTRAP FIX ----- */
@@ -360,6 +360,63 @@ ul.nav-stacked > li > a {
   padding: 4px 0;
 }
 
+.o_image_floating {
+  width: 40%;
+  margin: 4px;
+}
+.o_image_floating div.o_container {
+  position: relative;
+}
+.o_image_floating div.o_container mark {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(86, 61, 124, 0.25);
+}
+.o_image_floating div.o_container mark a {
+  color: white;
+}
+.o_image_floating.o_hide_link div.o_container mark {
+  display: none;
+}
+.o_image_floating.o_margin_s {
+  margin-bottom: 4px;
+}
+.o_image_floating.o_margin_s.pull-right {
+  margin-left: 8px;
+}
+.o_image_floating.o_margin_s.pull-left {
+  margin-right: 8px;
+}
+.o_image_floating.o_margin_m {
+  margin-bottom: 8px;
+}
+.o_image_floating.o_margin_m.pull-right {
+  margin-left: 12px;
+}
+.o_image_floating.o_margin_m.pull-left {
+  margin-right: 12px;
+}
+.o_image_floating.o_margin_l {
+  margin-bottom: 12px;
+}
+.o_image_floating.o_margin_l.pull-right {
+  margin-left: 16px;
+}
+.o_image_floating.o_margin_l.pull-left {
+  margin-right: 16px;
+}
+.o_image_floating.o_margin_xl {
+  margin-bottom: 24px;
+}
+.o_image_floating.o_margin_xl.pull-right {
+  margin-left: 32px;
+}
+.o_image_floating.o_margin_xl.pull-left {
+  margin-right: 32px;
+}
+
 /* Parallax Theme */
 div.carousel .carousel-indicators li {
   border: 1px solid grey;
@@ -542,4 +599,64 @@ div.media_iframe_video .css_editable_mode_display {
     -o-transform: none !important;
     transform: none !important;
   }
+}
+/* Fix: backward compatibility saas-3 */
+div.carousel .container > .carousel-caption {
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 20px;
+}
+div.carousel .container > .carousel-caption > div {
+  position: absolute;
+  text-align: left;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  bottom: 20px;
+}
+div.carousel .container > .carousel-image {
+  top: 5%;
+  bottom: 5%;
+  position: absolute;
+  max-height: 90%;
+  margin: 0 auto;
+}
+div.carousel .item.text_image .container > .carousel-caption {
+  left: 10%;
+}
+div.carousel .item.text_image .container > .carousel-caption > div {
+  right: 50%;
+  margin-right: -20%;
+  max-width: 550px;
+}
+div.carousel .item.text_image .container > .carousel-image {
+  right: 10%;
+  left: 50%;
+}
+div.carousel .item.image_text .container > .carousel-caption {
+  right: 10%;
+}
+div.carousel .item.image_text .container > .carousel-caption > div {
+  left: 50%;
+  margin-left: -20%;
+  max-width: 550px;
+}
+div.carousel .item.image_text .container > .carousel-image {
+  right: 50%;
+  left: 10%;
+}
+div.carousel .item.text_only .container > .carousel-caption {
+  left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: auto;
+}
+div.carousel .item.text_only .container > .carousel-caption > div {
+  text-align: center;
+  background: transparent;
+  bottom: auto;
+  width: 100%;
+}
+div.carousel .item.text_only .container > .carousel-image {
+  display: none !important;
 }
