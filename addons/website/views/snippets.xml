@@ -101,6 +101,52 @@
         </section>
     </div>
 
+    <div name="Image-Text" class="o_block_image_float">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
+            <span class="oe_snippet_thumbnail_title">Image-Floating</span>
+        </div>
+        <section class="oe_snippet_body para_large">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mb16 mt16">
+                        <div class="o_image_floating o_margin_l pull-right">
+                            <div class="o_container">
+                                <img class="img img-rounded img-responsive" src="/website/static/src/img/odoo.jpg"/>
+                                <mark class="text-center"><a href="#"><strong>Click Here</strong></a></mark>
+                            </div>
+                            <div class="o_footer">
+                                <small class="text-muted">A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</small>
+                            </div>
+                        </div>
+                        <h3>What a day it was yesterday - such a big day for us!</h3>
+                        <p style="text-align: justify;">
+                            In case you still feel a bit puzzled about all
+                            of our yesterday's announcements, here is a little
+                            summary for you. <br/>
+                            We have decided to change the
+                            name because <b>"OpenERP"</b> didn't reflect the offering
+                            of the company anymore. With our newest apps, such
+                            as Website Builder, PoS or eCommerce, we have
+                            moved beyond the ERP territory. <br/>
+                            But <u>don't worry</u>, <b>Odoo</b> is and always will be
+                            fully open source. You can read more about the new name here.
+                            We have also prepared a short FAQ to explain all these changes
+                            to all of you. <br/>
+                        </p>
+                        <h3>Discover more about Odoo</h3>
+                        <p style="text-align: justify;">
+                            With Odoo's fully integrated software, you can easily manage your
+                            meetings, schedule business calls, create recurring meetings,
+                            synchronize your agenda and easily keep in touch with your colleagues,
+                            partners and other people involved in projects or business discussions.
+                            <br/><br/><a href="#">Check now and discover more today!</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -329,6 +375,21 @@
         </div>
     </div>
 
+    <div name="Image Floating" class="o_block_image_floating">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
+            <span class="oe_snippet_thumbnail_title">Image Floating</span>
+        </div>
+        <div class="oe_snippet_body o_image_floating o_margin_l pull-right">
+            <div class="o_container">
+                <img class="img img-rounded img-responsive" src="/website/static/src/img/library/ipad.png"/>
+                <mark class="text-center"><a href="#"><strong>Click Here</strong></a></mark>
+            </div>
+            <div class="o_footer">
+                <small class="text-muted">A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</small>
+            </div>
+        </div>
+    </div>
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -928,7 +989,7 @@
     </div>
 
     <div data-snippet-option-id='content'
-        data-selector="blockquote, .well, .panel, .oe_share"
+        data-selector="blockquote, .well, .panel, .oe_share, .o_image_floating"
         data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
         data-selector-children=".content">
     </div>
@@ -936,6 +997,36 @@
     <div data-snippet-option-id='separator'
         data-selector="hr"
         data-selector-children=".oe_structure, [data-oe-type=html]">
+    </div>
+
+    <div data-snippet-option-id='image_floating_margin'
+        data-selector=".o_image_floating">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Margin</a>
+            <ul class="dropdown-menu">
+                <li data-value="o_margin_xl"> <a>Extra-Large</a> </li>
+                <li data-value="o_margin_l"> <a>Large</a> </li>
+                <li data-value="o_margin_m"  > <a>Medium</a> </li>
+                <li data-value="o_margin_s"  > <a>Small</a></li>
+                <li data-value=""  > <a>None</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-snippet-option-id='image_floating_hidelink'
+        data-selector=".o_image_floating">
+        <li data-value="o_hide_link"><a>Hide link</a></li>
+    </div>
+
+    <div data-snippet-option-id='image_floating_side'
+         data-selector=".o_image_floating">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Float</a>
+            <ul class="dropdown-menu">
+                <li data-value="pull-left"><a>Left</a></li>
+                <li data-value="pull-right"><a>Right</a></li>
+            </ul>
+        </li>
     </div>
 
     <div data-snippet-option-id='parallax'
