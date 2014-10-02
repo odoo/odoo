@@ -693,6 +693,13 @@ class Environment(object):
             finally:
                 release_local(cls._local)
 
+    @classmethod
+    def reset(cls):
+        """ Clear the set of environments.
+            This may be useful when recreating a registry inside a transaction.
+        """
+        cls._local.environments = Environments()
+
     def __new__(cls, cr, uid, context):
         assert context is not None
         args = (cr, uid, context)
