@@ -26,7 +26,7 @@ class Experiment_snapshot(osv.Model):
     
     _columns = {
         'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ,ondelete='cascade'),
-        'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True),
+        'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True,ondelete='cascade'),
         'frequency': fields.selection([('10','Rare'),('50','Sometimes'),('100','Offen')], 'Frequency'),
         'google_index': fields.function(_get_index,type='integer', string='Google_index'),
     }
@@ -35,7 +35,8 @@ class Experiment_snapshot(osv.Model):
         'frequency': '10',
     }
 
-EXPERIMENT_STATES = [('draft','Draft'),('running','Running'),('done','Done')]
+EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready_to_run'),('running','Running'),('ended','Ended')]
+
 class Experiment(osv.Model):
     _name = "website_version.experiment"
     _inherit = ['mail.thread']
@@ -47,12 +48,12 @@ class Experiment(osv.Model):
         exp['objectiveMetric'] = "ga:goal3Completions"
         exp['status'] = vals['state']
         exp['variations'] =[]
-        exp['variations'].append({'name':'master','url': 'http://domain/master'})
+        exp['variations'].append({'name':'master','url': 'http://0.0.0.0:8069/master'})
         l =  vals.get('experiment_snapshot_ids')
         if l:
             for snap in l:
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
-                exp['variations'].append({'name':name, 'url': 'http://domain/'+name})
+                exp['variations'].append({'name':name, 'url': 'http://0.0.0.0:8069/'+name})
         print exp
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
         if not google_id:
@@ -77,21 +78,21 @@ class Experiment(osv.Model):
                 temp['status'] = exp.state
             if exp_snaps:
                 index = 0
-                temp['variations'] = [{'name':'master','url': 'http://domain/master'}]
+                temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
                 for exp_s in exp.experiment_snapshot_ids:
                     for li in exp_snaps:
                         if not li[0] == 2 and li[1] == exp_s.id:
-                            temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://domain/'+exp_s.snapshot_id.name})
+                            temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
                     index+=1
                 while index< len(exp_snaps):
                     snap_id = exp_snaps[index][2]['snapshot_id']
                     snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
-                    temp['variations'].append({'name':snap_name, 'url': 'http://domain/'+snap_name})
+                    temp['variations'].append({'name':snap_name, 'url': 'http://0.0.0.0:8069/'+snap_name})
                     index+=1
             else:
-                temp['variations'] = [{'name':'master','url': 'http://domain/master'}]
+                temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
                 for exp_s in exp.experiment_snapshot_ids:
-                    temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://domain/'+exp_s.snapshot_id.name})
+                    temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
 
             print temp
             self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
