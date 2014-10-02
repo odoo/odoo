@@ -612,9 +612,9 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
-                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
+                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.datetime.now()})
             else:
-                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
+                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.datetime.now()})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
         return True
 
