@@ -56,6 +56,12 @@
                 </kanban>
             </field>
         </record>
+
+        <record id="action_analytic" model="ir.actions.act_url">
+            <field name="name">Google analytics</field>
+            <field name="url">https://www.google.com/analytics/web/?authuser=0#report/siteopt-experiments/</field>
+            <field name="target">self</field>
+        </record>
         
         <record model="ir.ui.view" id="experiment_form_view">
             <field name="name">experiment.form</field>
@@ -74,6 +80,8 @@
                               being able to start selling through the touchscreen interface.
                             </p>
                         </div> -->
+                        <button icon="gtk-ok" name="website_version.action_analytic" String="Google analytics" action="action" type="action" 
+                            class="oe_highlight pull-right" />
                         <h1><field name="name"/></h1>
                         <group col="4">
                             <field name="website_id"/>
@@ -166,19 +174,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <record id="action_analytic" model="ir.actions.act_url">
-            <field name="name">Google analytics</field>
-            <field name="url">https://www.google.com/analytics/web</field>
-            <field name="target">self</field>
-        </record>
 
 
         <menuitem name="website" id="website_menu" sequence="10" parent="base.marketing_menu" />
         <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
         <menuitem action="action_snapshot" id="menu_action_snapshot" parent="website_menu" groups="base.group_no_one"/>
         <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
-
-        <menuitem action="action_analytic" id="Google analytics" parent="website_menu"/>
 
     </data>
 </openerp>
