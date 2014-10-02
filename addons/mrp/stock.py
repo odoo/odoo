@@ -75,7 +75,7 @@ class StockMove(osv.osv):
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
             factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
             res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [], context=context)
-            
+
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
@@ -118,18 +118,18 @@ class StockMove(osv.osv):
                             proc = proc_obj.create(cr, uid, valdef, context=context)
                         proc_obj.run(cr, uid, [proc], context=context) #could be omitted
 
-            
+
             #check if new moves needs to be exploded
             if to_explode_again_ids:
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
                     processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
-            
+
             if not move.split_from and move.procurement_id:
                 # Check if procurements have been made to wait for
                 moves = move.procurement_id.move_ids
                 if len(moves) == 1:
                     proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
-                
+
             #delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
         #return list of newly created move or the move id otherwise, unless there is no move anymore
@@ -178,7 +178,7 @@ class StockMove(osv.osv):
         for move in self.browse(cr, uid, ids2, context=context):
             prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
             move_qty = move.product_qty
-            if move_qty <= 0:
+            if float_compare(move_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move_qty - product_qty
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
@@ -237,7 +237,7 @@ class StockMove(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse', 
+        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse',
                                                   help="When products are manufactured, they can be manufactured in this warehouse."),
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
     }
@@ -259,7 +259,7 @@ class stock_warehouse(osv.osv):
             'route_id': manufacture_route_id,
             'action': 'manufacture',
             'picking_type_id': warehouse.int_type_id.id,
-            'propagate': False, 
+            'propagate': False,
             'warehouse_id': warehouse.id,
         }
 
