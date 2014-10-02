@@ -192,13 +192,14 @@ class google_management(osv.AbstractModel):
 
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data_json = simplejson.dumps(data)
+        data_json = simplejson.dumps(experiment)
 
         try:
             x = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
         except:
             x = False
-        return x['id']
+        print x[1]['id']
+        return x[1]['id']
 
     def update_an_experiment(self, cr, uid, experiment, experiment_id, context=None):
         gs_pool = self.pool['google.service']
