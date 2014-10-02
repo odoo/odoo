@@ -74,10 +74,8 @@ class account_bank_statement_import(osv.TransientModel):
         return bank_account_id, partner_id
 
     def import_bank_statements(self, cr, uid, bank_statement_vals=False, context=None):
-        """ Get a list of values to pass to the create() of account.bank.statement object, and returns a list of ID created using those values
-            This method will also automatically reconcile transactions for which there is an unambiguous counterpart. """
+        """ Create new bank statements from imported values, filtering out already imported transactions, and returns data used by the reconciliation widget """
         bs_obj = self.pool.get('account.bank.statement')
-        bsl_obj = self.pool.get('account.bank.statement.line')
         if len(bank_statement_vals) == 0:
             raise osv.except_osv(_('Error'), _('The file doesn\'t contain any bank statement (or wasn\'t properly processed).'))
         
@@ -95,34 +93,12 @@ class account_bank_statement_import(osv.TransientModel):
         if len(statement_ids) == 0:
             raise osv.except_osv(_('Error'), _('You have already imported that file.'))
 
-        num_auto_reconciled = 0
-        for statement in bs_obj.browse(cr, uid, statement_ids, context=context):
-            for st_line in statement.line_ids:
-                counterpart = bsl_obj.get_reconciliation_proposition(cr, uid, st_line, unambiguous=True, context=context)
-                if counterpart:
-                    for move_line_dict in counterpart:
-                        # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
-                        # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
-                        # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
-                        # 'counterpart_move_line_id': 7,
-                        # 'credit': 500
-                        # This is what the reconciliation widget does.
-                        move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
-                        move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
-                    bsl_obj.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
-                    num_auto_reconciled += 1
-
         # Prepare import feedback
         notifications = []
         if num_ignored_statement_lines > 1:
             notifications += [{
                 'type': 'warning', # note : can be success, info, warning or danger
                 'message': _("%d transactions had already been imported and therefore were ignored. You might want to check how your bank exports statements.") % num_ignored_statement_lines
-            }]
-        if num_auto_reconciled > 0:
-            notifications += [{
-                'type': 'info',
-                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled.")
             }]
 
         return statement_ids, notifications

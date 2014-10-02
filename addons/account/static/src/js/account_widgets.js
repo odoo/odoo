@@ -965,7 +965,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
-            this.notifications = context.context.notifications;
+            this.notifications = context.context.notifications || [];
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -973,58 +973,33 @@ openerp.account = function (instance) {
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
-            // The same move line cannot be selected for multiple resolutions
+            // The same move line cannot be selected for multiple reconciliations
             this.excluded_move_lines_ids = {};
         },
     
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
-                // Retreive statement infos and reconciliation data from the model
-                var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
                 var deferred_promises = [];
+
+                // Let the server prepare the ground
+                deferred_promises.push(self.model_bank_statement_line
+                    .call("reconciliation_widget_preprocess", [self.statement_ids || undefined])
+                    .then(function(data) {
+                        self.already_reconciled_lines = data.num_already_reconciled_lines;
+                        self.notifications = self.notifications.concat(data.notifications);
+                        self.lines = data.st_lines_ids;
+                        if (self.single_statement && data.statement_name)
+                            self.title = data.statement_name;
+                    })
+                );
                 
-                // Working on specified statement(s)
-                if (self.statement_ids) {
-                    lines_filter.push(['statement_id', 'in', self.statement_ids]);
-
-                    // If only one statement, display its name as title and allow to modify it
-                    if (self.single_statement) {
-                        deferred_promises.push(self.model_bank_statement
-                            .query(["name"])
-                            .filter([['id', '=', self.statement_ids[0]]])
-                            .first()
-                            .then(function(title){
-                                self.title = title.name;
-                            })
-                        );
-                    }
-
-                    // Anyway, find out how many statement lines are reconciled (for the progressbar)
-                    deferred_promises.push(self.model_bank_statement
-                        .call("number_of_lines_reconciled", [self.statement_ids])
-                        .then(function(num) {
-                            self.already_reconciled_lines = num;
-                        })
-                    );
-                }
-
                 // Get the id of the menuitem
                 deferred_promises.push(new instance.web.Model("ir.model.data")
                     .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
                     .then(function(data) {
                         self.reconciliation_menu_id = data;
                         self.doReloadMenuReconciliation();
-                    })
-                );
-
-                // Get statement lines
-                deferred_promises.push(self.model_bank_statement_line
-                    .query(['id'])
-                    .filter(lines_filter)
-                    .order_by('statement_id, id')
-                    .all().then(function (data) {
-                        self.lines = _(data).map(function(o){ return o.id });
                     })
                 );
         
