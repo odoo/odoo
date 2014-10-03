@@ -227,11 +227,8 @@ def _code_get(self, cr, uid, context=None):
 #----------------------------------------------------------
 
 class account_account(osv.osv):
-    _order = "parent_left"
-    _parent_order = "code"
     _name = "account.account"
     _description = "Account"
-    _parent_store = True
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -268,15 +265,14 @@ class account_account(osv.osv):
                 order, context=context, count=count)
 
     def _get_children_and_consol(self, cr, uid, ids, context=None):
-        #this function search for all the children and all consolidated children (recursively) of the given account ids
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
+        #this function search for all the consolidated children (recursively) of the given account ids
         ids3 = []
-        for rec in self.browse(cr, uid, ids2, context=context):
+        for rec in self.browse(cr, uid, ids, context=context):
             for child in rec.child_consol_ids:
                 ids3.append(child.id)
         if ids3:
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
-        return ids2 + ids3
+        return ids3
 
     def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
@@ -349,13 +345,13 @@ class account_account(osv.osv):
 #                        except ValueError:
 #                            brs.insert(0, child)
 #                if can_compute:
-                for fn in field_names:
-                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                    for child in current.child_id:
-                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                            sums[current.id][fn] += sums[child.id][fn]
-                        else:
-                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+#                 for fn in field_names:
+#                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
+#                     for child in current.child_id:
+#                         if child.company_id.currency_id.id == current.company_id.currency_id.id:
+#                             sums[current.id][fn] += sums[child.id][fn]
+#                         else:
+#                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
 
                 # as we have to relay on values computed before this is calculated separately than previous fields
                 if current.currency_id and current.exchange_rate and \
@@ -378,34 +374,6 @@ class account_account(osv.osv):
         for rec in self.browse(cr, uid, ids, context=context):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
         return result
-
-    def _get_child_ids(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.child_parent_ids:
-                result[record.id] = [x.id for x in record.child_parent_ids]
-            else:
-                result[record.id] = []
-
-            if record.child_consol_ids:
-                for acc in record.child_consol_ids:
-                    if acc.id not in result[record.id]:
-                        result[record.id].append(acc.id)
-
-        return result
-
-    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for account in self.browse(cr, uid, ids, context=context):
-            #we may not know the level of the parent at the time of computation, so we
-            # can't simply do res[account.id] = account.parent_id.level + 1
-            level = 0
-            parent = account.parent_id
-            while parent:
-                level += 1
-                parent = parent.parent_id
-            res[account.id] = level
-        return res
 
     def _set_credit_debit(self, cr, uid, account_id, name, value, arg, context=None):
         if context.get('config_invisible', True):
@@ -473,10 +441,7 @@ class account_account(osv.osv):
             help="Account Type is used for information purpose, to generate "
               "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', 'Financial Reports'),
-        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
-        'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
-        'child_id': fields.function(_get_child_ids, type='many2many', relation="account.account", string="Child Accounts"),
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
         'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
@@ -496,8 +461,6 @@ class account_account(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
 
-        'parent_left': fields.integer('Parent Left', select=1),
-        'parent_right': fields.integer('Parent Right', select=1),
         'currency_mode': fields.selection([('current', 'At Date'), ('average', 'Average Rate')], 'Outgoing Currencies Rate',
             help=
             'This will select how the current currency rate for outgoing transactions is computed. '\
@@ -505,10 +468,6 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'level': fields.function(_get_level, string='Level', method=True, type='integer',
-             store={
-                    'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
-                   }),
     }
 
     _defaults = {
@@ -519,55 +478,6 @@ class account_account(osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        obj_self = self.browse(cr, uid, ids[0], context=context)
-        p_id = obj_self.parent_id and obj_self.parent_id.id
-        if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
-            return False
-        while(ids):
-            cr.execute('SELECT DISTINCT child_id '\
-                       'FROM account_account_consol_rel '\
-                       'WHERE parent_id IN %s', (tuple(ids),))
-            child_ids = map(itemgetter(0), cr.fetchall())
-            c_ids = child_ids
-            if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
-                return False
-            while len(c_ids):
-                s_ids = self.search(cr, uid, [('parent_id', 'in', c_ids)])
-                if p_id and (p_id in s_ids):
-                    return False
-                c_ids = s_ids
-            ids = child_ids
-        return True
-
-    def _check_type(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
-            if account.child_id and account.type not in ('view', 'consolidation'):
-                return False
-        return True
-
-    def _check_account_type(self, cr, uid, ids, context=None):
-        for account in self.browse(cr, uid, ids, context=context):
-            if account.type in ('receivable', 'payable') and account.user_type.close_method != 'unreconciled':
-                return False
-        return True
-
-    def _check_company_account(self, cr, uid, ids, context=None):
-        for account in self.browse(cr, uid, ids, context=context):
-            if account.parent_id:
-                if account.company_id != account.parent_id.company_id:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
-        (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
-        (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
-    ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
@@ -616,7 +526,7 @@ class account_account(osv.osv):
         if not ids:
             return []
         if isinstance(ids, (int, long)):
-                    ids = [ids]
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
         for record in reads:
@@ -638,21 +548,12 @@ class account_account(osv.osv):
         if account.id in done_list:
             return False
         done_list.append(account.id)
-        if account:
-            for child in account.child_id:
-                child_ids = self.copy(cr, uid, child.id, default, context=context, done_list=done_list, local=True)
-                if child_ids:
-                    new_child_ids.append(child_ids)
-            default['child_parent_ids'] = [(6, 0, new_child_ids)]
-        else:
-            default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
     def _check_moves(self, cr, uid, ids, method, context=None):
         line_obj = self.pool.get('account.move.line')
-        account_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
-        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
+        if line_obj.search(cr, uid, [('account_id', 'in', ids)], context=context):
             if method == 'write':
                 raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
@@ -669,8 +570,7 @@ class account_account(osv.osv):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
             old_type = account.type
-            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+            if line_obj.search(cr, uid, [('account_id', '=', account.id)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
                     raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
@@ -686,8 +586,7 @@ class account_account(osv.osv):
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
-            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])], context=context)
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
+            if line_obj.search(cr, uid, [('account_id', '=', account.id)], context=context):
                 raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
         return True
 

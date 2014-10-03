@@ -172,7 +172,6 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="parent_id"/>
                             <field name="type"/>
                             <field name="user_type"/>
                             <field name="active"/>
@@ -203,12 +202,10 @@
         <record id="view_account_list" model="ir.ui.view">
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
-            <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -229,7 +226,6 @@
                     <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                     <field name="user_type"/>
                     <group expand="0" string="Group By">
-                        <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
                         <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
                     </group>
@@ -269,7 +265,6 @@
         <record id="view_account_tree" model="ir.ui.view">
             <field name="name">account.account.tree</field>
             <field name="model">account.account</field>
-            <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
@@ -280,7 +275,6 @@
                     <field name="company_currency_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
-                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -289,7 +283,6 @@
             <field name="res_model">account.account</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
@@ -298,7 +291,6 @@
                 <tree string="Unrealized Gains and losses" create="false">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id"/>
