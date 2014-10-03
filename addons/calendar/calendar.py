@@ -1046,7 +1046,9 @@ class calendar_event(osv.Model):
     def new_invitation_token(self, cr, uid, record, partner_id):
         return uuid.uuid4().hex
 
-    def create_attendees(self, cr, uid, ids, context):
+    def create_attendees(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         user_obj = self.pool['res.users']
         current_user = user_obj.browse(cr, uid, uid, context=context)
         res = {}
@@ -1076,8 +1078,9 @@ class calendar_event(osv.Model):
 
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
-                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                    if not context.get('no_email'):
+                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
+                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
