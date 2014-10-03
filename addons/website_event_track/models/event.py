@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
@@ -173,16 +174,16 @@ class event_event(osv.osv):
         'show_blog': False,
     }
 
-    def _get_new_menu_pages(self, cr, uid, event, context=None):
-        context = context or {}
-        result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
-        if event.show_tracks:
-            result.append( (_('Talks'), '/event/%s/track' % slug(event)))
-            result.append( (_('Agenda'), '/event/%s/agenda' % slug(event)))
-        if event.blog_id:
-            result.append( (_('News'), '/blogpost'+slug(event.blog_ig)))
-        if event.show_track_proposal:
-            result.append( (_('Talk Proposals'), '/event/%s/track_proposal' % slug(event)))
+    @api.one
+    def _get_new_menu_pages(self):
+        result = super(event_event, self)._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
+        if self.show_tracks:
+            result.append((_('Talks'), '/event/%s/track' % slug(self)))
+            result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
+        if self.blog_id:
+            result.append((_('News'), '/blogpost'+slug(self.blog_ig)))
+        if self.show_track_proposal:
+            result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result
 
 #
