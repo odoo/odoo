@@ -39,6 +39,8 @@ from tempfile import NamedTemporaryFile
 # Utils
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
+version = version.split('-')[0]
+
 timestamp = time.strftime("%Y%m%d-%H%M%S", time.gmtime())
 PUBLISH_DIRS = {
     'tar.gz': 'src',
