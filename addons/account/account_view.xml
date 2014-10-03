@@ -178,8 +178,8 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="debit" attrs="{'readonly':[('type','=','view')]}"/>
-                            <field name="credit" attrs="{'readonly':[('type','=','view')]}"/>
+                            <field name="debit"/>
+                            <field name="credit"/>
                             <field name="balance"/>
                         </group>
                         <group>
@@ -392,8 +392,8 @@
                             <field name="type"/>
                         </group>
                         <group>
-                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','consolidation')]"/>
+                            <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','consolidation')]"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
@@ -422,9 +422,9 @@
                         <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
-                                    <field name="profit_account_id" domain="[('type','!=','view')]"/>
-                                    <field name="loss_account_id" domain="[('type','!=','view')]"/>
-                                    <field name="internal_account_id" domain="[('type','!=','view')]"/>
+                                    <field name="profit_account_id"/>
+                                    <field name="loss_account_id"/>
+                                    <field name="internal_account_id"/>
                                 </group>
                                 <group string="Miscellaneous">
                                     <field name="with_last_closing_balance" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
@@ -1013,7 +1013,7 @@
                                 <field name="child_depend"/>
                             </group>
                             <group string="Invoices">
-                                  <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <field name="account_collected_id" domain="[('type','&lt;&gt;','consolidation')]"/>
                                   <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
@@ -1023,7 +1023,7 @@
 
                             </group>
                             <group string="Refunds">
-                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                  <field name="account_paid_id" domain="[('type','&lt;&gt;','consolidation')]"/>
                                   <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
@@ -1097,7 +1097,7 @@
                             <page string="Information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','consolidation')]"/>
                                         <field name="debit"/>
                                         <field name="credit"/>
                                         <field name="quantity"/>
@@ -1157,7 +1157,7 @@
                                 <field name="date"/>
                                 <field name="journal_id" readonly="False"/>
                                 <field name="period_id" readonly="False"/>
-                                <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
+                                <field name="account_id" domain="[('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
                                 <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                                 <newline/>
                                 <field name="debit"/>
@@ -1394,7 +1394,7 @@
                                         <page string="Information">
                                             <group>
                                                 <group string="Amount">
-                                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('type','&lt;&gt;','consolidation')]"/>
                                                     <field name="debit"/>
                                                     <field name="credit"/>
                                                     <field name="quantity"/>
