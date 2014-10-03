@@ -46,11 +46,27 @@ $('.oe_website_sale').each(function () {
             });
     });
 
+    function set_width($input){
+        var $wrapper = $input.parent('.oe_website_spinner');
+        var length = $input.val().toString().replace('.', '').length;
+        width = 112+(length-1)*9;
+        $wrapper.css('width', width+'px');
+    }
+    $(oe_website_sale).find('.oe_website_spinner input').each(function(){
+        return set_width($(this));
+    });
+
+    $(oe_website_sale).on('change', '.oe_website_spinner input', function(ev){
+        ev.preventDefault();
+        return set_width($(ev.currentTarget));
+    });
+
     // hack to add and rome from cart with json
-    $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
+    $(oe_website_sale).on('click', 'span:has(a.js_add_cart_json)', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var $input = $link.parent().parent().find("input");
+        var $wrapper = $link.parent('.oe_website_spinner');
+        var $input = $wrapper.find("input");
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);

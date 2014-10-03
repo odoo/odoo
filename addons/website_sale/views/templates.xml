@@ -663,7 +663,7 @@
                           <tr>
                               <th colspan="2" width="100">Product</th>
                               <th width="100">Price</th>
-                              <th width="120">Quantity</th>
+                              <th class="text-center" width="120">Quantity</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -1031,8 +1031,8 @@
                   <thead>
                       <tr>
                           <th colspan="2" width="80">Product</th>
-                          <th width="100">Price</th>
-                          <th width="120">Quantity</th>
+                          <th class="text-right" width="100">Price</th>
+                          <th class="text-right" width="120">Quantity</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -1047,14 +1047,14 @@
                           <td t-if="line.product_id.product_tmpl_id">
                              <strong t-field="line.product_id.name"/>
                           </td>
-                          <td class="text-center">
+                          <td class="text-right" >
                              <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
                                  "widget": "monetary",
                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                              }'/>
                           </td>
                           <td>
-                             <div t-esc="line.product_uom_qty"/>
+                             <div class="text-right" t-esc="line.product_uom_qty"/>
                           </td>
                       </tr>
                   </tbody>
