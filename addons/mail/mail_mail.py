@@ -305,8 +305,21 @@ class mail_mail(osv.Model):
                         object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                         subtype = 'html',
                         subtype_alternative = 'plain')
-                    res = ir_mail_server.send_email(cr, uid, msg,
-                        mail_server_id=mail.mail_server_id.id, context=context)
+                    try:
+                        res = ir_mail_server.send_email(
+                            cr, uid,
+                            msg,
+                            mail_server_id=mail.mail_server_id.id,
+                            context=context
+                        )
+                    except AssertionError as error:
+                        if error.message == ir_mail_server.NO_VALID_RECIPIENT:
+                            # Since there's a single result for all emails
+                            # setting res to False here would only work if
+                            # this is the last message... Doing nothing.
+                            pass
+                        else:
+                            raise
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True
