@@ -36,6 +36,7 @@ class Experiment_snapshot(osv.Model):
     }
 
 EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready to run'),('running','Running'),('ended','Ended')]
+OBJECTIVES = [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
@@ -45,7 +46,9 @@ class Experiment(osv.Model):
         print vals
         exp={}
         exp['name'] = vals['name']
-        #exp['objectiveMetric'] = "ga:goal3Completions"
+        #exp['objectiveMetric'] = ["ga:adsenseAdsClicks","ga:adsenseAdsViewed","ga:adsenseRevenue","ga:bounces","ga:pageviews","ga:sessionDuration","ga:transactions","ga:transactionRevenue"]
+        exp['objectiveMetric'] = vals['objective']
+        #exp['objectiveMetric'] = "ga:adsenseAdsClicks"
         exp['status'] = vals['state']
         exp['variations'] =[{'name':'master','url': 'http://0.0.0.0:8069/master'}]
         l =  vals.get('experiment_snapshot_ids')
@@ -136,6 +139,7 @@ class Experiment(osv.Model):
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
+        'objective': fields.selection(OBJECTIVES, 'Objective', required=True),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
@@ -144,6 +148,7 @@ class Experiment(osv.Model):
 
     _defaults = {
         'state': 'draft',
+        'objective': 'ga:pageviews',
         'sequence': 1,
     }
 

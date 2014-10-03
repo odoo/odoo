@@ -125,6 +125,7 @@ class TableExporter(http.Controller):
         gm_obj = request.registry['google.management']
 
         client_id = gs_obj.get_client_id(request.cr, request.uid, 'management', context=kw.get('local_context'))
+        client_secret = gs_obj.get_client_secret(self, cr, uid, 'management', context=None)
         if not client_id or client_id == '':
             dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'website_version', 'action_config_settings_google_management')
             return {
