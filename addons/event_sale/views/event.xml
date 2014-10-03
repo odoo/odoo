@@ -2,22 +2,6 @@
 <openerp>
     <data>
 
-        <record model="ir.ui.view" id="event_sale_product_template_form">
-             <field name="model">product.template</field>
-             <field name="inherit_id" ref="product.product_template_form_view" />
-             <field name="arch" type="xml">
-                <div name="options" position="inside">
-                    <div>
-                        <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
-                        <label for="event_ok"/>
-                    </div>
-                </div>
-                <field name='type' position="after">
-                    <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)]}"/>
-                </field>
-             </field>
-        </record>
-
         <record model="ir.ui.view" id="view_event_registration_ticket_search">
             <field name="name">event.registration.ticket.search</field>
             <field name="model">event.registration</field>
@@ -50,26 +34,6 @@
                 </field>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="event_order_line">
-             <field name="name">event.sale.order</field>
-             <field name="model">sale.order</field>
-             <field name="inherit_id" ref="sale.view_order_form" />
-             <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="event_id" domain="['|', ('type','=', False),('type', '=', event_type_id)]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
-                    <field name="event_ticket_id" domain="[('event_id', '=', event_id), ('seats_available', '>', 0)]" attrs="{'invisible': [('event_id', '=', False)]}"
-                        on_change="onchange_event_ticket_id(event_ticket_id, context)"/>
-                    <field name="event_type_id" invisible="1"/>
-                    <field name="event_ok" invisible="1"/>
-                </xpath>
-             </field>
-        </record>
-        
-        <!-- the presence of 'event user' makes the order lines non-editable -->
-        <record id="sale.view_order_form_editable_list" model="ir.ui.view">
-            <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
-        </record>        
         
         <record id="view_event_form" model="ir.ui.view">
             <field name="name">view_event_form</field>
@@ -82,7 +46,7 @@
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Payments" editable="bottom">
                                     <field name="name"/>
-                                    <field name="product_id" on_change='onchange_product_id(product_id)'/>
+                                    <field name="product_id"/>
                                     <field name="deadline"/>
                                     <field name="price"/>
                                     <field name="seats_max"/>
@@ -108,7 +72,7 @@
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Payments" editable="bottom">
                                     <field name="name"/>
-                                    <field name="product_id" on_change='onchange_product_id(product_id)'/>
+                                    <field name="product_id"/>
                                     <field name="deadline"/>
                                     <field name="price"/>
                                     <field name="seats_max"/>
