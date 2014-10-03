@@ -146,10 +146,14 @@ def encode_rfc2822_address_header(header_text):
 
     addresses = getaddresses([tools.ustr(header_text).encode('utf-8')])
     return COMMASPACE.join(map(encode_addr, addresses))
- 
+
+
 class ir_mail_server(osv.osv):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
+
+    NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
+                          "specified for outgoing emails (To/Cc/Bcc)")
 
     _columns = {
         'name': fields.char('Description', size=64, required=True, select=True),
@@ -397,7 +401,7 @@ class ir_mail_server(osv.osv):
         email_cc = message['Cc']
         email_bcc = message['Bcc']
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
-        assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
+        assert smtp_to_list, self.NO_VALID_RECIPIENT
 
         # Do not actually send emails in testing mode!
         if getattr(threading.currentThread(), 'testing', False):
