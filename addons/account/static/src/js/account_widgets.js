@@ -842,7 +842,7 @@ openerp.account = function (instance) {
                         .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount])
                         .then(function(data){
                             line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
-                            line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
+                            line_created_being_edited[0].amount = (data.total.toFixed(4) === amount.toFixed(4) ? amount : data.total);
                             var current_line_cursor = 1;
                             $.each(data.taxes, function(index, tax){
                                 if (tax.amount !== 0.0) {
@@ -1652,7 +1652,7 @@ openerp.account = function (instance) {
             self.$(".tbody_open_balance").empty();
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
-                if (Math.abs(balance).toFixed(3) === "0.000") {
+                if (Math.abs(balance).toFixed(4) === "0.0000") {
                     self.$(".button_ok").addClass("oe_highlight");
                     self.$(".button_ok").removeAttr("disabled");
                     self.$(".button_ok").text("OK");
@@ -1675,7 +1675,7 @@ openerp.account = function (instance) {
                 return;
             }
     
-            if (Math.abs(balance).toFixed(3) === "0.000") {
+            if (Math.abs(balance).toFixed(4) === "0.0000") {
                 self.$(".button_ok").addClass("oe_highlight");
                 self.$(".button_ok").text("OK");
             } else {
@@ -1795,7 +1795,7 @@ openerp.account = function (instance) {
                 balance += o.amount;
             });
             // Dealing with floating-point
-            balance = Math.round(balance*1000)/1000;
+            balance = Math.round(balance*10000)/10000;
             self.set("balance", balance);
             
             // Propose partial reconciliation if necessary
@@ -1873,7 +1873,7 @@ openerp.account = function (instance) {
             var mv_line_dicts = [];
             _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
             _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
-            if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
+            if (Math.abs(self.get("balance")).toFixed(4) !== "0.0000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },
     
@@ -2252,12 +2252,12 @@ openerp.account = function (instance) {
             if (self.get("mv_lines_selected").length < 2) {
                 self.$(".button_reconcile").text(_t("Done"));
                 self.persist_action = "mark_as_reconciled";
-            } else if (Math.abs(balance).toFixed(3) === "0.000") {
+            } else if (Math.abs(balance).toFixed(4) === "0.0000") {
                 self.$(".button_reconcile").addClass("oe_highlight");
             }
 
             self.$(".tbody_open_balance").empty();
-            if (Math.abs(balance).toFixed(3) !== "0.000" && self.get("mv_lines_selected").length > 1) {
+            if (Math.abs(balance).toFixed(4) !== "0.0000" && self.get("mv_lines_selected").length > 1) {
                 var debit = (balance > 0 ? self.formatCurrencies(balance, self.currency_id) : "");
                 var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.currency_id) : "");
                 var $line = $(QWeb.render("manual_reconciliation_line_open_balance", {
