@@ -1161,8 +1161,6 @@ class account_move(osv.osv):
             for line in move.line_id:
                 account = line.account_id
                 top_account = account
-                while top_account.parent_id:
-                    top_account = top_account.parent_id
                 if not top_common:
                     top_common = top_account
                 elif top_account.id != top_common.id:
