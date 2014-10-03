@@ -103,7 +103,8 @@ def publish(o, releases):
         if release_extension == 'deb':
             temp_path = tempfile.mkdtemp(suffix='debPackages')
             system(['cp', release_path, temp_path])
-            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s' % join(o.pub, 'deb', 'Packages.gz'), shell=True, cwd=temp_path)
+            with open(os.path.join(o.pub, 'deb', 'Packages'), 'w') as out:
+                subprocess.call(['dpkg-scanpackages', '.'], stdout=out, cwd=temp_path)
             shutil.rmtree(temp_path)
 
         # Latest/symlink handler
