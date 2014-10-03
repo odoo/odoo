@@ -9,6 +9,9 @@ openerp.testing.section('editor', {
         mock('test.model:onchange', function () {
             return {};
         });
+        mock('test.model:default_get', function () {
+            return {};
+        });
     }
 }, function (test) {
     /**
@@ -211,7 +214,7 @@ openerp.testing.section('list.edition', {
         });
     }
 }, function (test) {
-    test('newrecord', {asserts: 6}, function (instance, $fix, mock) {
+    test('newrecord', {asserts: 7}, function (instance, $fix, mock) {
         var got_defaults = false;
         mock('demo:default_get', function (args) {
             var fields = args[0];
