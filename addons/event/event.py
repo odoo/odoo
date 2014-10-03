@@ -250,7 +250,7 @@ class event_event(osv.osv):
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         values = {}
         if type_event:
-            type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context, context=context)
+            type_info =  self.pool.get('event.type').browse(cr,uid,type_event, context=context)
             dic ={
               'reply_to': type_info.default_reply_to,
               'email_registration_id': type_info.default_email_registration.id,
