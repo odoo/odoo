@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import unicodedata
 
 from openerp import tools
 import openerp.modules
@@ -335,10 +336,11 @@ class ir_translation(osv.osv):
                            AND name=%s""",
                     (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
-        trad = res and res[0] or u''
+        trad = res and tools.ustr(res[0]) or u''
         if source and not trad:
             return tools.ustr(source)
-        return trad
+        # Remove control characters
+        return filter(lambda c: unicodedata.category(c) != 'Cc', trad)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
