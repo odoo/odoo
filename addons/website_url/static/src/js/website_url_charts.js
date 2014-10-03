@@ -15,28 +15,14 @@
             }
         ];
 
-        var all_chart_data = [
-            {
-                "key": "Series 1",
-                // "values": [[1025409600000 , 0] , [1028088000000 , 20] , [1030766400000 , 7] , [1033358400000 , 1]]
-                "values": [[1025409600000 , 0], [1411596000000 , 14] , [1411941600000 , 7] , [1412028000000 , 19]]
-            },
-        ];
-
-        console.log(all_chart_data);
-
         openerp.jsonRpc('/r/gere/chart', 'call', {})
             .then(function(result) {
-                console.log(result);
 
                 var clicks = {};
 
-                //result.unshift({create_date: '2014-09-15'});
-
                 for(var i = 0 ; i < result.length ; i++) {
-                    var link_date = moment(result[i].create_date, 'YYYY-MM-DD');
-                    var timestamp = link_date.format('X') * 1000;
-                    timestamp in clicks ? clicks[timestamp] += 1 : clicks[timestamp] = 1;
+                    var link_date = moment(result[i].create_date, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                    link_date in clicks ? clicks[link_date] += 1 : clicks[link_date] = 1;
                 }
 
                 var clicks_array = [];
@@ -45,34 +31,42 @@
                     clicks_array.push([key, clicks[key]]);
                 }
 
-                console.log(clicks);
-                console.log(clicks_array);
-
                 var all_chart_data2 = [{}];
                 all_chart_data2[0]['key'] = 'Series 1';
                 all_chart_data2[0]['values'] = clicks_array;
 
                 console.log(all_chart_data2);
 
+                function getDate(d) {
+                    var d = new Date(d[0])
+                    console.log('getDate() : ' + d);
+                    return d;
+                }
+
+                var minDate = getDate(all_chart_data2[0]['values'][0]),
+                    maxDate = getDate(all_chart_data2[0]['values'][all_chart_data2[0]['values'].length - 1]);
+
+                var x = d3.time.scale().domain([minDate, maxDate]).range([0, 450]);
+
                 // All Chart
                 nv.addGraph(function() {
                     var chart = nv.models.lineChart()
-                        .x(function(d) { return d[0] })
+                        .x(function(d) {
+                            var nx = x(getDate(d));
+                            console.log(nx);
+                            return nx;
+                        })
                         .y(function(d) { return d[1] })
                         .color(d3.scale.category10().range())
                         .useInteractiveGuideline(true);
 
                     chart.xAxis.tickFormat(function(d) {
-                        // return d3.time.format('%x')(new Date(d))
-                        return moment(d).format('DD/MM/YYYY');
+                        return moment(x.invert(d)).format('DD/MM/YYYY');
                     });
 
                     d3.select('#all_chart svg')
                         .datum(all_chart_data2)
-                        // .transition().duration(500)
                         .call(chart);
-
-                    // nv.utils.windowResize(chart.update);
 
                     return chart;
                 });
