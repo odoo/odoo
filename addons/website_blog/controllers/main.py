@@ -174,6 +174,22 @@ class WebsiteBlog(http.Controller):
         blog_post_obj = request.registry['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
+        def get_next_post_id(blog_post_ids, current_blog_post_id):
+            if not blog_post_ids or not current_blog_post_id:
+                return False
+            return blog_post_ids[0 if blog_post_ids.index(current_blog_post_id) == len(blog_post_ids) - 1 \
+                     else blog_post_ids.index(current_blog_post_id) + 1]
+
+        def check_blog_post_status(blog_post_id, visited_ids):
+            #recursive check to see if the blog posts which client earlier visited(stored in 'visited_blogs' cookies) are been 'unpublished' or deleted.
+            if not blog_post_id:
+                return False
+            if blog_post_obj.search(cr, uid, [('id', '=', blog_post_id)], context=context):
+                return blog_post_id
+            next_blog_post_id = get_next_post_id(visited_ids, blog_post_id)
+            visited_ids.remove(blog_post_id)
+            return check_blog_post_status(next_blog_post_id, visited_ids)
+
         pager_url = "/blogpost/%s" % blog_post.id
 
         pager = request.website.pager(
@@ -206,10 +222,12 @@ class WebsiteBlog(http.Controller):
             visited_ids.append(blog_post.id)
         next_post_id = blog_post_obj.search(cr, uid, [
             ('id', 'not in', visited_ids),
-        ], order='ranking desc', limit=1, context=context)
+        ], order='visits desc', limit=1, context=context)
         if not next_post_id:
-            next_post_id = blog_post_obj.search(cr, uid, [('id', '!=', blog.id)], order='ranking desc', limit=1, context=context)
-        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
+            # Once all blog posts are been visited, it will iterate the blog posts by refering in the 'visited_blogs' cookies
+            next_post_id = get_next_post_id(visited_ids, blog_post.id)
+            next_post_id = check_blog_post_status(next_post_id, visited_ids)
+        next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
 
         values = {
             'tags': tags,
