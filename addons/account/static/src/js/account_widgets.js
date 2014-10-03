@@ -41,6 +41,7 @@ openerp.account = function (instance) {
             this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
+            this.map_currency_id_rounding = {};
             this.map_tax_id_amount = {};
             this.presets = {};
             // We'll need to get the code of an account selected in a many2one (whose value is the id)
@@ -197,6 +198,13 @@ openerp.account = function (instance) {
                     .query(['id', 'code'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
+                    });
+
+                // Create a dict currency id -> rounding factor
+                new instance.web.Model("res.currency")
+                    .query(['id', 'rounding'])
+                    .all().then(function(data) {
+                        _.each(data, function(o) { self.map_currency_id_rounding[o.id] = o.rounding });
                     });
 
                 // Create a dict tax id -> amount
@@ -639,6 +647,7 @@ openerp.account = function (instance) {
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.model_res_users = new instance.web.Model("res.users");
             this.model_tax = new instance.web.Model("account.tax");
+            this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
             this.map_account_id_code = this.getParent().map_account_id_code;
             this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.presets = this.getParent().presets;
@@ -1406,7 +1415,6 @@ openerp.account = function (instance) {
                         }
                     );
                 } else {
-                    line_created_being_edited[0].amount = amount;
                     line_created_being_edited.length = 1;
                     deferred_tax.resolve();
                 }
@@ -1414,9 +1422,12 @@ openerp.account = function (instance) {
     
             $.when(deferred_tax).then(function(){
                 // Format amounts
+                var rounding = 1/self.map_currency_id_rounding[self.st_line.currency_id];
                 $.each(line_created_being_edited, function(index, val) {
-                    if (val.amount)
+                    if (val.amount) {
+                        line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
                         line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
+                    }
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
