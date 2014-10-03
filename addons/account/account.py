@@ -565,31 +565,6 @@ class account_account(osv.osv):
             raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
 
-    def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
-        restricted_groups = ['consolidation','view']
-        line_obj = self.pool.get('account.move.line')
-        for account in self.browse(cr, uid, ids, context=context):
-            old_type = account.type
-            if line_obj.search(cr, uid, [('account_id', '=', account.id)]):
-                #Check for 'Closed' type
-                if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
-                # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
-                if (new_type in restricted_groups):
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
-
-        return True
-
-    # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
-    # the code of an account if journal entries have been already posted on this account. This cannot be simply 
-    # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
-    def _check_allow_code_change(self, cr, uid, ids, context=None):
-        line_obj = self.pool.get('account.move.line')
-        for account in self.browse(cr, uid, ids, context=context):
-            if line_obj.search(cr, uid, [('account_id', '=', account.id)], context=context):
-                raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
-        return True
-
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
@@ -608,10 +583,6 @@ class account_account(osv.osv):
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
-        if 'type' in vals.keys():
-            self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
-        if 'code' in vals.keys():
-            self._check_allow_code_change(cr, uid, ids, context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
