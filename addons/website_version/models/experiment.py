@@ -35,7 +35,7 @@ class Experiment_snapshot(osv.Model):
         'frequency': '10',
     }
 
-EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready_to_run'),('running','Running'),('ended','Ended')]
+EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready to run'),('running','Running'),('ended','Ended')]
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
@@ -45,16 +45,14 @@ class Experiment(osv.Model):
         print vals
         exp={}
         exp['name'] = vals['name']
-        exp['objectiveMetric'] = "ga:goal3Completions"
+        #exp['objectiveMetric'] = "ga:goal3Completions"
         exp['status'] = vals['state']
-        exp['variations'] =[]
-        exp['variations'].append({'name':'master','url': 'http://0.0.0.0:8069/master'})
+        exp['variations'] =[{'name':'master','url': 'http://0.0.0.0:8069/master'}]
         l =  vals.get('experiment_snapshot_ids')
         if l:
             for snap in l:
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
                 exp['variations'].append({'name':name, 'url': 'http://0.0.0.0:8069/'+name})
-        print exp
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
         if not google_id:
             raise Warning("Please verify you give the authorizations to use google analytics api ...")
@@ -74,6 +72,18 @@ class Experiment(osv.Model):
                 else:
                     temp['name'] = exp.name
                 if state:
+                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, context=None)
+                    if len(current[1]["variations"]) == 1:
+                        raise Warning("You must define at least one variation in your experiment.")
+                    if not current[1].get("objectiveMetric"):
+                        raise Warning("You must define at least one goal for this experiment in your Google Analytics account before moving its state.")
+                    if current[1]["status"] == 'RUNNING' and (state == 'draft' or state == 'ready_to_run'):
+                        raise Warning("You cannot modify a running experiment.")
+                    if state == 'ended' and not current[1]["status"] == 'RUNNING':
+                        raise Warning("Your experiment must be running to be ended.")
+                    if current[1]["status"] == 'ENDED':
+                        raise Warning("You cannot modify the state of an ended experiement.")
+                    print current[1]["status"]
                     temp['status'] = state
                 else:
                     temp['status'] = exp.state
@@ -94,14 +104,14 @@ class Experiment(osv.Model):
                     temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
                     for exp_s in exp.experiment_snapshot_ids:
                         temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
-
-                print temp
+                #to check the constraints before to write on the google analytics account 
+                x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
-        return super(Experiment, self).write(cr, uid, ids, vals, context=context)
+        else:
+            x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
+        return x
 
     def unlink(self, cr, uid, ids, context=None):
-        print ids
-        # from pudb import set_trace; set_trace()
         for exp in self.browse(cr, uid, ids, context=context):
             print exp.google_id
             self.pool['google.management'].delete_an_experiment(cr, uid, exp.google_id, context=context)
@@ -120,10 +130,6 @@ class Experiment(osv.Model):
                 #We must considerate master
                 result[exp.id] += 1
         return result
-
-    # def _get_state(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-    #     from pudb import set_trace; set_trace()
-    #     return STATES, {}
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
@@ -165,7 +171,6 @@ class Experiment(osv.Model):
     _order = 'sequence'
 
     _group_by_full = {
-        # 'state': _get_state
         'state': lambda *args, **kwargs : ([s[0] for s in EXPERIMENT_STATES], dict()),
     }
 
@@ -185,18 +190,13 @@ class google_management(osv.AbstractModel):
         return data
 
     def create_an_experiment(self, cr, uid, data, context=None):
-        #from pudb import set_trace; set_trace()
         gs_pool = self.pool['google.service']
-        #data = self.generate_data(cr, uid, experiment, isCreating=True, context=context)
-
         accountId='55031254'
         webPropertyId='UA-55031254-1'
         profileId='91492412'
-
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
-
         try:
             x = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
         except:
@@ -211,11 +211,25 @@ class google_management(osv.AbstractModel):
         profileId='91492412'
 
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s?access_token=%s' % (accountId, webPropertyId, profileId,experiment_id, self.get_token(cr, uid, context))
-        print data
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
+
+    def get_experiment_info(self, cr, uid, experiment_id, context=None):
+        gs_pool = self.pool['google.service']
+
+        params = {
+            'access_token': self.get_token(cr, uid, context),
+        }
+
+        accountId='55031254'
+        webPropertyId='UA-55031254-1'
+        profileId='91492412'
+        
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
+        return gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
 
     def delete_an_experiment(self, cr, uid, experiment_id, context=None):
         gs_pool = self.pool['google.service']
@@ -232,6 +246,8 @@ class google_management(osv.AbstractModel):
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment_id)
 
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
+
+
 
     def get_list_account(self, cr, uid, context=None):
         token = self.get_token(cr, uid, context)

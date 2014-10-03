@@ -43,7 +43,7 @@
                               <field name="name"/> on <field name="website_id"/>
                             </div>
                             <div class="oe_clear"></div>
-                            <div> <field name="version_number"/> version </div>
+                            <div> <field name="version_number"/> variation </div>
                             <div class="oe_right">
                               <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                                 <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
@@ -88,7 +88,7 @@
                             <field name="google_id"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Snapshots in experiment" colspan="4" >
+                            <page string="Variations in experiment" colspan="4" >
                                 <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
                                     <tree string="PPP" editable="bottom"> 
                                         <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
@@ -110,11 +110,36 @@
             <field name="arch" type="xml">
                 <tree string="Experiment tree">
                     <field name="name" />
+                    <field name="website_id"/>
                     <field name="state"/>
                     <field name="sequence" widget="handle"/>
                 </tree>
             </field>
         </record>
+
+        <record id="experiment_search" model="ir.ui.view">
+            <field name="name">experiment.search</field>
+            <field name="model">website_version.experiment</field>
+            <field name="arch" type="xml">
+                <search string="Search Experiment">
+                    <field name="name" />
+                    <field name="website_id"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="website_id" domain="[]" name="my_exps" context="{'group_by':'website_id'}"/>
+                        <filter string="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- <record id="action_experiment_search" model="ir.actions.act_window">
+            <field name="name">Experiment search</field>
+            <field name="res_model">website_version.experiment</field>
+            <field name="view_mode">list</field>
+            <field name="context">{'search_default_my_exps':1}</field>
+        </record> -->
 
         <record model="ir.ui.view" id="experiment_snapshot_form_view">
             <field name="name">experiment_snapshot.form</field>
