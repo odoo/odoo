@@ -519,10 +519,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.find('.oe_view_nocontent').click(function() {
             self.$buttons.openerpBounce();
         });
+        this.$el.find('.oe_kanban_groups').hide();
     },
     remove_no_result: function() {
         this.$el.css("position", "");
         this.$el.find('.oe_view_nocontent').remove();
+        this.$el.find('.oe_kanban_groups').show();
     },
 
     /*
