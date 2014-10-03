@@ -262,6 +262,8 @@ class event_event(models.Model):
             regs.write({'nb_register': num_of_seats})
         regs.sudo().confirm_registration()
 
+        print "This is a test"
+
     @api.one
     def unsubscribe_to_event(self):
         """ Unsubscribe the current user from a given event """
