@@ -187,11 +187,11 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context=None):
         acc_ana_line_obj = self.pool.get('account.analytic.line')
         for obj_line in self.browse(cr, uid, ids, context=context):
+            if obj_line.analytic_lines:
+                acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                if obj_line.analytic_lines:
-                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True

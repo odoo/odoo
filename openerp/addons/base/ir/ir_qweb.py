@@ -666,7 +666,10 @@ class DateTimeConverter(osv.AbstractModel):
         if options and 'format' in options:
             pattern = options['format']
         else:
-            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+            if options and options.get('only_date') and options.get('only_date') in ["True", 'true']:
+                strftime_pattern = (u"%s" % (lang.date_format))
+            else:
+                strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
         if options and options.get('hide_seconds'):
@@ -1158,7 +1161,7 @@ class AssetsBundle(object):
     def get_cache(self, type):
         content = None
         domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
-        bundle = self.registry['ir.attachment'].search_read(self.cr, self.uid, domain, ['datas'], context=self.context)
+        bundle = self.registry['ir.attachment'].search_read(self.cr, openerp.SUPERUSER_ID, domain, ['datas'], context=self.context)
         if bundle and bundle[0]['datas']:
             content = bundle[0]['datas'].decode('base64')
         return content
@@ -1167,7 +1170,7 @@ class AssetsBundle(object):
         ira = self.registry['ir.attachment']
         url_prefix = '/web/%s/%s/' % (type, self.xmlid)
         # Invalidate previous caches
-        oids = ira.search(self.cr, self.uid, [('url', '=like', url_prefix + '%')], context=self.context)
+        oids = ira.search(self.cr, openerp.SUPERUSER_ID, [('url', '=like', url_prefix + '%')], context=self.context)
         if oids:
             ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
         url = url_prefix + self.version
@@ -1275,7 +1278,7 @@ class WebAsset(object):
                     fields = ['__last_update', 'datas', 'mimetype']
                     domain = [('type', '=', 'binary'), ('url', '=', self.url)]
                     ira = self.registry['ir.attachment']
-                    attach = ira.search_read(self.cr, self.uid, domain, fields, context=self.context)
+                    attach = ira.search_read(self.cr, openerp.SUPERUSER_ID, domain, fields, context=self.context)
                     self._ir_attach = attach[0]
                 except Exception:
                     raise AssetNotFound("Could not find %s" % self.name)
@@ -1417,7 +1420,7 @@ class SassAsset(StylesheetAsset):
             ira = self.registry['ir.attachment']
             url = self.html_url % self.url
             domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-            ira_id = ira.search(self.cr, self.uid, domain, context=self.context)
+            ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
             if ira_id:
                 # TODO: update only if needed
                 ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content}, context=self.context)
