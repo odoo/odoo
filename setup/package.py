@@ -26,6 +26,7 @@ import pexpect
 import shutil
 import signal
 import subprocess
+import tempfile
 import time
 import xmlrpclib
 from contextlib import contextmanager
@@ -73,9 +74,18 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     modules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/object' % (addr, port)).execute(
         dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
     )
-    if modules:
-        print("Package test: successfuly installed %s modules" % len(modules))
+    if modules and len(modules) > 1:
+        time.sleep(1)
+        toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/object' % (addr, port)).execute(
+            dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
+        )
+        if toinstallmodules:
+            print("Package test: FAILED. Not able to install dependencies of base.")
+            raise Exception("Installation of package failed")
+        else:
+            print("Package test: successfuly installed %s modules" % len(modules))
     else:
+        print("Package test: FAILED. Not able to install base.")
         raise Exception("Installation of package failed")
 
 def publish(o, releases):
@@ -89,6 +99,12 @@ def publish(o, releases):
 
         system('mkdir -p %s' % join(o.pub, release_dir))
         shutil.move(join(o.build_dir, release), release_path)
+
+        if release_extension == 'deb':
+            temp_path = tempfile.mkdtemp(suffix='debPackages')
+            system(['cp', release_path, temp_path])
+            subprocess.Popen('dpkg-scanpackages . /dev/null | gzip -9c > %s' % join(o.pub, 'deb', 'Packages.gz'), shell=True, cwd=temp_path)
+            shutil.rmtree(temp_path)
 
         # Latest/symlink handler
         release_abspath = abspath(release_path)
@@ -352,7 +368,6 @@ def options():
 def main():
     o = options()
     _prepare_build_dir(o)
-
     try:
         if not o.no_tarball:
             build_tgz(o)
@@ -368,7 +383,6 @@ def main():
                 try:
                     test_deb(o)
                     publish(o, ['openerp.deb', 'openerp.dsc', 'openerp_amd64.changes', 'openerp.deb.tar.gz'])
-                    system('dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz', join(o.pub, 'deb'))
                 except Exception, e:
                     print("Won't publish the deb release.\n Exception: %s" % str(e))
         if not o.no_rpm:
