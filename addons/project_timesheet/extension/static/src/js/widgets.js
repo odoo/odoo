@@ -67,6 +67,8 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         start: function() {
             this._super.apply(this, arguments);
             this.prepare_autocomplete();
+            /*
+            //Not needed if we are going to use textext lib
             this.$dropdown = this.$el.find(".pt_m2o_drop_down_button");
             this.$dropdown.on("click", function(event) {
                 var $target = $(event.target).is("img") ? $(event.target).parent() : $(event.target);
@@ -74,10 +76,13 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 $input.focus();
                 $input.autocomplete("search");
             });
+            */
         },
         prepare_autocomplete: function() {
             var self = this;
-            this.$input = this.$el.find("input");
+            this.$input = this.$el.find("textarea");
+            //this.$input = this.$el.find("input");
+            /*
             this.$input.autocomplete({
                 source: function(req, resp) {
                     self.get_search_result(req.term).done(function(result) {
@@ -115,6 +120,77 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 }
                 isSelecting = false;
             });
+            */
+            this.$input.textext({
+                plugins: 'arrow autocomplete',
+                autocomplete: {
+                    render: function(suggestion) {
+                        console.log("suggestion are ::: ",suggestion);
+                        return $('<span class="text-label"/>').
+                                 data('index', suggestion['index']).html(suggestion['label']);
+                    }
+                },
+                ext: {
+                    autocomplete: {
+                        selectFromDropdown: function() {
+                            this.trigger('hideDropdown');
+                            var index = Number(this.selectedSuggestionElement().children().children().data('index'));
+                            var data = self.search_result[index];
+                            if (data.id) {
+                                self.add_id(data.id, data.name);
+                            } else {
+                                self.ignore_blur = true;
+                                data.action();
+                            }
+                            this.trigger('setSuggestions', {result : []});
+                        },
+                    },
+                    itemManager: {
+                        itemToString: function(item) {
+                            return item.name;
+                        },
+                    },
+                    core: {
+                        onSetInputData: function(e, data) {
+                            if (data === '') {
+                                this._plugins.autocomplete._suggestions = null;
+                            }
+                            this.input().val(data);
+                        },
+                    },
+                },
+            }).bind('hideDropdown', function() {
+                self._drop_shown = false;
+            }).bind('showDropdown', function() {
+                self._drop_shown = true;
+            }).bind('getSuggestions', function(e, data) {
+                var _this = this;
+                query = (data ? data.query : '') || '';
+                self.get_search_result(query).done(function(result){
+                    self.search_result = result;
+                    console.log("Inside getSuggestions ::: ", self.search_result);
+                    $(_this).trigger(
+                        'setSuggestions',
+                        { result : _.map(result, function(el, i) {
+                            return _.extend(el, {index:i});
+                        }) });
+                });
+            });
+            self.$input
+            .focusin(function () {
+                self.trigger('focused');
+                self.ignore_blur = false;
+            })
+            .focusout(function() {
+                self.$input.trigger("setInputData", "");
+                if (!self.ignore_blur) {
+                    self.trigger('blurred');
+                }
+            }).keydown(function(e) {
+                if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
+                    self.$input.textext()[0].autocomplete().selectFromDropdown();
+                }
+            });
         },
         get_search_result: function(term) {
             var self = this;
@@ -126,9 +202,20 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 var search_data = _.compact(_(data).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
             }
             var values = _.map(search_data, function(x) {
+                var label = _.str.escapeHTML(x[1].split("\n")[0]);
+                if (self.model == "tasks") {
+                    var task_name = x[1].split("\n")[0];
+                    var priority = x[1].split("\n")[1] || 0; //TODO: For now, we will move this logic for task m2o special logic uisng include
+                    if(priority) {
+                        var span = "<span class='glyphicon glyphicon-star pull-right'></span>";
+                        var $spans = Array(priority+1).join(span);
+                        label = "<span>"+_.str.escapeHTML(task_name)+"</span>"+$spans;
+                    }
+                }
                 x[1] = x[1].split("\n")[0];
                 return {
-                    label: _.str.escapeHTML(x[1]),
+                    //label: _.str.escapeHTML(x[1]),
+                    label: label,
                     value: x[1],
                     name: x[1],
                     id: x[0],
@@ -156,6 +243,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             $target.data("id", virtual_id);
             $target.val(term);
         },
+        add_id: function(id, name) {
+            console.log("id is ::: ",id, name);
+            this.$input.val(name);
+        },
     });
 
     project_timesheet.ActivityListView = openerp.Widget.extend({
@@ -182,14 +273,4 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
     });
 
-    //TO REMOVE
-    project_timesheet.FooterWidget = openerp.Widget.extend({
-        template: "Footer",
-        init: function() {
-            this._super.apply(this, arguments);
-        },
-        start: function() {
-            this._super.apply(this, arguments);
-        }
-    });
 }
