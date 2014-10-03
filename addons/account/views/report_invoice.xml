@@ -32,6 +32,10 @@
                     <strong>Invoice Date:</strong>
                     <p t-field="o.date_invoice"/>
                 </div>
+                <div class="col-xs-2" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">
+                    <strong>Due Date:</strong>
+                    <p t-field="o.date_due"/>
+                </div>
                 <div class="col-xs-2" t-if="o.origin">
                     <strong>Source:</strong>
                     <p t-field="o.origin"/>
@@ -50,17 +54,17 @@
                 <thead>
                     <tr>
                         <th>Description</th>
-                        <th>Quantity</th>
+                        <th class="text-right">Quantity</th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
-                        <th class="text-right">Taxes</th>
-                        <th class="text-right">Amount</th>
+                        <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                        <th>Taxes</th>
+                        <th class="text-right">Price</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
                     <tr t-foreach="o.invoice_line" t-as="l">
                         <td><span t-field="l.name"/></td>
-                        <td>
+                        <td class="text-right">
                             <span t-field="l.quantity"/>
                             <span t-field="l.uos_id"  groups="product.group_uom"/>
                         </td>
@@ -68,7 +72,7 @@
                             <span t-field="l.price_unit"/>
                         </td>
                         <td groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
-                        <td class="text-right">
+                        <td>
                             <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
                         </td>
                         <td class="text-right">
@@ -135,13 +139,12 @@
                 <strong>Comment:</strong>
                 <span t-field="o.comment"/>
             </p>
-            <p t-if="o.payment_term.note">
-                <strong>Payment Term:</strong>
+            <p t-if="o.payment_term">
                 <span t-field="o.payment_term.note"/>
             </p>
-            <p t-if="o.fiscal_position">
-                <strong>Fiscal Position:</strong>
-                <span t-field="o.fiscal_position"/>
+            <p t-if="o.fiscal_position and o.fiscal_position.note">
+                <strong>Fiscal Position Remark:</strong>
+                <span t-field="o.fiscal_position.note"/>
             </p>
         </div>
     </t>

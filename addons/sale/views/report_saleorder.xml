@@ -47,7 +47,7 @@
                 </div>
                 <div t-if="o.payment_term" class="col-xs-3">
                     <strong>Payment Term:</strong>
-                    <p t-field="o.payment_term"/>
+                    <p t-field="o.payment_term.name"/>
                 </div>
             </div>
 
@@ -55,10 +55,10 @@
                 <thead>
                     <tr>
                         <th>Description</th>
-                        <th>Taxes</th>
                         <th class="text-right">Quantity</th>
                         <th class="text-right">Unit Price</th>
                         <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                        <th>Taxes</th>
                         <th class="text-right">Price</th>
                     </tr>
                </thead>
@@ -66,9 +66,6 @@
                     <tr t-foreach="o.order_line" t-as="l">
                         <td>
                            <span t-field="l.name"/>
-                        </td>
-                        <td>
-                            <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
                         </td>
                         <td class="text-right">
                             <span t-field="l.product_uom_qty"/>
@@ -79,6 +76,9 @@
                         </td>
                         <td groups="sale.group_discount_per_so_line">
                             <span t-field="l.discount"/>
+                        </td>
+                        <td>
+                            <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
@@ -118,8 +118,14 @@
 
             <p t-field="o.note" />
             <p t-if="o.payment_term">
-                <strong>Payment Term:</strong>
-                <span t-field="o.payment_term"/>
+                <span t-field="o.payment_term.note"/>
+            </p>
+            <p t-if="not o.payment_term and o.partner_id.property_payment_term">
+                <span t-field="o.partner_id.property_payment_term.note"/>
+            </p>
+            <p t-if="o.fiscal_position and o.fiscal_position.note">
+                <strong>Fiscal Position Remark:</strong>
+                <span t-field="o.fiscal_position.note"/>
             </p>
             <div class="oe_structure"/>
         </div>
