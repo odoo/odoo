@@ -65,11 +65,11 @@ class bank(osv.osv):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id), ('parent_id', '!=', False)], context=context)
+                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], context=context)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
-                ref_acc_bank = obj_acc.browse(cr, uid, ids[0], context=context).parent_id
+                ref_acc_bank = obj_acc.browse(cr, uid, ids[0], context=context)
                 while True:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
                     ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', bank.company_id.id)])
@@ -83,7 +83,6 @@ class bank(osv.osv):
                     'type': 'liquidity',
                     'user_type': ref_acc_bank.user_type.id,
                     'reconcile': False,
-                    'parent_id': ref_acc_bank.id,
                     'company_id': bank.company_id.id,
                 }
                 acc_bank_id  = obj_acc.create(cr,uid,acc,context=context)
