@@ -35,6 +35,7 @@ class Forum(osv.Model):
             ('vote','Most Voted'),
             ('relevancy','Relevancy'),
             ], 'Default Order', required=True),
+        'default_allow': fields.selection([('post_link','Link'),('ask_question','Question'),('post_discussion','Discussion')], 'Default Post', required=True),
         'allow_link': fields.boolean('Links', help="When clicking on the post, it redirects to an external link"),
         'allow_question': fields.boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones."),
         'allow_discussion': fields.boolean('Discussions'),
@@ -81,6 +82,7 @@ class Forum(osv.Model):
     _defaults = {
         'default_order': 'date',
         'allow_question': True,
+        'default_allow': 'ask_question',
         'allow_link': False,
         'allow_discussion': False,
         'description': 'This community is for professionals and enthusiasts of our products and services.',

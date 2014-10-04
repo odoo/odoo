@@ -69,11 +69,11 @@
                 </div>
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li t-att-class="post_type == 'question' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='question') }}">Trending</a>
+                        <li t-att-class="sorting == 'relevancy' and 'active' or '' ">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy') }}">Trending</a>
                         </li>
-                        <li t-att-class="post_type == 'link' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='link') }}">Newest</a>
+                        <li t-att-class="sorting == 'creation' and 'active' or '' ">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='creation') }}">Newest</a>
                         </li>
                         <li t-att-class="searches.get('users') and 'active' or '' ">
                             <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
@@ -89,11 +89,11 @@
                         </li>
                     </ul>
                     <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                        <div class="form-group">
-                            <input type="search" class="form-control"
-                                name="search" placeholder="Search a question..."
-                                t-att-value="search or ''"/>
-                            <button type="submit" class="btn btn-default">Search</button>
+                        <div class="input-group">
+                            <input type="search" class="form-control" name="search" t-att-value="search or ''"/>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">Search</button>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -112,13 +112,17 @@
                 </div>
                 <div class="col-sm-3" id="right-column">
                     <div t-if="not header.get('ask_hide')" class="btn-group btn-block mb16">
-                        <a type="button" class="btn btn-primary btn-lg btn-block dropdown-toggle" data-toggle="dropdown">
-                            New <span class="caret"></span>
-                        </a>
+                        <button type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
+                            New
+                        </button>
+                        <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Select Post</span>
+                        </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a t-attf-href="/forum/#{slug(forum)}/post_link">Share a Link</a></li>
-                            <li><a t-attf-href="/forum/#{slug(forum)}/ask_question">Ask a Question</a></li>
-                            <li><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Launch a Discussion</a></li>
+                            <li t-if="allow_link"><a t-attf-href="/forum/#{slug(forum)}/post_link">Share a Link</a></li>
+                            <li t-if="allow_question"><a t-attf-href="/forum/#{slug(forum)}/ask_question">Ask a Question</a></li>
+                            <li t-if="allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Launch a Discussion</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-default">
@@ -272,7 +276,7 @@
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
-        <h1 class="page-header mt0">
+        <h2 class="page-header mt0">
             <t t-esc="question_count"/>
                 <span t-if="post_type == 'all'">Posts</span>
                 <span t-if="post_type == 'question'">Questions</span>
@@ -281,7 +285,6 @@
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <t t-if="filters == 'all'">All</t>
                   <t t-if="filters == 'unanswered'">Unanswered</t>
                   <t t-if="filters == 'followed'">Followed</t>
                   <t t-if="tag"><span t-field="tag.name"/></t>
@@ -325,7 +328,7 @@
                   </li>
               </ul>
             </small>
-        </h1>
+        </h2>
         <div t-foreach="question_ids" t-as="question" class="mb16">
             <t t-call="website_forum.display_post"/>
         </div>
