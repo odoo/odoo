@@ -97,7 +97,7 @@ General Options
   --version                           show program version number and exit
   -h, --help                          show this help message and exit
   -c CONFIG, --config=CONFIG          specify alternate config file
-  -s, --save                          save configuration to ~/.odoo_serverrc
+  -s, --save                          save configuration to ~/.odoorc
   -v, --verbose                       enable debugging
   --pidfile=PIDFILE                   file where the server pid will be stored
   --logfile=LOGFILE                   file where the server log will be stored
@@ -157,17 +157,15 @@ Configuration
 
 .. _getting_started_configuration-link:
 
-Two configuration files are available:
+One configuration file is available:
 
-    * one for the client: ``~/.openerprc``
-    * one for the server: ``~/.odoo_serverrc``
+    * ``~/.odoorc``
 
-If they are not found, the server and the client will start with a
-default configuration. Those files follow the convention used by
+If it is not found, the server will start with a
+default configuration. This file follows the convention used by
 python's ConfigParser module. Please note that lines beginning with
-"#" or ";" are comments. The client configuration file is
-automatically generated upon the first start. The sezrver
-configuration file can automatically be created using the command ::
+"#" or ";" are comments. The server configuration file can 
+automatically be created using the command ::
 
   ./openerp-server -s or ./openerp-server --save
 
@@ -186,7 +184,7 @@ server/bin/addons. It is possible to add new addons by
  - specifying another directory containing addons to the server. The
    later can be accomplished either by running the server with the
    ``--addons-path=`` option, or by configuring this option in the
-   odoo_serverrc file, automatically generated under Linux in your
+   odoorc file, automatically generated under Linux in your
    home directory by the server when executed with the ``--save``
    option. You can provide several addons to the ``addons_path`` =
    option, separating them using commas.
