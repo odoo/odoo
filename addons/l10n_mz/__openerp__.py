@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014 3HConsulting, Lda. All Rights Reserved
-#    http://3hconsulting.blogspot.com.
+#    Copyright (C) 2014 3hConsulting, Lda. All Rights Reserved
+#	 http://3hconsulting.blogspot.com/
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
     'author': '3HConsulting',
     'website': 'http://3hconsulting.blogspot.com/',
     'category': 'Localization/Account Charts',
-    'description': 'Plano de contas SNC para Moçambique',
+    'description': 'Plano de contas PGC-PE para Moçambique',
     'depends': ['base',
                 'base_vat',
                 'account',
