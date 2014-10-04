@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012 Thinkopen Solutions, Lda. All Rights Reserved
-#    http://www.thinkopensolutions.com.
+#    Copyright (C) 2014 3hConsulting, Lda. All Rights Reserved
+#    http://3hconsulting.blogspot.com
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
