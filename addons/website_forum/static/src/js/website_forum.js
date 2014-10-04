@@ -109,7 +109,7 @@ $(document).ready(function () {
             return true;
         });
 
-        $('.close_introduction_message').on('click', function (ev) {
+        $('.js_close_intro').on('click', function (ev) {
             ev.preventDefault();
             document.cookie = "no_introduction_message = false";
             return true;

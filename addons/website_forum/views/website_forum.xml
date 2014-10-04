@@ -47,16 +47,14 @@
         <t t-set="head">
             <t t-call-assets="website_forum.assets_forum"/>
         </t>
-        <div class="container mt16 website_forum">
-            <div class="row" t-if="is_public_user and not no_introduction_message">
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close close_introduction_message" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                    <div>
-                        <div t-field="forum.introduction_message"/>
-                        <a class='btn btn-primary' t-attf-href="/web?redirect=#{ request.httprequest.url }">Sign in</a>
-                    </div>
-                </div>
+        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
+            <div class="container">
+                <div t-field="forum.introduction_message"/>
+                <a class='btn btn-primary' t-attf-href="/web?redirect=#{ request.httprequest.url }">Register</a>
+                <button type="button" class="btn btn-link js_close_intro" data-dismiss="alert" aria-hidden="true">Hide Intro</button>
             </div>
+        </div>
+        <div class="container mt16 website_forum">
             <div class="navbar navbar-default">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
@@ -72,13 +70,10 @@
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li t-att-class="post_type == 'question' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'sorting', 'filters', post_type='question') }}">Question</a>
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='question') }}">Trending</a>
                         </li>
                         <li t-att-class="post_type == 'link' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'sorting', 'filters', post_type='link') }}">Articles</a>
-                        </li>
-                        <li t-att-class="post_type == 'discussion' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'sorting', 'filters', post_type='discussion') }}">Discussions</a>
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='link') }}">Newest</a>
                         </li>
                         <li t-att-class="searches.get('users') and 'active' or '' ">
                             <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
@@ -121,9 +116,9 @@
                             New <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a t-attf-href="/forum/#{slug(forum)}/ask_question">Question</a></li>
-                            <li><a t-attf-href="/forum/#{slug(forum)}/post_link">Article</a></li>
-                            <li><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Discussion</a></li>
+                            <li><a t-attf-href="/forum/#{slug(forum)}/post_link">Share a Link</a></li>
+                            <li><a t-attf-href="/forum/#{slug(forum)}/ask_question">Ask a Question</a></li>
+                            <li><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Launch a Discussion</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-default">
@@ -281,7 +276,7 @@
             <t t-esc="question_count"/>
                 <span t-if="post_type == 'all'">Posts</span>
                 <span t-if="post_type == 'question'">Questions</span>
-                <span t-if="post_type == 'link'">Articles</span>
+                <span t-if="post_type == 'link'">Posts</span>
                 <span t-if="post_type == 'discussion'">Discussions</span>
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
