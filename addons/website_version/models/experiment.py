@@ -75,6 +75,7 @@ class Experiment(osv.Model):
                 else:
                     temp['name'] = exp.name
                 if state:
+                    print self.pool['google.management'].get_goal_info(cr, uid, context=None)
                     current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, context=None)
                     if len(current[1]["variations"]) == 1:
                         raise Warning("You must define at least one variation in your experiment.")
@@ -236,6 +237,22 @@ class google_management(osv.AbstractModel):
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
         return gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
 
+    def get_goal_info(self, cr, uid, context=None):
+        gs_pool = self.pool['google.service']
+
+        params = {
+            'access_token': self.get_token(cr, uid, context),
+        }
+
+        accountId='55031254'
+        webPropertyId='UA-55031254-1'
+        profileId='91492412'
+        
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/goals' % (accountId, webPropertyId, profileId)
+        return gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
+
     def delete_an_experiment(self, cr, uid, experiment_id, context=None):
         gs_pool = self.pool['google.service']
 
@@ -293,7 +310,7 @@ class google_management(osv.AbstractModel):
     # Should be called at configuration
     def get_management_scope(self):
         return 'https://www.googleapis.com/auth/analytics https://www.googleapis.com/auth/analytics.edit'
-
+        
     def authorize_google_uri(self, cr, uid, from_url='http://www.odoo.com', context=None):
         url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_management_scope(), context=context)
         return url

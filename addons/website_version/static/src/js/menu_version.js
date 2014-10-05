@@ -109,6 +109,31 @@
             window.location.href = 'https://www.google.com/analytics/web';
 
         },
+
+        create_experiment: function() {
+            var m_names = new Array("January", "February", "March", 
+                "April", "May", "June", "July", "August", "September", 
+                "October", "November", "December");
+            var d = new Date();
+            var curr_date = d.getDate();
+            var curr_month = d.getMonth();
+            var curr_year = d.getFullYear();
+            website.prompt({
+                id: "editor_new_experiment",
+                window_title: _t("New experiment"),
+                input: "name" ,
+                default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
+            }).then(function (name) {
+                var context = website.get_context();
+                openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name }).then(function (result) {
+
+                    location.reload();
+                    alert("You are actually working on "+name+ " version.");
+                }).fail(function(){
+                    alert("This name already exists.");
+                });
+            });
+        },
         
     });
 
