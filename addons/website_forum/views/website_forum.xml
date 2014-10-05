@@ -112,9 +112,11 @@
                 </div>
                 <div class="col-sm-3" id="right-column">
                     <div t-if="not header.get('ask_hide')" class="btn-group btn-block mb16">
-                        <button type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
-                            New
-                        </button>
+                        <a type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
+                            <t t-if="forum.default_allow == 'ask_question'">Ask Question</t>
+                            <t t-if="forum.default_allow == 'post_link'">Submit Post</t>
+                            <t t-if="forum.default_allow == 'post_discussion'">New Post</t>
+                        </a>
                         <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                             <span class="sr-only">Select Post</span>
@@ -138,7 +140,7 @@
                     </div>
                     <div class="panel panel-default" id="about_forum">
                         <div class="panel-heading">
-                            <h3 class="panel-title">About This Forum</h3>
+                            <h3 class="panel-title">About This Community</h3>
                         </div>
                         <div class="panel-body">
                             <t t-raw="forum.description"/>
@@ -290,7 +292,7 @@
                   <t t-if="tag"><span t-field="tag.name"/></t>
                   <t t-if="sorting == 'relevancy'"> by relevancy</t>
                   <t t-if="sorting == 'date'"> by activity date</t>
-                  <t t-if="sorting == 'creation'"> by creation date</t>
+                  <t t-if="sorting == 'creation'"> by newest</t>
                   <t t-if="sorting == 'answered'"> by most answered</t>
                   <t t-if="sorting == 'vote'"> by most voted</t>
                   <b class="caret"/>
@@ -350,20 +352,42 @@
 <!-- Edition: Post Article -->
 <template id="post_link">
     <t t-call="website_forum.header">
-        <h1 class="mt0">Post Your Article</h1>
-        <p>
-            <b>Share</b> Start Something Awesome
+        <h1 class="mt0">Submit a Link</h1>
+        <p class="mb32">
+            Share an awesome link. Your post will appear in the 'Newest' top-menu.
+            If the community vote on your post, it will get traction by being promoted
+            in the homepage.
+        </p><p>
+            We keep a high level of quality in showcased posts, only 20% of the submited
+            posts will be featured.
         </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/link/new" method="post" role="form" class="tag_text">
-            <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
-                class="form-control mb16 link_url" placeholder="Your Article URL..."/>
+        <form t-attf-action="/forum/#{ slug(forum) }/link/new" method="post" role="form" class="tag_text form-horizontal">
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
-            <input type="text" name="content" readonly="True" required="True" t-attf-value="#{content}"
-                class="form-control" placeholder="Your Article Title..."/>
-            <br/>
-            <input type="text" name="post_tags" readonly="True" placeholder="Tags" class="form-control load_tags"/>
-            <br/>
-            <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post Your Article</button>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="post_name">URL to Share</label>
+                <div class="col-sm-8">
+                    <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
+                        class="form-control mb16 link_url" placeholder="e.g. https://www.odoo.com"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="post_name">Post Title</label>
+                <div class="col-sm-8">
+                    <input type="text" name="content" readonly="True" required="True" t-attf-value="#{content}"
+                        class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="post_name">Tags</label>
+                <div class="col-sm-8">
+                    <input type="text" name="post_tags" readonly="True" class="form-control load_tags"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post Your Article</button>
+                </div>
+            </div>
         </form>
     </t>
 </template>
