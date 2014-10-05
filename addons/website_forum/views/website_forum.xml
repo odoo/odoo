@@ -69,11 +69,11 @@
                 </div>
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li t-att-class="sorting == 'relevancy' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy') }}">Trending</a>
+                        <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy desc') }}">Trending</a>
                         </li>
-                        <li t-att-class="sorting == 'creation' and 'active' or '' ">
-                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='creation') }}">Newest</a>
+                        <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                            <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='create_date desc') }}">Newest</a>
                         </li>
                         <li t-att-class="searches.get('users') and 'active' or '' ">
                             <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
@@ -275,11 +275,11 @@
                   <t t-if="filters == 'unanswered'">Unanswered</t>
                   <t t-if="filters == 'followed'">Followed</t>
                   <t t-if="tag"><span t-field="tag.name"/></t>
-                  <t t-if="sorting == 'relevancy'"> by relevancy</t>
-                  <t t-if="sorting == 'date'"> by activity date</t>
-                  <t t-if="sorting == 'creation'"> by newest</t>
-                  <t t-if="sorting == 'answered'"> by most answered</t>
-                  <t t-if="sorting == 'vote'"> by most voted</t>
+                  <t t-if="sorting == 'relevancy desc'"> by relevancy</t>
+                  <t t-if="sorting == 'write_date desc'"> by activity date</t>
+                  <t t-if="sorting == 'create_date desc'"> by newest</t>
+                  <t t-if="sorting == 'child_count desc'"> by most answered</t>
+                  <t t-if="sorting == 'vote_count desc'"> by most voted</t>
                   <b class="caret"/>
               </a>
               <ul class="dropdown-menu">
@@ -298,20 +298,20 @@
                       <a href=""><t t-esc="tag.name"/></a>
                   </li>
                   <li class="dropdown-header">Sort by</li>
-                  <li t-att-class="sorting == 'relevancy' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy')">Relevancy</a>
+                  <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevancy</a>
                   </li>
-                  <li t-att-class="sorting == 'date' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='date')">Last activity date</a>
+                  <li t-att-class="sorting == 'write_date desc' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
                   </li>
-                  <li t-att-class="sorting == 'creation' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='creation')">Newest</a>
+                  <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
                   </li>
-                  <li t-att-class="sorting == 'answered' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='answered')">Most answered</a>
+                  <li t-att-class="sorting == 'child_count desc' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
                   </li>
-                  <li t-att-class="sorting == 'vote' and 'active' or '' ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote')">Most voted</a>
+                  <li t-att-class="sorting == 'vote_count desc' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
                   </li>
               </ul>
             </small>
