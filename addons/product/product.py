@@ -868,6 +868,9 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
         return res
 
+    def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
+        return self._is_product_variant_impl(cr, uid, ids, name, arg, context=context)
+
     def _is_product_variant_impl(self, cr, uid, ids, name, arg, context=None):
         return dict.fromkeys(ids, True)
 
@@ -934,6 +937,7 @@ class product_product(osv.osv):
         'image_medium': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
             string="Medium-sized image", type="binary",
             help="Image of the product variant (Medium-sized image of product template if false)."),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
     }
 
     _defaults = {
