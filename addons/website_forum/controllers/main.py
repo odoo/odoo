@@ -96,13 +96,8 @@ class WebsiteForum(http.Controller):
         else:
             filters = 'all'
 
-        if post_type == 'link':
-            domain += [('type', '=', 'link')]
-        elif post_type == 'question':
-            domain += [('type', '=', 'question')]
-        elif post_type == 'discussion':
-            domain += [('type', '=', 'discussion')]
-
+        if post_type:
+            domain += [('type', '=', post_type)]
         if not sorting:
             sorting = forum.default_order
 
