@@ -79,7 +79,7 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True)
-    def questions(self, forum, tag=None, page=1, filters='all', sorting='relevancy', search='', post_type='all', **post):
+    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type='all', **post):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
@@ -103,17 +103,8 @@ class WebsiteForum(http.Controller):
         elif post_type == 'discussion':
             domain += [('type', '=', 'discussion')]
 
-        if sorting == 'answered':
-            order = 'child_count desc'
-        elif sorting == 'vote':
-            order = 'vote_count desc'
-        elif sorting == 'date':
-            order = 'write_date desc'
-        elif sorting == 'creation':
-            order = 'create_date desc'
-        else:
-            sorting == 'relevancy'
-            order = 'relevancy'
+        if not sorting:
+            sorting = forum.default_order
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
@@ -121,18 +112,18 @@ class WebsiteForum(http.Controller):
         else:
             url = "/forum/%s" % slug(forum)
 
-        url_args = {}
+        url_args = {
+            'sorting': sorting
+        }
         if search:
             url_args['search'] = search
         if filters:
             url_args['filters'] = filters
-        if sorting:
-            url_args['sorting'] = sorting
         pager = request.website.pager(url=url, total=question_count, page=page,
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
 
-        obj_ids = Post.search(cr, uid, domain, limit=self._post_per_page, offset=pager['offset'], order=order, context=context)
+        obj_ids = Post.search(cr, uid, domain, limit=self._post_per_page, offset=pager['offset'], order=sorting, context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
 
         values = self._prepare_forum_values(forum=forum, searches=post)
@@ -296,6 +287,7 @@ class WebsiteForum(http.Controller):
                 'forum_id': forum.id,
                 'name': post.get('post_name', ''),
                 'content': post.get('content'),
+                'content_link': post.get('content_link', False),
                 'parent_id': post_parent and post_parent.id or False,
                 'tag_ids': post_tag_ids,
                 'type': post_parent and post_parent.type or post_type,

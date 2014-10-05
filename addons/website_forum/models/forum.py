@@ -30,10 +30,11 @@ class Forum(osv.Model):
         'relevancy_option_first': fields.float('First Relevancy Parameter'),
         'relevancy_option_second': fields.float('Second Relevancy Parameter'),
         'default_order': fields.selection([
-            ('creation','Newest'),
-            ('date','Last Updated'),
-            ('vote','Most Voted'),
-            ('relevancy','Relevancy'),
+            ('create_date desc','Newest'),
+            ('write_date desc','Last Updated'),
+            ('vote_count desc','Most Voted'),
+            ('relevancy desc','Relevancy'),
+            ('child_count desc','Answered'),
             ], 'Default Order', required=True),
         'default_allow': fields.selection([('post_link','Link'),('ask_question','Question'),('post_discussion','Discussion')], 'Default Post', required=True),
         'allow_link': fields.boolean('Links', help="When clicking on the post, it redirects to an external link"),
@@ -80,14 +81,14 @@ class Forum(osv.Model):
         return False
 
     _defaults = {
-        'default_order': 'date',
+        'default_order': 'write_date desc',
         'allow_question': True,
         'default_allow': 'ask_question',
         'allow_link': False,
         'allow_discussion': False,
         'description': 'This community is for professionals and enthusiasts of our products and services.',
         'faq': _get_default_faq,
-        'introduction_message': """<h1>Welcome to Odoo Forum</h1>
+        'introduction_message': """<h1 class="mt0">Welcome!</h1>
                   <p> This community is for professionals and enthusiasts of our products and services.
                       Share and discuss the best content and new marketing ideas,
                       build your professional profile and become a better marketer together.
@@ -249,6 +250,7 @@ class Post(osv.Model):
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content'),
+        'content_link': fields.char('URL', help="URL of Link Articles"),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),

@@ -349,7 +349,7 @@
         <form t-attf-action="/forum/#{ slug(forum) }/link/new" method="post" role="form" class="tag_text form-horizontal">
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="post_name">URL to Share</label>
+                <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
                 <div class="col-sm-8">
                     <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
                         class="form-control mb16 link_url" placeholder="e.g. https://www.odoo.com"/>
@@ -363,7 +363,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="post_name">Tags</label>
+                <label class="col-sm-2 control-label" for="post_tags">Tags</label>
                 <div class="col-sm-8">
                     <input type="text" name="post_tags" readonly="True" class="form-control load_tags"/>
                 </div>
@@ -566,7 +566,7 @@
             <div t-attf-class="col-md-10 #{not question.active and 'alert alert-danger' or ''}">
                 <h1 class="mt0">
                     <t t-if="question.type == 'link'">
-                        <a t-att-href="question.name" t-raw="question.content"/>
+                        <a t-att-href="question.content_link" t-raw="question.name"/>
                     </t>
                     <t t-if="question.type in ('question', 'discussion')">
                         <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
