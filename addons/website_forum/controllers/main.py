@@ -79,7 +79,7 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True)
-    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type='all', **post):
+    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
@@ -93,13 +93,13 @@ class WebsiteForum(http.Controller):
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
             domain += [('message_follower_ids', '=', user.partner_id.id)]
-        else:
-            filters = 'all'
 
         if post_type:
             domain += [('type', '=', post_type)]
         if not sorting:
             sorting = forum.default_order
+
+        print domain
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:

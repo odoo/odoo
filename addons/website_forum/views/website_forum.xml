@@ -192,7 +192,7 @@
         <div class="col-md-10 clearfix">
             <div class="question-name">
                 <t t-if="question.type == 'link'">
-                    <a t-att-href="question.name" t-raw="question.content"/>
+                    <a t-att-href="question.content_link" t-raw="question.name"/>
                 </t>
                 <t t-if="question.type in ('question', 'discussion')">
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
