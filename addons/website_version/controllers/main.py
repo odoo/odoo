@@ -57,6 +57,12 @@ class TableExporter(http.Controller):
         website_id = request.website.id
         ids = snap.search(cr, uid, [('website_id','=',website_id),('view_ids.key','=',v.key)],context=context)
         result = snap.read(cr, uid, ids,['id','name'],context=context)
+        snap_id = request.context.get('snapshot_id')
+        for x in result:
+            if x['id'] == snap_id:
+                x['bold'] = 1
+            else:
+                x['bold'] = 0 
         return result
 
     @http.route(['/website_version/is_master'], type = 'json', auth = "public", website = True)
