@@ -113,18 +113,18 @@
                 <div class="col-sm-3" id="right-column">
                     <div t-if="not header.get('ask_hide')" class="btn-group btn-block mb16">
                         <a type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
-                            <t t-if="forum.default_allow == 'ask_question'">Ask Question</t>
-                            <t t-if="forum.default_allow == 'post_link'">Submit Post</t>
-                            <t t-if="forum.default_allow == 'post_discussion'">New Post</t>
+                            <t t-if="forum.default_allow == 'ask_question'">Ask a Question</t>
+                            <t t-if="forum.default_allow == 'post_link'">Submit a Post</t>
+                            <t t-if="forum.default_allow == 'post_discussion'">New Discussion</t>
                         </a>
                         <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                             <span class="sr-only">Select Post</span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li t-if="allow_link"><a t-attf-href="/forum/#{slug(forum)}/post_link">Share a Link</a></li>
-                            <li t-if="allow_question"><a t-attf-href="/forum/#{slug(forum)}/ask_question">Ask a Question</a></li>
-                            <li t-if="allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Launch a Discussion</a></li>
+                            <li t-if="forum.allow_link"><a t-attf-href="/forum/#{slug(forum)}/post_link">Submit a Post</a></li>
+                            <li t-if="forum.allow_question"><a t-attf-href="/forum/#{slug(forum)}/ask_question">Ask a Question</a></li>
+                            <li t-if="forum.allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/post_discussion">Launch a Discussion</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-default">
@@ -191,8 +191,6 @@
         </div>
         <div class="col-md-10 clearfix">
             <div class="question-name">
-                <span t-if="question.type == 'question'" class="fa fa-question-circle text-muted"/>
-                <span t-if="question.type == 'discussion'" class="fa fa-comment text-muted"/>
                 <t t-if="question.type == 'link'">
                     <a t-att-href="question.name" t-raw="question.content"/>
                 </t>
@@ -204,32 +202,19 @@
             </div>
             <t t-foreach="question.tag_ids" t-as="question_tag">
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
-                    <span t-attf-class="pull-right badge #{tag and tag.name == question_tag.name and 'badge-active' ''}" t-field="question_tag.name"
+                    <span t-attf-class="pull-right label #{tag and tag.name == question_tag.name and 'label-primary' or 'label-default'}" t-field="question_tag.name"
                         style="margin-right: 4px;"/>
                 </a>
             </t>
-            <div class="text-muted">
-                by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
-                    t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
-                    style="display: inline-block;"/>
-                on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
-                <span t-if="question.type == 'question'" class="visible-xs">
-                    <b t-esc="question.child_count or 0"/>
-                    <t t-if="question.child_count&gt;1">answers</t>
-                    <t t-if="question.child_count==1">answer</t>
-                </span>
-                with <b t-field="question.views"/> views
-                <span t-if="question.vote_count&gt;0"> and
-                    <b t-esc="question.vote_count or 0"/>
-                    <t t-if="question.vote_count&gt;1">votes</t>
-                    <t t-if="question.vote_count==1">vote</t>
-                </span>
-                <a t-if="question.type == 'link'" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+            <small class="text-muted">
+                By <span t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
+                • <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                • <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
                     <t t-esc="question.child_count"/>
-                    <t t-if="question.child_count&gt;1">Comments</t>
-                    <t t-if="question.child_count&lt;=1">Comment</t>
+                    <t t-if="question.child_count&gt;1">comments</t>
+                    <t t-if="question.child_count&lt;=1">comment</t>
                 </a>
-            </div>
+            </small>
         </div>
     </div>
 </template>
@@ -614,7 +599,7 @@
                     <div class="pull-right">
                         <div class="text-right">
                             <t t-foreach="question.tag_ids" t-as="tag">
-                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
+                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label lebel-default" t-field="tag.name"/>
                             </t>
                         </div>
                         <ul class="list-inline" id="options">
@@ -863,7 +848,7 @@
         </p>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="tags" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="badge">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="label label-default">
                     <span t-field="tag.name"/>
                 </a>
                 <span>
