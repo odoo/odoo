@@ -19,16 +19,17 @@
                             <t t-if="website.get_current_snapshot(context=context)[0] != 0 ">
                                 <li><a href="#" data-action="master">Master</a></li>
                             </t>
-                            <li class="last_divider divider"> </li>
+                            <li class="first_divider divider"> </li>
                             <li><a href="#" data-action="create_snapshot">Create a new version</a></li>
+                            <li class="divider"> </li>
                             <!-- <li><a href="#" data-action="google_analytics">Statistics  
                             <span class="badge"><t t-esc="website.get_running_experiment_number(context=context)"></t></span></a></li> -->
                             <t t-if="website.get_current_snapshot(context=context)[0] != 0 ">
-                                <li class="divider"> </li>
                                 <li><a href="#" data-action="publish_version" 
                                     t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">Publish this version</a></li>
-                                <li class="divider"> </li>
+                                <li class="divider publish_version"> </li>
                             </t>
+                            <li><a href="#" data-action="create_snapshot">Create an experiment</a></li>
                         </ul>
                     </li>
             </xpath>

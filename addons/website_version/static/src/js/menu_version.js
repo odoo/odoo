@@ -26,15 +26,15 @@
                 var view_id = $('html').attr('data-view-xmlid');
                 openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
                     self.$el.find(".snapshot").remove();
-                    self.$el.find(".last_divider").before(QWeb.render("all_versions", {snapshots:result}));
+                    self.$el.find(".first_divider").before(QWeb.render("all_versions", {snapshots:result}));
 
                     openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
                         .then(function (result) {
                             self.$el.find(".publish").remove();
-                            // self.$el.find("#last_divider").remove();
+                            self.$el.find(".second_divider").remove();
                             if(!result){
-                                // self.$el.find(".version_menu").append('<li class="divider" id="last_divider"> </li>');
-                                self.$el.find(".version_menu").append('<li class="publish"><a href="#" data-action="publish" data-view_id='+view_id+'>Publish this page</a></li>');
+                                self.$el.find(".publish_version").before('<li class="divider second_divider"> </li>');
+                                self.$el.find(".publish_version").before('<li class="publish"><a href="#" data-action="publish" data-view_id='+view_id+'>Publish this page</a></li>');
                                 
                             }
                         });
