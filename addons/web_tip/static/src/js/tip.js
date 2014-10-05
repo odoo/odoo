@@ -90,6 +90,9 @@
             var model = formView.model;
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
+            formView.on('view_content_has_changed', self, function() {
+                self.eval_tip(null, model, mode, type);
+            });
             self.eval_tip(null, model, mode, type);
         },
 
@@ -136,7 +139,9 @@
         add_tip: function(tip) {
             var self = this;
             self.tip_mutex.exec(function() {
-                return $.when(self.do_tip(tip));
+                if (!tip.is_consumed) {
+                    return $.when(self.do_tip(tip));
+                }
             });
         },
 
@@ -167,6 +172,15 @@
                         });
                     }
                     return def.reject();
+                }
+
+                // if needed, scroll prior to displaying the tip
+                var scroll = _.find(self.$element.parentsUntil('body'), function(el) {
+                    var overflow = $(el).css('overflow-y');
+                    return (overflow === 'auto' || overflow === 'scroll');
+                });
+                if (scroll) {
+                    $(scroll).scrollTo(self.$element);
                 }
 
                 var _top = self.$element.offset().top -5;

@@ -8,20 +8,21 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-09-18 12:48+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:08+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-19 08:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:387
 #, python-format
 msgid "%s %s has been added to the fleet!"
-msgstr ""
+msgstr "%s %s wurde zur Flotte hinzugefügt!"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:661
@@ -57,6 +58,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Vertrags.\n"
+"              </p><p>\n"
+"                Verwalten Sie alle Verträge (Leasing, Versicherungen, etc.) "
+"mitsamt\n"
+"                der Services, Kosten. Odoo benachrichtigt Sie automatisch, "
+"wenn\n"
+"                Verträge erneuert werden müssen.\n"
+"              </p><p>\n"
+"                Jeder Vertrag (z.B.: Leasing) kann verschiedene Services "
+"beinhalten\n"
+"                (Reparaturen, Versicherungen, Wartungsintervalle).\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
@@ -70,6 +85,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Eingabe von Betriebskosten.\n"
+"              </p><p>\n"
+"                Odoo unterstützt Sie bei der Verwaltung Ihrer \n"
+"                Fahrzeuge. Kosten werden automatisch erzeugt durch "
+"Wartungsservices ,\n"
+"                Verträge (feste Laufzeit oder wiederkehrende) und "
+"Tankprotokolle.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
@@ -151,6 +176,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Wartungsservice. \n"
+"              </p><p>\n"
+"                Odoo hilft Ihnen bei Durchführung und Verfolgung Ihrer "
+"Wartungsleistung . \n"
+"                Es gibt verschiedene Typen Wartungsservices: Gelegentliche "
+"Reparaturen, feste\n"
+"                Wartungsintervalle etc.\n"
+"               </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
@@ -188,6 +223,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie zur Erstellung eines neuen Fahrzeugs.\n"
+"              </p><p>\n"
+"                Sie können Ihre Fahrzeugflotte verwalten, indem Sie die "
+"Verträge, Wartungsservices, einmalige\n"
+"                und laufende Kosten, Kilometerstände und "
+"Kraftstoffverbräuche für jedes einzelne Fahrzeug eingeben.\n"
+"            </p><p>\n"
+"                Odoo alarmiert Sie, wenn Ihre Verträge für Wartung oder "
+"Versicherung zu erneuern oder zu \n"
+"                verlängern sind.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
@@ -227,6 +275,16 @@ msgid ""
 "        </p>\n"
 "      "
 msgstr ""
+"<p>\n"
+"          Odoo hilft Ihnen beim Kostenmanagement Ihres Fuhrparks.\n"
+"          Diese Kosten für Wartung und Nutzung finden Sie hier. \n"
+"        </p>\n"
+"        <p>\n"
+"          Durch die verschiedenen Filtermöglichkeiten, können die "
+"vollständigen\n"
+"          Kosten nach Typ und Fahrzeug ausgewertet werden.\n"
+"        </p>\n"
+"      "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -565,7 +623,7 @@ msgstr "Kosten für Fahrzeug"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr ""
+msgstr "Einmalige Kosten zu Beginn der Vertragslaufzeit"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_subtype_id:0
@@ -623,7 +681,7 @@ msgstr ""
 #: field:fleet.vehicle.state,create_uid:0
 #: field:fleet.vehicle.tag,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: fleet
 #: field:fleet.contract.state,create_date:0
@@ -639,7 +697,7 @@ msgstr ""
 #: field:fleet.vehicle.state,create_date:0
 #: field:fleet.vehicle.tag,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: fleet
 #: help:fleet.vehicle,state_id:0
@@ -660,7 +718,7 @@ msgstr "Datum"
 #. module: fleet
 #: help:fleet.vehicle,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum der zuletzt gesendeten Nachricht"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,date:0
@@ -862,7 +920,7 @@ msgstr "Generierte Kosten"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Generated Recurring Costs"
-msgstr ""
+msgstr "Generierte wiederkehrende Kosten"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -871,7 +929,7 @@ msgstr ""
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppierung"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -951,7 +1009,7 @@ msgstr "Hybrid-Kraftstoff"
 #: field:fleet.vehicle.state,id:0
 #: field:fleet.vehicle.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: fleet
 #: help:fleet.vehicle,message_unread:0
@@ -1037,7 +1095,7 @@ msgstr "Kilometer"
 #. module: fleet
 #: field:fleet.vehicle,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum der letzten Nachricht"
 
 #. module: fleet
 #: field:fleet.vehicle,odometer:0
@@ -1058,7 +1116,7 @@ msgstr "Letzter Kilometerstand"
 #: field:fleet.vehicle.state,write_uid:0
 #: field:fleet.vehicle.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: fleet
 #: field:fleet.contract.state,write_date:0
@@ -1074,7 +1132,7 @@ msgstr ""
 #: field:fleet.vehicle.state,write_date:0
 #: field:fleet.vehicle.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1123,13 +1181,13 @@ msgstr "Logo"
 #: field:fleet.vehicle,image_medium:0
 #: field:fleet.vehicle.model,image_medium:0
 msgid "Logo (medium)"
-msgstr ""
+msgstr "Logo (Mittelgroß)"
 
 #. module: fleet
 #: field:fleet.vehicle,image_small:0
 #: field:fleet.vehicle.model,image_small:0
 msgid "Logo (small)"
-msgstr ""
+msgstr "Logo (Klein)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1310,7 +1368,7 @@ msgstr "Kilometerstand"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "Tachostand nach Fahrzeug"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1394,7 +1452,7 @@ msgstr "Person, die den Vertrag genehmigen muss"
 #. module: fleet
 #: field:fleet.vehicle,power:0
 msgid "Power"
-msgstr ""
+msgstr "Leistung"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -1841,12 +1899,12 @@ msgstr "Fahrzeugkosten"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs Month"
-msgstr ""
+msgstr "Monatliche Fahrzeugkosten"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs by Month"
-msgstr ""
+msgstr "Monatl. Fahrzeugkosten pro Monat"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
@@ -1917,7 +1975,7 @@ msgstr "Betriebskosten (Fahrzeug)"
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "Fahrzeugkilometerstand"
 
 #. module: fleet
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
@@ -1998,7 +2056,7 @@ msgstr "und"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "g/km"
-msgstr ""
+msgstr "g/km"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_kanban

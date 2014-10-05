@@ -563,13 +563,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.pos_widget.screen_selector.back();
             });
 
+            this.$('.new-customer').click(function(){
+                self.display_client_details('edit',{
+                    'country_id': self.pos.company.country_id,
+                });
+            });
+
             var partners = this.pos.db.get_partners_sorted(1000);
             this.render_list(partners);
             
-            this.pos.load_new_partners().then(function(){ 
-                // will only get called if new partners were reloaded.
-                self.render_list(self.pos.db.get_partners_sorted(1000));
-            });
+            this.reload_partners();
 
             if( this.old_client ){
                 this.display_client_details('show',this.old_client,0);
@@ -598,6 +601,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('.searchbox .search-clear').click(function(){
                 self.clear_search();
             });
+        },
+        barcode_client_action: function(code){
+            if (this.editing_client) {
+                this.$('.detail.barcode').val(code.code);
+            } else if (this.pos.db.get_partner_by_ean13(code.code)) {
+                this.display_client_details('show',this.pos.db.get_partner_by_ean13(code.code));
+            }
         },
         perform_search: function(query, associate_result){
             if(query){
@@ -655,7 +665,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         toggle_save_button: function(){
             var $button = this.$('.button.next');
-            if( this.new_client ){
+            if (this.editing_client) {
+                $button.addClass('oe_hidden');
+                return;
+            } else if( this.new_client ){
                 if( !this.old_client){
                     $button.text(_t('Set Customer'));
                 }else{
@@ -687,43 +700,207 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         partner_icon_url: function(id){
             return '/web/binary/image?model=res.partner&id='+id+'&field=image_small';
         },
+
+        // ui handle for the 'edit selected customer' action
+        edit_client_details: function(partner) {
+            this.display_client_details('edit',partner);
+        },
+
+        // ui handle for the 'cancel customer edit changes' action
+        undo_client_details: function(partner) {
+            if (!partner.id) {
+                this.display_client_details('hide');
+            } else {
+                this.display_client_details('show',partner);
+            }
+        },
+
+        // what happens when we save the changes on the client edit form -> we fetch the fields, sanitize them,
+        // send them to the backend for update, and call saved_client_details() when the server tells us the
+        // save was successfull.
+        save_client_details: function(partner) {
+            var self = this;
+            
+            var fields = {}
+            this.$('.client-details-contents .detail').each(function(idx,el){
+                fields[el.name] = el.value;
+            });
+
+            if (!fields.name) {
+                this.pos_widget.screen_selector.show_popup('error',{
+                    message: _t('A Customer Name Is Required'),
+                });
+                return;
+            }
+            
+            if (this.uploaded_picture) {
+                fields.image = this.uploaded_picture;
+            }
+
+            fields.id           = partner.id || false;
+            fields.country_id   = fields.country_id || false;
+            fields.ean13        = fields.ean13 ? this.pos.barcode_reader.sanitize_ean(fields.ean13) : false; 
+
+            new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
+                self.saved_client_details(partner_id);
+            });
+        },
+        
+        // what happens when we've just pushed modifications for a partner of id partner_id
+        saved_client_details: function(partner_id){
+            var self = this;
+            this.reload_partners().then(function(){
+                var partner = self.pos.db.get_partner_by_id(partner_id);
+                if (partner) {
+                    self.new_client = partner;
+                    self.toggle_save_button();
+                    self.display_client_details('show',partner);
+                } else {
+                    // should never happen, because create_from_ui must return the id of the partner it
+                    // has created, and reload_partner() must have loaded the newly created partner. 
+                    self.display_client_details('hide');
+                }
+            });
+        },
+
+        // resizes an image, keeping the aspect ratio intact,
+        // the resize is useful to avoid sending 12Mpixels jpegs
+        // over a wireless connection.
+        resize_image_to_dataurl: function(img, maxwidth, maxheight, callback){
+            img.onload = function(){
+                var png = new Image();
+                var canvas = document.createElement('canvas');
+                var ctx    = canvas.getContext('2d');
+                var ratio  = 1;
+
+                if (img.width > maxwidth) {
+                    ratio = maxwidth / img.width;
+                }
+                if (img.height * ratio > maxheight) {
+                    ratio = maxheight / img.height;
+                }
+                var width  = Math.floor(img.width * ratio);
+                var height = Math.floor(img.height * ratio);
+
+                canvas.width  = width;
+                canvas.height = height;
+                ctx.drawImage(img,0,0,width,height);
+
+                var dataurl = canvas.toDataURL();
+                callback(dataurl);
+            }
+        },
+
+        // Loads and resizes a File that contains an image.
+        // callback gets a dataurl in case of success.
+        load_image_file: function(file, callback){
+            var self = this;
+            if (!file.type.match(/image.*/)) {
+                this.pos_widget.screen_selector.show_popup('error',{
+                    message:_t('Unsupported File Format'),
+                    comment:_t('Only web-compatible Image formats such as .png or .jpeg are supported'),
+                });
+                return;
+            }
+            
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var dataurl = event.target.result;
+                var img     = new Image();
+                img.src = dataurl;
+                self.resize_image_to_dataurl(img,800,600,callback);
+            }
+            reader.onerror = function(){
+                self.pos_widget.screen_selector.show_popup('error',{
+                    message:_t('Could Not Read Image'),
+                    comment:_t('The provided file could not be read due to an unknown error'),
+                });
+            };
+            reader.readAsDataURL(file);
+        },
+
+        // This fetches partner changes on the server, and in case of changes, 
+        // rerenders the affected views
+        reload_partners: function(){
+            var self = this;
+            return this.pos.load_new_partners().then(function(){
+                self.render_list(self.pos.db.get_partners_sorted(1000));
+                
+                // update the currently assigned client if it has been changed in db.
+                var curr_client = self.pos.get_order().get_client();
+                if (curr_client) {
+                    self.pos.get_order().set_client(self.pos.db.get_partner_by_id(curr_client.id));
+                }
+            });
+        },
+
+        // Shows,hides or edit the customer details box :
+        // visibility: 'show', 'hide' or 'edit'
+        // partner:    the partner object to show or edit
+        // clickpos:   the height of the click on the list (in pixel), used
+        //             to maintain consistent scroll.
         display_client_details: function(visibility,partner,clickpos){
+            var self = this;
+            var contents = this.$('.client-details-contents');
+            var parent   = this.$('.client-list').parent();
+            var scroll   = parent.scrollTop();
+            var height   = contents.height();
+
+            contents.off('click','.button.edit'); 
+            contents.off('click','.button.save'); 
+            contents.off('click','.button.undo'); 
+            contents.on('click','.button.edit',function(){ self.edit_client_details(partner); });
+            contents.on('click','.button.save',function(){ self.save_client_details(partner); });
+            contents.on('click','.button.undo',function(){ self.undo_client_details(partner); });
+            this.editing_client = false;
+            this.uploaded_picture = null;
+
             if(visibility === 'show'){
-                var contents = this.$('.client-details-contents');
-                var parent   = this.$('.client-list').parent();
-                var old_scroll   = parent.scrollTop();
-                var old_height   = contents.height();
                 contents.empty();
                 contents.append($(QWeb.render('ClientDetails',{widget:this,partner:partner})));
+
                 var new_height   = contents.height();
 
                 if(!this.details_visible){
-                    if(clickpos < old_scroll + new_height + 20 ){
+                    if(clickpos < scroll + new_height + 20 ){
                         parent.scrollTop( clickpos - 20 );
                     }else{
                         parent.scrollTop(parent.scrollTop() + new_height);
                     }
                 }else{
-                    parent.scrollTop(parent.scrollTop() - old_height + new_height);
+                    parent.scrollTop(parent.scrollTop() - height + new_height);
                 }
 
                 this.details_visible = true;
-            }else if(visibility === 'hide'){
-                var contents = this.$('.client-details-contents');
-                var parent   = this.$('.client-list').parent();
-                var scroll   = parent.scrollTop();
-                var height   = contents.height();
+                this.toggle_save_button();
+            } else if (visibility === 'edit') {
+                this.editing_client = true;
+                contents.empty();
+                contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
+                this.toggle_save_button();
+
+                contents.find('.image-uploader').on('change',function(){
+                    self.load_image_file(event.target.files[0],function(res){
+                        if (res) {
+                            contents.find('.client-picture img, .client-picture .fa').remove();
+                            contents.find('.client-picture').append("<img src='"+res+"'>");
+                            contents.find('.detail.picture').remove();
+                            self.uploaded_picture = res;
+                        }
+                    });
+                });
+            } else if (visibility === 'hide') {
                 contents.empty();
                 if( height > scroll ){
                     contents.css({height:height+'px'});
                     contents.animate({height:0},400,function(){
                         contents.css({height:''});
                     });
-                    //parent.scrollTop(0);
                 }else{
                     parent.scrollTop( parent.scrollTop() - height);
                 }
                 this.details_visible = false;
+                this.toggle_save_button();
             }
         },
         close: function(){

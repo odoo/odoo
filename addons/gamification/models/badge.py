@@ -95,7 +95,7 @@ class gamification_badge(osv.Model):
             the total number of time this badge was granted
             the total number of users this badge was granted to
         """
-        result = dict.fromkeys(ids, {'stat_count':0, 'stat_count_distinct':0, 'unique_owner_ids':[]})
+        result = dict((res_id, {'stat_count': 0, 'stat_count_distinct': 0, 'unique_owner_ids': []}) for res_id in ids)
 
         cr.execute("""
             SELECT badge_id, count(user_id) as stat_count,

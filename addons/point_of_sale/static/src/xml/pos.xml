@@ -285,13 +285,78 @@
         </tr>
     </t>
 
+    <t t-name="ClientDetailsEdit">
+        <section class='client-details edit'>
+            <div class='client-picture'>
+                <t t-if='!partner.id'>
+                    <i class='fa fa-camera'></i>
+                </t>
+                <t t-if='partner.id'>
+                    <img t-att-src='widget.partner_icon_url(partner.id)' />
+                </t>
+                <input type='file' class='image-uploader'></input>   
+            </div>
+            <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
+            <div class='edit-buttons'>
+                <div class='button undo'><i class='fa fa-undo' /></div>
+                <div class='button save'><i class='fa fa-floppy-o' /></div>
+            </div>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Street</span>
+                        <input class='detail client-address-street' name='street'       t-att-value='partner.street' placeholder='Street'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>City</span>
+                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city' placeholder='City'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Postcode</span>
+                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip' placeholder='ZIP'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Country</span>
+                        <select class='detail client-address-country' name='country_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.countries' t-as='country'>
+                                <option t-att-value='country.id' t-att-selected="partner_country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
+                                    <t t-esc='country.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>Email</span>
+                        <input class='detail client-email'  name='email'    type='email'    t-att-value='partner.email || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Phone</span>
+                        <input class='detail client-phone'  name='phone'    type='tel'      t-att-value='partner.phone || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Barcode</span>
+                        <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Tax ID</span>
+                        <input class='detail vat'           name='vat'     t-att-value='partner.vat || ""'></input>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
                 <img t-att-src='widget.partner_icon_url(partner.id)' />
-                <!--<img src='http://static.fjcdn.com/gifs/Aku_c019d6_2548127.gif' />-->
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
+            <div class='edit-buttons'>
+                <div class='button edit'><i class='fa fa-pencil-square' /></div>
+            </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
                     <div class='client-detail'>
@@ -299,11 +364,11 @@
                         <span class='detail client-address'><t t-esc='partner.address' /></span>
                     </div>
                     <div class='client-detail'>
-                        <span class='label'>email</span>
+                        <span class='label'>Email</span>
                         <span class='detail client-email'><t t-esc='partner.email' /></span>
                     </div>
                     <div class='client-detail'>
-                        <span class='label'>phone</span>
+                        <span class='label'>Phone</span>
                         <t t-if='partner.phone'>
                             <span class='detail client-phone'><t t-esc='partner.phone' /></span>
                         </t>
@@ -314,12 +379,21 @@
                 </div>
                 <div class='client-details-right'>
                     <div class='client-detail'>
-                        <span class='label'>ID</span>
+                        <span class='label'>Barcode</span>
                         <t t-if='partner.ean13'>
                             <span class='detail client-id'><t t-esc='partner.ean13'/></span>
                         </t>
                         <t t-if='!partner.ean13'>
                             <span class='detail client-id empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Tax ID</span>
+                        <t t-if='partner.vat'>
+                            <span class='detail vat'><t t-esc='partner.vat'/></span>
+                        </t>
+                        <t t-if='!partner.vat'>
+                            <span class='detail vat empty'>N/A</span>
                         </t>
                     </div>
                 </div>
@@ -340,6 +414,10 @@
                         <span class='search-clear'></span>
                     </span>
                     <span class='searchbox'></span>
+                    <span class='button new-customer'>
+                        <i class='fa fa-user'></i>
+                        <i class='fa fa-plus'></i>
+                    </span>
                     <span class='button next oe_hidden highlight'>
                         Select Customer
                         <i class='fa fa-angle-double-right'></i>

@@ -204,6 +204,7 @@ class gamification_challenge(osv.Model):
         'category': 'hr',
         'reward_failure': False,
         'report_template_id': lambda s, *a, **k: s._get_report_template(*a, **k),
+        'reward_realtime': True,
     }
 
 
@@ -361,6 +362,9 @@ class gamification_challenge(osv.Model):
 
         return True
 
+    def action_start(self, cr, uid, ids, context=None):
+        """Start a challenge"""
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
         """Check a challenge
@@ -707,7 +711,7 @@ class gamification_challenge(osv.Model):
 
             rewarded_users = []
             challenge_ended = end_date == yesterday.strftime(DF) or force
-            if challenge.reward_id and challenge_ended or challenge.reward_realtime:
+            if challenge.reward_id and (challenge_ended or challenge.reward_realtime):
                 # not using start_date as intemportal goals have a start date but no end_date
                 reached_goals = self.pool.get('gamification.goal').read_group(cr, uid, [
                     ('challenge_id', '=', challenge.id),

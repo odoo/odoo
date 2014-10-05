@@ -151,7 +151,7 @@ class product_product(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':
@@ -306,7 +306,7 @@ class product_template(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':

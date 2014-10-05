@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
@@ -115,15 +116,23 @@ class event_track(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
 
+    def open_track_speakers_list(self, cr, uid, track_id, context=None):
+        track_id = self.browse(cr, uid, track_id, context=context)
+        return {
+            'name':_('Speakers'),
+            'domain': [('id', 'in',[partner.id for partner in track_id.speaker_ids])],
+            'view_type': 'form',
+            'view_mode': 'kanban,form',
+            'res_model': 'res.partner',
+            'view_id':False,
+            'type': 'ir.actions.act_window',
+        }
+
 #
 # Events
 #
 class event_event(osv.osv):
     _inherit = "event.event"
-
-    def _list_tz(self,cr,uid, context=None):
-        # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-        return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
     def _count_tracks(self, cr, uid, ids, field_name, arg, context=None):
         return {
@@ -131,8 +140,14 @@ class event_event(osv.osv):
             for event in self.browse(cr, uid, ids, context=context)
         }
 
+    def _count_sponsor(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.sponsor_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
+
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
-        res = dict.fromkeys(ids, [])
+        res = dict((res_id, []) for res_id in ids)
         for event in self.browse(cr, uid, ids, context=context):
             for track in event.track_ids:
                 res[event.id] += [tag.id for tag in track.tag_ids]
@@ -150,26 +165,25 @@ class event_event(osv.osv):
         'count_tracks': fields.function(_count_tracks, type='integer', string='Tracks'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
         'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
-        'timezone_of_event': fields.selection(_list_tz, 'Event Timezone', size=64),
+        'count_sponsor': fields.function(_count_sponsor, type='integer', string='Sponsors'),
     }
 
     _defaults = {
         'show_track_proposal': False,
         'show_tracks': False,
         'show_blog': False,
-        'timezone_of_event':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
     }
 
-    def _get_new_menu_pages(self, cr, uid, event, context=None):
-        context = context or {}
-        result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
-        if event.show_tracks:
-            result.append( (_('Talks'), '/event/%s/track' % slug(event)))
-            result.append( (_('Agenda'), '/event/%s/agenda' % slug(event)))
-        if event.blog_id:
-            result.append( (_('News'), '/blogpost'+slug(event.blog_ig)))
-        if event.show_track_proposal:
-            result.append( (_('Talk Proposals'), '/event/%s/track_proposal' % slug(event)))
+    @api.one
+    def _get_new_menu_pages(self):
+        result = super(event_event, self)._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
+        if self.show_tracks:
+            result.append((_('Talks'), '/event/%s/track' % slug(self)))
+            result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
+        if self.blog_id:
+            result.append((_('News'), '/blogpost'+slug(self.blog_ig)))
+        if self.show_track_proposal:
+            result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result
 
 #
@@ -195,8 +209,3 @@ class event_sponsors(osv.osv):
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
         'image_medium': fields.related('partner_id', 'image_medium', string='Logo', type='binary')
     }
-
-    def has_access_to_partner(self, cr, uid, ids, context=None):
-        partner_ids = [sponsor.partner_id.id for sponsor in self.browse(cr, uid, ids, context=context)]
-        return len(partner_ids) == self.pool.get("res.partner").search(cr, uid, [("id", "in", partner_ids)], count=True, context=context)
-

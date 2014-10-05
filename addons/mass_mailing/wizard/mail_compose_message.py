@@ -58,6 +58,6 @@ class MailComposeMessage(osv.TransientModel):
                     })],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
-                    'auto_delete': True,
+                    'auto_delete': not mass_mailing.keep_archives,
                 })
         return res

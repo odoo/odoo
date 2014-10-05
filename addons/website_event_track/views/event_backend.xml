@@ -18,14 +18,17 @@
             </field>
         </record>
 
-
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
             <field name="name">Event Locations</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
                 <form string="Event Location">
-                    <field name="name"/>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -101,6 +104,37 @@
         </record>
         <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.event_configuration" groups="base.group_no_one"/>
 
+        <!-- EVENT.SPONSOR VIEWS -->
+        <record model="ir.ui.view" id="view_event_sponsor_tree">
+            <field name="name">event.sponsor.tree</field>
+            <field name="model">event.sponsor</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="partner_id"/>
+                    <field name="url"/>
+                    <field name="sponsor_type_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_sponsor_search">
+            <field name="name">event.sponsor.search</field>
+            <field name="model">event.sponsor</field>
+            <field name="arch" type="xml">
+                <search string="Event Sponsors">
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_event_sponsor_from_event">
+            <field name="name">Event Tracks</field>
+            <field name="res_model">event.sponsor</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        </record>
+
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">
             <field name="name">Track Tags</field>
@@ -160,15 +194,18 @@
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                    <button name="%(website_event_track.act_event_list_tracks)d" 
-                        type="action" 
-                        class="oe_stat_button oe_inline" 
-                        icon="fa-inbox">
+                    <button name="%(act_event_list_tracks)d" 
+                            type="action" 
+                            class="oe_stat_button oe_inline" 
+                            icon="fa-inbox">
                         <field name="count_tracks" widget="statinfo"/>
                     </button>
-                </xpath>
-                <xpath expr="//field[@name='organizer_id']" position="after">
-                    <field name="timezone_of_event" />
+                    <button name="%(action_event_sponsor_from_event)d"
+                            type="action"
+                            class="oe_stat_button oe_inline"
+                            icon="fa-users">
+                        <field name="count_sponsor" widget="statinfo" class="oe_inline" string="Sponsorships"/>
+                    </button>
                 </xpath>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <label for="tag_ids" class="oe_edit_only"/>
@@ -181,28 +218,6 @@
                         <field name="show_track_proposal"/>
                         <label for="show_track_proposal"/>
                     </div>
-                </xpath>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Tracks">
-                        <group col="2" class="oe_title">
-                            <field name="allowed_track_tag_ids" widget="many2many_tags"/>
-                        </group>
-                        <field name="track_ids" context="{'default_event_id': active_id}"/>
-                    </page>
-                    <page string="Sponsorships">
-                        <field name="sponsor_ids" context="{'default_event_id': active_id}">
-                            <tree editable="bottom">
-                                <field name="partner_id"/>
-                                <field name="url"/>
-                                <field name="sponsor_type_id"/>
-                            </tree>
-                            <form string="Sponsoring">
-                                <field name="partner_id"/>
-                                <field name="url"/>
-                                <field name="sponsor_type_id"/>
-                            </form>
-                        </field>
-                    </page>
                 </xpath>
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
                 </xpath>
@@ -250,8 +265,17 @@
                                            <img t-attf-src="/web/static/src/img/icons/star-#{priority == 0 ? 'on' : 'off'}.png" width="16" height="16"/>
                                         </a>
                                     </span>
-                                    <div t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" class="oe_kanban_avatar oe_left" width="24px" height="24px"/>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
+                                                <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" width="30px" height="30px"/>
+                                            </t>
+                                            <t t-if="record.speaker_ids.raw_value.length > 11 ">
+                                                <a name="open_track_speakers_list" type="object">
+                                                    <t t-esc="record.speaker_ids.raw_value.length - 11"> More</t>
+                                                </a>
+                                            </t>
+                                        </div>
                                     </div>
                                     <div class="oe_clear"/>
                                 </div>
@@ -364,7 +388,7 @@
         <record model="ir.actions.act_window" id="action_event_track">
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
         </record>
         <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_configuration" groups="base.group_no_one"/>
 

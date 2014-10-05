@@ -303,7 +303,7 @@ class procurement_order(osv.osv):
         return {}
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
-        date_planned = start_date
+        date_planned = start_date + relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):

@@ -408,11 +408,12 @@ class website_sale(http.Controller):
         checkout['shipping_id'] = shipping_id
 
         # Default search by user country
-        country_code = request.session['geoip'].get('country_code')
-        if country_code:
-            country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
-            if country_ids:
-                checkout['country_id'] = country_ids[0]
+        if not checkout.get('country_id'):
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                country_ids = request.registry.get('res.country').search(cr, uid, [('code', '=', country_code)], context=context)
+                if country_ids:
+                    checkout['country_id'] = country_ids[0]
 
         values = {
             'countries': countries,
@@ -528,7 +529,7 @@ class website_sale(http.Controller):
 
         order_info = {
             'partner_id': partner_id,
-            'message_follower_ids': [(4, partner_id)],
+            'message_follower_ids': [(4, partner_id), (3, request.website.partner_id.id)],
             'partner_invoice_id': partner_id,
         }
         order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
@@ -619,7 +620,7 @@ class website_sale(http.Controller):
         # if tx:
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
-        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
+        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
         values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
         for acquirer in values['acquirers']:
@@ -648,7 +649,6 @@ class website_sale(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         transaction_obj = request.registry.get('payment.transaction')
-        sale_order_obj = request.registry['sale.order']
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
@@ -678,13 +678,11 @@ class website_sale(http.Controller):
             request.session['sale_transaction_id'] = tx_id
 
         # update quotation
-        sale_order_obj.write(
+        request.registry['sale.order'].write(
             cr, SUPERUSER_ID, [order.id], {
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
-        # confirm the quotation
-        sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
@@ -702,7 +700,7 @@ class website_sale(http.Controller):
             }
 
         tx_ids = request.registry['payment.transaction'].search(
-            cr, uid, [
+            cr, SUPERUSER_ID, [
                 '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
             ], context=context)
 
@@ -717,7 +715,7 @@ class website_sale(http.Controller):
                 message = ""
                 validation = None
         else:
-            tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+            tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
             if state == 'done':
                 message = '<p>%s</p>' % _('Your payment has been received.')
@@ -759,13 +757,17 @@ class website_sale(http.Controller):
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             assert order.id == request.session.get('sale_last_order_id')
 
-        if not tx or not order:
+        if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
 
-        if not order.amount_total or tx.state in ['pending', 'done']:
+        if (not order.amount_total and not tx) or tx.state in ['pending', 'done']:
+            if (not order.amount_total and not tx):
+                # Orders are confirmed by payment transactions, but there is none for free orders,
+                # (e.g. free events), so confirm immediately
+                order.action_button_confirm()
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
-        elif tx.state == 'cancel':
+        elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
 

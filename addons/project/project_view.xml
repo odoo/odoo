@@ -394,6 +394,7 @@
                     <sheet string="Task">
                     <div class="row">
                         <h1 class="col-xs-11">
+                            <field class="oe_inline oe_left" name="priority" widget="priority"/>
                             <field name="name" placeholder="Task summary..." class="oe_inline"/>
                         </h1>
                         <div class="col-xs-1 text-right">
@@ -460,7 +461,6 @@
                         </page>
                         <page string="Extra Info">
                             <group col="4">
-                                <field name="priority" groups="base.group_user" widget="priority"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                                 <field name="partner_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>

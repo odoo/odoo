@@ -3,7 +3,8 @@
     <data>
         <menuitem id="im_livechat" name="Live Chat" parent="mail.mail_feeds_main" groups="group_im_livechat"/>
 
-        <record model="ir.actions.act_window" id="action_support_channels">
+        <!-- Support Channel -->
+        <record id="action_support_channels" model="ir.actions.act_window">
             <field name="name">Live Chat Channels</field>
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
@@ -23,7 +24,7 @@
         <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
 
 
-        <record model="ir.ui.view" id="support_channel_kanban">
+        <record id="support_channel_kanban" model="ir.ui.view">
             <field name="name">support_channel.kanban</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
@@ -121,41 +122,77 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">History</field>
-            <field name="res_model">im_chat.message</field>
-            <field name="view_mode">list</field>
-            <field name="domain">[('to_id.channel_id', '!=', None)]</field>
-            <field name="context">{'search_default_group_by_to_id': 1}</field>
-        </record>
-        <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 
-        <record id="im_message_form" model="ir.ui.view">
-            <field name="name">im.chat.message.tree</field>
-            <field name="model">im_chat.message</field>
+        <!-- Session History for Support -->
+        <record id="action_session_history" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">im_chat.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('channel_id', '!=', None)]</field>
+            <field name="context">{'group_by': ['channel_id', 'create_date:month']}</field>
+        </record>
+        <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat"/>
+
+        <record id="im_chat_session_search" model="ir.ui.view">
+            <field name="name">im_chat.session.search</field>
+            <field name="model">im_chat.session</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <filter name="id" string="My sessions" domain="[('user_ids','in', uid)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
+                        <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
+                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}" />
+                        <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="im_chat_session_list_view" model="ir.ui.view">
+            <field name="name">im_chat.session.tree</field>
+            <field name="model">im_chat.session</field>
             <field name="arch" type="xml">
                 <tree string="History" create="false">
-                    <field name="to_id"/>
+                    <field name="id"/>
+                    <field name="fullname"/>
+                    <field name="uuid"/>
                     <field name="create_date"/>
-                    <field name="from_id"/>
-                    <field name="message"/>
+                    <field name="feedback_rating"/>
                 </tree>
             </field>
         </record>
 
-        <record id="im_message_search" model="ir.ui.view">
-            <field name="name">im.chat.message.search</field>
-            <field name="model">im_chat.message</field>
+        <record id="im_chat_session_form_view" model="ir.ui.view">
+            <field name="name">im_chat.session.form</field>
+            <field name="model">im_chat.session</field>
             <field name="arch" type="xml">
-                <search string="Search history">
-                    <filter name="to_id" string="My Sessions" domain="[('to_id.user_ids','in', uid)]"/>
-                    <field name="from_id"/>
-                    <field name="to_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter name="group_by_to_id" string="Session" domain="[]" context="{'group_by':'to_id'}"/>
-                        <filter name="group_by_date" string="Date" domain="[]" context="{'group_by':'create_date'}"/>
-                    </group>
-                </search>
+                <form string="Session Form" version="7.0" create="false" edit="false">
+                    <sheet>
+                        <group>
+                           <group string="General">
+                                <field name="id"/>
+                                <field name="uuid" readonly="1"/>
+                                <field name="fullname" widget="html"/>
+                                <field name="create_date" readonly="1"/>
+                            </group>
+                            <group string="Feedback">
+                                <field name="feedback_rating"/>
+                                <field name="feedback_reason"/>
+                            </group>
+                        </group>
+                        <field name="message_ids" type="tree">
+                            <tree string="History">
+                                <field name="create_date" />
+                                <field name="from_id" />
+                                <field name="message" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
             </field>
         </record>
 

@@ -383,7 +383,7 @@ class stock_quant(osv.osv):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
     def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
-        """Moves all given stock.quant in the given destination location.
+        """Moves all given stock.quant in the given destination location.  Unreserve from current move.
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
         :param location_to: browse record (stock.location) depicting where the quants have to be moved
@@ -418,7 +418,8 @@ class stock_quant(osv.osv):
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
-                'package_id': dest_package_id}
+                'package_id': dest_package_id,
+                'reservation_id': False}
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -789,12 +790,12 @@ class stock_picking(osv.osv):
                 * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'priority': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_priority, type='selection', selection=procurement.PROCUREMENT_PRIORITIES, string='Priority',
-                                    store={'stock.move': (_get_pickings, ['priority'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves", 
+                                    store={'stock.move': (_get_pickings, ['priority', 'picking_id'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves",
                                     track_visibility='onchange', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
+                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['date_expected', 'picking_id'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
         'date': fields.datetime('Creation Date', help="Creation Date, usually the time of the order", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=True),
@@ -938,7 +939,8 @@ class stock_picking(osv.osv):
                 'pack_operation_ids': [],
                 'backorder_id': picking.id,
             })
-            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (picking.name), context=context)
+            backorder = self.browse(cr, uid, backorder_id, context=context)
+            self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (backorder.name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
@@ -1785,7 +1787,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or "/")
         group_id = move.group_id and move.group_id.id or False
         if move.rule_id:
             if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
@@ -2241,7 +2243,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
-        """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
+        """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
         """
         context = context or {}
         picking_obj = self.pool.get("stock.picking")
@@ -2292,6 +2294,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
                 move_qty[move.id] -= record.qty
         #Check for remaining qtys and unreserve/check move_dest_id in
+        move_dest_ids = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move_qty[move.id] > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
@@ -2303,27 +2306,24 @@ class stock_move(osv.osv):
                 qty = move_qty[move.id]
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain_list=prefered_domain_list, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
-            #unreserve the quants and make them available for other operations/moves
-            quant_obj.quants_unreserve(cr, uid, move, context=context)
 
-            #Check moves that were pushed
-            if move.move_dest_id.state in ('waiting', 'confirmed'):
-                # FIXME is opw 607970 still present with new WMS?
-                # (see commits 1ef2c181033bd200906fb1e5ce35e234bf566ac6
-                # and 41c5ceb8ebb95c1b4e98d8dd1f12b8e547a24b1d)
-                other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
-                                            ('move_dest_id', '=', move.move_dest_id.id)], context=context)
-                #If no other moves for the move that got pushed:
-                if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
+            # If the move has a destination, add it to the list to reserve
+            if move.move_dest_id and move.move_dest_id.state in ('waiting', 'confirmed'):
+                move_dest_ids.add(move.move_dest_id.id)
+
             if move.procurement_id:
                 procurement_ids.append(move.procurement_id.id)
 
+            #unreserve the quants and make them available for other operations/moves
+            quant_obj.quants_unreserve(cr, uid, move, context=context)
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         #set the move as done
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        #assign destination moves
+        if move_dest_ids:
+            self.action_assign(cr, uid, list(move_dest_ids), context=context)
         #check picking state to set the date_done is needed
         done_picking = []
         for picking in picking_obj.browse(cr, uid, list(pickings), context=context):
@@ -2442,14 +2442,15 @@ class stock_move(osv.osv):
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
 
 
-    def get_code_from_locs(self, cr, uid, move, context=None):
+    def get_code_from_locs(self, cr, uid, move, location_id=False, location_dest_id=False, context=None):
         """
         Returns the code the picking type should have.  This can easily be used
         to check if a move is internal or not
+        move, location_id and location_dest_id are browse records
         """
         code = 'internal'
-        src_loc = move.location_id
-        dest_loc = move.location_dest_id
+        src_loc = location_id or move.location_id
+        dest_loc = location_dest_id or move.location_dest_id
         if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
             code = 'outgoing'
         if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
@@ -3622,7 +3623,7 @@ class stock_package(osv.osv):
 
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id, 'owner_id': False})
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
@@ -4112,7 +4113,7 @@ class stock_picking_type(osv.osv):
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
-        res = dict.fromkeys(ids, [])
+        res = {}
         for picking_type_id in ids:
             #get last 10 pickings of this type
             picking_ids = picking_obj.search(cr, uid, [('picking_type_id', '=', picking_type_id), ('state', '=', 'done')], order='date_done desc', limit=10, context=context)

@@ -38,7 +38,7 @@
                     name="action_make_meeting"
                     icon="gtk-redo"
                     type="object"/>
-                <button string="Convert to Opportunity"
+                <button string="Create an Opportunity"
                     type="object"
                     name="action_button_convert2opportunity"
                     states="open,pending"
@@ -104,7 +104,7 @@
                             domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field name="partner_mobile"/>
                         <field name="priority" widget="priority"/>
-                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)"/>
+                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)" context="{'opportunity_id': opportunity_id}"/>
                     </group>
                     <field name="description" placeholder="Description..."/>
                 </sheet>
@@ -142,7 +142,7 @@
                 <button string="Meeting"
                      icon="gtk-redo"
                      name="action_make_meeting" type="object"/>
-                <button string="Convert to Opportunity"
+                <button string="Create an Opportunity"
                     name="action_button_convert2opportunity"
                     states="open,pending"
                     icon="gtk-index"

@@ -39,7 +39,6 @@
 
 """
 
-import copy
 import datetime
 import functools
 import itertools
@@ -236,6 +235,11 @@ class MetaModel(api.Meta):
         # Remember which models to instanciate for this module.
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
+
+        # transform columns into new-style fields (enables field inheritance)
+        for name, column in self._columns.iteritems():
+            if not hasattr(self, name):
+                setattr(self, name, column.to_field())
 
 
 class NewId(object):
@@ -474,6 +478,18 @@ class BaseModel(object):
             cls._columns.pop(name, None)
 
     @classmethod
+    def _pop_field(cls, name):
+        """ Remove the field with the given `name` from the model.
+            This method should only be used for manual fields.
+        """
+        field = cls._fields.pop(name)
+        cls._columns.pop(name, None)
+        cls._all_columns.pop(name, None)
+        if hasattr(cls, name):
+            delattr(cls, name)
+        return field
+
+    @classmethod
     def _add_magic_fields(cls):
         """ Introduce magic fields on the current class
 
@@ -636,12 +652,6 @@ class BaseModel(object):
         }
         cls = type(cls._name, (cls,), attrs)
 
-        # float fields are registry-dependent (digit attribute); duplicate them
-        # to avoid issues
-        for key, col in cls._columns.items():
-            if col._type == 'float':
-                cls._columns[key] = copy.copy(col)
-
         # instantiate the model, and initialize it
         model = object.__new__(cls)
         model.__init__(pool, cr)
@@ -803,7 +813,7 @@ class BaseModel(object):
         # inheritance between different models)
         cls._fields = {}
         for attr, field in getmembers(cls, Field.__instancecheck__):
-            if not field._origin:
+            if not field.inherited:
                 cls._add_field(attr, field.copy())
 
         # introduce magic fields
@@ -1679,8 +1689,9 @@ class BaseModel(object):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        for i, got_name in enumerate(self.name_get()):
-            self[i].display_name = got_name[1]
+        names = dict(self.name_get())
+        for record in self:
+            record.display_name = names.get(record.id, False)
 
     @api.multi
     def name_get(self):
@@ -2491,8 +2502,8 @@ class BaseModel(object):
                 self._create_table(cr)
                 has_rows = False
             else:
-                cr.execute('SELECT min(id) FROM "%s"' % (self._table,))
-                has_rows = cr.fetchone()[0] is not None
+                cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
+                has_rows = cr.rowcount
 
             cr.commit()
             if self._parent_store:
@@ -2952,9 +2963,9 @@ class BaseModel(object):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
                     cls._add_field(attr, field.copy(
+                        inherited=True,
                         related=(parent_field, attr),
                         related_sudo=False,
-                        _origin=field,
                     ))
 
         cls._inherits_reload_src()
@@ -3005,7 +3016,9 @@ class BaseModel(object):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
             if partial and field.manual and \
-                    field.relational and field.comodel_name not in self.pool:
+                    field.relational and \
+                    (field.comodel_name not in self.pool or \
+                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
                 # do not set up manual fields that refer to unknown models
                 continue
             field.setup(self.env)
@@ -3701,6 +3714,7 @@ class BaseModel(object):
 
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
+        deleted_related = defaultdict(list)
         for field in vals.keys():
             fobj = None
             if field in self._columns:
@@ -3709,6 +3723,10 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
+            if fobj._type in ['one2many', 'many2many'] and vals[field]:
+                for wtuple in vals[field]:
+                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
+                        deleted_related[fobj._obj].append(wtuple[1])
             groups = fobj.write
 
             if groups:
@@ -3912,7 +3930,8 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    todo.append(id)
+                    if id not in deleted_related[model_name]:
+                        todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields

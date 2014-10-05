@@ -110,6 +110,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                     "AND account.active ", params)
         self.partner_ids = [res['partner_id'] for res in self.cr.dictfetchall()]
         objects = obj_partner.browse(self.cr, self.uid, self.partner_ids)
+        objects = sorted(objects, key=lambda x: (x.ref, x.name))
         return super(third_party_ledger, self).set_context(objects, data, self.partner_ids, report_type)
 
     def lines(self, partner):

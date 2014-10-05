@@ -389,7 +389,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 var rows = self.build_rows(header.children);
                 var doc_fragment = $(document.createDocumentFragment());
                 rows.map(function (row) {
-                    doc_fragment.append(self.draw_row(row));
+                    doc_fragment.append(self.draw_row(row, 0));
                 });
                 self.$row_clicked.after(doc_fragment);
             } else {

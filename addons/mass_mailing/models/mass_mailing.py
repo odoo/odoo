@@ -382,6 +382,7 @@ class MassMailing(osv.Model):
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
         ),
+        'keep_archives': fields.boolean('Keep Archives'),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',

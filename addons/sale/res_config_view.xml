@@ -22,13 +22,8 @@
                         </div>
                     </group>
                     <group name='default_options'>
-                        <label for="id" string="Default Options" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
-                        <div>
-                            <div name='time_unit' attrs="{'invisible': [('module_account_analytic_analysis','=',False)],'required':[('module_account_analytic_analysis','=',True)]}">
-                                <label for="time_unit"/>
-                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
-                            </div>
-                        </div>
+                        <label for="id" string="Default Options"/>
+                        <div name="div_default_options"/>
                     </group>
                 </div>
                 <div name="Customer Features" position="inside">
