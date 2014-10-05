@@ -281,7 +281,7 @@ class WebsiteForum(http.Controller):
         new_question_id = request.registry['forum.post'].create(cr, uid, {
                 'forum_id': forum.id,
                 'name': post.get('post_name', ''),
-                'content': post.get('content'),
+                'content': post.get('content', False),
                 'content_link': post.get('content_link', False),
                 'parent_id': post_parent and post_parent.id or False,
                 'tag_ids': post_tag_ids,
