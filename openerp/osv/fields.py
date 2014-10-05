@@ -482,6 +482,43 @@ class datetime(_column):
                               exc_info=True)
         return utc_timestamp
 
+    @staticmethod
+    def context_to_utc_timestamp(cr, uid, timestamp, context=None):
+        """Returns the given timestamp converted from the client's timezone to UTC.
+           This method is *not* meant for use as a _defaults initializer,
+           because datetime fields are automatically converted upon
+           display on client side. For _defaults :meth:`fields.datetime.now`
+           should be used instead.
+
+           :param datetime timestamp: naive datetime value (expressed in client timezone)
+                                      to be converted to the UTC
+           :param dict context: the 'tz' key in the context should give the
+                                name of the User/Client timezone (otherwise
+                                UTC is used)
+           :rtype: datetime
+           :return: timestamp converted to timezone-aware datetime in UTC
+                    timezone
+        """
+        assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
+        #context_today = None
+        utc_timestamp = None
+        if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
+            user = registry['res.users'].browse(cr, SUPERUSER_ID, uid)
+            tz_name = user.tz
+        if tz_name:
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(tz_name)
+                localized_timestamp = context_tz.localize(timestamp, is_dst=False) # UTC = no DST
+                utc_timestamp = localized_timestamp.astimezone(utc)
+            except Exception:
+                _logger.debug("failed to compute UTC date using context/client-specific today date",
+                              exc_info=True)
+        return utc_timestamp or timestamp
+
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
