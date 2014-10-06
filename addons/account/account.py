@@ -61,11 +61,11 @@ class res_company(osv.osv):
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
             string="Gain Exchange Rate Account",
-            domain="[('type', '=', 'other')]",),
+            domain="[('type', '=', 'other'), ('deprecated', '=', False)]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
             string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other')]",),
+            domain="[('type', '=', 'other'), ('deprecated', '=', False)]",),
     }
 
 class account_payment_term(osv.osv):
@@ -440,7 +440,7 @@ class account_account(osv.osv):
             help="Account Type is used for information purpose, to generate "
               "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', 'Financial Reports'),
-        'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
+        'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children', domain=[('deprecated', '=', False)]),
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
         'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
@@ -603,9 +603,9 @@ class account_journal(osv.osv):
                                  " Select 'General' for miscellaneous operations journals."\
                                  " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
-        'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view')]),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
+        'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('deprecated', '=', False)]),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view'), ('deprecated', '=', False)]", help="It acts as a default account for credit amount"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view'), ('deprecated', '=', False)]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
@@ -616,9 +616,9 @@ class account_journal(osv.osv):
         'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period'),
-        'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
-        'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
-        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
+        'profit_account_id' : fields.many2one('account.account', 'Profit Account', domain=[('deprecated', '=', False)]),
+        'loss_account_id' : fields.many2one('account.account', 'Loss Account', domain=[('deprecated', '=', False)]),
+        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1, domain=[('deprecated', '=', False)]),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
@@ -1683,8 +1683,8 @@ class account_tax(osv.osv):
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-        'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
-        'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
+        'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', domain=[('deprecated', '=', False)], help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
+        'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', domain=[('deprecated', '=', False)], help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
         'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
         'account_analytic_paid_id':fields.many2one('account.analytic.account', 'Refund Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
         'parent_id':fields.many2one('account.tax', 'Parent Tax Account', select=True),
@@ -2218,7 +2218,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
         return res and res[0] or False
 
     _columns = {
-        'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True),
+        'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)]),
     }
     _defaults = {
         'cparent_id': _get_def_cparent,

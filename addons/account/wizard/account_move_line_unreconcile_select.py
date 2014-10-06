@@ -25,7 +25,7 @@ class account_move_line_unreconcile_select(osv.osv_memory):
     _name = "account.move.line.unreconcile.select"
     _description = "Unreconciliation"
     _columns ={
-       'account_id': fields.many2one('account.account','Account',required=True),
+       'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('deprecated', '=', False)]),
     }
     def action_open_window(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]

@@ -34,7 +34,7 @@ class analytic_entries_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=False),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, domain=[('deprecated', '=', False)]),
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', required=True),
         'move_id': fields.many2one('account.move.line', 'Move', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),

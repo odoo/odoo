@@ -105,7 +105,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
     _description = 'Account move line reconcile (writeoff)'
     _columns = {
         'journal_id': fields.many2one('account.journal','Write-Off Journal', required=True),
-        'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True),
+        'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True, domain=[('deprecated', '=', False)]),
         'date_p': fields.date('Date'),
         'comment': fields.char('Comment', required=True),
         'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),

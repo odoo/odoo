@@ -69,7 +69,7 @@ class hr_expense_expense(osv.osv):
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
-        'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account"),
+        'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account", domain=[('deprecated', '=', False)]),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, copy=False,

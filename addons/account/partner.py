@@ -146,8 +146,8 @@ class account_fiscal_position_account(osv.osv):
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
-        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
+        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view'), ('deprecated', '=', False)], required=True),
+        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view'), ('deprecated', '=', False)], required=True)
     }
 
     _sql_constraints = [
@@ -276,14 +276,14 @@ class res_partner(osv.osv):
             type='many2one',
             relation='account.account',
             string="Account Payable",
-            domain="[('type', '=', 'payable')]",
+            domain="[('type', '=', 'payable'), ('deprecated', '=', False)]",
             help="This account will be used instead of the default one as the payable account for the current partner",
             required=True),
         'property_account_receivable': fields.property(
             type='many2one',
             relation='account.account',
             string="Account Receivable",
-            domain="[('type', '=', 'receivable')]",
+            domain="[('type', '=', 'receivable'), ('deprecated', '=', False)]",
             help="This account will be used instead of the default one as the receivable account for the current partner",
             required=True),
         'property_account_position': fields.property(

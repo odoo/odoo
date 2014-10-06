@@ -40,7 +40,7 @@ class account_entries_report(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)]),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),

@@ -255,7 +255,7 @@ class account_invoice(models.Model):
 
     account_id = fields.Many2one('account.account', string='Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
-        help="The partner account used for this invoice.")
+        domain=[('deprecated', '=', False)], help="The partner account used for this invoice.")
     invoice_line = fields.One2many('account.invoice.line', 'invoice_id', string='Invoice Lines',
         readonly=True, states={'draft': [('readonly', False)]}, copy=True)
     tax_line = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines',
@@ -1251,7 +1251,7 @@ class account_invoice_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='set null', index=True)
     account_id = fields.Many2one('account.account', string='Account',
-        required=True, domain=[('type', 'not in', ['view', 'closed'])],
+        required=True, domain=[('type', 'not in', ['view', 'closed']), ('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True,
@@ -1472,7 +1472,7 @@ class account_invoice_tax(models.Model):
     name = fields.Char(string='Tax Description',
         required=True)
     account_id = fields.Many2one('account.account', string='Tax Account',
-        required=True, domain=[('type', 'not in', ['view', 'income', 'closed'])])
+        required=True, domain=[('type', 'not in', ['view', 'income', 'closed']), ('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     base = fields.Float(string='Base', digits=dp.get_precision('Account'))
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))

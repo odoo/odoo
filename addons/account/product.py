@@ -29,11 +29,13 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used for invoices to value sales."),
         'property_account_expense_categ': fields.property(
             type='many2one',
             relation='account.account',
             string="Expense Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used for invoices to value expenses."),
     }
 
@@ -54,11 +56,13 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used for invoices instead of the default one to value sales for the current product."),
         'property_account_expense': fields.property(
             type='many2one',
             relation='account.account',
             string="Expense Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
 

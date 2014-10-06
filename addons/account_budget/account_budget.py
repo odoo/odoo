@@ -40,7 +40,7 @@ class account_budget_post(osv.osv):
     _columns = {
         'code': fields.char('Code', size=64, required=True),
         'name': fields.char('Name', required=True),
-        'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
+        'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts', domain=[('deprecated', '=', False)]),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }

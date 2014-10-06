@@ -256,7 +256,7 @@ class report_account_sales(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)]),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),

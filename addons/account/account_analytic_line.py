@@ -29,7 +29,7 @@ class account_analytic_line(osv.osv):
     _columns = {
         'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'product_id': fields.many2one('product.product', 'Product'),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict'),
+        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)]),
         'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
         'code': fields.char('Code', size=8),

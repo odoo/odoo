@@ -27,7 +27,7 @@ class account_move_line_reconcile_select(osv.osv_memory):
     _description = "Move line reconcile select"
     _columns = {
        'account_id': fields.many2one('account.account', 'Account', \
-                            domain = [('reconcile', '=', 1)], required=True),
+                            domain = [('reconcile', '=', 1), ('deprecated', '=', False)], required=True),
     }
 
     def action_open_window(self, cr, uid, ids, context=None):

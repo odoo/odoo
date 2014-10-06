@@ -136,13 +136,13 @@ class account_config_settings(osv.osv_memory):
             type='many2one',
             relation='account.account',
             string="Gain Exchange Rate Account", 
-            domain="[('type', '=', 'other')]"),
+            domain="[('type', '=', 'other'), ('deprecated', '=', False)]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
             string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other')]"),
+            domain="[('type', '=', 'other'), ('deprecated', '=', False)]"),
     }
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)

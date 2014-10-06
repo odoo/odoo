@@ -53,7 +53,7 @@ class sale_receipt_report(osv.osv):
             ('pay_later','Pay Later or Group Funds'),
         ],'Payment', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)]),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
         'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg")
     }

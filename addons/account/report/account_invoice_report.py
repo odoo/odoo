@@ -89,8 +89,8 @@ class account_invoice_report(osv.osv):
             ('cancel','Cancelled')
             ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account',readonly=True),
-        'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
+        'account_id': fields.many2one('account.account', 'Account',readonly=True, domain=[('deprecated', '=', False)]),
+        'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True, domain=[('deprecated', '=', False)]),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
