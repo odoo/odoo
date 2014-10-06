@@ -137,7 +137,8 @@ class sale_order(osv.osv):
 
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True,
+            states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Expiry Date'),
