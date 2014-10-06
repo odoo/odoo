@@ -117,7 +117,7 @@
                 console.log(result);
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                self.wizard.find('.launch').click(function(){
+                self.wizard.on('click','.launch', function(){
                     console.log('LAUNCH');
                 });
             });
