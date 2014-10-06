@@ -530,46 +530,62 @@ class account_account(models.Model):
         return super(account_account, self).unlink(cr, uid, ids, context=context)
 
 
-class account_journal(osv.osv):
+class account_journal(models.Model):
     _name = "account.journal"
     _description = "Journal"
-    _columns = {
-        'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
-        'name': fields.char('Journal Name', required=True),
-        'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
-                                 help="Select 'Sale' for customer invoices journals."\
-                                 " Select 'Purchase' for supplier invoices journals."\
-                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
-                                 " Select 'General' for miscellaneous operations journals."\
-                                 " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
-        'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
-        'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('deprecated', '=', False)]),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view'), ('deprecated', '=', False)]", help="It acts as a default account for credit amount"),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view'), ('deprecated', '=', False)]", help="It acts as a default account for debit amount"),
-        'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
-        'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
-        'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False),
-        'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
-        'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
-        'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
-        'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date':fields.boolean('Check Date in Period', help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period'),
-        'profit_account_id' : fields.many2one('account.account', 'Profit Account', domain=[('deprecated', '=', False)]),
-        'loss_account_id' : fields.many2one('account.account', 'Loss Account', domain=[('deprecated', '=', False)]),
-        'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1, domain=[('deprecated', '=', False)]),
-        'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
-        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
-    }
 
-    _defaults = {
-        'cash_control' : False,
-        'with_last_closing_balance' : True,
-        'user_id': lambda self, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-    }
+    with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
+        help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
+    name = fields.Char(string='Journal Name', required=True)
+    code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
+    type = fields.Selection([
+            ('sale', 'Sale'),
+            ('sale_refund','Sale Refund'),
+            ('purchase', 'Purchase'),
+            ('purchase_refund','Purchase Refund'),
+            ('cash', 'Cash'), ('bank', 'Bank and Checks'),
+            ('general', 'General'),
+            ('situation', 'Opening/Closing Situation')
+        ], string='Type', size=32, required=True,
+        help="Select 'Sale' for customer invoices journals."\
+        " Select 'Purchase' for supplier invoices journals."\
+        " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
+        " Select 'General' for miscellaneous operations journals."\
+        " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
+    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Type Controls',
+        domain=[('code', '<>', 'view'), ('code', '<>', 'closed')])
+    account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Account',
+        domain=[('deprecated', '=', False)])
+    default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
+        domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount")
+    default_debit_account_id = fields.Many2one('account.account', string='Default Debit Account',
+        domain=[('deprecated', '=', False)], help="It acts as a default account for debit amount")
+    centralisation = fields.Boolean(string='Centralized Counterpart',
+        help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart.\
+        This is used in fiscal year closing.")
+    update_posted = fields.Boolean(string='Allow Cancelling Entries',
+        help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal")
+    group_invoice_lines = fields.Boolean(string='Group Invoice Lines',
+        help="If this box is checked, the system will try to group the accounting lines when generating them from invoices.")
+    sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
+        help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
+    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user,
+        help="The user responsible for this journal")
+    groups_id = fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
+    currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
+    entry_posted = fields.Boolean(string='Autopost Created Moves',
+        help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.')
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id.id,
+        help="Company related to this journal")
+    allow_date = fields.Boolean(string='Check Date in Period',
+        help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period')
+    profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)])
+    loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)])
+    internal_account_id = fields.Many2one('account.account', string='Internal Transfers Account', index=True, domain=[('deprecated', '=', False)])
+    cash_control = fields.Boolean(string='Cash Control', default=False,
+        help='If you want the journal should be control at opening/closing, check this option')
+    analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
         ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
