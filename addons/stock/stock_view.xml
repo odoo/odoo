@@ -227,13 +227,13 @@
             <field name="arch" type="xml">
                 <form string="Packs" version="7.0">
                     <group>
-                        <group groups="product.group_stock_packaging" string="Pack Identification">
+                        <group string="Pack Identification">
                             <field name="name"/>
                             <field name="serial"/>
                             <field name="date"/>
                             <field name="active"/>
                         </group>
-                        <group groups="stock.group_tracking_lot" string="Traceability">
+                        <group string="Traceability">
                             <button name="action_traceability" string="Upstream Traceability" type="object"
                                  colspan="2"/>
                             <button name="action_traceability" string="Downstream Traceability" type="object"
@@ -274,7 +274,7 @@
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
             sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
-            groups="product.group_stock_packaging"
+            groups="stock.group_tracking_lot"
             sequence="6"
             parent="menu_traceability"/>
 
@@ -1143,14 +1143,14 @@
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
                         icon="gtk-justify-fill" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
-                        groups="stock.group_tracking_lot"/>
+                        groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
-                        groups="product.group_stock_packaging"
+                        groups="stock.group_tracking_lot"
                         icon="terp-accessories-archiver" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
                     <button name="%(split_into)d" string="Put in a new pack" type="action"
-                        groups="product.group_stock_packaging"
+                        groups="stock.group_tracking_lot"
                         icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id" groups="stock.group_locations"/>
@@ -1198,7 +1198,7 @@
                         groups="stock.group_tracking_lot"
                         states="draft,assigned,confirmed"/>
                      <button name="%(split_into)d" string="Put in a new pack" type="action"
-                        groups="product.group_stock_packaging"
+                        groups="stock.group_tracking_lot"
                         icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed"/>
                       <field name="location_dest_id" groups="stock.group_locations"/>
@@ -1266,7 +1266,6 @@
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
                                 <button name="%(split_into)d" string="New Pack" type="action"
-                                      groups="product.group_stock_packaging"
                                       icon="terp-accessories-archiver+"
                                       states="draft,assigned,confirmed"/>
                             </div>
@@ -1333,13 +1332,12 @@
                                 <field name="location_dest_id" domain="[('usage','in', ['internal', 'supplier', 'customer'])]" groups="stock.group_locations"/>
                             </group>
 
-                            <group groups="stock.group_tracking_lot" string="Traceability">
+                            <group groups="stock.group_tracking_lot,stock.group_production_lot" string="Traceability">
                                 <label for="tracking_id"/>
                                 <div>
                                     <field name="tracking_id" groups="stock.group_tracking_lot" class="oe_inline"/>
                                       <button name="%(split_into)d" 
                                             string="New Pack" type="action"
-                                            groups="product.group_stock_packaging"
                                             icon="terp-accessories-archiver+"
                                             states="draft,assigned,confirmed"/>
                                  </div>
@@ -1351,7 +1349,7 @@
                                             domain="[('product_id','=?',product_id)]"
                                             on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" class="oe_inline"/>
                                         <button name="%(track_line)d"
-                                            groups="stock.group_tracking_lot"
+                                            groups="stock.group_production_lot"
                                             states="draft,waiting,confirmed,assigned"
                                             string="Split" type="action" icon="gtk-justify-fill"/>
                             </div>
@@ -1458,15 +1456,15 @@
                     <button name="%(track_line)d" string="Split in Serial Numbers" type="action"
                         icon="gtk-justify-fill" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                         states="draft,waiting,confirmed,assigned,done"
-                        groups="stock.group_tracking_lot"/>
+                        groups="stock.group_production_lot"/>
                     <field name="tracking_id" groups="stock.group_tracking_lot"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                        groups="product.group_stock_packaging"
+                        groups="stock.group_tracking_lot"
                         icon="terp-accessories-archiver"
                         states="draft,assigned,confirmed,done"/>
                     <button name="%(split_into)d" string="Put in a new pack" type="action"
-                        groups="product.group_stock_packaging"
+                        groups="stock.group_tracking_lot"
                         icon="terp-accessories-archiver+"
                         states="draft,assigned,confirmed,done"/>
                     <field name="state"/>

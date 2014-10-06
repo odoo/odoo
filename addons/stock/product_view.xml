@@ -98,10 +98,10 @@
                             <field name="outgoing_qty" class="oe_inline"/>
                             <field name="virtual_available" class="oe_inline"/>
                     </group>
-                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
-                        <field name="track_production" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
-                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                    <group name="lot" groups="stock.group_production_lot" string="Lots">
+                        <field name="track_production"/>
+                        <field name="track_incoming"/>
+                        <field name="track_outgoing"/>
                     </group>
                 </group>
                 <group name="status" position="after" version="7.0">
