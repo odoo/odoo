@@ -181,7 +181,7 @@ class account_account_type(models.Model):
 # Accounts
 #----------------------------------------------------------
 
-class account_account(osv.osv):
+class account_account(models.Model):
     _name = "account.account"
     _description = "Account"
 
@@ -376,57 +376,51 @@ class account_account(osv.osv):
             }, context=context)
         return True
 
-    _columns = {
-        'name': fields.char('Name', required=True, select=True),
-        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64, required=True, select=1),
-        'type': fields.related('user_type', 'type', type='selection',
-                    selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-                    ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-                    ], store=True, string="Internal Type"),
-        'user_type': fields.many2one('account.account.type', 'Type', required=True,
-            help="Account Type is used for information purpose, to generate "
-              "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
-        'financial_report_ids': fields.many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', 'Financial Reports'),
-        'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children', domain=[('deprecated', '=', False)]),
-        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
-        'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
-        'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
-        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
-                                           help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
-                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
-                                                help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
-        'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
-        'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
-        'shortcut': fields.char('Shortcut', size=12),
-        'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
-            'account_id', 'tax_id', 'Default Taxes'),
-        'note': fields.text('Internal Notes'),
-        'company_currency_id': fields.function(_get_company_currency, type='many2one', relation='res.currency', string='Company Currency'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'deprecated': fields.boolean('Deprecated', select=2),
-
-        'currency_mode': fields.selection([('current', 'At Date'), ('average', 'Average Rate')], 'Outgoing Currencies Rate',
-            help=
-            'This will select how the current currency rate for outgoing transactions is computed. '\
+    name = fields.Char(string='Name', required=True, index=True)
+    currency_id = fields.Many2one('res.currency', string='Secondary Currency',
+        help="Forces all moves for this account to have this secondary currency.")
+    code = fields.Char(string='Code', size=64, required=True, index=True)
+    type = fields.Selection(related='user_type.type',
+        selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
+        ], store=True, string="Internal Type"),
+    user_type = fields.Many2one('account.account.type', string='Type', required=True,
+        help="Account Type is used for information purpose, to generate "\
+        "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
+    financial_report_ids = fields.Many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', string='Financial Reports')
+    child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
+    balance = fields.Float(compute='__compute', digits=dp.get_precision('Account'), string='Balance')
+    credit = fields.Float(compute='__compute', inverse='_set_credit_debit', digits=dp.get_precision('Account'), string='Credit')
+    debit = fields.Float(compute='__compute', inverse='_set_credit_debit', digits=dp.get_precision('Account'), string='Debit')
+    foreign_balance = fields.Float(compute='__compute', digits=dp.get_precision('Account'), string='Foreign Balance',
+        help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
+    adjusted_balance = fields.Float(compute='__compute', digits=dp.get_precision('Account'), string='Adjusted Balance',
+        help="Total amount (in Company currency) for transactions held in secondary currency for this account.")
+    unrealized_gain_loss = fields.Float(compute='__compute', digits=dp.get_precision('Account'), string='Unrealized Gain or Loss',
+        help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions.")
+    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+        help="Check this box if this account allows reconciliation of journal items.")
+    exchange_rate = fields.Float(related='currency_id.rate', string='Exchange Rate', digits=(12,6))
+    shortcut = fields.Char(string='Shortcut', size=12)
+    tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
+        'account_id', 'tax_id', string='Default Taxes')
+    note = fields.Text('Internal Notes')
+    company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute='_get_company_currency')
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env['res.company']._company_default_get('account.account'))
+    deprecated = fields.Boolean(string='Deprecated', index=True, default=False)
+    currency_mode = fields.Selection([('current', 'At Date'), ('average', 'Average Rate')],
+        default='current', string='Outgoing Currencies Rate',
+        help='This will select how the current currency rate for outgoing transactions is computed. '\
             'In most countries the legal method is "average" but only a few software systems are able to '\
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
-            required=True),
-    }
-
-    _defaults = {
-        'reconcile': False,
-        'deprecated': False,
-        'currency_mode': 'current',
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
-    }
+        required=True)
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
