@@ -93,6 +93,8 @@
                     }
                 }
 
+                console.log(clicks_by_country_data)
+
                 // Country Chart
                 nv.addGraph(function() {
                     var chart = nv.models.pieChart()
@@ -101,7 +103,7 @@
                         .showLabels(true);
 
 
-                    d3.select("#by_country svg")
+                    d3.select("#clicks_by_country svg")
                         .datum(clicks_by_country_data)
                         .transition().duration(1200)
                         .call(chart);

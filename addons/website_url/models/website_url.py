@@ -57,7 +57,8 @@ class website_alias(models.Model):
         # We use a custom method to convert the record to a dictionnary (instead of .read)
         # because we insert the names of the UTMs (like source_id.name)
 
-        return {'code':self.code, 'count':self.count, 'url':self.url, 'write_date':self.write_date, 'short_url':self.short_url,
+        return {'code':self.code, 'count':self.count, 'url':self.url, 'write_date':self.write_date, 
+                'short_url':self.short_url, 'stats_url':self.short_url + '+',
                     'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
                     'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
                     'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
