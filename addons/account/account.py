@@ -207,6 +207,17 @@ class account_account_type(osv.osv):
                         ('expense', _('Profit & Loss (Expense account)')),
                         ('asset', _('Balance Sheet (Asset account)')),
                         ('liability', _('Balance Sheet (Liability account)'))], help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+        'type': fields.selection([
+            ('view', 'View'),
+            ('other', 'Regular'),
+            ('receivable', 'Receivable'),
+            ('payable', 'Payable'),
+            ('liquidity','Liquidity'),
+            ('consolidation', 'Consolidation'),
+        ], 'Type', required=True, help="The 'Internal Type' is used for features available on "\
+            "different types of accounts: view can not have journal items, consolidation are accounts that "\
+            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+            "partners accounts (for debit/credit computations)."),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -425,18 +436,11 @@ class account_account(osv.osv):
         'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
-        'type': fields.selection([
-            ('view', 'View'),
-            ('other', 'Regular'),
-            ('receivable', 'Receivable'),
-            ('payable', 'Payable'),
-            ('liquidity','Liquidity'),
-            ('consolidation', 'Consolidation'),
-        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
-            "different types of accounts: view can not have journal items, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations)."),
-        'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
+        'type': fields.related('user_type', 'type', type='selection',
+                    selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+                    ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
+                    ], string="Internal Type"),
+        'user_type': fields.many2one('account.account.type', 'Type', required=True,
             help="Account Type is used for information purpose, to generate "
               "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', 'Financial Reports'),
