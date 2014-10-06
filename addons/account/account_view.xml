@@ -203,7 +203,7 @@
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'" string="Chart of accounts" toolbar="1" >
+                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation')" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type" invisible="1"/>
@@ -266,7 +266,7 @@
             <field name="name">account.account.tree</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'" string="Chart of accounts" toolbar="1" >
+                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation')" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
                     <field name="debit"/>
@@ -690,7 +690,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="account_id" domain="[('type', 'not in', ['view', 'consolidation'])]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
                             </group>

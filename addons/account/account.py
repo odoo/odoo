@@ -432,11 +432,10 @@ class account_account(osv.osv):
             ('payable', 'Payable'),
             ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
-            ('closed', 'Closed'),
         ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
             "different types of accounts: view can not have journal items, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
+            "partners accounts (for debit/credit computations)."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="Account Type is used for information purpose, to generate "
               "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
@@ -604,7 +603,7 @@ class account_journal(osv.osv):
                                  " Select 'General' for miscellaneous operations journals."\
                                  " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
-        'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
+        'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view')]),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
