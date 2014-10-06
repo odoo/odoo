@@ -96,6 +96,11 @@ class ir_http(osv.AbstractModel):
 
     def _handle_exception(self, exception):
         # If handle_exception returns something different than None, it will be used as a response
+
+        # Don't handle exception but use werkeug debugger if server in --dev mode
+        if openerp.tools.config['dev_mode']:
+            orig_type, original, tb = sys.exc_info()
+            raise type(exception), original, tb
         try:
             return request._handle_exception(exception)
         except openerp.exceptions.AccessDenied:
