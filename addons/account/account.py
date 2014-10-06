@@ -223,6 +223,7 @@ class account_account_type(osv.osv):
     _defaults = {
         'close_method': 'none',
         'report_type': 'none',
+        'type': 'other',
     }
     _order = "code"
 
@@ -474,7 +475,6 @@ class account_account(osv.osv):
     }
 
     _defaults = {
-        'type': 'other',
         'reconcile': False,
         'deprecated': False,
         'currency_mode': 'current',
