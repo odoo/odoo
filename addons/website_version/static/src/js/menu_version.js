@@ -112,13 +112,10 @@
 
         create_experiment: function() {
             var view_id = $('html').attr('data-view-xmlid');
-            console.log(view_id);
             openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
-                console.log(result);
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.launch', function(){
-                    console.log('LAUNCH');
                     var name = $('#name').val();
                     var tab = self.wizard.find('.form-field-required');
                     var result = [];
@@ -128,7 +125,10 @@
                             result.push($(tab[i]).attr('data-version_id'))
                         }
                     }
+                    var objective = self.wizard.find('.selectpicker').val();
+                    console.log(name);
                     console.log(result);
+                    console.log(objective);
                 });
             });
         },
