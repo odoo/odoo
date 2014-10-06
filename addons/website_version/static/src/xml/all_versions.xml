@@ -19,5 +19,32 @@
         <div id="CheckGoogleAccess" class="odoo_google_token" >
                 <button class="GoogleAccess"> Authorize google </button>
         </div>
-    </t>       
+    </t>
+
+    <t t-name="website_version.create_experiment">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                
+                <h4 class="modal-title">Create an experiment</h4>
+              </div>
+              <div class="modal-body">
+                <t t-foreach="snapshots" t-as="item">       
+                    <div class="form-group row">
+                        <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
+                        <div class="col-md-9 col-sm-8 ">
+                            <input type="checkbox" class="form-field-required" id="formFieldEditor-required" />
+                        </div>
+                    </div>
+                </t>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </t>      
 </templates>
