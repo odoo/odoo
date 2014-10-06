@@ -489,13 +489,13 @@
            src_model="account.journal"/>
 
         <!-- Bank statement -->
-        
+
         <record id="action_bank_reconcile_bank_statements" model="ir.actions.client">
             <field name="name">Reconciliation on Bank Statements</field>
             <field name="tag">bank_statement_reconciliation_view</field>
             <field name="context">{'statement_ids': [active_id]}</field>
         </record>
-        
+
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
             <field name="model">account.bank.statement</field>
@@ -532,7 +532,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_bank_statement_search" model="ir.ui.view">
             <field name="name">account.bank.statement.search</field>
             <field name="model">account.bank.statement</field>
@@ -552,7 +552,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_bank_statement_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
@@ -678,13 +678,13 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
         </record>
-        
+
         <record id="action_bank_reconcile" model="ir.actions.client">
             <field name="name">Reconciliation on Bank Statements</field>
             <field name="res_model">account.bank.statement.line</field>
             <field name="tag">bank_statement_reconciliation_view</field>
         </record>
-        
+
         <!-- because of the needaction badge, groups needs to be specified -->
         <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
 
@@ -816,7 +816,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
+        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one,account.group_account_manager"/>
 
         <!-- Entries -->
         <record id="view_account_move_tree" model="ir.ui.view">
