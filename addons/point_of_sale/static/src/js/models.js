@@ -1064,7 +1064,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         addPaymentline: function(cashregister) {
             var paymentLines = this.get('paymentLines');
             var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos:this.pos});
-            if(cashregister.journal.type !== 'cash'){
+            if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
                 newPaymentline.set_amount( Math.max(this.getDueLeft(),0) );
             }
             paymentLines.add(newPaymentline);
@@ -1177,25 +1177,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         finalize: function(){
             this.destroy();
-        },
-        set_to_invoice: function(to_invoice) {
-            this.to_invoice = to_invoice;
-        },
-        is_to_invoice: function(){
-            return this.to_invoice;
-        },
-        // remove all the paymentlines with zero money in it
-        clean_empty_paymentlines: function() {
-            var lines = this.get('paymentLines').models;
-            var empty = [];
-            for ( var i = 0; i < lines.length; i++) {
-                if (!lines[i].get_amount()) {
-                    empty.push(lines[i]);
-                }
-            }
-            for ( var i = 0; i < empty.length; i++) {
-                this.removePaymentline(empty[i]);
-            }
         },
         // the client related to the current order.
         set_client: function(client){
