@@ -34,6 +34,8 @@ from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
 
+from openerp import models, fields, api, _
+
 _logger = logging.getLogger(__name__)
 
 def check_cycle(self, cr, uid, ids, context=None):
@@ -55,31 +57,25 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
-class res_company(osv.osv):
+class res_company(models.Model):
     _inherit = "res.company"
-    _columns = {
-        'income_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Gain Exchange Rate Account",
-            domain="[('type', '=', 'other'), ('deprecated', '=', False)]",),
-        'expense_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other'), ('deprecated', '=', False)]",),
-    }
 
-class account_payment_term(osv.osv):
+    income_currency_exchange_account_id = fields.Many2one('account.account',
+        string="Gain Exchange Rate Account", domain=[('type', '=', 'other'), ('deprecated', '=', False)])
+    expense_currency_exchange_account_id = fields.Many2one('account.account',
+        string="Loss Exchange Rate Account", domain=[('type', '=', 'other'), ('deprecated', '=', False)])
+
+
+class account_payment_term(models.Model):
     _name = "account.payment.term"
     _description = "Payment Term"
-    _columns = {
-        'name': fields.char('Payment Term', translate=True, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
-        'note': fields.text('Description', translate=True),
-        'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms', copy=True),
-    }
-    _defaults = {
-        'active': 1,
-    }
+
+    name = fields.Char(string='Payment Term', translate=True, required=True)
+    active = fields.Boolean(string='Active', default=True,
+        help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
+    note = fields.Text(string='Description', translate=True)
+    line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
+
     _order = "name"
 
     def compute(self, cr, uid, id, value, date_ref=False, context=None):
@@ -113,26 +109,23 @@ class account_payment_term(osv.osv):
             result.append( (time.strftime('%Y-%m-%d'), dist) )
         return result
 
-class account_payment_term_line(osv.osv):
+class account_payment_term_line(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _columns = {
-        'value': fields.selection([('balance', 'Balance'),
-                                   ('procent', 'Percent'),
-                                   ('fixed', 'Fixed Amount')], 'Computation',
-                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
-        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100."),
-        'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
-            "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
-        'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
-        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
-    }
-    _defaults = {
-        'value': 'balance',
-        'days': 30,
-        'days2': 0,
-    }
+    value = fields.Selection([
+            ('balance', 'Balance'),
+            ('procent', 'Percent'),
+            ('fixed', 'Fixed Amount')
+        ], string='Computation', required=True, default='balance',
+        help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated.""")
+    value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
+    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computation of the day of month." \
+        "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
+    days2 = fields.Integer(string='Day of the Month', required=True, default='0',
+        help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month).")
+    payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
+
     _order = "value desc,days"
 
     def _check_percent(self, cr, uid, ids, context=None):
@@ -146,41 +139,41 @@ class account_payment_term_line(osv.osv):
     ]
 
 
-class account_account_type(osv.osv):
+class account_account_type(models.Model):
     _name = "account.account.type"
     _description = "Account Type"
 
-    _columns = {
-        'name': fields.char('Account Type', required=True, translate=True),
-        'code': fields.char('Code', size=32, required=True, select=True),
-        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
+    name = fields.Char(string='Account Type', required=True, translate=True)
+    code = fields.Char(string='Code', size=32, required=True, index=True)
+    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance'), ('unreconciled', 'Unreconciled')],
+        string='Deferral Method', required=True, default='none',
+        help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
+        'None' means that nothing will be done.
+        'Balance' will generally be used for cash accounts.
+        'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
+        'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year.""")
+    report_type = fields.Selection([
+        ('none','/'),
+        ('income', _('Profit & Loss (Income account)')),
+        ('expense', _('Profit & Loss (Expense account)')),
+        ('asset', _('Balance Sheet (Asset account)')),
+        ('liability', _('Balance Sheet (Liability account)'))
+        ],
+        default='none',string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True)
+    type = fields.Selection([
+        ('view', 'View'),
+        ('other', 'Regular'),
+        ('receivable', 'Receivable'),
+        ('payable', 'Payable'),
+        ('liquidity','Liquidity'),
+        ('consolidation', 'Consolidation'),
+        ], string='Type', required=True, default='other',
+        help="The 'Internal Type' is used for features available on "\
+        "different types of accounts: view can not have journal items, consolidation are accounts that "\
+        "can have children accounts for multi-company consolidations, payable/receivable are for "\
+        "partners accounts (for debit/credit computations)."),
+    note = fields.Text(string='Description')
 
- 'None' means that nothing will be done.
- 'Balance' will generally be used for cash accounts.
- 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.selection([('none','/'),
-                        ('income', _('Profit & Loss (Income account)')),
-                        ('expense', _('Profit & Loss (Expense account)')),
-                        ('asset', _('Balance Sheet (Asset account)')),
-                        ('liability', _('Balance Sheet (Liability account)'))], string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
-        'type': fields.selection([
-            ('view', 'View'),
-            ('other', 'Regular'),
-            ('receivable', 'Receivable'),
-            ('payable', 'Payable'),
-            ('liquidity','Liquidity'),
-            ('consolidation', 'Consolidation'),
-        ], 'Type', required=True, help="The 'Internal Type' is used for features available on "\
-            "different types of accounts: view can not have journal items, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations)."),
-        'note': fields.text('Description'),
-    }
-    _defaults = {
-        'close_method': 'none',
-        'report_type': 'none',
-        'type': 'other',
-    }
     _order = "code"
 
 
