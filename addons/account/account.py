@@ -439,7 +439,7 @@ class account_account(osv.osv):
         'type': fields.related('user_type', 'type', type='selection',
                     selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
                     ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-                    ], string="Internal Type"),
+                    ], store=True, string="Internal Type"),
         'user_type': fields.many2one('account.account.type', 'Type', required=True,
             help="Account Type is used for information purpose, to generate "
               "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
