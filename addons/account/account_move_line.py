@@ -1231,7 +1231,7 @@ class account_move_line(osv.osv):
                 vals['company_id'] = move.company_id.id
             if move.date and not vals.get('date'):
                 vals['date'] = move.date
-        if ('account_id' in vals) and not account_obj.read(cr, uid, [vals['account_id']], ['deprecated'])[0]['deprecated']:
+        if ('account_id' in vals) and account_obj.read(cr, uid, [vals['account_id']], ['deprecated'])[0]['deprecated']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use deprecated account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
