@@ -150,63 +150,19 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
 
-    def _get_financial_report_ref(self, cr, uid, context=None):
-        obj_data = self.pool.get('ir.model.data')
-        obj_financial_report = self.pool.get('account.financial.report')
-        financial_report_ref = {}
-        for key, financial_report in [
-                    ('asset','account_financial_report_assets0'),
-                    ('liability','account_financial_report_liability0'),
-                    ('income','account_financial_report_income0'),
-                    ('expense','account_financial_report_expense0'),
-                ]:
-            try:
-                financial_report_ref[key] = obj_financial_report.browse(cr, uid,
-                    obj_data.get_object_reference(cr, uid, 'account', financial_report)[1],
-                    context=context)
-            except ValueError:
-                pass
-        return financial_report_ref
-
-    def _get_current_report_type(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = 'none'
-            for key, financial_report in financial_report_ref.items():
-                list_ids = [x.id for x in financial_report.account_type_ids]
-                if record.id in list_ids:
-                    res[record.id] = key
-        return res
-
-    def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
-        field_value = field_value or 'none'
-        obj_financial_report = self.pool.get('account.financial.report')
-        #unlink if it exists somewhere in the financial reports related to BS or PL
-        financial_report_ref = self._get_financial_report_ref(cr, uid, context=context)
-        for key, financial_report in financial_report_ref.items():
-            list_ids = [x.id for x in financial_report.account_type_ids]
-            if account_type_id in list_ids:
-                obj_financial_report.write(cr, uid, [financial_report.id], {'account_type_ids': [(3, account_type_id)]})
-        #write it in the good place
-        if field_value != 'none':
-            return obj_financial_report.write(cr, uid, [financial_report_ref[field_value].id], {'account_type_ids': [(4, account_type_id)]})
-
     _columns = {
         'name': fields.char('Account Type', required=True, translate=True),
         'code': fields.char('Code', size=32, required=True, select=True),
-        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
+        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
  'None' means that nothing will be done.
  'Balance' will generally be used for cash accounts.
- 'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
-            selection= [('none','/'),
+        'report_type': fields.selection([('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
                         ('asset', _('Balance Sheet (Asset account)')),
-                        ('liability', _('Balance Sheet (Liability account)'))], help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
+                        ('liability', _('Balance Sheet (Liability account)'))], string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'type': fields.selection([
             ('view', 'View'),
             ('other', 'Regular'),
@@ -227,12 +183,6 @@ class account_account_type(osv.osv):
     }
     _order = "code"
 
-
-def _code_get(self, cr, uid, context=None):
-    acc_type_obj = self.pool.get('account.account.type')
-    ids = acc_type_obj.search(cr, uid, [])
-    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    return [(r['code'], r['name']) for r in res]
 
 #----------------------------------------------------------
 # Accounts
