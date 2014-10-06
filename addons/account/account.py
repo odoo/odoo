@@ -2084,27 +2084,17 @@ class account_account_template(osv.osv):
         'name': fields.char('Name', required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True, select=1),
-        'type': fields.selection([
-            ('receivable','Receivable'),
-            ('payable','Payable'),
-            ('view','View'),
-            ('consolidation','Consolidation'),
-            ('liquidity','Liquidity'),
-            ('other','Regular'),
-            ('closed','Closed'),
-            ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
-            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
-        'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
+        'type': fields.related('user_type', 'type', type='selection',
+                    selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+                    ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
+                    ], store=True, string="Internal Type"),
+        'user_type': fields.many2one('account.account.type', 'Type', required=True,
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id', 'Financial Reports'),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
-        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade', domain=[('type','=','view')]),
-        'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times)."),
@@ -2115,11 +2105,6 @@ class account_account_template(osv.osv):
         'type': 'view',
         'nocreate': False,
     }
-
-    _check_recursion = check_cycle
-    _constraints = [
-        (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
-    ]
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -2145,60 +2130,34 @@ class account_account_template(osv.osv):
         :returns: return acc_template_ref for reference purpose.
         :rtype: dict
         """
-        if context is None:
-            context = {}
         obj_acc = self.pool.get('account.account')
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context).name
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
-        #deactivate the parent_store functionnality on account_account for rapidity purpose
-        ctx = context.copy()
-        ctx.update({'defer_parent_store_computation': True})
-        level_ref = {}
-        children_acc_criteria = [('chart_template_id','=', chart_template_id)]
-        if template.account_root_id.id:
-            children_acc_criteria = ['|'] + children_acc_criteria + ['&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False)]
-        children_acc_template = self.search(cr, uid, [('nocreate','!=',True)] + children_acc_criteria, order='id')
-        for account_template in self.browse(cr, uid, children_acc_template, context=context):
-            # skip the root of COA if it's not the main one
-            if (template.account_root_id.id == account_template.id) and template.parent_id:
-                continue
-            tax_ids = []
-            for tax in account_template.tax_ids:
-                tax_ids.append(tax_template_ref[tax.id])
+        tax_ids = []
+        for tax in template.tax_ids:
+            tax_ids.append(tax_template_ref[tax.id])
 
-            code_main = account_template.code and len(account_template.code) or 0
-            code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
-                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            parent_id = account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False
-            #the level as to be given as well at the creation time, because of the defer_parent_store_computation in
-            #context. Indeed because of this, the parent_left and parent_right are not computed and thus the child_of
-            #operator does not return the expected values, with result of having the level field not computed at all.
-            if parent_id:
-                level = parent_id in level_ref and level_ref[parent_id] + 1 or obj_acc._get_level(cr, uid, [parent_id], 'level', None, context=context)[parent_id] + 1
-            else:
-                level = 0
-            vals={
-                'name': (template.account_root_id.id == account_template.id) and company_name or account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'type': account_template.type,
-                'user_type': account_template.user_type and account_template.user_type.id or False,
-                'reconcile': account_template.reconcile,
-                'shortcut': account_template.shortcut,
-                'note': account_template.note,
-                'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
-                'parent_id': parent_id,
-                'tax_ids': [(6,0,tax_ids)],
-                'company_id': company_id,
-                'level': level,
-            }
-            new_account = obj_acc.create(cr, uid, vals, context=ctx)
-            acc_template_ref[account_template.id] = new_account
-            level_ref[new_account] = level
+        code_main = template.code and len(template.code) or 0
+        code_acc = template.code or ''
+        if code_main > 0 and code_main <= code_digits and template.type != 'view':
+            code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
 
-        #reactivate the parent_store functionnality on account_account
-        obj_acc._parent_store_compute(cr)
+        vals={
+            'name': company_name or template.name,
+            'currency_id': template.currency_id and template.currency_id.id or False,
+            'code': code_acc,
+            'type': template.type,
+            'user_type': template.user_type and template.user_type.id or False,
+            'reconcile': template.reconcile,
+            'shortcut': template.shortcut,
+            'note': template.note,
+            'financial_report_ids': template.financial_report_ids and [(6, 0, [x.id for x in template.financial_report_ids])] or False,
+            'tax_ids': [(6, 0, tax_ids)],
+            'company_id': company_id,
+        }
+        new_account = obj_acc.create(cr, uid, vals, context=context)
+        acc_template_ref[template.id] = new_account
+
         return acc_template_ref
 
 
