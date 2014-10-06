@@ -29,23 +29,7 @@ class Website_Url(http.Controller):
     def shorten_url(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
-        # return
-
-        campaign_obj = request.registry['crm.tracking.campaign']
-        campaign_ids = campaign_obj.search(cr, uid, [], context=context)
-        campaigns = campaign_obj.browse(cr, uid, campaign_ids, context=context)
-
-        channel_obj = request.registry['crm.tracking.medium']
-        channel_ids = channel_obj.search(cr, uid, [], context=context)
-        channels = channel_obj.browse(cr, uid, channel_ids, context=context)
-
-        source_obj = request.registry['crm.tracking.source']
-        source_ids = source_obj.search(cr, uid, [], context=context)
-        sources = source_obj.browse(cr, uid, source_ids, context=context)
-
-
-        return request.website.render("website_url.page_shorten_url", 
-            {'campaigns':campaigns, 'channels':channels, 'sources':sources})
+        return request.website.render("website_url.page_shorten_url")
 
     @http.route(['/r/recent_links'], type='json', auth='user')
     def recent_links(self, **post):
@@ -65,40 +49,28 @@ class Website_Url(http.Controller):
 
         return alias.archive()
 
-
-    """@http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
-    def statistics_shorten_url(self, code, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        # JSH Todo: Find way to redirect user. to statistics of the
-        # perticular url code
-        action_id = request.registry['ir.actions.act_window'].for_xml_id(cr, uid, 'website_url', 'action_website_alias_stats', context=context)['id']
-        return werkzeug.utils.redirect("/web#view_type=graph&model=website.alias.click&action=%d" % (action_id), 302)"""
-
-
     @http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        return request.website.render("website_url.graphs", {})
+        return request.website.render("website_url.graphs", {'code':code})
 
     @http.route(['/r/<string:code>/chart'], type="json", auth="user")
     def chart_data(self, code):
         cr, uid, context = request.cr, request.uid, request.context
-        # alias = request.registry['website.alias']
-        click_obj = request.registry['website.alias.click']
 
-        # alias_id = alias.search_read([('code', '=', code)], ['id'])
-        #for data in Alias_clicks.sudo().search_read([('alias_id', '=', alias_id)], ['alias_id', 'click_date', 'country_id']):
-        click_ids = click_obj.search(cr, uid, [])
-        clicks = click_obj.read(cr, uid, click_ids, ['create_date'], context=context)
+        alias_obj = request.registry['website.alias']
+        alias_id = alias_obj.search(cr, uid, [('code', '=', code)], context=context)
 
-        print clicks
+        total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id[0], context=context)
+        month_clicks = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
+        clicks_by_country = request.registry['website.alias.click'].get_clicks_by_country(cr, uid, alias_id[0], context=context)
 
-        return clicks
+        return {'total_clicks':total_clicks, 'month_clicks':month_clicks, 'clicks_by_country':clicks_by_country}
 
     @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
     def full_url_redirect(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        (ip, country_code) = (request.httprequest.remote_addr, request.session.geoip.get('country_code'))
+        (ip, country_code) = (request.httprequest.remote_addr, request.session['geoip'].get('country_code'))
 
         redirect_url = request.registry['website.alias'].get_url_from_code(cr, uid, code, ip, country_code, context=context)
 
@@ -108,7 +80,6 @@ class Website_Url(http.Controller):
             return werkzeug.utils.redirect('', 301)
 
     # Routes dedicated to the form selects (possibility to create records on the fly
-    # TO REFRACTOR
     @http.route(['/r/campaigns'], type='json', auth='user')
     def campaigns(self):
         cr, uid, context = request.cr, request.uid, request.context
@@ -144,24 +115,24 @@ class Website_Url(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         campaign_obj = request.registry['crm.tracking.campaign']
-        campaigns = campaign_obj.create(cr, uid, {'name': post['name']}, context=context)
+        campaign = campaign_obj.create(cr, uid, {'name': post['name']}, context=context)
 
-        return campaigns
+        return campaign
 
     @http.route(['/r/mediums/new'], type='json', auth='user', methods=['POST'])
     def new_medium(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
         medium_obj = request.registry['crm.tracking.medium']
-        mediums = medium_obj.create(cr, uid, {'name': post['name']}, context=context)
+        medium = medium_obj.create(cr, uid, {'name': post['name']}, context=context)
 
-        return mediums
+        return medium
 
     @http.route(['/r/sources/new'], type='json', auth='user', methods=['POST'])
     def new_source(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
         source_obj = request.registry['crm.tracking.source']
-        sources = source_obj.create(cr, uid, {'name': post['name']}, context=context)
+        source = source_obj.create(cr, uid, {'name': post['name']}, context=context)
 
-        return sources
+        return source

@@ -92,38 +92,46 @@
                     <div class="row">
                         <div class="col-sm-12">
 
+                            <input type="hidden" id="code" t-att-value="code" />
+
                             <h2 class="text-center">URL Shortener</h2>
                             <h3 class="text-muted text-center">Statistics</h3>
                             <p class="text-center">URL</p>
 
                             <!-- Tabs -->
-                            <ul class="nav nav-tabs hidden-print">
+                            <ul class="nav nav-tabs hidden-print graph-tabs">
                                 <li class="active">
-                                    <a href="#all_chart" data-toggle="tab">All</a>
+                                    <a href="#last_month_chart" data-toggle="tab">Last Month</a>
                                 </li>
                                 <li>
                                     <a href="#hour_chart" data-toggle="tab">Last Hour</a>
                                 </li>
+                                <li>
+                                    <a href="#by_country" data-toggle="tab">By Country</a>
+                                </li>
                             </ul>
 
                             <div class="tab-content">
-                                <div class="tab-pane active" id="all_chart">
+                                <div class="tab-pane active" id="last_month_chart">
                                     <svg style="height:20em"></svg>
                                 </div>
                                 <div class="tab-pane" id="hour_chart">
                                     <svg style="height:20em"></svg>
                                 </div>
+                                <div class="tab-pane" id="by_country">
+                                    <svg style="height:20em;"></svg>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
+<!--                     <div class="row">
                         <div class="col-sm-12">
                             <div id="pie_chart">
                                 <svg style="height:20em"></svg>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </t>
         </template>

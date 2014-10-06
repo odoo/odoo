@@ -22,7 +22,7 @@ class website_alias(models.Model):
 
     url = fields.Char(string='Full URL', required=True)
     code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
-    count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
+    count = fields.Integer(string='Number of Clicks', compute='_count_url')
     short_url = fields.Char(string="Short URL", compute='_short_url')
     alias_click_ids = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
     is_archived = fields.Boolean(string='Archived', default=False)
@@ -116,21 +116,24 @@ class website_alias(models.Model):
     @api.model
     def get_url_from_code(self, code, ip, country_code, stat_id=False, context=None):
 
+        print 'get_url_from_code'
+
         rec = self.sudo().search([('code', '=', code)])
 
         if rec:
             again = rec.alias_click_ids.sudo().search_count([('alias_id', '=', rec.id), ('ip', '=', ip)])
 
-            if not again:
-                country_id = self.env['res.country'].sudo().search([('code', '=', country_code)])
-                vals = {
-                    'alias_id':rec.id,
-                    'create_date':datetime.date.today(),
-                    'ip':ip,
-                    'country_id': country_id and country_id[0] or False,
-                    'mail_stat_id': stat_id
-                }
-                self.env['website.alias.click'].sudo().create(vals) 
+            # if not again:
+            country_record = self.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).read(['id'])
+
+            vals = {
+                'alias_id':rec.id,
+                'create_date':datetime.date.today(),
+                'ip':ip,
+                'country_id': country_record[0]['id'] if country_record else False,
+                'mail_stat_id': stat_id
+            }
+            self.env['website.alias.click'].sudo().create(vals) 
             
             parsed = urlparse(rec.url)
             utms = ''
@@ -156,3 +159,31 @@ class website_alias_click(models.Model):
     alias_id = fields.Many2one('website.alias','Alias', required=True)
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country','Country')
+
+    @api.model
+    def get_clicks_by_day(self, alias_id):
+        self.env.cr.execute("""
+            SELECT to_char(create_date, 'YYYY-MM-DD'), count(id)
+            FROM website_alias_click
+            WHERE alias_id = '%s'
+            GROUP BY to_char(create_date, 'YYYY-MM-DD')
+        """, (alias_id, ))
+
+        return self.env.cr.dictfetchall()
+
+    @api.model
+    def get_total_clicks(self, alias_id):
+        return self.search_count([('alias_id', '=', alias_id)])
+
+    @api.model
+    def get_clicks_by_country(self, alias_id):
+        self.env.cr.execute("""
+            SELECT rc.name, count(wac.id)
+            FROM website_alias_click wac
+            LEFT OUTER JOIN res_country rc
+            ON wac.country_id = rc.id
+            WHERE wac.alias_id = '%s'
+            GROUP BY wac.country_id, rc.name
+        """, (alias_id, ))
+
+        return self.env.cr.dictfetchall()
