@@ -1160,7 +1160,7 @@
                             <t t-if="order.get_client()">
                                 <i class='fa fa-user'/>
                             </t>
-                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'Unknown Customer: ') + order.get('creationDate').toString('t')"/>
+                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + order.get('creationDate').toString('t')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>
