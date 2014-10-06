@@ -459,7 +459,7 @@ class account_account(osv.osv):
         'note': fields.text('Internal Notes'),
         'company_currency_id': fields.function(_get_company_currency, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
+        'deprecated': fields.boolean('Deprecated', select=2),
 
         'currency_mode': fields.selection([('current', 'At Date'), ('average', 'Average Rate')], 'Outgoing Currencies Rate',
             help=
@@ -473,7 +473,7 @@ class account_account(osv.osv):
     _defaults = {
         'type': 'other',
         'reconcile': False,
-        'active': True,
+        'deprecated': False,
         'currency_mode': 'current',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
@@ -581,7 +581,7 @@ class account_account(osv.osv):
                 for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
                     if vals['company_id']!=i:
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
-        if 'active' in vals and not vals['active']:
+        if 'deprecated' in vals and not vals['deprecated']:
             self._check_moves(cr, uid, ids, "write", context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
@@ -2692,7 +2692,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         company_ids = company_obj.search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
-        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        cr.execute("SELECT company_id FROM account_account WHERE deprecated = 'f' AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
