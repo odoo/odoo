@@ -251,6 +251,7 @@ class Field(object):
     automatic = False           # whether the field is automatically created ("magic" field)
     inherited = False           # whether the field is inherited (_inherits)
     column = None               # the column interfaced by the field
+    setup_done = False          # whether the field has been set up
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -346,7 +347,7 @@ class Field(object):
 
     def reset(self):
         """ Prepare `self` for a new setup. """
-        self._setup_done = False
+        self.setup_done = False
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
         # invalidates the cache of each `field`, and registers the records to
@@ -359,8 +360,8 @@ class Field(object):
             and other properties). This method is idempotent: it has no effect
             if `self` has already been set up.
         """
-        if not self._setup_done:
-            self._setup_done = True
+        if not self.setup_done:
+            self.setup_done = True
             self._setup(env)
 
     def _setup(self, env):
