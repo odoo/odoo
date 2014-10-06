@@ -119,6 +119,16 @@
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.launch', function(){
                     console.log('LAUNCH');
+                    var name = $('#name').val();
+                    var tab = self.wizard.find('.form-field-required');
+                    var result = [];
+                    var i;
+                    for (i = 0; i < tab.length; i++) {
+                        if ($(tab[i]).is(':checked')) {
+                            result.push($(tab[i]).attr('data-version_id'))
+                        }
+                    }
+                    console.log(result);
                 });
             });
         },
