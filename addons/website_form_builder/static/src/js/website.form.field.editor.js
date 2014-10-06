@@ -101,6 +101,7 @@
     			this.wizard.find('.form-action-mailto').addClass('hidden');
     	},
         on_prompt: function () {
+        	debugger;
             var self = this;
             var DefFormPopUp = $.Deferred();
             (new openerp.Model(new openerp.Session(),"website.form"))
@@ -143,7 +144,8 @@
             this.on_prompt().fail(function () {  self.editor.on_remove(); });
         },
         start : function () {
-        	var self = this;
+        	debugger;
+        	this.$el.find(".js_action_form_list").on("click", _.bind(this.on_prompt, this));
         	this._super();        
         },
         clean_for_save: function () {},
@@ -843,6 +845,7 @@
         	self.on_prompt().then(function() {self.removeAction(); });
         },
         start : function () {
+        	
             var self = this;
             model.init(this.$target.parent().attr('data-model')).then(function() {
             	console.log(model);

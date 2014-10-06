@@ -12,7 +12,8 @@ OpenERP Contact Form
     'depends': ['website'],
     'data': [
         'views/snippets.xml',
-        'views/templates.xml'
+        'views/templates.xml',
+        'data/website_form_mail.xml'
     ],
     'qweb': [
         'static/src/xml/website.form.editor.wizard.template.xml'
