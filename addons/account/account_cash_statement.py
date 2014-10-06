@@ -296,7 +296,7 @@ class account_cash_statement(osv.osv):
                 continue
 
             for item_label, item_account in TABLES:
-                if getattr(obj.journal_id, item_account):
+                if not getattr(obj.journal_id, item_account):
                     raise osv.except_osv(_('Error!'),
                                          _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
 
