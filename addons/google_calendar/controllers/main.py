@@ -40,7 +40,7 @@ class google_calendar_controller(http.Controller):
                 }
 
             # If App authorized, and user access accepted, We launch the synchronization
-            return gc_obj.synchronize_events(request.cr, request.uid, [request.uid], context=kw.get('local_context'))
+            return gc_obj.synchronize_events(request.cr, request.uid, [], context=kw.get('local_context'))
 
         return {"status": "success"}
 

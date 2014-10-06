@@ -3042,6 +3042,8 @@ class BaseModel(object):
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
                 continue
+            if not field.setup_done:
+                continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
             res[fname] = field.get_description(recs.env)

@@ -39,6 +39,10 @@ class contactus(http.Controller):
             '_kwargs': kwargs,
         }
 
+    def get_contactus_response(self, values, kwargs):
+        values = self.preRenderThanks(request, values, kwargs)
+        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
         def dict_to_str(title, dictvar):
@@ -106,5 +110,4 @@ class contactus(http.Controller):
                 }
                 request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
 
-        values = self.preRenderThanks(request, values, kwargs)
-        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+        return self.get_contactus_response(values, kwargs)
