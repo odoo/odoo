@@ -221,7 +221,7 @@ class account_bank_statement(osv.osv):
             'ref': st_line.ref,
         }
 
-    def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_account(self, cr, uid, st_line, context=None):
         """Retrieve the account to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
@@ -231,7 +231,7 @@ class account_bank_statement(osv.osv):
             return st_line.statement_id.journal_id.default_credit_account_id.id
         return st_line.statement_id.journal_id.default_debit_account_id.id
 
-    def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_partner(self, cr, uid, st_line, context=None):
         """Retrieve the partner to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
