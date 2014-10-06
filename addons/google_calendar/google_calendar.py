@@ -510,7 +510,7 @@ class google_calendar(osv.AbstractModel):
                 else:
                     _logger.info("[%s] Calendar Synchro - Done with status : %s  !" % (user_to_sync, resp.get("status")))
             except Exception, e:
-                _logger.info("[%s] Calendar Synchro - Exception : %s !" % exception_to_unicode(e))
+                _logger.info("[%s] Calendar Synchro - Exception : %s !" % (user_to_sync, exception_to_unicode(e)))
         _logger.info("Calendar Synchro - Ended by cron")
 
     def synchronize_events(self, cr, uid, ids, lastSync=True, context=None):
