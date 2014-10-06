@@ -1103,7 +1103,6 @@
                                         <field name="quantity"/>
                                     </group>
                                     <group string="Accounting Documents">
-                                        <field name="invoice" readonly="True"/>
                                         <field name="move_id" required="False"/>
                                         <field name="statement_id" readonly="True"/>
                                     </group>
@@ -1211,7 +1210,6 @@
                     <field name="credit" sum="Total Credit"/>
                     <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
                     <field name="reconcile_ref"/>
-                    <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
                     <field name="state" invisible="1"/>
@@ -1446,7 +1444,6 @@
                                     </notebook>
                                 </form>
                                 <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
-                                    <field name="invoice"/>
                                     <field name="name"/>
                                     <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
                                     <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
