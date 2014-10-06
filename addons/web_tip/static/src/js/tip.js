@@ -248,7 +248,7 @@
                 });
 
                 // resize
-                $(window).resize(function() {
+                instance.web.bus.on('resize', this, function() {
                     self.reposition();
                 });
             } else {
@@ -280,14 +280,14 @@
         },
 
         _set_helper_position : function() {
-            var self = this;
-            var _top = self.$element.offset().top -5;
-            var _left = self.$element.offset().left -5;
-            var _width = self.$element.outerWidth() + 10;
-            var _height = self.$element.outerHeight() + 10;
-            self.$helper.offset({top: _top , left: _left});
-            self.$helper.width(_width);
-            self.$helper.height(_height);
+            var offset = this.$element.offset();
+            var _top = offset.top - 5;
+            var _left = offset.left - 5;
+            var _width = this.$element.outerWidth() + 10;
+            var _height = this.$element.outerHeight() + 10;
+            this.$helper.offset({top: _top , left: _left});
+            this.$helper.width(_width);
+            this.$helper.height(_height);
         }
     });
 
