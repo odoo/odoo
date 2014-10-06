@@ -129,7 +129,8 @@ def get_view_arch_from_file(filename, xmlid):
                 node.tag = 'data'
             node.attrib.pop('id', None)
             return etree.tostring(node)
-    raise ValueError("Could not find view arch definition in file '%s' for xmlid '%s'" % (filename, xmlid))
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'" % (filename, xmlid))
+    return None
 
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
