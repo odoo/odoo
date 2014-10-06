@@ -114,12 +114,31 @@
             <field name="arch" type="xml">
                 <div class="oe_kanban_content">
                      <a href="#" title="Add to call center calls">
-                        
                         <img  class="oe_dial_lead_to_call_center_button_icon" src="/web/static/src/img/icons/terp-call-start.png" />
                     </a>
                 </div>
             </field>
         </record>
+
+        <!-- wizard to change the log of calls -->
+        <record model="ir.ui.view" id="wizard_change_log_form_view">
+            <field name="name">wizard.form</field>
+            <field name="model">crm.phonecall.log.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Edit the log">
+                    <group>
+                        <field name="description" placeholder="Description..."/>
+                    </group>
+                    <footer>
+                        <button name="save" type="object"
+                                string="Save" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
 
         <menuitem name="Call Center" id="menu_crm_phone_callcenter"
             parent="crm.menu_crm_case_phone"

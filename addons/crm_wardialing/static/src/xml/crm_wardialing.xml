@@ -5,6 +5,8 @@
 <t t-name="crm_wardialing.PhonecallWidget">
     <div rel='popover' data-trigger="hover" data-placement='right' class="oe_dial_phonecall ui-draggable">
         <div>
+            <span class="phonecall_id" style="display:none"><t t-esc="widget.get('id')"/></span>
+
             <span class="oe_dial_phonecall_clip">
                 <img t-att-src="'data:image/jpg;base64,'+widget.get('image_small')" class="oe_dial_phonecall_avatar"/>
             </span>
@@ -17,7 +19,10 @@
     <div class="oe_dial">
         <div class="oe_dial_frame_header_button">
             <a href="#">
-                    <img class="oe_dial_header_dialbutton_icon" src="/web/static/src/img/icons/terp-call-start.png"/>
+                    <img class="oe_dial_header_dialbutton_icon" src="/web/static/src/img/icons/gtk-goto-bottom.png"/>
+            </a>
+            <a href="#">
+                    <img class="oe_dial_header_refresh_icon" src="/web/static/src/img/icons/gtk-refresh.png"/>
             </a>
         </div>
         <div class="oe_dial_frame_header">
@@ -27,12 +32,20 @@
         </div>
         <div class="oe_dial_phonecalls"></div>
         <div class="oe_dial_content">
-            
-            <button type="button" class="oe_dial_callbutton">Call</button>
-            <button type="button" class="oe_dial_nextcallbutton">Next Call</button>
+            <div>
+                <button type="button" class="oe_dial_callbutton">Call</button>
+                <button type="button" class="oe_dial_nextcallbutton">Next Call</button>
+            </div>
+            <div>
+                <button type="button" class="oe_dial_changelog">Call Log</button>
+            </div>
+            <div>
+                <button type="button" class="oe_dial_email">Send Email</button>
+            </div>
         </div>
     </div>
 </t>
+
 
 
 

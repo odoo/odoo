@@ -5,32 +5,30 @@
 <openerp>
     <data>
 
-    	<record model="ir.ui.view" id="wizard_to_call_form_view">
-            <field name="name">wizard.form</field>
-            <field name="model">crm.wardialing.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Create Call Center Calls">
-                    <h2>Opportunities</h2>
-                    <group>
-                        <field nolabel="1" name="opportunity_ids"/>
-                    </group>
-                    <footer>
-                        <button name="save" type="object"
-                                string="Save" class="oe_highlight"/>
-                        or
-                        <button special="cancel" string="Cancel"/>
-                    </footer>
-                </form>
+
+        <record id="action_create_call_center_call" model="ir.actions.server">
+            <field name="name">Create call center call</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'crm.lead':
+                    ids = []
+                    if(context['active_ids']):
+                        ids = context['active_ids']
+                    else:
+                        ids = context['opportunity_id']
+                    self.create_call_center_call(cr, uid, ids, context=context)
             </field>
         </record>
 
-        
-
-        <act_window id="action_opportunity_to_call"
-            multi="True"
-            key2="client_action_multi" name="Create calls"
-            res_model="crm.wardialing.wizard" src_model="crm.lead"
-            view_mode="form" target="new" />
+        <record model="ir.values" id="ir_create_call_center_call">
+            <field name="model_id" ref="crm.model_crm_lead" />
+            <field name="name">Add to Call Center</field>
+            <field name="key2">client_action_multi</field>
+            <field eval="'ir.actions.server,%d'%action_create_call_center_call" name="value"/>
+            <field name="key">action</field>
+            <field name="model">crm.lead</field>
+        </record>
     </data>
 </openerp>
 
