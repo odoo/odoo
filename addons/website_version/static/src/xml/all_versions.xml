@@ -26,10 +26,15 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                
                 <h4 class="modal-title">Create an experiment</h4>
-              </div>
+              </div> 
               <div class="modal-body">
+                <div class="form-group row">
+                    <label for="formFieldEditor-label" class="col-md-3 control-label">Name :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control form-field-label" id="formFieldEditor-label" />
+                    </div>
+                </div>
                 <t t-foreach="snapshots" t-as="item">       
                     <div class="form-group row">
                         <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
@@ -38,10 +43,19 @@
                         </div>
                     </div>
                 </t>
+                <div class="form-group row">
+                    <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
+                    <select class="selectpicker col-md-3">
+                        <option>bounces</option>
+                        <option>pageviews</option>
+                        <option>sessionDuration</option>
+                    </select>
+                </div>
               </div>
               <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Launch</button>
+                <button type="button" class="btn btn-primary">Draft</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
