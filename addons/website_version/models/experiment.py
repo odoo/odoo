@@ -56,7 +56,7 @@ class Experiment(osv.Model):
             for snap in l:
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
                 exp['variations'].append({'name':name, 'url': 'http://0.0.0.0:8069/'+name})
-        google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, context=context)
+        google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
             raise Warning("Please verify you give the authorizations to use google analytics api ...")
         vals['google_id'] = google_id
@@ -75,8 +75,8 @@ class Experiment(osv.Model):
                 else:
                     temp['name'] = exp.name
                 if state:
-                    print self.pool['google.management'].get_goal_info(cr, uid, context=None)
-                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, context=None)
+                    #print self.pool['google.management'].get_goal_info(cr, uid, context=None)
+                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
                     if len(current[1]["variations"]) == 1:
                         raise Warning("You must define at least one variation in your experiment.")
                     if not current[1].get("objectiveMetric"):
@@ -110,15 +110,14 @@ class Experiment(osv.Model):
                         temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
                 #to check the constraints before to write on the google analytics account 
                 x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
-                self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, context=None)
+                self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
         else:
             x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
         return x
 
     def unlink(self, cr, uid, ids, context=None):
         for exp in self.browse(cr, uid, ids, context=context):
-            print exp.google_id
-            self.pool['google.management'].delete_an_experiment(cr, uid, exp.google_id, context=context)
+            self.pool['google.management'].delete_an_experiment(cr, uid, exp.google_id, exp.website_id.id, context=context)
         return super(Experiment, self).unlink(cr, uid, ids, context=context)
 
 
@@ -134,6 +133,9 @@ class Experiment(osv.Model):
                 #We must considerate master
                 result[exp.id] += 1
         return result
+
+    def _get_objective(self):
+        self.objective = [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
@@ -195,11 +197,12 @@ class google_management(osv.AbstractModel):
 
         return data
 
-    def create_an_experiment(self, cr, uid, data, context=None):
+    def create_an_experiment(self, cr, uid, data, website_id, context=None):
         gs_pool = self.pool['google.service']
-        accountId='55031254'
-        webPropertyId='UA-55031254-1'
-        profileId='91492412'
+        website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
+        webPropertyId = website.google_analytics_key
+        accountId = webPropertyId.split('-')[1] 
+        profileId = website.google_analytics_view_id
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
@@ -209,63 +212,63 @@ class google_management(osv.AbstractModel):
             x = False
         return x[1]['id']
 
-    def update_an_experiment(self, cr, uid, data, experiment_id, context=None):
+    def update_an_experiment(self, cr, uid, data, google_id, website_id, context=None):
         gs_pool = self.pool['google.service']
+        website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
+        webPropertyId = website.google_analytics_key
+        accountId = webPropertyId.split('-')[1] 
+        profileId = website.google_analytics_view_id
 
-        accountId='55031254'
-        webPropertyId='UA-55031254-1'
-        profileId='91492412'
-
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s?access_token=%s' % (accountId, webPropertyId, profileId,experiment_id, self.get_token(cr, uid, context))
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s?access_token=%s' % (accountId, webPropertyId, profileId, google_id, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
 
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
 
-    def get_experiment_info(self, cr, uid, experiment_id, context=None):
+    def get_experiment_info(self, cr, uid, google_id, website_id, context=None):
         gs_pool = self.pool['google.service']
+        website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
+        webPropertyId = website.google_analytics_key
+        accountId = webPropertyId.split('-')[1] 
+        profileId = website.google_analytics_view_id
 
         params = {
             'access_token': self.get_token(cr, uid, context),
         }
-
-        accountId='55031254'
-        webPropertyId='UA-55031254-1'
-        profileId='91492412'
         
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId,experiment_id)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' % (accountId, webPropertyId, profileId, google_id)
         return gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
 
-    def get_goal_info(self, cr, uid, context=None):
+    def get_goal_info(self, cr, uid, website_id, context=None):
         gs_pool = self.pool['google.service']
+        website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
+        webPropertyId = website.google_analytics_key
+        accountId = webPropertyId.split('-')[1] 
+        profileId = website.google_analytics_view_id
 
         params = {
             'access_token': self.get_token(cr, uid, context),
         }
-
-        accountId='55031254'
-        webPropertyId='UA-55031254-1'
-        profileId='91492412'
         
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/goals' % (accountId, webPropertyId, profileId)
         return gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
 
-    def delete_an_experiment(self, cr, uid, experiment_id, context=None):
+    def delete_an_experiment(self, cr, uid, google_id, website_id, context=None):
         gs_pool = self.pool['google.service']
+        website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
+        webPropertyId = website.google_analytics_key
+        accountId = webPropertyId.split('-')[1] 
+        profileId = website.google_analytics_view_id
 
         params = {
             'access_token': self.get_token(cr, uid, context)
         }
-
-        accountId='55031254'
-        webPropertyId='UA-55031254-1'
-        profileId='91492412'
         
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId,experiment_id)
+        url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId, google_id)
 
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
 

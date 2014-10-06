@@ -10,6 +10,9 @@ class NewWebsite(osv.Model):
     _inherit = "website"
 
     _columns = {
+        'google_analytics_client_id': fields.char('Client ID'),
+        'google_analytics_client_secret': fields.char('Client Secret'),
+        'google_analytics_view_id': fields.char('View ID'),
         'google_management_rtoken': fields.char('Refresh Token'),
         'google_management_token': fields.char('User token'),
         'google_management_token_validity': fields.datetime('Token Validity'),
