@@ -115,7 +115,11 @@
             console.log(view_id);
             openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
                 console.log(result);
-                $(openerp.qweb.render("website_version.create_experiment",{snapshots:result})).appendTo($('body')).modal({"keyboard" :true});
+                self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result}));
+                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                self.wizard.find('.launch').click(function(){
+                    console.log('LAUNCH');
+                });
             });
         },
         
