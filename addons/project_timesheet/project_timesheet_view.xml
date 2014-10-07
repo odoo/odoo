@@ -138,5 +138,13 @@
         <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>
 
+        <!-- Time tracking quickly -->
+        <record model="ir.actions.act_url" id="action_project_timesheet_ui">
+            <field name="name">Project Time Tacking</field>
+            <field name="url">/project_timesheet/ptoject_timesheet_ui</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_project_timesheet" parent="base.menu_main_pm" name="Timesheet"/>
+        <menuitem id="menu_project_time_tracking" name="Project Time Tracking" parent="menu_project_timesheet" action="action_project_timesheet_ui"/>
     </data>
 </openerp>
