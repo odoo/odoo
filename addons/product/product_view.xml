@@ -149,7 +149,7 @@
                                             attrs="{'readonly': [('is_only_child', '=', False)]}"
                                             context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
                                     </group>
-                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
+                                    <group name="Weights" string="Weights">
                                         <field digits="(14, 3)" name="volume"
                                             attrs="{'readonly': ['|', ('type','=','service'), ('is_only_child', '=', False)]}"/>
                                         <field name="weight"
