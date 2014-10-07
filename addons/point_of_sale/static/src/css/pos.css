@@ -1925,7 +1925,13 @@ td {
     height: 180px;
     line-height:180px;
 }
-.pos .popup input {
+.pos .popup input,
+.pos .popup-input {
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    background: white;
+    min-height: 44px;
     font-family: "Lato";
     font-size: 20px;
     color: #444;
@@ -1936,7 +1942,8 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup input:focus {
+.pos .popup input:focus,
+.pos .popup-input.active {
     outline: none;
     box-shadow: 0px 0px 0px 3px #6EC89B;
 }
@@ -1962,6 +1969,42 @@ td {
 .pos .popup.popup-selection .selection-item:nth-child(even) {
     background: rgb(247,247,247);
 }
+.pos .popup-numpad {
+    margin: 12px auto;
+    text-align: left;
+    width: 244px;
+}
+.pos .popup-number .message {
+    margin-top: 0;
+}
+.pos .popup-numpad .input-button,
+.pos .popup-numpad .mode-button {
+    background: none;
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 25px;
+    margin: 4px;
+    vertical-align: top;
+    color: #444;
+}
+.pos .popup-numpad .input-button:active,
+.pos .popup-numpad .mode-button:active {
+    background: #444;
+    color: white;
+    border-color: #444;
+}
+
+.pos .popup-password .mode-button.add,
+.pos .popup-password .input-button.dot {
+    display: none;
+}
+.pos .popup-password .popup-numpad {
+    width: 182px;
+}
+.pos .popup-password .popup-input {
+    -webkit-text-security: disc;
+ }
 
 /*  ********* The Webkit Scrollbar  ********* */
 

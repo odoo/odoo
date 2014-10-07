@@ -1012,7 +1012,7 @@
     <t t-name="SelectionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-selection">
-                <p class="message"><t t-esc=" widget.message || 'Confirm ?' " /></p>
+                <p class="message"><t t-esc=" widget.message || 'Select' " /></p>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
                         <div class='selection-item' t-att-data-item-index='item_index'>
@@ -1021,6 +1021,49 @@
                     </t>
                 </div>
                 <div class="footer">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="NumberPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-number">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <div class='popup-input value active'>
+                    <t t-esc='widget.inputbuffer' />
+                </div>
+                <div class='popup-numpad'>
+                    <button class="input-button number-char" data-action='1'>1</button>
+                    <button class="input-button number-char" data-action='2'>2</button>
+                    <button class="input-button number-char" data-action='3'>3</button>
+                    <button class="mode-button add" data-action='+10'>+10</button>
+                    <br />
+                    <button class="input-button number-char" data-action='4'>4</button>
+                    <button class="input-button number-char" data-action='5'>5</button>
+                    <button class="input-button number-char" data-action='6'>6</button>
+                    <button class="mode-button add" data-action='+20'>+20</button>
+                    <br />
+                    <button class="input-button number-char" data-action='7'>7</button>
+                    <button class="input-button number-char" data-action='8'>8</button>
+                    <button class="input-button number-char" data-action='9'>9</button>
+                    <button class="mode-button add" data-action='+50'>+50</button>
+                    <br />
+                    <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+                    <button class="input-button number-char" data-action='0'>0</button>
+                    <button class="input-button number-char dot" data-action='.'>.</button>
+                    <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                        <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                    </button>
+                    <br />
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
                     <div class="button cancel">
                         Cancel 
                     </div>

@@ -462,6 +462,89 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template: 'TextAreaPopupWidget',
     });
 
+    module.NumberPopupWidget = module.PopUpWidget.extend({
+        template: 'NumberPopupWidget',
+        click_numpad_button: function($el,event){
+            this.numpad_input($el.data('action'));
+        },
+        numpad_input: function(input) { //FIXME -> Deduplicate code
+            var oldbuf = this.inputbuffer.slice(0);
+
+            if (input === '.') {
+                if (this.firstinput) {
+                    this.inputbuffer = "0.";
+                }else if (!this.inputbuffer.length || this.inputbuffer === '-') {
+                    this.inputbuffer += "0.";
+                } else if (this.inputbuffer.indexOf('.') < 0){
+                    this.inputbuffer = this.inputbuffer + '.';
+                }
+            } else if (input === 'CLEAR') {
+                this.inputbuffer = ""; 
+            } else if (input === 'BACKSPACE') { 
+                this.inputbuffer = this.inputbuffer.substring(0,this.inputbuffer.length - 1);
+            } else if (input === '+') {
+                if ( this.inputbuffer[0] === '-' ) {
+                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
+                }
+            } else if (input === '-') {
+                if ( this.inputbuffer[0] === '-' ) {
+                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
+                } else {
+                    this.inputbuffer = '-' + this.inputbuffer;
+                }
+            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
+                this.inputbuffer = '' + ((parseFloat(this.inputbuffer) || 0) + parseFloat(input));
+            } else if (!isNaN(parseInt(input))) {
+                if (this.firstinput) {
+                    this.inputbuffer = '' + input;
+                } else {
+                    this.inputbuffer += input;
+                }
+            }
+
+            this.firstinput = this.inputbuffer.length === 0;
+
+            if (this.inputbuffer !== oldbuf) {
+                this.$('.value').text(this.inputbuffer);
+            }
+        },
+        show: function(options){
+            options = options || {};
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.comment = options.comment || '';
+            this.inputbuffer = options.value   || '';
+            this.renderElement();
+            this.firstinput = true;
+            
+            this.$('.input-button,.mode-button').click(function(event){
+                self.click_numpad_button($(this),event);
+            });
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.cancel ){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.confirm ){
+                    options.confirm.call(self,self.inputbuffer);
+                }
+            });
+        },
+    });
+
+    module.PasswordPopupWidget = module.NumberPopupWidget.extend({
+        renderElement: function(){
+            this._super();
+            this.$('.popup').addClass('popup-password');    // HELLO HACK !
+        },
+    });
+
     module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorNoClientPopupWidget',
     });
@@ -1160,7 +1243,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             }
 
-            this.firstinput = false;
+            this.firstinput = this.inputbuffer.length === 0;
 
             if (this.inputbuffer !== oldbuf) {
                 var order = this.pos.get_order();
