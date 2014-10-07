@@ -1,0 +1,89 @@
+@charset "utf-8";
+/*       
+ *	THIS CSS FILE IS FOR WEBSITE FORM BUILDER CONFIGURATION (NO THEME)
+ */
+
+
+.form-action-mailto textarea,
+.form-action-mailto .text-wrap,
+.form-action-mailto .text-core,
+.form-control .form-input-search, 
+.form-control .text-wrap, 
+.form-control .text-core{
+	width: 100% !important;
+	height: 100% !important;
+	border: none;
+	font-size: 14px !important;
+	margin:0px !important;
+	
+	overflow-x: ellipsis;
+	overflow-y: visible;
+}
+
+.form-action-mailto .text-core .text-wrap .text-dropdown {
+	position:relative; !important;
+	margin-top: -75px; !important;
+}
+
+.form-control .form-input-search {
+	position: relative;
+	top:1px;
+}
+
+input[type=text] {
+	overflow:hidden;
+   	text-overflow:ellipsis;
+}
+
+.form-editor-add {
+	display:table-row;
+	width: 24px;
+	height: 24px;
+	border-radius: 12px;
+	margin:0px;
+	padding:0px;
+	font-size:20px;
+	font-weight: bold;
+	padding-bottom: 5px;
+	line-height: 20px;
+}
+
+.form-editor-table {
+	max-height:20%;
+	overflow-y:auto;
+	overflow-x:hidden;
+	text-align:center;
+}
+
+.form-editor-table td, .form-editor-table th{
+	text-align:center;
+}
+.div-inline {
+	display:inline;
+	padding-right:10px;
+}
+.tb-actions {
+	width:24px;
+}
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}

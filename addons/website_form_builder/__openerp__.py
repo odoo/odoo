@@ -9,10 +9,15 @@ OpenERP Contact Form
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website_form_builder','website_partner', 'crm'],
+    'depends': ['website'],
     'data': [
-        'data/website_crm_data.xml',
-        'views/website_crm.xml',
+        'views/snippets.xml',
+        'security/ir.model.access.csv',
+        'views/templates.xml',
+        'data/website_form_mail.xml'
+    ],
+    'qweb': [
+        'static/src/xml/website.form.editor.wizard.template.xml'
     ],
     'installable': True,
     'auto_install': False,

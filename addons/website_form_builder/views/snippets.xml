@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="contactus_snippets" name="Contactus snippets" inherit_id="website.snippets">
+			<xpath expr="//div[contains(@class, 'scroll')]/ul[contains(@class, 'nav')]" position="inside">	
+				<li><a href="#snippet_form" data-toggle="tab">Form Fields</a></li>
+			</xpath>	
+
+			<xpath expr="//div[@id='snippet_structure']" position="inside" >
+				<div>
+					<div class="oe_snippet_thumbnail">
+						<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
+						<span class="oe_snippet_thumbnail_title">Form Editor</span>
+					</div>
+					<section class="oe_snippet_body editForm">
+						<div class="container">
+							<form action="/contactus/crm.lead/" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+								<div class="form-group form-field form-init" data-form="input">
+									<label for="contact_name" class="col-md-3 col-sm-4 control-label">Your Name</label>
+									<div class="col-md-7 col-sm-8">
+										<div class="wrap-unwrap">
+											<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group form-field form-init" data-form="input">
+									<label for="phone" class="col-md-3 col-sm-4 control-label">Phone Number</label>
+									<div class="col-md-7 col-sm-8">
+										<div class="wrap-unwrap">
+											<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group form-field form-init" data-form="input">
+									<label for="email_from" class="col-md-3 col-sm-4 control-label">Email</label>
+									<div class="col-md-7 col-sm-8">
+										<div class="wrap-unwrap">
+											<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group form-field form-init" data-form="input">
+									<label for="name" class="col-md-3 col-sm-4 control-label">Subject</label>
+									<div class="col-md-7 col-sm-8">
+										<div class="wrap-unwrap">
+											<input type="text" class="form-control form-data" name="name" id="name" placeholder="" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group form-field form-init" data-form="textarea">
+									<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
+									<div class="col-md-7 col-sm-8">
+										<textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+										<button class="btn btn-primary btn-lg">Send</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</section>
+				</div>
+			</xpath>
+	
+		
+		<!---  FIELD SNIPPETS -->
+	
+			<xpath expr="//div[@id='snippet_effect']" position="after">
+				<div id="snippet_form" class="tab-pane">
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png" />
+							<span class="oe_snippet_thumbnail_title">Input Text</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="input">
+							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<input type="text" class="form-control form-data" placeholder="Placeholder Exemple" />
+								</div>
+								<p class="help-block">Help exemple.</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png" />
+							<span class="oe_snippet_thumbnail_title">Input Hidden</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field css_non_editable_mode_hidden" data-form="hidden">
+							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-unwrap">
+									<p class="form-control">Hidden Field</p>
+									<input type="hidden" class="form-control form-data" name="hidden" value="No Value"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Textarea</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="textarea">
+							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<textarea  class="form-control form-data" name="" style="min-height: 120px"></textarea>
+								<p class="help-block">Help exemple.</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Checkbox</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="checkbox">
+							<label for="checkbox" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-options form-data multivalues">
+									<div class="checkbox">
+										<label for="checkbox-0">
+											<input type="checkbox" name="checkbox-0" id="checkbox-0"  value="0" />
+											<span class="option">option 0</span>
+										</label>
+									</div>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="checkbox-1" id="checkbox-1" value="1" />
+											<span class="option">option 1</span>
+										</label>
+									</div>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="checkbox-2" id="checkbox-2" value="2" />
+											<span class="option">option 2</span>
+										</label>
+									</div>
+								</div>
+								<p class="help-block">Help exemple.</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Radios</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="radio">
+							<label for="radio" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="wrap-options form-data multivalues">
+									<div class="radio">
+										<label for="radio-0">
+											<input type="radio" name="radio-0" id="radio-0"  value="0" />
+											<span class="option">option 0</span>
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" name="radio-1" id="radio-1" value="1" />
+											<span class="option">option 1</span>
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input type="radio" name="radio-2" id="radio-2" value="2" />
+											<span class="option">option 2</span>
+										</label>
+									</div>
+								</div>
+								<p class="help-block">Help exemple.</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Select</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field" data-form="select">
+							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<select id="select" class="form-control form-data wrap-options">
+									<option value="0">Option 0</option>
+									<option value="1">Option 1</option>
+									<option value="2">Option 2</option>
+								</select>
+								<p class="help-block">Help exemple.</p>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Search</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field form-field-search" data-form="search">
+							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="form-control form-data">
+									<textarea class="form-input-search" name="" rows="1"></textarea>
+								</div>
+								<p class="help-block">Help exemple.</p>
+								<datalist id="data-list" class="wrap-options">
+									<option value="0">Option 0</option>
+									<option value="1">Option 1</option>
+									<option value="2">Option 2</option>
+								</datalist>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="oe_snippet_thumbnail">
+							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
+							<span class="oe_snippet_thumbnail_title">Input File</span>
+						</div>
+						<div class="form-group oe_snippet_body form-field input-file" data-form="inputfile">
+							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
+							<div class="col-md-7 col-sm-8">
+								<div class="input-group">
+									<span class="input-group-btn">
+										<span class="btn btn-primary btn-file">
+											<span class="browse-label">Browse</span>
+											<input type="file" multiple="true" class="form-data"/>
+										</span>
+									</span>
+									<input type="text" class="form-control" placeholder="no file" readonly="true" />
+								</div>
+								<p class="help-block">Select a file.</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</xpath>
+		
+			<xpath expr="//div[@id='snippet_options']" position="inside">
+				<div 	data-js='editForm'
+						data-selector=".editForm"
+						data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+				>
+					
+					<li data-fghjh=""><a href="#" class="button js_action_form_list">Change Form Parameters</a></li>
+					<li class="divider"></li>
+				</div>
+						
+				<div data-js='input'
+					data-selector=".form-field"
+					data-drop-near=".form-field"
+					data-drop-in="form"></div>
+				
+				<div data-snippet-option-id='editFormField'
+					data-selector=".form-field"
+					data-drop-near=".form-field"
+				>
+					<li>
+						<a href="#" class="button js_action_form_list">Change Field Parameters</a>
+					</li>
+				</div> 
+			</xpath>
+		</template>
+			
+	</data>
+</openerp>
+
