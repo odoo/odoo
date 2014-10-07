@@ -1988,39 +1988,35 @@ class account_tax(models.Model):
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
 
-class account_tax_template(osv.osv):
+class account_tax_template(models.Model):
     _name = 'account.tax.template'
 
-class account_account_template(osv.osv):
-    _order = "code"
+class account_account_template(models.Model):
     _name = "account.account.template"
     _description ='Templates for Accounts'
+    _order = "code"
 
-    _columns = {
-        'name': fields.char('Name', required=True, select=True),
-        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64, required=True, select=1),
-        'type': fields.related('user_type', 'type', type='selection',
-                    selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-                    ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-                    ], store=True, string="Internal Type"),
-        'user_type': fields.many2one('account.account.type', 'Type', required=True,
-            help="These types are defined according to your country. The type contains more information "\
-            "about the account and its specificities."),
-        'financial_report_ids': fields.many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id', 'Financial Reports'),
-        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
-        'shortcut': fields.char('Shortcut', size=12),
-        'note': fields.text('Note'),
-        'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
-        'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times)."),
-    }
-
-    _defaults = {
-        'reconcile': False,
-        'type': 'view',
-        'nocreate': False,
-    }
+    name = fields.Char(string='Name', required=True, index=True),
+    currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
+    code = fields.Char(string='Code', size=64, required=True, index=True)
+    type = fields.Selection(related='user_type.type', default='view',
+        selection =[('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
+        ], store=True, string='Internal Type')
+    user_type = fields.Many2one('account.account.type', string='Type', required=True,
+        help="These types are defined according to your country. The type contains more information "\
+        "about the account and its specificities.")
+    financial_report_ids = fields.Many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id',
+        string='Financial Reports')
+    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+        help="Check this option if you want the user to reconcile entries in this account.")
+    shortcut = fields.Char(string='Shortcut', size=12)
+    note = fields.Text(string='Note')
+    tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
+    nocreate = fields.Boolean(string='Optional Create', default=False,
+        help="If checked, the new chart of accounts will not contain this by default.")
+    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template',
+        help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
