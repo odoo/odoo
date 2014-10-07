@@ -168,8 +168,7 @@ class TableExporter(http.Controller):
         tab = []
         for x in snapshot_ids:
             tab.append([0, False, {'frequency': '50', 'snapshot_id': int(x)}])
-        goal_id = request.registry['website_version.goals'].search(cr, uid, [('name','=',objectives)],context=context)[0]
-        vals = {'name':name, 'google_id': False, 'state': 'draft', 'website_id':context.get('website_id'), 'experiment_snapshot_ids':tab, 'objectives': goal_id}
+        vals = {'name':name, 'google_id': False, 'state': 'draft', 'website_id':context.get('website_id'), 'experiment_snapshot_ids':tab, 'objectives': int(objectives)}
         exp_obj = request.registry['website_version.experiment']
         exp_obj.create(cr, uid, vals, context=None)
 
