@@ -146,7 +146,7 @@ openerp.testing.section('search.query', {
  * @param [defaults={}]
  * @return {instance.web.SearchView}
  */
-var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
+var makeSearchView = function (instance, dummy_widget_attributes, defaults, options) {
     instance.web.search.fields.add(
         'dummy', 'instance.dummy.DummyWidget');
     instance.dummy = {};
@@ -175,8 +175,8 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
 
     var dataset = new instance.web.DataSet(null, 'dummy.model');
     var mock_parent = {getParent: function () {return null;}};
-
-    var view = new instance.web.SearchView(mock_parent, dataset, false, defaults);
+    options = _.defaults(options || {}, {$buttons: $('<div>')});
+    var view = new instance.web.SearchView(mock_parent, dataset, false, defaults, options);
     var self = this;
     view.on('invalid_search', self, function () {
         ok(false, JSON.stringify([].slice(arguments)));
@@ -1018,42 +1018,21 @@ openerp.testing.section('search.serialization', {
         return $.when(t1, t2);
     });
 });
-openerp.testing.section('search.removal', {
+openerp.testing.section('search.menus', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
 }, function (test) {
-    test('clear button', {asserts: 2}, function (instance, $fix) {
-        var view = makeSearchView(instance, {
-            facet_for_defaults: function (defaults) {
-                return $.when({
-                    field: this,
-                    category: 'Dummy',
-                    values: [{label: 'dummy', value: defaults.dummy}]
-                });
-            }
-        }, {dummy: 42});
+    test('is-drawn', {asserts: 3}, function (instance, $fix) {
+        var view = makeSearchView(instance, false, false, {$buttons: $('<div>')});
         return view.appendTo($fix)
             .done(function () {
-                equal(view.query.length, 1, "view should have default facet");
-                $fix.find('.oe_searchview_clear').click();
-                equal(view.query.length, 0, "cleared view should not have any facet");
-            });
-    });
-});
-openerp.testing.section('search.drawer', {
-    dependencies: ['web.search'],
-    rpc: 'mock',
-    templates: true
-}, function (test) {
-    test('is-drawn', {asserts: 2}, function (instance, $fix) {
-        var view = makeSearchView(instance);
-        return view.appendTo($fix)
-            .done(function () {
-                ok($fix.find('.oe_searchview_filters').length,
-                   "filters drawer control has been drawn");
-                ok($fix.find('.oe_searchview_advanced').length,
-                   "filters advanced search has been drawn");
+                ok(view.$buttons.find('.filters-menu').length,
+                   "filters menu has been drawn");
+                ok(view.$buttons.find('.group-by-menu').length,
+                   "group by menu has been drawn");
+                ok(view.$buttons.find('.favorites-menu').length,
+                   "favorites menu has been drawn");
             });
     });
 });
@@ -1076,18 +1055,25 @@ openerp.testing.section('search.filters', {
         });
     }
 }, function (test) {
-    test('drawn', {asserts: 3}, function (instance, $fix) {
+    test('drawn', {asserts: 4}, function (instance, $fix) {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
             .done(function () {
-                var $fs = $fix.find('.oe_searchview_filters ul');
-                // 3 filters, 1 filtergroup, 1 custom report widget,
-                // 1 Filters, 1 SaveFilter widget, and 1 advanced 
-                equal(view.drawer.inputs.length, 8,
-                      'view should have 8 inputs total');
-                equal($fs.children().length, 3,
-                      "drawer should have a filter group with 3 filters");
-                equal(_.str.strip($fs.children().eq(0).text()), "Foo1",
+                var $filters = view.$buttons.find('.filters-menu li'),
+                    $favorites = view.$buttons.find('.favorites-menu li'),
+                    $groupby = view.$buttons.find('.group-by-menu li');
+                // 3 filters, 1 separator, 1 button add filter, 
+                // 1 filter condition menu, 1 apply button
+                equal($filters.length, 7,
+                      'filter menu should have 7 elements total');
+                // 1 divider, 1 save search button, 1 text input, 2 checkboxes, 
+                // 1 save button 
+                equal($favorites.length, 6,
+                      "favorites menu should have 6 elements");
+                // 1 divider, 1 add custom group button, 1 select groupby, 1 apply button,
+                equal($groupby.length, 4,
+                      "groupby menu should have 4 element");
+                equal(_.str.strip($filters.find('a')[0].textContent), "Foo1",
                       "Text content of first filter option should match filter string");
             });
     });
@@ -1095,8 +1081,8 @@ openerp.testing.section('search.filters', {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
             .done(function () {
-                var $fs = $fix.find('.oe_searchview_filters ul');
-                $fs.children(':eq(2)').trigger('click');
+                var $fs = view.$buttons.find('.filters-menu li a');
+                $fs.eq(2).trigger('click');
                 equal(view.query.length, 1, "click should have added a facet");
                 var facet = view.query.at(0);
                 equal(facet.values.length, 1, "facet should have a single value");
@@ -1111,8 +1097,8 @@ openerp.testing.section('search.filters', {
         var view = makeSearchView(instance, {}, {foo2: true});
         return view.appendTo($fix)
             .done(function () {
-                var $fs = $fix.find('.oe_searchview_filters ul');
-                $fs.children(':eq(2)').trigger('click');
+                var $fs = view.$buttons.find('.filters-menu li a');
+                $fs.eq(2).trigger('click');
                 equal(view.query.length, 1, "click should not have changed facet count");
                 var facet = view.query.at(0);
                 equal(facet.values.length, 2, "facet should have a second value");
@@ -1132,11 +1118,11 @@ openerp.testing.section('search.filters', {
         });
         return view.appendTo($fix)
             .done(function () {
-                var $fs = $fix.find('.oe_searchview_filters ul');
+                var $fs = view.$buttons.find('.filters-menu li a');
                 // sanity check
                 equal(view.query.length, 1, "query should have default facet");
                 strictEqual(calls, 0);
-                $fs.children(':eq(1)').trigger('click');
+                $fs.eq(1).trigger('click');
                 equal(view.query.length, 0, "click should have removed facet");
                 strictEqual(calls, 1, "one search should have been triggered");
             });
@@ -1170,6 +1156,7 @@ openerp.testing.section('search.groupby', {
         .done(function () {
             // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
             // and 1 SaveFilter widget
+            debugger;
             equal(view.drawer.inputs.length, 8,
                   'should have 8 inputs total');
             var group = _.find(view.drawer.inputs, function (f) {
