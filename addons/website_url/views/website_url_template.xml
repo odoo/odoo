@@ -5,6 +5,7 @@
         <template id="assets_website_url">
             <script type="text/javascript" src="/website_url/static/src/js/website_url.js"/>
             <script type="text/javascript" src="/website_url/static/src/js/ZeroClipboard.min.js"/>
+            <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/styles.css"/>
         </template>
 
         <template id="assets_website_url_charts">
@@ -87,6 +88,7 @@
                 <t t-set="head">
                     <t t-call-assets="website_url.assets_nvd3"/>
                     <t t-call-assets="website_url.assets_website_url_charts"/>
+
                 </t>
                 <div class="container">
                     <div class="row">
