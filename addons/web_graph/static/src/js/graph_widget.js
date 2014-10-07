@@ -122,6 +122,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
+        return [];
         var self = this;
 
         var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {

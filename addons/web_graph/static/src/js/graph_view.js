@@ -114,12 +114,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.widget_config.measures = measures;
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
-            this.graph_widget.appendTo(this.$el);
-            this.ViewManager.on('switch_mode', this, function (e) {
-                if (e === 'graph') {
-                    var group_bys = self.get_groupbys_from_searchview();
-                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by, group_bys.measures);
-                }
+            this.graph_widget.appendTo(this.$el).done(function () {
+
             });
             return;
         }
@@ -226,7 +222,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             category:'GroupBy',
             values: this.make_groupby_values(groupbys, 'group_by'),
-            icon:'w',
+            icon:'fa fa-bars',
             field: this.search_view._s_groupby
         };
     },
@@ -235,7 +231,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             category:'ColGroupBy',
             values: this.make_groupby_values(groupbys, 'col_group_by'),
-            icon:'f',
+            icon:'fa fa-bars fa-rotate-90',
             field: this.col_search_field
         };
     },

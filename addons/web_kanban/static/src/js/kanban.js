@@ -43,6 +43,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        if (!this.options.$buttons.length) {
+            this.options.$buttons = false;
+        }
     },
     view_loading: function(r) {
         return this.load_kanban(r);
@@ -69,13 +72,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         if (unsorted && default_order) {
             this.dataset.set_sort(default_order.split(','));
         }
-
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
             this.$buttons.appendTo(this.options.$buttons);
         } else {
-            this.$el.find('.oe_kanban_buttons').replaceWith(this.$buttons);
+            this.$('.oe_kanban_buttons').replaceWith(this.$buttons);
         }
         this.$buttons
             .on('click', 'button.oe_kanban_button_new', this.do_add_record)
@@ -490,7 +492,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
 
     do_show: function() {
-        if (this.$buttons) {
+        if (this.options.$buttons) {
             this.$buttons.show();
         }
         this.do_push_state({});

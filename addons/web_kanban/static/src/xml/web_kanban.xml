@@ -15,7 +15,7 @@
 <div t-name="KanbanView.buttons" class="oe_kanban_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="oe_kanban_button_new btn btn-primary">
+            <button type="button" class="oe_kanban_button_new btn btn-primary btn-sm">
                 <t t-esc="widget.options.create_text || _t('Create')"/>
             </button>
             <span t-if="widget.is_action_enabled('group_create')" class="oe_alternative" style="display: none">
