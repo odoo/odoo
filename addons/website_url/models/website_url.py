@@ -117,24 +117,22 @@ class website_alias(models.Model):
     @api.model
     def get_url_from_code(self, code, ip, country_code, stat_id=False, context=None):
 
-        print 'get_url_from_code'
-
         rec = self.sudo().search([('code', '=', code)])
 
         if rec:
             again = rec.alias_click_ids.sudo().search_count([('alias_id', '=', rec.id), ('ip', '=', ip)])
 
-            # if not again:
-            country_record = self.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).read(['id'])
+            if not again:
+                country_record = self.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).read(['id'])
 
-            vals = {
-                'alias_id':rec.id,
-                'create_date':datetime.date.today(),
-                'ip':ip,
-                'country_id': country_record[0]['id'] if country_record else False,
-                'mail_stat_id': stat_id
-            }
-            self.env['website.alias.click'].sudo().create(vals) 
+                vals = {
+                    'alias_id':rec.id,
+                    'create_date':datetime.date.today(),
+                    'ip':ip,
+                    'country_id': country_record[0]['id'] if country_record else False,
+                    'mail_stat_id': stat_id
+                }
+                self.env['website.alias.click'].sudo().create(vals)
             
             parsed = urlparse(rec.url)
             utms = ''

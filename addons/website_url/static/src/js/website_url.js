@@ -101,8 +101,10 @@
             this.update_notification();
         },
         remove_link: function(link) {
-            link.$el.remove();
-            link.destroy();
+            link.$el.fadeOut(400, function(){ 
+                link.$el.remove();
+                link.destroy();
+            });
 
             this.update_notification();
         },
@@ -113,22 +115,24 @@
             else {
                 this.$el.find('.notification').empty();
             }
-        }
+        },
     });
 
     openerp.website_url.SelectBox = openerp.Widget.extend({
         init: function(path) {
             this.path = path;
         },
-        start: function($element) {
+        start: function($element, placeholder) {
             var self = this;
             this.$element = $element;
+            this.placeholder = placeholder;
 
             this.fetch_objects().then(function(results) {
                 self.objects = results;
 
                 $element.select2({
                     initSelection: {id: 0, text: 'Test'},
+                    placeholder: self.placeholder,
                     createSearchChoice:function(term, data) {
                         if(self.object_exists(term)) { 
                             return null; 
@@ -190,13 +194,13 @@
         recent_links.start($("#recent_links"));
 
         var campaign_select = new openerp.website_url.SelectBox('campaigns');
-        campaign_select.start($("#campaign-select"));
-
-        var source_select = new openerp.website_url.SelectBox('sources');
-        source_select.start($("#source-select"));
+        campaign_select.start($("#campaign-select"), 'e.g. Promotion of June, Winter Newsletter, ..');
 
         var medium_select = new openerp.website_url.SelectBox('mediums');
-        medium_select.start($("#channel-select"));
+        medium_select.start($("#channel-select"), 'e.g. Newsletter, Social Network, ..');
+
+        var source_select = new openerp.website_url.SelectBox('sources');
+        source_select.start($("#source-select"), 'e.g. Search Engine, Website page, ..');
 
         ZeroClipboard.config(
             {swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" }
@@ -229,7 +233,9 @@
                         else {
                             var link = result[0];
                             $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
+                            $("#url-form-group .control-label").html('Link to share');
                             $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
+                            $("#utms").hide();
                             recent_links.add_link(link);
                         }
                     });
@@ -238,8 +244,10 @@
 
         $("#url").on("change keyup paste mouseup", function() {
             if ($(this).data("last_result") != $("#url").val()) {
-                $("#btn_shorten_url").text("Get short link").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
+                $("#url-form-group .control-label").html('Copy the link to track');
+                $("#btn_shorten_url").text("Get tracked link").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
                 $('#url-form-group').removeClass('has-error');
+                $("#utms").show();
             }
         });
     });

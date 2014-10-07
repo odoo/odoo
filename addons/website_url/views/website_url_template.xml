@@ -23,8 +23,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2 class="text-center">URL Shortener</h2>
-                        <h3 class="text-muted text-center">Get analytics with short URLs</h3>
+                        <h2 class="text-center">Link Tracker</h2>
+                        <h3 class="text-muted text-center">Count clicks on links you share</h3>
                     </div>
                 </div>
 
@@ -36,40 +36,50 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group" id="url-form-group">
-                            <label class="control-label">Link to shorten</label>
-                            <div class="input-group">
-                                <input type="text" id="url" class="form-control input"  required="True" placeholder="e.g. http://www.odoo.com"/>
+                            <label>Copy the link to track</label>
+<!--                             <div class="input-group"> -->
+                                <input type="text" id="url" class="form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus"/>
 
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Get short link</button>
-                                </span>
+                               
+<!--                             </div> -->
+                            <p class="help-block">Campaign, channel et source are optional. With them, you will able to compare links with each others and know which campaign or source drive more traffic.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="utms">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Campaign</label>
+                                <input type="hidden" class="form-control" id="campaign-select"/>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Channel</label>
+                                <input type="hidden" class="form-control" id="channel-select" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Source</label>
+                                <input type="hidden" class="form-control" id="source-select" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Campaign</label>
-                            <input type="hidden" class="form-control" id="campaign-select"/>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Channel</label>
-                            <input type="hidden" class="form-control" id="channel-select" />
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label>Source</label>
-                            <input type="hidden" class="form-control" id="source-select" />
-                        </div>
+                    <div class="col-sm-12 text-center">
+<!--                          <span class="input-group-btn"> -->
+                            <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Get tracked link</button>
+<!--                             </span> -->
                     </div>
                 </div>
+                
 
                 <div class="row">
                     <div class="col-sm-12">

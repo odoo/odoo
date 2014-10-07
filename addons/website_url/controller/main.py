@@ -55,12 +55,7 @@ class Website_Url(http.Controller):
 
         alias_obj = request.registry['website.alias']
         alias_id = alias_obj.search(cr, uid, [('code', '=', code)])
-
-        print alias_id
-
         alias = alias_obj.browse(cr, uid, alias_id, context=context)
-
-        print alias.to_json()[0]
 
         return request.website.render("website_url.graphs", alias.to_json()[0])
 
