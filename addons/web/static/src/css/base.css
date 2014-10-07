@@ -752,59 +752,6 @@
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
-.openerp .oe_sidebar {
-  white-space: nowrap;
-}
-.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment {
-  height: 20px;
-  cursor: pointer;
-  padding-left: 6px;
-  margin-top: 6px;
-}
-.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment span {
-  font-weight: bold;
-}
-.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment .oe_hidden_input_file {
-  width: 200px;
-}
-.openerp .oe_sidebar .oe_dropdown_menu .oe_sidebar_add_attachment:hover {
-  background-color: #efeff8;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0fa), to(#eeeef6));
-  background-image: -webkit-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -moz-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -ms-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: -o-linear-gradient(top, #f0f0fa, #eeeef6);
-  background-image: linear-gradient(to bottom, #f0f0fa, #eeeef6);
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.openerp .oe_sidebar .oe_dropdown_menu li .oe_sidebar_delete_item {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: none;
-  width: 12px;
-  height: 12px;
-  padding: 1px;
-  color: #8786b7;
-  line-height: 8px;
-  text-align: center;
-  font-weight: bold;
-  text-shadow: 0 1px 1px white;
-}
-.openerp .oe_sidebar .oe_dropdown_menu li .oe_sidebar_delete_item:hover {
-  text-decoration: none;
-  color: white;
-  background: #8786b7;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-}
-.openerp .oe_sidebar .oe_dropdown_menu li:hover .oe_sidebar_delete_item {
-  display: inline-block;
-}
 .openerp .oe_loading {
   display: none;
   z-index: 1001;
@@ -1044,6 +991,22 @@
 .openerp .oe_application {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+}
+.openerp .oe_application > div {
+  position: relative;
+  height: 100%;
+}
+.openerp .oe_application .oe-view-manager .oe-view-manager-debug {
+  margin-right: 5px;
+}
+.openerp .oe_application .oe-view-manager .oe-view-manager-content {
+  display: table-row;
+  height: 100%;
+}
+.openerp .oe_application .oe-view-manager-body {
+  position: relative;
+  height: 100%;
 }
 .openerp .oe_application .oe-view-manager-body a {
   color: #7C7BAD;
@@ -1051,42 +1014,26 @@
 .openerp .oe_application .oe-view-manager-body .oe-view-manager-view-kanban:not(:empty) {
   height: 100%;
 }
-.openerp .oe_application > div {
-  position: relative;
-  height: 100%;
-}
-.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper {
-  display: table-row;
-  height: 100%;
-}
-.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div {
-  position: relative;
-  height: 100%;
-}
-.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
+.openerp .oe_application .oe-view-manager-body > div {
   position: absolute;
-  position: static\9;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   overflow: auto;
 }
-.openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
-  max-width: 7em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.openerp .oe_application .oe_form_field_one2many .oe-view-manager-views {
+  position: initial;
 }
-.openerp .oe_application .oe_breadcrumb_title > * {
-  display: inline-block;
-  overflow: hidden;
-  font-weight: bold;
+.openerp .oe-view-manager {
+  display: table;
+  width: 100%;
+  height: 100%;
 }
 .openerp .oe-view-manager-header {
-  height: 90px;
-  overflow: visible;
-  border-bottom: 1px solid black;
-  display: none;
+  display: table-row;
+  background-color: #f0eeee;
+  border-bottom: 1px solid #afafb6;
 }
 .openerp .oe-view-manager-header .oe-right-toolbar {
   float: right;
@@ -1095,26 +1042,34 @@
   display: inline-block;
 }
 .openerp .oe-view-manager-header .row {
-  height: 45px;
-}
-.openerp .oe-view-manager-header .oe-view-title {
-  float: left;
-  font-size: 18px;
-  font-weight: bold;
   margin: 0;
 }
-.openerp .oe-view-manager-header .oe-header-title {
+.openerp .oe-view-manager-header .row:first-child {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.openerp .oe-view-manager-header .row:last-child {
+  padding-bottom: 10px;
+}
+.openerp .oe-view-manager-header .oe_tag {
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+.openerp .oe-view-manager-header .oe-view-title {
+  font-size: 18px;
   padding-left: 0;
+  margin: 0;
+  background-color: #f0eeee;
 }
 .openerp .oe-view-manager-header .oe-view-manager-search-view {
-  float: right;
   padding-top: 5px;
 }
 .openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-kanban:before {
   content: "";
 }
 .openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-list:before {
-  content: "";
+  content: "";
 }
 .openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-form:before {
   content: "";
@@ -1128,14 +1083,27 @@
 .openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-gantt:before {
   content: "";
 }
+.openerp .oe-view-manager-header .oe-view-manager-switch .oe-vm-switch-pivot:before {
+  content: "";
+}
 .openerp .oe-view-manager-header .oe-view-manager-buttons {
-  float: left;
+  display: inline-block;
 }
 .openerp .oe-view-manager-header .oe-view-manager-buttons > div {
   display: none;
 }
-.openerp .oe-view-manager-header .oe_pager_value {
+.openerp .oe-view-manager-header .oe-view-manager-sidebar {
   display: inline-block;
+  float: right;
+}
+.openerp .oe-view-manager-header .oe_form_buttons {
+  padding: 0;
+}
+.openerp .oe-view-manager-header .oe-pager-buttons {
+  min-height: 30px;
+}
+.openerp .oe_view_manager_inline > .oe-view-manager-header, .openerp .oe_view_manager_inlineview > .oe-view-manager-header {
+  display: none;
 }
 .openerp .oe_application > div > div > .oe-view-manager-body {
   position: absolute;
@@ -1144,12 +1112,6 @@
   left: 0;
   right: 0;
   overflow: auto;
-}
-.openerp .oe_view_manager_inline, .openerp .oe_view_manager_inlineview {
-  height: 100%;
-}
-.openerp .oe_view_manager_inline > .oe_view_manager_header, .openerp .oe_view_manager_inlineview > .oe_view_manager_header {
-  display: none;
 }
 .openerp .oe_popup_form {
   display: table;
@@ -1163,71 +1125,33 @@
 .openerp .oe_popup_list_pager {
   float: right;
 }
+.openerp .oe_popup_search {
+  width: 50%;
+  float: right;
+}
 .openerp .oe_searchview {
   cursor: text;
   position: relative;
-  padding: 1px 0;
-  min-width: 400px;
-  width: 400px;
-  -moz-border-radius: 13px;
-  -webkit-border-radius: 13px;
-  border-radius: 13px;
-}
-.openerp .oe_searchview input, .openerp .oe_searchview textarea {
-  padding: 3px;
-  height: 14px;
-  font-size: 12px;
-  line-height: 18px;
-}
-.openerp .oe_searchview input:not([type]), .openerp .oe_searchview input[type="text"], .openerp .oe_searchview input[type="number"] {
-  width: 156px;
-  height: 22px;
-}
-.openerp .oe_searchview input[type="checkbox"] {
-  margin: 3px 3px 3px 4px;
-}
-.openerp .oe_searchview select {
-  margin: 2px 4px 2px 0;
-}
-.openerp .oe_searchview.oe_focused {
-  border-color: #a6a6fe;
-  -moz-box-shadow: 0 1px 2px #a6a6fe inset;
-  -webkit-box-shadow: 0 1px 2px #a6a6fe inset;
-  box-shadow: 0 1px 2px #a6a6fe inset;
-}
-.openerp .oe_searchview .oe_searchview_clear {
-  cursor: pointer;
-  position: absolute;
-  top: 3px;
-  right: 18px;
-  width: 15px;
-  height: 24px;
+  display: none;
+  height: auto;
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 .openerp .oe_searchview .oe_searchview_unfold_drawer {
   position: absolute;
-  top: 0;
-  right: 0;
-  color: #ccc;
+  top: 8px;
+  left: 5px;
   cursor: pointer;
-}
-.openerp .oe_searchview .oe_searchview_unfold_drawer:hover {
-  color: #999;
-}
-.openerp .oe_searchview .oe_searchview_unfold_drawer:before {
-  position: absolute;
-  top: 7px;
-  right: 18px;
-  width: 0;
 }
 .openerp .oe_searchview .oe_searchview_search {
   cursor: pointer;
   position: absolute;
-  left: 6px;
+  right: 6px;
   top: 8px;
 }
 .openerp .oe_searchview .oe_searchview_facets {
   min-height: 22px;
-  margin: 2px 35px 0 20px;
+  margin: 2px 20px 0 10px;
 }
 .openerp .oe_searchview .oe_searchview_facets * {
   vertical-align: top;
@@ -1235,18 +1159,21 @@
   font-size: 100%;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet {
-  height: 20px;
   margin: 1px 0;
   font-size: 11px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   outline: none;
 }
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .label {
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input {
   padding: 0 0 0 6px;
   font-size: 12px;
   height: 16px;
-  margin-top: 3px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input:focus {
   outline: none;
@@ -1256,9 +1183,6 @@
   cursor: pointer;
   padding: 0;
   -webkit-font-smoothing: auto;
-}
-.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet span {
-  height: 18px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet:focus {
   border-color: #a6a6fe;
@@ -1280,10 +1204,14 @@
   font-size: 16px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value {
+  border-left: 1px solid #afafb6;
   color: #4C4C4C;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value:last-child {
   padding-right: 16px;
+}
+.openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_value:first-child {
+  border-left: none;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_facet .oe_facet_remove {
   position: absolute;
@@ -1310,8 +1238,8 @@
 .openerp .oe_searchview .oe-autocomplete {
   display: none;
   position: absolute;
-  width: 300px;
   background-color: white;
+  width: 400px;
   border: 1px solid #afafb6;
   z-index: 666;
   margin-top: 2px;
@@ -1319,9 +1247,6 @@
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 .openerp .oe_searchview .oe-autocomplete ul {
   list-style-type: none;
@@ -1353,216 +1278,133 @@
 .openerp .oe_searchview .oe-autocomplete ul li.oe-separator:last-child {
   display: none;
 }
-.openerp .oe_searchview_drawer_container {
-  overflow: auto;
-}
-.openerp .oe_searchview_drawer {
-  display: none;
+.openerp .oe-search-options a {
+  padding-left: 25px;
+  padding-right: 25px;
   width: 100%;
-  cursor: default;
-  display: none;
-  overflow: hidden;
-  border-bottom: 1px solid #afafb6;
-  text-align: left;
-  padding: 8px 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
-.openerp .oe_searchview_drawer .badge {
-  font-size: 12px;
-  line-height: 12px;
+.openerp .oe-search-options .oe-apply-filter {
+  margin-left: 25px;
 }
-.openerp .oe_searchview_drawer > div:first-child {
-  border: none;
-  padding-left: 0;
-}
-.openerp .oe_searchview_drawer > div:first-child li:hover:not(.badge) {
-  background-color: #f0f0fa;
-}
-.openerp .oe_searchview_drawer .col-md-5 {
-  padding-left: 0;
-}
-.openerp .oe_searchview_drawer dl {
-  margin-bottom: 0;
-}
-.openerp .oe_searchview_drawer dt {
-  color: #7C7BAD;
-  font-size: 13px;
-  line-height: 24px;
-}
-.openerp .oe_searchview_drawer dd {
-  line-height: 24px;
-  font-size: 13px;
-  padding-top: 3px;
-}
-.openerp .oe_searchview_drawer h4, .openerp .oe_searchview_drawer h4 * {
-  margin: 0 0 0 2px;
-  padding-left: 20px;
-  cursor: pointer;
-  font-weight: normal;
-  display: inline-block;
-}
-.openerp .oe_searchview_drawer h4:hover, .openerp .oe_searchview_drawer h4 *:hover {
-  background-color: #f0f0fa;
-}
-.openerp .oe_searchview_drawer h4:before {
-  content: "▸ ";
-  color: #a3a3a3;
-}
-.openerp .oe_searchview_drawer button {
-  margin: 4px 0;
-}
-.openerp .oe_searchview_drawer .button {
-  border: none;
-  background: transparent;
-  padding: 0 2px;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-}
-.openerp .oe_searchview_drawer .oe_searchview_section ul {
-  margin: 0 8px;
-  padding: 0;
-  list-style: none;
-  display: inline;
-}
-.openerp .oe_searchview_drawer .oe_searchview_section li {
-  display: inline-block;
-  cursor: pointer;
-  position: relative;
-  margin-right: 8px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_section li > span {
-  display: inline-block;
-  max-width: 250px;
-  text-overflow: ellipsis;
-  vertical-align: bottom;
-  overflow: hidden;
-}
-.openerp .oe_searchview_drawer form {
-  margin-left: 12px;
-}
-.openerp .oe_searchview_drawer form p {
-  margin: 4px 0;
-  line-height: 18px;
-}
-.openerp .oe_searchview_drawer form button {
-  margin: 0 0 8px -3px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_savefilter form {
+.openerp .oe-search-options .oe-add-filter-menu {
   display: none;
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom {
-  display: none;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom li {
-  cursor: pointer;
-  position: relative;
-  line-height: 14px;
-  margin-right: 0;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom li button {
-  position: absolute;
-  top: 0;
-  right: 5px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom li a {
+.openerp .oe-search-options .oe-add-condition {
+  width: auto;
   margin-left: 10px;
-  position: inherit;
-  visibility: hidden;
-  display: inline-block;
+  padding-left: 0;
+  padding-right: 10px;
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom li span:hover:not(.badge) {
-  background-color: #f0f0fa;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom li:hover a {
-  visibility: visible;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom label {
-  font-weight: normal;
-}
-.openerp .oe_searchview_drawer .oe_searchview_dashboard form {
-  display: none;
-  margin-top: 2px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced {
-  overflow: auto;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced form {
-  display: none;
-  margin-top: 8px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced button.oe_add_condition:before {
-  content: "Z";
-  font-family: "entypoRegular" !important;
-  font-size: 24px;
-  font-weight: 300 !important;
-  margin-right: 4px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced ul {
-  list-style: none;
-  padding: 0;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced li {
-  position: relative;
-  list-style: none;
-  margin: 0;
-  white-space: nowrap;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced li:first-child .searchview_extended_prop_or {
-  visibility: hidden;
-  margin-left: -14px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_advanced .searchview_extended_prop_or {
-  opacity: 0.5;
-  margin-left: -14px;
-}
-.openerp .oe_searchview_drawer .oe_opened h4:before {
-  content: "▾ ";
-  position: relative;
-  top: -1px;
-}
-.openerp .oe_searchview_drawer .oe_opened form {
+.openerp .oe-search-options .selected {
   display: block;
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom_delete, .openerp .oe_searchview_drawer .searchview_extended_delete_prop {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  line-height: 12px;
-  padding: 1px;
-  color: #8786b7;
-  line-height: 8px;
-  text-align: center;
+.openerp .oe-search-options .selected a {
   font-weight: bold;
-  text-shadow: 0 1px 1px white;
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom_delete:hover, .openerp .oe_searchview_drawer .searchview_extended_delete_prop:hover {
-  text-decoration: none;
-  color: white;
-  background: #8786b7;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-}
-.openerp .oe_searchview_drawer .oe_searchview_custom_delete {
-  display: none;
+.openerp .oe-search-options .selected a:before {
+  font-family: FontAwesome;
   position: absolute;
-  bottom: 1px;
-  right: 4px;
+  left: 6px;
+  top: 3px;
+  content: "";
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom_private:hover .oe_searchview_custom_delete, .openerp .oe_searchview_drawer .oe_searchview_custom_public:hover .oe_searchview_custom_delete {
+.openerp .oe-search-options .oe-group-selector {
+  margin: 3px 25px;
+  min-width: calc(100% - 40px);
+  max-width: 250px;
+  width: auto;
+}
+.openerp .oe-search-options .divider {
+  display: none;
+}
+.openerp .oe-search-options .filters-menu .divider {
+  display: list-item;
+}
+.openerp .oe-search-options .closed-menu a:before {
+  font-family: FontAwesome;
+  position: absolute;
+  left: 12px;
+  top: 3px;
+  content: "";
+}
+.openerp .oe-search-options .open-menu a:before {
+  font-family: FontAwesome;
+  position: absolute;
+  left: 9px;
+  top: 3px;
+  content: "";
+}
+.openerp .oe-search-options .oe-select-group {
+  margin: 3px 25px;
+}
+.openerp .oe-search-options .oe-add-group {
+  display: none;
+}
+.openerp .oe-search-options .oe-save-name {
+  display: none;
+  margin: 3px 25px;
+}
+.openerp .oe-search-options .oe-save-name span {
+  white-space: nowrap;
+}
+.openerp .oe-search-options .oe-save-name span input {
+  margin-left: 0;
+}
+.openerp .oe-search-options .searchview_extended_prop_field {
+  display: inline;
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_op {
+  margin: 3px 0;
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_delete_prop {
+  float: right;
+  display: inline;
+}
+.openerp .oe-search-options .searchview_extended_prop_value {
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value > select, .openerp .oe-search-options .searchview_extended_prop_value > input {
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_main {
+  width: calc(100% - 20px);
+}
+.openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_master {
+  width: 100%;
+}
+.openerp .oe-search-options .searchview_extended_prop_value .fa-calendar {
+  margin-left: -21px;
+  cursor: pointer;
+}
+.openerp .oe-search-options span.fa-trash-o {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  cursor: pointer;
+}
+.openerp .oe-search-options .dropdown-menu > li {
+  position: relative;
+  white-space: nowrap;
+}
+.openerp .oe-search-options .dropdown-menu li.oe-filter-condition {
+  white-space: normal;
+  padding-left: 25px;
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+.openerp .oe-search-options a {
   display: inline-block;
 }
-.openerp .oe_searchview_drawer .oe_searchview_custom_public:after {
-  content: ",";
-  font-family: "entypoRegular" !important;
-  font-size: 22px;
-  font-weight: 300 !important;
-  margin: 0 0 0 4px;
-  padding: 0;
+.openerp input.oe-save-name {
+  width: auto;
+}
+.openerp .oe_pager_value {
+  display: inline-block;
 }
 .openerp .oe_view_nocontent {
   padding: 15px;
@@ -1995,6 +1837,10 @@
 }
 .openerp .oe_form .oe_datepicker_root {
   display: inline-block;
+}
+.openerp .oe_form .oe_datepicker_root .datepickerbutton {
+  margin-left: 5px;
+  cursor: pointer;
 }
 .openerp .oe_form .oe_form_required input:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required select:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required textarea:not([disabled]):not([readonly]) {
   background-color: #D2D2FF !important;
@@ -2737,6 +2583,8 @@
 }
 .openerp .oe_debug_view {
   float: left;
+  margin-top: 5px;
+  width: auto;
 }
 .openerp .oe_debug_view_log {
   font-size: 95%;
@@ -2796,9 +2644,6 @@
   font-size: 11px;
   background-color: #7c7bad;
 }
-.openerp button, .openerp body {
-  line-height: normal;
-}
 .openerp h1, .openerp h2 {
   font-weight: bold;
 }
@@ -2836,9 +2681,6 @@
 }
 
 @-moz-document url-prefix() {
-  .openerp .oe_searchview .oe_searchview_search {
-    top: -1px;
-  }
   .openerp .oe_form_field_many2one .oe_m2o_cm_button {
     line-height: 18px;
   }

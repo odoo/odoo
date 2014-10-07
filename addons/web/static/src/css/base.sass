@@ -653,44 +653,6 @@ $sheet-padding: 16px
         border-right: 4px solid transparent
         border-top: 4px solid#404040
         @include opacity(0.5)
-    .oe_sidebar
-        white-space: nowrap
-        .oe_dropdown_menu
-            .oe_sidebar_add_attachment
-                height: 20px
-                cursor: pointer
-                padding-left: 6px
-                margin-top: 6px
-                span
-                    font-weight: bold
-                .oe_hidden_input_file
-                    width: 200px
-                &:hover
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-                    @include box-shadow(none)
-            li
-                .oe_sidebar_delete_item
-                    position: absolute
-                    top: 4px
-                    right: 4px
-                    display: none
-                    width: 12px
-                    height: 12px
-                    padding: 1px
-                    color: #8786b7
-                    line-height: 8px
-                    text-align: center
-                    font-weight: bold
-                    text-shadow: 0 1px 1px white
-                    &:hover
-                        text-decoration: none
-                        color: white
-                        background: #8786b7
-                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                        @include radius(2px)
-                &:hover
-                    .oe_sidebar_delete_item
-                        display: inline-block
     // }}}
     // Loading {{{
     .oe_loading
@@ -899,67 +861,70 @@ $sheet-padding: 16px
     .oe_application
         width: 100%
         height: 100%
+        overflow: hidden
+        > div
+            position: relative
+            height: 100%
+        .oe-view-manager
+            .oe-view-manager-debug
+                margin-right: 5px
+            .oe-view-manager-content
+                display: table-row
+                height: 100%
+
         .oe-view-manager-body
+            position: relative
+            height: 100%
             a
                 color: $link-color
             .oe-view-manager-view-kanban:not(:empty)
                 height: 100%
-        > div
-            position: relative
-            height: 100%
-            > .oe_view_manager
-                > .oe_view_manager_wrapper
-                    display: table-row
-                    height: 100%
-                    > div
-                        position: relative
-                        height: 100%
-                        > .oe_view_manager_body
-                            position: absolute
-                            position: static\9
-                            top: 0
-                            bottom: 0
-                            left: 0
-                            right: 0
-                            overflow: auto
+            > div
+                position: absolute
+                top: 0
+                bottom: 0
+                left: 0
+                right: 0
+                overflow: auto
+        .oe_form_field_one2many
+            .oe-view-manager-views
+                position: initial
 
-
-        .oe_breadcrumb_item:not(:last-child)
-            max-width: 7em
-            white-space: nowrap
-            text-overflow: ellipsis
-        .oe_breadcrumb_title > *
-            display: inline-block
-            overflow: hidden
-            font-weight: bold
     // }}}
     // ViewManager common {{{
+    .oe-view-manager
+        display: table
+        width: 100%
+        height: 100%
     .oe-view-manager-header
-        height: 90px
-        overflow: visible
-        border-bottom: 1px solid black
-        display: none
+        display: table-row
+        background-color: rgb(240, 238, 238)
+        border-bottom: 1px solid #afafb6
         .oe-right-toolbar
             float: right
             > div
                 display: inline-block
         .row
-            height: 45px
-        .oe-view-title
-            float: left
-            font-size: 18px
-            font-weight: bold
             margin: 0
-        .oe-header-title
+        .row:first-child
+            padding-top: 3px
+            padding-bottom: 3px
+        .row:last-child
+            padding-bottom: 10px
+        .oe_tag
+            @include radius(0px)
+        .oe-view-title
+            font-size: 18px
             padding-left: 0
+            margin: 0
+            background-color: rgb(240, 238, 238)
         .oe-view-manager-search-view
-            float: right
             padding-top: 5px
         .oe-view-manager-switch
             .oe-vm-switch-kanban:before
                 content: "\f009"
             .oe-vm-switch-list:before
-                content: "\f0c9"
+                content: ""
             .oe-vm-switch-form:before
                 content: "\f044"
             .oe-vm-switch-graph:before
@@ -968,12 +933,22 @@ $sheet-padding: 16px
                 content: "\f073"
             .oe-vm-switch-gantt:before
                 content: "\f0ae"
+            .oe-vm-switch-pivot:before
+                content: "\f0ce"
         .oe-view-manager-buttons
-            float: left
+            display: inline-block
             > div
                 display: none
-        .oe_pager_value
-            display: inline-block            
+        .oe-view-manager-sidebar
+            display: inline-block
+            float: right
+        .oe_form_buttons
+            padding: 0
+        .oe-pager-buttons
+            min-height: 30px
+    .oe_view_manager_inline, .oe_view_manager_inlineview
+        > .oe-view-manager-header
+            display: none
     .oe_application 
         > div    
             > div
@@ -985,26 +960,6 @@ $sheet-padding: 16px
                     right: 0
                     overflow: auto
         // }}}
-        // ViewManager application {{{
-    // .oe_view_manager_current
-    //     height: 100%
-    //     > .oe_view_manager_header
-    //         border-bottom: 1px solid #cacaca
-    //         @include vertical-gradient(#fcfcfc, #dedede)
-    //         @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-    //         .oe_header_row
-    //             td
-    //                 padding: 8px
-    //         .oe_header_row:first-child
-    //             td
-    //                 padding-top: 8px
-    // }}}
-    // ViewManager inline {{{
-    .oe_view_manager_inline, .oe_view_manager_inlineview
-        height: 100%
-        > .oe_view_manager_header
-            display: none
-    // }}}
     // FormPopup {{{
     .oe_popup_form 
         display: table
@@ -1016,77 +971,48 @@ $sheet-padding: 16px
         // End of customize
     .oe_popup_list_pager
         float: right
+    .oe_popup_search
+        width: 50%
+        float: right
     // }}}
     // SearchView {{{
     .oe_searchview
         cursor: text
         position: relative
-        padding: 1px 0
-        min-width: 400px
-        width: 400px
-        @include radius(13px)
-        input, textarea
-            padding: 3px
-            height: 14px
-            font-size: 12px
-            line-height: 18px
-        //Customize searchview input, select
-        input:not([type]), input[type="text"], input[type="number"]
-            width: 156px
-            height: 22px
-        input[type="checkbox"]
-            margin: 3px 3px 3px 4px
-        select
-            margin: 2px 4px 2px 0 
-        //End of customize
-        &.oe_focused
-            border-color: $tag-border-selected
-            @include box-shadow(0 1px 2px $tag-border-selected inset)
-        .oe_searchview_clear
-            cursor: pointer
-            position: absolute
-            top: 3px
-            right: 18px
-            width: 15px
-            height: 24px
+        display: none
+        height: auto
+        padding-top: 1px
+        padding-bottom: 1px
         .oe_searchview_unfold_drawer
             position: absolute
-            top: 0
-            right: 0
-            color: #ccc
+            top: 8px
+            left: 5px
             cursor: pointer
-            &:hover
-                color: #999
-            &:before
-                position: absolute
-                top: 7px
-                right: 18px
-                width: 0
 
         .oe_searchview_search
             cursor: pointer
             position: absolute
-            left: 6px
+            right: 6px
             top: 8px
 
         .oe_searchview_facets
             min-height: 22px
-            margin: 2px 35px 0 20px
+            margin: 2px 20px 0 10px
             *
                 vertical-align: top
                 display: inline-block
                 font-size: 100%
             .oe_searchview_facet
-                height: 20px
                 margin: 1px 0
                 font-size: 11px
                 &:focus
                     outline: none
+                .label
+                    @include radius(0px)
             .oe_searchview_input
                 padding: 0 0 0 6px
                 font-size: 12px
                 height: 16px
-                margin-top: 3px
                 &:focus
                     outline: none
             .oe_searchview_facet
@@ -1095,8 +1021,6 @@ $sheet-padding: 16px
                 padding: 0
                 -webkit-font-smoothing: auto
                 // spacing for opera, FF
-                span
-                    height: 18px
                 &:focus
                     border-color: $tag-border-selected
                     @include box-shadow(0 0 3px 1px $tag-border-selected)
@@ -1110,9 +1034,12 @@ $sheet-padding: 16px
                 .oe_facet_category.oe_i
                     font-size: 16px
                 .oe_facet_value
+                    border-left: 1px solid #afafb6
                     color: #4C4C4C
                     &:last-child
                         padding-right: 16px
+                    &:first-child
+                        border-left: none
                 .oe_facet_remove
                     position: absolute
                     top: 3px
@@ -1135,14 +1062,13 @@ $sheet-padding: 16px
         .oe-autocomplete
             display: none
             position: absolute
-            width: 300px
             background-color: white
+            width: 400px
             border: 1px solid #afafb6
             z-index: 666
             margin-top: 2px
             cursor: default
             @include radius(3px)
-            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3))
             ul
                 list-style-type: none
                 padding-left: 0
@@ -1166,180 +1092,112 @@ $sheet-padding: 16px
                 li.oe-separator:last-child
                     display: none
 
-
-    .oe_searchview_drawer_container
-        overflow: auto
-    .oe_searchview_drawer
-        display: none
-        width: 100%
-        cursor: default
-        display: none
-        overflow: hidden
-        border-bottom: 1px solid $tag-border
-        text-align: left
-        padding: 8px 0
-        .badge
-            font-size: 12px
-            line-height: 12px
-        > div:first-child
-            border: none
-            padding-left: 0
-            li:hover:not(.badge)
-                background-color: $hover-background
-        .col-md-5
-            padding-left: 0
-        dl 
-            margin-bottom: 0
-        dt
-            color: $section-title-color
-            font-size: 13px
-            line-height: 24px
-        dd
-            line-height: 24px
-            font-size: 13px
-            padding-top: 3px
-        h4, h4 *
-            margin: 0 0 0 2px
-            padding-left: 20px
-            cursor: pointer
-            font-weight: normal
-            display: inline-block
-            &:hover
-                background-color: $hover-background
-        h4:before
-            content: "▸ "
-            color: #a3a3a3
-        button
-            margin: 4px 0
-        .button
-            border: none
-            background: transparent
-            padding: 0 2px
-            @include box-shadow(none)
-            @include radius(0)
-        .oe_searchview_section
-            ul
-                margin: 0 8px 
-                padding: 0
-                list-style: none
-                display: inline
-            li
-                display: inline-block
-                cursor: pointer
-                position: relative
-                margin-right: 8px
-                > span
-                    display: inline-block
-                    max-width: 250px
-                    text-overflow: ellipsis
-                    vertical-align: bottom
-                    overflow: hidden
-        form
-            margin-left: 12px
-            p
-                margin: 4px 0
-                line-height: 18px
-            button
-                margin: 0 0 8px -3px // Managed margin-left according bootstrap3
-        .oe_searchview_savefilter
-            form
-                display: none
-        .oe_searchview_custom
+    .oe-search-options
+        a
+            padding-left: 25px
+            padding-right: 25px
+            width: 100%
+            -webkit-user-select: none
+            -moz-user-select: none
+            user-select: none
+        .oe-apply-filter
+            margin-left: 25px
+        .oe-add-filter-menu
             display: none
-            li
-                cursor: pointer
-                position: relative
-                line-height: 14px
-                margin-right: 0
-                button
-                    position: absolute
-                    top: 0
-                    right: 5px
-                a
-                    margin-left: 10px
-                    position: inherit
-                    visibility: hidden
-                    display: inline-block
-                span:hover:not(.badge)
-                    background-color: $hover-background
-            li:hover a
-                visibility: visible
-            //Customize for searchview label
-            label
-                font-weight: normal
-            //End of Customize
-        .oe_searchview_dashboard
-            form
-                display: none
-                margin-top: 2px
+        .oe-add-condition
+            width: auto
+            margin-left: 10px
+            padding-left: 0
+            padding-right: 10px
+        .selected
+            display: block
+            a
+                font-weight: bold
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 6px
+                top: 3px
+                content: "\f00c"
+        .oe-group-selector
+            margin: 3px 25px
+            min-width: calc(100% - 40px)
+            max-width: 250px
+            width: auto
+        .divider
+            display: none
+        .filters-menu
+            .divider
+                display: list-item
+        .closed-menu
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 12px
+                top: 3px
+                content: "\f0da"
+        .open-menu
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 9px
+                top: 3px
+                content: "\f0d7"
 
-        .oe_searchview_advanced
-            overflow: auto
-            form
-                display: none
-                margin-top: 8px
-            button.oe_add_condition:before
-                content: "Z"
-                font-family: "entypoRegular" !important
-                font-size: 24px
-                font-weight: 300 !important
-                margin-right: 4px
-            ul
-                list-style: none
-                padding: 0
-            li
-                position: relative
-                list-style: none
-                margin: 0
+        .oe-select-group
+            margin: 3px 25px
+        .oe-add-group
+            display: none
+        .oe-save-name
+            display: none
+            margin: 3px 25px
+            span
                 white-space: nowrap
-                &:first-child .searchview_extended_prop_or
-                    visibility: hidden
-                    margin-left: -14px
-            .searchview_extended_prop_or
-                opacity: 0.5
-                margin-left: -14px //Customize 'or' in searchview
-        .oe_opened
-            h4:before
-                content: "▾ "
-                position: relative
-                top: -1px
-            form
-                display: block
-
-        // delete buttons
-        .oe_searchview_custom_delete, .searchview_extended_delete_prop
-            display: inline-block
-            width: 12px
-            height: 12px
-            line-height: 12px
-            padding: 1px
-            color: #8786b7
-            line-height: 8px
-            text-align: center
-            font-weight: bold
-            text-shadow: 0 1px 1px white
-            &:hover
-                text-decoration: none
-                color: white
-                background: #8786b7
-                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                @include radius(2px)
-        .oe_searchview_custom_delete
-            display: none
+                input
+                    margin-left: 0
+        .searchview_extended_prop_field
+            display: inline
+            width: calc(100% - 20px)
+        
+        .searchview_extended_prop_op
+            margin: 3px 0
+            width: calc(100% - 20px)
+        .searchview_extended_delete_prop
+            float: right
+            display: inline
+        .searchview_extended_prop_value
+            width: calc(100% - 20px)
+            > select, > input
+                width: calc(100% - 20px)
+            .oe_datepicker_main
+                width: calc(100% - 20px)
+            .oe_datepicker_master
+                width: 100%
+            .fa-calendar
+                margin-left: -21px
+                cursor: pointer
+        span.fa-trash-o
             position: absolute
-            bottom: 1px
-            right: 4px
-        .oe_searchview_custom_private, .oe_searchview_custom_public
-            &:hover
-                .oe_searchview_custom_delete
-                    display: inline-block
-        .oe_searchview_custom_public:after
-            content: ","
-            font-family: "entypoRegular" !important
-            font-size: 22px
-            font-weight: 300 !important
-            margin: 0 0 0 4px
-            padding: 0
+            top: 6px
+            right: 10px
+            cursor: pointer
+        .dropdown-menu
+            > li
+                position: relative
+                white-space: nowrap
+            li.oe-filter-condition
+                white-space: normal
+                padding-left: 25px
+                padding-right: 10px
+                margin-bottom: 5px
+        a
+            display: inline-block
+
+    input.oe-save-name
+        width: auto
+    .oe_pager_value
+        display: inline-block  
+
     // }}}
     // Views Common {{{
     .oe_view_nocontent
@@ -1674,6 +1532,9 @@ $sheet-padding: 16px
             width: auto
         .oe_datepicker_root
             display: inline-block
+            .datepickerbutton
+                margin-left: 5px
+                cursor: pointer
         .oe_form_required
             input:not([disabled]):not([readonly]), select:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])
                 background-color: #D2D2FF !important
@@ -2250,6 +2111,8 @@ $sheet-padding: 16px
             content: "[newline]"
     .oe_debug_view
         float: left
+        margin-top: 5px
+        width: auto
     .oe_debug_view_log
         font-size: 95%
         line-height: 1.2em
@@ -2300,8 +2163,6 @@ $sheet-padding: 16px
         background-color: #7c7bad
 
     // Customize for global tags
-    button, body
-        line-height: normal
     h1,h2
         font-weight: bold
     h3
@@ -2337,8 +2198,6 @@ $sheet-padding: 16px
         
 @-moz-document url-prefix()
     .openerp
-        .oe_searchview .oe_searchview_search
-            top: -1px
         .oe_form_field_many2one .oe_m2o_cm_button
             line-height: 18px
         .oe_webclient
