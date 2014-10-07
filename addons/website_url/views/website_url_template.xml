@@ -94,28 +94,58 @@
 
                             <input type="hidden" id="code" t-att-value="code" />
 
-                            <h2 class="text-center">URL Shortener</h2>
-                            <h3 class="text-muted text-center">Statistics</h3>
-                            <p class="text-center">URL</p>
+                            <h1 class="text-center">Statistics</h1>
+                            <h3 class="text-muted text-center">
+                                <t t-esc="url"/>
+                            </h3>
+
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <h4>
+                                                <span class="fa fa-circle-o-notch"></span> <span id="total_clicks_data"></span> total clicks
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <h4>
+                                                <span class="fa fa-flag"></span> <span id="number_of_countries_data"></span> countries
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Tabs -->
                             <ul class="nav nav-tabs hidden-print graph-tabs">
                                 <li class="active">
+                                    <a href="#all_time_chart" data-toggle="tab">All Time</a>
+                                </li>
+                                <li>
                                     <a href="#last_month_chart" data-toggle="tab">Last Month</a>
                                 </li>
                                 <li>
-                                    <a href="#hour_chart" data-toggle="tab">Last Hour</a>
+                                    <a href="#last_week_chart" data-toggle="tab">Last Week</a>
                                 </li>
                                 <li>
-                                    <a href="#clicks_by_country" data-toggle="tab">By Country</a>
+                                    <a href="#clicks_by_country" data-toggle="tab">Countries</a>
                                 </li>
                             </ul>
 
                             <div class="tab-content">
-                                <div class="tab-pane active" id="last_month_chart">
+                                <div class="tab-pane active" id="all_time_chart">
                                     <svg style="height:20em"></svg>
                                 </div>
-                                <div class="tab-pane" id="hour_chart">
+                                <div class="tab-pane" id="last_month_chart">
+                                    <svg style="height:20em"></svg>
+                                </div>
+                                <div class="tab-pane" id="last_week_chart">
                                     <svg style="height:20em"></svg>
                                 </div>
                                 <div class="tab-pane" id="clicks_by_country">

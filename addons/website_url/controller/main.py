@@ -52,7 +52,17 @@ class Website_Url(http.Controller):
     @http.route(['/r/<string:code>+'] , type='http', auth="user", website=True)
     def statistics_shorten_url(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        return request.website.render("website_url.graphs", {'code':code})
+
+        alias_obj = request.registry['website.alias']
+        alias_id = alias_obj.search(cr, uid, [('code', '=', code)])
+
+        print alias_id
+
+        alias = alias_obj.browse(cr, uid, alias_id, context=context)
+
+        print alias.to_json()[0]
+
+        return request.website.render("website_url.graphs", alias.to_json()[0])
 
     @http.route(['/r/<string:code>/chart'], type="json", auth="user")
     def chart_data(self, code):
@@ -62,10 +72,10 @@ class Website_Url(http.Controller):
         alias_id = alias_obj.search(cr, uid, [('code', '=', code)], context=context)
 
         total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id[0], context=context)
-        month_clicks = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
+        clicks_by_day = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
         clicks_by_country = request.registry['website.alias.click'].get_clicks_by_country(cr, uid, alias_id[0], context=context)
 
-        return {'total_clicks':total_clicks, 'month_clicks':month_clicks, 'clicks_by_country':clicks_by_country}
+        return {'total_clicks':total_clicks, 'clicks_by_day':clicks_by_day, 'clicks_by_country':clicks_by_country}
 
     @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
     def full_url_redirect(self, code, **post):

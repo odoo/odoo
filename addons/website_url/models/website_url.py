@@ -164,10 +164,11 @@ class website_alias_click(models.Model):
     @api.model
     def get_clicks_by_day(self, alias_id):
         self.env.cr.execute("""
-            SELECT to_char(create_date, 'YYYY-MM-DD'), count(id)
+            SELECT to_char(create_date, 'YYYY-MM-DD'), COUNT(id)
             FROM website_alias_click
             WHERE alias_id = '%s'
             GROUP BY to_char(create_date, 'YYYY-MM-DD')
+            ORDER BY to_char(create_date, 'YYYY-MM-DD') DESC
         """, (alias_id, ))
 
         return self.env.cr.dictfetchall()
@@ -179,7 +180,7 @@ class website_alias_click(models.Model):
     @api.model
     def get_clicks_by_country(self, alias_id):
         self.env.cr.execute("""
-            SELECT rc.name, count(wac.id)
+            SELECT rc.name, COUNT(wac.id)
             FROM website_alias_click wac
             LEFT OUTER JOIN res_country rc
             ON wac.country_id = rc.id
