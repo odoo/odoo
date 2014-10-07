@@ -571,11 +571,11 @@ class account_journal(models.Model):
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user,
         help="The user responsible for this journal")
-    groups_id = fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
+    groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
     entry_posted = fields.Boolean(string='Autopost Created Moves',
         help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.')
-    company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id.id,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
     allow_date = fields.Boolean(string='Check Date in Period',
         help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period')
@@ -689,26 +689,20 @@ class account_journal(models.Model):
         return self.name_get(cr, user, ids, context=context)
 
 
-class account_fiscalyear(osv.osv):
+class account_fiscalyear(models.Model):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
-    _columns = {
-        'name': fields.char('Fiscal Year', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'date_start': fields.date('Start Date', required=True),
-        'date_stop': fields.date('End Date', required=True),
-        'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False),
-        'end_journal_id': fields.many2one(
-             'account.journal', 'End of Year Entries Journal',
-             readonly=True, copy=False),
-    }
-    _defaults = {
-        'state': 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-    }
-    _order = "date_start, id"
 
+    name = fields.Char(string='Fiscal Year', required=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    date_start = fields.Date(string='Start Date', required=True)
+    date_stop = fields.Date(string='End Date', required=True)
+    period_ids = fields.One2many('account.period', 'fiscalyear_id', string='Periods')
+    state = fields.Selection([('draft','Open'), ('done','Closed')], string='Status', readonly=True, copy=False, default='draft')
+    end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
+        readonly=True, copy=False)
+
+    _order = "date_start, id"
 
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
@@ -776,24 +770,22 @@ class account_fiscalyear(osv.osv):
         return ids
 
 
-class account_period(osv.osv):
+class account_period(models.Model):
     _name = "account.period"
     _description = "Account period"
-    _columns = {
-        'name': fields.char('Period Name', required=True),
-        'code': fields.char('Code', size=12),
-        'special': fields.boolean('Opening/Closing Period',help="These periods can overlap."),
-        'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
-        'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True, copy=False,
-                                  help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.'),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
-    }
-    _defaults = {
-        'state': 'draft',
-    }
+
+    name = fields.Char(string='Period Name', required=True)
+    code = fields.Char(string='Code', size=12)
+    special = fields.Boolean(string='Opening/Closing Period', help="These periods can overlap.")
+    date_start = fields.Date(string='Start of Period', required=True, states={'done': [('readonly', True)]})
+    date_stop = fields.Date(string='End of Period', required=True, states={'done': [('readonly', True)]}),
+    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', required=True, states={'done': [('readonly', True)]}, index=True)
+    state = fields.Selection([('draft', 'Open'), ('done', 'Closed')], string='Status', readonly=True, copy=False, default='draft',
+        help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.')
+    company_id = fields.Many2one(related='fiscalyear_id.company_id', 'res.company', string='Company', store=True, readonly=True)
+
     _order = "date_start, special desc"
+
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
@@ -964,7 +956,7 @@ class account_journal_period(osv.osv):
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------
-class account_move(osv.osv):
+class account_move(models.Model):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
@@ -1020,45 +1012,30 @@ class account_move(osv.osv):
             return [('id', 'in', tuple(ids))]
         return [('id', '=', '0')]
 
-    def _get_move_from_lines(self, cr, uid, ids, context=None):
-        line_obj = self.pool.get('account.move.line')
-        return [line.move_id.id for line in line_obj.browse(cr, uid, ids, context=context)]
-
-    _columns = {
-        'name': fields.char('Number', required=True, copy=False),
-        'ref': fields.char('Reference', copy=False),
-        'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
-        'state': fields.selection(
-              [('draft','Unposted'), ('posted','Posted')], 'Status',
-              required=True, readonly=True, copy=False,
-              help='All manually created new journal entries are usually in the status \'Unposted\', '
-                   'but you can set the option to skip that status on the related journal. '
-                   'In that case, they will behave as journal entries automatically created by the '
-                   'system on document validation (invoices, bank statements...) and will be created '
-                   'in \'Posted\' status.'),
-        'line_id': fields.one2many('account.move.line', 'move_id', 'Entries',
-                                   states={'posted':[('readonly',True)]},
-                                   copy=True),
-        'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
-        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
-            _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
-            'account.move.line': (_get_move_from_lines, ['partner_id'],10)
-            }),
-        'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
-        'narration':fields.text('Internal Note'),
-        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
-        'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
-    }
-
-    _defaults = {
-        'name': '/',
-        'state': 'draft',
-        'period_id': _get_period,
-        'date': fields.date.context_today,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-    }
+    name = fields.Char(string='Number', required=True, copy=False, default='/')
+    ref = fields.Char(string='Reference', copy=False)
+    period_id = fields.Many2one('account.period', string='Period', required=True, states={'posted': [('readonly', True)]},
+        default=lambda self: self._get_period)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
+    state = fields.selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
+      required=True, readonly=True, copy=False, default='draft',
+      help='All manually created new journal entries are usually in the status \'Unposted\', '
+           'but you can set the option to skip that status on the related journal. '
+           'In that case, they will behave as journal entries automatically created by the '
+           'system on document validation (invoices, bank statements...) and will be created '
+           'in \'Posted\' status.')
+    line_id = fields.One2many('account.move.line', 'move_id', string='Entries',
+        states={'posted': [('readonly', True)]}, copy=True)
+    to_check = fields.Boolean(string='To Review',
+        help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
+    partner_id = fields.Many2one(related='line_id.partner_id', 'res.partner', string="Partner", store=True)
+    amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), search='_search_amount')
+    date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
+    narration = fields.Text(string='Internal Note')
+    company_id = fields.Many2one(related='journal_id.company_id', 'res.company', string='Company', store=True, readonly=True,
+        default=lambda self: self.env.user.company_id)
+    balance = fields.Float(string='balance', digits=dp.get_precision('Account'),
+        help="This is a field only used for internal purpose and shouldn't be displayed")
 
     def _check_centralisation(self, cursor, user, ids, context=None):
         for move in self.browse(cursor, user, ids, context=context):
