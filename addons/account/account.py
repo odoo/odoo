@@ -1440,7 +1440,7 @@ class account_move_reconcile(models.Model):
 a documenter
 child_depend: la taxe depend des taxes filles
 """
-class account_tax_code(osv.osv):
+class account_tax_code(models.Model):
     """
     A code for the tax object.
 
@@ -1522,20 +1522,22 @@ class account_tax_code(osv.osv):
     _description = 'Tax Code'
     _rec_name = 'code'
     _order = 'sequence, code'
-    _columns = {
-        'name': fields.char('Tax Case Name', required=True, translate=True),
-        'code': fields.char('Case Code', size=64),
-        'info': fields.text('Description'),
-        'sum': fields.function(_sum_year, string="Year Sum"),
-        'sum_period': fields.function(_sum_period, string="Period Sum"),
-        'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
-        'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Child Codes'),
-        'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax code to appear on invoices"),
-        'sequence': fields.integer('Sequence', help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
-    }
+
+    name = fields.Char(string='Tax Case Name', required=True, translate=True)
+    code = fields.Char(string='Case Code', size=64)
+    info = fields.Text(string='Description')
+    sum = fields.Float(compute='_sum_year', string='Year Sum')
+    sum_period = fields.Float(compute='_sum_period', string='Period Sum')
+    parent_id = fields.Many2one('account.tax.code', string='Parent Code', index=True)
+    child_ids = fields.One2many('account.tax.code', 'parent_id', string='Child Codes')
+    line_ids = fields.One2many('account.move.line', 'tax_code_id', string='Lines')
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company)
+    sign = fields.Float(string='Coefficent for parent', required=True, default=1.0,
+        help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.')
+    notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
+        help="Check this box if you don't want any tax related to this tax code to appear on invoices")
+    sequence = fields.Integer(string='Sequence',
+        help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'")
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
@@ -1564,24 +1566,17 @@ class account_tax_code(osv.osv):
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
-    _defaults = {
-        'company_id': _default_company,
-        'sign': 1.0,
-        'notprintable': False,
-    }
-
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
-    _order = 'code'
-
 
 def get_precision_tax():
     def change_digit_tax(cr):
         res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
         return (16, res+3)
     return change_digit_tax
+
 
 class account_tax(osv.osv):
     """
