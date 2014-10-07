@@ -20,4 +20,26 @@
             </xpath>
         </template>
     </data>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_call_later" model="email.template">
+            <field name="name">Call Later - Send by Email</field>
+            
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+
+                    <p>Hello ${object.partner_id.name},</p>
+
+                    <p>I'm not available right now. Please call me later.</p>
+
+                </div>
+            ]]></field>
+        </record>
+    </data>
 </openerp>

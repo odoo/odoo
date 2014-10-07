@@ -5,7 +5,7 @@
 <openerp>
     <data>
 
-
+        <!-- server action used to create the call from the menu "more" in the lead's list view -->
         <record id="action_create_call_center_call" model="ir.actions.server">
             <field name="name">Create call center call</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
@@ -21,6 +21,7 @@
             </field>
         </record>
 
+        <!-- insertion of the action "Add to Call Center" in the "more" menu in the lead's list view -->
         <record model="ir.values" id="ir_create_call_center_call">
             <field name="model_id" ref="crm.model_crm_lead" />
             <field name="name">Add to Call Center</field>

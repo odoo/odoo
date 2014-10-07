@@ -46,13 +46,6 @@ openerp.crm_wardialing = function(instance) {
             this.$el.draggable({helper: "clone"});
         },
 
-        //Action when we click on a phonecall to be redirect to the linked opportunity
-        to_leads: function() {
-            if(this.get("opportunity_id")){
-                this.trigger("to_leads", this.get("opportunity_id"));
-            }
-        },
-
         //select the clicked call, show options and put some highlight on it
         select_call: function(){
             this.trigger("select_call", this)
@@ -94,6 +87,13 @@ openerp.crm_wardialing = function(instance) {
             this.$el.find(".oe_dial_email").click(function() {
                 self.send_email();
             });
+            this.$el.find(".oe_dial_to_client").click(function() {
+                self.to_client();
+            });
+            this.$el.find(".oe_dial_to_lead").click(function() {
+                self.to_lead();
+            });
+
 
             return;
         },
@@ -112,9 +112,11 @@ openerp.crm_wardialing = function(instance) {
         search_phonecalls_status: function() {
             var phonecall_model = new openerp.web.Model("crm.phonecall");
 
-            //hide the option to edit the logs
+            //hide the options in the dialing panel
             this.$el.find(".oe_dial_changelog").css("display","none");
             this.$el.find(".oe_dial_email").css("display","none");
+            this.$el.find(".oe_dial_to_client").css("display","none");
+            this.$el.find(".oe_dial_to_lead").css("display","none");
 
             var self = this;
             return phonecall_model.query(['id', 'partner_id', 'to_call', 'description', 'opportunity_id'])
@@ -170,18 +172,37 @@ openerp.crm_wardialing = function(instance) {
             this.shown = ! this.shown;
         },
 
-        //action to change the main view to go to the opportunity view
-        to_leads: function(opportunity_id) {
+        //action to change the main view to go to the opportunity's view
+        to_lead: function() {
+            var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
+            var phonecall = this.phonecalls[id];
+            
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
                 res_model: "crm.lead",
-                res_id: opportunity_id,
+                res_id: phonecall.opportunity_id[0],
                 views: [[false, 'form']],
                 target: 'current',
                 context: {},
             });
         },
 
+        //action to change the main view to go to the client's view
+        to_client: function() {
+            var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
+            var phonecall = this.phonecalls[id];
+            
+            openerp.client.action_manager.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "res.partner",
+                res_id: phonecall.partner_id[0],
+                views: [[false, 'form']],
+                target: 'current',
+                context: {},
+            });
+        },
+
+        //action to select a call and display the specific actions
         select_call: function(phonecall_widget){
             self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
             phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
@@ -190,14 +211,21 @@ openerp.crm_wardialing = function(instance) {
             this.$el.find(".oe_dial_email").css("display","none");
             if(phonecall_widget.get('email')){
                 this.$el.find(".oe_dial_email").css("display","inline");
+                this.$el.find(".oe_dial_changelog").css("width", "45%");
+            }else{
+                this.$el.find(".oe_dial_changelog").css("width", "90%");
             }
+            this.$el.find(".oe_dial_to_client").css("display","inline");
+            this.$el.find(".oe_dial_to_lead").css("display","inline");
         },
 
         //action done when the button "call" is clicked
         call_button: function(){
-            console.log(this.phonecalls[0]);
+            console.log(this.phonecalls.first);
             var phonecall_model = new openerp.web.Model("crm.phonecall");
-            phonecall_model.call("call_partner", [this.phonecalls[0].id]).then(function(phonecall){
+            var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
+            console.log(phonecall_id);
+            phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
                 console.log("after the call")
             });
             
@@ -224,6 +252,7 @@ openerp.crm_wardialing = function(instance) {
             console.log("EMAIL");
             var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
             var widget = this.widgets[this.phonecalls[id].id];
+            
             console.log(widget.get('email'));
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
@@ -233,8 +262,11 @@ openerp.crm_wardialing = function(instance) {
                 target: 'new',
                 key2: 'client_action_multi',
                 context: {
-                            'default_composition_mode': 'mass_mail',
+                            'default_composition_mode': 'comment',
                             'default_email_to': widget.get('email'),
+                            'default_model': 'crm.lead',
+                            'default_res_id': this.phonecalls[id].opportunity_id[0],
+                            'default_partner_ids': [this.phonecalls[id].partner_id[0]],
                         },
                 views: [[false, 'form']],
             });
