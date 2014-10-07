@@ -1362,21 +1362,18 @@ class account_move(models.Model):
         return len(valid_moves) > 0 and valid_moves or False
 
 
-class account_move_reconcile(osv.osv):
+class account_move_reconcile(models.Model):
     _name = "account.move.reconcile"
     _description = "Account Reconciliation"
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'type': fields.char('Type', required=True),
-        'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
-        'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
-        'create_date': fields.date('Creation date', readonly=True),
-        'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
-    }
-    _defaults = {
-        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
-    }
-    
+
+    name = fields.Char(string='Name', required=True, default=lambda self: self.env['ir.sequence'].get('account.reconcile') or '/')
+    type = fields.Char(string='Type', required=True)
+    line_id = fields.One2many('account.move.line', 'reconcile_id', string='Entry Lines')
+    line_partial_ids = fields.One2many('account.move.line', 'reconcile_partial_id', string='Partial Entry lines')
+    create_date = fields.Date(string='Creation date', readonly=True)
+    opening_reconciliation = fields.Boolean(string='Opening Entries Reconciliation',
+        help="Is this reconciliation produced by the opening of a new fiscal year ?.")
+
     # You cannot unlink a reconciliation if it is a opening_reconciliation one,
     # you should use the generate opening entries wizard for that
     def unlink(self, cr, uid, ids, context=None):
