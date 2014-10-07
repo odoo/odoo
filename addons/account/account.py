@@ -2073,7 +2073,7 @@ class account_account_template(models.Model):
         return acc_template_ref
 
 
-class account_add_tmpl_wizard(osv.osv_memory):
+class account_add_tmpl_wizard(models.TransientModel):
     """Add one more account from the template.
 
     With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
@@ -2092,12 +2092,8 @@ class account_add_tmpl_wizard(osv.osv_memory):
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
         return res and res[0] or False
 
-    _columns = {
-        'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)]),
-    }
-    _defaults = {
-        'cparent_id': _get_def_cparent,
-    }
+    cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent,
+        help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)])
 
     def action_create(self,cr,uid,ids,context=None):
         if context is None:
@@ -2126,31 +2122,24 @@ class account_add_tmpl_wizard(osv.osv_memory):
         return { 'type': 'state', 'state': 'end' }
 
 
-class account_tax_code_template(osv.osv):
-
+class account_tax_code_template(models.Model):
     _name = 'account.tax.code.template'
     _description = 'Tax Code Template'
     _order = 'sequence, code'
     _rec_name = 'code'
-    _columns = {
-        'name': fields.char('Tax Case Name', required=True),
-        'code': fields.char('Case Code', size=64),
-        'info': fields.text('Description'),
-        'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
-        'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
-        'sign': fields.float('Sign For Parent', required=True),
-        'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any tax related to this tax Code to appear on invoices."),
-        'sequence': fields.integer(
-            'Sequence', help=(
-                "Determine the display order in the report 'Accounting "
-                "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
-            ),
-    }
 
-    _defaults = {
-        'sign': 1.0,
-        'notprintable': False,
-    }
+    name = fields.Char(string='Tax Case Name', required=True)
+    code = fields.Char(string='Case Code', size=64)
+    info = fields.Text(string='Description')
+    parent_id = fields.Many2one('account.tax.code.template', string='Parent Code', index=True)
+    child_ids = fields.One2many('account.tax.code.template', 'parent_id', string='Child Codes')
+    sign = fields.Float(string='Sign For Parent', required=True, default=1.0)
+    notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
+        help="Check this box if you don't want any tax related to this tax Code to appear on invoices.")
+    sequence = fields.Integer(string='Sequence', help=(
+            "Determine the display order in the report 'Accounting "
+            "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
+        )
 
     def generate_tax_code(self, cr, uid, tax_code_root_id, company_id, context=None):
         '''
