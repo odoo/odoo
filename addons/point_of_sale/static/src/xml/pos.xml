@@ -1013,9 +1013,9 @@
         <div class="modal-dialog">
             <div class="popup popup-selection">
                 <p class="message"><t t-esc=" widget.message || 'Confirm ?' " /></p>
-                <div class='selection'>
+                <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div class='button item' t-att-data-item-index='item_index'>
+                        <div class='selection-item' t-att-data-item-index='item_index'>
                             <t t-esc='item.label'/>
                         </div>
                     </t>

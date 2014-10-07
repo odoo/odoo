@@ -417,7 +417,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             });
 
-            this.$('.button.item').click(function(){
+            this.$('.selection-item').click(function(){
                 self.pos_widget.screen_selector.close_popup();
                 if (options.confirm) {
                     var item = self.list[parseInt($(this).data('item-index'))];

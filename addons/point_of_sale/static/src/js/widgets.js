@@ -577,22 +577,42 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options){
             var options = options || {};
             this._super(parent,options);
-            this.mode = options.mode || 'cashier';
         },
         set_user_mode: function(mode){
             this.mode = mode;
-            this.refresh();
-        },
-        refresh: function(){
             this.renderElement();
         },
-        get_name: function(){
-            var user;
-            if(this.mode === 'cashier'){
-                user = this.pos.cashier || this.pos.user;
-            }else{
-                user = this.pos.get_order().get_client()  || this.pos.user;
+        renderElement: function(){
+            var self = this;
+            this._super();
+
+            this.$el.click(function(){
+                self.click_username();
+            });
+        },
+        click_username: function(){
+            var self = this;
+            
+            var list = [];
+            for (var i = 0; i < this.pos.users.length; i++) {
+                list.push({
+                    'label':this.pos.users[i].name,
+                    'item': this.pos.users[i],
+                });
             }
+
+            this.pos_widget.screen_selector.show_popup('selection',{
+                'message': _t('Change Cashier'),
+                list: list,
+                confirm: function(cashier){
+                    this.pos.cashier = cashier;
+                    self.renderElement();
+                },
+            });
+
+        },
+        get_name: function(){
+            var user = this.pos.cashier || this.pos.user;
             if(user){
                 return user.name;
             }else{
