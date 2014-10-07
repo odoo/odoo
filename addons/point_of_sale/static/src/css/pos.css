@@ -1926,13 +1926,19 @@ td {
     line-height:180px;
 }
 .pos .popup input {
-    font-size: 18px;
-    font-family: Lato;
-    padding: 4px;
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
     border-radius: 3px;
-    border: solid 1px #cecece;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
     box-sizing: border-box;
     width: 80%;
+}
+.pos .popup input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
 }
 .pos .popup.popup-selection .message {
     margin-top: 0;
