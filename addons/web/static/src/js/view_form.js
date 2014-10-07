@@ -257,7 +257,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            this.do_show({ reload: warm });
+            this.do_show();
         }
     },
     /**
@@ -5285,22 +5285,20 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.display_popup();
     },
     start: function() {
-        var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            instance.web.pyeval.eval_domains_and_contexts({
+            var context = instance.web.pyeval.sync_eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
-            }).done(function (results) {
-                var search_defaults = {};
-                _.each(results.context, function (value_, key) {
-                    var match = /^search_default_(.*)$/.exec(key);
-                    if (match) {
-                        search_defaults[match[1]] = value_;
-                    }
-                });
-                self.setup_search_view(search_defaults);
+            }).context;
+            var search_defaults = {};
+            _.each(context, function (value_, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value_;
+                }
             });
+            this.setup_search_view(search_defaults);
         } else { // "form"
             this.new_object();
         }
@@ -5310,12 +5308,9 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
-        if (this.searchview_drawer) {
-            this.searchview_drawer.destroy();
-        }
+        var $buttons = this.$('.oe-search-options');
         this.searchview = new instance.web.SearchView(this,
-                this.dataset, false,  search_defaults);
-        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
+                this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5325,7 +5320,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.on("search_view_loaded", self, function() {
+        this.searchview.appendTo(this.$(".oe_popup_search")).done(function() {
+            self.searchview.toggle_visibility(true);
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,

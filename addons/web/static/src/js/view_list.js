@@ -404,11 +404,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        if (total === 0)
-            this.$pager.hide();
-        else
-            this.$pager.css("display", "");
-        this.$pager.find('.oe-pager-button').toggleClass('disabled', total <= limit);
+        this.$pager.find('.oe-pager-button').toggle(total > limit);
+        this.$pager.find('.oe_pager_value').toggle(total !== 0);
         var spager = '-';
         if (total) {
             var range_start = this.page * limit + 1;
