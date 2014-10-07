@@ -17,7 +17,6 @@
 .floor-selector { 
     line-height: 48px;
     font-size: 18px;
-    border-bottom: solid 1px rgb(196,196,196);
     display: -webkit-flex;
     display: flex;
     text-align: center;
@@ -33,7 +32,8 @@
     border-left: none;
 }
 .floor-selector .button.active {
-    background: rgb(210, 231, 210);
+    background: #6EC89B;
+    color: white;
 }
 
 /* ------ FLOOR MAP ------- */
@@ -43,6 +43,7 @@
     flex: 1;
     position: relative;
     width: auto;
+    box-shadow: 0px 6px 0px -3px rgba(0,0,0,0.07) inset;
     background: #D8D7D7;
     background-repeat: no-repeat;
     overflow: hidden;
@@ -52,7 +53,19 @@
     .floor-map {
         margin: 8px;
         border-radius: 3px;
-        border: dashed 1px rgba(0, 0, 0, 0.1);
+    }
+    .floor-selector {
+        margin: 8px;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        width: auto;
+        border: none;
+    }
+    .floor-selector .button {
+        border-left: none;
+    }
+    .floor-selector .button.active{
+        border-radius: 3px;
     }
 }
 
@@ -64,6 +77,7 @@
     background: rgb(53, 211, 116);
     border-radius: 3px;
     cursor: pointer;
+    box-shadow: 0px 3px rgba(0,0,0,0.07);
 }
 .floor-map .table .label {
     display: block;
