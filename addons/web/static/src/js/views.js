@@ -675,15 +675,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
-                if (controller) {
-                    var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
-                    if (view_name === view_type) {
-                        container.show();
-                        controller.do_show(view_options || {});
-                    } else {
-                        container.hide();
-                        controller.do_hide();
-                    }
+                var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
+                if (view_name === view_type) {
+                    container.show();
+                    if (controller) controller.do_show(view_options || {});
+		} else {
+                    container.hide();
+                    if (controller) controller.do_hide();
                 }
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
