@@ -2193,78 +2193,80 @@ class account_tax_code_template(models.Model):
     _order = 'code,name'
 
 
-class account_chart_template(osv.osv):
+class account_chart_template(models.Model):
     _name="account.chart.template"
     _description= "Templates for Account Chart"
 
-    _columns={
-        'name': fields.char('Name', required=True),
-        'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
-        'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
-        'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
-        'currency_id': fields.many2one('res.currency', 'Currency'),
-        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
-        'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
-        'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
-        'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
-        'bank_account_view_id': fields.many2one('account.account.template', 'Bank Account'),
-        'property_account_receivable': fields.many2one('account.account.template', 'Receivable Account'),
-        'property_account_payable': fields.many2one('account.account.template', 'Payable Account'),
-        'property_account_expense_categ': fields.many2one('account.account.template', 'Expense Category Account'),
-        'property_account_income_categ': fields.many2one('account.account.template', 'Income Category Account'),
-        'property_account_expense': fields.many2one('account.account.template', 'Expense Account on Product Template'),
-        'property_account_income': fields.many2one('account.account.template', 'Income Account on Product Template'),
-        'property_account_income_opening': fields.many2one('account.account.template', 'Opening Entries Income Account'),
-        'property_account_expense_opening': fields.many2one('account.account.template', 'Opening Entries Expense Account'),
-    }
-
-    _defaults = {
-        'visible': True,
-        'code_digits': 6,
-        'complete_tax_set': True,
-    }
+    name = fields.Char(string='Name', required=True)
+    parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
+    code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
+    visible = fields.Boolean(string='Can be Visible?', default=True,
+        help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template.")
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
+        help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete')
+    account_root_id = fields.Many2one('account.account.template', string='Root Account', domain=[('parent_id','=',False)])
+    tax_code_root_id = fields.Many2one('account.tax.code.template', string='Root Tax Code', domain=[('parent_id','=',False)])
+    tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
+        help='List of all the taxes that have to be installed by the wizard')
+    bank_account_view_id = fields.Many2one('account.account.template', string='Bank Account')
+    property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
+    property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
+    property_account_expense_categ = fields.Many2one('account.account.template', string='Expense Category Account')
+    property_account_income_categ = fields.Many2one('account.account.template', string='Income Category Account')
+    property_account_expense = fields.Many2one('account.account.template', string='Expense Account on Product Template')
+    property_account_income = fields.Many2one('account.account.template', string='Income Account on Product Template')
+    property_account_income_opening = fields.Many2one('account.account.template', string='Opening Entries Income Account')
+    property_account_expense_opening = fields.Many2one('account.account.template', string='Opening Entries Expense Account')
 
 
-class account_tax_template(osv.osv):
-
+class account_tax_template(models.Model):
     _name = 'account.tax.template'
     _description = 'Templates for Taxes'
+    _order = 'sequence'
 
-    _columns = {
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'name': fields.char('Tax Name', required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For Tax Type percent enter % ratio between 0-1."),
-        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True),
-        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-        'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
-        'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
-        'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
-        'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
-        'python_compute':fields.text('Python Code'),
-        'python_compute_inv':fields.text('Python Code (reverse)'),
-        'python_applicable':fields.text('Applicable Code'),
+    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+    name = fields.Char(string='Tax Name', required=True)
+    sequence = fields.Integer(string='Sequence', required=True, default=1,
+        help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important.")
+    amount = fields.Float(string='Amount', required=True, digits=get_precision_tax(), default=0, help="For Tax Type percent enter % ratio between 0-1.")
+    type = fields.Selection([('percent', 'Percent'), ('fixed', 'Fixed'), ('none', 'None'), ('code', 'Python Code'), ('balance', 'Balance')],
+        string='Tax Type', default='percent', required=True)
+    applicable_type = fields.Selection([('true', 'True'), ('code', 'Python Code')], string='Applicable Type', required=True,
+        default='true', help="If not applicable (computed through a Python code), the tax won't appear on the invoice.")
+    domain = fields.Char(string='Domain',
+        help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain.")
+    account_collected_id = fields.Many2one('account.account.template', string='Invoice Tax Account')
+    account_paid_id = fields.Many2one('account.account.template', string='Refund Tax Account')
+    parent_id = fields.Many2one('account.tax.template', string='Parent Tax Account', index=True)
+    child_depend = fields.Boolean(string='Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
+    python_compute = fields.Text(string='Python Code',
+        default='''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''')
+    python_compute_inv = fields.Text(string='Python Code (reverse)',
+        default='''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''')
+    python_applicable = fields.Text(string='Applicable Code')
 
-        #
-        # Fields used for the Tax declaration
-        #
-        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
-        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+    #
+    # Fields used for the Tax declaration
+    #
+    base_code_id = fields.Many2one('account.tax.code.template', string='Base Code', help="Use this code for the tax declaration.")
+    tax_code_id = fields.Many2one('account.tax.code.template', string='Tax Code', help="Use this code for the tax declaration.")
+    base_sign = fields.Float(string='Base Code Sign', default=1, help="Usually 1 or -1.")
+    tax_sign = fields.Float(string='Tax Code Sign', default=1, help="Usually 1 or -1.")
 
-        # Same fields for refund invoices
+    # Same fields for refund invoices
 
-        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
-        'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
-        'description': fields.char('Internal Name'),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
-    }
+    ref_base_code_id = fields.Many2one('account.tax.code.template', string='Refund Base Code', help="Use this code for the tax declaration.")
+    ref_tax_code_id = fields.Many2one('account.tax.code.template', string='Refund Tax Code', help="Use this code for the tax declaration.")
+    ref_base_sign = fields.Float(string='Refund Base Code Sign', default=1, help="Usually 1 or -1.")
+    ref_tax_sign = fields.Float(string='Refund Tax Code Sign', default=1, help="Usually 1 or -1.")
+    include_base_amount = fields.Boolean(string='Include in Base Amount', default=False,
+        help="Set if the amount of tax must be included in the base amount before computing the next taxes.")
+    description = fields.Char(string='Internal Name')
+    type_tax_use = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('all', 'All')], default='all',
+        string='Tax Use In', required=True)
+    price_include = fields.Boolean(string='Tax Included in Price', default=False,
+        help="Check this if the price you use on the product and invoices includes this tax.")
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -2280,23 +2282,6 @@ class account_tax_template(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
-    _defaults = {
-        'python_compute': lambda *a: '''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': lambda *a: '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
-        'applicable_type': 'true',
-        'type': 'percent',
-        'amount': 0,
-        'sequence': 1,
-        'ref_tax_sign': 1,
-        'ref_base_sign': 1,
-        'tax_sign': 1,
-        'base_sign': 1,
-        'include_base_amount': False,
-        'type_tax_use': 'all',
-        'price_include': 0,
-    }
-    _order = 'sequence'
 
     def _generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
         """
