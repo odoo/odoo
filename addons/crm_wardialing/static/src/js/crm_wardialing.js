@@ -112,11 +112,7 @@ openerp.crm_wardialing = function(instance) {
         search_phonecalls_status: function() {
             var phonecall_model = new openerp.web.Model("crm.phonecall");
 
-            //hide the options in the dialing panel
-            this.$el.find(".oe_dial_changelog").css("display","none");
-            this.$el.find(".oe_dial_email").css("display","none");
-            this.$el.find(".oe_dial_to_client").css("display","none");
-            this.$el.find(".oe_dial_to_lead").css("display","none");
+            this.$el.find(".oe_dial_phonecalls").css('max-height','235px');
 
             var self = this;
             return phonecall_model.query(['id', 'partner_id', 'to_call', 'description', 'opportunity_id'])
@@ -204,19 +200,24 @@ openerp.crm_wardialing = function(instance) {
 
         //action to select a call and display the specific actions
         select_call: function(phonecall_widget){
+            var classes = phonecall_widget.$()[0].className.split(" ");
+            
+            
             self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
-            phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
-
-            this.$el.find(".oe_dial_changelog").css("display","inline");
-            this.$el.find(".oe_dial_email").css("display","none");
-            if(phonecall_widget.get('email')){
-                this.$el.find(".oe_dial_email").css("display","inline");
-                this.$el.find(".oe_dial_changelog").css("width", "45%");
+            if(classes.indexOf("oe_dial_selected_phonecall") == -1){
+                phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
+                this.$el.find(".oe_dial_phonecalls").animate({'max-height' : '178px'},'slow');   
+                this.$el.find(".oe_dial_email").css("display","none");
+                if(phonecall_widget.get('email')){
+                    this.$el.find(".oe_dial_email").css("display","inline");
+                    this.$el.find(".oe_dial_changelog").css("width", "45%");
+                }else{
+                    this.$el.find(".oe_dial_changelog").css("width", "90%");
+                }
             }else{
-                this.$el.find(".oe_dial_changelog").css("width", "90%");
+                this.$el.find(".oe_dial_phonecalls").animate({'max-height' : '235px'},'slow'); 
             }
-            this.$el.find(".oe_dial_to_client").css("display","inline");
-            this.$el.find(".oe_dial_to_lead").css("display","inline");
+            
         },
 
         //action done when the button "call" is clicked
@@ -252,7 +253,7 @@ openerp.crm_wardialing = function(instance) {
             console.log("EMAIL");
             var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
             var widget = this.widgets[this.phonecalls[id].id];
-            
+
             console.log(widget.get('email'));
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
