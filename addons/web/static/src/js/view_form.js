@@ -85,8 +85,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {instance.web.Session} session the current openerp session
      * @param {instance.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
-     * @param {Object} options
-     *                  - resize_textareas : [true|false|max_height]
      *
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
@@ -3972,7 +3970,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.form_last_update = $.Deferred();
@@ -4270,7 +4267,6 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
-            kanban: 'instance.web.form.One2ManyKanbanView',
         });
         this.__ignore_blur = false;
     },
@@ -4539,13 +4535,6 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
         }
     }
 });
-
-var lazy_build_o2m_kanban_view = function() {
-    if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
-        return;
-    instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-    });
-};
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
@@ -5139,8 +5128,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.domain = domain || [];
         this.context = context || {};
         this.options = options;
-        _.defaults(this.options, {
-        });
+        _.defaults(this.options, {});
     },
     init_dataset: function() {
         var self = this;
@@ -5356,8 +5344,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.new_object();
                 });
             });
-        });
-        this.searchview.appendTo(this.$(".oe_popup_search"));
+        });        
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;

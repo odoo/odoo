@@ -7,9 +7,6 @@ openerp.web.search = {};
 var QWeb = instance.web.qweb,
       _t =  instance.web._t,
      _lt = instance.web._lt;
-_.mixin({
-    sum: function (obj) { return _.reduce(obj, function (a, b) { return a + b; }, 0); }
-});
 
 /** @namespace */
 var my = instance.web.search = {};
