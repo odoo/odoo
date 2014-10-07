@@ -577,7 +577,7 @@
 </t>
 <t t-name="ViewPager">
     <div class="oe_pager_value">
-        <t t-raw="__content__"/>
+        <t t-raw="0"/>
     </div>
     <ul class="oe_pager_group">
         <!--
@@ -1373,7 +1373,7 @@
             method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <t t-raw="__content__"/>
+            <t t-raw="0"/>
             <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
             <input type="file" class="oe_form_binary_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>

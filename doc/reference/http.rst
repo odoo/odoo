@@ -59,7 +59,7 @@ and defining methods decorated with :func:`~openerp.http.route`::
             return stuff()
 
 To *override* a controller, :ref:`inherit <python:tut-inheritance>` from its
-class and override relevant methods::
+class and override relevant methods, re-exposing them if necessary::
 
     class Extension(MyController):
         @route()
