@@ -1262,12 +1262,23 @@ class stock_picking(osv.osv):
         picking = op.picking_id
         res = {
             'picking_id': picking.id,
+            'picking_type_id': picking.picking_type_id and picking.picking_type_id.id or False,
+            'origin': op.linked_move_operation_ids[-1] and op.linked_move_operation_ids[-1].move_id and op.linked_move_operation_ids[-1].move_id.origin,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': remaining_qty,
             'name': _('Extra Move: ') + op.product_id.name,
+            'product_uos': op.linked_move_operation_ids[-1] and op.linked_move_operation_ids[-1].move_id and  \
+                           op.linked_move_operation_ids[-1].move_id.product_uos and  \
+                           op.linked_move_operation_ids[-1].move_id.product_uos.id or False,
+            'product_uos_qty': op.linked_move_operation_ids[-1] and op.linked_move_operation_ids[-1].move_id and  \
+                           op.linked_move_operation_ids[-1].move_id.product_uos and \
+                           self.pool['product.uom']._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.linked_move_operation_ids[-1].move_id.product_uos, round=False, context=context) or False,
+            'group_id': op.linked_move_operation_ids[-1] and op.linked_move_operation_ids[-1].move_id and  \
+                        op.linked_move_operation_ids[-1].move_id.group_id and  \
+                        op.linked_move_operation_ids[-1].move_id.group_id.id or False,
             'state': 'draft',
             }
         return res
