@@ -1578,7 +1578,7 @@ def get_precision_tax():
     return change_digit_tax
 
 
-class account_tax(osv.osv):
+class account_tax(models.Model):
     """
     A tax object.
 
@@ -1599,48 +1599,61 @@ class account_tax(osv.osv):
 
     _name = 'account.tax'
     _description = 'Tax'
-    _columns = {
-        'name': fields.char('Tax Name', required=True, translate=True, help="This name will be displayed on reports"),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
-        'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
-            help="The computation method for the tax amount."),
-        'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
-            help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
-        'domain':fields.char('Domain', help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-        'account_collected_id':fields.many2one('account.account', 'Invoice Tax Account', domain=[('deprecated', '=', False)], help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."),
-        'account_paid_id':fields.many2one('account.account', 'Refund Tax Account', domain=[('deprecated', '=', False)], help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."),
-        'account_analytic_collected_id':fields.many2one('account.analytic.account', 'Invoice Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
-        'account_analytic_paid_id':fields.many2one('account.analytic.account', 'Refund Tax Analytic Account', help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."),
-        'parent_id':fields.many2one('account.tax', 'Parent Tax Account', select=True),
-        'child_ids':fields.one2many('account.tax', 'parent_id', 'Child Tax Accounts'),
-        'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
-        'python_compute':fields.text('Python Code'),
-        'python_compute_inv':fields.text('Python Code (reverse)'),
-        'python_applicable':fields.text('Applicable Code'),
+    _order = 'sequence'
 
-        #
-        # Fields used for the Tax declaration
-        #
-        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
-        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+    name = fields.Char(string='Tax Name', required=True, translate=True, help="This name will be displayed on reports")
+    sequence = fields.Integer(string='Sequence', required=True, default=1,
+        help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important.")
+    amount = fields.Float(string='Amount', required=True, digits=get_precision_tax(), default=0,
+        help="For taxes of type percentage, enter % ratio between 0-1.")
+    active = fields.Boolean(string='Active', default=True,
+        help="If the active field is set to False, it will allow you to hide the tax without removing it.")
+    type = fields.Selection([('percent', 'Percentage'), ('fixed', 'Fixed Amount'), ('none', 'None'), ('code', 'Python Code'), ('balance', 'Balance')],
+        default='percent', string='Tax Type', required=True, help="The computation method for the tax amount.")
+    applicable_type = fields.Selection([('true', 'Always'), ('code', 'Given by Python Code')], string='Applicability', required=True, default='true',
+        help="If not applicable (computed through a Python code), the tax won't appear on the invoice.")
+    domain = fields.Char(string='Domain',
+        help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain.")
+    account_collected_id = fields.Many2one('account.account', string='Invoice Tax Account', domain=[('deprecated', '=', False)],
+        help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account.")
+    account_paid_id = fields.Many2one('account.account', string='Refund Tax Account', domain=[('deprecated', '=', False)],
+        help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account.")
+    account_analytic_collected_id = fields.Many2one('account.analytic.account', 'Invoice Tax Analytic Account',
+        help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default.")
+    account_analytic_paid_id = fields.Many2one('account.analytic.account', string='Refund Tax Analytic Account',
+        help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default.")
+    parent_id = fields.Many2one('account.tax', string='Parent Tax Account', index=True)
+    child_ids = fields.One2many('account.tax', 'parent_id', string='Child Tax Accounts')
+    child_depend = fields.Boolean(string='Tax on Children',
+        help="Set if the tax computation is based on the computation of child taxes rather than on the total amount.")
+    python_compute = fields.Text(string='Python Code',
+        default='''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''')
+    python_compute_inv = fields.Text(string='Python Code (reverse)',
+        default='''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''')
+    python_applicable = fields.Text(string='Applicable Code')
 
-        # Same fields for refund invoices
+    #
+    # Fields used for the Tax declaration
+    #
+    base_code_id = fields.Many2one('account.tax.code', string='Account Base Code', help="Use this code for the tax declaration.")
+    tax_code_id = fields.Many2one('account.tax.code', string='Account Tax Code', help="Use this code for the tax declaration.")
+    base_sign = fields.Float(string='Base Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
+    tax_sign = fields.Float(string='Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
 
-        'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
-        'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Tax Code'),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
+    # Same fields for refund invoices
 
-    }
+    ref_base_code_id = fields.Many2one('account.tax.code', string='Refund Base Code', help="Use this code for the tax declaration.")
+    ref_tax_code_id = fields.Many2one('account.tax.code', string='Refund Tax Code', help="Use this code for the tax declaration.")
+    ref_base_sign = fields.Float(string='Refund Base Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
+    ref_tax_sign = fields.Float(string='Refund Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
+    include_base_amount = fields.Boolean(string='Included in base amount', default=False,
+        help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes")
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company)
+    description = fields.Char(string='Tax Code')
+    price_include = fields.Boolean(string='Tax Included in Price', default=False,
+        help="Check this if the price you use on the product and invoices includes this tax.")
+    type_tax_use = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('all', 'All')], string='Tax Application', required=True, default='all')
+
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
     ]
@@ -1706,25 +1719,6 @@ class account_tax(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
-    _defaults = {
-        'python_compute': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
-        'applicable_type': 'true',
-        'type': 'percent',
-        'amount': 0,
-        'price_include': 0,
-        'active': 1,
-        'type_tax_use': 'all',
-        'sequence': 1,
-        'ref_tax_sign': 1,
-        'ref_base_sign': 1,
-        'tax_sign': 1,
-        'base_sign': 1,
-        'include_base_amount': False,
-        'company_id': _default_company,
-    }
-    _order = 'sequence'
 
     def _applicable(self, cr, uid, taxes, price_unit, product=None, partner=None):
         res = []
