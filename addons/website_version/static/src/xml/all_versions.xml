@@ -46,9 +46,9 @@
                 <div class="form-group row">
                     <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
                     <select class="selectpicker col-md-3">
-                        <option>bounces</option>
-                        <option>pageviews</option>
-                        <option>sessionDuration</option>
+                        <t t-foreach="goals" t-as="item">
+                            <option t-att-data-version_id="item.id" ><t t-esc="item.name"></t></option>
+                        </t>
                     </select>
                 </div>
               </div>

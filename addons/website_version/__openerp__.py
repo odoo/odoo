@@ -18,6 +18,7 @@ OpenERP Website CMS
         'views/website_views.xml',
         'views/res_config.xml',
         'data/demo.xml',
+        'data/data.xml',
     ],
     'demo': [],
     'qweb': ['static/src/xml/*.xml'],

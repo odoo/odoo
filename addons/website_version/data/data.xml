@@ -2,13 +2,28 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="action_analytic" model="ir.actions.act_url">
+        <!-- <record id="action_analytic" model="ir.actions.act_url">
             <field name="name">Google analytics</field>
             <field name="url">https://www.google.com/analytics/web</field>
             <field name="target">self</field>
         </record>
 
-        <menuitem action="action_analytic" id="menu_analytics" parent="website_menu"/>
+        <menuitem action="action_analytic" id="menu_analytics" parent="website_menu"/> -->
+
+        <record id="goal_bounces" model="website_version.goals">
+            <field name="name">bounces</field>
+            <field name="google_ref">ga:bounces</field>
+        </record>
+
+        <record id="goal_pageviews" model="website_version.goals">
+            <field name="name">pageviews</field>
+            <field name="google_ref">ga:pageviews</field>
+        </record>
+
+        <record id="goal_sessionDuration" model="website_version.goals">
+            <field name="name">sessionDuration</field>
+            <field name="google_ref">ga:sessionDuration</field>
+        </record>
 
     </data>
 </openerp>

@@ -35,8 +35,15 @@ class Experiment_snapshot(osv.Model):
         'frequency': '10',
     }
 
+class Goals(osv.Model):
+    _name = "website_version.goals"
+    
+    _columns = {
+        'name': fields.char(string="Name", size=256, required=True),
+        'google_ref': fields.char(string="Reference Google", size=256, required=True),        
+    }
+
 EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready to run'),('running','Running'),('ended','Ended')]
-OBJECTIVES = [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
@@ -47,7 +54,7 @@ class Experiment(osv.Model):
         exp={}
         exp['name'] = vals['name']
         #exp['objectiveMetric'] = ["ga:adsenseAdsClicks","ga:adsenseAdsViewed","ga:adsenseRevenue","ga:bounces","ga:pageviews","ga:sessionDuration","ga:transactions","ga:transactionRevenue"]
-        exp['objectiveMetric'] = vals['objective']
+        exp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [vals['objectives']],context)[0].google_ref
         #exp['objectiveMetric'] = "ga:adsenseAdsClicks"
         exp['status'] = vals['state']
         exp['variations'] =[{'name':'master','url': 'http://0.0.0.0:8069/master'}]
@@ -63,10 +70,13 @@ class Experiment(osv.Model):
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        print vals
         name = vals.get('name')
         state = vals.get('state')
         exp_snaps = vals.get('experiment_snapshot_ids')
-        if name or state or exp_snaps:
+        obj_metric = vals.get('objectives')
+        #some write operation doesn't need to synchronise with Google
+        if name or state or exp_snaps or obj_metric:
             print 'WRITE EXP'
             for exp in self.browse(cr, uid, ids, context=context):
                 temp={}
@@ -75,7 +85,6 @@ class Experiment(osv.Model):
                 else:
                     temp['name'] = exp.name
                 if state:
-                    #print self.pool['google.management'].get_goal_info(cr, uid, context=None)
                     current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
                     if len(current[1]["variations"]) == 1:
                         raise Warning("You must define at least one variation in your experiment.")
@@ -91,6 +100,11 @@ class Experiment(osv.Model):
                     temp['status'] = state
                 else:
                     temp['status'] = exp.state
+                if obj_metric:
+                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
+                    if current[1]["status"] == 'RUNNING' or current[1]["status"] == 'ENDED':
+                        raise Warning("You cannot modify the objective of an ended or running experiement.")
+                    temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
                 if exp_snaps:
                     index = 0
                     temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
@@ -108,7 +122,8 @@ class Experiment(osv.Model):
                     temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
                     for exp_s in exp.experiment_snapshot_ids:
                         temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
-                #to check the constraints before to write on the google analytics account 
+                #to check the constraints before to write on the google analytics account
+                print temp 
                 x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
         else:
@@ -134,15 +149,31 @@ class Experiment(osv.Model):
                 result[exp.id] += 1
         return result
 
-    def _get_objective(self):
-        self.objective = [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
+    def _get_objective(self,cr,uid,ids,name,args,context=None):
+        return [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
+
+    def update_goals(self,cr,uid,ids,context=None):
+        gm_obj = self.pool['google.management']
+        goals_obj = self.pool['website_version.goals']
+        ids = goals_obj.search(cr, uid, [],context=context)
+        website_id = context.get('website_id')
+        if not website_id:
+            raise Warning("You must specify the website.")
+        x = gm_obj.get_goal_info(cr, uid, website_id, context=context)
+        #goals_obj.unlink(cr, uid, ids, context=context)
+        for y in x[1]['items']:
+            if not goals_obj.search(cr, uid, [('name','=',y['name'])],context=context):
+                vals ={'name':y['name'], 'google_ref':'ga:goal'+y['id']+'Completions'}
+                goals_obj.create(cr, uid, vals, context=None)
+
+
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
-        'objective': fields.selection(OBJECTIVES, 'Objective', required=True),
+        'objectives': fields.many2one('website_version.goals',string="Objectives"),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
@@ -151,7 +182,6 @@ class Experiment(osv.Model):
 
     _defaults = {
         'state': 'draft',
-        'objective': 'ga:pageviews',
         'sequence': 1,
     }
 
