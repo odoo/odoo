@@ -28,7 +28,7 @@ Generates Intrastat XML report for declaration
 Based on invoices.
     """,
     'author': 'OpenERP SA',
-    'depends': ['report_intrastat', 'base_action_rule', 'sale_stock', 'account_accountant', 'l10n_be'],
+    'depends': ['report_intrastat', 'sale_stock', 'account_accountant', 'l10n_be'],
     'data': [
         'data/regions.xml',
         'data/report.intrastat.code.xml',
@@ -36,8 +36,8 @@ Based on invoices.
         'data/transport.modes.xml',
         'security/groups.xml',
         'security/ir.model.access.csv',
-        'l10n_be_intrastat_declaration.xml',
-        'wizard/l10n_be_intrastat_declaration_xml_view.xml',
+        'l10n_be_intrastat.xml',
+        'wizard/l10n_be_intrastat_xml_view.xml',
     ],
     'demo': [],
     'test': [],

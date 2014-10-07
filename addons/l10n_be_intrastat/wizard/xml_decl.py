@@ -33,7 +33,7 @@ class xml_decl(osv.TransientModel):
     """
     Intrastat XML Declaration
     """
-    _name = "l10n_be_intrastat_declaration_xml.xml_decl"
+    _name = "l10n_be_intrastat_xml.xml_decl"
     _description = 'Intrastat XML Declaration'
 
     def _get_tax_code(self, cr, uid, context=None):
@@ -99,9 +99,9 @@ class xml_decl(osv.TransientModel):
         company = decl_datas.tax_code_id.company_id
         if not (company.partner_id and company.partner_id.country_id and company.partner_id.country_id.id):
             raise osv.except_osv(_('Insufficient Data!'), _('No Country associated with your company.'))
-        kbo = company.kbo
+        kbo = company.company_registry
         if not kbo:
-            raise osv.except_osv(_('Insufficient Data!'), _('No KBO number associated with your company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No company registry associated with your company.'))
         if len(decl_datas.month) != 2:
             decl_datas.month = "0%s" % decl_datas.month
         if int(decl_datas.month)<1 or int(decl_datas.month)>12:
@@ -139,7 +139,7 @@ class xml_decl(osv.TransientModel):
             'context': context,
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'l10n_be_intrastat_declaration_xml.xml_decl',
+            'res_model': 'l10n_be_intrastat_xml.xml_decl',
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': ids[0],
@@ -154,9 +154,9 @@ class xml_decl(osv.TransientModel):
         location_mod = self.pool['stock.location']
         product_mod = self.pool['product.product']
         purchaseorder_mod = self.pool['purchase.order']
-        region_mod = self.pool['l10n_be_intrastat_declaration.regions']
+        region_mod = self.pool['l10n_be_intrastat.regions']
         saleorder_mod = self.pool['sale.order']
-        trans_mod = self.pool['l10n_be_intrastat_declaration.transport_mode']
+        trans_mod = self.pool['l10n_be_intrastat.transport_mode']
         warehouse_mod = self.pool['stock.warehouse']
 
         if dispatchmode:

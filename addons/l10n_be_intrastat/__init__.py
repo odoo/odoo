@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import l10n_be_intrastat_declaration
+import l10n_be_intrastat
 import wizard

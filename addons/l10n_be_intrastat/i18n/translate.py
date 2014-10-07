@@ -22,7 +22,7 @@ import shutil
 
 # Some constants
 infile_csv = 'nom-e-14_utf8.csv'
-infile_po = 'l10n_be_intrastat_declaration.po'
+infile_po = 'l10n_be_intrastat.po'
 
 # Translations
 trans = {'nl': 'n',

@@ -8,11 +8,11 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_due']" position="after">
-                    <field name="incoterm_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
                 <xpath expr="//field[@name='move_id']" position="after">
                     <field name="intrastat_transaction_id"/>
-                    <field name="transport_mode_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
                     <field name="intrastat_country_id"/>
                 </xpath>
             </field>
@@ -22,7 +22,7 @@
         <!-- Transaction Form -->
         <record model="ir.ui.view" id="intra_view_transaction_form">
             <field name="name">intra.view.transaction_form</field>
-            <field name="model">l10n_be_intrastat_declaration.transaction</field>
+            <field name="model">l10n_be_intrastat.transaction</field>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Intrastat transaction form">
@@ -37,7 +37,7 @@
         <!-- Transaction List -->
         <record model="ir.ui.view" id="intra_view_transaction_tree">
             <field name="name">intra.view.transaction_tree</field>
-            <field name="model">l10n_be_intrastat_declaration.transaction</field>
+            <field name="model">l10n_be_intrastat.transaction</field>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <tree string="Intrastat transaction types">
@@ -50,7 +50,7 @@
         <!-- Transport mode Form -->
         <record model="ir.ui.view" id="intra_view_transport_mode_form">
             <field name="name">intra.view.transport_mode_form</field>
-            <field name="model">l10n_be_intrastat_declaration.transport_mode</field>
+            <field name="model">l10n_be_intrastat.transport_mode</field>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Intrastat transpartation mode form">
@@ -65,7 +65,7 @@
         <!-- Transport mode List -->
         <record model="ir.ui.view" id="intra_view_transport_mode_tree">
             <field name="name">intra.view.transport_mode_tree</field>
-            <field name="model">l10n_be_intrastat_declaration.transport_mode</field>
+            <field name="model">l10n_be_intrastat.transport_mode</field>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <tree string="Intrastat transportation modes">
@@ -97,9 +97,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_registry']" position="after">
                     <field name="region_id" attrs="{'required': [('country_id', '=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
-                    <field name="transport_mode_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
-                    <field name="incoterm_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
-                    <field name="kbo" attrs="{'required': [('country_id', '=', %(base.be)d )],'invisible': [('country_id', '!=', %(base.be)d )]}"/>
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
             </field>
         </record>
@@ -124,11 +123,11 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='payment_term']" position="after">
-                    <field name="incoterm_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+                    <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
                 <xpath expr="//field[@name='period_id']" position="after">
                     <field name="intrastat_transaction_id" />
-                    <field name="transport_mode_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
                     <field name="intrastat_country_id" />
                 </xpath>
             </field>

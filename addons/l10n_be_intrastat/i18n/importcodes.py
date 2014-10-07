@@ -14,7 +14,7 @@ data.set("noupdate", "1")
 rows = csv.reader(open(infile_csv, encoding='iso8859-15'), delimiter=';', quotechar='"')
 for row in rows:
     record = ET.SubElement(data, "record")
-    record.set("id", "l10n_be_intrastat_declaration.intrastat_category_2014_%s" % row[0].encode('utf-8').decode('utf-8'))
+    record.set("id", "l10n_be_intrastat.intrastat_category_2014_%s" % row[0].encode('utf-8').decode('utf-8'))
     record.set("model", "report.intrastat.code")
     field = ET.SubElement(record, "field")
     field.set("name", "name")
