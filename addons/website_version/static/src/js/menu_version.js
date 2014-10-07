@@ -117,7 +117,7 @@
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result.tab_snap, goals:result.tab_goal}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.create', function(){
-                    var name = $('#name').val();
+                    var name = $('.name').val();
                     var tab = self.wizard.find('.form-field-required');
                     var result = [];
                     var i;
