@@ -1548,15 +1548,7 @@ instance.web.View = instance.web.Widget.extend({
     do_switch_view: function() {
         this.trigger.apply(this, ['switch_mode'].concat(_.toArray(arguments)));
     },
-    /**
-     * Cancels the switch to the current view, switches to the previous one
-     *
-     * @param {Object} [options]
-     * @param {Boolean} [options.created=false] resource was created
-     * @param {String} [options.default=null] view to switch to if no previous view
-     */
-
-    do_search: function(view) {
+    do_search: function(domain, context, group_by) {
     },
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
