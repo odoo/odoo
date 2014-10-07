@@ -332,12 +332,12 @@ class account_move_line(osv.osv):
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
             invoice_ids.append(invoice_id)
-        invoice_names = {False: ''}
+        invoice_names = {}
         for invoice_id, name in invoice_obj.name_get(cursor, user, invoice_ids, context=context):
             invoice_names[invoice_id] = name
         for line_id in res.keys():
             invoice_id = res[line_id]
-            res[line_id] = (invoice_id, invoice_names[invoice_id])
+            res[line_id] = invoice_id and (invoice_id, invoice_names[invoice_id]) or False
         return res
 
     def name_get(self, cr, uid, ids, context=None):
