@@ -111,11 +111,12 @@
         },
 
         create_experiment: function() {
+            var self = this;
             var view_id = $('html').attr('data-view-xmlid');
             openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                self.wizard.on('click','.launch', function(){
+                self.wizard.on('click','.create', function(){
                     var name = $('#name').val();
                     var tab = self.wizard.find('.form-field-required');
                     var result = [];
@@ -125,10 +126,25 @@
                             result.push($(tab[i]).attr('data-version_id'))
                         }
                     }
-                    var objective = self.wizard.find('.selectpicker').val();
+                    var objective = "ga:"+self.wizard.find('.selectpicker').val();
+                    var check = true;
+                    if (name ==''){
+                        alert("You must give a name to your experiment.");
+                        check = false;
+                    }
+                    if (result.length == 0 && check){
+                        alert("You must choose at least one version in your experiment.");
+                        check = false;
+                    }
                     console.log(name);
                     console.log(result);
                     console.log(objective);
+                    if(check){
+                        openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objective':objective }).then(function (result) {
+                            alert("Your experiment " + name + " is created.");
+                            location.reload();
+                        });
+                    } 
                 });
             });
         },
