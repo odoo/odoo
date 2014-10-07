@@ -11,19 +11,6 @@
     </xpath>
 </template>
 
-<template id="assets_forum" name="Forum Assets">
-    <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-
-    <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
-    <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-    <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
-    <script type="text/javascript">
-        CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-        ,['Outdent','Indent','Link','Unlink','Image'],] ;
-    </script>
-</template>
-
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.footer_default"
     name="Footer Questions Link">
@@ -46,6 +33,16 @@
     <t t-call="website.layout">
         <t t-set="head">
             <t t-call-assets="website_forum.assets_forum"/>
+        <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+        <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+        <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
+        <script type="text/javascript">
+		CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
+		,['Outdent','Indent','Link','Unlink','Image'],] ;
+        </script>
         </t>
         <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
             <div class="container">
