@@ -854,9 +854,9 @@
                       <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                   </div>
                   <div t-if="has_check_vat" class="clearfix"/>
-                  <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="street2" style="font-weight: normal">Company Name</label>
-                      <input type="text" name="street2" class="form-control" t-att-value="checkout.get('street2')"/>
+                  <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
+                      <label class="control-label" for="street" style="font-weight: normal">Company Name</label>
+                      <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
                   </div>
                   <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="vat" style="font-weight: normal">VAT Number</label>
@@ -871,9 +871,9 @@
                       <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                   </div>
 
-                  <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="street">Street</label>
-                      <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
+                  <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
+                      <label class="control-label" for="street2">Street</label>
+                      <input type="text" name="street2" class="form-control" t-att-value="checkout.get('street2')"/>
                   </div>
                   <div class="clearfix"/>
 
