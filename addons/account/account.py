@@ -2408,7 +2408,7 @@ class account_fiscal_position_account_template(models.Model):
 # Account generation from template wizards
 # ---------------------------------------------------------
 
-class wizard_multi_charts_accounts(osv.osv_memory):
+class wizard_multi_charts_accounts(models.TransientModel):
     """
     Create a new account chart for a company.
     Wizards ask for:
@@ -2424,20 +2424,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _name='wizard.multi.charts.accounts'
     _inherit = 'res.config'
 
-    _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', help="Currency as per company's country."),
-        'only_one_chart_template': fields.boolean('Only One Chart Template Available'),
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
-        'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
-        "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
-        "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
-        'sale_tax_rate': fields.float('Sales Tax(%)'),
-        'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
-    }
-
+    company_id = fields.Many2one('res.company', string='Company', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.")
+    only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
+    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+    bank_accounts_id = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True)
+    code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
+    sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
+    purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
+    sale_tax_rate = fields.Float(string='Sales Tax(%)')
+    purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
+    complete_tax_set = fields.Boolean('Complete Set of Taxes',
+        help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete')
 
     def _get_chart_parent_ids(self, cr, uid, chart_template, context=None):
         """ Returns the IDs of all ancestor charts, including the chart itself.
@@ -2969,15 +2967,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return True
 
 
-class account_bank_accounts_wizard(osv.osv_memory):
+class account_bank_accounts_wizard(models.TransientModel):
     _name='account.bank.accounts.wizard'
 
-    _columns = {
-        'acc_name': fields.char('Account Name.', required=True),
-        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True, ondelete='cascade'),
-        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type'),
-    }
+    acc_name = fields.Char(string='Account Name.', required=True)
+    bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
+    currency_id = fields.Many2one('res.currency', string='Secondary Currency',
+        help="Forces all moves for this account to have this secondary currency.")
+    account_type = fields.Selection([('cash', 'Cash'), ('check', 'Check'), ('bank', 'Bank')], string='Account Type')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
