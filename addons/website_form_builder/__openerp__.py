@@ -12,6 +12,7 @@ OpenERP Contact Form
     'depends': ['website'],
     'data': [
         'views/snippets.xml',
+        'security/ir.model.access.csv',
         'views/templates.xml',
         'data/website_form_mail.xml'
     ],

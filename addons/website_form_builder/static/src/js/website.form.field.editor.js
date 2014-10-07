@@ -63,35 +63,36 @@
 	
 	website.snippet.options.editForm = website.snippet.Option.extend({
 		wizard: null,
-    	validate: function () {
+    	validate: function (def) {
     		var self = this;
-	
+			var DefferedForm = def;
     		return function () {		
 				var model_sel = self.wizard.find('.form-select-action').val();
 				self.$target.find('form').attr('data-model', model_sel);
 				self.$target.find('form').attr('action','/contactus/'+model_sel);
-				
 				model.ref = model_sel;
         		model.getFields().then(function(){
         			var mail = self.wizard.find('.form-action-mailto textarea').val();
-        			if(self.wizard.find('select').val() != 'mail.mail') ValidOption = true;
+        			if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
     				else if(mail.length > 0) {
     					(new openerp.Model(new openerp.Session(),"website.form"))
     					.call("insert_partner",[mail], {context: openerp.website.get_context()}).then(function(id) {
     						console.log(id);
-    						ValidOption = true;
-    					});
+    						if(id) {
+    							var hidden_email = self.$target.find('.hidden_email_website_form_editor');
+    							
+    							if((hidden_email == undefined) || !hidden_email.length)
+    								self.$target.find('form').append('<input type="hidden" class="hidden_email_website_form_editor" name="recipient_ids" value="'+id+'" />');
+    							else hidden_email.val(id);
+    							DefferedForm.resolve();
+    						}
+    						else DefferedForm.reject();
+    					})
+    					.fail(function() {DefferedForm.reject();});
     				}
     				$('#oe_snippets').removeClass('hidden');
     				self.wizard.modal('hide');
         		});	
-    		};
-    	},
-    	
-    	confirm: function (DefferedForm) {
-    		return function() {
-    			if(ValidOption) DefferedForm.resolve();
-    			else			DefferedForm.reject();    		
     		};
     	},
     	organizeForm: function() {
@@ -101,7 +102,6 @@
     			this.wizard.find('.form-action-mailto').addClass('hidden');
     	},
         on_prompt: function () {
-        	debugger;
             var self = this;
             var DefFormPopUp = $.Deferred();
             (new openerp.Model(new openerp.Session(),"website.form"))
@@ -132,8 +132,7 @@
 
 				
 				self.wizard.find('select').on('change',_.bind(self.organizeForm,self));
-				self.wizard.on('hide.bs.modal',self.confirm(DefFormPopUp));
-				self.wizard.find('.validate').on('click',self.validate(self.wizard));
+				self.wizard.find('.validate').on('click',self.validate(DefFormPopUp));
     		});
 
 			return DefFormPopUp;
@@ -144,7 +143,6 @@
             this.on_prompt().fail(function () {  self.editor.on_remove(); });
         },
         start : function () {
-        	debugger;
         	this.$el.find(".js_action_form_list").on("click", _.bind(this.on_prompt, this));
         	this._super();        
         },
@@ -520,7 +518,9 @@
 	    hiddenLoadData: function() {
 	    	this.getFields(['integer', 'date','char','text','float'],this.wizard);
 	    	this.wizard.find('.form-field-value').val(this.$target.find('.form-data').val());
-	    	this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name'));
+	    	this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name')).parent().parent().addClass('hidden');
+	    	this.wizard.find('.form-field-required').parent().parent().addClass('hidden');
+	    	this.wizard.find('.form-field-help').parent().parent().addClass('hidden');
 	    },
     	inputLoadData: function() {
     		this.getFields(['integer', 'date','char','text','float'],this.wizard);
@@ -587,10 +587,10 @@
     	},
     	defaultLoadData: function () {		
     		this.wizard.find('.form-field-label')			.val(this.$target.find('label').html());								// Load label on this.wizard
-			this.wizard.find('.form-field-placeholder')		.val(this.$target.find('.form-data').prop('placeholder'));			// Load placeholder on wizard
+			this.wizard.find('.form-field-placeholder')		.val(this.$target.find('.form-data').prop('placeholder'));				// Load placeholder on wizard
    			this.wizard.find('.form-field-help')			.val(this.$target.find('.help-block').html());							// Load help text on this.wizard
-   			this.wizard.find('.form-field-required')		.prop('checked',this.$target.find('.form-data').prop('required'));	// Check required option on this.wizard if enabled
-            this.wizard.find('.form-select-field')			.val(this.$target.find('.form-data').attr('name'));			// Load action on this.wizard
+   			this.wizard.find('.form-field-required')		.prop('checked',this.$target.find('.form-data').prop('required'));		// Check required option on this.wizard if enabled
+            this.wizard.find('.form-select-field')			.val(this.$target.find('.form-data').attr('name'));						// Load action on this.wizard
     	},
     	
     	//------------------------------------
@@ -603,6 +603,8 @@
     		var self = this;
     		return function() {
     			self.$target.find('.form-data').val(self.wizard.find('.form-field-value').val());
+    			self.$target.find('.help-block').html('');
+    			self.$target.find('label').html('');
     		};
     	},
     	textareaValidate: function() {
@@ -847,6 +849,7 @@
         start : function () {
         	
             var self = this;
+            if(this.$target.data('form') == 'hidden') this.$target.addClass('website-form-editor-hidden-under-edit');
             model.init(this.$target.parent().attr('data-model')).then(function() {
             	console.log(model);
 	            self.$el.find(".js_action_form_list").on("click", _.bind(self.launcher, self));
@@ -855,6 +858,7 @@
         },
         clean_for_save: function () {
         	var type = this.$target.attr('data-form');
+        	if(this.$target.data('form') == 'hidden') this.$target.removeClass('website-form-editor-hidden-under-edit');
         	if(type == 'search')
   				this.$target.find('.form-data').html('<textarea class="form-input-search" name="'+name+'" rows="1"></textarea>');
         },
@@ -864,6 +868,7 @@
     	save: function () {
     		$('main form').find('.form-builder-error-message').remove();
     		var required_error = '';
+    		if($('main form').data('model') == undefined) return this._super();
     		if(model.fields == undefined) return this._super();
     		$.each(model.fields.required,function(i,name){
     			var present = 0;

@@ -20,7 +20,21 @@
 				var model = self.$target.find('form').data('model');
 				var args = {"context": openerp.website.get_context()};
 				self.$target.find('.form-data').each(function(i,elem){
-					if(($(elem).hasClass('multivalues'))) {
+					
+					if($(elem).find('input[type=radio]').length != 0) {
+						var subelem = $(elem).find('input[type=radio]:checked');
+						args[$(subelem).prop('name')] = subelem.val();
+					} 
+					else if ($(elem).find('.form-input-search').length != 0) {
+						var extracted_data = $.parseJSON($(elem).find('textarea').textext()[0].hiddenInput().val());
+						var name = $(elem).attr('name');
+						var subargs = [];
+						$.each(extracted_data, function (i, val) {
+							subargs.push(val.id);
+						});
+						args[name] = subargs;
+					}
+					else if(($(elem).hasClass('multivalues'))) {
 						var subargs = [];
 						var name = '';
 						$(elem).find('input').each(function (j,subelem) {
@@ -28,7 +42,7 @@
 							if($(subelem).is(':checked')) subargs.push($(subelem).val());
 						});	
 						args[name] = subargs; 	
-					} else args[$(elem).prop('name')] = $(elem).val();
+					} else  args[$(elem).prop('name')] = ($(elem).val()) ? $(elem).val() : 0;
 				});
 				openerp.jsonRpc('/contactus/'+model, 'call', args).then(function (data) {
 				    	if(data) {

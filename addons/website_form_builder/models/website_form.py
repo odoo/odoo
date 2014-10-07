@@ -24,7 +24,7 @@ class website_form(osv.Model):
         list = []
         id = self.pool['res.partner'].search(cr,uid, [('email', '=', email),], limit=1, context=context)
         if not id:
-            id = self.pool['res.partner'].create(cr, uid, {'email': email}, context=context)
+            id = self.pool['res.partner'].create(cr, uid, {'email': email, 'name': email}, context=context)
         return id
     
     # return all partners
@@ -60,6 +60,8 @@ class website_form(osv.Model):
         list = self.pool[model].fields_get(cr,uid,context=context)
         for elem in self._get_blacklist_fields(cr, uid, model, context=context):
             list.pop(elem.name, None)
+        for key, val in self.pool[model]._inherits.iteritems():
+            list.pop(val,None)
         return list
         
     # get all required fields from field model
@@ -69,6 +71,9 @@ class website_form(osv.Model):
         ids = self.pool['ir.model.fields'].search(cr,uid,filter,context=context)
         for elem in self.pool['ir.model.fields'].browse(cr,uid,ids):
             list.append(elem.name)
+        for key, val in self.pool[model]._inherits.iteritems():
+            if val in list:
+                list.remove(val)
         return list
     
     def get_authorized_models(self, cr, uid, context=None):
