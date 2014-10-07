@@ -2341,17 +2341,15 @@ class account_tax_template(models.Model):
 
 # Fiscal Position Templates
 
-class account_fiscal_position_template(osv.osv):
+class account_fiscal_position_template(models.Model):
     _name = 'account.fiscal.position.template'
     _description = 'Template for Fiscal Position'
 
-    _columns = {
-        'name': fields.char('Fiscal Position Template', required=True),
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
-        'note': fields.text('Notes'),
-    }
+    name = fields.Char(string='Fiscal Position Template', required=True)
+    chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
+    account_ids = fields.One2many('account.fiscal.position.account.template', 'position_id', string='Account Mapping')
+    tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
+    note = fields.Text(string='Notes')
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
         """
@@ -2386,27 +2384,24 @@ class account_fiscal_position_template(osv.osv):
         return True
 
 
-class account_fiscal_position_tax_template(osv.osv):
+class account_fiscal_position_tax_template(models.Model):
     _name = 'account.fiscal.position.tax.template'
     _description = 'Template Tax Fiscal Position'
     _rec_name = 'position_id'
 
-    _columns = {
-        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
-        'tax_src_id': fields.many2one('account.tax.template', 'Tax Source', required=True),
-        'tax_dest_id': fields.many2one('account.tax.template', 'Replacement Tax')
-    }
+    position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Position', required=True, ondelete='cascade')
+    tax_src_id = fields.Many2one('account.tax.template', string='Tax Source', required=True)
+    tax_dest_id = fields.Many2one('account.tax.template', string='Replacement Tax')
 
 
-class account_fiscal_position_account_template(osv.osv):
+class account_fiscal_position_account_template(models.Model):
     _name = 'account.fiscal.position.account.template'
     _description = 'Template Account Fiscal Mapping'
     _rec_name = 'position_id'
-    _columns = {
-        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Mapping', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account.template', 'Account Source', domain=[('type','<>','view')], required=True),
-        'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
-    }
+
+    position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
+    account_src_id = fields.Many2one('account.account.template', string='Account Source', domain=[('type', '<>', 'view')], required=True)
+    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', domain=[('type', '<>', 'view')], required=True)
 
 
 # ---------------------------------------------------------
