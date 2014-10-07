@@ -163,9 +163,8 @@ class stock_picking(osv.osv):
         Adding link between extra move and purchase order line if exists in the corresponding original move to be copied
         """
         res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
-        res['purchase_line_id'] = op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and  \
-                                   op.linked_move_operation_ids[-1].move_id.purchase_line_id and  \
-                                   op.linked_move_operation_ids[-1].move_id.purchase_line_id.id or False
+        res.update{'purchase_line_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.purchase_line_id and  \
+                                   op.linked_move_operation_ids[-1].move_id.purchase_line_id.id or False}
         return res
 
 

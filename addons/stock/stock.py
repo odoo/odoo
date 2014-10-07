@@ -1262,7 +1262,7 @@ class stock_picking(osv.osv):
         picking = op.picking_id
         res = {
             'name': _('Extra Move: ') + op.product_id.name,
-            'origin': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and op.linked_move_operation_ids[-1].move_id.origin,
+            'origin': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.origin,
             'picking_id': picking.id,
             'picking_type_id': picking.picking_type_id and picking.picking_type_id.id or False,
             'warehouse_id': picking.picking_type_id and picking.picking_type_id.warehouse_id and picking.picking_type_id.warehouse_id.id or False,
@@ -1271,18 +1271,14 @@ class stock_picking(osv.osv):
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': remaining_qty,
-            'product_uos': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and  \
-                           op.linked_move_operation_ids[-1].move_id.product_uos and  \
+            'product_uos': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.product_uos and  \
                            op.linked_move_operation_ids[-1].move_id.product_uos.id or False,
-            'product_uos_qty': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and  \
-                           op.linked_move_operation_ids[-1].move_id.product_uos and \
+            'product_uos_qty': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.product_uos and \
                            self.pool['product.uom']._compute_qty_obj(cr, uid, product.uom_id, remaining_qty, op.linked_move_operation_ids[-1].move_id.product_uos, round=False, context=context) or False,
             'partner_id': picking.partner_id and picking.partner_id.id or False,
-            'procurement_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and  \
-                        op.linked_move_operation_ids[-1].move_id.procurement_id and  \
+            'procurement_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.procurement_id and  \
                         op.linked_move_operation_ids[-1].move_id.procurement_id.id or False,
-            'group_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id and  \
-                        op.linked_move_operation_ids[-1].move_id.group_id and  \
+            'group_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.group_id and  \
                         op.linked_move_operation_ids[-1].move_id.group_id.id or False,
             'state': 'draft',
             }
