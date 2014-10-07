@@ -160,18 +160,23 @@ function odoo_project_timesheet_models(project_timesheet) {
             }).then(function(work_activities) {
                 var tasks = _.pluck(work_activities, "task_id");
                 tasks = _.pluck(_.groupBy(tasks), 0);
-                self.project_timesheet_db.save("tasks", tasks);
+                //self.project_timesheet_db.save("tasks", tasks);
                 return new project_timesheet.Model(project_timesheet.session, "project.task").call("search_read", {
                     domain: [["id", "in", _.map(tasks, function(task) {return task[0];})]],
                     fields: ['id', 'project_id', "priority"]
-                }).then(function(tasks) {
+                }).then(function(tasks_read) {
                     var projects = [];
-                    var tasks_2 = _.pluck(work_activities, "task_id");
-                    _.each(tasks_2, function(task) {
-                        task.task_id[1] = task.task_id[1] +"\n"+ task.priority;
-                    })
-                    //set project_id in activities, where task_id is projects.id
                     _.each(tasks, function(task) {
+                        _.each(tasks_read, function(task_read) {
+                            if(task[0] == task_read.id) {
+                                task[1] = task[1] +"\n"+ task_read.priority;
+                            }
+                        });
+                    });
+                    self.project_timesheet_db.save("tasks", tasks);
+
+                    //set project_id in activities, where task_id is projects.id
+                    _.each(tasks_read, function(task) {
                         var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id});
                         _.each(activities, function(activity) {
                             activity['project_id'] = task['project_id'];

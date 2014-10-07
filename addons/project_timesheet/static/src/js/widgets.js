@@ -125,7 +125,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 plugins: 'arrow autocomplete',
                 autocomplete: {
                     render: function(suggestion) {
-                        console.log("suggestion are ::: ",suggestion);
                         return $('<span class="text-label"/>').
                                  data('index', suggestion['index']).html(suggestion['label']);
                     }
@@ -168,7 +167,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 query = (data ? data.query : '') || '';
                 self.get_search_result(query).done(function(result){
                     self.search_result = result;
-                    console.log("Inside getSuggestions ::: ", self.search_result);
                     $(_this).trigger(
                         'setSuggestions',
                         { result : _.map(result, function(el, i) {
@@ -205,7 +203,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 var label = _.str.escapeHTML(x[1].split("\n")[0]);
                 if (self.model == "tasks") {
                     var task_name = x[1].split("\n")[0];
-                    var priority = x[1].split("\n")[1] || 0; //TODO: For now, we will move this logic for task m2o special logic uisng include
+                    var priority = parseInt(x[1].split("\n")[1]) || 0; //TODO: For now, we will move this logic for task m2o special logic uisng include
                     if(priority) {
                         var span = "<span class='glyphicon glyphicon-star pull-right'></span>";
                         var $spans = Array(priority+1).join(span);
@@ -239,12 +237,12 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         _quick_create: function(e, term) {
             //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
             var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
-            $target = $(e.target);
-            $target.data("id", virtual_id);
-            $target.val(term);
+            this.$input.data("id", virtual_id);
+            this.$input.val(term);
         },
         add_id: function(id, name) {
             console.log("id is ::: ",id, name);
+            this.$input.data("id", id);
             this.$input.val(name);
         },
     });
