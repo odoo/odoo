@@ -24,7 +24,7 @@ from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Charset import Charset
 from email.Header import Header
-from email.Utils import formatdate, make_msgid, COMMASPACE
+from email.Utils import formatdate, make_msgid, COMMASPACE, parseaddr
 from email import Encoders
 import logging
 import re
@@ -118,6 +118,7 @@ def encode_header_param(param_text):
     return param_text_ascii if param_text_ascii\
          else Charset('utf8').header_encode(param_text_utf8)
 
+# TODO master, remove me, no longer used internaly
 name_with_email_pattern = re.compile(r'("[^<@>]+")\s*<([^ ,<@]+@[^> ,]+)>')
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 
@@ -141,15 +142,16 @@ def encode_rfc2822_address_header(header_text):
     header_text_ascii = try_coerce_ascii(header_text_utf8)
     if header_text_ascii:
         return header_text_ascii
+
+    name, email = parseaddr(header_text_utf8)
+    if not name:
+      return email
+
     # non-ASCII characters are present, attempt to
     # replace all "Name" patterns with the RFC2047-
     # encoded version
-    def replace(match_obj):
-        name, email = match_obj.group(1), match_obj.group(2)
-        name_encoded = str(Header(name, 'utf-8'))
-        return "%s <%s>" % (name_encoded, email)
-    header_text_utf8 = name_with_email_pattern.sub(replace,
-                                                   header_text_utf8)
+    name_encoded = str(Header(name, 'utf-8'))
+    header_text_utf8 = "%s <%s>" % (name_encoded, email)
     # try again after encoding
     header_text_ascii = try_coerce_ascii(header_text_utf8)
     if header_text_ascii:

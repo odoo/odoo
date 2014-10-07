@@ -1204,7 +1204,9 @@ class stock_picking(osv.osv):
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
-                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
+                # retrieve the string value of field in user's language
+                state = dict(self.fields_get(cr, uid, context=context)['state']['selection']).get(pick.state, pick.state)
+                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(state,))
             else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
@@ -1295,11 +1297,12 @@ class stock_picking(osv.osv):
 
                         product_avail[product.id] += qty
 
-
+            # every line of the picking is empty, do not generate anything
+            empty_picking = not any(q for q in move_product_qty.values() if q > 0)
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
-                if not new_picking:
+                if not new_picking and not empty_picking:
                     new_picking_name = pick.name
                     self.write(cr, uid, [pick.id], 
                                {'name': sequence_obj.get(cr, uid,
@@ -1365,6 +1368,8 @@ class stock_picking(osv.osv):
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 self.message_post(cr, uid, new_picking, body=_("Back order <em>%s</em> has been <b>created</b>.") % (pick.name), context=context)
+            elif empty_picking:
+                delivered_pack_id = pick.id
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
@@ -2209,16 +2214,24 @@ class stock_move(osv.osv):
         return count
 
     def setlast_tracking(self, cr, uid, ids, context=None):
-        tracking_obj = self.pool.get('stock.tracking')
-        picking = self.browse(cr, uid, ids, context=context)[0].picking_id
-        if picking:
-            last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
-            if not last_track:
-                last_track = tracking_obj.create(cr, uid, {}, context=context)
+        assert len(ids) == 1, "1 ID expected, got %s" % (ids, )
+        tracking_obj = self.pool['stock.tracking']
+        move = self.browse(cr, uid, ids[0], context=context)
+        picking_id = move.picking_id.id
+        if picking_id:
+            move_ids = self.search(cr, uid, [
+                ('picking_id', '=', picking_id),
+                ('tracking_id', '!=', False)
+                ], limit=1, order='tracking_id DESC', context=context)
+            if move_ids:
+                tracking_move = self.browse(cr, uid, move_ids[0],
+                                            context=context)
+                tracking_id = tracking_move.tracking_id.id
             else:
-                last_track.sort()
-                last_track = last_track[-1]
-            self.write(cr, uid, ids, {'tracking_id': last_track})
+                tracking_id = tracking_obj.create(cr, uid, {}, context=context)
+            self.write(cr, uid, move.id,
+                       {'tracking_id': tracking_id},
+                       context=context)
         return True
 
     #

@@ -75,11 +75,23 @@ class stock_partial_picking(osv.osv_memory):
             res[wizard.id] = any([not(x.tracking) for x in wizard.move_ids])
         return res
 
+    def __get_help_text(self, cursor, user, picking_id, context=None):
+        text = _("The proposed cost is made based on %s")
+        value = _("standard prices set on the products")
+        return text % value
+
+    def _get_help_text(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for wiz in self.browse(cursor, user, ids, context=context):
+            res[wiz.id] = self.__get_help_text(cursor, user, wiz.picking_id.id, context=context)
+        return res
+
     _columns = {
         'date': fields.datetime('Date', required=True),
         'move_ids' : fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
+        'help_text': fields.function(_get_help_text, string='Note', type='char'),
      }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -122,6 +134,7 @@ class stock_partial_picking(osv.osv_memory):
             res.update(move_ids=moves)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        res['help_text'] = self.__get_help_text(cr, uid, picking_id, context=context)
         return res
 
     def _product_cost_for_average_update(self, cr, uid, move):
@@ -150,6 +163,7 @@ class stock_partial_picking(osv.osv_memory):
             'move_id' : move.id,
             'location_id' : move.location_id.id,
             'location_dest_id' : move.location_dest_id.id,
+            'currency': move.picking_id and move.picking_id.company_id.currency_id.id or False,
         }
         if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
@@ -218,6 +232,8 @@ class stock_partial_picking(osv.osv_memory):
         # We don't need to find which view is required, stock.picking does it.
         done = stock_picking.do_partial(
             cr, uid, [partial.picking_id.id], partial_data, context=context)
+        if done[partial.picking_id.id]['delivered_picking'] == partial.picking_id.id:
+            return {'type': 'ir.actions.act_window_close'}
         return {
             'type': 'ir.actions.act_window',
             'res_model': context.get('active_model', 'stock.picking'),

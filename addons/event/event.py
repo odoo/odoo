@@ -114,7 +114,7 @@ class event_event(osv.osv):
             reg_ids = register_pool.search(cr, uid, [
                                ('event_id', '=', self.event.id),
                                ('state', 'not in', ['draft', 'cancel'])], context=context)
-            register_pool.mail_user_confirm(cr, uid, reg_ids)
+            register_pool.mail_user_confirm(cr, uid, reg_ids, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -165,7 +165,7 @@ class event_event(osv.osv):
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = False
-            curr_reg_id = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=' ,event.id)])
+            curr_reg_id = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=' ,event.id)], context=context)
             if curr_reg_id:
                 for reg in register_pool.browse(cr, uid, curr_reg_id, context=context):
                     if reg.state in ('open','done'):
@@ -226,7 +226,7 @@ class event_event(osv.osv):
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
         #the subscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats})]
+            curr_reg_ids = [register_pool.create(cr, SUPERUSER_ID, {'event_id': ids[0] ,'email': user.email, 'name':user.name, 'user_id': user.id, 'nb_register': num_of_seats}, context=context)]
         else:
             register_pool.write(cr, uid, curr_reg_ids, {'nb_register': num_of_seats}, context=context)
         return register_pool.confirm_registration(cr, SUPERUSER_ID, curr_reg_ids, context=context)
@@ -234,7 +234,7 @@ class event_event(osv.osv):
     def unsubscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         #the unsubscription is done with SUPERUSER_ID because in case we share the kanban view, we want anyone to be able to unsubscribe
-        curr_reg_ids = register_pool.search(cr, SUPERUSER_ID, [('user_id', '=', uid), ('event_id', '=', ids[0])])
+        curr_reg_ids = register_pool.search(cr, SUPERUSER_ID, [('user_id', '=', uid), ('event_id', '=', ids[0])], context=context)
         return register_pool.button_reg_cancel(cr, SUPERUSER_ID, curr_reg_ids, context=context)
 
     def _check_closing_date(self, cr, uid, ids, context=None):
@@ -250,7 +250,7 @@ class event_event(osv.osv):
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         values = {}
         if type_event:
-            type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
+            type_info =  self.pool.get('event.type').browse(cr,uid,type_event, context=context)
             dic ={
               'reply_to': type_info.default_reply_to,
               'email_registration_id': type_info.default_email_registration.id,
@@ -370,7 +370,7 @@ class event_registration(osv.osv):
             else:
                 template_id = registration.event_id.email_registration_id.id
                 if template_id:
-                    mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
+                    self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id, context=context)
         return True
 
     def mail_user_confirm(self, cr, uid, ids, context=None):
@@ -380,7 +380,7 @@ class event_registration(osv.osv):
         for registration in self.browse(cr, uid, ids, context=context):
             template_id = registration.event_id.email_confirmation_id.id
             if template_id:
-                mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
+                self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id, context=context)
         return True
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner, context=None):

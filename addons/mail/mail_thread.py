@@ -29,7 +29,6 @@ import re
 import socket
 import time
 import xmlrpclib
-import re
 from email.message import Message
 
 from openerp import tools
@@ -300,7 +299,7 @@ class mail_thread(osv.AbstractModel):
 
         if not context.get('mail_notrack'):
             # Perform the tracking
-            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         else:
             tracked_fields = None
         if tracked_fields:
