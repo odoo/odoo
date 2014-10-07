@@ -26,7 +26,10 @@ from openerp import tools
 from email.header import decode_header
 from email.utils import formataddr
 from openerp import SUPERUSER_ID, api
-from openerp.osv import osv, orm, fields
+from openerp.osv import expression, fields, osv, orm
+from openerp.osv.query import Query
+
+
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
@@ -619,14 +622,6 @@ class mail_message(osv.Model):
             return super(mail_message, self)._search(
                 cr, uid, args, offset=offset, limit=limit, order=order,
                 context=context, count=count, access_rights_uid=access_rights_uid)
-        # Perform a super with count as False, to have the ids, not a counter
-        ids = super(mail_message, self)._search(
-            cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=False, access_rights_uid=access_rights_uid)
-        if not ids and count:
-            return 0
-        elif not ids:
-            return ids
 
         pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
@@ -635,11 +630,37 @@ class mail_message(osv.Model):
         # check read access rights before checking the actual rules on the given ids
         super(mail_message, self).check_access_rights(cr, access_rights_uid or uid, 'read')
 
-        cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, n.partner_id
-            FROM "%s" m LEFT JOIN "mail_notification" n
-            ON n.message_id=m.id AND n.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, ids,))
+        domain = args or []
+
+        e = expression.expression(cr, uid, domain, self, context)
+        tables = e.get_tables()
+        tables.append("mail_notification")
+        where_clause, where_params = e.to_sql()
+        where_clause = where_clause and [where_clause] or []
+        joins = {'mail_message': [
+            ('mail_notification', 'id', 'message_id', 'LEFT JOIN'),
+        ]}
+        query = Query(tables=tables, where_clause=where_clause, where_clause_params=where_params, joins=joins)
+
+        order_by = self._generate_order_by(order, query)
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        # These specially ugly lines are here because the v8 api of Query does not accept a filter
+        # to be applied during a join. This will be fixed in master.
+        from_clause.replace(
+            '("mail_message"."id" = "mail_notification"."message_id")',
+            '("mail_message"."id" = "mail_notification"."message_id" AND "mail_notification"."partner_id" = %s)' % pid
+        )
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        limit_str = limit and ' limit %d' % limit or ''
+        offset_str = offset and ' offset %d' % offset or ''
+        query_str = 'SELECT "%s".id, "%s".model, "%s".res_id, "%s".author_id, "mail_notification"."partner_id" FROM ' % \
+            (self._table, self._table, self._table, self._table) + from_clause + where_str + order_by + limit_str + offset_str
+
+        cr.execute(query_str, where_clause_params)
+
+        ids = []
         for id, rmod, rid, author_id, partner_id in cr.fetchall():
+            ids.append(id)
             if author_id == pid:
                 author_ids.add(id)
             elif partner_id == pid:
@@ -653,9 +674,7 @@ class mail_message(osv.Model):
         if count:
             return len(final_ids)
         else:
-            # re-construct a list based on ids, because set did not keep the original order
-            id_list = [id for id in ids if id in final_ids]
-            return id_list
+            return filter(lambda x: x in list(final_ids), ids)
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Access rules of mail.message:
