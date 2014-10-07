@@ -609,7 +609,7 @@ function openerp_restaurant_floors(instance,module){
             if (this.pos.config.iface_floorplan) {
                 if (this.pos.get_order()) {
                     if (this.pos.table && this.pos.table.floor) {
-                        this.$('.orders').prepend(QWeb.render('BackToFloorButton',{floor:this.pos.table.floor}));
+                        this.$('.orders').prepend(QWeb.render('BackToFloorButton',{table: this.pos.table, floor:this.pos.table.floor}));
                         this.$('.floor-button').click(function(){
                             self.floor_button_click_handler();
                         });
