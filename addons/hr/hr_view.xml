@@ -131,6 +131,7 @@
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id" />
                     <field name="category_ids" groups="base.group_hr_user"/>
+                    <field name="job_id" />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
@@ -361,11 +362,8 @@
                         <div class="oe_right" name="buttons"/>
                         <group name="employee_data">
                             <field name="department_id" class="oe_inline"/>
-                            <label for="no_of_employee"/>no_of_recruitment
-                            <div>
-                                <field name="no_of_employee" class="oe_inline"/>
-                                <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
-                            </div>
+                            <field name="no_of_recruitment" class="oe_inline" />
+                            
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>

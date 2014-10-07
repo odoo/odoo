@@ -1,5 +1,5 @@
 {
-    'name': 'Jobs',
+    'name': 'Online Jobs',
     'category': 'Website',
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',

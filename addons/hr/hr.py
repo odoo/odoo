@@ -72,7 +72,6 @@ class hr_employee_category(osv.Model):
         (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
-
 class hr_job(osv.Model):
 
     def _get_nbr_employees(self, cr, uid, ids, name, args, context=None):
@@ -129,11 +128,12 @@ class hr_job(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
         'state': 'recruit',
+        'no_of_recruitment' : 1,
     }
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
-        ('hired_employee_check', "CHECK ( no_of_hired_employee <= no_of_recruitment )", "Number of hired employee must be less than expected number of employee in recruitment."),
+        
     ]
 
     def set_recruit(self, cr, uid, ids, context=None):

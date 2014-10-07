@@ -338,6 +338,23 @@
         </field>
     </record>
 
+    <!-- Action for the stat button of the no_employee -->
+    <record model="ir.actions.act_window" id="action_hr_job_no_employee">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_job_id': active_id}</field>
+        <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+    </record>
+
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
@@ -376,6 +393,12 @@
                         context="{'default_user_id': user_id}" 
                         type="action">
                         <field name="application_count" widget="statinfo" string="Applications"/>
+                    </button>
+                    <button class="oe_stat_button" 
+                        icon="fa-users"
+                        name="%(action_hr_job_no_employee)d"
+                        type="action">
+                        <field name="no_of_employee" widget="statinfo" string="Employees"/>
                     </button>
                     <button class="oe_stat_button"
                         icon="fa-book"
@@ -498,7 +521,7 @@
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job.
+                 Click here to create a new job. You can remove the "In Recruitment" filter to display all the job positions.
               </p>
               <p>
                 Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe
