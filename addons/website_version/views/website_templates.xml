@@ -7,9 +7,9 @@
             <xpath expr="//li[contains(@id, 'customize-menu')]" position="before">
                     <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                         <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">
-                            Version (
+                            Version <!-- (
                                         <span><t t-esc="website.get_current_snapshot(context=context)[1]"></t></span>
-                                    )<span class="caret"></span>
+                                    ) --><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu version_menu" role="menu">
                             <li class="dropdown-header" style="text-transform: uppercase;">All versions</li>
@@ -60,12 +60,6 @@
                     });
             </xpath>
         </template> -->
-
-        <template id="assets_frontend_AB_testing" name="website_AB_testing assets" inherit_id="website.assets_frontend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_version/static/src/js/AB_testing.js"></script>
-            </xpath>
-        </template>
 
         <template id="assets_backend" name="stock assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
