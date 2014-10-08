@@ -877,12 +877,12 @@ class ir_actions_server(osv.osv):
         workflow.trg_validate(uid, target_pool._name, target_id, trigger_name, cr)
 
     def run_action_multi(self, cr, uid, action, eval_context=None, context=None):
-        res = []
+        res = False
         for act in action.child_ids:
-            result = self.run(cr, uid, [act.id], context)
+            result = self.run(cr, uid, [act.id], context=context)
             if result:
-                res.append(result)
-        return res and res[0] or False
+                res = result
+        return res
 
     def run_action_object_write(self, cr, uid, action, eval_context=None, context=None):
         """ Write server action.
