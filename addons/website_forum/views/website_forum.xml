@@ -5,23 +5,28 @@
 <!-- Editor custom -->
 <template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets" groups="base.group_user">
     <xpath expr="." position="inside">
-        <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
     </xpath>
 </template>
 
-<template id="assets_forum" name="Forum Assets">
-    <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-    <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+<!-- Front-end custom css / js + ckeditor lib and customization -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+        <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+        <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = '/web/static/lib/ckeditor/';
+        </script>
+        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
+         <script type="text/javascript">
+                CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
+                ,['Outdent','Indent','Link','Unlink','Image'],] ;
+        </script>
 
-    <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
-    <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-    <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
-    <script type="text/javascript">
-        CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-        ,['Outdent','Indent','Link','Unlink','Image'],] ;
-    </script>
+    </xpath>
 </template>
 
 <!-- Layout add nav and footer -->
@@ -44,9 +49,6 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
-        <t t-set="head">
-            <t t-call-assets="website_forum.assets_forum"/>
-        </t>
         <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
             <div class="container">
                 <div t-field="forum.introduction_message"/>
@@ -60,7 +62,6 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
-                        <!-- <span class="icon-bar"></span> -->
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
@@ -402,6 +403,13 @@
 <!-- Edition: ask your question -->
 <template id="ask_question">
     <t t-call="website_forum.header">
+        <t t-set="head">
+            <script type="text/javascript">
+                $(function () {
+                    $("[data-toggle='popover']").popover();
+                });
+            </script>
+        </t>
         <h1 class="mt0">Ask Your Question</h1>
         <p>
             To improve your chance getting an answer:
@@ -417,11 +425,6 @@
             <li>Avoid unnecessary introductions (Hi,... Please... Thanks...),</li>
             <li>Provide enough details and, if possible, give an example.</li>
         </ul>
-        <script type="text/javascript">
-            $(function () {
-                $("[data-toggle='popover']").popover();
-            });
-        </script>
         <form t-attf-action="/forum/#{ slug(forum) }/question/new" method="post" role="form" class="tag_text">
             <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Question Title..."/>
@@ -601,7 +604,7 @@
                     <div class="pull-right">
                         <div class="text-right">
                             <t t-foreach="question.tag_ids" t-as="tag">
-                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label lebel-default" t-field="tag.name"/>
+                                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label label-default" t-field="tag.name"/>
                             </t>
                         </div>
                         <ul class="list-inline" id="options">
