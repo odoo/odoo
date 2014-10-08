@@ -119,5 +119,6 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
             [('journal_id', 'in', form_data['journal_ids']), ('period_id', 'in', period_list)]
         ).ids
 
-        return {'model': context.get('active_model', 'ir.ui.menu'), 'ids': context.get('active_ids', []),
-                'content': self._get_content_data(form_data['fiscalyear_id']), 'form': form_data, }
+        form_data['content'] = self._get_content_data(form_data['fiscalyear_id'])
+
+        return {'model': context.get('active_model', 'ir.ui.menu'), 'ids': context.get('active_ids', []), 'form': form_data}

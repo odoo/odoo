@@ -26,8 +26,6 @@ class AccountReportsConfiguratorController(Controller):
 
     @route('/account/reportconfigurator/<reportname>', type='http', auth='user', website=True)
     def configurator(self, reportname, **kwargs):
-        print request.env['account.report.configurator'].get_configurator(reportname).to_report_sxw_dict(**kwargs)
-        #report_configurator = request.env['account.report.configurator'].get_configurator(reportname).create()
         html = request.env['report'].get_html(
             request.env['account.account'].search([], limit=0), 'account.report_%s' % reportname,
             data=request.env['account.report.configurator'].get_configurator(reportname).create({}).to_report_sxw_dict(**kwargs)

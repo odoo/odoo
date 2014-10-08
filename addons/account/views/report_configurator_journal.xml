@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_journal_configurator" inherit_id="account.report_configurator" primary="True">
+    <xpath expr="//select[@name='target_move']" position="after">
+        <div class="checkbox">
+            <label> 
+                <input t-if="data['form']['amount_currency'] == False" type="checkbox" name="amount_currency" value="True" />
+                <input t-if="data['form']['amount_currency'] == True" type="checkbox" name="amount_currency" value="True" checked="checked" />
+                with currency
+            </label>
+        </div>
+    </xpath>
+</template>
+</data>
+</openerp>

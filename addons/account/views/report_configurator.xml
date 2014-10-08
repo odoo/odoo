@@ -9,7 +9,7 @@
                 <div class="col-xs-3">
                     <label for="chart_account_id">Chart of account :</label>
                     <select name="chart_account_id" class="form-control">
-                        <t t-foreach="data['content']['accounts']" t-as="a"> 
+                        <t t-foreach="data['form']['content']['accounts']" t-as="a"> 
                             <option t-if="a['id'] == data['form']['chart_account_id']" selected="selected" t-att-value="a['id']">
                                 <t t-esc="a['name']"></t>
                             </option>
@@ -20,7 +20,7 @@
                     </select>
                     <label for="fiscalyear_id">Fiscal year :</label>
                     <select name="fiscalyear_id" class="form-control">
-                        <t t-foreach="data['content']['fiscalyears']" t-as="fy">
+                        <t t-foreach="data['form']['content']['fiscalyears']" t-as="fy">
                             <option t-if="fy['id'] == data['form']['fiscalyear_id']" selected="selected" t-att-value="fy['id']">
                                 <t t-esc="fy['name']"></t>
                             </option>
@@ -62,7 +62,7 @@
                     <t t-if="data['form']['filter'] == 'filter_period'">
                         <label for="period_from">Start Period :</label>
                         <select name="period_from" class="form-control">
-                            <t t-foreach="data['content']['periods']" t-as="p">
+                            <t t-foreach="data['form']['content']['periods']" t-as="p">
                                 <option t-if="p['id'] == data['form']['period_from']" selected="selected" t-att-value="p['id']">
                                     <t t-esc="p['name']"></t>
                                 </option>
@@ -73,7 +73,7 @@
                         </select>
                         <label for="period_to">End Period :</label>
                         <select name="period_to" class="form-control">
-                            <t t-foreach="data['content']['periods']" t-as="p">
+                            <t t-foreach="data['form']['content']['periods']" t-as="p">
                                 <option t-if="p['id'] == data['form']['period_to']" selected="selected" t-att-value="p['id']">
                                     <t t-esc="p['name']"></t>
                                 </option>
@@ -89,7 +89,7 @@
                     <div class="row">
                         <div class="col-xs-8">  
                             <select name="add_journal_id" class="form-control">
-                                <t t-foreach="data['content']['journals']" t-as="j">
+                                <t t-foreach="data['form']['content']['journals']" t-as="j">
                                     <option t-att-value="j['id']"><t t-esc="j['name']"></t></option>
                                 </t>
                             </select>
@@ -102,7 +102,7 @@
                         <div class="col-xs-8">
                             <select name="remove_journal_id" class="form-control">
                                 <t t-foreach="data['form']['journal_ids']" t-as="fj">
-                                    <option t-att-value="fj"><t t-foreach="data['content']['journals']" t-as="j"><t t-if="j['id'] == fj"><t t-esc="j['name']"></t></t></t></option>
+                                    <option t-att-value="fj"><t t-foreach="data['form']['content']['journals']" t-as="j"><t t-if="j['id'] == fj"><t t-esc="j['name']"></t></t></t></option>
                                 </t>
                             </select>
                         </div>
