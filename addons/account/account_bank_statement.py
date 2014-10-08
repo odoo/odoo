@@ -457,7 +457,7 @@ class account_bank_statement_line(osv.osv):
         # Try to automatically reconcile statement lines
         num_auto_reconciled = 0
         for st_line in self.browse(cr, uid, st_lines):
-            counterpart = self.get_reconciliation_proposition(cr, uid, st_line, unambiguous=True, context=context)
+            counterpart = self.get_unambiguous_reconciliation_proposition(cr, uid, st_line, context=context)
             if counterpart:
                 for move_line_dict in counterpart:
                     # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
@@ -554,7 +554,7 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, unambiguous=False, context=None):
+    def get_unambiguous_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line.
             The unambiguous parameter is used to reconcile the statement line without user intervention (eg. when importing a statement) """
         if excluded_ids is None:
@@ -576,11 +576,35 @@ class account_bank_statement_line(osv.osv):
         # Look for structured communication match
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
-            additional_domain = [('ref', '=', st_line.name)]
-            if unambiguous:
-                additional_domain += [(amount_field, '=', (sign * st_line.amount))]
+            additional_domain = [('ref', '=', st_line.name), (amount_field, '=', (sign * st_line.amount))]
             match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
+                mv_line = match_ids[0]
+                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
+                if (mv_line['partner_id'] and not st_line.partner_id.id):
+                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
+                    mv_line['has_no_partner'] = False
+                return [mv_line]
+
+        # Look for a single move line with the same partner, the same amount
+        if st_line.partner_id.id:
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+            if match_ids and len(match_ids) == 1:
+                return match_ids
+
+        return []
+
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line """
+        if excluded_ids is None:
+            excluded_ids = []
+
+        # Look for structured communication match
+        if st_line.name:
+            overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
+            additional_domain = [('ref', '=', st_line.name)]
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
+            if match_ids:
                 mv_line = match_ids[0]
                 # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
                 if (mv_line['partner_id'] and not st_line.partner_id.id):
@@ -591,13 +615,23 @@ class account_bank_statement_line(osv.osv):
         if not st_line.partner_id.id:
             return []
 
+        # How to compare statement line amount and move lines amount
+        company_currency = st_line.journal_id.company_id.currency_id.id
+        statement_currency = st_line.journal_id.currency.id or company_currency
+        sign = 1 # correct the fact that st_line.amount is signed and debit/credit is not
+        if statement_currency == company_currency:
+            amount_field = 'credit'
+            if st_line.amount > 0:
+                amount_field = 'debit'
+            else:
+                sign = -1
+        else:
+            amount_field = 'amount_currency'
+
         # Look for a single move line with the same partner, the same amount
         match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
-        if match_ids and len(match_ids) == 1:
-            return match_ids
-
-        if unambiguous:
-            return []
+        if match_ids:
+            return [match_ids[0]]
 
         # Look for a set of move line whose amount is <= to the line's amount
         if sign == -1:

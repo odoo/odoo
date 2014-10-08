@@ -62,6 +62,7 @@ class account_bank_statement_import(osv.TransientModel):
                 line_ids.append((0, 0, vals_line))
         except Exception, e:
             raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
+        account_number = ofx.account.number
         st_start_date = ofx.account.statement.start_date or False
         st_end_date = ofx.account.statement.end_date or False
         period_obj = self.pool.get('account.period')
@@ -78,6 +79,9 @@ class account_bank_statement_import(osv.TransientModel):
         }
         vals_bank_statement.update({'line_ids': line_ids})
         os.remove(path)
-        return [vals_bank_statement]
+        return {
+            'account_number': account_number,
+            'bank_statement_vals': [vals_bank_statement],
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

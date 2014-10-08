@@ -11,7 +11,8 @@
                     <group>
                         <group>
                             <field name="data_file"/>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" context="{'default_type':'bank'}"/>
+                            <field name="hide_journal_field" invisible="1"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'invisible': [('hide_journal_field', '=', True)]}" context="{'default_type':'bank'}"/>
                         </group>
                         <group>
                             <b colspan="2"> How to import your bank statement :</b>
