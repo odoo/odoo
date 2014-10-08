@@ -1,21 +1,94 @@
 # Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-12 16:32+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-22 09:24+0000\n"
+"Last-Translator: Opencloud - PT <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 08:57+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:278
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (cópia)"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "Hierarquia da conta"
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
+msgid "Account Manager"
+msgstr "Gestor de conta"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Nome de Conta/Contrato"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Montante"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: selection:account.analytic.account,type:0
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Conta analítica"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Contabilidade Analítica"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "Movimentos Analíticos"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linha analítica"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr "Vista analítica"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "Balanço"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Calculado multiplicando a quantidade pelo preço de custo do artigo. Sempre "
+"expresso na Moeda da principal da empresa."
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -24,35 +97,163 @@ msgstr "Conta Descendente"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr "Em progresso"
+msgid "Closed"
+msgstr "Encerrado"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:229
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "Empresa"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr "Contrato Terminado"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Contract Information"
+msgstr "Informação de contrato"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr "Contrato aberto"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr "Contrato Fechado"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr "Contrato Aberto"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Contrato ou projeto"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr "Contrato Pendente"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr "Contrato a Renovar"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:238
 #, python-format
 msgid "Contract: "
 msgstr "Contrato: "
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Template"
+#: field:account.analytic.line,create_date:0
+msgid "Create Date"
+msgstr "Data de Criação"
 
 #. module: analytic
-#: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
-msgid "End Date"
-msgstr "Data de fecho"
+#: field:account.analytic.account,create_uid:0
+#: field:account.analytic.line,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
 
 #. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "Especifica o montante do valor a contar"
+#: field:account.analytic.account,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "Crédito"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "Moeda"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "Data"
+
+#. module: analytic
+#: help:account.analytic.account,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Data da Última Mensagem Inserida no Registo"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Débito"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "Descrição"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "End Date"
+msgstr "Data de fecho"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "Error!"
+msgstr "Erro!"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr "Erro! Não pode criar contas analíticas de forma recursiva."
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr "Data de Expiração"
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "Nome completo"
+
+#. module: analytic
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Mantém o resumo Chatter (número de mensagens, ...). Esse resumo é "
+"diretamente em formato HTML para ser inserido em vistas kanban."
+
+#. module: analytic
+#: field:account.analytic.account,id:0
+#: field:account.analytic.line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -66,9 +267,76 @@ msgid ""
 "The special type 'Template of Contract' allows you to define a template with "
 "default data that you can reuse easily."
 msgstr ""
+"Se selecionar o tipo de vista, isso significa que não vai permitir criar "
+"entradas de diário usando essa conta. \n"
+"O tipo de conta 'Analítica' significa contas habituais que só usam "
+"contabilidade. \n"
+"Se selecionar contrato ou projeto, oferece-lhe a possibilidade de gerir a "
+"validade e as opções de faturação para esta conta. \n"
+"O tipo especial de \"Modelo de Contrato\" permite que você defina um modelo "
+"com dados padrão que você pode reutilizar facilmente."
 
 #. module: analytic
-#: view:account.analytic.account:0
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
+"Se você definir uma empresa, a moeda selecionada tem que ser a mesma da "
+"empresa. \n"
+"Você pode remover a empresa a que pertence, e, assim, alterar a moeda, só "
+"por conta analítica do tipo 'vista'. Isto pode ser realmente útil para fins "
+"de consolidação de várias empresas gráficos com diferentes moedas, por "
+"exemplo."
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr "Em progresso"
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr "É um seguidor"
+
+#. module: analytic
+#: field:account.analytic.account,message_last_post:0
+msgid "Last Message Date"
+msgstr "Data da Última Mensagem"
+
+#. module: analytic
+#: field:account.analytic.account,write_uid:0
+#: field:account.analytic.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Última Actualização por"
+
+#. module: analytic
+#: field:account.analytic.account,write_date:0
+#: field:account.analytic.line,write_date:0
+msgid "Last Updated on"
+msgstr "Última Actualização em"
+
+#. module: analytic
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr "Mensagens"
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Histórico de mensagens e comunicação"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "Novo"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
 "                                        passed or the maximum number of "
@@ -80,178 +348,16 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Contrato ou projeto"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Nome de Conta/Contrato"
-
-#. module: analytic
-#: field:account.analytic.account,manager_id:0
-msgid "Account Manager"
-msgstr "Gestor de conta"
-
-#. module: analytic
-#: field:account.analytic.account,message_follower_ids:0
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Closed"
-msgstr "Encerrado"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_pending
-msgid "Contract to Renew"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
-msgstr "Novo"
-
-#. module: analytic
-#: field:account.analytic.account,user_id:0
-msgid "Project Manager"
-msgstr "Gestor de projeto"
-
-#. module: analytic
-#: field:account.analytic.account,state:0
-msgid "Status"
-msgstr "Estado"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:271
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (cópia)"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Linha analítica"
-
-#. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
-msgid "Description"
-msgstr "Descrição"
-
-#. module: analytic
-#: field:account.analytic.account,message_unread:0
-msgid "Unread Messages"
-msgstr "Mensagens por ler"
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Erro! Não pode criar contas analíticas de forma recursiva."
-
-#. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
-msgid "Company"
-msgstr "Empresa"
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Renewal"
-msgstr "Renovação"
-
-#. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr ""
-
-#. module: analytic
-#: help:account.analytic.account,quantity_max:0
-msgid ""
-"Sets the higher limit of time to work on the contract, based on the "
-"timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"Se definir uma empresa, a moeda selecionada tem que ser a mesma que a "
-"moeda.\n"
-"Pode remover a empresa a que pertença, e assim, alterar a moeda, apenas por "
-"conta analítica do tipo 'vista'. Isto pode ser realmente útil para fins de "
-"consolidação de vários planos de contas de empresas com diferentes moedas, "
-"por exemplo."
-
-#. module: analytic
-#: field:account.analytic.account,message_is_follower:0
-msgid "Is a Follower"
-msgstr "É um seguidor"
-
-#. module: analytic
-#: field:account.analytic.line,user_id:0
-msgid "User"
-msgstr "Utilizador"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.line,date:0
-msgid "Date"
-msgstr "Data"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_closed
-msgid "Contract Finished"
-msgstr ""
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
-msgstr "Termos e condições"
-
-#. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
-msgstr ""
-"Calculado multiplicando a quantidade pelo preço de custo do artigo. Sempre "
-"expresso na Moeda da principal da empresa."
-
-#. module: analytic
-#: field:account.analytic.account,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
-
-#. module: analytic
-#: field:account.analytic.account,child_complete_ids:0
-msgid "Account Hierarchy"
-msgstr "Hierarquia da conta"
-
-#. module: analytic
-#: field:account.analytic.account,message_ids:0
-msgid "Messages"
-msgstr "Mensagens"
+"Uma vez que a data final do contrato é \n"
+"                                         passada ou o número máximo de "
+"serviço \n"
+"                                         unidades (por exemplo, contrato de "
+"suporte) é \n"
+"                                         atingido, o gestor de contas é "
+"notificado \n"
+"                                         por e-mail para renovar o contrato "
+"com o \n"
+"                                         cliente."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -259,65 +365,14 @@ msgid "Parent Analytic Account"
 msgstr "Conta Analítica Ascendente"
 
 #. module: analytic
-#: view:account.analytic.account:0
-msgid "Contract Information"
-msgstr "Informação de contrato"
-
-#. module: analytic
-#: field:account.analytic.account,template_id:0
-#: selection:account.analytic.account,type:0
-msgid "Template of Contract"
-msgstr "Modelo de contrato"
-
-#. module: analytic
-#: field:account.analytic.account,message_summary:0
-msgid "Summary"
-msgstr "Resumo"
-
-#. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
 msgstr "Unidades de serviço pré-pagas"
 
 #. module: analytic
-#: field:account.analytic.account,credit:0
-msgid "Credit"
-msgstr "Crédito"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_opened
-msgid "Contract Opened"
-msgstr "Contrato aberto"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
-msgstr "Contrato <b>fechado</b>"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "Cancelado"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Analytic View"
-msgstr "Vista analítica"
-
-#. module: analytic
-#: field:account.analytic.account,balance:0
-msgid "Balance"
-msgstr "Balanço"
-
-#. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "To Renew"
-msgstr "Para renovar"
+#: field:account.analytic.account,user_id:0
+msgid "Project Manager"
+msgstr "Gestor de projeto"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -326,9 +381,10 @@ msgid "Quantity"
 msgstr "Quantidade"
 
 #. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Date End"
-msgstr "Data Final"
+#: code:addons/analytic/analytic.py:272
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr "Criação Rápida de Contas Não Permitida"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -336,50 +392,24 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "Error!"
-msgstr "Erro!"
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Renewal"
+msgstr "Renovação"
 
 #. module: analytic
-#: model:res.groups,name:analytic.group_analytic_accounting
-msgid "Analytic Accounting"
-msgstr "Contabilidade Analítica"
-
-#. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Montante"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Nome completo da conta"
-
-#. module: analytic
-#: view:account.analytic.account:0
-#: selection:account.analytic.account,type:0
-#: field:account.analytic.line,account_id:0
-#: model:ir.model,name:analytic.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Conta analítica"
-
-#. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Currency"
-msgstr "Moeda"
-
-#. module: analytic
-#: help:account.analytic.account,message_summary:0
+#: help:account.analytic.account,quantity_max:0
 msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+"Sets the higher limit of time to work on the contract, based on the "
+"timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
+"Define o limite superior de tempo para trabalhar no contrato, com base no "
+"quadro de horários. (por exemplo, número de horas num contrato de suporte "
+"limitado.)"
 
 #. module: analytic
-#: field:account.analytic.account,type:0
-msgid "Type of Account"
-msgstr "Tipo de conta"
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Especifica o montante do valor a contar"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -387,127 +417,58 @@ msgid "Start Date"
 msgstr "Data de abertura"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr "Estado"
 
 #. module: analytic
-#: field:account.analytic.account,line_ids:0
-msgid "Analytic Entries"
-msgstr "Movimentos Analíticos"
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr "Resumo"
 
-#~ msgid "Draft"
-#~ msgstr "Esboço"
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Template"
 
-#~ msgid "Pending"
-#~ msgstr "Pendente"
+#. module: analytic
+#: field:account.analytic.account,template_id:0
+#: selection:account.analytic.account,type:0
+msgid "Template of Contract"
+msgstr "Modelo de contrato"
 
-#~ msgid "Maximum Quantity"
-#~ msgstr "Quantidade máxima"
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Terms and Conditions"
+msgstr "Termos e condições"
 
-#~ msgid "Account currency"
-#~ msgstr "Divisa da conta"
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "To Renew"
+msgstr "Para renovar"
 
-#~ msgid "Account Code"
-#~ msgstr "Código da conta"
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Type of Account"
+msgstr "Tipo de conta"
 
-#~ msgid "State"
-#~ msgstr "Estado"
+#. module: analytic
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr "Mensagens por ler"
 
-#~ msgid "Sets the higher limit of quantity of hours."
-#~ msgstr "Estabelece o limite máximo de horas"
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "Utilizador"
 
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Erro! Não pode criar contas analíticas recursivamente"
-
-#~ msgid "Open"
-#~ msgstr "Abrir"
-
-#~ msgid ""
-#~ "Module for defining analytic accounting object.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Módulo para definir um objecto de contabilidade analítica.\n"
-#~ "    "
-
-#~ msgid "Normal"
-#~ msgstr "Normal"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "Erro! A moeda tem que ser a mesma que foi seleccionada pela empresa"
-
-#~ msgid "View"
-#~ msgstr "Vista"
-
-#~ msgid "Partner"
-#~ msgstr "Parceiro"
-
-#~ msgid "Code/Reference"
-#~ msgstr "Código / Referência"
-
+#. module: analytic
+#: code:addons/analytic/analytic.py:272
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Erro !"
+msgid "Warning"
+msgstr "Aviso"
 
-#~ msgid "Maximum Time"
-#~ msgstr "Tempo máximo:"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Não pode criar uma linha de análise numa conta de vista."
-
-#~ msgid "Account Type"
-#~ msgstr "Tipo de Conta"
-
-#~ msgid "Sets the higher limit of time to work on the contract."
-#~ msgstr ""
-#~ "Defina o limite máximo de tempo de trabalho a ser usado num contrato."
-
-#~ msgid "Contact"
-#~ msgstr "Contato"
-
-#~ msgid ""
-#~ "If you select the View Type, it means you won't allow to create journal "
-#~ "entries using that account."
-#~ msgstr ""
-#~ "Se selecionar o tipo vista, isso significa que não irá permitir criar "
-#~ "movimentos no diário ao usar esta conta."
-
-#~ msgid "Date Start"
-#~ msgstr "Data Inicial"
-
-#~ msgid "Account Name"
-#~ msgstr "Nome da Conta"
-
-#~ msgid ""
-#~ "* When an account is created its in 'Draft' state.                           "
-#~ "       \n"
-#~ "* If any associated partner is there, it can be in 'Open' state.             "
-#~ "                     \n"
-#~ "* If any pending balance is there it can be in 'Pending'.                    "
-#~ "               \n"
-#~ "* And finally when all the transactions are over, it can be in 'Close' "
-#~ "state.                                   \n"
-#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
-#~ " If it is template then we can make projects based on the template projects. "
-#~ "If its in 'Running' state it is a normal project.                            "
-#~ "     \n"
-#~ " If it is to be reviewed then the state is 'Pending'.\n"
-#~ " When the project is completed the state is set to 'Done'."
-#~ msgstr ""
-#~ "* Quando uma conta é criada no estado 'Rascunho'.                            "
-#~ "      \n"
-#~ "* Se algum parceiro associado estiver lá, poderá estar em estado 'Aberto'.   "
-#~ "                               \n"
-#~ "* Se houver algum saldo pendente, poderá estar no estado 'Pendente'.         "
-#~ "                          \n"
-#~ "* E, finalmente, quando todas as transações terminaram, poderá estar no "
-#~ "estado 'Fechado'.                                   \n"
-#~ "* O projeto também pode estar em qualquer caso nos estados 'Template' e 'Em "
-#~ "Movimento'.\n"
-#~ " Se for um template então podemos fazer projetos baseados no template de "
-#~ "projetos. Se for 'Em Movimento' será um projeto normal.                      "
-#~ "           \n"
-#~ " Se é para ser revisto,então o estado é 'Pendente'.\n"
-#~ " Quando o projeto estiver concluído, o estado está definido como 'Concluído'."
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "Não pode criar uma linha numa conta do tipo de vista."

@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from openerp import models, fields, api, osv
 
 # We just create a new model
 class mother(models.Model):
     _name = 'test.inherit.mother'
 
-    name = fields.Char('Name', required=True)
+    _columns = {
+        # check interoperability of field inheritance with old-style fields
+        'name': osv.fields.char('Name', required=True),
+        'state': osv.fields.selection([('a', 'A'), ('b', 'B')], string='State'),
+    }
+
     surname = fields.Char(compute='_compute_surname')
-    state = fields.Selection([('a', 'A'), ('b', 'B')])
 
     @api.one
     @api.depends('name')

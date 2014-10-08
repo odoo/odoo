@@ -199,6 +199,7 @@ $sheet-padding: 16px
     background: white
     &.openerp_webclient_container
         height: calc(100% - 34px)
+        overflow: auto
     @media (max-width: 768px)
         &.openerp_webclient_container
             height: calc(100% - 52px)
@@ -846,26 +847,56 @@ $sheet-padding: 16px
             margin-left: 20px
     // }}}
     // About openerp {{{
+    $link-color-odoo: #a24689
     .oe_about
-        background-color: white
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        @include radius(0 0 2px 2px)
+        .label
+            background-color: $link-color-odoo
         a
-            color: $link-color
-            &:hover
-                text-decoration: underline
-            &:focus
-                outline: none
-        .oe_logo
-            margin-left: -6px
-        .oe_bottom
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-            color: #eee
-            padding: 0 16px
-            @include radius(0 0 2px 2px)
-            a
-                color: #eee
+            color: $link-color-odoo
+
+        .user-details
+            position: relative
+            padding: 0
+            margin-bottom: 275px
+            .user-image
+                width: 100%
+                text-align: center
+            .user-info-block
+                width: 100%
+                position: absolute
+                top: 55px
+                padding-top: 35px
+                .user-heading
+                    text-align: center
+                    margin: 10px 0 0
+                .navigation
+                    li
+                        a
+                            padding: 10px 20px
+                        &.active a
+                            background: $link-color-odoo
+                            color: #fff
+                .user-body
+                    text-align: center
+                    .tab-content > div
+                        float: left
+                        width: 100%
+        a.oe_activate_debug_mode
+            color: white !important
+            font-size: 100%
+        #social
+            i
+                margin: 10px
+                &:hover
+                    @include transform(scale(1.3))
+            .social-fb:hover
+                color: #3B5998
+            .social-tw:hover
+                color: #4099FF
+            .social-gp:hover
+                color: #d34836
+            .social-lk:hover
+                color: #007bb6
     // }}}
     // ActionManager {{{
     a.oe_form_uri:hover
@@ -1541,7 +1572,7 @@ $sheet-padding: 16px
                 padding: 0 16px
     // }}}
     // FormView.header {{{
-    .oe_form > :not(.oe_form_nosheet) header
+    .oe_form > :not(.oe_form_nosheet) header, .oe_form > .oe_form_nosheet header
         padding-left: 2px
         ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
             display: inline-block
@@ -2112,7 +2143,8 @@ $sheet-padding: 16px
                 &.oe_readonly
                     padding: 6px 0px 0px
                     text-align: right
-                    max-width: 100px
+                span
+                    padding: 0px 6px
                 input
                     width: 100% !important
                     text-align: right
@@ -2629,6 +2661,8 @@ body.oe_single_form
 // @media print {{{
 @media print
     .openerp
+        .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body
+            overflow: visible
         .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default, .oe_topbar, .oe_leftbar, .oe_loading
             // We use !important here because jQuery adds @style = display: block on elements when using $.fn.show()
             display: none !important
@@ -2659,6 +2693,8 @@ body.oe_single_form
             background: none
         .openerp div.oe_mail_wall
             overflow: hidden !important
+    .openerp.openerp_webclient_container
+        overflow: visible
 // }}}
 
 // End of customize
@@ -2715,6 +2751,8 @@ body.oe_single_form
         padding: 1px
         height: 18px
         font-size: 20px
+    .modal-body
+        overflow-x: auto
     .modal-footer
         text-align: left
     .oe_button
@@ -2762,7 +2800,7 @@ div.tour-backdrop
 // }}}
 
 body
-    overflow: auto
+    overflow: hidden
 
 // hack to make IE11 work
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 

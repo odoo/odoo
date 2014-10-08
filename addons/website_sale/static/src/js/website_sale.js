@@ -90,6 +90,12 @@ $('.oe_website_sale').each(function () {
         return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
     }
 
+    $(oe_website_sale).on('change', 'input.js_product_change', function (ev) {
+        var $parent = $(this).closest('.js_product');
+        $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
+        $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
+    });
+
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
         var $parent = $ul.closest('.js_product');
@@ -106,7 +112,7 @@ $('.oe_website_sale').each(function () {
 
         var product_id = false;
         for (var k in variant_ids) {
-            if (_.isEqual(variant_ids[k][1], values)) {
+            if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                 $price.html(price_to_str(variant_ids[k][2]));
                 $default_price.html(price_to_str(variant_ids[k][3]));
                 if (variant_ids[k][3]-variant_ids[k][2]>0.2) {

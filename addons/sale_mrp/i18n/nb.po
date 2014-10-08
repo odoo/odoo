@@ -1,31 +1,21 @@
 # Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-07-22 20:19+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Produksjonsordre"
-
-#. module: sale_mrp
-#: help:mrp.production,sale_name:0
-msgid "Indicate the name of sales order."
-msgstr "Angi navnet på salgsordren."
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_mrp
 #: help:mrp.production,sale_ref:0
@@ -33,8 +23,18 @@ msgid "Indicate the Customer Reference from sales order."
 msgstr "Viser kundereferansen fra salgsordren"
 
 #. module: sale_mrp
-#: field:mrp.production,sale_ref:0
-msgid "Sale Reference"
+#: help:mrp.production,sale_name:0
+msgid "Indicate the name of sales order."
+msgstr "Angi navnet på salgsordren."
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Produksjonsordre"
+
+#. module: sale_mrp
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
 msgstr ""
 
 #. module: sale_mrp
@@ -42,14 +42,22 @@ msgstr ""
 msgid "Sale Name"
 msgstr ""
 
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referanse må være unik pr firma!"
+#. module: sale_mrp
+#: field:mrp.production,sale_ref:0
+msgid "Sale Reference"
+msgstr ""
 
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "Ordrekvantum kan ikke være negativt eller null!"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
-#~ msgid "Sales Reference"
-#~ msgstr "Salgsreferanse"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
-#~ msgid "Sales Name"
-#~ msgstr "Salgsnavn"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr ""

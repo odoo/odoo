@@ -42,6 +42,7 @@ import logging
 import pytz
 import re
 import xmlrpclib
+from operator import itemgetter
 from psycopg2 import Binary
 
 import openerp
@@ -115,12 +116,13 @@ class _column(object):
         self.group_operator = args.get('group_operator', False)
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
+        self._args = args
         for a in args:
             setattr(self, a, args[a])
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
-        if not self._classic_write or self.groups or self.deprecated:
+        if not self._classic_write or self.deprecated:
             self._prefetch = False
 
     def to_field(self):
@@ -130,8 +132,8 @@ class _column(object):
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
-        items = [
-            ('_origin', self),                  # field interfaces self
+        base_items = [
+            ('column', self),                   # field interfaces self
             ('copy', self.copy),
             ('index', self.select),
             ('manual', self.manual),
@@ -141,15 +143,17 @@ class _column(object):
             ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
-            ('change_default', self.change_default),
-            ('deprecated', self.deprecated),
-        ]
-        return dict(item for item in items if item[1])
+        ])
+        return dict(base_items + truthy_items + self._args.items())
 
     def restart(self):
         pass
@@ -671,19 +675,20 @@ class one2many(_column):
             context = dict(context or {})
             context.update(self._context)
 
-        res = dict((id, []) for id in ids)
-
+        # retrieve the records in the comodel
         comodel = obj.pool[self._obj].browse(cr, user, [], context)
         inverse = self._fields_id
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
+        records = comodel.search(domain, limit=self._limit)
 
-        for record in comodel.search(domain, limit=self._limit):
-            # Note: record[inverse] can be a record or an integer!
-            assert int(record[inverse]) in res
-            res[int(record[inverse])].append(record.id)
+        result = {id: [] for id in ids}
+        # read the inverse of records without prefetching other fields on them
+        for record in records.with_context(prefetch_fields=False):
+            # record[inverse] may be a record or an integer
+            result[int(record[inverse])].append(record.id)
 
-        return res
+        return result
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []

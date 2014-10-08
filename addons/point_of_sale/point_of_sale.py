@@ -62,7 +62,7 @@ class pos_config(osv.osv):
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
         'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
-        'iface_self_checkout' : fields.boolean('Self Checkout Mode',
+        'iface_self_checkout' : fields.boolean('Self Checkout Mode', # FIXME : this field is obsolete
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, Odoo uses the normal cashier mode by default."),
         'iface_cashdrawer' : fields.boolean('Cashdrawer', help="Automatically open the cashdrawer"),
         'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
@@ -396,6 +396,7 @@ class pos_session(osv.osv):
                 if not cashids:
                     cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
+            journal_proxy.write(cr, uid, cashids, {'journal_user': True})
             jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
@@ -1401,5 +1402,28 @@ class product_template(osv.osv):
         'to_weight' : False,
         'available_in_pos': True,
     }
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
+    def create_from_ui(self, cr, uid, partner, context=None):
+        """ create or modify a partner from the point of sale ui.
+            partner contains the partner's fields. """
+
+        #image is a dataurl, get the data after the comma
+        if partner.get('image',False):
+            img =  partner['image'].split(',')[1]
+            partner['image'] = img
+
+        if partner.get('id',False):  # Modifying existing partner
+            partner_id = partner['id']
+            del partner['id']
+            self.write(cr, uid, [partner_id], partner, context=context)
+        else:
+            partner_id = self.create(cr, uid, partner, context=context)
+        
+        return partner_id
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

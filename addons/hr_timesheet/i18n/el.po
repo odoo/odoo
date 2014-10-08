@@ -1,23 +1,48 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet
+# Greek translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2010-08-03 06:50+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
-"Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:57+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Country: GREECE\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:13+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "(Keep empty for current time)"
+msgstr "(Μη συμπληρώσετε το πεδίο αυτό)"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "(local time on the server side)"
+msgstr "(τοπική ώρα server)"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to record activities.\n"
+"              </p><p>\n"
+"                You can register and track your workings hours by project "
+"every\n"
+"                day. Every time spent on a project will become a cost in "
+"the\n"
+"                analytic accounting/contract and can be re-invoiced to\n"
+"                customers if required.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -25,7 +50,7 @@ msgid ""
 "<p>\n"
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
-"                In OpenERP, contracts and projects are implemented using\n"
+"                In Odoo, contracts and projects are implemented using\n"
 "                analytic account. So, you can track costs and revenues to "
 "analyse\n"
 "                your margins easily.\n"
@@ -46,20 +71,159 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Absent"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Accounting"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,account_id:0
+#: model:ir.model,name:hr_timesheet.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Αναλυτικός Λογαριασμός"
+
+#. module: hr_timesheet
+#: field:hr.employee,journal_id:0
+msgid "Analytic Journal"
+msgstr "Αναλυτικό Ημερολόγιο"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,line_id:0
+msgid "Analytic Line"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Analytic account"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Change Work"
+msgstr "Αλλαγή Εργασίας"
+
+#. module: hr_timesheet
+#: help:account.analytic.account,use_timesheets:0
+msgid "Check this field if this project manages timesheets"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.out.project,date:0
+msgid "Closing Date"
+msgstr "Ημερ/νία Κλεισίματος"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,cost:0
+msgid "Cost"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
+msgid "Cost/Revenue"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
+msgid "Costs & Revenues"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_uid:0
+#: field:hr.sign.in.project,create_uid:0
+#: field:hr.sign.out.project,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_date:0
+#: field:hr.sign.in.project,create_date:0
+#: field:hr.sign.out.project,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,server_date:0
+#: field:hr.sign.out.project,server_date:0
+msgid "Current Date"
+msgstr "Τρέχουσα Ημερ/νία"
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,state:0
+#: field:hr.sign.out.project,state:0
+msgid "Current Status"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,date:0
+msgid "Date"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
+msgid "Define your Analytic Structure"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,name:0
+msgid "Description"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Duration"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,emp_id:0
+#: field:hr.sign.out.project,emp_id:0
+msgid "Employee ID"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:152
 #, python-format
-msgid "Wed"
-msgstr "Τετ"
+msgid ""
+"Employee is not created for this user. Please create one from configuration "
+"panel."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "(Keep empty for current_time)"
-msgstr "(Μη συμπληρώσετε το πεδίο αυτό)"
+#: field:hr.sign.in.project,name:0
+#: field:hr.sign.out.project,name:0
+msgid "Employee's Name"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Group By..."
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -72,62 +236,74 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.employee,uom_id:0
-msgid "Unit of Measure"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Extended Filters..."
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.employee,journal_id:0
-msgid "Analytic Journal"
-msgstr "Αναλυτικό Ημερολόγιο"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Stop Working"
-msgstr "Τέλος Εργασίας"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
-msgid "Employee Timesheet"
-msgstr "Φύλλο Xρόνου Eργασίας Υπαλλήλου"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
-msgid "Timesheet"
-msgstr "Φύλλo Xρόνου Eργασίας"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
-#, python-format
-msgid "Please define employee for this user!"
+#: field:hr.timesheet.report,general_account_id:0
+msgid "General Account"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "General Information"
+msgstr "Γενικές Πληροφορίες"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
-msgid "Mon"
-msgstr "Δευτ"
+msgid "Go to the configuration panel"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in"
-msgstr "Προσέλευση"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group By"
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Fri"
-msgstr "Παρ"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group by month of date"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-msgid "Timesheet Activities"
+#: field:hr.analytic.timesheet,id:0
+#: field:hr.sign.in.project,id:0
+#: field:hr.sign.out.project,id:0
+#: field:hr.timesheet.report,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_timesheet
+#: help:hr.employee,product_id:0
+msgid ""
+"If you want to reinvoice working time of employees, link this employee to a "
+"service to determinate the cost price of the job."
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Information"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_uid:0
+#: field:hr.sign.in.project,write_uid:0
+#: field:hr.sign.out.project,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_date:0
+#: field:hr.sign.in.project,write_date:0
+#: field:hr.sign.out.project,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: hr_timesheet
@@ -136,67 +312,32 @@ msgid "Minimum Analytic Amount"
 msgstr "Ελάχιστος Αναλυτικός Λογαριασμός"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr ""
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Month"
+msgstr "Μήνας"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Work done in the last period"
-msgstr "Δεδουλευμένα της τελευταίας περιοδου"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
-msgid "Employees name"
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,account_id:0
-msgid "Project / Analytic Account"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
-msgid "Print Employees Timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
+#: code:addons/hr_timesheet/hr_timesheet.py:189
 #, python-format
-msgid "Please define employee for your user."
+msgid ""
+"No 'Analytic Journal' is defined for employee %s \n"
+"Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs & Revenues"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: code:addons/hr_timesheet/hr_timesheet.py:191
 #, python-format
-msgid "Tue"
-msgstr "Τρίτη"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Αναλυτικός Λογαριασμός"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Costs and Revenues"
+msgid ""
+"No analytic account is defined on the project.\n"
+"Please set one or we cannot automatically fill the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
+#: code:addons/hr_timesheet/hr_timesheet.py:158
 #, python-format
-msgid "Warning!"
+msgid ""
+"No analytic journal defined for '%s'.\n"
+"You should assign an analytic journal on the employee form."
 msgstr ""
 
 #. module: hr_timesheet
@@ -205,69 +346,75 @@ msgid "Partner"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
-msgid "Sat"
-msgstr "Σάβ"
+msgid "Please define cost unit for this employee."
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
-msgid "Sun"
-msgstr "Κυρ"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Sum"
-msgstr "Άθροισμα"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Analytic account"
+msgid "Please define employee for your user."
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to record activities.\n"
-"              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
-"                analytic accounting/contract and can be re-invoiced to\n"
-"                customers if required.\n"
-"              </p>\n"
-"            "
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Present"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-msgid "Print"
-msgstr "Εκτύπωση"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: field:hr.employee,product_id:0
+#: field:hr.timesheet.report,product_id:0
+msgid "Product"
+msgstr "Προϊον"
 
 #. module: hr_timesheet
-#: help:account.analytic.account,use_timesheets:0
-msgid "Check this field if this project manages timesheets"
+#: field:hr.sign.out.project,account_id:0
+msgid "Project / Analytic Account"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Monthly Employees Timesheet"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
+msgid "Sign In By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Sign In/Out by Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Sign in"
+msgstr "Προσέλευση"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
-msgid "July"
-msgstr "Ιούλιος"
+msgid "Sign in / Sign out"
+msgstr "Προσέλευση / Αναχώρηση"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
+msgid "Sign in / Sign out by Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Start Working"
+msgstr "Έναρξη Εργασίας"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,date:0
@@ -276,275 +423,48 @@ msgid "Starting Date"
 msgstr "Ημερ/νία Έναρξης"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#, python-format
-msgid "Please define cost unit for this employee."
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Stop Working"
+msgstr "Τέλος Εργασίας"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "This Month"
 msgstr ""
 
 #. module: hr_timesheet
-#: help:hr.employee,product_id:0
-msgid "Specifies employee's designation as a product with type 'service'."
+#: field:hr.timesheet.report,quantity:0
+msgid "Time"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#, python-format
-msgid ""
-"No analytic account is defined on the project.\n"
-"Please set one or we cannot automatically fill the timesheet."
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
+msgid "Timesheet"
+msgstr "Φύλλo Xρόνου Eργασίας"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
+msgid "Timesheet Accounts"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total cost"
-msgstr "Συνολικό Κόστος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#, python-format
-msgid ""
-"No 'Analytic Journal' is defined for employee %s \n"
-"Define an employee for the selected user and assign an 'Analytic Journal'!"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
+msgid "Timesheet Activities"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "September"
-msgstr "Σεπτέμβριος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "Δεκέμβριος"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.users,employee_ids:0
-msgid "employees"
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
+msgid "Timesheet Analysis"
 msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,month:0
-#: field:hr.analytical.timesheet.users,month:0
-msgid "Month"
-msgstr "Μήνας"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,info:0
-msgid "Work Description"
-msgstr "Περιγραφή Εργασίας"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "or"
-msgstr ""
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Timesheet by Employee"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
-msgid "Employee timesheet"
-msgstr "Φύλλο Xρόνου Eργασίας Υπαλλήλου"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
-msgid "Sign in / Sign out by project"
-msgstr "Προσέλευση / Αναχώρηση ανά έργο"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
-msgid "Define your Analytic Structure"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
-#: view:hr.sign.in.project:0
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "Προσέλευση / Αναχώρηση"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(Keep empty for current time)"
-msgstr "(Μη συμπληρώσετε το πεδίο αυτό)"
-
-#. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
-msgid "Timesheets"
-msgstr "Φύλλα Xρόνου Eργασίας"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
-msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In OpenERP, analytic accounts are also used to "
-"track customer contracts."
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
-msgid "Analytic Line"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "August"
-msgstr "Αύγουστος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#, python-format
-msgid ""
-"No analytic journal defined for '%s'.\n"
-"You should assign an analytic journal on the employee form."
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "June"
-msgstr "Ιούνιος"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
-msgid "Current Status"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Date"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "November"
-msgstr "Νοέμβριος"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,date:0
-msgid "Closing Date"
-msgstr "Ημερ/νία Κλεισίματος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "October"
-msgstr "Οκτώβριος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "January"
-msgstr "Ιανουάριος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Thu"
-msgstr "Πέμ"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Sign In/Out by Project"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
-msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
-msgid "Employee ID"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Period"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "General Information"
-msgstr "Γενικές Πληροφορίες"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Cancel"
-msgstr "Ακύρωση"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet_users:0
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
-#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
-msgid "Employees Timesheet"
-msgstr "Φύλλο Xρόνου Eργασίας Υπαλλήλων"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Information"
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,employee_id:0
-#: model:ir.model,name:hr_timesheet.model_hr_employee
-msgid "Employee"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid ""
-"Employees can encode their time spent on the different projects they are "
-"assigned on. A  project is an analytic account and the time spent on a "
-"project generates costs on the analytic account. This feature allows to "
-"record at the same time the attendance and the timesheet."
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,server_date:0
-#: field:hr.sign.out.project,server_date:0
-msgid "Current Date"
-msgstr "Τρέχουσα Ημερ/νία"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
@@ -552,259 +472,81 @@ msgid "Timesheet Line"
 msgstr "Γραμμή Φύλλου Xρόνου Eργασίας"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: field:hr.employee,product_id:0
-msgid "Product"
-msgstr "Προϊον"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet Month"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Users"
-msgstr "Χρήστες"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet by Month"
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "May"
-msgstr "Μάιος"
+#: field:account.analytic.account,use_timesheets:0
+#: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
+msgid "Timesheets"
+msgstr "Φύλλα Xρόνου Eργασίας"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Total cost"
+msgstr "Συνολικό Κόστος"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
 msgid "Total time"
 msgstr "Σύνολο Χρόνου"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(local time on the server side)"
-msgstr "(τοπική ώρα server)"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
-msgid "Sign In By Project"
+#: field:hr.employee,uom_id:0
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "February"
-msgstr "Φεβρουάριος"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
-#, python-format
-msgid ""
-"Please create an employee for this user, using the menu: Human Resources > "
-"Employees."
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "March"
-msgstr "Μάρτιος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "April"
-msgstr "Απρίλιος"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,user_id:0
+msgid "User"
+msgstr "Χρήστης"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Start Working"
-msgstr "Έναρξη Εργασίας"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Users"
+msgstr "Χρήστες"
 
 #. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,year:0
-#: field:hr.analytical.timesheet.users,year:0
-msgid "Year"
-msgstr "Έτος"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Duration"
+#: code:addons/hr_timesheet/hr_timesheet.py:158
+#: code:addons/hr_timesheet/hr_timesheet.py:189
+#: code:addons/hr_timesheet/hr_timesheet.py:191
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Accounting"
+#: field:hr.sign.out.project,info:0
+msgid "Work Description"
+msgstr "Περιγραφή Εργασίας"
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Work done in the last period"
+msgstr "Δεδουλευμένα της τελευταίας περιοδου"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
+msgid ""
+"You should create an analytic account structure depending on your needs to "
+"analyse costs and revenues. In Odoo, analytic accounts are also used to "
+"track customer contracts."
 msgstr ""
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-msgid "Total"
-msgstr "Σύνολο"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Change Work"
-msgstr "Αλλαγή Εργασίας"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Ο χρήστης σας δεν έχει συνδεθεί με υπάλληλο της εταιρείας"
-
-#~ msgid "Work done stats"
-#~ msgstr "Στατιστικά δεδουλευμένων"
-
-#~ msgid "Working Hours of The Day"
-#~ msgstr "Ημερήσιο Ωράριο Εργασίας"
-
-#~ msgid "Day"
-#~ msgstr "Ημέρα"
-
-#~ msgid "Current state"
-#~ msgstr "Παρούσα Κατάσταση"
-
-#~ msgid "My Working Hours"
-#~ msgstr "Το Ωράριο Εργασίας μου"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "UserError"
-
-#, python-format
-#~ msgid "No cost unit defined for this employee !"
-#~ msgstr "Δεν έχει οριστεί μονάδα κόστους για τον υπάλληλο"
-
-#~ msgid "Timesheet Process"
-#~ msgstr "Διαδικασία Xρόνου Eργασίας"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "Ανθρώπινο Δυναμικό (Κωδικοποίηση Φύλλων Xρόνου Eργασίας)"
-
-#, python-format
-#~ msgid "ValidateError"
-#~ msgstr "ValidateError"
-
-#~ msgid "Consultancy - Senior Developer"
-#~ msgstr "Consultancy - Senior Developer"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic journal available for this employee.\n"
-#~ "Define an employee for the selected user and assign an analytic journal."
-#~ msgstr ""
-#~ "Δεν υπάρχει αναλυτικό ημερολόγιο για τον υπάλληλο\n"
-#~ "Ορίστε υπάλληλο για το συγκεκριμένο χρήστη και συνδέστε ένα αναλυτικό "
-#~ "ημερολόγιο"
-
-#~ msgid "Hour"
-#~ msgstr "Ώρα"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Γραμμές Φύλλων Xρόνου Eργασίας"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalid XML for View Architecture!"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Error: UOS must be in a different category than the UOM"
-
-#~ msgid "Choose Users"
-#~ msgstr "Επιλογή Χρηστών"
-
-#~ msgid "Timesheet line"
-#~ msgstr "Γραμμή Φύλλου Xρόνου Eργασίας"
-
-#~ msgid "My Working Hours of The Day"
-#~ msgstr "Το Ημερήσιο Ωράριό μου"
-
-#~ msgid "Stats by month"
-#~ msgstr "Μηνιαία Στατιστικά"
-
-#~ msgid "To be invoiced"
-#~ msgstr "Προς Τιμολόγηση"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-
-#~ msgid "Sign in status"
-#~ msgstr "Κατάσταση Προσέλευσης"
-
-#~ msgid "User"
-#~ msgstr "Χρήστης"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic account defined on the project.\n"
-#~ "Please set one or we can not automatically fill the timesheet."
-#~ msgstr ""
-#~ "Δεν έχει οριστεί Αναλυτικός Λογαριασμός για το έργο.\n"
-#~ "Παρακαλώ ορίστε έναν για να συμπληρωθεί το Φύλλο Xρόνου Eργασίας αυτόματα."
-
-#~ msgid "Key dates"
-#~ msgstr "Σημαντικές ημερ/νίες"
-
-#~ msgid "Analysis stats"
-#~ msgstr "Στατιστικά Ανάλυσης"
-
-#~ msgid "Employee's name"
-#~ msgstr "Όνομα Υπαλλήλου"
-
-#~ msgid "Analysis summary"
-#~ msgstr "Ανάλυση Συνοπτικά"
-
-#~ msgid "Choose your month"
-#~ msgstr "Επιλογή Μήνα"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#~ msgid "Working Time"
-#~ msgstr "Χρόνος Εργασίας"
-
-#~ msgid "Current Server Date"
-#~ msgstr "Τρέχουσα Ημερ/νία Server"
-
-#~ msgid "Working Hours"
-#~ msgstr "Ώρες Εργασίας"
-
-#~ msgid "Analytic line"
-#~ msgstr "Αναλυτική Γραμμή"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Σφάλμα: Άκυρος Κωδικός ΕΑΝ"
-
-#~ msgid "Stats by user"
-#~ msgstr "Στατιστικά ανά Χρήστη"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#~ msgid "Print My Timesheet"
-#~ msgstr "Εκτύπωσε το φύλλο εργασίας μου"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "month"
+msgstr ""

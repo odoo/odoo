@@ -1003,7 +1003,19 @@
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
-            var $clone = this.$target.find(".item.active").clone();
+            // clone the best candidate from template to use new features
+            var $snippets = this.BuildingBlock.$snippets.find('.oe_snippet_body.carousel');
+            var point = 0;
+            var selection;
+            var className = _.compact(this.$target.attr("class").split(" "));
+            $snippets.each(function () {
+                var len = _.intersection(_.compact(this.className.split(" ")), className).length;
+                if (len > point) {
+                    point = len;
+                    selection = this;
+                }
+            });
+            var $clone = $(selection).find('.item:first').clone();
 
             // insert
             $clone.removeClass('active').insertAfter($active);
@@ -1115,10 +1127,10 @@
             var self = this;
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
-
-            this.$target.find('.carousel-image, .carousel-inner .content > div').attr('contentEditable', 'true');
-            this.$target.find('.carousel-image').attr('attributeEditable', 'true');
             this._super();
+
+            /* Fix: backward compatibility saas-3 */
+            this.$target.find('.item.text_image .container').find('> .carousel-caption > div, > img.carousel-image').attr('contentEditable', 'true');
         },
     });
 

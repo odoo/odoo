@@ -1,48 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* membership
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-11-19 05:29+0000\n"
-"Last-Translator: Guipo Hao <hrlpool@sohu.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:13+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:17+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: membership
-#: model:process.transition,name:membership.process_transition_invoicetoassociate0
-msgid "invoice to associate"
-msgstr "商会发票"
-
-#. module: membership
-#: model:process.process,name:membership.process_process_membershipprocess0
-msgid "Membership Process"
-msgstr "会员处理"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Paid Member"
-msgstr "付费会员"
-
-#. module: membership
-#: view:report.membership:0
-msgid "This will display waiting, invoiced and total pending columns"
-msgstr "将显示等待、已开票、应付总额三列"
-
-#. module: membership
-#: view:report.membership:0
-#: view:res.partner:0
-msgid "Group By..."
-msgstr "分组..."
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# 已开票"
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -50,36 +28,219 @@ msgid "# Paid"
 msgstr "# 已付款"
 
 #. module: membership
+#: field:report.membership,num_waiting:0
+msgid "# Waiting"
+msgstr "# 正在等待"
+
+#. module: membership
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr "你将作为哪个客户的附属会员。你的会员资格会随着主会员的状态变化。"
+
+#. module: membership
+#: field:membership.membership_line,account_invoice_line:0
+msgid "Account Invoice line"
+msgstr "帐户发票明细"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "Add a description..."
+msgstr ""
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "All Members"
+msgstr "全部会员"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "All non Members"
+msgstr "所有非会员"
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr "会员资格的价格"
+
+#. module: membership
+#: field:report.membership,associate_member_id:0
+#: view:res.partner:membership.view_res_partner_member_filter
+#: field:res.partner,associate_member:0
+msgid "Associate Member"
+msgstr "附属会员"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Associated Partner"
+msgstr "商会业务伙伴"
+
+#. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "基础会员"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_form
+msgid "Buy Membership"
+msgstr "购买会员资格"
+
+#. module: membership
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Cancel"
+msgstr "取消"
+
+#. module: membership
+#: field:res.partner,membership_cancel:0
+msgid "Cancel Membership Date"
+msgstr "取消会员日期"
+
+#. module: membership
+#: field:membership.membership_line,date_cancel:0
+msgid "Cancel date"
+msgstr "取消日期"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Cancelled Member"
+msgstr "已取消的会员"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Category"
+msgstr "分类"
+
+#. module: membership
+#: help:product.template,membership:0
+msgid "Check if the product is eligible for membership."
+msgstr "检查产品是否适于成员。"
+
+#. module: membership
+#: field:membership.membership_line,company_id:0
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_tree
+msgid "Contacts"
+msgstr "联系人"
+
+#. module: membership
+#: field:membership.invoice,create_uid:0
+#: field:membership.membership_line,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: membership
+#: field:membership.invoice,create_date:0
+#: field:membership.membership_line,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,membership_state:0
+msgid "Current Membership State"
+msgstr "当前会员状态"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current Membership Status"
+msgstr "当前会员状态"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Customer Partners"
+msgstr "客户业务伙伴"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Customers"
+msgstr "客户"
+
+#. module: membership
+#: help:product.template,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr "会员资格开始生效的日期"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "客户加入会员资格的日期"
+
+#. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr "退订会员资格的日期"
+
+#. module: membership
+#: help:product.template,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
+msgstr "会员资格到哪一天结束"
+
+#. module: membership
 #: field:report.membership,tot_earned:0
 msgid "Earned Amount"
 msgstr "已实现收入"
 
 #. module: membership
-#: model:ir.model,name:membership.model_report_membership
-msgid "Membership Analysis"
-msgstr "会员分析"
+#: field:report.membership,date_to:0
+msgid "End Date"
+msgstr "结束日期"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "March"
-msgstr "3月"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "End Membership Date"
+msgstr "会员资格结束日期"
 
 #. module: membership
-#: model:process.node,note:membership.process_node_setassociation0
-msgid "Set an associate member of partner."
-msgstr "设商会成员为业务伙伴"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "End Month"
+msgstr ""
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetopaid0
-msgid "Invoice is be paid."
-msgstr "支付发票"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "会员资格结束日期"
 
 #. module: membership
-#: field:membership.membership_line,company_id:0
-#: view:report.membership:0
-#: field:report.membership,company_id:0
-msgid "Company"
-msgstr "公司"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Ending Month Of Membership"
+msgstr ""
+
+#. module: membership
+#: sql_constraint:product.template:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr "错误！失效日期不能早于开始日期"
+
+#. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "错误，您不能创建循环引用的会员用户"
+
+#. module: membership
+#: code:addons/membership/membership.py:402
+#: code:addons/membership/membership.py:405
+#, python-format
+msgid "Error!"
+msgstr "错误！"
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "错误，这个会员卡已过期"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Forecast"
+msgstr "预测"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -90,277 +251,48 @@ msgid "Free Member"
 msgstr "免费会员"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Ending Date Of Membership"
-msgstr "会员资格终止日期"
-
-#. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "会员资格结束日期"
-
-#. module: membership
-#: field:product.product,membership_date_to:0
-#: field:res.partner,membership_stop:0
-msgid "Membership End Date"
-msgstr "会员结束日期"
-
-#. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
-#: view:res.partner:0
-msgid "Salesperson"
-msgstr "销售员"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_waitingtoinvoice0
-msgid "Waiting to invoice"
-msgstr "等待发票"
-
-#. module: membership
-#: view:report.membership:0
-msgid "This will display paid, old and total earned columns"
-msgstr "将显示已付、旧的、实现收入总计三列"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Suppliers"
-msgstr "供应商"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Non Member"
-msgstr "非会员"
-
-#. module: membership
-#: view:product.product:0
-msgid "Taxes"
-msgstr "税金"
-
-#. module: membership
-#: view:res.partner:0
-msgid "All Members"
-msgstr "全部会员"
-
-#. module: membership
-#: code:addons/membership/membership.py:410
-#: code:addons/membership/membership.py:413
-#, python-format
-msgid "Error!"
-msgstr "错误！"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_producttomember0
-msgid "Product to member"
-msgstr "产品给会员"
-
-#. module: membership
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "银牌会员"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_associatedmember0
-msgid "Member is associated."
-msgstr "是商会会员"
-
-#. module: membership
-#: field:report.membership,tot_pending:0
-msgid "Pending Amount"
-msgstr "未决金额"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_associationpartner0
-msgid "Associated partner."
-msgstr "商会伙伴"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Supplier Partners"
-msgstr "供应商业务伙伴"
-
-#. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# 已开票"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_report_membership_tree
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
-msgstr "会员分析"
-
-#. module: membership
-#: view:res.partner:0
-msgid "End Membership Date"
-msgstr "会员资格结束日期"
-
-#. module: membership
-#: code:addons/membership/membership.py:414
-#, python-format
-msgid "Partner doesn't have an address to make the invoice."
-msgstr "业务伙伴没有发票地址"
-
-#. module: membership
-#: model:ir.model,name:membership.model_res_partner
-#: field:membership.membership_line,partner:0
-msgid "Partner"
-msgstr "业务伙伴"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_invoicetopaid0
-msgid "Invoice to paid"
-msgstr "支付发票"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Customer Partners"
-msgstr "客户业务伙伴"
-
-#. module: membership
 #: field:membership.membership_line,date_from:0
 msgid "From"
 msgstr "来自"
 
 #. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "错误，这个会员卡已过期"
-
-#. module: membership
-#: model:process.transition.action,name:membership.process_transition_action_create0
-msgid "Create"
-msgstr "创建"
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_membership_line
-msgid "Member line"
-msgstr "会员明细"
-
-#. module: membership
-#: help:report.membership,date_from:0
-msgid "Start membership date"
-msgstr "入会日期"
-
-#. module: membership
-#: field:res.partner,membership_cancel:0
-msgid "Cancel Membership Date"
-msgstr "取消会员日期"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_paidmember0
-msgid "Paid member"
-msgstr "付费会员"
-
-#. module: membership
-#: field:report.membership,num_waiting:0
-msgid "# Waiting"
-msgstr "# 正在等待"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members
-#: model:ir.ui.menu,name:membership.menu_members
-#: model:ir.ui.menu,name:membership.menu_membership
-#: view:res.partner:0
-msgid "Members"
-msgstr "会员"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Invoiced/Paid/Free"
-msgstr "已开发票/已付款/免费"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_invoicedmember0
-msgid "Open invoice."
-msgstr "待处理发票"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "July"
-msgstr "7月"
+#: view:product.template:membership.membership_product_search_form_view
+msgid "From Month"
+msgstr ""
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
-msgid "Golden Membership"
-msgstr "金牌会员"
+msgid "Gold Membership"
+msgstr ""
 
 #. module: membership
-#: help:res.partner,associate_member:0
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
-msgstr "你将作为哪个客户的附属会员。你的会员资格会随着主会员的状态变化。"
+#: view:report.membership:membership.view_report_membership_search
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Group By"
+msgstr ""
 
 #. module: membership
-#: view:product.product:0
-#: view:report.membership:0
-#: field:report.membership,membership_id:0
-msgid "Membership Product"
-msgstr "会员产品"
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Group by..."
+msgstr "分组"
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_producttomember0
-msgid "Define product for membership."
-msgstr "定义会员产品"
+#: field:membership.invoice,id:0
+#: field:membership.membership_line,id:0
+#: field:report.membership,id:0
+msgid "ID"
+msgstr ""
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "已开发票的会员可能是商会会员"
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Inactive"
+msgstr "不活跃的"
 
 #. module: membership
-#: help:product.product,membership_date_to:0
-#: help:res.partner,membership_stop:0
-msgid "Date until which membership remains active."
-msgstr "会员资格到哪一天结束"
-
-#. module: membership
-#: view:product.product:0
-msgid "Membership products"
-msgstr "会员卡"
-
-#. module: membership
-#: field:res.partner,membership_state:0
-msgid "Current Membership Status"
-msgstr "当前会员状态"
-
-#. module: membership
-#: field:membership.membership_line,date:0
-msgid "Join Date"
-msgstr "加入日期"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_setassociation0
-msgid "Set association"
-msgstr "设置商会"
-
-#. module: membership
-#: view:res.partner:0
-msgid " Membership State"
-msgstr " 会员状态"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Memberships"
-msgstr "会员"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr "会员发票支付"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "September"
-msgstr "9月"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "December"
-msgstr "12月"
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr "发票"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -368,132 +300,10 @@ msgid "Invoice Line"
 msgstr "发票明细"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,month:0
-msgid "Month"
-msgstr "月份"
-
-#. module: membership
-#: view:product.product:0
-msgid "Group by..."
-msgstr "分组"
-
-#. module: membership
-#: code:addons/membership/membership.py:411
-#, python-format
-msgid "Partner is a free Member."
-msgstr "业务伙伴为免费会员。"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Buy Membership"
-msgstr "购买会员资格"
-
-#. module: membership
-#: field:report.membership,associate_member_id:0
-#: view:res.partner:0
-#: field:res.partner,associate_member:0
-msgid "Associate Member"
-msgstr "附属会员"
-
-#. module: membership
-#: help:product.product,membership_date_from:0
-#: help:res.partner,membership_start:0
-msgid "Date from which membership becomes active."
-msgstr "会员资格开始生效的日期"
-
-#. module: membership
-#: view:report.membership:0
-msgid "Associated Partner"
-msgstr "商会业务伙伴"
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_invoice
-#: view:membership.invoice:0
-msgid "Membership Invoice"
-msgstr "会员发票"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_membershipproduct0
-msgid "Define membership product."
-msgstr "定义会员产品"
-
-#. module: membership
-#: view:product.product:0
-msgid "Category"
-msgstr "分类"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Contacts"
-msgstr "联系人"
-
-#. module: membership
-#: view:report.membership:0
-msgid "Forecast"
-msgstr "预测"
-
-#. module: membership
-#: field:report.membership,partner_id:0
-msgid "Member"
-msgstr "会员"
-
-#. module: membership
-#: view:product.product:0
-msgid "Date From"
-msgstr "起始日期"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_associatedmember0
-msgid "Associated member"
-msgstr "商会会员"
-
-#. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr "客户加入会员资格的日期"
-
-#. module: membership
-#: field:membership.membership_line,state:0
-msgid "Membership Status"
-msgstr "会员状态"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Customers"
-msgstr "客户"
-
-#. module: membership
-#: view:membership.invoice:0
-msgid "or"
-msgstr "或者"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "August"
-msgstr "8月"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_products
-#: model:ir.ui.menu,name:membership.menu_membership_products
-#: view:product.product:0
-msgid "Membership Products"
-msgstr "会员产品"
-
-#. module: membership
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "错误！失效日期不能早于开始日期"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "June"
-msgstr "6月"
-
-#. module: membership
-#: help:product.product,membership:0
-msgid "Check if the product is eligible for membership."
-msgstr "检查产品是否适于成员。"
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "发票会员"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -503,116 +313,22 @@ msgid "Invoiced Member"
 msgstr "已开发票的会员"
 
 #. module: membership
-#: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "会籍"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Waiting Member"
-msgstr "等待会员"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_associationpartner0
-msgid "Association Partner"
-msgstr "商会业务伙伴"
-
-#. module: membership
-#: field:report.membership,date_from:0
-#: view:res.partner:0
-msgid "Start Date"
-msgstr "开始日期"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "November"
-msgstr "11月"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "October"
-msgstr "10月"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Invoiced/Paid/Free"
+msgstr "已开发票/已付款/免费"
 
 #. module: membership
 #: help:res.partner,membership_state:0
 msgid ""
 "It indicates the membership state.\n"
-"                    -Non Member: A partner who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                    -Paying member: A member who has paid the membership fee."
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
 msgstr ""
-"该指示显示成员状态：\n"
-"                    -非成员：伙伴未申请任何成员。\n"
-"                    -失效成员：已经取消资格的成员。\n"
-"                    -过期成员：成员身份过期的成员。\n"
-"                    -待批准成员：已经申请成员资格并且将生成发票的成员。\n"
-"                    -待付费成员：已经生成付费申请的成员。\n"
-"                    -付费成员：已经付成员费的成员。"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "January"
-msgstr "1月"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Membership Partners"
-msgstr "会员合作伙伴"
-
-#. module: membership
-#: field:membership.membership_line,member_price:0
-#: view:product.product:0
-msgid "Membership Fee"
-msgstr "会费"
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negotiated by the partner"
-msgstr "客户协商后的价格"
-
-#. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "基础会员"
-
-#. module: membership
-#: view:res.partner:0
-msgid "None/Canceled/Old/Waiting"
-msgstr "无/已取消/旧的/等待中"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Old Member"
-msgstr "旧会员"
-
-#. module: membership
-#: field:membership.membership_line,date_to:0
-msgid "To"
-msgstr "到"
-
-#. module: membership
-#: view:report.membership:0
-#: field:report.membership,membership_state:0
-msgid "Current Membership State"
-msgstr "当前会员状态"
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -640,40 +356,26 @@ msgstr ""
 "                    -付费成员：已经付成员费的成员。"
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_waitingtoinvoice0
-msgid "Draft invoice is now open."
-msgstr "发票现在是待处理"
+#: field:membership.membership_line,date:0
+msgid "Join Date"
+msgstr "加入日期"
 
 #. module: membership
-#: view:product.product:0
-msgid "Inactive"
-msgstr "不活跃的"
+#: field:membership.invoice,write_uid:0
+#: field:membership.membership_line,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
-msgstr "发票"
+#: field:membership.invoice,write_date:0
+#: field:membership.membership_line,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: membership
-#: view:membership.invoice:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: membership
-#: view:res.partner:0
-msgid "All non Members"
-msgstr "所有非会员"
-
-#. module: membership
-#: field:membership.membership_line,account_invoice_line:0
-msgid "Account Invoice line"
-msgstr "帐户发票明细"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_waitingmember0
-msgid "Draft invoice for membership."
-msgstr "会员草稿发票"
+#: field:report.membership,partner_id:0
+msgid "Member"
+msgstr "会员"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
@@ -681,30 +383,34 @@ msgid "Member Price"
 msgstr "会员价格"
 
 #. module: membership
-#: view:product.product:0
-msgid "Membership Duration"
-msgstr "成员期间"
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Member line"
+msgstr "会员明细"
 
 #. module: membership
-#: model:ir.model,name:membership.model_product_product
-msgid "Product"
-msgstr "产品"
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
+#: view:res.partner:membership.membership_members_tree
+msgid "Members"
+msgstr "会员"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "May"
-msgstr "5月"
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr "会员分析"
 
 #. module: membership
-#: field:product.product,membership_date_from:0
-#: field:res.partner,membership_start:0
-msgid "Membership Start Date"
-msgstr "成员开始日期"
-
-#. module: membership
-#: help:res.partner,free_member:0
-msgid "Select if you want to give free membership."
-msgstr "提供免费成员资格"
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: field:product.template,membership:0
+#: view:report.membership:membership.view_report_membership_graph1
+#: view:report.membership:membership.view_report_membership_search
+#: view:res.partner:membership.view_partner_form
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "会籍"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
@@ -712,378 +418,224 @@ msgid "Membership Amount"
 msgstr "成员费用"
 
 #. module: membership
-#: field:report.membership,date_to:0
-#: view:res.partner:0
-msgid "End Date"
-msgstr "结束日期"
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr "会员分析"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "February"
-msgstr "2月"
+#: view:product.template:membership.membership_products_form
+msgid "Membership Duration"
+msgstr "成员期间"
 
 #. module: membership
-#: model:process.node,name:membership.process_node_invoicedmember0
-msgid "Invoiced member"
-msgstr "已开发票会员"
+#: field:product.template,membership_date_to:0
+#: field:res.partner,membership_stop:0
+msgid "Membership End Date"
+msgstr "会员结束日期"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "April"
-msgstr "4月"
+#: field:membership.membership_line,member_price:0
+#: view:product.template:membership.membership_products_form
+#: view:product.template:membership.membership_products_tree
+msgid "Membership Fee"
+msgstr "会费"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Starting Date Of Membership"
-msgstr "会员资格开始日期"
+#: model:ir.model,name:membership.model_membership_invoice
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Membership Invoice"
+msgstr "会员发票"
 
 #. module: membership
-#: help:res.partner,membership_cancel:0
-msgid "Date on which membership has been cancelled"
-msgstr "退订会员资格的日期"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Membership Partners"
+msgstr "会员合作伙伴"
 
 #. module: membership
-#: field:membership.membership_line,date_cancel:0
-msgid "Cancel date"
-msgstr "取消日期"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_waitingmember0
-msgid "Waiting member"
-msgstr "等待会员"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
-#: view:membership.invoice:0
-msgid "Invoice Membership"
-msgstr "发票会员"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_membershipproduct0
-msgid "Membership product"
+#: view:product.template:membership.membership_product_search_form_view
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,membership_id:0
+msgid "Membership Product"
 msgstr "会员产品"
 
 #. module: membership
-#: help:membership.membership_line,member_price:0
-msgid "Amount for the membership"
-msgstr "会员资格的价格"
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Membership Products"
+msgstr "会员产品"
 
 #. module: membership
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，您不能创建循环引用的会员用户"
+#: field:product.template,membership_date_from:0
+#: field:res.partner,membership_start:0
+msgid "Membership Start Date"
+msgstr "成员开始日期"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Membership State"
+msgstr "会员状态"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership Status"
+msgstr "会员状态"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+#: view:product.template:membership.membership_products_tree
+msgid "Membership products"
+msgstr "会员卡"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_form
+msgid "Memberships"
+msgstr "会员"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Month"
+msgstr "月份"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
-msgid "Cancelled Member"
-msgstr "已取消的会员"
+msgid "Non Member"
+msgstr "非会员"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,year:0
-msgid "Year"
-msgstr "年"
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "None/Canceled/Old/Waiting"
+msgstr "无/已取消/旧的/等待中"
 
 #. module: membership
-#: view:product.product:0
-msgid "Accounting"
-msgstr "记账"
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Old Member"
+msgstr "旧会员"
 
 #. module: membership
-#: view:report.membership:0
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Paid Member"
+msgstr "付费会员"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+#: field:membership.membership_line,partner:0
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: membership
+#: code:addons/membership/membership.py:406
+#, python-format
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "业务伙伴没有发票地址"
+
+#. module: membership
+#: code:addons/membership/membership.py:403
+#, python-format
+msgid "Partner is a free Member."
+msgstr "业务伙伴为免费会员。"
+
+#. module: membership
+#: field:report.membership,tot_pending:0
+msgid "Pending Amount"
+msgstr "未决金额"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_template
+msgid "Product Template"
+msgstr "产品模板"
+
+#. module: membership
+#: field:report.membership,quantity:0
+msgid "Quantity"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
 msgid "Revenue Done"
 msgstr "已实现收入"
 
-#~ msgid "Partners"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Reporting"
-#~ msgstr "报表"
-
-#~ msgid "Configuration"
-#~ msgstr "设置"
-
-#~ msgid "Information"
-#~ msgstr "信息"
-
-#~ msgid "Currency"
-#~ msgstr "货币"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
-
-#~ msgid "Waiting"
-#~ msgstr "等待"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "错误：无效的(EAN)条码"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在这动作定义中无效的模块名"
-
-#~ msgid "Date to"
-#~ msgstr "日期到"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "错误!你不能创建递归的账户"
-
-#~ msgid "Date from"
-#~ msgstr "日期格式"
-
-#~ msgid "Free members"
-#~ msgstr "免费会员"
-
-#~ msgid "Confirm"
-#~ msgstr "确定"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Membership by Years"
-#~ msgstr "会籍年份"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "错误:销售单位和计量单位必须是不同类型"
-
-#~ msgid "Future members (invoice not confirmed)"
-#~ msgstr "未来会员(发票没确认)"
-
-#~ msgid "Membership Product - 2"
-#~ msgstr "会员产品 - 2"
-
-#~ msgid "Membership Product - 1"
-#~ msgstr "会员产品 - 1"
-
-#~ msgid "Canceled"
-#~ msgstr "取消"
-
-#~ msgid "Member Sale Pricelist"
-#~ msgstr "会员售价表"
-
-#~ msgid "Invoiced"
-#~ msgstr "开发票"
-
-#~ msgid "Member Sale Pricelist Version"
-#~ msgstr "会员售价表版本"
-
-#~ msgid "Cancel membership date"
-#~ msgstr "取消会员日期"
-
-#~ msgid "Paid"
-#~ msgstr "已付"
-
-#~ msgid "Specify if this product is a membership product"
-#~ msgstr "如果这产品是会籍产品指定"
-
-#~ msgid "Invoiced members"
-#~ msgstr "已开发票的会员"
-
-#~ msgid "You cannot have 2 pricelist versions that overlap!"
-#~ msgstr "你不能有2个价格表版本"
-
-#~ msgid "Old members"
-#~ msgstr "旧会员"
-
-#~ msgid "Membership amount"
-#~ msgstr "会员数"
-
-#~ msgid "Choose invoice details"
-#~ msgstr "选择发票细节"
-
-#~ msgid "Future members"
-#~ msgstr "未来的会员"
-
-#~ msgid "Associated members"
-#~ msgstr "准会员"
-
-#~ msgid "Paid members"
-#~ msgstr "付费会员"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须要以x_开头并且不能含特殊的字符"
-
-#~ msgid "Canceled Member"
-#~ msgstr "取消会员"
-
-#~ msgid "Free member"
-#~ msgstr "免费会员"
-
-#~ msgid "Stop membership date"
-#~ msgstr "停止会员日期"
-
-#~ msgid "Current members"
-#~ msgstr "当前的会员"
-
-#~ msgid "New Membership by Years"
-#~ msgstr "年新会员"
-
-#~ msgid "Current membership state"
-#~ msgstr "当前会员状态"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "错误：无效的Bvr号（错误的检验和）"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "错误：需要BVR参照"
-
-#~ msgid "Join Membership"
-#~ msgstr "加入成员"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "错误！"
-
-#~ msgid "Join"
-#~ msgstr "加入"
-
-#~ msgid "Product Template"
-#~ msgstr "产品模板"
-
-#~ msgid "General"
-#~ msgstr "一般"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "Description"
-#~ msgstr "说明"
-
-#~ msgid "Sale Taxes"
-#~ msgstr "销售税"
-
-#~ msgid "Purchase Description"
-#~ msgstr "采购说明"
-
-#~ msgid "Sale Description"
-#~ msgstr "销售说明"
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                    -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                    -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                    -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                    -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                    -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                    -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "会员的状态：\n"
-#~ "非会员：      该客户还没有会员资格\n"
-#~ "已退会员：   该客户已退出会员资格\n"
-#~ "旧会员：      该客户的会员资格已过期\n"
-#~ "待办会员：   该客户已签署会员资料等待开发票\n"
-#~ "已开票会员：该客户的发票已开\n"
-#~ "已付款会员：该客户已付款"
-
-#~ msgid "Select if a product is a membership product."
-#~ msgstr "选择作为会员资格的产品"
-
-#~ msgid "Membership State"
-#~ msgstr "会员状态"
-
-#~ msgid "Accounting Info"
-#~ msgstr "财务信息"
-
-#~ msgid "Select if you want to give membership free of cost."
-#~ msgstr "勾选此项则此会员资格免费"
-
-#~ msgid "Categorization"
-#~ msgstr "分类"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "最近30天"
-
-#~ msgid "Last 365 Days"
-#~ msgstr "最近365天"
-
-#~ msgid ""
-#~ "It indicates the membership state.\n"
-#~ "                        -Non Member: A member who has not applied for any "
-#~ "membership.\n"
-#~ "                        -Cancelled Member: A member who has cancelled his "
-#~ "membership.\n"
-#~ "                        -Old Member: A member whose membership date has "
-#~ "expired.\n"
-#~ "                        -Waiting Member: A member who has applied for the "
-#~ "membership and whose invoice is going to be created.\n"
-#~ "                        -Invoiced Member: A member whose invoice has been "
-#~ "created.\n"
-#~ "                        -Paid Member: A member who has paid the membership "
-#~ "amount."
-#~ msgstr ""
-#~ "会员的状态：\n"
-#~ "非会员：客户还没有签署会员协议\n"
-#~ "已退订会员：客户已退订会员资格\n"
-#~ "旧会员：客户的会员资额已过期\n"
-#~ "等待会员：客户已签署会员协议，等待发票\n"
-#~ "已开票会员：会员的发票已开\n"
-#~ "已付款会员：会员已付款"
-
-#~ msgid "Salesman"
-#~ msgstr "业务员"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "增加筛选条件"
-
-#~ msgid "Associate member"
-#~ msgstr "商会成员"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to manage all operations for managing memberships.\n"
-#~ "It supports different kind of members:\n"
-#~ "* Free member\n"
-#~ "* Associated member (ex: a group subscribe for a membership for all\n"
-#~ "  subsidiaries)\n"
-#~ "* Paid members,\n"
-#~ "* Special member prices, ...\n"
-#~ "\n"
-#~ "It is integrated with sales and accounting to allow you to automatically\n"
-#~ "invoice and send propositions for membership renewal.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "此模块用于管理所有会员管理的日常运营。\n"
-#~ "支持多种会员资格：\n"
-#~ "  免费会员\n"
-#~ "  附属会员（一组会员共用一个会员资格）\n"
-#~ "  已付款会员特价会员\n"
-#~ "\n"
-#~ "与销售和财务系统集成并自动创建会员的发票和续费提醒\n"
-#~ "    "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "错误！您不能创建递归的商会会员。"
-
-#~ msgid "Events created in current month"
-#~ msgstr "本月新建的活动"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    上月    "
-
-#~ msgid "Events created in last month"
-#~ msgstr "上个月新建的活动"
-
-#~ msgid "   Month   "
-#~ msgstr "   月   "
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "BBA传输结构有误！"
-
-#~ msgid "Events created in current year"
-#~ msgstr "本年新建的活动"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "发票号必须在公司范围内唯一"
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,user_id:0
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Salesperson"
+msgstr "销售员"
+
+#. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give free membership."
+msgstr "提供免费成员资格"
+
+#. module: membership
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "银牌会员"
+
+#. module: membership
+#: field:report.membership,start_date:0
+msgid "Start Date"
+msgstr "开始日期"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Start Month"
+msgstr ""
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Starting Month Of Membership"
+msgstr ""
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Supplier Partners"
+msgstr "供应商业务伙伴"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Suppliers"
+msgstr "供应商"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "Taxes"
+msgstr "税金"
+
+#. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr "客户协商后的价格"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "This note will be displayed on quotations..."
+msgstr ""
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "This will display paid, old and total earned columns"
+msgstr "将显示已付、旧的、实现收入总计三列"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "将显示等待、已开票、应付总额三列"
+
+#. module: membership
+#: field:membership.membership_line,date_to:0
+msgid "To"
+msgstr "到"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Waiting Member"
+msgstr "等待会员"

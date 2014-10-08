@@ -15,7 +15,7 @@ If you are a developer type the following command at your terminal:
 
     wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
 
-Then follow <a href="https://doc.openerp.com/trunk/server/howto/howto_website/">the developer tutorial</a>
+Then follow <a href="https://doc.odoo.com/trunk/server/howto/howto_website/">the developer tutorial</a>
 
 
 
@@ -33,11 +33,13 @@ Packages, tarballs and installers
         $ sudo apt-get update
         $ sudo apt-get install odoo
 
-* <a href="http://nightly.openerp.com/">Source tarballs</a>
+    If you plan to use Odoo with a local database, please make sure to install PostgreSQL *before* installing the Odoo Debian package.
 
-* <a href="http://nightly.openerp.com/">Windows installer</a>
+* <a href="http://nightly.odoo.com/8.0/nightly/src/">Source tarballs</a>
 
-* <a href="http://nightly.openerp.com/">RPM package</a>
+* <a href="http://nightly.odoo.com/8.0/nightly/exe/">Windows installer</a>
+
+* <a href="http://nightly.odoo.com/8.0/nightly/rpm/">RPM package</a>
 
 
 For Odoo employees

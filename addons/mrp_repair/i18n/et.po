@@ -1,182 +1,58 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp_repair
+# Estonian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-10-30 12:38+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_tax:0
-#: field:mrp.repair.fee,tax_id:0
-#: field:mrp.repair.line,tax_id:0
-msgid "Taxes"
+#: help:mrp.repair.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically as draft when repair order in "
+"draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order "
+"in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.     "
+"                   \n"
+"* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Maksuvaba summa"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,move_id:0
-msgid "Inventory Move"
-msgstr "Inventuuri liikumine"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Group By..."
+#: help:mrp.repair,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.      "
+"       \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Loo arve uuesti"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "(Add)"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
-#: view:mrp.repair.cancel:0
-msgid "Cancel Repair Order"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "(update)"
 msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
-msgid "To Invoice"
-msgstr "Arvepeal"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Printing Date"
-msgstr "Printimise kuupäev"
-
-#. module: mrp_repair
-#: field:mrp.repair.make_invoice,group:0
-msgid "Group by partner invoice address"
-msgstr "Grupeeri partneri arve aadressi järgi"
-
-#. module: mrp_repair
-#: field:mrp.repair,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
-#, python-format
-msgid "No product defined on Fees!"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Set to Draft"
-msgstr "Määra mustandiks"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Invoice Exception"
-msgstr "Arve erand"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Serial Number"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,address_id:0
-msgid "Delivery Address"
-msgstr "Tarneaadress"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "History"
-msgstr "Ajalugu"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,price_subtotal:0
-#: field:mrp.repair.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Vahesumma"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Invoice address :"
-msgstr "Arveaadress :"
-
-#. module: mrp_repair
-#: help:mrp.repair,partner_id:0
-msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Guarantee limit"
-msgstr "Garantiiaeg"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Notes"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Net Total :"
-msgstr "Neto :"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Operations"
-msgstr "Operatsioonid"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -200,37 +76,231 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: help:mrp.repair.line,state:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#, python-format
+msgid "Active ID not Found"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Lisa"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "Remondijärgne"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Remondieelne"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Loobu"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Loobu remondist"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+#: selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: mrp_repair
+#: help:mrp.repair,partner_id:0
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Kinnita remont"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0
+#: selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Kinnitatud"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:541
+#, python-format
 msgid ""
-" * The 'Draft' status is set automatically as draft when repair order in "
-"draft status.                         \n"
-"* The 'Confirmed' status is set automatically as confirm when repair order "
-"in confirm status.                         \n"
-"* The 'Done' status is set automatically when repair order is completed.     "
-"                   \n"
-"* The 'Cancelled' status is set automatically when user cancel repair order."
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,move_id:0
-msgid "Move"
-msgstr "Suuna"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Tax"
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create Invoice"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
-msgid "Repair Orders"
-msgstr "Remondikorraldused"
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr "Loo arved"
 
 #. module: mrp_repair
-#: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
-msgid "Quotation / Order"
-msgstr "Hinnapakkumine / Korraldus"
+#: field:mrp.repair,create_uid:0
+#: field:mrp.repair.cancel,create_uid:0
+#: field:mrp.repair.fee,create_uid:0
+#: field:mrp.repair.line,create_uid:0
+#: field:mrp.repair.make_invoice,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,create_date:0
+#: field:mrp.repair.cancel,create_date:0
+#: field:mrp.repair.fee,create_date:0
+#: field:mrp.repair.line,create_date:0
+#: field:mrp.repair.make_invoice,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,location_id:0
+msgid "Current Location"
+msgstr "Praegune asukoht"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,address_id:0
+msgid "Delivery Address"
+msgstr "Tarneaadress"
+
+#. module: mrp_repair
+#: field:mrp.repair,location_dest_id:0
+msgid "Delivery Location"
+msgstr "Tarnea asukoht"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,name:0
+#: field:mrp.repair.line,name:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Kirjeldus"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,location_dest_id:0
+msgid "Dest. Location"
+msgstr "Sihtkoht"
+
+#. module: mrp_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Valmis"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Remondi lõpp"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr "Täiendav info"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair,fees_lines:0
+msgid "Fees"
+msgstr "Kulud"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Fees Line(s)"
+msgstr "Kulude rida(read)"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.make_invoice,group:0
+msgid "Group by partner invoice address"
+msgstr "Grupeeri partneri arve aadressi järgi"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Guarantee Limit:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr "Ajalugu"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_summary:0
@@ -240,171 +310,43 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Extra Info"
-msgstr "Täiendav info"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Warning!"
+#: field:mrp.repair,id:0
+#: field:mrp.repair.cancel,id:0
+#: field:mrp.repair.fee,id:0
+#: field:mrp.repair.line,id:0
+#: field:mrp.repair.make_invoice,id:0
+msgid "ID"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "(update)"
+#: help:mrp.repair,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,partner_id:0
-msgid "Partner"
-msgstr "Partner"
+#: field:mrp.repair,internal_notes:0
+msgid "Internal Notes"
+msgstr "Sisemised märkused"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr ""
+#: field:mrp.repair.line,move_id:0
+msgid "Inventory Move"
+msgstr "Inventuuri liikumine"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-#: selection:mrp.repair,state:0
-#: selection:mrp.repair.line,state:0
-msgid "Confirmed"
-msgstr "Kinnitatud"
+#: field:mrp.repair,invoice_id:0
+msgid "Invoice"
+msgstr "Arve"
 
 #. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair order.      "
-"       \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Repairs order"
-msgstr "Remontide korraldus"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#, python-format
-msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Order N° :"
-msgstr "Remondikorralduse N° :"
-
-#. module: mrp_repair
-#: field:mrp.repair,prodlot_id:0
-#: field:mrp.repair.line,prodlot_id:0
-#: report:repair.order:0
-msgid "Lot Number"
-msgstr "Seerianumber"
-
-#. module: mrp_repair
-#: field:mrp.repair,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,fees_lines:0
-msgid "Fees Lines"
-msgstr "Kulude read"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,type:0
-msgid "Type"
-msgstr "Tüüp"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Fees Line(s)"
-msgstr "Kulude rida(read)"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoice Corrected"
+msgstr "Arve korrigeeritud"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-msgid "To be Invoiced"
-msgstr "Tehakse arve"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Shipping address :"
-msgstr "Tarneaadress :"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Total :"
-msgstr "Kokku :"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,pricelist_id:0
-msgid "Pricelist"
-msgstr "Hinnakiri"
-
-#. module: mrp_repair
-#: field:mrp.repair,quotation_notes:0
-msgid "Quotation Notes"
-msgstr "Hinnapakkumise märkused"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair,state:0
-#: field:mrp.repair.line,state:0
-msgid "Status"
-msgstr "Staatus"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Search Reair Orders"
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "(Add)"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-#: view:mrp.repair:0
-msgid "Repair Line"
-msgstr "Remondi rida"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "N° :"
-msgstr "N° :"
-
-#. module: mrp_repair
-#: field:mrp.repair,invoice_method:0
-msgid "Invoice Method"
-msgstr "Arve meetod"
-
-#. module: mrp_repair
-#: field:mrp.repair,repaired:0
-#: selection:mrp.repair,state:0
-msgid "Repaired"
-msgstr "Remonditud"
+msgid "Invoice Exception"
+msgstr "Arve erand"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -413,28 +355,22 @@ msgid "Invoice Line"
 msgstr "Arve Rida"
 
 #. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "Before Repair"
-msgstr "Remondieelne"
+#: field:mrp.repair,invoice_method:0
+msgid "Invoice Method"
+msgstr "Arve meetod"
 
 #. module: mrp_repair
-#: field:mrp.repair,location_id:0
-msgid "Current Location"
-msgstr "Praegune asukoht"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-msgid "Yes"
-msgstr "Jah"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "or"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 #: field:mrp.repair,invoiced:0
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
@@ -442,30 +378,297 @@ msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoicing"
+msgstr "Arveldamine"
+
+#. module: mrp_repair
+#: field:mrp.repair,partner_invoice_id:0
+msgid "Invoicing Address"
+msgstr "Arveaadress"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,write_uid:0
+#: field:mrp.repair.cancel,write_uid:0
+#: field:mrp.repair.fee,write_uid:0
+#: field:mrp.repair.line,write_uid:0
+#: field:mrp.repair.make_invoice,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,write_date:0
+#: field:mrp.repair.cancel,write_date:0
+#: field:mrp.repair.fee,write_date:0
+#: field:mrp.repair.line,write_date:0
+#: field:mrp.repair.make_invoice,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.line,lot_id:0
+msgid "Lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Lot Number"
+msgstr "Seerianumber"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Loo arve"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: mrp_repair
+#: help:mrp.repair,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,move_id:0
+msgid "Move"
+msgstr "Suuna"
+
+#. module: mrp_repair
+#: help:mrp.repair,move_id:0
+msgid "Move created by the repair order"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "Arve puudub"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:528
+#, python-format
+msgid "No Pricelist!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:389
+#, python-format
+msgid "No product defined on Fees!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:539
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Operation Line(s)"
+msgstr "Operatsiooni rida(read)"
+
+#. module: mrp_repair
+#: field:mrp.repair,operations:0
+msgid "Operation Lines"
+msgstr "Operatsiooni read"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr "Operatsioonid"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Hind"
+
+#. module: mrp_repair
+#: field:mrp.repair,pricelist_id:0
+msgid "Pricelist"
+msgstr "Hinnakiri"
+
+#. module: mrp_repair
+#: help:mrp.repair,pricelist_id:0
+msgid "Pricelist of the selected partner."
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Printing Date:"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair.fee,product_id:0
+#: field:mrp.repair.line,product_id:0
+msgid "Product"
+msgstr "Toode"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Product Information"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,product_qty:0
+msgid "Product Quantity"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,product_uom:0
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create invoices"
-msgstr "Loo arved"
+#: field:mrp.repair,product_id:0
+msgid "Product to Repair"
+msgstr "Remonditav toode"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "(Remove)"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Product to Repair:"
 msgstr ""
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,type:0
-msgid "Add"
-msgstr "Lisa"
+#: help:mrp.repair,lot_id:0
+msgid "Products repaired are all belonging to this lot"
+msgstr ""
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Mustand"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Quantity"
+msgstr "Kogus"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Hinnapakkumine"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Hinnapakkumine / Korraldus"
+
+#. module: mrp_repair
+#: field:mrp.repair,quotation_notes:0
+msgid "Quotation Notes"
+msgstr "Hinnapakkumise märkused"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Valmis remondiks"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Reair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Recreate Invoice"
+msgstr "Loo arve uuesti"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Remove"
+msgstr "Eemalda"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr "Remondi rida"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Order N°:"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,repair_id:0
+#: field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repair Orders"
+msgstr "Remondikorraldused"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation N°:"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
@@ -473,19 +676,37 @@ msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-#: view:mrp.repair:0
-msgid "Repair Order"
+#: code:addons/mrp_repair/mrp_repair.py:302
+#, python-format
+msgid "Repair order is already invoiced."
 msgstr ""
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "Remondis"
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Ready To Repair"
+#: field:mrp.repair,repaired:0
+#: selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr "Remonditud"
+
+#. module: mrp_repair
+#: field:mrp.repair,lot_id:0
+msgid "Repaired Lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Remontide korraldus"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Search Reair Orders"
 msgstr ""
 
 #. module: mrp_repair
@@ -497,71 +718,43 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,guarantee_limit:0
-msgid "Warranty Expiration"
-msgstr ""
-
-#. module: mrp_repair
-#: help:mrp.repair,pricelist_id:0
-msgid "Pricelist of the selected partner."
-msgstr ""
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Guarantee Limit"
-msgstr "Garantiiaeg"
-
-#. module: mrp_repair
-#: field:mrp.repair,default_address_id:0
-msgid "unknown"
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,product_id:0
-#: report:repair.order:0
-msgid "Product to Repair"
-msgstr "Remonditav toode"
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "After Repair"
-msgstr "Remondijärgne"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#: code:addons/mrp_repair/mrp_repair.py:289
 #, python-format
-msgid "Active ID not Found"
+msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Määra mustandiks"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Date"
-msgstr ""
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Shipping address :"
+msgstr "Tarneaadress :"
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
-msgid "Repair Fees Line"
-msgstr ""
+#: field:mrp.repair.line,location_id:0
+msgid "Source Location"
+msgstr "Lähtekoht"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Quotation"
-msgstr "Hinnapakkumine"
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Alusta remonti"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Confirm Repair"
-msgstr "Kinnita remont"
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,state:0
+#: field:mrp.repair.line,state:0
+msgid "Status"
+msgstr "Staatus"
 
 #. module: mrp_repair
-#: report:repair.order:0
-msgid "Repair Quotation"
-msgstr "Remondi hinnapakkumine"
+#: field:mrp.repair.fee,price_subtotal:0
+#: field:mrp.repair.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Vahesumma"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_summary:0
@@ -569,96 +762,29 @@ msgid "Summary"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "End Repair"
-msgstr "Remondi lõpp"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Tax"
+msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: field:mrp.repair,amount_tax:0
+#: field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair.line,tax_id:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Maksud"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:224
 #, python-format
-msgid "No account defined for product \"%s\"."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Quotations"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_uom_qty:0
-#: field:mrp.repair.line,product_uom_qty:0
-#: report:repair.order:0
-msgid "Quantity"
-msgstr "Kogus"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Product Information"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
-#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
-msgid "Make Invoice"
-msgstr "Loo arve"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Start Repair"
-msgstr "Alusta remonti"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
-#: report:repair.order:0
-msgid "Unit Price"
-msgstr "Ühiku hind"
-
-#. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Done"
-msgstr "Valmis"
-
-#. module: mrp_repair
-#: field:mrp.repair,invoice_id:0
-msgid "Invoice"
-msgstr "Arve"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Fees"
-msgstr "Kulud"
-
-#. module: mrp_repair
-#: view:mrp.repair.cancel:0
-#: view:mrp.repair.make_invoice:0
-msgid "Cancel"
-msgstr "Loobu"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,location_dest_id:0
-msgid "Dest. Location"
-msgstr "Sihtkoht"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Operation Line(s)"
-msgstr "Operatsiooni rida(read)"
-
-#. module: mrp_repair
-#: field:mrp.repair,location_dest_id:0
-msgid "Delivery Location"
-msgstr "Tarnea asukoht"
-
-#. module: mrp_repair
-#: help:mrp.repair,deliver_bool:0
 msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired and create a picking with selected product. Note that you can "
-"select the locations in the Info tab, if you have the extended view."
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
 msgstr ""
 
 #. module: mrp_repair
@@ -671,293 +797,131 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Create Invoice"
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Reair Orders"
-msgstr ""
+#: field:mrp.repair.fee,to_invoice:0
+#: field:mrp.repair.line,to_invoice:0
+msgid "To Invoice"
+msgstr "Arvepeal"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,name:0
-#: field:mrp.repair.line,name:0
-#: report:repair.order:0
-msgid "Description"
-msgstr "Kirjeldus"
-
-#. module: mrp_repair
-#: field:mrp.repair,operations:0
-msgid "Operation Lines"
-msgstr "Operatsiooni read"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-#: field:mrp.repair.fee,product_id:0
-#: field:mrp.repair.line,product_id:0
-msgid "Product"
-msgstr "Toode"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoice Corrected"
-msgstr "Arve korrigeeritud"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Price"
-msgstr "Hind"
-
-#. module: mrp_repair
-#: field:mrp.repair,deliver_bool:0
-msgid "Deliver"
-msgstr "Tarnimine"
-
-#. module: mrp_repair
-#: field:mrp.repair,internal_notes:0
-msgid "Internal Notes"
-msgstr "Sisemised märkused"
-
-#. module: mrp_repair
-#: report:repair.order:0
-msgid "Taxes:"
-msgstr "Maksud:"
-
-#. module: mrp_repair
-#: view:mrp.repair.make_invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair,picking_id:0
-msgid "Picking"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Untaxed amount"
-msgstr "Maksuvaba summa"
-
-#. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
-msgid "Repair Order Reference"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:49
-#, python-format
-msgid "Repair order is not invoiced."
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Total amount"
-msgstr "Kogusumma"
-
-#. module: mrp_repair
-#: selection:mrp.repair.line,type:0
-msgid "Remove"
-msgstr "Eemalda"
-
-#. module: mrp_repair
-#: field:mrp.repair,partner_invoice_id:0
-msgid "Invoicing Address"
-msgstr "Arveaadress"
-
-#. module: mrp_repair
-#: help:mrp.repair,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Invoicing"
-msgstr "Arveldamine"
-
-#. module: mrp_repair
-#: field:mrp.repair.line,location_id:0
-msgid "Source Location"
-msgstr "Lähtekoht"
-
-#. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
-#: view:mrp.repair:0
-msgid "Cancel Repair"
-msgstr "Loobu remondist"
-
-#. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "No Invoice"
-msgstr "Arve puudub"
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "Tehakse arve"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
+#: view:website:mrp_repair.report_mrprepairorder
 msgid "Total"
 msgstr "Kokku"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Ready to Repair"
-msgstr "Valmis remondiks"
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Total Without Taxes"
+msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr "Kogusumma"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,type:0
+msgid "Type"
+msgstr "Tüüp"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "Remondis"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,price_unit:0
+#: field:mrp.repair.line,price_unit:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Ühiku hind"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Maksuvaba summa"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr "Maksuvaba summa"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "VAT:"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:224
 #, python-format
-msgid "No partner !"
-msgstr "Partner puudub!"
+msgid "Warning"
+msgstr ""
 
-#~ msgid "Fees Line"
-#~ msgstr "Kulude rida"
-
-#~ msgid "Repair Order Ref"
-#~ msgstr "Remonditellimuse viide"
-
-#~ msgid "Repairs in quotation"
-#~ msgstr "Remondid hinnapakkumises"
-
-#~ msgid "Repair Fees line"
-#~ msgstr "Remondikulude rida"
-
-#~ msgid "Repairs"
-#~ msgstr "Remondid"
-
-#~ msgid "Packing"
-#~ msgstr "Pakkimine"
-
-#~ msgid "Repairs in progress"
-#~ msgstr "Käimasolevad remondid"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "No"
-#~ msgstr "Ei"
-
-#~ msgid "New Repair"
-#~ msgstr "Uus remont"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "The pricelist comes from the selected partner, by default."
-#~ msgstr "Hinnakiri tuleb valitud partnerilt vaikimisi."
-
-#~ msgid ""
-#~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
-#~ "Invoice. Do you want to continue?"
-#~ msgstr ""
-#~ "See operatsioon tühistab remondiprotsessi, aga ei tühista selle arvet. Kas "
-#~ "soovid jätkata?"
-
-#~ msgid "Compute"
-#~ msgstr "Arvuta"
-
-#~ msgid "Repairs Ready to Start"
-#~ msgstr "Remondid valmis alustamiseks"
-
-#~ msgid "Qty"
-#~ msgstr "Kogus"
-
-#~ msgid "Repair Operations Lines"
-#~ msgstr "Remondioperatsiooni read"
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "Kas soovid tõesti luua arved ?"
-
-#~ msgid ""
-#~ "Check this box if you want to manage the delivery once the product is "
-#~ "repaired. If cheked, it will create a packing with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the extended "
-#~ "view."
-#~ msgstr ""
-#~ "Vali see kast, kui soovid hallata tarneid peale remondi lõppu. Kui on "
-#~ "valitud luuakse pakkimine valitud tootele. Pane tähele, et saad määrata "
-#~ "tarneasukohad infoaknas, kui sul on laiendatud vaade."
-
-#~ msgid "Make invoices"
-#~ msgstr "Loo arved"
-
-#~ msgid "Repair Ref"
-#~ msgstr "Remondiviide"
-
-#~ msgid "Cancel Repair...??"
-#~ msgstr "Loobu remondist...??"
-
-#~ msgid "Product UoM"
-#~ msgstr "Toote mõõtühik"
-
-#~ msgid "Quality"
-#~ msgstr "Kvaliteet"
-
-#~ msgid "States"
-#~ msgstr "staatused"
-
-#~ msgid ""
-#~ "This field allow you to choose the parner that will be invoiced and delivered"
-#~ msgstr ""
-#~ "See väli lubab sul valida partneri kellele tehakse arve ja tarnitakse "
-#~ "toode(ed)"
-
-#~ msgid "Canceled"
-#~ msgstr "Tühistatud"
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "Kogus (MÜ)"
-
-#~ msgid ""
-#~ "This field allow you to change the workflow of the repair order. If value "
-#~ "selected is different from 'No Invoice', it also allow you to select the "
-#~ "pricelist and invoicing address."
-#~ msgstr ""
-#~ "See väli võimaldab sul muuta remondikorralduse töövoogu. Kui valitud väärtus "
-#~ "pole 'Arveta' siis võimaldab see sul valida hinnakirja ja arveldamise "
-#~ "aadressi."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid ""
-#~ "The garantee limit is computed as: last move date + warranty defined on "
-#~ "selected product. If the current date is below the garantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
-#~ "Note that you can change manually afterwards."
-#~ msgstr ""
-#~ "Garantiilimiit on arvutatud nii: viimase liikumise kuupäev + määratletud "
-#~ "garantii valitud tootel. Kui käesolev kuupäev on allpool garantiilimiiti "
-#~ "siis iga lisatav operatsioon ja tasu seatakse vaikimisi 'mitte arveldada'. "
-#~ "Sa saad seda hiljem käsitsi muuta."
-
-#~ msgid "Repair State"
-#~ msgstr "Remondi olek"
-
-#~ msgid "Gives the state of the Repair Order"
-#~ msgstr "Annab remondikorralduse oleku"
-
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:289
+#: code:addons/mrp_repair/mrp_repair.py:302
+#: code:addons/mrp_repair/mrp_repair.py:389
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
-#~ msgid "You have to select a partner in the repair form !"
-#~ msgstr "Sa pead valima partneri remondi vormil!"
+msgid "Warning!"
+msgstr ""
 
-#~ msgid "Products Repairs Module"
-#~ msgstr "Tooteremondi moodul"
+#. module: mrp_repair
+#: field:mrp.repair,guarantee_limit:0
+msgid "Warranty Expiration"
+msgstr ""
 
-#~ msgid "Repairs Order"
-#~ msgstr "Remondikorraldus"
+#. module: mrp_repair
+#: field:mrp.repair,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
 
-#~ msgid "Repairs to be invoiced"
-#~ msgstr "Remondid arveldamiseks"
+#. module: mrp_repair
+#: help:mrp.repair,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
 
-#~ msgid "UoM"
-#~ msgstr "MõÜ"
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr "Jah"
 
-#~ msgid "VAT"
-#~ msgstr "KM"
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:530
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+"Please set one before choosing a product."
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair,default_address_id:0
+msgid "unknown"
+msgstr ""

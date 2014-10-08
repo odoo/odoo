@@ -416,11 +416,12 @@ class calendar_alarm_manager(osv.AbstractModel):
         return res
 
     def get_next_mail(self, cr, uid, context=None):
-        cron = self.pool.get('ir.cron').search(cr, uid, [('model', 'ilike', self._name)], context=context)
-        if cron and len(cron) == 1:
-            cron = self.pool.get('ir.cron').browse(cr, uid, cron[0], context=context)
-        else:
-            _logger.exception("Cron for " + self._name + " can not be identified !")
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+        except ValueError:
+            _logger.error("Cron for " + self._name + " can not be identified !")
+            return False
 
         if cron.interval_type == "weeks":
             cron_interval = cron.interval_number * 7 * 24 * 60 * 60
@@ -432,9 +433,12 @@ class calendar_alarm_manager(osv.AbstractModel):
             cron_interval = cron.interval_number * 60
         elif cron.interval_type == "seconds":
             cron_interval = cron.interval_number
+        else:
+            cron_interval = False
 
         if not cron_interval:
-            _logger.exception("Cron delay can not be computed !")
+            _logger.error("Cron delay can not be computed !")
+            return False
 
         all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
 
@@ -558,6 +562,35 @@ class calendar_alarm(osv.Model):
         'duration': 1,
         'interval': 'hours',
     }
+
+    def _update_cron(self, cr, uid, context=None):
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+        except ValueError:
+            return False
+        return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
+
+    def create(self, cr, uid, values, context=None):
+        res = super(calendar_alarm, self).create(cr, uid, values, context=context)
+
+        self._update_cron(cr, uid, context=context)
+
+        return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(calendar_alarm, self).write(cr, uid, ids, values, context=context)
+
+        self._update_cron(cr, uid, context=context)
+
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(calendar_alarm, self).unlink(cr, uid, ids, context=context)
+
+        self._update_cron(cr, uid, context=context)
+
+        return res
 
 
 class ir_values(osv.Model):
@@ -1013,7 +1046,9 @@ class calendar_event(osv.Model):
     def new_invitation_token(self, cr, uid, record, partner_id):
         return uuid.uuid4().hex
 
-    def create_attendees(self, cr, uid, ids, context):
+    def create_attendees(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         user_obj = self.pool['res.users']
         current_user = user_obj.browse(cr, uid, uid, context=context)
         res = {}
@@ -1043,8 +1078,9 @@ class calendar_event(osv.Model):
 
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
-                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                    if not context.get('no_email'):
+                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
+                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)

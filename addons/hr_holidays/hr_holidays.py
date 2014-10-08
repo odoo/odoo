@@ -68,7 +68,7 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, context=context)
         else:
-            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
+            res = dict((res_id, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}) for res_id in ids)
         return res
 
     _columns = {
@@ -385,7 +385,8 @@ class hr_holidays(osv.osv):
                 if record.user_id and record.user_id.partner_id:
                     meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
                     
-                meeting_id = meeting_obj.create(cr, uid, meeting_vals)
+                ctx_no_email = dict(context or {}, no_email=True)
+                meeting_id = meeting_obj.create(cr, uid, meeting_vals, context=ctx_no_email)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
             elif record.holiday_type == 'category':
@@ -430,7 +431,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        meeting_obj = self.pool.get('calendar.event')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.meeting_id:

@@ -21,6 +21,7 @@
 
 from datetime import datetime
 
+from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -152,35 +153,26 @@ class hr_applicant(osv.Model):
         return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
-        @return: difference between current date and log date
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
+        res = dict((res_id, {}) for res_id in ids)
         for issue in self.browse(cr, uid, ids, context=context):
+            values = {
+                'day_open': 0.0,
+                'day_close': 0.0,
+            }
+
+            if issue.date_open:
+                date_create = datetime.strptime(issue.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                date_open = datetime.strptime(issue.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                values['day_open'] = (date_open - date_create).total_seconds() / (24.0 * 3600)
+
+            if issue.date_closed:
+                date_create = datetime.strptime(issue.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                date_closed = datetime.strptime(issue.date_closed, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                values['day_close'] = (date_closed - date_create).total_seconds() / (24.0 * 3600)
+
+            # filter only required values
             for field in fields:
-                res[issue.id] = {}
-                duration = 0
-                ans = False
-                hours = 0
-
-                if field in ['day_open']:
-                    if issue.date_open:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
-                        ans = date_open - date_create
-
-                elif field in ['day_close']:
-                    if issue.date_closed:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
-                        ans = date_close - date_create
-                if ans:
-                    duration = float(ans.days)
-                    res[issue.id][field] = abs(float(duration))
+                res[issue.id][field] = values[field]
         return res
 
     def _get_attachment_number(self, cr, uid, ids, fields, args, context=None):
@@ -227,10 +219,12 @@ class hr_applicant(osv.Model):
         'response_id': fields.many2one('survey.user_input', "Response", ondelete='set null', oldname="response"),
         'reference': fields.char('Referred By'),
         'source_id': fields.many2one('hr.recruitment.source', 'Source'),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_close', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Open',
+                                    multi='day_open', type="float",
+                                    store={'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='day_close', type="float",
+                                     store={'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
@@ -276,6 +270,14 @@ class hr_applicant(osv.Model):
                         'partner_mobile': addr.mobile,
                         'email_from': addr.email})
         return {'value': data}
+
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
+        if not stage_id:
+            return {'value': {}}
+        stage = self.pool['hr.recruitment.stage'].browse(cr, uid, stage_id, context=context)
+        if stage.fold:
+            return {'value': {'date_closed': fields.datetime.now()}}
+        return {'value': {'date_closed': False}}
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
@@ -406,6 +408,10 @@ class hr_applicant(osv.Model):
         if vals.get('job_id') or context.get('default_job_id'):
             job_id = vals.get('job_id') or context.get('default_job_id')
             vals.update(self.onchange_job(cr, uid, [], job_id, context=context)['value'])
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        if 'stage_id' in vals:
+            vals.update(self.onchange_stage_id(cr, uid, None, vals.get('stage_id'), context=context)['value'])
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         applicant = self.browse(cr, uid, obj_id, context=context)
         if applicant.job_id:
@@ -427,6 +433,7 @@ class hr_applicant(osv.Model):
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
+            vals.update(self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value'])
             for applicant in self.browse(cr, uid, ids, context=None):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)

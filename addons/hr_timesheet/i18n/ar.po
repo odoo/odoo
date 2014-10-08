@@ -1,20 +1,48 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet
+# Arabic translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:49+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:56+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:13+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "(Keep empty for current time)"
+msgstr "(احتفظ بالفراغ للوقت الحالي)"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "(local time on the server side)"
+msgstr "(بالتوقيت المحلي على الجانب الملقم)"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to record activities.\n"
+"              </p><p>\n"
+"                You can register and track your workings hours by project "
+"every\n"
+"                day. Every time spent on a project will become a cost in "
+"the\n"
+"                analytic accounting/contract and can be re-invoiced to\n"
+"                customers if required.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -22,7 +50,7 @@ msgid ""
 "<p>\n"
 "                No activity yet on this contract.\n"
 "              </p><p>\n"
-"                In OpenERP, contracts and projects are implemented using\n"
+"                In Odoo, contracts and projects are implemented using\n"
 "                analytic account. So, you can track costs and revenues to "
 "analyse\n"
 "                your margins easily.\n"
@@ -43,21 +71,163 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Absent"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Accounting"
+msgstr "المحاسبة"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,account_id:0
+#: model:ir.model,name:hr_timesheet.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "حساب تحليلي"
+
+#. module: hr_timesheet
+#: field:hr.employee,journal_id:0
+msgid "Analytic Journal"
+msgstr "يومية تحليلية"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,line_id:0
+msgid "Analytic Line"
+msgstr "خط تحليلي"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Analytic account"
+msgstr "حساب تحليلي"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Change Work"
+msgstr "تغيير العمل"
+
+#. module: hr_timesheet
+#: help:account.analytic.account,use_timesheets:0
+msgid "Check this field if this project manages timesheets"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.out.project,date:0
+msgid "Closing Date"
+msgstr "تاريخ الاغلاق"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,cost:0
+msgid "Cost"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
+msgid "Cost/Revenue"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
+msgid "Costs & Revenues"
+msgstr "التكاليف والأرباح"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_uid:0
+#: field:hr.sign.in.project,create_uid:0
+#: field:hr.sign.out.project,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_date:0
+#: field:hr.sign.in.project,create_date:0
+#: field:hr.sign.out.project,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,server_date:0
+#: field:hr.sign.out.project,server_date:0
+msgid "Current Date"
+msgstr "التاريخ الحالي"
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,state:0
+#: field:hr.sign.out.project,state:0
+msgid "Current Status"
+msgstr "الحالة الحالية"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,date:0
+msgid "Date"
+msgstr "تاريخ"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
+msgid "Define your Analytic Structure"
+msgstr "تعريف هيكلك التحليلي"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,name:0
+msgid "Description"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Duration"
+msgstr "المدة"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+msgid "Employee"
+msgstr "موظف"
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,emp_id:0
+#: field:hr.sign.out.project,emp_id:0
+msgid "Employee ID"
+msgstr "هوية الموظف"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:152
 #, python-format
-msgid "Wed"
-msgstr "أربعاء"
+msgid ""
+"Employee is not created for this user. Please create one from configuration "
+"panel."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "(Keep empty for current_time)"
-msgstr "(احفظ الفراغ للوقت_الجاري)"
+#: field:hr.sign.in.project,name:0
+#: field:hr.sign.out.project,name:0
+msgid "Employee's Name"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Group By..."
-msgstr "تجميع حسب..."
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
+"يمكن للموظفين ترميز الوقت الذي يقضونه في مشاريع مختلفة. والمشروع عبارة عن "
+"حساب تحليلي والوقت الذي تستغرقه في مشروع يولد التكاليف على الحساب التحليلي. "
+"هذه الميزة تسمح بتسجيل في الوقت نفسه الحضور والجدول الزمني."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -72,62 +242,74 @@ msgstr ""
 "هذه الميزة تسمح بتسجيل في الوقت نفسه الحضور والجدول الزمني."
 
 #. module: hr_timesheet
-#: field:hr.employee,uom_id:0
-msgid "Unit of Measure"
-msgstr "وحدة القياس"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Extended Filters..."
+msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.employee,journal_id:0
-msgid "Analytic Journal"
-msgstr "يومية تحليلية"
+#: field:hr.timesheet.report,general_account_id:0
+msgid "General Account"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Stop Working"
-msgstr "توقف العمل"
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "General Information"
+msgstr "معلومات عامة"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
-msgid "Employee Timesheet"
-msgstr "الجدول الزمني للموظفين"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
-msgid "Timesheet"
-msgstr "سجل الدوام"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
+#: code:addons/hr_timesheet/hr_timesheet.py:153
 #, python-format
-msgid "Please define employee for this user!"
-msgstr "الرجاء تحديد الموظف لهذا المستخدم!"
+msgid "Go to the configuration panel"
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Mon"
-msgstr "الأثنين"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group By"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in"
-msgstr "تسجيل الدخول"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group by month of date"
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Fri"
-msgstr "الجمعة"
+#: field:hr.analytic.timesheet,id:0
+#: field:hr.sign.in.project,id:0
+#: field:hr.sign.out.project,id:0
+#: field:hr.timesheet.report,id:0
+msgid "ID"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-msgid "Timesheet Activities"
+#: help:hr.employee,product_id:0
+msgid ""
+"If you want to reinvoice working time of employees, link this employee to a "
+"service to determinate the cost price of the job."
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Information"
+msgstr "معلومات"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_uid:0
+#: field:hr.sign.in.project,write_uid:0
+#: field:hr.sign.out.project,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_date:0
+#: field:hr.sign.in.project,write_date:0
+#: field:hr.sign.out.project,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: hr_timesheet
@@ -136,144 +318,38 @@ msgid "Minimum Analytic Amount"
 msgstr "الحد الأدنى لتحليل الكمية"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr "سجل الدوام الشهرى للموظف"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Month"
+msgstr "شهر"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Work done in the last period"
-msgstr "تم العمل في الفترة السابقة"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
-msgid "Employees name"
-msgstr "اسماء الموظفين"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,account_id:0
-msgid "Project / Analytic Account"
-msgstr "المشروع/تحليل الحساب"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
-msgid "Print Employees Timesheet"
-msgstr "اطبع سجل الدوام  للموظفين"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
+#: code:addons/hr_timesheet/hr_timesheet.py:189
 #, python-format
-msgid "Please define employee for your user."
-msgstr "الرجاء تحديد موظف للمستخدم الخاص بك!"
+msgid ""
+"No 'Analytic Journal' is defined for employee %s \n"
+"Define an employee for the selected user and assign an 'Analytic Journal'!"
+msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs & Revenues"
-msgstr "التكاليف والأرباح"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#: code:addons/hr_timesheet/hr_timesheet.py:191
 #, python-format
-msgid "Tue"
-msgstr "الثلاثاء"
+msgid ""
+"No analytic account is defined on the project.\n"
+"Please set one or we cannot automatically fill the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "حساب تحليلي"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Costs and Revenues"
-msgstr "التكاليف والأرباح"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
+#: code:addons/hr_timesheet/hr_timesheet.py:158
 #, python-format
-msgid "Warning!"
-msgstr "تحذير!"
+msgid ""
+"No analytic journal defined for '%s'.\n"
+"You should assign an analytic journal on the employee form."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
 msgstr "الشريك"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Sat"
-msgstr "السبت"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Sun"
-msgstr "الأحد"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Sum"
-msgstr "المجموع"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Analytic account"
-msgstr "حساب تحليلي"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to record activities.\n"
-"              </p><p>\n"
-"                You can register and track your workings hours by project "
-"every\n"
-"                day. Every time spent on a project will become a cost in "
-"the\n"
-"                analytic accounting/contract and can be re-invoiced to\n"
-"                customers if required.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-msgid "Print"
-msgstr "طباعة"
-
-#. module: hr_timesheet
-#: help:account.analytic.account,use_timesheets:0
-msgid "Check this field if this project manages timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Monthly Employees Timesheet"
-msgstr "سجل الدوام الشهري للموظفين"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "July"
-msgstr "يوليو"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
-msgid "Starting Date"
-msgstr "تاريخ البدء"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -282,309 +358,29 @@ msgid "Please define cost unit for this employee."
 msgstr "الرجاء تحديد وحدة تكلفة لهذا الموظف"
 
 #. module: hr_timesheet
-#: help:hr.employee,product_id:0
-msgid "Specifies employee's designation as a product with type 'service'."
-msgstr "حدد مهمة الموظف كمنتج مع نوع ‘خدمة‘."
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
+#, python-format
+msgid "Please define employee for your user."
+msgstr "الرجاء تحديد موظف للمستخدم الخاص بك!"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#, python-format
-msgid ""
-"No analytic account is defined on the project.\n"
-"Please set one or we cannot automatically fill the timesheet."
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Present"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total cost"
-msgstr "التكلفة الكلية"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#, python-format
-msgid ""
-"No 'Analytic Journal' is defined for employee %s \n"
-"Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "September"
-msgstr "سبتمبر"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "ديسمبر"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.users,employee_ids:0
-msgid "employees"
-msgstr "الموظفون"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,month:0
-#: field:hr.analytical.timesheet.users,month:0
-msgid "Month"
-msgstr "شهر"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,info:0
-msgid "Work Description"
-msgstr "وصف العمل"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "or"
-msgstr "أو"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Timesheet by Employee"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
-msgid "Employee timesheet"
-msgstr "سجل دوام الموظفين"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
-msgid "Sign in / Sign out by project"
-msgstr "تسجيل الدخول / تسجيل الخروج من المشروع"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
-msgid "Define your Analytic Structure"
-msgstr "تعريف هيكلك التحليلي"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
-#: view:hr.sign.in.project:0
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "تسجيل الدخول / تسجيل الخروج"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(Keep empty for current time)"
-msgstr "(احتفظ بالفراغ للوقت الحالي)"
-
-#. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
-msgid "Timesheets"
-msgstr "الجداول الزمنية"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
-msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In OpenERP, analytic accounts are also used to "
-"track customer contracts."
-msgstr ""
-"يجب إنشاء بنية حساب تحليلي حسب احتياجاتك لتحليل التكاليف والإيرادات. في "
-"OpenERP، وتستخدم أيضا حسابات تحليلية لتتبع عقود العملاء."
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
-msgid "Analytic Line"
-msgstr "خط تحليلي"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "August"
-msgstr "أغسطس"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#, python-format
-msgid ""
-"No analytic journal defined for '%s'.\n"
-"You should assign an analytic journal on the employee form."
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "June"
-msgstr "يونيو"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,state:0
-#: field:hr.sign.out.project,state:0
-msgid "Current Status"
-msgstr "الحالة الحالية"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Date"
-msgstr "تاريخ"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "November"
-msgstr "نوفمبر"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,date:0
-msgid "Closing Date"
-msgstr "تاريخ الاغلاق"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "October"
-msgstr "أكتوبر"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "January"
-msgstr "يناير"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Thu"
-msgstr "الخميس"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Sign In/Out by Project"
-msgstr "تسجيل الدخول/الخروج من المشروع:"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
-msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr "اطبع سجل الدوام للموظف واطبع سجل الدوام الخاص بي"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0
-#: field:hr.sign.out.project,emp_id:0
-msgid "Employee ID"
-msgstr "هوية الموظف"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Period"
-msgstr "الفترة"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "General Information"
-msgstr "معلومات عامة"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Cancel"
-msgstr "إلغاء"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet_users:0
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
-#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
-msgid "Employees Timesheet"
-msgstr "سجل دوام الموظفين"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Information"
-msgstr "معلومات"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,employee_id:0
-#: model:ir.model,name:hr_timesheet.model_hr_employee
-msgid "Employee"
-msgstr "موظف"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid ""
-"Employees can encode their time spent on the different projects they are "
-"assigned on. A  project is an analytic account and the time spent on a "
-"project generates costs on the analytic account. This feature allows to "
-"record at the same time the attendance and the timesheet."
-msgstr ""
-"يمكن للموظفين ترميز الوقت الذي يقضونه في مشاريع مختلفة. والمشروع عبارة عن "
-"حساب تحليلي والوقت الذي تستغرقه في مشروع يولد التكاليف على الحساب التحليلي. "
-"هذه الميزة تسمح بتسجيل في الوقت نفسه الحضور والجدول الزمني."
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,server_date:0
-#: field:hr.sign.out.project,server_date:0
-msgid "Current Date"
-msgstr "التاريخ الحالي"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "خط سجل الدوام"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: field:hr.employee,product_id:0
+#: field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "المنتج"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Users"
-msgstr "المستخدمون"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "May"
-msgstr "مايو"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "إجمالي الوقت"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(local time on the server side)"
-msgstr "(بالتوقيت المحلي على الجانب الملقم)"
+#: field:hr.sign.out.project,account_id:0
+msgid "Project / Analytic Account"
+msgstr "المشروع/تحليل الحساب"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
@@ -592,13 +388,11 @@ msgid "Sign In By Project"
 msgstr "تسجيل الدخول الى المشروع"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "February"
-msgstr "فبراير"
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Sign In/Out by Project"
+msgstr "تسجيل الدخول/الخروج من المشروع:"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
@@ -606,229 +400,159 @@ msgid "Sign Out By Project"
 msgstr "سجل خروج من المشروع"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Sign in"
+msgstr "تسجيل الدخول"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
-msgid ""
-"Please create an employee for this user, using the menu: Human Resources > "
-"Employees."
+msgid "Sign in / Sign out"
+msgstr "تسجيل الدخول / تسجيل الخروج"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
+msgid "Sign in / Sign out by Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Employees"
-msgstr "الموظفون"
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Start Working"
+msgstr "ابدأ العمل"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "March"
-msgstr "مارس"
+#: field:hr.sign.in.project,date:0
+#: field:hr.sign.out.project,date_start:0
+msgid "Starting Date"
+msgstr "تاريخ البدء"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "April"
-msgstr "إبريل"
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Stop Working"
+msgstr "توقف العمل"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "This Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,quantity:0
+msgid "Time"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
+msgid "Timesheet"
+msgstr "سجل الدوام"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
+msgid "Timesheet Accounts"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
+msgid "Timesheet Activities"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
+msgid "Timesheet Analysis"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "خط سجل الدوام"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet by Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
+#: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
+msgid "Timesheets"
+msgstr "الجداول الزمنية"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Total cost"
+msgstr "التكلفة الكلية"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Total time"
+msgstr "إجمالي الوقت"
+
+#. module: hr_timesheet
+#: field:hr.employee,uom_id:0
+msgid "Unit of Measure"
+msgstr "وحدة القياس"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,user_id:0
+msgid "User"
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "User Error!"
 msgstr "خطأ للمستخدم !"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Start Working"
-msgstr "ابدأ العمل"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Users"
+msgstr "المستخدمون"
 
 #. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,year:0
-#: field:hr.analytical.timesheet.users,year:0
-msgid "Year"
-msgstr "سنة"
+#: code:addons/hr_timesheet/hr_timesheet.py:158
+#: code:addons/hr_timesheet/hr_timesheet.py:189
+#: code:addons/hr_timesheet/hr_timesheet.py:191
+#, python-format
+msgid "Warning!"
+msgstr "تحذير!"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Duration"
-msgstr "المدة"
+#: field:hr.sign.out.project,info:0
+msgid "Work Description"
+msgstr "وصف العمل"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Accounting"
-msgstr "المحاسبة"
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Work done in the last period"
+msgstr "تم العمل في الفترة السابقة"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-msgid "Total"
-msgstr "الإجمالي"
+#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
+msgid ""
+"You should create an analytic account structure depending on your needs to "
+"analyse costs and revenues. In Odoo, analytic accounts are also used to "
+"track customer contracts."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Change Work"
-msgstr "تغيير العمل"
-
-#~ msgid "Today"
-#~ msgstr "اليوم"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "خطأ مستخدم"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "تحذير"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "تحذير !"
-
-#~ msgid "Categories"
-#~ msgstr "الفئات"
-
-#~ msgid "Working Hours"
-#~ msgstr "ساعات العمل"
-
-#~ msgid "Invoicing"
-#~ msgstr "الفواتير"
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "لا يوجد موظف محدد لمستخدمك !"
-
-#~ msgid "Work done stats"
-#~ msgstr "احصائية ماتم عمله"
-
-#, python-format
-#~ msgid "No cost unit defined for this employee !"
-#~ msgstr "لا يوجد تكلفة موحدة محددة لهذا الموظف !"
-
-#~ msgid "Sign In/Out By Project"
-#~ msgstr "تسجيل الدخول/الخروج من المشروع:"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "خطوط سجل الدوام"
-
-#~ msgid "Service on Timesheet"
-#~ msgstr "الخدمات فى سجل الدوام"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "الموارد البشرية (ترميز سجل الدوام)"
-
-#~ msgid ""
-#~ "Through Working Hours you can register your working hours by project every "
-#~ "day."
-#~ msgstr "يمكنك التسجيل خلال ساعات العمل ساعات عملك بالمشروع كل يوم."
-
-#~ msgid "To be invoiced"
-#~ msgstr "لتتضمن في الفاتورة"
-
-#~ msgid "Stats by month"
-#~ msgstr "الحالات بالشهر"
-
-#~ msgid "Print My Timesheet"
-#~ msgstr "اطبع سجل الدوام الخاص بي"
-
-#, python-format
-#~ msgid ""
-#~ "Analytic journal is not defined for employee %s \n"
-#~ "Define an employee for the selected user and assign an analytic journal!"
-#~ msgstr ""
-#~ "لم يتم تحديد اليومية التحليلية للموظف %s\n"
-#~ "حدد الموظف للمستخدم المختار وعيّن اليومية المحللة!"
-
-#~ msgid "Analysis stats"
-#~ msgstr "تحليل الاحصاءات"
-
-#~ msgid "Key dates"
-#~ msgstr "التواريخ الرئيسية"
-
-#~ msgid "My Timesheet"
-#~ msgstr "سجل الدوام الخاص بي"
-
-#~ msgid "Anlytic account"
-#~ msgstr "حساب تحليلي"
-
-#~ msgid "Analysis summary"
-#~ msgstr "ملخص التحليلي"
-
-#~ msgid "This wizard will print monthly timesheet"
-#~ msgstr "سيطبع هذا المعالج سجل الدوام شهريًا"
-
-#~ msgid "Analytic line"
-#~ msgstr "خط تحليلي"
-
-#~ msgid "Stats by user"
-#~ msgstr "احصائيات من قبل المستخدم"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic account defined on the project.\n"
-#~ "Please set one or we can not automatically fill the timesheet."
-#~ msgstr ""
-#~ "لم يتم تحديد حساب تحليلي في المشروع.\n"
-#~ "الرجاء ضع حساب تحليلي اما لا يمكننا ملء سجل الدوام تلقائيًا."
-
-#, python-format
-#~ msgid "No employee defined for this user"
-#~ msgstr "لم يتم تحديد موظف لهذا المستخدم"
-
-#~ msgid "Partner Id"
-#~ msgstr "تعريف الشريك"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
-
-#~ msgid "Current state"
-#~ msgstr "الحالة الجارية"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a timesheet system. Each employee can encode and\n"
-#~ "track their time spent on the different projects. A project is an\n"
-#~ "analytic account and the time spent on a project generates costs on\n"
-#~ "the analytic account.\n"
-#~ "\n"
-#~ "Lots of reporting on time and employee tracking are provided.\n"
-#~ "\n"
-#~ "It is completely integrated with the cost accounting module. It allows you\n"
-#~ "to set up a management by affair.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "تنفذ هذه الوحدة نظام الجدول الزمني. ويمكن لكل موظف ترميز و\n"
-#~ "تتبع الوقت الذي يقضونه في المشاريع المختلفة. والمشروع عبارة عن\n"
-#~ "حساب تحليلي والوقت الذي تستغرقه في المشروع يدر التكاليف على\n"
-#~ "الحساب التحليلي.\n"
-#~ "\n"
-#~ "وتقدم الكثير من التقارير المحددة في الوقت  وتتبع الموظف.\n"
-#~ "\n"
-#~ "يتكامل تماما مع تكلفة الوحدة المحاسبية. لأنها تتيح لك\n"
-#~ "إنشاء إدارة من القضية.\n"
-#~ "    "
-
-#~ msgid "Invoice Analysis"
-#~ msgstr "تحليل الفاتورة"
-
-#~ msgid "UoM"
-#~ msgstr "وحدة القياس"
-
-#~ msgid ""
-#~ "Through this menu you can register and follow your workings hours by project "
-#~ "every day."
-#~ msgstr ""
-#~ "من خلال هذه القائمة بإمكانك التسجيل ومتابعة ساعات العمل لكل مشروع يومياً"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "لا يمكنك تعديل عملية مؤكدة أو تمت في الجدول الزمني !."
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "month"
+msgstr ""

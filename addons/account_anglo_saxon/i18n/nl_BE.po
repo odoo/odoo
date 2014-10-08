@@ -1,26 +1,35 @@
 # Dutch (Belgium) translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-27 13:28+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-11 13:17+0000\n"
 "Last-Translator: Els Van Vossel (Foxy) <Unknown>\n"
 "Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:23+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-12 07:42+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Productcategorie"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+"Als de factuur is gemaakt vanuit een binnenkomende of uitgaande zending, is "
+"dit de referentie naar de gekoppelde voorraadbeweging"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Factuur"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +37,14 @@ msgid "Invoice Line"
 msgstr "Factuurlijn"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Aankooporder"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr "Voorraadbeweging"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Productsjabloon"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Pickinglijst"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +53,19 @@ msgid "Price Difference Account"
 msgstr "Prijsverschillenrekening"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Factuur"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Productcategorie"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Pickinglijst"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Productsjabloon"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Aankooporder"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,36 +76,3 @@ msgid ""
 msgstr ""
 "Deze rekening wordt gebruikt om de prijsverschillen tussen aankoop- en "
 "kostprijs te boeken."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "De orderreferentie moet uniek zijn."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Fout: de standaardmeeteenheid en de aankoopmeeteenheid moeten in dezelfde "
-#~ "categorie zitten."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "U kunt niet dezelfde categorieën maken."
-
-#~ msgid " Accounting Property"
-#~ msgstr " Boekhoudeigenschap"
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "Voorraadboekhouding voor Angelsaksische landen"
-
-#~ msgid "Error ! You cannot create recursive categories."
-#~ msgstr "U kunt niet dezelfde categorieën maken."
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Ongeldige gestructureerde mededeling"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "De orderreferentie moet uniek zijn."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "De referentie moet uniek zijn."
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Factuurnummer moet uniek zijn per bedrijf"

@@ -287,8 +287,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (!remaining--) {
+                        if (self.dataset.index >= records.length){
                             self.dataset.index = self.dataset.size() ? 0 : null;
+                        }
+                        if (!remaining--) {
                             return self.do_add_groups(groups_array);
                         }
                 });
@@ -945,7 +947,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.$el.find('[title]').each(function(){
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
-                container: $(this),
                 title: function() {
                     var template = $(this).attr('tooltip');
                     if (!self.view.qweb.has_template(template)) {

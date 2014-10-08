@@ -95,10 +95,9 @@ class SaleOrder(orm.Model):
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        for delivery_id in list(delivery_ids):
-            grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
-            if not grid_id:
-                delivery_ids.remove(delivery_id)
+        for delivery_id in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
+            if not delivery_id.available:
+                delivery_ids.remove(delivery_id.id)
         return delivery_ids
 
     def _get_errors(self, cr, uid, order, context=None):

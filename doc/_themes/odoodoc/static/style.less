@@ -36,23 +36,6 @@ body {
   .make-md-column(3);
 }
 
-.sphinxsidebarwrapper {
-  width: 100%;
-
-  .hidden-xs();
-  .hidden-sm();
-  .hidden-print();
-
-  // hide level 0 (root title)
-  > .nav  > li > a {
-    display: none !important;
-  }
-  // hide levels 3+
-  > .nav .nav .nav .nav {
-    display: none !important;
-  }
-}
-
 .btn-outline {
   color: @brand-primary;
   background-color: transparent;
@@ -118,6 +101,23 @@ body {
       color: white;
     }
   }
+  /* version switcher */
+  div.versions {
+    position: relative;
+    cursor: pointer;
+    font-size: 300%;
+    display: inline-block;
+
+    > a {
+      font-size: 40%;
+      margin: 0.2em;
+      color: #999;
+      font-family: Lato, Arial, sans-serif;
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 // FIXME: protocol-relative urls for remote but absolute for local (file://)?
@@ -158,59 +158,150 @@ body {
   }
 }
 
-/* First level of nav */
-.sphinxsidebarwrapper > .nav {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+/* Side navigation visibility changes */
+.sphinxsidebarwrapper {
+  > .nav { // root (contains document categories), always show
+    .nav {
+      // hide sub-everything by default
+      display: none;
+    }
 
-/* All levels of nav */
-.sphinxsidebarwrapper .nav {
-  > li > a {
-    display: block;
-    padding: 4px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #999;
-
-    &:hover, &:focus {
-      padding-left: 19px;
-      color: @brand-primary;
-      text-decoration: none;
-      background-color: transparent;
-      border-left: 1px solid @brand-primary;
+    li.active > .nav,
+    li.current > .nav {
+      // sub-items of a current or active li are shown
+      display: block;
     }
   }
-
-  > .active > a, > .active:hover > a, > .active:focus > a {
-    padding-left: 18px;
-    font-weight: bold;
-    color: @brand-primary;
-    background-color: transparent;
-    border-left: 2px solid @brand-primary;
-  }
 }
 
-/* Nav: second level (shown on .active) */
-.sphinxsidebarwrapper .nav .nav .nav {
-  display: none; /* Hide by default, but at >768px, show it */
-  padding-bottom: 10px;
+/* Side navigation graphical styling */
+@nav-spacing: 20px;
+@nav-spacing-increment: 5px;
+@nav-hover-offset: 1px;
+@nav-hover: @nav-spacing - @nav-hover-offset;
+@nav-current-offset: 2px;
+@nav-current: @nav-spacing - @nav-current-offset;
 
-  > li > a {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 30px;
+.sphinxsidebar {
+  z-index: 1;
+}
+.sphinxsidebarwrapper {
+  width: 100%;
+  font-size: 13px;
+  z-index: 1;
+
+  .hidden-xs();
+  .hidden-sm();
+  .hidden-print();
+
+  /* First level of nav */
+  > .nav {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .nav > li > a {
+    font-weight: bold;
+    padding-left: @nav-spacing;
+  }
+  .nav .nav > li > a {
     font-size: 12px;
+    padding-left: @nav-spacing + @nav-spacing-increment;
+  }
+  .nav .nav .nav > li > a {
     font-weight: normal;
+    padding-left: @nav-spacing + 2*@nav-spacing-increment;
+  }
+  .nav .nav .nav .nav > li > a {
+    font-size: 11px;
+    padding-left: @nav-spacing + 3*@nav-spacing-increment;
   }
 
-  > li > a:hover, > li > a:focus {
-    padding-left: 29px;
-  }
+  /* All levels of nav */
+  .nav {
+    > li > a {
+      display: block;
+      padding: 4px @nav-spacing;
+      color: #999;
 
-  > .active > a, > .active:hover > a, > .active:focus > a {
-    padding-left: 28px;
-    font-weight: 500;
+      &:hover, &:focus {
+        padding-left: @nav-hover;
+        color: @brand-primary;
+        text-decoration: none;
+        background-color: transparent;
+        border-left: @nav-hover-offset solid @brand-primary;
+      }
+    }
+
+    // before scrollspy is applied, need to use current for docs
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current;
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: transparent;
+      border-left: @nav-current-offset solid @brand-primary;
+    }
+  }
+  .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + @nav-spacing-increment;
+    }
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + @nav-spacing-increment;
+    }
+  }
+  .nav .nav .nav {
+    padding-bottom: 10px;
+
+    > li > a {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 2 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 2 * @nav-spacing-increment;
+      font-weight: bold;
+    }
+  }
+  .nav .nav .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 3 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 3 * @nav-spacing-increment;
+    }
+  }
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+  a {
+    font-size: 13px;
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.github {
+      padding-left: 15px;
+      position: relative;
+      &:before {
+        left: 0;
+        top: 1px;
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: url(github-link.png) left bottom / 13px no-repeat;
+      }
+      &:hover:before {
+        background-position: left top;
+      }
+    }
   }
 }
 
@@ -278,10 +369,16 @@ body {
   }
 }
 
-// hide header ¶ link
-.headerlink {
+// move [source] link to the right
+.viewcode-link {
+  font-weight: normal;
+  float: right;
   display: none;
 }
+dt:hover > a > .viewcode-link {
+  display: inline;
+}
+
 // either that or overwrite visit_attribution/depart_attribution
 blockquote p.attribution:extend(blockquote footer) {}
 
@@ -453,4 +550,9 @@ td.field-body {
 pre {
   word-break: normal;
   word-wrap: normal;
+}
+
+// lighten js namespace/class name
+.descclassname {
+  opacity: 0.5;
 }

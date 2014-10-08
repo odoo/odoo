@@ -243,8 +243,9 @@ class sale_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
-
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product'),
     }
+
     _defaults = {
         'date_order': fields.datetime.now,
         'order_policy': 'manual',
@@ -595,22 +596,8 @@ class sale_order(osv.osv):
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.signal_workflow(cr, uid, ids, 'order_confirm')
-
-        # redisplay the record as a sales order
-        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
-        view_id = view_ref and view_ref[1] or False,
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
-            'res_model': 'sale.order',
-            'res_id': ids[0],
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': view_id,
-            'target': 'current',
-            'nodestroy': True,
-        }
-
+        return True
+        
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
@@ -815,6 +802,10 @@ class sale_order_line(osv.osv):
     def need_procurement(self, cr, uid, ids, context=None):
         #when sale is installed only, there is no need to create procurements, that's only
         #further installed modules (sale_service, sale_stock) that will change this.
+        prod_obj = self.pool.get('product.product')
+        for line in self.browse(cr, uid, ids, context=context):
+            if prod_obj.need_procurement(cr, uid, [line.product_id.id], context=context):
+                return True
         return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
@@ -1251,7 +1242,7 @@ class procurement_order(osv.osv):
         from openerp import workflow
         if vals.get('state') in ['done', 'cancel', 'exception']:
             for proc in self.browse(cr, uid, ids, context=context):
-                if proc.sale_line_id and proc.sale_line_id.order_id and proc.move_ids:
+                if proc.sale_line_id and proc.sale_line_id.order_id:
                     order_id = proc.sale_line_id.order_id.id
                     if self.pool.get('sale.order').test_procurements_done(cr, uid, [order_id], context=context):
                         workflow.trg_validate(uid, 'sale.order', order_id, 'ship_end', cr)

@@ -165,7 +165,7 @@ class account_invoice(models.Model):
             elif data_line.reconcile_partial_id:
                 lines = data_line.reconcile_partial_id.line_partial_ids
             else:
-                lines = self.env['account_move_line']
+                lines = self.env['account.move.line']
             partial_lines += data_line
             self.move_lines = lines - partial_lines
 
@@ -449,7 +449,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -645,10 +645,6 @@ class account_invoice(models.Model):
                 invoice.check_total = invoice.amount_total
         return True
 
-    @staticmethod
-    def _convert_ref(ref):
-        return (ref or '').replace('/','')
-
     @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """
@@ -661,7 +657,7 @@ class account_invoice(models.Model):
                 if self.type in ('in_invoice', 'in_refund'):
                     ref = self.reference
                 else:
-                    ref = self._convert_ref(self.number)
+                    ref = self.number
                 if not self.journal_id.analytic_journal_id:
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
@@ -827,7 +823,7 @@ class account_invoice(models.Model):
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -955,11 +951,11 @@ class account_invoice(models.Model):
 
             if inv.type in ('in_invoice', 'in_refund'):
                 if not inv.reference:
-                    ref = self._convert_ref(inv.number)
+                    ref = inv.number
                 else:
                     ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             self._cr.execute(""" UPDATE account_move SET ref=%s
                            WHERE id=%s AND (ref IS NULL OR ref = '')""",
@@ -1131,7 +1127,7 @@ class account_invoice(models.Model):
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
-            ref = self._convert_ref(self.number)
+            ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
         name = name or self.invoice_line.name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
@@ -1294,8 +1290,8 @@ class account_invoice_line(models.Model):
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            context=None, company_id=None):
-        context = context or {}
+            company_id=None):
+        context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
 
@@ -1362,14 +1358,14 @@ class account_invoice_line(models.Model):
 
     @api.multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
-            fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        context = context or {}
+            fposition_id=False, price_unit=False, currency_id=False, company_id=None):
+        context = self._context
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
             product, uom, qty, name, type, partner_id, fposition_id, price_unit,
-            currency_id, context=context, company_id=company_id,
+            currency_id, company_id=company_id,
         )
         warning = {}
         if not uom:

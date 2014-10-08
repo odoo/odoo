@@ -2,15 +2,6 @@
 <openerp>
     <data>
 
-<!-- Editor custom -->
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum assets">
-    <xpath expr="/t" position="inside">
-        <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
-        <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
-        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
-    </xpath>
-</template>
-
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.footer_default"
     name="Footer Questions Link">
@@ -37,6 +28,13 @@
     </xpath>
 </template>
 
+<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor" groups="base.group_user">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
+    </xpath>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
@@ -46,7 +44,6 @@
                 CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
                 ,['Outdent','Indent','Link','Unlink','Image'],] ;
             </script>
-            <t t-raw="0"/>
         </t>
         <div class="container mt16 website_forum">
             <div class="navbar navbar-default">
@@ -963,10 +960,10 @@
 
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#questions" data-toggle="tab"><t t-esc="len(questions)"/> Questions</a>
+                <a href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
             </li>
             <li>
-                <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
+                <a href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
             </li>
             <li t-if="uid == user.id">
                 <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
@@ -1000,20 +997,20 @@
             <div class="tab-pane" id="badges">
                 <t t-call="website_forum.user_badges"/>
             </div>
-            <div class="tab-pane" id="favourite_question">
+            <div class="tab-pane" id="favourite_question" t-if="uid == user.id">
                 <div t-foreach="favourite" t-as="question">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="followed_question">
+            <div class="tab-pane" id="followed_question" t-if="uid == user.id">
                 <div t-foreach="followed" t-as="question" class="mb16">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="votes">
+            <div class="tab-pane" id="votes" t-if="uid == user.id">
                 <t t-call="website_forum.user_votes"/>
             </div>
-            <div class="tab-pane" id="activity">
+            <div class="tab-pane" id="activity" t-if="uid == user.id">
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
                         <span t-field="activity.date" t-field-options='{"format": "short"}'/>

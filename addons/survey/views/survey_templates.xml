@@ -82,11 +82,13 @@
     </template>
 
     <!-- A survey -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        </xpath>
+    </template>
     <template id="survey" name="Survey">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            </t>
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -260,9 +262,6 @@
     <!-- Printable view of a survey (all pages) -->
     <template id="survey_print" name="Survey">
         <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            </t>
             <div class="wrap">
                 <div class="container">
                     <div class="row">

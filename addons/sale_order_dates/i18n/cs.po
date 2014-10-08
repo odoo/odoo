@@ -1,40 +1,25 @@
 # Czech translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-03-30 12:41+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:40+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale_order_dates
-#: view:sale.order:0
-msgid "Dates"
-msgstr ""
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
 msgid "Commitment Date"
-msgstr ""
-
-#. module: sale_order_dates
-#: field:sale.order,effective_date:0
-msgid "Effective Date"
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which the first Delivery Order was created."
 msgstr ""
 
 #. module: sale_order_dates
@@ -50,8 +35,36 @@ msgid ""
 msgstr ""
 
 #. module: sale_order_dates
+#: help:sale.order,commitment_date:0
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you "
+"can promise to the customer, based on the Product Lead Times."
+msgstr ""
+
+#. module: sale_order_dates
+#: help:sale.order,effective_date:0
+msgid "Date on which the first Delivery Order was created."
+msgstr ""
+
+#. module: sale_order_dates
+#: view:sale.order:sale_order_dates.view_sale_orderfor
+msgid "Dates"
+msgstr ""
+
+#. module: sale_order_dates
+#: field:sale.order,effective_date:0
+msgid "Effective Date"
+msgstr ""
+
+#. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
+msgstr ""
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:76
+#, python-format
+msgid "Requested date is too soon!"
 msgstr ""
 
 #. module: sale_order_dates
@@ -60,20 +73,7 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
-msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
-msgstr ""
-
-#. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:90
-#, python-format
-msgid "Requested date is too soon!"
-msgstr ""
-
-#. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:91
+#: code:addons/sale_order_dates/sale_order_dates.py:77
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

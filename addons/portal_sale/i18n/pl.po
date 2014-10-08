@@ -1,80 +1,122 @@
 # Polish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-17 08:48+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-18 20:08+0000\n"
+"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:52+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:25+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr ""
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
-msgid "We haven't sent you any invoice."
-msgstr "Nie wysłaliśmy ci żadnych faktur."
-
-#. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_sale
+#: model:email.template,body_html:portal_sale.email_template_edi_invoice
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"\n"
+"    <p>A new invoice is available for you: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"\n"
+"    <% set signup_url = object.get_signup_url() %>\n"
+"    % if signup_url:\n"
+"    <p>\n"
+"    You can access the invoice document and pay online via our Customer "
+"Portal:\n"
+"    </p>\n"
+"        <a style=\"display:block; width: 150px; height:20px; margin-left: "
+"120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
+"serif; font-size: 13px; font-weight: bold; text-align: center; text-"
+"decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
+"background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat "
+"no-repeat;\"\n"
+"           href=\"${signup_url}\">View Invoice</a>\n"
+"    % endif\n"
+"    \n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        % endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 msgstr ""
-
-#. module: portal_sale
-#: model:res.groups,name:portal_sale.group_payment_options
-msgid "View Online Payment Options"
-msgstr "Obejrzyj opcje płatności online"
-
-#. module: portal_sale
-#: field:account.config.settings,group_payment_options:0
-msgid "Show payment buttons to employees too"
-msgstr "Pokaż przycisk płatności również pracownikom"
-
-#. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
-msgid ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Oferta' "
-"or 'Zamówienie'} (Ref ${object.name or 'n/a' })"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
-msgid "We haven't sent you any quotation."
-msgstr "Nie wysłaliśmy ci żadnych ofert."
-
-#. module: portal_sale
-#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
-msgid "Sales Orders"
-msgstr "Zamówienia Sprzedaży"
-
-#. module: portal_sale
-#: model:res.groups,comment:portal_sale.group_payment_options
-msgid ""
-"Members of this group see the online payment options\n"
-"on Sale Orders and Customer Invoices. These options are meant for customers "
-"who are accessing\n"
-"their documents through the portal."
-msgstr ""
-"Członkowie tych grup widzą opcje płatności\n"
-"w Zamówieniach sprzedaży i Fakturach sprzedaży. Opcje są przeznaczone dla "
-"klientów\n"
-"korzystających z dokumentów udostępnionych przez portal."
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_sale
@@ -182,21 +224,78 @@ msgid ""
 msgstr ""
 
 #. module: portal_sale
+#: model:email.template,report_name:portal_sale.email_template_edi_sale
+msgid ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+
+#. module: portal_sale
+#: model:email.template,subject:portal_sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Oferta' or 'Zamówienie'} (Odn. ${object.name or 'n/a' })"
+
+#. module: portal_sale
+#: model:email.template,subject:portal_sale.email_template_edi_invoice
+msgid ""
+"${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
+msgstr ""
+"${object.company_id.name|safe} Faktura (Odn. ${object.number or 'n/a' })"
+
+#. module: portal_sale
+#: view:account.config.settings:portal_sale.portal_sale_payment_option_config
+msgid "Configure payment acquiring methods"
+msgstr "Konfiguruj metody przyjmowania płatności"
+
+#. module: portal_sale
+#: model:ir.model,name:portal_sale.model_account_invoice
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: portal_sale
 #: model:email.template,report_name:portal_sale.email_template_edi_invoice
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr "${object.company_id.name} Faktura (Ref ${object.number or 'n/a' })"
+#: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
+#: model:ir.ui.menu,name:portal_sale.portal_invoices
+msgid "Invoices"
+msgstr "Faktury"
+
+#. module: portal_sale
+#: model:res.groups,comment:portal_sale.group_payment_options
+msgid ""
+"Members of this group see the online payment options\n"
+"on Sale Orders and Customer Invoices. These options are meant for customers "
+"who are accessing\n"
+"their documents through the portal."
+msgstr ""
+"Członkowie tych grup widzą opcje płatności\n"
+"w Zamówieniach sprzedaży i Fakturach sprzedaży. Opcje są przeznaczone dla "
+"klientów\n"
+"korzystających z dokumentów udostępnionych przez portal."
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
 msgstr "Wychodzące"
+
+#. module: portal_sale
+#: field:account.invoice,portal_payment_options:0
+#: field:sale.order,portal_payment_options:0
+msgid "Portal Payment Options"
+msgstr "Opcje płatności portalowych"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -205,15 +304,19 @@ msgid "Quotations"
 msgstr "Oferty"
 
 #. module: portal_sale
+#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
+msgid "Sale Orders"
+msgstr "Zamówienia sprzedaży"
+
+#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
 msgstr "Zamówienie sprzedaży"
 
 #. module: portal_sale
-#: field:account.invoice,portal_payment_options:0
-#: field:sale.order,portal_payment_options:0
-msgid "Portal Payment Options"
-msgstr "Opcje płatności portalowych"
+#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
+msgid "Sales Orders"
+msgstr "Zamówienia Sprzedaży"
 
 #. module: portal_sale
 #: help:account.config.settings,group_payment_options:0
@@ -225,128 +328,31 @@ msgstr ""
 "zaznaczone, to opcje są widoczne tylko dla użytkowników portalu."
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
-#: model:ir.ui.menu,name:portal_sale.portal_invoices
-msgid "Invoices"
-msgstr "Faktury"
+#: field:account.config.settings,group_payment_options:0
+msgid "Show payment buttons to employees too"
+msgstr "Pokaż przycisk płatności również pracownikom"
 
 #. module: portal_sale
-#: view:account.config.settings:0
-msgid "Configure payment acquiring methods"
-msgstr "Konfiguruj metody przyjmowania płatności"
+#: model:res.groups,name:portal_sale.group_payment_options
+msgid "View Online Payment Options"
+msgstr "Obejrzyj opcje płatności online"
 
 #. module: portal_sale
-#: model:email.template,body_html:portal_sale.email_template_edi_invoice
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"\n"
-"    <p>A new invoice is available for you: </p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>  \n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
-"    <p>\n"
-"    You can access the invoice document and pay online via our Customer "
-"Portal:\n"
-"    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: "
-"120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
-"serif; font-size: 13px; font-weight: bold; text-align: center; text-"
-"decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
-"background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat "
-"no-repeat;\"\n"
-"           href=\"${signup_url}\">View Invoice</a>\n"
-"    % endif\n"
-"    \n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"    \n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        % endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
+#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
+msgid "We haven't sent you any invoice."
+msgstr "Nie wysłaliśmy ci żadnych faktur."
+
+#. module: portal_sale
+#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
+msgid "We haven't sent you any quotation."
+msgstr "Nie wysłaliśmy ci żadnych ofert."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "Nie wysyłaliśmy Ci żadnej oferty."
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_account_invoice
-msgid "Invoice"
-msgstr "Faktura"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-msgid "Sale Orders"
-msgstr "Zamówienia sprzedaży"
+#: view:account.invoice:portal_sale.view_account_invoice_filter_share
+msgid "[('share','=', False)]"
+msgstr "('share','=', False)]"

@@ -1,122 +1,43 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_setup
+# German translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-19 22:09+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-24 14:29+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
-"Language-Team: \n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:58+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Emails Integration"
-msgstr "E-Mail-Integration"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "(reload fonts)"
+msgstr "(Schriftarten erneut laden)"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Gast"
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer portal"
+msgstr "Aktivieren Sie das Kundenportal"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Contacts"
-msgstr "Kontakte"
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr "Ermögliche Dokumentenfreigabe"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: base_setup
-#: field:base.config.settings,module_auth_oauth:0
-msgid ""
-"Use external authentication providers, sign in with google, facebook, ..."
-msgstr "Externe Benutzer-Authentifizierung,  z.B. mit Google-Konto"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid ""
-"OpenERP allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically "
-"synchronize emails with OpenERP\n"
-"                            using regular POP/IMAP accounts, using a direct "
-"email integration script for your\n"
-"                            email server, or by manually pushing emails to "
-"OpenERP using specific\n"
-"                            plugins for your preferred email application."
+#: field:base.config.settings,module_google_calendar:0
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
-"OpenERP ermöglicht die automatische Erstellung von Interessenten (und "
-"anderen Belegen)\n"
-"                                    aus eingehenden EMails. Sie können Ihren "
-"E-Mail-Posteingang regelmässig synchronisieren, indem\n"
-"                                    Sie hierzu Ihre POP/IMAP Konten anbinden "
-"und dann ein Script zur direkten E-Mail-Integration \n"
-"                                    regelmässig anwenden oder indem Sie "
-"selektiv mit Hilfe eines Plugins für Ihre persönliche Arbeitsplatz \n"
-"                                    Mailanwendung bestimmte E-Mails nach "
-"OpenERP transferieren."
-
-#. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "VERKAUF"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Mitglied"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Portal access"
-msgstr "Portalzugang"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Authentication"
-msgstr "Authentifizierung"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Quotations and Sales Orders"
-msgstr "Angebote und Aufträge"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
-msgid "General Settings"
-msgstr "Allgemeine Einstellungen"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Spender"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Email"
-msgstr "E-Mail"
-
-#. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Patient"
+"Benutzer können ihren Kalender mit dem Google Kalender synchronisieren"
 
 #. module: base_setup
 #: field:base.config.settings,module_base_import:0
@@ -124,19 +45,109 @@ msgid "Allow users to import data from CSV files"
 msgstr "Erlaubt Benutzern Import von .csv Dateien"
 
 #. module: base_setup
-#: field:base.config.settings,module_multi_company:0
-msgid "Manage multiple companies"
-msgstr "Multi-Unternehmen Verwaltung"
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Apply"
+msgstr "Anwenden"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
-msgstr "Anbindung E-Mail-Anwendung"
+#: field:base.config.settings,module_google_drive:0
+msgid "Attach Google documents to any record"
+msgstr "Hängen Sie Google Dokumente an jeden beliebigen Datensatz an"
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "--db-filter=YOUR_DATABAE"
-msgstr "--db-filter=YOUR_DATABAE"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Authentication"
+msgstr "Authentifizierung"
+
+#. module: base_setup
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr "CRM"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Klient"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Konfiguriere Verkauf"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure outgoing email servers"
+msgstr "Konfigurieren Sie die Postausgangsserver"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure your company data"
+msgstr "Konfigurieren Sie Ihre Unternehmensdaten"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Contacts"
+msgstr "Kontakte"
+
+#. module: base_setup
+#: field:base.config.settings,create_uid:0
+#: field:base.setup.terminology,create_uid:0
+#: field:sale.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: base_setup
+#: field:base.config.settings,create_date:0
+#: field:base.setup.terminology,create_date:0
+#: field:sale.config.settings,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Kunde"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Customer Features"
+msgstr "Kundenanwendungen"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Spender"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Email"
+msgstr "E-Mail"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Emails Integration"
+msgstr "E-Mail-Integration"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr "Grundeinstellungen"
+
+#. module: base_setup
+#: help:sale.config.settings,module_mass_mailing:0
+msgid "Get access to statistics with your mass mailing, manage campaigns."
+msgstr ""
+"Erhalten Sie Zugang für die Massenmail Statistik, verwalten Sie Kampagnen."
 
 #. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
@@ -144,48 +155,149 @@ msgid "Get contacts automatically from linkedIn"
 msgstr "Kontakte aus linkedin importieren"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_thunderbird:0
-msgid "Enable Thunderbird plug-in"
-msgstr "Aktiviere Thunderbird Plug-In"
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "Erteilen Sie den Kunden Zugriff auf Ihre eigenen Dokumente."
 
 #. module: base_setup
-#: view:base.setup.terminology:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Calendar"
+msgstr "Google Kalender"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Customer Features"
-msgstr "Kundenanwendungen"
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr "Google Drive"
 
 #. module: base_setup
-#: view:base.config.settings:0
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Gast"
+
+#. module: base_setup
+#: field:base.setup.terminology,partner:0
+msgid "How do you call a Customer"
+msgstr "Wie bezeichnen Sie einen Kunden"
+
+#. module: base_setup
+#: field:base.config.settings,id:0
+#: field:base.setup.terminology,id:0
+#: field:sale.config.settings,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid "Import / Export"
 msgstr "Import / Export"
 
 #. module: base_setup
-#: view:sale.config.settings:0
+#: field:base.config.settings,write_uid:0
+#: field:base.setup.terminology,write_uid:0
+#: field:sale.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: base_setup
+#: field:base.config.settings,write_date:0
+#: field:base.setup.terminology,write_date:0
+#: field:sale.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: base_setup
+#: field:sale.config.settings,module_mass_mailing:0
+msgid "Manage mass mailing campaigns"
+msgstr "Verwalten Sie Kampagnen für Massenmailings"
+
+#. module: base_setup
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr "Multi-Company Verwaltung"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Mitglied"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid ""
+"Odoo allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with Odoo\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"Odoo using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
+"Odoo ermöglicht die automatische Erstellung von Interessenten (und anderen "
+"Belegen)\n"
+"aus eingehenden E-Mails. Sie können Ihren E-Mail Posteingang regelmässig "
+"synchronisieren, indem\n"
+"Sie hierzu Ihre POP/IMAP Konten anbinden und dann ein Script zur direkten E-"
+"Mail Integration \n"
+"regelmässig anwenden, oder indem Sie selektiv mit Hilfe eines Plugins Ihre E-"
+"Mails von Ihrer präferierten E-Mail-Anwendung nach Odoo übertragen."
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr ""
+"Sobald die Installation abgeschlossen ist, können Sie Ihre API Einstellungen "
+"für den \"Google Kalender\" konfigurieren"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Options"
+msgstr "Einstellungen"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Patient"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Portal access"
+msgstr "Portalzugang"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Quotations and Sales Orders"
+msgstr "Angebote und Aufträge"
+
+#. module: base_setup
+#: field:base.config.settings,font:0
+msgid "Report Font"
+msgstr "Schriftart"
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr "VERKAUF"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
 msgid "Sale Features"
 msgstr "Verkaufsfunktionen"
 
 #. module: base_setup
-#: field:sale.config.settings,module_plugin_outlook:0
-msgid "Enable Outlook plug-in"
-msgstr "Aktiviere Outlook Plugin"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
+#: help:base.config.settings,font:0
 msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
 msgstr ""
-"Sie können mit diesem Assistenten die Terminologie des gesamten Systems im "
-"Sinne der Kunden verändern."
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Mieter"
+"Stellen Sie im Report-Header die Schriftart ein, Sie wird dann standardmäßig "
+"für die RML Reports Ihres Unternehmens verwendet."
 
 #. module: base_setup
 #: help:base.config.settings,module_share:0
@@ -193,9 +305,40 @@ msgid "Share or embbed any screen of openerp."
 msgstr "Teilen oder einbetten von Bildschirmansichten"
 
 #. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Social Network Integration"
+msgstr "Integration Sozialer Netzwerke"
+
+#. module: base_setup
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Spezifizieren Sie Ihre Terminologie"
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Kunde"
+msgid "Tenant"
+msgstr "Unternehmen"
+
+#. module: base_setup
+#: help:base.config.settings,module_google_calendar:0
+msgid "This installs the module google_calendar."
+msgstr "Bei Aktivierung wird das Modul Google Kalender installiert."
+
+#. module: base_setup
+#: help:base.config.settings,module_google_drive:0
+msgid "This installs the module google_docs."
+msgstr "Bei Aktivierung wird das Modul Google Docs installiert."
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Verwenden Sie ein anderes Wort für \"Kunde\""
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr "Externe Benutzer-Authentifizierung,  z.B. mit Google-Konto"
 
 #. module: base_setup
 #: help:sale.config.settings,module_web_linkedin:0
@@ -208,49 +351,7 @@ msgstr ""
 "etc.)"
 
 #. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies.\n"
-"                This installs the module multi_company."
-msgstr ""
-"Arbeiten Sie in einer Multi-Unternehmen Organisation, und wenden Sie die "
-"entsprechenden Berechtigungen für den wechselseitigen Unternehmenszugriff "
-"einfach an."
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"The public portal is accessible only if you are in a single database mode. "
-"You can\n"
-"                                    launch the OpenERP Server with the option"
-msgstr ""
-"Der öffentliche Portalzugang ist nur im einfachen Modus der Datenbank "
-"möglich. Sie können\n"
-"                              Ihren OpenERP Server mit folgender Option "
-"starten"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr ""
-"Sie finden weitere Optionen unter Ihren Unternehmenseinstellungen: Adresse "
-"für Kopf- und Fußzeile, Mahntexte, u.s.w."
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "Wie bezeichnen Sie einen Kunden"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
 "                                    (quotation, invoice), your customer will "
@@ -266,726 +367,36 @@ msgstr ""
 "Kunden auch zu allen anderen Dokumenten anmelden."
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Klient"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal_anonymous:0
-msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr ""
-"Aktivieren Sie den Zugriff auf veröffentliche Bereiche und Dokumente , "
-"OpenERP wird dadurch auch öffentlich verfügbar."
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_thunderbird:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"The plugin allows you archive email and its attachments to the selected\n"
-"                OpenERP objects. You can select a partner, or a lead and\n"
-"                attach the selected mail as a .eml file in\n"
-"                the attachment of a selected record. You can create "
-"documents for CRM Lead,\n"
-"                Partner from the selected emails.\n"
-"                This installs the module plugin_thunderbird."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"-This installs the module multi_company."
 msgstr ""
-"Die Erweiterung erlaubt es, E-Mails inklusive Anhänge bei ausgewählten\n"
-"                 OpenERP Objekten zu archivieren. Sie können bei der Auswahl "
-"entscheiden, ob Sie den Anhang \n"
-"                 als .eml Dateianhang beim Kunden oder bei einem "
-"Interessenten zuordnen. Sie können auch neue \n"
-"                 Dokumente anlegen, z.B. für einen neuen Interessenten, "
-"indem Sie die Auswahl\n"
-"                \"Neues Dokument\" anklicken. Durch die Auswahl wird das "
-"Modul plugin_thunderbird installiert."
+"Arbeiten Sie in einer Multi-Company Umgebung, und wenden Sie die "
+"entsprechenden Berechtigungen für den wechselseitigen Unternehmenszugriff "
+"einfach an. \n"
+"- Sie installieren hier das Modul multi_company."
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Verwenden Sie ein anderes Wort für \"Kunde\""
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:0
-msgid "Configure Sales"
-msgstr "Konfiguriere Verkauf"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_outlook:0
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
 msgid ""
-"The Outlook plugin allows you to select an object that you would like to "
-"add\n"
-"                to your email and its attachments from MS Outlook. You can "
-"select a partner,\n"
-"                or a lead object and archive a selected\n"
-"                email into an OpenERP mail message with attachments.\n"
-"                This installs the module plugin_outlook."
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
 msgstr ""
-"Das Outlook Plugin erlaubt es, E-Mails inklusive Anhänge bei ausgewählten\n"
-"                 OpenERP Objekten zu archivieren. Sie können bei der Auswahl "
-"entscheiden, ob Sie den Anhang \n"
-"                 als .eml Dateianhang beim Kunden oder einem Interessenten  "
-"zuordnen. Sie können auch neue \n"
-"                 Dokumente anlegen, z.B. für einen Interessenten, indem Sie "
-"die Auswahl\n"
-"                \"Neues Dokument\" anklicken. Durch Ihre Auswahl wird das "
-"Modul plugin_outlook installiert."
+"Sie können mit diesem Assistenten die Terminologie des gesamten Systems im "
+"Sinne der Kunden verändern."
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Options"
-msgstr "Einstellungen"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "Aktivieren Sie das Kundenportal"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
-"to do so.\n"
-"                                    Once activated, the login page will be "
-"replaced by the public website."
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
 msgstr ""
-"es so zu machen.\n"
-"                              Durch Aktivierung wird die Loginseite durch "
-"Ihre öffentliche Webpage ersetzt."
+"Sie finden weitere Optionen unter Ihren Unternehmenseinstellungen: Adresse "
+"für Kopf- und Fußzeile, Mahntexte, u.s.w."
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "Ermögliche Dokumentenfreigabe"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "(company news, jobs, contact form, etc.)"
-msgstr "(Unternehmens-News, Stellenangebote, Fragebögen etc.)"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal_anonymous:0
-msgid "Activate the public portal"
-msgstr "Aktivierung des öffentlichen Portals"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure outgoing email servers"
-msgstr "Konfiguriere die Postausgangsserver"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Social Network Integration"
-msgstr "Integration Sozialer Netzwerke"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "Erteilen Sie den Kunden Zugriff auf Ihre eigenen Dokumente."
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Apply"
-msgstr "Anwenden"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "Specify Your Terminology"
-msgstr "Spezifizieren Sie Ihre Terminologie"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "or"
-msgstr "oder"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure your company data"
-msgstr "Konfigurieren Sie Ihre Unternehmensdaten"
-
-#~ msgid "City"
-#~ msgstr "Stadt"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database "
-#~ "using the default setup."
-#~ msgstr ""
-#~ "Sie können Ihre System nun konfigurieren oder sich sofort verbinden und die "
-#~ "Standardeinstellungen verwenden"
-
-#~ msgid "Report header"
-#~ msgstr "Bericht Kopfzeile"
-
-#~ msgid "Start Configuration"
-#~ msgstr "Beginne Konfiguration"
-
-#~ msgid ""
-#~ "You'll be able to install more modules later through the Administration menu."
-#~ msgstr ""
-#~ "Sie können später im Administrationsmenü weitere Module installieren."
-
-#~ msgid ""
-#~ "A profile sets a pre-selection of modules for specific needs. These profiles "
-#~ "have been setup to help you discover the different aspects of OpenERP. This "
-#~ "is just an overview, we have 300+ available modules."
-#~ msgstr ""
-#~ "Ein Profil installiert eine vordefinierte Anzahl von Modulen für spezielle "
-#~ "Anforderungen. Diese Profile sollen Ihnen helfen, die verschiedenen "
-#~ "Möglichkeiten von OpenERP zu erkunden. Dies ist nur ein Überblick. Es gibt "
-#~ "mehr als 300 Module."
-
-#~ msgid "Next"
-#~ msgstr "Nächste"
-
-#~ msgid "State"
-#~ msgstr "Staat"
-
-#~ msgid "Your new database is now fully installed."
-#~ msgstr "Ihre Datenbank ist jetzt vollständig installiert"
-
-#~ msgid "Report Footer 1"
-#~ msgstr "Bericht Fusszeile 1"
-
-#~ msgid "Report Footer 2"
-#~ msgstr "Bericht Fusszeile 2"
-
-#~ msgid "Street2"
-#~ msgstr "Strasse2"
-
-#~ msgid "Report Information"
-#~ msgstr "Report Information"
-
-#~ msgid "Define Main Company"
-#~ msgstr "Haupt Gesellschaft Defnieren"
-
-#~ msgid "Company Name"
-#~ msgstr "Unternehmensname"
-
-#~ msgid "Country"
-#~ msgstr "Land"
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to write legal sentences here:\n"
-#~ "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-#~ msgstr ""
-#~ "Dieser Satz wird am unteren Ende Ihrer Berichte erscheinen. Wir empfehlen "
-#~ "hier die gestzlich vorgesehen Angaben zu machen zB: Web: http://openerp.com -"
-#~ " Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-
-#~ msgid "Summary"
-#~ msgstr "Zusammenfassung"
-
-#~ msgid "Report Header"
-#~ msgstr "Bericht Kopfzeile"
-
-#~ msgid "Your Logo - Use a size of about 450x150 pixels."
-#~ msgstr "Ihr Logo – sollte ca 450x150 Pixel groß sein"
-
-#~ msgid "Currency"
-#~ msgstr "Währung"
-
-#~ msgid "Street"
-#~ msgstr "Strasse"
-
-#~ msgid "Profile"
-#~ msgstr "Profil"
-
-#~ msgid "E-mail"
-#~ msgstr "E-Mail"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "General Information"
-#~ msgstr "Allgemeine Informationen"
-
-#~ msgid "Installation Done"
-#~ msgstr "Installation durchgeführt"
-
-#~ msgid "Logo"
-#~ msgstr "Logo"
-
-#~ msgid "Select a Profile"
-#~ msgstr "Wähle ein Profil"
-
-#~ msgid "Install"
-#~ msgstr "Installiere"
-
-#~ msgid "Zip code"
-#~ msgstr "Postleitzahl"
-
-#~ msgid "Base Setup"
-#~ msgstr "Basis Setup"
-
-#~ msgid "Previous"
-#~ msgstr "Vorherig"
-
-#~ msgid "Bank Account No"
-#~ msgstr "Bankkonto"
-
-#~ msgid "Your database is now created."
-#~ msgstr "Ihre Datenbank ist jetzt vollständig installiert"
-
-#~ msgid "Company"
-#~ msgstr "Unternehmen"
-
-#~ msgid "title"
-#~ msgstr "Bezeichnung"
-
-#~ msgid "Zip Code"
-#~ msgstr "Postleitzahl"
-
-#~ msgid "Company Configuration"
-#~ msgstr "Konfiguration Unternehmen"
-
-#~ msgid "Image"
-#~ msgstr "Bild"
-
-#~ msgid "Extra Tools"
-#~ msgstr "Extra Werkzeuge"
-
-#~ msgid ""
-#~ "Helps you manage your manufacturing processes and generate reports on those "
-#~ "processes."
-#~ msgstr "Management Ihrer Fertigungsprozesse und Erstellung von Auswertungen"
-
-#~ msgid "Helps you manage your marketing campaigns step by step."
-#~ msgstr ""
-#~ "Management von Marketingkampagnen zur Automatisierung von Vertriebsaktionen"
-
-#~ msgid "Point of Sales"
-#~ msgstr "POS & Kasse"
-
-#~ msgid "Associations"
-#~ msgstr "Vereine & Verbände"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database as "
-#~ "an administrator."
-#~ msgstr ""
-#~ "Sie können Ihr System jetzt entweder über den Assistenten vorkonfigurieren "
-#~ "oder sofort mit der Arbeit auf dieser Datenbank beginnen."
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfiguration Abfolge"
-
-#~ msgid "Fed. State"
-#~ msgstr "Bundesland"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing & Kampagnen"
-
-#~ msgid "Sales Management"
-#~ msgstr "Angebote & Rechnungen"
-
-#~ msgid ""
-#~ "Lets you install various interesting but non-essential tools like Survey, "
-#~ "Lunch and Ideas box."
-#~ msgstr ""
-#~ "Optionale Erweiterung interessanter, aber nicht zwingend zu installierender "
-#~ "Applikationen, wie z.B. Umfragen, Vorschlagswesen etc."
-
-#~ msgid "Advanced Reporting"
-#~ msgstr "Reports & Auswertungen"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Knowledge & Dokumente"
-
-#~ msgid ""
-#~ "Helps you manage your projects and tasks by tracking them, generating "
-#~ "plannings, etc..."
-#~ msgstr ""
-#~ "Management, Planung und Überwachnung von Projekten, Aufgaben, Zeiten und "
-#~ "Kosten ..."
-
-#~ msgid "Human Resources"
-#~ msgstr "Personal & Zeiterfassung"
-
-#~ msgid "Accounting & Finance"
-#~ msgstr "Finanzen & Controlling"
-
-#~ msgid "Auction Houses"
-#~ msgstr "Auktionen & Versteigerungen"
-
-#~ msgid "Purchase Management"
-#~ msgstr "Disposition & Einkauf"
-
-#~ msgid "Helps you handle your quotations, sale orders and invoicing."
-#~ msgstr "Erstellen Sie Angebote, Aufträge und Rechnungen."
-
-#~ msgid "Warehouse Management"
-#~ msgstr "Lager & Logistik"
-
-#~ msgid "Project Management"
-#~ msgstr "Projekte & Aufgaben"
-
-#~ msgid "Installed Users"
-#~ msgstr "Existierende Benutzer"
-
-#~ msgid "New Database"
-#~ msgstr "Neue Datenbank"
-
-#~ msgid "Customer Relationship Management"
-#~ msgstr "CRM & SRM"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications selected to help you "
-#~ "manage your auctions as well as the business processes around them."
-#~ msgstr ""
-#~ "Installiert ein vordefiniertes Set an Anwendungen für das Management von "
-#~ "Auktionshäusern und deren Prozesse."
-
-#~ msgid ""
-#~ "Lets you install various tools to simplify and enhance OpenERP's report "
-#~ "creation."
-#~ msgstr ""
-#~ "Installation der Werkzeuge für die Erstellung und Verwaltung von Reports."
-
-#~ msgid "Information about your new database"
-#~ msgstr "Information zur Datenbank"
-
-#~ msgid "Food Industry"
-#~ msgstr "Nahrung & Genuss"
-
-#~ msgid "Company Website"
-#~ msgstr "Webpage"
-
-#~ msgid "Install Specific Industry Applications"
-#~ msgstr "Installation Branchenanwendungen"
-
-#~ msgid "Example: http://openerp.com"
-#~ msgstr "Beispiel: http://openerp.com"
-
-#~ msgid "Install Applications"
-#~ msgstr "Installiere Module"
-
-#, python-format
-#~ msgid "The following users have been installed : \n"
-#~ msgstr "Folgende Benutzer wurden installiert : \n"
-
-#~ msgid "Invoicing"
-#~ msgstr "Offene Posten Buchhaltung"
-
-#~ msgid ""
-#~ "Helps you handle your accounting needs, if you are not an accountant, we "
-#~ "suggest you to install only the Invoicing "
-#~ msgstr ""
-#~ "Management Ihrer Finanzen. Falls Sie keine vollständige Finanzbuchhaltung "
-#~ "benötigen, empfehlen wir nur die Installation der Anwendung Offene Posten "
-#~ "Buchhaltung. "
-
-#~ msgid "Use Directly"
-#~ msgstr "Sofort beginnen"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your industry."
-#~ msgstr ""
-#~ "Installiert eine Vorauswahl von OpenERP Modulen zur Anwendung in Ihrem "
-#~ "Betrieb."
-
-#~ msgid ""
-#~ "Helps you get the most out of your points of sales with fast sale encoding, "
-#~ "simplified payment mode encoding, automatic picking lists generation and "
-#~ "more."
-#~ msgstr ""
-#~ "Applikation für Ihren Point of Sales mit Schnellerfassung von Verkäufen, "
-#~ "vereinfachter Zahlungserfassung, automatische Lieferscheinerstellung u.a. "
-#~ "Anwendungen."
-
-#~ msgid ""
-#~ "Helps you manage your human resources by encoding your employees structure, "
-#~ "generating work sheets, tracking attendance and more."
-#~ msgstr ""
-#~ "Personalwesen zur Verwaltung von Mitarbeitern, Arbeitszeiten,  Zeiterfassung "
-#~ "von Mitarbeitern, Urlaubsverwaltung, Spesenabrechnung usw."
-
-#~ msgid ""
-#~ "Allows you to create your invoices and track the payments. It is an easier "
-#~ "version of the accounting module for managers who are not accountants."
-#~ msgstr ""
-#~ "Applikation zur Erstellung von Rechnungen mit offener Posten Buchhaltung zur "
-#~ "Zahlungsüberwachung. Diese vereinfachte Version kann auch durch Mitarbeiter "
-#~ "genutzt werden, die keine ausgewiesenen Buchhaltungsexperten sind."
-
-#~ msgid ""
-#~ "Helps you manage your purchase-related processes such as requests for "
-#~ "quotations, supplier invoices, etc..."
-#~ msgstr ""
-#~ "Unterstützung aller Beschaffungsvorgänge, wie z.B. Bedarfsmeldung, "
-#~ "Angebotsanfrage, Bestellung und Rechnungskontrolle."
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to put bank information here:\n"
-#~ "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-#~ msgstr ""
-#~ "Dieser Satz wird am unteren Ende Ihrer Berichte erscheinen. Wir empfehlen "
-#~ "hier die gesetzlich vorgesehen Angaben zu machen zB: IBAN: BE74 1262 0121 "
-#~ "6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-
-#~ msgid "Street 2"
-#~ msgstr "Strasse 2"
-
-#~ msgid "Setup"
-#~ msgstr "Installation"
-
-#~ msgid ""
-#~ "Lets you install addons geared towards sharing knowledge with and between "
-#~ "your employees."
-#~ msgstr ""
-#~ "Installiert die Anwendungen zur Verwaltung von Wissen und Daten und "
-#~ "ermöglicht einen effizienten Austausch und die gemeinsame Bearbeitung von "
-#~ "Dokumenten."
-
-#~ msgid ""
-#~ "This sentence will appear at the top right corner of your reports.\n"
-#~ "We suggest you to put a slogan here:\n"
-#~ "\"Open Source Business Solutions\"."
-#~ msgstr ""
-#~ "Dieser Satz wird im oberen rechten Eck der Berichte erscheinen.\n"
-#~ " Wir empfehlen Ihnen einen Slogan zu verwenden:\n"
-#~ " z.b. 'Open Source Unternehmens Lösungen'."
-
-#~ msgid "Manufacturing"
-#~ msgstr "Stücklisten & Fertigungsaufträge"
-
-#~ msgid ""
-#~ "Helps you track and manage relations with customers such as leads, requests "
-#~ "or issues. Can automatically send reminders, escalate requests or trigger "
-#~ "business-specific actions based on standard events."
-#~ msgstr ""
-#~ "Die Anwendung CRM (Kundenbeziehungen) steuert die Abläufe im Vertrieb, SRM "
-#~ "(Lieferantenbeziehungen) kann in ähnlicher Weise im Einkauf verwendet "
-#~ "werden. Terminieren Sie wichtige Vertriebsaktionen, verfolgen Sie die "
-#~ "Kundenhistorie und kommunizieren Sie mit Kunden und Lieferanten."
-
-#~ msgid ""
-#~ "Helps you manage your inventory and main stock operations: delivery orders, "
-#~ "receptions, etc."
-#~ msgstr ""
-#~ "Management von Lagerorten und Verwaltung von Beständen, z.B. durch  Erfassen "
-#~ "von Lieferungen, Durchführung von Inventuren, etc."
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your association more efficiently."
-#~ msgstr ""
-#~ "Installation von definierten Sets an Anwendungen für das Management von "
-#~ "Vereinen oder Verbänden."
-
-#~ msgid "Skip Configuration Wizards"
-#~ msgstr "Überspringe Konfigurationsassistent"
-
-#~ msgid "Configure Your Company Information"
-#~ msgstr "Konfigurieren Sie Ihre Unternehmensdaten"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module implements a configuration system that helps user\n"
-#~ "    to configure the system at the installation of a new database.\n"
-#~ "\n"
-#~ "    It allows you to select between a list of profiles to install:\n"
-#~ "    * Minimal profile\n"
-#~ "    * Accounting only\n"
-#~ "    * Services companies\n"
-#~ "    * Manufacturing companies\n"
-#~ "\n"
-#~ "    It also asks screens to help easily configure your company, the header "
-#~ "and\n"
-#~ "    footer, the account chart to install and the language.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Durch dieses Modul wird den Benutzern ein Assistent zur ersten "
-#~ "Konfiguration \n"
-#~ "    der Datenbank zur Verfügung gestellt.\n"
-#~ "\n"
-#~ "    Es besteht die Möglichkeit aus Installationsprofilen auszuwählen:\n"
-#~ "    * Minimal Profil\n"
-#~ "    * Finanzen\n"
-#~ "    * Dienstleistungsbetriebe\n"
-#~ "    * Fertigungsbetriebe\n"
-#~ "\n"
-#~ "    In weiteren Konfigurationsschritten werden dann schrittweise die Daten "
-#~ "des\n"
-#~ "    Unternehmens konfiguriert, z.B. die Anschrift zur Ausgabe im Kopf- und "
-#~ "Fussbereich\n"
-#~ "    von Belegen, der Kontenplan, die Sprache etc.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Your company information will be used to personalize documents issued with "
-#~ "OpenERP such as invoices, sales orders and much more."
-#~ msgstr ""
-#~ "Ihre Unternehmensinformationen werden benötigt, damit diese Daten auf "
-#~ "Rechnungen, Verkaufsaufträgen und anderen Dokumenten erscheinen."
-
-#~ msgid ""
-#~ "Select the Applications you want your system to cover. If you are not sure "
-#~ "about your exact needs at this stage, you can easily install them later."
-#~ msgstr ""
-#~ "Wählen Sie die Anwendungen aus, die Ihr System beinhalten soll. Wenn Sie "
-#~ "jetzt noch nicht sicher sind, installieren Sie diese einfach zu einem "
-#~ "späteren Zeitpunkt."
-
-#~ msgid "base.setup.installer"
-#~ msgstr "base.setup.installer"
-
-#~ msgid "base.setup.config"
-#~ msgstr "base.setup.config"
-
-#~ msgid "base.setup.company"
-#~ msgstr "base.setup.company"
-
-#~ msgid "Display Tips"
-#~ msgstr "Zeige Tipps"
-
-#~ msgid "Sync Google Contact"
-#~ msgstr "Synchronisiere Google Kontakte"
-
-#~ msgid "Define Users's Preferences"
-#~ msgstr "Benutzereinstellungen festlegen"
-
-#~ msgid "Create"
-#~ msgstr "Erstellen"
-
-#~ msgid "product.installer"
-#~ msgstr "product.installer"
-
-#~ msgid "Set Company Header and Footer"
-#~ msgstr "Setze Unternehmens Kopf- und Fusszeilen"
-
-#~ msgid "Import"
-#~ msgstr "Importieren"
-
-#~ msgid ""
-#~ "If you use OpenERP for the first time we strongly advise you to select the "
-#~ "simplified interface, which has less features but is easier. You can always "
-#~ "switch later from the user preferences."
-#~ msgstr ""
-#~ "Wenn sie OpenERP erstmals verwenden, empfehlen wir Ihnen das vereinfachte "
-#~ "Benutzerinterface zu benutzen. Es bietet zwar weniger Funktionen, ist "
-#~ "dadurch aber auch leichter zu bedienen und verstehen. Sie können jederzeit "
-#~ "in Ihren Benutzereinstellungen auf das erweiterte Benutzerinterface wechseln."
-
-#~ msgid "For Quickbooks Ippids"
-#~ msgstr "Für Quickbooks Import"
-
-#~ msgid "Extended"
-#~ msgstr "Erweitert"
-
-#~ msgid "Customers"
-#~ msgstr "Kunden"
-
-#~ msgid "migrade.application.installer.modules"
-#~ msgstr "migrade.application.installer.modules"
-
-#~ msgid "Interface"
-#~ msgstr "Benutzeroberfläche"
-
-#~ msgid ""
-#~ "Sets default language for the all user interface, when UI translations are "
-#~ "available. If you want to Add new Language, you can add it from 'Load an "
-#~ "Official Translation' wizard  from 'Administration' menu."
-#~ msgstr ""
-#~ "Bestimmt die Standard Sprache für alle Formulare. Mit \"Lade neue offizielle "
-#~ "Sprache\" können Sie weitere Sprachen hinzufügen"
-
-#~ msgid "Language"
-#~ msgstr "Sprache"
-
-#~ msgid ""
-#~ "This will set the default preferences for new users and update all existing "
-#~ "ones. Afterwards, users are free to change those values on their own user "
-#~ "preference form."
-#~ msgstr ""
-#~ "Dies setzt die Standardeinstellungen für alle bestehenden und neue Benutzer. "
-#~ "Danach kann jeder Benutzer seine eigenen Standardeinstellungen setzen."
-
-#~ msgid "user.preferences.config"
-#~ msgstr "user.preferences.config"
-
-#~ msgid "Timezone"
-#~ msgstr "Zeitzone"
-
-#~ msgid "Simplified"
-#~ msgstr "Vereinfacht"
-
-#~ msgid "For Sync Google Contact"
-#~ msgstr "Synchronisation von Google Kontakten"
-
-#~ msgid ""
-#~ "Set default for new user's timezone, used to perform timezone conversions "
-#~ "between the server and the client."
-#~ msgstr ""
-#~ "Setze den Standardwert für die Zeitzone neuer Benutzer. Damit wird die "
-#~ "Zeitzone des Servers zur Zeitzone des Benutzers konvertiert"
-
-#~ msgid ""
-#~ "Create or Import Customers  and their contacts manually from this form or "
-#~ "you can import your existing partners by CSV spreadsheet from \"Import "
-#~ "Data\" wizard"
-#~ msgstr ""
-#~ "Erfassen Sie Kunden und deren Kontakte in diesem Formular manuell oder lesen "
-#~ "Sie vorhandene Daten mit dem Importassistenten aus CSV-Dateien ein"
-
-#~ msgid "For Import Saleforce"
-#~ msgstr "Zum Import von Verkaufskräften"
-
-#~ msgid "Define default users preferences"
-#~ msgstr "Standardeeinstellungen für (neue) Benutzer festlegen"
-
-#~ msgid ""
-#~ "Fill in your company data (address, logo, bank accounts) so that it's "
-#~ "printed on your reports. You can click on the button 'Preview Header' in "
-#~ "order to check the header/footer of PDF documents."
-#~ msgstr ""
-#~ "Erfassen Sie die Unternehmensdaten (Adresse, Logo, Bankkonten) die auf den "
-#~ "Reports gedruckt werden sollen.\r\n"
-#~ "Mit \"Vorschau\" können Sie eine PDF-Vorschau ansehen und die Darstellung "
-#~ "überprüfen."
-
-#~ msgid "Create Additional Users"
-#~ msgstr "Weitere Benutzer anlegen"
-
-#~ msgid ""
-#~ "Check out this box if you want to always display tips on each menu action"
-#~ msgstr ""
-#~ "Dieses Kästchen unmarkiert lassen um alle Tips für alle Menüpunkte zu "
-#~ "erhalten"
-
-#~ msgid "Import Saleforce"
-#~ msgstr "Verkaufsmitarbeiter importieren"
-
-#~ msgid "Quickbooks Ippids"
-#~ msgstr "Quickbooks Import"
-
-#~ msgid "For Import Sugarcrm"
-#~ msgstr "Um aus Sugarcrm zu importieren"
-
-#~ msgid "Import or create customers"
-#~ msgstr "Kunden importieren oder anlegen"
-
-#~ msgid "Import Sugarcrm"
-#~ msgstr "Aus Sugarcrm importieren"
-
-#~ msgid "Create or Import Customers"
-#~ msgstr "Kunden anlegen oder importieren"
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "res_config_contents"
+msgstr "res_config_contents"

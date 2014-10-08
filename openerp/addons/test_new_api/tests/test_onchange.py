@@ -20,7 +20,7 @@ class TestOnChange(common.TransactionCase):
         with self.assertRaises(AttributeError):
             self.Discussion.not_really_a_method()
 
-    def test_new_onchange(self):
+    def test_onchange(self):
         """ test the effect of onchange() """
         discussion = self.env.ref('test_new_api.discussion_0')
         BODY = "What a beautiful day!"
@@ -55,7 +55,7 @@ class TestOnChange(common.TransactionCase):
         self.assertLessEqual(set(['size']), set(result['value']))
         self.assertEqual(result['value']['size'], len(BODY))
 
-    def test_new_onchange_one2many(self):
+    def test_onchange_one2many(self):
         """ test the effect of onchange() on one2many fields """
         BODY = "What a beautiful day!"
         USER = self.env.user
@@ -137,7 +137,7 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
-    def test_new_onchange_specific(self):
+    def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
         discussion = self.env.ref('test_new_api.discussion_0')
         demo = self.env.ref('base.user_demo')
@@ -163,3 +163,25 @@ class TestOnChange(common.TransactionCase):
 
         self.assertLessEqual(set(['participants']), set(result['value']))
         self.assertItemsEqual(result['value']['participants'], participants + [(4, demo.id)])
+
+    def test_onchange_one2many_value(self):
+        """ test the value of the one2many field inside the onchange """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        demo = self.env.ref('base.user_demo')
+
+        field_onchange = self.Discussion._onchange_spec()
+        self.assertEqual(field_onchange.get('messages'), '1')
+
+        self.assertEqual(len(discussion.messages), 3)
+        messages = [(4, msg.id) for msg in discussion.messages]
+        messages[0] = (1, messages[0][1], {'body': 'test onchange'})
+        values = {
+            'name': discussion.name,
+            'moderator': demo.id,
+            'categories': [(4, cat.id) for cat in discussion.categories],
+            'messages': messages,
+            'participants': [(4, usr.id) for usr in discussion.participants],
+            'message_changes': 0,
+        }
+        result = discussion.onchange(values, 'messages', field_onchange)
+        self.assertEqual(result['value'].get('message_changes', 0), len(discussion.messages))

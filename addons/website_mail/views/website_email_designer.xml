@@ -5,9 +5,6 @@
 <!-- Template Choice page -->
 <template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
-        </t>
         <div id="wrap" class="container" t-ignore="True">
             <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
                 <a class="mt16 btn btn-default pull-right" 
@@ -27,7 +24,7 @@
                     </div>
                     <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
                         <div class="email_preview_border">
-                            <div t-field="template.body_html" class="email_preview js_content"/>
+                            <div t-esc="html_sanitize(template.body_html)" class="email_preview js_content"/>
                         </div>
                         <h4 t-field="template.name"/>
                         <button class="btn btn-primary js_template_set">Select</button>

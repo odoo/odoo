@@ -1,185 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * account_followup
-# Els Van Vossel <evv@agaplan.eu>, 2013.
+# Dutch (Belgium) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-04-15 23:02+0000\n"
-"Last-Translator: Els Van Vossel (Foxy) <Unknown>\n"
-"Language-Team: Els Van Vossel\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: nl\n"
-
-#. module: account_followup
-#: model:email.template,subject:account_followup.email_template_account_followup_default
-#: model:email.template,subject:account_followup.email_template_account_followup_level0
-#: model:email.template,subject:account_followup.email_template_account_followup_level1
-#: model:email.template,subject:account_followup.email_template_account_followup_level2
-msgid "${user.company_id.name} Payment Reminder"
-msgstr "${user.company_id.name} Aanmaning"
-
-#. module: account_followup
-#: help:res.partner,latest_followup_level_id:0
-msgid "The maximum follow-up level"
-msgstr "Het maximale aanmaningsniveau"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: view:res.partner:0
-msgid "Group By..."
-msgstr "Groeperen op..."
-
-#. module: account_followup
-#: field:account_followup.print,followup_id:0
-msgid "Follow-Up"
-msgstr "Aanmaningen"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(date)s"
-msgstr "%(date)s"
-
-#. module: account_followup
-#: field:res.partner,payment_next_action_date:0
-msgid "Next Action Date"
-msgstr "Volgende actiedatum"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,manual_action:0
-msgid "Manual Action"
-msgstr "Manuele actie"
-
-#. module: account_followup
-#: field:account_followup.sending.results,needprinting:0
-msgid "Needs Printing"
-msgstr "Moet worden afgedrukt"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "⇾ Als Gedaan markeren"
-
-#. module: account_followup
-#: field:account_followup.followup.line,manual_action_note:0
-msgid "Action To Do"
-msgstr "Uit te voeren actie"
-
-#. module: account_followup
-#: field:account_followup.followup,company_id:0
-#: view:account_followup.stat:0
-#: field:account_followup.stat,company_id:0
-#: field:account_followup.stat.by.partner,company_id:0
-msgid "Company"
-msgstr "Bedrijf"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:258
-#, python-format
-msgid "Invoice Date"
-msgstr "Factuurdatum"
-
-#. module: account_followup
-#: field:account_followup.print,email_subject:0
-msgid "Email Subject"
-msgstr "E-mailonderwerp"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(user_signature)s"
-msgstr "%(user_signature)s"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "days overdue, do the following actions:"
-msgstr "dagen vervallen, voer volgende acties uit:"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-up Steps"
-msgstr "Aanmaningsstappen"
-
-#. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "E-mailbericht"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
-msgid "Send Follow-Ups"
-msgstr "Aanmaningen versturen"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: code:addons/account_followup/account_followup.py:262
-#, python-format
-msgid "Amount"
-msgstr "Bedrag"
-
-#. module: account_followup
-#: help:res.partner,payment_next_action:0
-msgid ""
-"This is the next action to be taken.  It will automatically be set when the "
-"partner gets a follow-up level that requires a manual action. "
-msgstr ""
-"Dit is de volgende actie die moet worden ondernomen. Deze wordt automatisch "
-"ingesteld als de relatie een aanmaningsniveau bereikt waarvoor een manuele "
-"actie is vereist. "
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "No Responsible"
-msgstr "Niemand verantwoordelijk"
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days.\n"
-"\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department, so that we can resolve the "
-"matter quickly.\n"
-"\n"
-"Details of due payments is printed below.\n"
-"\n"
-"Best Regards,\n"
-msgstr ""
-"\n"
-"Beste %(partner_name)s,\n"
-"\n"
-"Het spijt ons te moeten vaststellen dat, ondanks een eerdere aanmaning, u "
-"nog steeds een openstaand saldo hebt.\n"
-"\n"
-"Wij verzoeken u dringend het openstaande saldo te betalen. Bij gebrek aan "
-"betaling, zijn wij genoodzaakt de verdere levering van goederen en diensten "
-"stop te zetten.\n"
-"Gelieve de betalingen uit te voeren binnen de 8 dagen.\n"
-"\n"
-"Als er een probleem is rond de betaling waarvan wij niet op de hoogte zijn, "
-"kunt u steeds contact opnemen met onze boekhouding, zodat dit snel kan "
-"worden opgelost.\n"
-"\n"
-"Hierna vindt u een overzicht van de vervallen documenten.\n"
-"\n"
-"Hoogachtend,\n"
+"X-Launchpad-Export-Date: 2014-09-24 08:56+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -251,128 +87,131 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: view:account_followup.stat.by.partner:0
-msgid "Balance > 0"
-msgstr "Saldo > 0"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Totaal debet"
-
-#. module: account_followup
-#: field:res.partner,payment_next_action:0
-msgid "Next Action"
-msgstr "Volgende actie"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": Partner Name"
-msgstr "Relatienaam"
-
-#. module: account_followup
-#: field:account_followup.followup.line,manual_action_responsible_id:0
-msgid "Assign a Responsible"
-msgstr "Duid iemand aan die verantwoordelijk is"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
-#: view:res.partner:0
-msgid "Follow-up"
-msgstr "Aanmaning"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "VAT:"
-msgstr "Btw:"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: field:account_followup.stat,partner_id:0
-#: field:account_followup.stat.by.partner,partner_id:0
-#: model:ir.model,name:account_followup.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: account_followup
-#: view:account_followup.followup:0
+#: model:email.template,body_html:account_followup.email_template_account_followup_level2
 msgid ""
-"To remind customers of paying their invoices, you can\n"
-"                        define different actions depending on how severely\n"
-"                        overdue the customer is. These actions are bundled\n"
-"                        into follow-up levels that are triggered when the "
-"due\n"
-"                        date of an invoice has passed a certain\n"
-"                        number of days. If there are other overdue invoices "
-"for the \n"
-"                        same customer, the actions of the most \n"
-"                        overdue invoice will be executed."
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    Despite several reminders, your account is still not settled.\n"
+"Unless full payment is made in next 8 days, legal action for the recovery of "
+"the debt will be taken without\n"
+"further notice.\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department.\n"
+"</p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 msgstr ""
-"Om klanten aan te manen tot betaling, kunt u\n"
-"                        verschillende acties instellen in functie van de "
-"grootte\n"
-"                        van het openstaand bedrag. Deze acties worden "
-"samengevoegd\n"
-"                        in aanmaningsniveaus die worden aangesproken als de\n"
-"                        vervaldatum van een factuur een ingesteld aantal "
-"dagen\n"
-"                        overschrijdt. Als de klant ook andere openstaande "
-"facturen heeft,\n"
-"                        worden de acties uitgevoerd in functie van het "
-"langst \n"
-"                        openstaande document."
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Beste ${object.name},</p>\n"
+"    <p>\n"
+"    Ondanks het feit dat wij u meerdere aanmaningen hebben gestuurd, is uw "
+"openstaand saldo nog steeds niet betaald.\n"
+"Indien dit bedrag niet binnen de 8 dagen op onze rekening staat, schakelen "
+"wij een advocaat in om het verschuldigde saldo bij u te innen. U ontvangt "
+"hierover geen verdere communicatie.\n"
+"Wij gaan ervan uit dat deze stap niet nodig zal zijn. De details van de "
+"openstaande betalingen vindt u hierna.\n"
+"Aarzel niet contact op te nemen met onze boekhouding als u nog vragen "
+"heeft.\n"
+"</p>\n"
+"<br/>\n"
+"Hoogachtend,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Date :"
-msgstr "Datum:"
-
-#. module: account_followup
-#: field:account_followup.print,partner_ids:0
-msgid "Partners"
-msgstr "Relaties"
-
-#. module: account_followup
-#: sql_constraint:account_followup.followup:0
-msgid "Only one follow-up per company is allowed"
-msgstr "Per bedrijf is maar een aanmaningsniveau toegelaten."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:254
-#, python-format
-msgid "Invoices Reminder"
-msgstr "Aanmaning facturen"
-
-#. module: account_followup
-#: help:account_followup.followup.line,send_letter:0
-msgid "When processing, it will print a letter"
-msgstr "Bij verwerking wordt een brief gemaakt"
-
-#. module: account_followup
-#: field:res.partner,payment_earliest_due_date:0
-msgid "Worst Due Date"
-msgstr "Hoogste vervaldatum"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Not Litigation"
-msgstr "Geen betwisting"
-
-#. module: account_followup
-#: view:account_followup.print:0
-msgid "Send emails and generate letters"
-msgstr "Verstuur e-mails en maak brieven"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_customer_followup
-msgid "Manual Follow-Ups"
-msgstr "Manuele aanmaningen"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(partner_name)s"
-msgstr "%(partner_name)s"
+#: model:email.template,body_html:account_followup.email_template_account_followup_default
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    Exception made if there was a mistake of ours, it seems that the "
+"following amount stays unpaid. Please, take\n"
+"appropriate measures in order to carry out this payment in the next 8 days.\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to\n"
+"contact our accounting department.\n"
+"    </p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Beste ${object.name},</p>\n"
+"    <p>\n"
+"    Volgens onze administratie hebben wij het onderstaande bedrag nog niet "
+"ontvangen. Wij verzoeken\n"
+"u het verschuldigde bedrag uiterlijk binnen 8 dagen over te maken.\n"
+"Indien dit schrijven uw betaling heeft gekruist, kunt u deze herinnering als "
+"niet verzonden beschouwen.\n"
+"Voor meer info kunt u steeds contact opnemen met onze boekhouding.\n"
+"    </p>\n"
+"<br/>\n"
+"Hoogachtend,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -452,357 +291,39 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: field:account_followup.stat,debit:0
-msgid "Debit"
-msgstr "Debet"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Follow-up Statistics"
-msgstr "Aanmaningsstatistieken"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Send Overdue Email"
-msgstr "Aanmaningsmail sturen"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-up Criteria"
-msgstr "Aanmaningscriteria"
-
-#. module: account_followup
-#: help:account_followup.followup.line,sequence:0
-msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Bepaalt de volgorde bij het weergeven van de aanmaningslijnen."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:166
-#, python-format
-msgid " will be sent"
-msgstr " wordt verstuurd"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": User's Company Name"
-msgstr "Bedrijfsnaam van gebruiker"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,send_letter:0
-msgid "Send a Letter"
-msgstr "Brief sturen"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-msgid "Payment Follow-ups"
-msgstr "Aanmaningen"
-
-#. module: account_followup
-#: field:account_followup.followup.line,delay:0
-msgid "Due Days"
-msgstr "Dagen vervallen"
-
-#. module: account_followup
-#: field:account.move.line,followup_line_id:0
-#: view:account_followup.stat:0
-msgid "Follow-up Level"
-msgstr "Aanmaningsniveau"
-
-#. module: account_followup
-#: field:account_followup.stat,date_followup:0
-msgid "Latest followup"
-msgstr "Laatste aanmaning"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
-msgid "Reconcile Invoices & Payments"
-msgstr "Facturen en betalingen afpunten"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_s
-msgid "Do Manual Follow-Ups"
-msgstr "Manuele aanmaningen uitvoeren"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Li."
-msgstr "Bt."
-
-#. module: account_followup
-#: field:account_followup.print,email_conf:0
-msgid "Send Email Confirmation"
-msgstr "Bevestiging per e-mail sturen"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-up Entries with period in current year"
-msgstr "Aanmaningen met periode in huidig jaar"
-
-#. module: account_followup
-#: field:account_followup.stat.by.partner,date_followup:0
-msgid "Latest follow-up"
-msgstr "Laatste aanmaning"
-
-#. module: account_followup
-#: field:account_followup.print,partner_lang:0
-msgid "Send Email in Partner Language"
-msgstr "Stuur e-mail in taal relatie"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:169
-#, python-format
-msgid " email(s) sent"
-msgstr " e-mail(s) verstuurd"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_print
-msgid "Print Follow-up & Send Mail to Customers"
-msgstr "Aanmaningen afdrukken & mail sturen naar klanten"
-
-#. module: account_followup
-#: field:account_followup.followup.line,description:0
-msgid "Printed Message"
-msgstr "Afgedrukt bericht"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:155
-#, python-format
-msgid "Anybody"
-msgstr "Iedereen"
-
-#. module: account_followup
-#: help:account_followup.followup.line,send_email:0
-msgid "When processing, it will send an email"
-msgstr "Bij verwerking wordt een e-mail verstuurd"
-
-#. module: account_followup
-#: view:account_followup.stat.by.partner:0
-msgid "Partner to Remind"
-msgstr "Relatie voor aanmaning"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Print Overdue Payments"
-msgstr "Vervallen documenten afdrukken"
-
-#. module: account_followup
-#: field:account_followup.followup.line,followup_id:0
-#: field:account_followup.stat,followup_id:0
-msgid "Follow Ups"
-msgstr "Aanmaningen"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:218
-#, python-format
-msgid "Email not sent because of email address of partner not filled in"
-msgstr ""
-"E-mail is niet verstuurd, omdat er voor de relatie geen e-mailadres is "
-"ingevuld."
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup
-msgid "Account Follow-up"
-msgstr "Aanmaningen"
-
-#. module: account_followup
-#: help:res.partner,payment_responsible_id:0
-msgid ""
-"Optionally you can assign a user to this field, which will make him "
-"responsible for the action."
-msgstr ""
-"U kunt eventueel een gebruiker toewijzen aan dit veld. Dit betekent dat hij "
-"verantwoordelijk is voor deze actie."
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_sending_results
-msgid "Results from the sending of the different letters and emails"
-msgstr "Resultaten van het versturen van brieven en e-mails"
-
-#. module: account_followup
-#: constraint:account_followup.followup.line:0
-msgid ""
-"Your description is invalid, use the right legend or %% if you want to use "
-"the percent character."
-msgstr ""
-"Uw beschrijving is niet geldig. Gebruik de juiste parameter of %% als u het "
-"percentageteken wilt gebruiken."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:172
-#, python-format
-msgid " manual action(s) assigned:"
-msgstr " manuele actie(s) toegewezen"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Search Partner"
-msgstr "Relatie zoeken"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
-msgid "Send Letters and Emails"
-msgstr "Brieven en e-mails sturen"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-msgid "Search Follow-up"
-msgstr "Aanmaningen zoeken"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Account Move line"
-msgstr "Boeking"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:237
-#, python-format
-msgid "Send Letters and Emails: Actions Summary"
-msgstr "Brieven en e-mails sturen: overzicht acties"
-
-#. module: account_followup
-#: view:account_followup.print:0
-msgid "or"
-msgstr "of"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-"Indien dit niet is ingesteld via de laatste aanmaning, dan wordt de "
-"standaard e-mailsjabloon gebruikt."
-
-#. module: account_followup
-#: sql_constraint:account_followup.followup.line:0
-msgid "Days of the follow-up levels must be different"
-msgstr "De dagen moeten verschillen per aanmaningsniveau."
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Click to mark the action as done."
-msgstr "Klik om de actie als Gedaan te markeren."
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
-msgid "Follow-Ups Analysis"
-msgstr "Aanmaningsanalyse"
-
-#. module: account_followup
-#: help:res.partner,payment_next_action_date:0
-msgid ""
-"This is when the manual follow-up is needed. The date will be set to the "
-"current date when the partner gets a follow-up level that requires a manual "
-"action. Can be practical to set manually e.g. to see if he keeps his "
-"promises."
-msgstr ""
-"Dit is als er manuele opvolging nodig is. De datum wordt ingesteld op de "
-"huidige datum als de relatie een aanmaningsniveau bereikt waarvoor een "
-"manuele handeling nodig is. Kan handig zijn om dit als manueel in te "
-"stellen, vb. om na te gaan of beloften worden nagekomen."
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Print overdue payments report independent of follow-up line"
-msgstr "Aanmaningen afdrukken onafgezien van de aanmaningslijn."
-
-#. module: account_followup
-#: help:account_followup.print,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-"Dit veld biedt u de mogelijkheid om een datum te kiezen om uw aanmaningen "
-"vooraf te plannen."
-
-#. module: account_followup
-#: field:account_followup.print,date:0
-msgid "Follow-up Sending Date"
-msgstr "Verzenddatum aanmaning"
-
-#. module: account_followup
-#: view:res.partner:0
-#: field:res.partner,payment_responsible_id:0
-msgid "Follow-up Responsible"
-msgstr "Verantwoordelijk voor aanmaning"
-
-#. module: account_followup
-#: model:email.template,body_html:account_followup.email_template_account_followup_level2
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"    Despite several reminders, your account is still not settled.\n"
-"Unless full payment is made in next 8 days, legal action for the recovery of "
-"the debt will be taken without\n"
-"further notice.\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
+"\n"
 "I trust that this action will prove unnecessary and details of due payments "
 "is printed below.\n"
+"\n"
 "In case of any queries concerning this matter, do not hesitate to contact "
 "our accounting department.\n"
-"</p>\n"
-"<br/>\n"
+"\n"
 "Best Regards,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
 msgstr ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Beste ${object.name},</p>\n"
-"    <p>\n"
-"    Ondanks het feit dat wij u meerdere aanmaningen hebben gestuurd, is uw "
-"openstaand saldo nog steeds niet betaald.\n"
-"Indien dit bedrag niet binnen de 8 dagen op onze rekening staat, schakelen "
-"wij een advocaat in om het verschuldigde saldo bij u te innen. U ontvangt "
-"hierover geen verdere communicatie.\n"
-"Wij gaan ervan uit dat deze stap niet nodig zal zijn. De details van de "
-"openstaande betalingen vindt u hierna.\n"
-"Aarzel niet contact op te nemen met onze boekhouding als u nog vragen "
-"heeft.\n"
-"</p>\n"
-"<br/>\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Ondanks eerdere aanmaningen, heeft u nog steeds een openstaand saldo.\n"
+"\n"
+"Als uw betaling binnen de 8 dagen opnieuw uitblijft, zijn wij genoodzaakt de "
+"vordering definitief uit handen te geven.\n"
+"\n"
+"Wij vertrouwen erop dat u het niet zover zult laten komen. Details van hety "
+"openstaande saldo vindt u hierna.\n"
+"\n"
+"Indien u nog vragen heeft, kunt u steeds contact opnemen met onze "
+"boekhouding.\n"
+"\n"
 "Hoogachtend,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"    <br/>\n"
-"\n"
-"</div>\n"
-"            "
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Document : Customer account statement"
-msgstr "Document: Rekeninguittreksel"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-msgid "Follow-up Levels"
-msgstr "Aanmaningsniveaus"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -843,202 +364,6 @@ msgstr ""
 "            "
 
 #. module: account_followup
-#: field:res.partner,payment_amount_due:0
-msgid "Amount Due"
-msgstr "Vervallen bedrag"
-
-#. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
-msgstr "Laatste aanmaning"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Download Letters"
-msgstr "Brieven downloaden"
-
-#. module: account_followup
-#: field:account_followup.print,company_id:0
-#: field:res.partner,unreconciled_aml_ids:0
-msgid "unknown"
-msgstr "onbekend"
-
-#. module: account_followup
-#: code:addons/account_followup/account_followup.py:313
-#, python-format
-msgid "Printed overdue payments report"
-msgstr "Afgedrukt aanmaningsrapport"
-
-#. module: account_followup
-#: help:account_followup.followup.line,manual_action:0
-msgid ""
-"When processing, it will set the manual action to be taken for that "
-"customer. "
-msgstr ""
-"Bij verwerking zal de manuele actie voor die klant worden ingesteld. "
-
-#. module: account_followup
-#: view:res.partner:0
-msgid ""
-"Below is the history of the transactions of this\n"
-"                            customer. You can check \"No Follow-up\" in\n"
-"                            order to exclude it from the next follow-up "
-"actions."
-msgstr ""
-"Hieronder vindt u een overzicht van de transacties voor deze\n"
-"                            klant. U kunt \"Stuur geen aanmaning\" kiezen "
-"om\n"
-"                            de factuur uit te sluiten van volgende "
-"aanmaningsacties."
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:171
-#, python-format
-msgid " email(s) should have been sent, but "
-msgstr " e-mail(s) zouden moeten zijn verstuurd, maar "
-
-#. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
-"Schakel dit veld in als u aanmaningen wilt afdrukken zonder het niveau te "
-"veranderen."
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_move_line
-msgid "Journal Items"
-msgstr "Boekingen"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Total:"
-msgstr "Totaal:"
-
-#. module: account_followup
-#: field:account_followup.followup.line,email_template_id:0
-msgid "Email Template"
-msgstr "E-mailsjabloon"
-
-#. module: account_followup
-#: field:account_followup.print,summary:0
-msgid "Summary"
-msgstr "Overzicht"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: field:account_followup.followup.line,send_email:0
-msgid "Send an Email"
-msgstr "E-mail versturen"
-
-#. module: account_followup
-#: field:account_followup.stat,credit:0
-msgid "Credit"
-msgstr "Krediet"
-
-#. module: account_followup
-#: field:res.partner,payment_amount_overdue:0
-msgid "Amount Overdue"
-msgstr "Vervallen bedrag"
-
-#. module: account_followup
-#: help:res.partner,latest_followup_level_id_without_lit:0
-msgid ""
-"The maximum follow-up level without taking into account the account move "
-"lines with litigation"
-msgstr ""
-"Het maximale aanmaningsniveau, zonder rekening te houden met boekingen die "
-"worden betwist."
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: field:res.partner,latest_followup_date:0
-msgid "Latest Follow-up Date"
-msgstr "Datum laatste aanmaning"
-
-#. module: account_followup
-#: model:email.template,body_html:account_followup.email_template_account_followup_default
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"    Exception made if there was a mistake of ours, it seems that the "
-"following amount stays unpaid. Please, take\n"
-"appropriate measures in order to carry out this payment in the next 8 days.\n"
-"Would your payment have been carried out after this mail was sent, please "
-"ignore this message. Do not hesitate to\n"
-"contact our accounting department.\n"
-"    </p>\n"
-"<br/>\n"
-"Best Regards,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
-"255, 255); \">\n"
-"    \n"
-"    <p>Beste ${object.name},</p>\n"
-"    <p>\n"
-"    Volgens onze administratie hebben wij het onderstaande bedrag nog niet "
-"ontvangen. Wij verzoeken\n"
-"u het verschuldigde bedrag uiterlijk binnen 8 dagen over te maken.\n"
-"Indien dit schrijven uw betaling heeft gekruist, kunt u deze herinnering als "
-"niet verzonden beschouwen.\n"
-"Voor meer info kunt u steeds contact opnemen met onze boekhouding.\n"
-"    </p>\n"
-"<br/>\n"
-"Hoogachtend,\n"
-"<br/>\n"
-"<br/>\n"
-"${user.name}\n"
-"<br/>\n"
-"<br/>\n"
-"\n"
-"${object.get_followup_table_html() | safe}\n"
-"\n"
-"<br/>\n"
-"</div>\n"
-"            "
-
-#. module: account_followup
-#: field:account.move.line,result:0
-#: view:account_followup.stat:0
-#: field:account_followup.stat,balance:0
-#: field:account_followup.stat.by.partner,balance:0
-msgid "Balance"
-msgstr "Saldo"
-
-#. module: account_followup
-#: help:res.partner,payment_note:0
-msgid "Payment Note"
-msgstr "Betalingsbewijs"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "My Follow-ups"
-msgstr "Mijn aanmaningen"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "%(company_name)s"
-msgstr "%(company_name)s"
-
-#. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
 msgid ""
 "\n"
@@ -1068,29 +393,119 @@ msgstr ""
 "Hoogachtend,\n"
 
 #. module: account_followup
-#: field:account_followup.stat,date_move_last:0
-#: field:account_followup.stat.by.partner,date_move_last:0
-msgid "Last move"
-msgstr "Laatste boeking"
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department, so that we can resolve the "
+"matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+"\n"
+"Beste %(partner_name)s,\n"
+"\n"
+"Het spijt ons te moeten vaststellen dat, ondanks een eerdere aanmaning, u "
+"nog steeds een openstaand saldo hebt.\n"
+"\n"
+"Wij verzoeken u dringend het openstaande saldo te betalen. Bij gebrek aan "
+"betaling, zijn wij genoodzaakt de verdere levering van goederen en diensten "
+"stop te zetten.\n"
+"Gelieve de betalingen uit te voeren binnen de 8 dagen.\n"
+"\n"
+"Als er een probleem is rond de betaling waarvan wij niet op de hoogte zijn, "
+"kunt u steeds contact opnemen met onze boekhouding, zodat dit snel kan "
+"worden opgelost.\n"
+"\n"
+"Hierna vindt u een overzicht van de vervallen documenten.\n"
+"\n"
+"Hoogachtend,\n"
 
 #. module: account_followup
-#: field:account_followup.stat,period_id:0
-msgid "Period"
-msgstr "Periode"
+#: code:addons/account_followup/wizard/account_followup_print.py:174
+#, python-format
+msgid " email(s) sent"
+msgstr " e-mail(s) verstuurd"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:228
+#: code:addons/account_followup/wizard/account_followup_print.py:176
+#, python-format
+msgid " email(s) should have been sent, but "
+msgstr " e-mail(s) zouden moeten zijn verstuurd, maar "
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:176
+#, python-format
+msgid " had unknown email address(es)"
+msgstr " had een onbekend e-mailadres"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:177
+#, python-format
+msgid " letter(s) in report"
+msgstr " brieven in rapport"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:177
+#, python-format
+msgid " manual action(s) assigned:"
+msgstr " manuele actie(s) toegewezen"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:171
+#, python-format
+msgid " will be sent"
+msgstr " wordt verstuurd"
+
+#. module: account_followup
+#: model:email.template,subject:account_followup.email_template_account_followup_default
+#: model:email.template,subject:account_followup.email_template_account_followup_level0
+#: model:email.template,subject:account_followup.email_template_account_followup_level1
+#: model:email.template,subject:account_followup.email_template_account_followup_level2
+msgid "${user.company_id.name} Payment Reminder"
+msgstr "${user.company_id.name} Aanmaning"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(company_name)s"
+msgstr "%(company_name)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(date)s"
+msgstr "%(date)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(partner_name)s"
+msgstr "%(partner_name)s"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "%(user_signature)s"
+msgstr "%(user_signature)s"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:234
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
 msgstr "%s relaties hebben geen schulden en de actie wordt gewist"
 
 #. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Follow-up Report"
-msgstr "Aanmaningsrapport"
-
-#. module: account_followup
-#: view:res.partner:0
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
@@ -1099,228 +514,24 @@ msgstr ""
 "                            was:"
 
 #. module: account_followup
-#: view:account_followup.print:0
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Close"
-msgstr "Afsluiten"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Litigation"
-msgstr "Betwist"
-
-#. module: account_followup
-#: field:account_followup.stat.by.partner,max_followup_id:0
-msgid "Max Follow Up Level"
-msgstr "Max. aanmaningsniveau"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:171
-#, python-format
-msgid " had unknown email address(es)"
-msgstr " had een onbekend e-mailadres"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
-msgstr "Verantwoordelijke"
-
-#. module: account_followup
-#: model:ir.ui.menu,name:account_followup.menu_finance_followup
-#: view:res.partner:0
-msgid "Payment Follow-up"
-msgstr "Aanmaningen"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid ": Current Date"
 msgstr ": Huidige datum"
 
 #. module: account_followup
-#: view:account_followup.print:0
-msgid ""
-"This action will send follow-up emails, print the letters and\n"
-"                        set the manual actions per customer, according to "
-"the follow-up levels defined."
-msgstr ""
-"Met deze actie stuurt u aanmaningsmails, kunt u brieven afdrukken en\n"
-"                        manuele acties instellen per klant, in functie van "
-"de ingestelde aanmaningsniveaus."
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": Partner Name"
+msgstr "Relatienaam"
 
 #. module: account_followup
-#: field:account_followup.followup.line,name:0
-msgid "Follow-Up Action"
-msgstr "Aanmaningsactie"
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": User Name"
+msgstr ": Gebruikersnaam"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Including journal entries marked as a litigation"
-msgstr "Inclusief betwiste boekingen"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-#: field:account_followup.sending.results,description:0
-#: code:addons/account_followup/account_followup.py:259
-#, python-format
-msgid "Description"
-msgstr "Omschrijving"
-
-#. module: account_followup
-#: view:account_followup.sending.results:0
-msgid "Summary of actions"
-msgstr "Overzicht van acties"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Ref"
-msgstr "Ref"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "After"
-msgstr "Na"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "This Fiscal year"
-msgstr "Dit boekjaar"
-
-#. module: account_followup
-#: field:res.partner,latest_followup_level_id_without_lit:0
-msgid "Latest Follow-up Level without litigation"
-msgstr "Laatste aanmaningsniveau met betwisting"
-
-#. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Geen boekingen gevonden.\n"
-"                </p>\n"
-"            "
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr "Relatieboekingen"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-up lines"
-msgstr "Aanmaningsregels"
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Despite several reminders, your account is still not settled.\n"
-"\n"
-"Unless full payment is made in next 8 days, then legal action for the "
-"recovery of the debt will be taken without further notice.\n"
-"\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department.\n"
-"\n"
-"Best Regards,\n"
-msgstr ""
-"\n"
-"Beste %(partner_name)s,\n"
-"\n"
-"Ondanks eerdere aanmaningen, heeft u nog steeds een openstaand saldo.\n"
-"\n"
-"Als uw betaling binnen de 8 dagen opnieuw uitblijft, zijn wij genoodzaakt de "
-"vordering definitief uit handen te geven.\n"
-"\n"
-"Wij vertrouwen erop dat u het niet zover zult laten komen. Details van hety "
-"openstaande saldo vindt u hierna.\n"
-"\n"
-"Indien u nog vragen heeft, kunt u steeds contact opnemen met onze "
-"boekhouding.\n"
-"\n"
-"Hoogachtend,\n"
-
-#. module: account_followup
-#: help:account_followup.print,partner_lang:0
-msgid ""
-"Do not change message text, if you want to send email in partner language, "
-"or configure from company"
-msgstr ""
-"Wijzig de tekst niet als u de e-mail in de taal van de relatie wilt sturen, "
-"of stel de tekst in op firma."
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ""
-"Write here the introduction in the letter,\n"
-"                            according to the level of the follow-up. You "
-"can\n"
-"                            use the following keywords in the text. Don't\n"
-"                            forget to translate in all languages you "
-"installed\n"
-"                            using to top right icon."
-msgstr ""
-"Schrijf hier de inleiding van uw brief,\n"
-"                            in functie van het aanmaningsniveau. U kunt\n"
-"                            de volgende parameters in de tekst gebruiken. "
-"Vergeet\n"
-"                            niet all geïnstalleerde talen te vertalen via "
-"het pictogram in de rechterbovenhoek."
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: model:ir.actions.act_window,name:account_followup.action_followup_stat
-msgid "Follow-ups Sent"
-msgstr "Verstuurde aanmaningen"
-
-#. module: account_followup
-#: field:account_followup.followup,name:0
-msgid "Name"
-msgstr "Naam:"
-
-#. module: account_followup
-#: field:res.partner,latest_followup_level_id:0
-msgid "Latest Follow-up Level"
-msgstr "Laatste aanmaningsniveau"
-
-#. module: account_followup
-#: field:account_followup.stat,date_move:0
-#: field:account_followup.stat.by.partner,date_move:0
-msgid "First move"
-msgstr "Eerste boeking"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
-msgid "Follow-up Statistics by Partner"
-msgstr "Aanmaningsstatistieken per relatie"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:172
-#, python-format
-msgid " letter(s) in report"
-msgstr " brieven in rapport"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Klanten met openstaande facturen"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Customer Followup"
-msgstr "Aanmaningen"
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ": User's Company Name"
+msgstr "Bedrijfsnaam van gebruiker"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -1348,25 +559,760 @@ msgstr ""
 "          "
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:166
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow-up"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Account Move line"
+msgstr "Boeking"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Accounting"
+msgstr "Boekhouding"
+
+#. module: account_followup
+#: field:account_followup.followup.line,manual_action_note:0
+msgid "Action To Do"
+msgstr "Uit te voeren actie"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
+msgstr ""
+"Uit te voeren actie, vb. bellen, nakijken of betaling is gebeurd, ..."
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "After"
+msgstr "Na"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:260
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Amount"
+msgstr "Bedrag"
+
+#. module: account_followup
+#: field:res.partner,payment_amount_due:0
+msgid "Amount Due"
+msgstr "Vervallen bedrag"
+
+#. module: account_followup
+#: field:res.partner,payment_amount_overdue:0
+msgid "Amount Overdue"
+msgstr "Vervallen bedrag"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:281
+#, python-format
+msgid "Amount due"
+msgstr "Vervallen bedrag"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:160
+#, python-format
+msgid "Anybody"
+msgstr "Iedereen"
+
+#. module: account_followup
+#: field:account_followup.followup.line,manual_action_responsible_id:0
+msgid "Assign a Responsible"
+msgstr "Duid iemand aan die verantwoordelijk is"
+
+#. module: account_followup
+#: field:account.move.line,result:0
+#: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
+msgid "Balance > 0"
+msgstr "Saldo > 0"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"Below is the history of the transactions of this\n"
+"                            customer. You can check \"No Follow-up\" in\n"
+"                            order to exclude it from the next follow-up "
+"actions."
+msgstr ""
+"Hieronder vindt u een overzicht van de transacties voor deze\n"
+"                            klant. U kunt \"Stuur geen aanmaning\" kiezen "
+"om\n"
+"                            de factuur uit te sluiten van volgende "
+"aanmaningsacties."
+
+#. module: account_followup
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Geblokkeerd"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: account_followup
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
+msgstr ""
+"Schakel deze optie in als u aanmaningen wilt drukken zonder het niveau aan "
+"te passen."
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Click to mark the action as done."
+msgstr "Klik om de actie als Gedaan te markeren."
+
+#. module: account_followup
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Close"
+msgstr "Afsluiten"
+
+#. module: account_followup
+#: field:account_followup.followup,company_id:0
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: account_followup
+#: view:account.config.settings:account_followup.view_account_config_settings_inherit
+msgid "Configure your follow-up levels"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,create_uid:0
+#: field:account_followup.followup.line,create_uid:0
+#: field:account_followup.print,create_uid:0
+#: field:account_followup.sending.results,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,create_date:0
+#: field:account_followup.followup.line,create_date:0
+#: field:account_followup.print,create_date:0
+#: field:account_followup.sending.results,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "Krediet"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_tree
+msgid "Customer Followup"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: field:res.partner,payment_note:0
+msgid "Customer Payment Promise"
+msgstr "Betalingsbelofte klant"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Customer ref:"
+msgstr ""
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Date:"
+msgstr ""
+
+#. module: account_followup
+#: sql_constraint:account_followup.followup.line:0
+msgid "Days of the follow-up levels must be different"
+msgstr "De dagen moeten verschillen per aanmaningsniveau."
+
+#. module: account_followup
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "Debet"
+
+#. module: account_followup
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:257
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.account_followup_s
+msgid "Do Manual Follow-Ups"
+msgstr "Manuele aanmaningen uitvoeren"
+
+#. module: account_followup
+#: help:account_followup.print,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+"Wijzig de tekst niet als u de e-mail in de taal van de relatie wilt sturen, "
+"of stel de tekst in op firma."
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Document: Customer account statement"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Download Letters"
+msgstr "Brieven downloaden"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
+msgid "Due Date"
+msgstr "Vervaldatum"
+
+#. module: account_followup
+#: field:account_followup.followup.line,delay:0
+msgid "Due Days"
+msgstr "Dagen vervallen"
+
+#. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "E-mailbericht"
+
+#. module: account_followup
+#: field:account_followup.print,email_subject:0
+msgid "Email Subject"
+msgstr "E-mailonderwerp"
+
+#. module: account_followup
+#: field:account_followup.followup.line,email_template_id:0
+msgid "Email Template"
+msgstr "E-mailsjabloon"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:216
+#, python-format
+msgid "Email not sent because of email address of partner not filled in"
+msgstr ""
+"E-mail is niet verstuurd, omdat er voor de relatie geen e-mailadres is "
+"ingevuld."
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#: code:addons/account_followup/account_followup.py:319
+#: code:addons/account_followup/report/account_followup_print.py:82
+#, python-format
+msgid "Error!"
+msgstr "Fout"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
+msgid "First move"
+msgstr "Eerste boeking"
+
+#. module: account_followup
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: field:account_followup.print,followup_id:0
+msgid "Follow-Up"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: field:account_followup.followup.line,name:0
+msgid "Follow-Up Action"
+msgstr "Aanmaningsactie"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-Ups Analysis"
+msgstr "Aanmaningsanalyse"
+
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_followup_form
+#: view:account_followup.followup:account_followup.view_account_followup_followup_tree
+#: field:account_followup.followup,followup_line:0
+#: model:ir.ui.menu,name:account_followup.account_followup_main_menu
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Follow-up"
+msgstr "Aanmaning"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-up Criteria"
+msgstr "Aanmaningscriteria"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Follow-up Entries with period in current year"
+msgstr "Aanmaningen met periode in huidig jaar"
+
+#. module: account_followup
+#: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Follow-up Level"
+msgstr "Aanmaningsniveau"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-up Levels"
+msgstr "Aanmaningsniveaus"
+
+#. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.action_report_followup
+msgid "Follow-up Report"
+msgstr "Aanmaningsrapport"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+#: field:res.partner,payment_responsible_id:0
+msgid "Follow-up Responsible"
+msgstr "Verantwoordelijk voor aanmaning"
+
+#. module: account_followup
+#: field:account_followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr "Verzenddatum aanmaning"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Follow-up Statistics"
+msgstr "Aanmaningsstatistieken"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Follow-up Statistics by Partner"
+msgstr "Aanmaningsstatistieken per relatie"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_tree
+msgid "Follow-up Steps"
+msgstr "Aanmaningsstappen"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid "Follow-up letter of "
 msgstr "Aanmaningsbrief van "
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "The"
-msgstr "De"
+#: view:account_followup.stat:account_followup.view_account_followup_stat_graph
+msgid "Follow-up lines"
+msgstr "Aanmaningsregels"
 
 #. module: account_followup
-#: view:account_followup.print:0
-msgid "Send follow-ups"
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+msgid "Follow-ups Sent"
+msgstr "Verstuurde aanmaningen"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Follow-ups To Do"
+msgstr "Te versturen aanmaningen"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Followup Level"
+msgstr ""
+
+#. module: account_followup
+#: help:account_followup.followup.line,sequence:0
+msgid "Gives the sequence order when displaying a list of follow-up lines."
+msgstr "Bepaalt de volgorde bij het weergeven van de aanmaningslijnen."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Group By"
+msgstr ""
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
+msgstr ""
+"Hij zei dat het om een tijdelijk probleem ging. Hij beloofde 50% te betalen "
+"voor 15 mei en het saldo voor 1 juli."
+
+#. module: account_followup
+#: field:account_followup.followup,id:0
+#: field:account_followup.followup.line,id:0
+#: field:account_followup.print,id:0
+#: field:account_followup.sending.results,id:0
+#: field:account_followup.stat,id:0
+#: field:account_followup.stat.by.partner,id:0
+#: field:report.account_followup.report_followup,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Indien dit niet is ingesteld via de laatste aanmaning, dan wordt de "
+"standaard e-mailsjabloon gebruikt."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Including journal entries marked as a litigation"
+msgstr "Inclusief betwiste boekingen"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:256
+#: view:website:account_followup.report_followup
+#, python-format
+msgid "Invoice Date"
+msgstr "Factuurdatum"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:258
+#, python-format
+msgid "Invoices Reminder"
+msgstr "Aanmaning facturen"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
+msgstr "Boekingen"
+
+#. module: account_followup
+#: field:account_followup.followup,write_uid:0
+#: field:account_followup.followup.line,write_uid:0
+#: field:account_followup.print,write_uid:0
+#: field:account_followup.sending.results,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,write_date:0
+#: field:account_followup.followup.line,write_date:0
+#: field:account_followup.print,write_date:0
+#: field:account_followup.sending.results,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
+msgid "Last move"
+msgstr "Laatste boeking"
+
+#. module: account_followup
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr "Laatste aanmaning"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_date:0
+msgid "Latest Follow-up Date"
+msgstr "Datum laatste aanmaning"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_level_id:0
+msgid "Latest Follow-up Level"
+msgstr "Laatste aanmaningsniveau"
+
+#. module: account_followup
+#: field:res.partner,latest_followup_level_id_without_lit:0
+msgid "Latest Follow-up Level without litigation"
+msgstr "Laatste aanmaningsniveau met betwisting"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Latest Follow-up Month"
+msgstr ""
+
+#. module: account_followup
+#: help:res.partner,latest_followup_date:0
+msgid "Latest date that the follow-up level of the partner was changed"
+msgstr ""
+"Laatste datum waarop het aanmaningsniveau van de relatie is gewijzigd."
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest follow-up"
+msgstr "Laatste aanmaning"
+
+#. module: account_followup
+#: field:account_followup.stat,date_followup:0
+msgid "Latest followup"
+msgstr "Laatste aanmaning"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Li."
+msgstr "Bt."
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Lit."
+msgstr "Betw."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Litigation"
+msgstr "Betwist"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,manual_action:0
+msgid "Manual Action"
+msgstr "Manuele actie"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_customer_followup
+msgid "Manual Follow-Ups"
+msgstr "Manuele aanmaningen"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Maturity Date"
+msgstr "Vervaldatum"
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
+msgstr "Max. aanmaningsniveau"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
+msgstr "Mijn aanmaningen"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "My Follow-ups"
+msgstr "Mijn aanmaningen"
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+msgid "Name"
+msgstr "Naam:"
+
+#. module: account_followup
+#: field:account_followup.sending.results,needprinting:0
+msgid "Needs Printing"
+msgstr "Moet worden afgedrukt"
+
+#. module: account_followup
+#: field:res.partner,payment_next_action:0
+msgid "Next Action"
+msgstr "Volgende actie"
+
+#. module: account_followup
+#: field:res.partner,payment_next_action_date:0
+msgid "Next Action Date"
+msgstr "Volgende actiedatum"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "No Responsible"
+msgstr "Niemand verantwoordelijk"
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "Not Litigation"
+msgstr "Geen betwisting"
+
+#. module: account_followup
+#: sql_constraint:account_followup.followup:0
+msgid "Only one follow-up per company is allowed"
+msgstr "Per bedrijf is maar een aanmaningsniveau toegelaten."
+
+#. module: account_followup
+#: help:res.partner,payment_responsible_id:0
+msgid ""
+"Optionally you can assign a user to this field, which will make him "
+"responsible for the action."
+msgstr ""
+"U kunt eventueel een gebruiker toewijzen aan dit veld. Dit betekent dat hij "
+"verantwoordelijk is voor deze actie."
+
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Partner entries"
+msgstr "Relatieboekingen"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_search
+#: view:account_followup.stat.by.partner:account_followup.account_followup_stat_by_partner_tree
+msgid "Partner to Remind"
+msgstr "Relatie voor aanmaning"
+
+#. module: account_followup
+#: field:account_followup.print,partner_ids:0
+msgid "Partners"
+msgstr "Relaties"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Partners with Overdue Credits"
+msgstr "Klanten met openstaande facturen"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_finance_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Payment Follow-up"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+msgid "Payment Follow-ups"
+msgstr "Aanmaningen"
+
+#. module: account_followup
+#: help:res.partner,payment_note:0
+msgid "Payment Note"
+msgstr "Betalingsbewijs"
+
+#. module: account_followup
+#: field:account_followup.stat,period_id:0
+msgid "Period"
+msgstr "Periode"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_print
+msgid "Print Follow-up & Send Mail to Customers"
+msgstr "Aanmaningen afdrukken & mail sturen naar klanten"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Print Overdue Payments"
+msgstr "Vervallen documenten afdrukken"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Print overdue payments report independent of follow-up line"
+msgstr "Aanmaningen afdrukken onafgezien van de aanmaningslijn."
+
+#. module: account_followup
+#: field:account_followup.followup.line,description:0
+msgid "Printed Message"
+msgstr "Afgedrukt bericht"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:314
+#, python-format
+msgid "Printed overdue payments report"
+msgstr "Afgedrukt aanmaningsrapport"
+
+#. module: account_followup
+#: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
+msgid "Reconcile Invoices & Payments"
+msgstr "Facturen en betalingen afpunten"
+
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Ref"
+msgstr "Ref"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Responsible of credit collection"
+msgstr "Verantwoordelijk voor incasso"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_sending_results
+msgid "Results from the sending of the different letters and emails"
+msgstr "Resultaten van het versturen van brieven en e-mails"
+
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_filter
+msgid "Search Follow-up"
+msgstr "Aanmaningen zoeken"
+
+#. module: account_followup
+#: view:res.partner:account_followup.customer_followup_search_view
+msgid "Search Partner"
+msgstr "Relatie zoeken"
+
+#. module: account_followup
+#: field:account_followup.print,email_conf:0
+msgid "Send Email Confirmation"
+msgstr "Bevestiging per e-mail sturen"
+
+#. module: account_followup
+#: field:account_followup.print,partner_lang:0
+msgid "Send Email in Partner Language"
+msgstr "Stuur e-mail in taal relatie"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+msgid "Send Follow-Ups"
 msgstr "Aanmaningen versturen"
 
 #. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Totaal credit"
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send Letters and Emails"
+msgstr "Brieven en e-mails sturen"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:241
+#, python-format
+msgid "Send Letters and Emails: Actions Summary"
+msgstr "Brieven en e-mails sturen: overzicht acties"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "Send Overdue Email"
+msgstr "Aanmaningsmail sturen"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,send_letter:0
+msgid "Send a Letter"
+msgstr "Brief sturen"
+
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+#: field:account_followup.followup.line,send_email:0
+msgid "Send an Email"
+msgstr "E-mail versturen"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "Send emails and generate letters"
+msgstr "Verstuur e-mails en maak brieven"
+
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid "Send follow-ups"
+msgstr "Aanmaningen versturen"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1374,19 +1320,48 @@ msgid "Sequence"
 msgstr "Volgorde"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Follow-ups To Do"
-msgstr "Te versturen aanmaningen"
+#: field:account_followup.print,summary:0
+msgid "Summary"
+msgstr "Overzicht"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Customer Ref :"
-msgstr "Klantenref.:"
+#: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
+msgid "Summary of actions"
+msgstr "Overzicht van acties"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Maturity Date"
-msgstr "Vervaldatum"
+#: field:account_followup.print,test_print:0
+msgid "Test Print"
+msgstr "Testafdruk"
+
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "The"
+msgstr "De"
+
+#. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:82
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
+msgstr ""
+"Het aanmaningsschema voor het gekozen bedrijf, is niet gekoppeld aan "
+"aanmaningsacties."
+
+#. module: account_followup
+#: help:res.partner,latest_followup_level_id:0
+msgid "The maximum follow-up level"
+msgstr "Het maximale aanmaningsniveau"
+
+#. module: account_followup
+#: help:res.partner,latest_followup_level_id_without_lit:0
+msgid ""
+"The maximum follow-up level without taking into account the account move "
+"lines with litigation"
+msgstr ""
+"Het maximale aanmaningsniveau, zonder rekening te houden met boekingen die "
+"worden betwist."
 
 #. module: account_followup
 #: help:account_followup.followup.line,delay:0
@@ -1400,341 +1375,185 @@ msgstr ""
 "vriendelijk bericht wilt sturen."
 
 #. module: account_followup
-#: help:res.partner,latest_followup_date:0
-msgid "Latest date that the follow-up level of the partner was changed"
+#: code:addons/account_followup/account_followup.py:313
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
 msgstr ""
-"Laatste datum waarop het aanmaningsniveau van de relatie is gewijzigd."
+"Voor deze relatie zijn er geen boekingen die moeten worden aangemaand."
 
 #. module: account_followup
-#: field:account_followup.print,test_print:0
-msgid "Test Print"
-msgstr "Testafdruk"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid ": User Name"
-msgstr ": Gebruikersnaam"
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "Accounting"
-msgstr "Boekhouding"
-
-#. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Geblokkeerd"
-
-#. module: account_followup
-#: field:res.partner,payment_note:0
-msgid "Customer Payment Promise"
-msgstr "Betalingsbelofte klant"
-
-#~ msgid "All payable entries"
-#~ msgstr "Alle crediteuren"
-
-#~ msgid "Select partners"
-#~ msgstr "Selecteer relaties"
-
-#~ msgid "Account Type"
-#~ msgstr "Rekeningsoort"
-
-#~ msgid "%(followup_amount)s: Total Amount Due"
-#~ msgstr "%(followup_amount)s: Totaal openstaand"
-
-#~ msgid "Balance:"
-#~ msgstr "Saldo:"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#~ msgid "End of Month"
-#~ msgstr "Eind v/d Maand"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Modules to automate letters for unpaid invoices, with multi-level "
-#~ "recalls.\n"
-#~ "\n"
-#~ "    You can define your multiple levels of recall through the menu:\n"
-#~ "        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
-#~ "\n"
-#~ "    Once it is defined, you can automatically print recalls every day\n"
-#~ "    through simply clicking on the menu:\n"
-#~ "        Accounting/Periodical Processing/Billing/Send followups\n"
-#~ "\n"
-#~ "    It will generate a PDF with all the letters according to the the\n"
-#~ "    different levels of recall defined. You can define different policies\n"
-#~ "    for different companies. You can also send mail to the customer.\n"
-#~ "\n"
-#~ "    Note that if you want to change the followup level for a given "
-#~ "partner/account entry, you can do from in the menu:\n"
-#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
-#~ "Sent\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "    Modules voor automatisch onbetaalde facturen aan te manen met meer "
-#~ "aanmaning niveaus.\n"
-#~ "\n"
-#~ "    U kunt uw aanmaningsniveaus definiëren via menu:\n"
-#~ "        Financieel/Configuratie/Diversen/Aanmaningen\n"
-#~ "\n"
-#~ "    Eenmaal gedefinieerd, kunt u automatisch dagelijks aanmaningen "
-#~ "afdrukken\n"
-#~ "    door eenvoudig te klikken op menu:\n"
-#~ "        Financieel/Periodieke verwerking/Facturatie/Aanmaningen versturen\n"
-#~ "\n"
-#~ "    Het genereert een PDF met alle aanmaningen overeenstemmend met de "
-#~ "verschillende\n"
-#~ "    gedefinieerde niveaus van aanmaningen. U kunt verschillende aanpakken "
-#~ "definiëren \n"
-#~ "    voor verschillende bedrijven. U kunt ook email sturen naar de klant.\n"
-#~ "\n"
-#~ "    Merk op dat wanneer u het aanmaanniveau voor een bepaalde klant/rekening "
-#~ "wilt wijzigen, u dat kunt via menu:\n"
-#~ "        Financieel/Rapportage/Algemene rapportage/Relatie "
-#~ "rekeningen/Verstuurde aanmaningen\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Follow up on the reminders sent over to your partners for unpaid invoices."
-#~ msgstr ""
-#~ "Opvolging op de aan uw relaties gestuurde herinneringen voor onbetaalde "
-#~ "facturen."
-
-#~ msgid "Search Followup"
-#~ msgstr "Aanmaning zoeken"
-
+#: code:addons/account_followup/account_followup.py:319
 #, python-format
-#~ msgid "Follwoup Summary"
-#~ msgstr "Samenvatting aanmaningen"
+msgid "There is no followup plan defined for the current company."
+msgstr "Er zijn geen aanmaningsniveaus ingesteld voor deze firma."
 
-#~ msgid "Follow-up Message"
-#~ msgstr "Aanmaningsbericht"
+#. module: account_followup
+#: view:account_followup.stat:account_followup.view_account_followup_stat_search
+msgid "This Fiscal year"
+msgstr "Dit boekjaar"
 
-#~ msgid "Select Partners to Remind"
-#~ msgstr "Selecteren aan te manen relaties"
+#. module: account_followup
+#: view:account_followup.print:account_followup.view_account_followup_print
+msgid ""
+"This action will send follow-up emails, print the letters and\n"
+"                        set the manual actions per customer, according to "
+"the follow-up levels defined."
+msgstr ""
+"Met deze actie stuurt u aanmaningsmails, kunt u brieven afdrukken en\n"
+"                        manuele acties instellen per klant, in functie van "
+"de ingestelde aanmaningsniveaus."
 
-#~ msgid "Ok"
-#~ msgstr "Ok"
+#. module: account_followup
+#: help:account_followup.print,date:0
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+"Dit veld biedt u de mogelijkheid om een datum te kiezen om uw aanmaningen "
+"vooraf te plannen."
 
-#~ msgid "Follow-Ups"
-#~ msgstr "Aanmaningen"
+#. module: account_followup
+#: help:res.partner,payment_next_action:0
+msgid ""
+"This is the next action to be taken.  It will automatically be set when the "
+"partner gets a follow-up level that requires a manual action. "
+msgstr ""
+"Dit is de volgende actie die moet worden ondernomen. Deze wordt automatisch "
+"ingesteld als de relatie een aanmaningsniveau bereikt waarvoor een manuele "
+"actie is vereist. "
 
-#~ msgid "Net Days"
-#~ msgstr "Netto dagen"
+#. module: account_followup
+#: help:res.partner,payment_next_action_date:0
+msgid ""
+"This is when the manual follow-up is needed. The date will be set to the "
+"current date when the partner gets a follow-up level that requires a manual "
+"action. Can be practical to set manually e.g. to see if he keeps his "
+"promises."
+msgstr ""
+"Dit is als er manuele opvolging nodig is. De datum wordt ingesteld op de "
+"huidige datum als de relatie een aanmaningsniveau bereikt waarvoor een "
+"manuele handeling nodig is. Kan handig zijn om dit als manueel in te "
+"stellen, vb. om na te gaan of beloften worden nagekomen."
 
-#~ msgid "Legend"
-#~ msgstr "Legende"
+#. module: account_followup
+#: view:account_followup.followup:account_followup.view_account_followup_followup_form
+msgid ""
+"To remind customers of paying their invoices, you can\n"
+"                        define different actions depending on how severely\n"
+"                        overdue the customer is. These actions are bundled\n"
+"                        into follow-up levels that are triggered when the "
+"due\n"
+"                        date of an invoice has passed a certain\n"
+"                        number of days. If there are other overdue invoices "
+"for the \n"
+"                        same customer, the actions of the most \n"
+"                        overdue invoice will be executed."
+msgstr ""
+"Om klanten aan te manen tot betaling, kunt u\n"
+"                        verschillende acties instellen in functie van de "
+"grootte\n"
+"                        van het openstaand bedrag. Deze acties worden "
+"samengevoegd\n"
+"                        in aanmaningsniveaus die worden aangesproken als de\n"
+"                        vervaldatum van een factuur een ingesteld aantal "
+"dagen\n"
+"                        overschrijdt. Als de klant ook andere openstaande "
+"facturen heeft,\n"
+"                        worden de acties uitgevoerd in functie van het "
+"langst \n"
+"                        openstaande document."
 
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Verkeerde krediet of debet waarde in boeking !"
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Total credit"
+msgstr "Totaal credit"
 
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "U kan geen boekingen maken op een afgesloten rekening."
+#. module: account_followup
+#: view:account.move.line:account_followup.account_move_line_partner_tree
+msgid "Total debit"
+msgstr "Totaal debet"
 
-#~ msgid "Account Follow Up"
-#~ msgstr "Aanmaningenbeheer"
+#. module: account_followup
+#: view:website:account_followup.report_followup
+msgid "Total:"
+msgstr "Totaal:"
 
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "We are disappointed to see that despite sending a reminder, that your "
-#~ "account is now seriously overdue.\n"
-#~ "\n"
-#~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no longer "
-#~ "be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in the "
-#~ "next 8 days\n"
-#~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do not "
-#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-#~ "we can resolve the matter quickly.\n"
-#~ "\n"
-#~ "Details of due payments is printed below.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Geachte %(partner_name)s,\n"
-#~ "\n"
-#~ "We zijn teleurgesteld om te constateren dat, ondanks het versturen van een "
-#~ "herinnering, u een aanzienlijke\n"
-#~ "betalingsachterstand heeft.\n"
-#~ "\n"
-#~ "Het is van belang dat er direct betaling plaatsvindt, anders moeten we "
-#~ "overwegen om uw rekening te blokkeren wat betekent dat we u niet langer "
-#~ "kunnen voorzien van gogederen en diensten.\n"
-#~ "Wilt u alstublieft maatregelen nemen om te zorgen voor betaling binnen 8 "
-#~ "dagen.\n"
-#~ "\n"
-#~ "Als er problemen zijn met betaling van een factuur waar we niet van op de "
-#~ "hoogte zijn, neem dan gerust contact op met onze debieturenafdeling op "
-#~ "(+32).10.68.94.39. opdat we de kwestie spoedig kunnen oplossen.\n"
-#~ "\n"
-#~ "Een openstaande posten overzicht treft u hieronder aan.\n"
-#~ "\n"
-#~ "Met vriendelijke groeten,\n"
+#. module: account_followup
+#: help:account_followup.followup.line,send_letter:0
+msgid "When processing, it will print a letter"
+msgstr "Bij verwerking wordt een brief gemaakt"
 
-#~ msgid "%(user_signature)s: User name"
-#~ msgstr "%(user_signature)s: Gebruikersnaam"
+#. module: account_followup
+#: help:account_followup.followup.line,send_email:0
+msgid "When processing, it will send an email"
+msgstr "Bij verwerking wordt een e-mail verstuurd"
 
-#~ msgid ""
-#~ "This feature allows you to send reminders to partners with pending invoices. "
-#~ "You can send them the default message for unpaid invoices or manually enter "
-#~ "a message should you need to remind them of a specific information."
-#~ msgstr ""
-#~ "U kan hiermee aanmaningen naar relaties sturen met openstaande facturen. U "
-#~ "kan kiezen tussen het standaard bericht sturen of handmatig een bericht "
-#~ "invoeren, mocht u dat nodig vinden."
+#. module: account_followup
+#: help:account_followup.followup.line,manual_action:0
+msgid ""
+"When processing, it will set the manual action to be taken for that "
+"customer. "
+msgstr ""
+"Bij verwerking zal de manuele actie voor die klant worden ingesteld. "
 
-#~ msgid "Email body"
-#~ msgstr "Bericht"
+#. module: account_followup
+#: field:res.partner,payment_earliest_due_date:0
+msgid "Worst Due Date"
+msgstr "Hoogste vervaldatum"
 
-#~ msgid "Partner Selection"
-#~ msgstr "Relatiekeuze"
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid ""
+"Write here the introduction in the letter,\n"
+"                            according to the level of the follow-up. You "
+"can\n"
+"                            use the following keywords in the text. Don't\n"
+"                            forget to translate in all languages you "
+"installed\n"
+"                            using to top right icon."
+msgstr ""
+"Schrijf hier de inleiding van uw brief,\n"
+"                            in functie van het aanmaningsniveau. U kunt\n"
+"                            de volgende parameters in de tekst gebruiken. "
+"Vergeet\n"
+"                            niet all geïnstalleerde talen te vertalen via "
+"het pictogram in de rechterbovenhoek."
 
-#~ msgid "Currency"
-#~ msgstr "Valuta"
-
-#~ msgid "Send followups"
-#~ msgstr "Verzend aanmaningen"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Despite several reminders, your account is still not settled.\n"
-#~ "\n"
-#~ "Unless full payment is made in next 8 days , then legal action for the "
-#~ "recovery of the debt, will be taken without further notice.\n"
-#~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due payments "
-#~ "is printed below.\n"
-#~ "\n"
-#~ "In case of any queries concerning this matter, do not hesitate to contact "
-#~ "our accounting department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Geachte %(partner_name)s,\n"
-#~ "\n"
-#~ "Ondanks verschillende herinneringen is uw openstaande saldo nog niet "
-#~ "voldaan.\n"
-#~ "\n"
-#~ "Indien uw betaling niet binnen 8 dagen is doorgevoerd zullen we zonder "
-#~ "verdere aankondiging overgaan tot het nemen van gerechtelijke stappen om het "
-#~ "openstaande saldo in te vorderen.\n"
-#~ "\n"
-#~ "Wij vertrouwen erop dat deze actie niet nodig zal blijken. Details van de "
-#~ "openstaande posten treft u heronder aan.\n"
-#~ "\n"
-#~ "Ingeval u nog vragen heeft omtrent deze kwestie, dan kunt u contact opnemen "
-#~ "met onze debiteurenbewaking op (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Hoogachtend,\n"
-
-#~ msgid "Send Mails"
-#~ msgstr "Mails versturen"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the following "
-#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
-#~ "this payment in the next 8 days.\n"
-#~ "\n"
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Beste %(partner_name)s,\n"
-#~ "\n"
-#~ "Uitgezonderd eventuele fouten onzerzijds lijkt het volgende bedrag onbetaald "
-#~ "te zijn gebleven. Wilt u de nodige stappen zetten om deze betaling binnen 8 "
-#~ "dagen te laten plaatsvinden.\n"
-#~ "\n"
-#~ "Als uw betaling al heeft plaatsgevonden, kunt u dit bericht als niet "
-#~ "verzonden beschouwen. Neem gerust contact op met onze debiteurenbewaking op "
-#~ "(+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Met vriendelijke groeten,\n"
-
-#~ msgid "Due"
-#~ msgstr "Vervallen"
-
-#~ msgid "Accounting follow-ups management"
-#~ msgstr "Aanmaningenbeheer"
-
-#~ msgid "Followup Statistics by Partner"
-#~ msgstr "Aanmaning statistieken per relatie"
-
-#~ msgid "Sub-Total:"
-#~ msgstr "Subtotaal:"
-
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:291
 #, python-format
-#~ msgid "Select Partners"
-#~ msgstr "Relaties selecteren"
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
+msgstr ""
+"U bent nu verantwoordelijk voor de volgende actie voor de aanmaning van"
 
-#~ msgid "Print Follow Ups"
-#~ msgstr "Aanmaningen afdrukken"
+#. module: account_followup
+#: constraint:account_followup.followup.line:0
+msgid ""
+"Your description is invalid, use the right legend or %% if you want to use "
+"the percent character."
+msgstr ""
+"Uw beschrijving is niet geldig. Gebruik de juiste parameter of %% als u het "
+"percentageteken wilt gebruiken."
 
-#~ msgid "Email Settings"
-#~ msgstr "Email-instellingen"
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "days overdue, do the following actions:"
+msgstr "dagen vervallen, voer volgende acties uit:"
 
-#, python-format
-#~ msgid ""
-#~ "All E-mails have been successfully sent to Partners:.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Alle e-mails zijn met succes verstuurd naar de relaties :\n"
-#~ "\n"
+#. module: account_followup
+#: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr "vb. bellen, nakijken of betaling is gebeurd, ..."
 
-#~ msgid "%(user_signature)s: User Name"
-#~ msgstr "%(user_signature)s: Gebruikersnaam"
+#. module: account_followup
+#: field:account_followup.print,company_id:0
+#: field:res.partner,unreconciled_aml_ids:0
+msgid "unknown"
+msgstr "onbekend"
 
-#~ msgid "Paid"
-#~ msgstr "Betaald"
-
-#~ msgid "Send email confirmation"
-#~ msgstr "Stuur bevestigings e-mail"
-
-#~ msgid "%(company_name)s: User's Company name"
-#~ msgstr "%(company_name)s: Bedrijfsnaam gebruiker"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
-
-#~ msgid "Followup Statistics"
-#~ msgstr "Aanmaning statistieken"
-
-#~ msgid "Print Followup & Send Mail to Customers"
-#~ msgstr "Aanmaning afdrukken en email versturen naar klanten"
-
-#~ msgid "Followup Lines"
-#~ msgstr "Aanmaningsregels"
-
-#~ msgid "Companies"
-#~ msgstr "Bedrijven"
-
-#~ msgid "%(company_currency)s: User's Company Currency"
-#~ msgstr "%(company_currency)s: Bedrijfsvaluta gebruiker"
-
-#~ msgid "%(partner_name)s: Partner Name"
-#~ msgstr "%(partner_name)s: Relatienaam"
-
-#~ msgid "Follow-Up lines"
-#~ msgstr "Aanmaningsregels"
-
-#~ msgid "Type of Term"
-#~ msgstr "Soort termijn"
+#. module: account_followup
+#: view:res.partner:account_followup.view_partner_inherit_followup_form
+msgid "⇾ Mark as Done"
+msgstr "⇾ Als Gedaan markeren"

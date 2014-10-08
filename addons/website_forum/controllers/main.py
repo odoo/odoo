@@ -451,16 +451,21 @@ class WebsiteForum(http.Controller):
             return request.website.render("website_forum.private_profile", values)
         # questions and answers by user
         user_questions, user_answers = [], []
-        user_post_ids = Post.search(
-            cr, uid, [
+        user_question_ids = Post.search(cr, uid, [
+                ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
-                '|', ('active', '=', False), ('active', '=', True)], context=context)
-        user_posts = Post.browse(cr, uid, user_post_ids, context=context)
-        for record in user_posts:
-            if record.parent_id:
-                user_answers.append(record)
-            else:
-                user_questions.append(record)
+            ], order='create_date desc', context=context)
+        count_user_questions = len(user_question_ids)
+        # displaying only the 20 most recent questions
+        user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
+
+        user_answer_ids = Post.search(cr, uid, [
+                ('parent_id', '!=', False),
+                ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
+            ], order='create_date desc', context=context)
+        count_user_answers = len(user_answer_ids)
+        # displaying only the 20  most recent answers
+        user_answers = Post.browse(cr, uid, user_answer_ids[:20], context=context)
 
         # showing questions which user following
         obj_ids = Followers.search(cr, SUPERUSER_ID, [('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)], context=context)
@@ -473,14 +478,13 @@ class WebsiteForum(http.Controller):
         favourite = Post.browse(cr, uid, fav_que_ids, context=context)
 
         #votes which given on users questions and answers.
-        data = Vote.read_group(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.create_uid', '=', user.id)], ["vote"], groupby=["vote"], context=context)
+        data = Vote.read_group(cr, uid, [('forum_id', '=', forum.id), ('recipient_id', '=', user.id)], ["vote"], groupby=["vote"], context=context)
         up_votes, down_votes = 0, 0
         for rec in data:
             if rec['vote'] == '1':
                 up_votes = rec['vote_count']
             elif rec['vote'] == '-1':
                 down_votes = rec['vote_count']
-        total_votes = up_votes + down_votes
 
         #Votes which given by users on others questions and answers.
         post_votes = Vote.search(cr, uid, [('user_id', '=', user.id)], context=context)
@@ -488,7 +492,7 @@ class WebsiteForum(http.Controller):
 
         #activity by user.
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
-        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100, context=context)
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_question_ids+user_answer_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100, context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
 
         posts = {}
@@ -509,10 +513,11 @@ class WebsiteForum(http.Controller):
             'main_object': user,
             'searches': post,
             'questions': user_questions,
+            'count_questions': count_user_questions,
             'answers': user_answers,
+            'count_answers': count_user_answers,
             'followed': followed,
             'favourite': favourite,
-            'total_votes': total_votes,
             'up_votes': up_votes,
             'down_votes': down_votes,
             'activities': activities,

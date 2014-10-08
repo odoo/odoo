@@ -1,194 +1,41 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* document
+# Romanian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 18:23+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:05+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: document
-#: field:document.directory,parent_id:0
-msgid "Parent Directory"
-msgstr "Director principal"
+#: field:report.document.file,nbr:0
+#: field:report.document.user,nbr:0
+msgid "# of Files"
+msgstr "# Fişiere"
 
 #. module: document
-#: code:addons/document/document.py:350
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:19
 #, python-format
-msgid "Directory name contains special characters!"
-msgstr "Numele directorului contine caractere speciale!"
+msgid "%s (%s)"
+msgstr "%s (%s)"
 
 #. module: document
-#: view:document.directory:0
-msgid "Search Document Directory"
-msgstr "Cautare Director Documente"
-
-#. module: document
-#: help:document.directory,resource_field:0
-msgid ""
-"Field to be used as name on resource directories. If empty, the \"name\" "
-"will be used."
-msgstr ""
-"Camp care va fi folosit ca nume pentru directoarele resurselor. Daca este "
-"necompletat, va fi folosit \"numele\"."
-
-#. module: document
-#: view:document.directory:0
-msgid "Group By..."
-msgstr "Grupeaza dupa..."
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr "Modificare"
-
-#. module: document
-#: view:document.directory:0
-msgid "Resources"
-msgstr "Resurse"
-
-#. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
-msgid "Files"
-msgstr "Fisiere"
-
-#. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Tip Mime"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "March"
-msgstr "Martie"
-
-#. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Expresie"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
-msgid "Company"
-msgstr "Firma"
-
-#. module: document
-#: model:ir.model,name:document.model_document_directory_content
-msgid "Directory Content"
-msgstr "Continut director"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr "Documentul meu(s)"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_document_management_configuration
-msgid "Document Management"
-msgstr "Managementul documentelor"
-
-#. module: document
-#: help:document.directory.dctx,expr:0
-msgid ""
-"A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"O expresie python folosita pentru evaluarea campului.\n"
-"Puteti folosi 'dir_id' pentru directorul actual, 'res_id', 'res_model' ca "
-"referinta a inregistrarii actuale, in fisiere dinamice"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid "The name of the field."
-msgstr "Numele campului."
-
-#. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
+#: code:addons/document/document.py:117
+#: code:addons/document/document.py:307
 #, python-format
-msgid "Directory name must be unique!"
-msgstr "Numele directorului trebuie sa fie unic!"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Filter on my documents"
-msgstr "Filtrarea documentelor"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
-msgid "Indexed Content"
-msgstr "Continut indexat"
-
-#. module: document
-#: help:document.directory,resource_find_all:0
-msgid ""
-"If true, all attachments that match this resource will  be located. If "
-"false, only ones that have this as parent."
-msgstr ""
-"Daca e adevarat, toate atasamentele care se potrivesc cu aceasta resursa vor "
-"fi localizate. Daca este fals, doar cele care il au pe acesta drept parinte."
-
-#. module: document
-#: view:document.directory:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
-#: model:ir.ui.menu,name:document.menu_document_directories
-msgid "Directories"
-msgstr "Directoare"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_user
-msgid "Files details by Users"
-msgstr "Detalii fisiere dupa Utilizator"
-
-#. module: document
-#: field:document.directory,resource_find_all:0
-msgid "Find all resources"
-msgstr "Gaseste toate resursele"
-
-#. module: document
-#: selection:document.directory,type:0
-msgid "Folders per resource"
-msgstr "Fisiere per resursa"
-
-#. module: document
-#: field:document.directory.content,suffix:0
-msgid "Suffix"
-msgstr "Sufix"
-
-#. module: document
-#: field:report.document.user,change_date:0
-msgid "Modified Date"
-msgstr "Data modificarii"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Knowledge Application Configuration"
-msgstr "Configurare Aplicatie Cunostinte"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
-msgid "Partner"
-msgstr "Partener"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Documente asociate"
+msgid "%s (copy)"
+msgstr "%s (copie)"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -212,255 +59,61 @@ msgstr ""
 "        "
 
 #. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
-#: code:addons/document/document.py:350
-#, python-format
-msgid "ValidateError"
-msgstr "Eroare de Validare"
-
-#. module: document
-#: model:ir.model,name:document.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actiuni.raport.xml"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_file_form
-#: model:ir.ui.menu,name:document.menu_document_doc
-#: model:ir.ui.menu,name:document.menu_document_files
-msgid "Documents"
-msgstr "Documente"
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Model resursa"
-
-#. module: document
-#: field:report.document.file,file_size:0
-#: field:report.document.user,file_size:0
-msgid "File Size"
-msgstr "Dimensiunea fisierului"
-
-#. module: document
-#: field:document.directory.content.type,name:0
-#: field:ir.attachment,file_type:0
-msgid "Content Type"
-msgstr "Tip continut"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: document
-#: sql_constraint:ir.attachment:0
-msgid "The filename must be unique in a directory !"
-msgstr "Numele fisierului trebuie sa fie unic intr-un director !"
-
-#. module: document
-#: code:addons/document/document.py:110
-#: code:addons/document/document.py:310
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copie)"
-
-#. module: document
-#: help:document.directory,ressource_type_id:0
+#: help:document.directory.dctx,expr:0
 msgid ""
-"Select an object here and there will be one folder per record of that "
-"resource."
+"A python expression used to evaluate the field.\n"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
+"to the current record, in dynamic folders"
 msgstr ""
-"Selectati un obiect aici si veti avea un folder per inregistrare a acelei "
-"resurse."
+"O expresie python folosita pentru evaluarea campului.\n"
+"Puteti folosi 'dir_id' pentru directorul actual, 'res_id', 'res_model' ca "
+"referinta a inregistrarii actuale, in fisiere dinamice"
 
 #. module: document
-#: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Folositi un domeniu daca doriti sa aplicati un filtru automat pe resurse "
-"vizibile."
+#: field:document.directory.content.type,active:0
+msgid "Active"
+msgstr "Activ(a)"
 
 #. module: document
-#: constraint:document.directory:0
-msgid "Error! You cannot create recursive directories."
-msgstr "Eroare! Nu puteti crea directoare recursive."
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Fisierele tuturor utilizatorilor"
 
 #. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Nume camp"
-
-#. module: document
-#: field:document.directory,dctx_ids:0
-msgid "Context fields"
-msgstr "Campuri context"
-
-#. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
-msgid "Directory Type"
-msgstr "Tip de director"
-
-#. module: document
-#: field:document.directory.content,report_id:0
-msgid "Report"
-msgstr "Raport"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "July"
-msgstr "Iulie"
-
-#. module: document
-#: field:document.directory.content.type,code:0
-msgid "Extension"
-msgstr "Extensie"
-
-#. module: document
-#: field:document.directory,content_ids:0
-msgid "Virtual Files"
-msgstr "Fisiere virtuale"
-
-#. module: document
-#: code:addons/document/document.py:576
-#, python-format
-msgid "Error at doc write!"
-msgstr "Eroare la scrierea documentului!"
-
-#. module: document
-#: view:document.directory:0
-msgid "Generated Files"
-msgstr "Fisiere generate"
-
-#. module: document
-#: view:document.configuration:0
-msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Atunci cand executati acest wizard, va va configura automat directoarele in "
-"functie de modulele instalate."
-
-#. module: document
-#: field:document.directory.content,directory_id:0
-#: field:document.directory.dctx,dir_id:0
-#: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
-#: model:ir.model,name:document.model_document_directory
-#: field:report.document.user,directory:0
-msgid "Directory"
-msgstr "Director"
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Securitate"
-
-#. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
-msgid "Last Modification User"
-msgstr "Utilizatorul ultimei modificari"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
-#: view:report.document.user:0
-msgid "Files by User"
-msgstr "Fisiere dupa Utilizator"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "on"
-msgstr "activat"
-
-#. module: document
-#: field:document.directory,domain:0
-msgid "Domain"
-msgstr "Domeniu"
-
-#. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
-msgid "Date Modified"
-msgstr "Data modificarii"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_file
-msgid "Files details by Directory"
-msgstr "Detalii fisiere dupa Director"
-
-#. module: document
-#: view:report.document.user:0
+#: view:report.document.user:document.view_report_document_user_search
 msgid "All users files"
 msgstr "Toate fisierele utilizatorilor"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_size_month
-#: view:report.document.file:0
-msgid "File Size by Month"
-msgstr "Dimensiune fisier dupa Luna"
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+"Impreuna cu Modulul Parinte, acest ID ataseaza acest fisier unei "
+"inregistrari specifice a Modelului Parinte"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "December"
-msgstr "Decembrie"
+msgid "April"
+msgstr "Aprilie"
 
 #. module: document
-#: selection:document.directory,type:0
-msgid "Static Directory"
-msgstr "Director static"
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:7
+#, python-format
+msgid "Attachment(s)"
+msgstr "Atasament(e)"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-msgid "Month"
-msgstr "Luna"
+#: view:ir.attachment:document.view_document_file_tree
+msgid "Attachments"
+msgstr "Atasamente"
 
 #. module: document
-#: view:document.directory:0
-msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Defineste cuvintele in context, pentru toate directoarele si fisierele "
-"subordonate"
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Static"
-
-#. module: document
-#: field:report.document.user,user:0
-msgid "unknown"
-msgstr "necunoscut(a)"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
-msgid "Owner"
-msgstr "Proprietar"
-
-#. module: document
-#: view:document.directory:0
-msgid "PDF Report"
-msgstr "Raport PDF"
-
-#. module: document
-#: view:document.directory:0
-msgid "Contents"
-msgstr "Cuprins"
-
-#. module: document
-#: field:document.directory,create_date:0
-#: field:report.document.user,create_date:0
-msgid "Date Created"
-msgstr "Data crearii"
+#: selection:report.document.user,month:0
+msgid "August"
+msgstr "August"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -474,22 +127,6 @@ msgstr ""
 "Daca este setat, directorul va trebui sa fie o resursa."
 
 #. module: document
-#: view:document.configuration:0
-#: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Configure Directories"
-msgstr "Configurati Directoare"
-
-#. module: document
-#: field:document.directory.content,include_name:0
-msgid "Include Record Name"
-msgstr "Include Numele Inregistrarii"
-
-#. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "Id model"
-
-#. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
 "Check this if you want to use the same tree structure as the object selected "
@@ -499,108 +136,59 @@ msgstr ""
 "selectat in sistem."
 
 #. module: document
-#: help:document.directory,ressource_id:0
-msgid ""
-"Along with Parent Model, this ID attaches this folder to a specific record "
-"of Parent Model."
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Subordonati"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Configure Directories"
+msgstr "Configurati Directoare"
+
+#. module: document
+#: field:document.directory.content,name:0
+msgid "Content Name"
+msgstr "Nume continut"
+
+#. module: document
+#: field:document.directory.content.type,name:0
+msgid "Content Type"
+msgstr "Tip continut"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Contents"
+msgstr "Cuprins"
+
+#. module: document
+#: field:document.directory,dctx_ids:0
+msgid "Context fields"
+msgstr "Campuri context"
+
+#. module: document
+#: field:document.configuration,create_uid:0
+#: field:document.directory.content,create_uid:0
+#: field:document.directory.content.type,create_uid:0
+#: field:document.directory.dctx,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Created by"
 msgstr ""
-"Impreuna cu Modulul Parinte, acest ID ataseaza acest fisier unei "
-"inregistrari specifice a Modelului Parinte"
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:6
-#, python-format
-msgid "Attachment(s)"
-msgstr "Atasament(e)"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "August"
-msgstr "August"
-
-#. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Context dinamic"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "Directorul nu poate fi parinte lui insusi!"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "June"
-msgstr "Iunie"
-
-#. module: document
-#: field:document.directory,group_ids:0
-msgid "Groups"
-msgstr "Grupuri"
-
-#. module: document
-#: field:document.directory.content.type,active:0
-msgid "Active"
-msgstr "Activ(a)"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "November"
-msgstr "Noiembrie"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
-"record, just like attachments. Don't put a parent directory if you select a "
-"parent model."
+#: field:document.configuration,create_date:0
+#: field:document.directory.content,create_date:0
+#: field:document.directory.content.type,create_date:0
+#: field:document.directory.dctx,create_date:0
+#: field:document.storage,create_date:0
+msgid "Created on"
 msgstr ""
-"Daca introduceti un obiect aici, sablonul director va aparea sub toate "
-"aceste obiecte. Asemenea directoare sunt \"atasate\" modulului sau "
-"inregistrarii specific(e), ca si atasamentele. Nu puneti un director parinte "
-"daca selectati un model parinte."
-
-#. module: document
-#: view:document.directory:0
-msgid "Definition"
-msgstr "Definitie"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "October"
-msgstr "Octombrie"
-
-#. module: document
-#: view:document.directory:0
-msgid "Seq."
-msgstr "Secv."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Fisierele tuturor utilizatorilor"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "January"
-msgstr "Ianuarie"
-
-#. module: document
-#: view:document.directory:0
-msgid "Document Directory"
-msgstr "Director Documente"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "Numele directorului trebuie sa fie unic !"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachments"
-msgstr "Atasamente"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -608,49 +196,72 @@ msgid "Creator"
 msgstr "Creator"
 
 #. module: document
-#: view:document.configuration:0
-msgid ""
-"OpenERP's Document Management System supports mapping virtual folders with "
-"documents. The virtual folder of a document can be used to manage the files "
-"attached to the document, or to print and download any report. This tool "
-"will create directories automatically according to modules installed."
-msgstr ""
-"Sistemul de Management al Documentelor OpenERP accepta maparea folderelor "
-"virtuale cu documente. Folderul virtual al unui document poate fi folosit "
-"pentru a gestiona fisierele atasate documentului, sau pentru a imprima si "
-"descarca orice raport. Acest instrument va crea automat directoare in "
-"functie de modulele instalate."
+#: field:document.directory,create_date:0
+#: field:report.document.user,create_date:0
+msgid "Date Created"
+msgstr "Data crearii"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
-#: view:report.document.user:0
-msgid "Files by Month"
-msgstr "Fisiere dupa Luna"
+#: field:document.directory,write_date:0
+msgid "Date Modified"
+msgstr "Data modificarii"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "September"
-msgstr "Septembrie"
+msgid "December"
+msgstr "Decembrie"
 
 #. module: document
-#: field:document.directory.content,prefix:0
-msgid "Prefix"
-msgstr "Prefix"
+#: view:document.directory:document.view_document_directory_form
+msgid "Define words in the context, for all child directories and files"
+msgstr ""
+"Defineste cuvintele in context, pentru toate directoarele si fisierele "
+"subordonate"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Subordonati"
+#: view:document.directory:document.view_document_directory_form
+msgid "Definition"
+msgstr "Definitie"
 
 #. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "ID resursa"
+#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:document.view_document_directory_tree
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: model:ir.ui.menu,name:document.menu_document_directories
+msgid "Directories"
+msgstr "Directoare"
 
 #. module: document
-#: field:document.directory.dctx,field:0
-msgid "Field"
-msgstr "Camp"
+#: model:ir.actions.act_window,name:document.action_document_directory_tree
+#: model:ir.ui.menu,name:document.menu_document_directories_tree
+msgid "Directories' Structure"
+msgstr "Structura directoarelor"
+
+#. module: document
+#: field:document.directory.content,directory_id:0
+#: field:document.directory.dctx,dir_id:0
+#: model:ir.actions.act_window,name:document.action_document_file_directory_form
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,parent_id:0
+#: model:ir.model,name:document.model_document_directory
+#: field:report.document.user,directory:0
+msgid "Directory"
+msgstr "Director"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
+msgstr "Configurare Director"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content
+msgid "Directory Content"
+msgstr "Continut director"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Tip de continut director"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
@@ -658,44 +269,58 @@ msgid "Directory Dynamic Context"
 msgstr "Context dinamic director"
 
 #. module: document
-#: field:document.directory,ressource_parent_type_id:0
-msgid "Parent Model"
-msgstr "Model parinte"
+#: view:document.directory:document.view_document_directory_form
+#: field:report.document.user,type:0
+msgid "Directory Type"
+msgstr "Tip de director"
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Aceste grupuri, totusi, NU se aplica directoarelor subordonate, care trebuie "
-"sa isi defineasca propriile grupuri."
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Directorul nu poate fi parinte lui insusi!"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "May"
-msgstr "Mai"
+#: code:addons/document/document.py:347
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Numele directorului contine caractere speciale!"
 
 #. module: document
-#: view:document.directory:0
-msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
-"Pentru fiecare intrare aici, fisierele virtuale vor aparea in acest fisier."
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#, python-format
+msgid "Directory name must be unique!"
+msgstr "Numele directorului trebuie sa fie unic!"
 
 #. module: document
-#: model:ir.model,name:document.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.atasament"
+#: view:document.directory:document.view_document_directory_filter
+msgid "Document Directory"
+msgstr "Director Documente"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Users File"
-msgstr "Utilizatori Fisier"
+#: model:ir.ui.menu,name:document.menu_document_management_configuration
+msgid "Document Management"
+msgstr "Managementul documentelor"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Directory Configuration"
-msgstr "Configurare Director"
+#: field:document.directory.content,extension:0
+msgid "Document Type"
+msgstr "Tipul documentului"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_document_file_form
+msgid "Documents"
+msgstr "Documente"
+
+#. module: document
+#: field:document.directory,domain:0
+msgid "Domain"
+msgstr "Domeniu"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Dynamic context"
+msgstr "Context dinamic"
 
 #. module: document
 #: help:document.directory,type:0
@@ -713,9 +338,262 @@ msgstr ""
 "dintre tipurile de resurse definite in directorul parinte."
 
 #. module: document
+#: code:addons/document/document.py:573
+#, python-format
+msgid "Error at doc write!"
+msgstr "Eroare la scrierea documentului!"
+
+#. module: document
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr "Eroare! Nu puteti crea directoare recursive."
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Expresie"
+
+#. module: document
+#: field:document.directory.content.type,code:0
+msgid "Extension"
+msgstr "Extensie"
+
+#. module: document
 #: selection:report.document.user,month:0
 msgid "February"
 msgstr "Februarie"
+
+#. module: document
+#: field:document.directory.dctx,field:0
+msgid "Field"
+msgstr "Camp"
+
+#. module: document
+#: help:document.directory,resource_field:0
+msgid ""
+"Field to be used as name on resource directories. If empty, the \"name\" "
+"will be used."
+msgstr ""
+"Camp care va fi folosit ca nume pentru directoarele resurselor. Daca este "
+"necompletat, va fi folosit \"numele\"."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Fields"
+msgstr "Campuri"
+
+#. module: document
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Nume fisier"
+
+#. module: document
+#: field:report.document.file,file_size:0
+#: field:report.document.user,file_size:0
+msgid "File Size"
+msgstr "Dimensiunea fisierului"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:document.view_size_month
+#: view:report.document.file:document.view_size_month_tree
+msgid "File Size by Month"
+msgstr "Dimensiune fisier dupa Luna"
+
+#. module: document
+#: field:document.directory,file_ids:0
+#: view:report.document.user:document.view_document_user_form
+#: view:report.document.user:document.view_document_user_tree
+msgid "Files"
+msgstr "Fisiere"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_tree
+msgid "Files by Month"
+msgstr "Fisiere dupa Luna"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:document.view_files_by_user_graph
+msgid "Files by User"
+msgstr "Fisiere dupa Utilizator"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Detalii fisiere dupa Director"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Detalii fisiere dupa Utilizator"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "Filter on my documents"
+msgstr "Filtrarea documentelor"
+
+#. module: document
+#: field:document.directory,resource_find_all:0
+msgid "Find all resources"
+msgstr "Gaseste toate resursele"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Folders per resource"
+msgstr "Fisiere per resursa"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "For each entry here, virtual files will appear in this folder."
+msgstr ""
+"Pentru fiecare intrare aici, fisierele virtuale vor aparea in acest fisier."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Generated Files"
+msgstr "Fisiere generate"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Group By"
+msgstr ""
+
+#. module: document
+#: field:document.directory,group_ids:0
+msgid "Groups"
+msgstr "Grupuri"
+
+#. module: document
+#: field:document.configuration,id:0
+#: field:document.directory,id:0
+#: field:document.directory.content,id:0
+#: field:document.directory.content.type,id:0
+#: field:document.directory.dctx,id:0
+#: field:document.storage,id:0
+#: field:report.document.file,id:0
+#: field:report.document.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: document
+#: help:document.directory,resource_find_all:0
+msgid ""
+"If true, all attachments that match this resource will  be located. If "
+"false, only ones that have this as parent."
+msgstr ""
+"Daca e adevarat, toate atasamentele care se potrivesc cu aceasta resursa vor "
+"fi localizate. Daca este fals, doar cele care il au pe acesta drept parinte."
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+"Daca introduceti un obiect aici, sablonul director va aparea sub toate "
+"aceste obiecte. Asemenea directoare sunt \"atasate\" modulului sau "
+"inregistrarii specific(e), ca si atasamentele. Nu puneti un director parinte "
+"daca selectati un model parinte."
+
+#. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Include Numele Inregistrarii"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+#: field:ir.attachment,index_content:0
+msgid "Indexed Content"
+msgstr "Continut indexat"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "January"
+msgstr "Ianuarie"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "July"
+msgstr "Iulie"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "June"
+msgstr "Iunie"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "Knowledge Application Configuration"
+msgstr "Configurare Aplicatie Cunostinte"
+
+#. module: document
+#: field:document.directory,write_uid:0
+msgid "Last Modification User"
+msgstr "Utilizatorul ultimei modificari"
+
+#. module: document
+#: field:document.configuration,write_uid:0
+#: field:document.directory.content,write_uid:0
+#: field:document.directory.content.type,write_uid:0
+#: field:document.directory.dctx,write_uid:0
+#: field:document.storage,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: document
+#: field:document.configuration,write_date:0
+#: field:document.directory.content,write_date:0
+#: field:document.directory.content.type,write_date:0
+#: field:document.directory.dctx,write_date:0
+#: field:document.storage,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "March"
+msgstr "Martie"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "May"
+msgstr "Mai"
+
+#. module: document
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Tip Mime"
+
+#. module: document
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "Id model"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+msgid "Modification"
+msgstr "Modificare"
+
+#. module: document
+#: field:report.document.user,change_date:0
+msgid "Modified Date"
+msgstr "Data modificarii"
+
+#. module: document
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Luna"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "My Document(s)"
+msgstr "Documentul meu(s)"
 
 #. module: document
 #: field:document.directory,name:0
@@ -723,28 +601,31 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: document
-#: view:document.directory:0
-msgid "Fields"
-msgstr "Campuri"
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Nume camp"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "April"
-msgstr "Aprilie"
+msgid "November"
+msgstr "Noiembrie"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
-msgid "# of Files"
-msgstr "# Fişiere"
+#: selection:report.document.user,month:0
+msgid "October"
+msgstr "Octombrie"
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Tip de continut director"
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"Odoo's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
 
 #. module: document
-#: view:document.directory:0
+#: view:document.directory:document.view_document_directory_form
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
@@ -753,11 +634,94 @@ msgstr ""
 "fisierele acestuia."
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:17
-#, python-format
-msgid "%s (%s)"
-msgstr "%s (%s)"
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,user_id:0
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,user_id:0
+#: field:report.document.user,user_id:0
+msgid "Owner"
+msgstr "Proprietar"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "PDF Report"
+msgstr "Raport PDF"
+
+#. module: document
+#: field:document.directory,parent_id:0
+msgid "Parent Directory"
+msgstr "Director principal"
+
+#. module: document
+#: field:document.directory,ressource_parent_type_id:0
+msgid "Parent Model"
+msgstr "Model parinte"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,partner_id:0
+msgid "Partner"
+msgstr "Partener"
+
+#. module: document
+#: field:document.directory.content,prefix:0
+msgid "Prefix"
+msgstr "Prefix"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Documente asociate"
+
+#. module: document
+#: field:document.directory.content,report_id:0
+msgid "Report"
+msgstr "Raport"
+
+#. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID resursa"
+
+#. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Model resursa"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Resources"
+msgstr "Resurse"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Search Document Directory"
+msgstr "Cautare Director Documente"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Security"
+msgstr "Securitate"
+
+#. module: document
+#: help:document.directory,ressource_type_id:0
+msgid ""
+"Select an object here and there will be one folder per record of that "
+"resource."
+msgstr ""
+"Selectati un obiect aici si veti avea un folder per inregistrare a acelei "
+"resurse."
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "September"
+msgstr "Septembrie"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Seq."
+msgstr "Secv."
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -765,35 +729,14 @@ msgid "Sequence"
 msgstr "Secventa"
 
 #. module: document
-#: field:document.directory.content,name:0
-msgid "Content Name"
-msgstr "Nume continut"
+#: view:document.directory:document.view_document_directory_filter
+msgid "Static"
+msgstr "Static"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Nume fisier"
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Structura arbore"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_continuturi"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_tree
-#: model:ir.ui.menu,name:document.menu_document_directories_tree
-msgid "Directories' Structure"
-msgstr "Structura directoarelor"
-
-#. module: document
-#: field:report.document.user,name:0
-msgid "Year"
-msgstr "An"
+#: selection:document.directory,type:0
+msgid "Static Directory"
+msgstr "Director static"
 
 #. module: document
 #: model:ir.model,name:document.model_document_storage
@@ -801,274 +744,91 @@ msgid "Storage Media"
 msgstr "Medii de stocare"
 
 #. module: document
-#: field:document.directory.content,extension:0
-msgid "Document Type"
-msgstr "Tipul documentului"
+#: field:document.directory.content,suffix:0
+msgid "Suffix"
+msgstr "Sufix"
 
-#~ msgid "Notes"
-#~ msgstr "Note"
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Numele directorului trebuie sa fie unic !"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-#~ "special !"
+#. module: document
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr "Numele fisierului trebuie sa fie unic intr-un director !"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nume invalid de model în definirea acțiunii"
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr "Numele campului."
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr ""
+"Aceste grupuri, totusi, NU se aplica directoarelor subordonate, care trebuie "
+"sa isi defineasca propriile grupuri."
 
-#~ msgid "Reporting"
-#~ msgstr "Raportare"
+#. module: document
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Structura arbore"
 
-#~ msgid "User"
-#~ msgstr "Utilizator"
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,type:0
+msgid "Type"
+msgstr "Tip"
 
-#~ msgid "Process Node"
-#~ msgstr "Nod proces"
+#. module: document
+#: help:document.directory,domain:0
+msgid ""
+"Use a domain if you want to apply an automatic filter on visible resources."
+msgstr ""
+"Folositi un domeniu daca doriti sa aplicati un filtru automat pe resurse "
+"vizibile."
 
-#~ msgid "This Year"
-#~ msgstr "Acest an"
+#. module: document
+#: view:report.document.user:document.view_report_document_user_search
+msgid "Users File"
+msgstr "Utilizatori Fisier"
 
-#~ msgid "title"
-#~ msgstr "titlu"
-
+#. module: document
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#: code:addons/document/document.py:347
 #, python-format
-#~ msgid "Error!"
-#~ msgstr "Eroare!"
+msgid "ValidateError"
+msgstr "Eroare de Validare"
 
-#~ msgid "Sale Order"
-#~ msgstr "Comadă vânzare"
+#. module: document
+#: field:document.directory,content_ids:0
+msgid "Virtual Files"
+msgstr "Fisiere virtuale"
 
-#~ msgid "Project"
-#~ msgstr "Proiect"
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+"Atunci cand executati acest wizard, va va configura automat directoarele in "
+"functie de modulele instalate."
 
-#~ msgid "Document Dashboard"
-#~ msgstr "Panou documente"
+#. module: document
+#: field:report.document.user,name:0
+msgid "Year"
+msgstr "An"
 
-#~ msgid "Files by Partner"
-#~ msgstr "Fişiere per partener"
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "res_config_contents"
+msgstr "res_config_continuturi"
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Configurare procese"
-
-#~ msgid "Image"
-#~ msgstr "Imagine"
-
-#~ msgid "Online"
-#~ msgstr "Online"
-
-#~ msgid "Data"
-#~ msgstr "Data"
-
-#~ msgid "Read Only"
-#~ msgstr "Doar citire"
-
-#~ msgid "Dashboard"
-#~ msgstr "Tablou de bord"
-
-#~ msgid "Product"
-#~ msgstr "Produs"
-
-#~ msgid "Configure Resource Directory"
-#~ msgstr "Configurare Director Resursa"
-
-#~ msgid "Auto directory configuration for Products."
-#~ msgstr "Configurare auto director pentru Produse."
-
-#~ msgid "Document directory"
-#~ msgstr "Director documente"
-
-#~ msgid "Files Per Partner"
-#~ msgstr "Fisiere per Partener"
-
-#~ msgid "Stored Filename"
-#~ msgstr "Nume fisier stocat"
-
-#~ msgid ""
-#~ "This is a complete document management system:\n"
-#~ "    * User Authentication\n"
-#~ "    * Document Indexation :- .pptx and .docx files are not support in "
-#~ "windows platform.\n"
-#~ "    * Dashboard for Document that includes:\n"
-#~ "        * New Files (list)\n"
-#~ "        * Files by Resource Type (graph)\n"
-#~ "        * Files by Partner (graph)\n"
-#~ "        * Files by Month (graph)\n"
-#~ "    ATTENTION:\n"
-#~ "    - When you install this module in a running company that have already "
-#~ "PDF files stored into the database,\n"
-#~ "      you will lose them all.\n"
-#~ "    - After installing this module PDF's are no longer stored into the "
-#~ "database,\n"
-#~ "      but in the servers rootpad like /server/bin/filestore.\n"
-#~ msgstr ""
-#~ "Acesta este un sistem complet de management al documetelor:\n"
-#~ "    * Autentificare utilizator\n"
-#~ "    * Indexare documente :- fisierele .pptx si .docx nu sunt acceptate de "
-#~ "platforma Windows.\n"
-#~ "    * Tablou de bord pentru documente care include:\n"
-#~ "        * Fisiere noi (lista)\n"
-#~ "        * Fisiere dupa Tipul resursei (grafic)\n"
-#~ "        * Fisiere dupa Partener (grafic)\n"
-#~ "        * Fisiere dupa Luna (grafic)\n"
-#~ "    ATENTIE:\n"
-#~ "    - Atunci cand instalati acest modul intr-o companie care are deja "
-#~ "stocate fisiere PDF in baza de date,\n"
-#~ "      le veti pierde pe toate.\n"
-#~ "    - Dupa instalarea acestui modul, fisierele PDF nu mai sunt stocate in "
-#~ "baza de date,\n"
-#~ "      ci in serverele rootpad precum /server/container/stocare fisiere.\n"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Auto Configurare Director"
-
-#~ msgid "Related to"
-#~ msgstr "Referitor la"
-
-#~ msgid "Choose the following Resouces to auto directory configuration."
-#~ msgstr ""
-#~ "Folositi urmatoarele Resurse pentru configurarea auto a directorului."
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "Sistemul de management integrat al documentelor"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "Configurare auto director pentru Proiecte."
-
-#~ msgid ""
-#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-#~ "what is typed here."
-#~ msgstr ""
-#~ "Numele campului. Observati ca prefixul \"dctx_\" va fi adaugat la ceea ce "
-#~ "este scris aici."
-
-#~ msgid "External file storage"
-#~ msgstr "Stocare fisiere externe"
-
-#~ msgid "For file storage, the root path of the storage"
-#~ msgstr "Pentru stocarea fisierelor, root path a stocarii"
-
-#~ msgid ""
-#~ "The Documents repository gives you access to all attachments, such as mails, "
-#~ "project documents, invoices etc."
-#~ msgstr ""
-#~ "Depozitarea documentelor va da acces la toate atasamentele, cum ar fi email-"
-#~ "uri, documente proiecte, facturi etc."
-
-#~ msgid "If set, media is for reading only"
-#~ msgstr "Daca sunt setate, media (mijloacele) sunt doar pentru citire"
-
-#~ msgid ""
-#~ "Auto directory configuration for Sale Orders and Quotation with report."
-#~ msgstr ""
-#~ "Configurare auto director pentru Ordine de vanzare si Cotatii cu raport."
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(copie)"
-
-#~ msgid "The storage path must be unique!"
-#~ msgstr "Calea de stocare trebuie sa fie unica!"
-
-#, python-format
-#~ msgid "File name must be unique!"
-#~ msgstr "Numele fisierului trebuie sa fie unic!"
-
-#~ msgid "Internal File storage"
-#~ msgstr "Stocare Fisier intern"
-
-#~ msgid "Search Document storage"
-#~ msgstr "Cautare arhiva documente"
-
-#~ msgid "Directory must have a parent or a storage"
-#~ msgstr "Directorul trebuie sa aiba un parinte sau o arhiva"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "Configurare auto Director"
-
-#~ msgid "Document board"
-#~ msgstr "Panou documente"
-
-#~ msgid "Files per Month"
-#~ msgstr "Fisiere pe luna"
-
-#~ msgid "Path"
-#~ msgstr "Ruta"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Managementul Cunostintelor"
-
-#~ msgid "Files by Users"
-#~ msgstr "Fisiere dupa Utilizator"
-
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "Eroare! Nu puteti crea Directoare recursive."
-
-#~ msgid "Storage"
-#~ msgstr "Depozit"
-
-#~ msgid "Modified"
-#~ msgstr "Modificat(a)"
-
-#~ msgid "Created"
-#~ msgstr "Creat(a)"
-
-#~ msgid "Attachment"
-#~ msgstr "Atasament"
-
-#~ msgid "Files By Users"
-#~ msgstr "Fisiere dupa Utilizatori"
-
-#~ msgid "Database"
-#~ msgstr "Baza de date"
-
-#~ msgid "Attached To"
-#~ msgstr "Anexeaza la"
-
-#~ msgid "Last Posted Time"
-#~ msgstr "Ora ultimei postari"
-
-#~ msgid "Files by users"
-#~ msgstr "Fisiere dupa Utilizatori"
-
-#~ msgid "Wall of Shame"
-#~ msgstr "Peretele Rusinii"
-
-#~ msgid "Files details by Partners"
-#~ msgstr "Detalii fisiere dupa Parteneri"
-
-#~ msgid "Users that did not inserted documents since one month"
-#~ msgstr "Utilizatori care nu au inserat documente de o luna"
-
-#~ msgid "New Files"
-#~ msgstr "Fisiere noi"
-
-#~ msgid "This Months Files"
-#~ msgstr "Fisierele din luna aceata"
-
-#~ msgid "Files By Partner"
-#~ msgstr "Fisiere dupa Parteneri"
-
-#~ msgid "This Month"
-#~ msgstr "Luna curenta"
-
-#~ msgid "Statistics by User"
-#~ msgstr "Statistici per Utilizator"
-
-#~ msgid "Indexed Content - experimental"
-#~ msgstr "Continut indexat - experimental"
-
-#~ msgid "Files by Resource Type"
-#~ msgstr "Fisiere dupa Tipul Resursei"
-
-#~ msgid "All Months Files"
-#~ msgstr "Toate fisierele lunilor"
-
-#~ msgid ""
-#~ "If not checked, media is currently offline and its contents not available"
-#~ msgstr ""
-#~ "Daca nu bifati, mediile sunt offline in prezent, iar continutul lor nu este "
-#~ "disponibil"
+#. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr "necunoscut(a)"

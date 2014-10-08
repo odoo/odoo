@@ -69,18 +69,6 @@ def resolve_all_mro(cls, name, reverse=False):
             yield klass.__dict__[name]
 
 
-def default_compute(field, value):
-    """ Return a compute function for the given default `value`; `value` is
-        either a constant, or a unary function returning the default value.
-    """
-    name = field.name
-    func = value if callable(value) else lambda rec: value
-    def compute(recs):
-        for rec in recs:
-            rec[name] = func(rec)
-    return compute
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -261,7 +249,9 @@ class Field(object):
     _free_attrs = None          # list of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
-    _origin = None              # the column or field interfaced by self, if any
+    inherited = False           # whether the field is inherited (_inherits)
+    column = None               # the column interfaced by the field
+    setup_done = False          # whether the field has been set up
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -280,8 +270,9 @@ class Field(object):
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
+    related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value
+    default = None              # default value (literal or callable)
 
     string = None               # field label
     help = None                 # field tooltip
@@ -356,7 +347,7 @@ class Field(object):
 
     def reset(self):
         """ Prepare `self` for a new setup. """
-        self._setup_done = False
+        self.setup_done = False
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
         # invalidates the cache of each `field`, and registers the records to
@@ -369,8 +360,8 @@ class Field(object):
             and other properties). This method is idempotent: it has no effect
             if `self` has already been set up.
         """
-        if not self._setup_done:
-            self._setup_done = True
+        if not self.setup_done:
+            self.setup_done = True
             self._setup(env)
 
     def _setup(self, env):
@@ -418,6 +409,7 @@ class Field(object):
         self.compute = self._compute_related
         self.inverse = self._inverse_related
         if field._description_searchable(env):
+            # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
@@ -427,13 +419,16 @@ class Field(object):
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
-        for record, sudo_record in zip(records, records.sudo()):
-            # bypass access rights check when traversing the related path
-            value = sudo_record if record.id else record
-            # traverse the intermediate fields, and keep at most one record
+        # when related_sudo, bypass access rights checks when reading values
+        others = records.sudo() if self.related_sudo else records
+        for record, other in zip(records, others):
+            if not record.id:
+                # draft record, do not switch to another environment
+                other = record
+            # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+                other = other[name][:1]
+            record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """
@@ -465,10 +460,6 @@ class Field(object):
 
         def make_depends(deps):
             return tuple(deps(recs) if callable(deps) else deps)
-
-        # transform self.default into self.compute
-        if self.default is not None and self.compute is None:
-            self.compute = default_compute(self, self.default)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
@@ -553,7 +544,20 @@ class Field(object):
         return False
 
     def _description_searchable(self, env):
-        return self._description_store(env) or bool(self.search)
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True)) or \
+                   bool(getattr(column, '_fnct_search', False))
+        return bool(self.search)
+
+    def _description_sortable(self, env):
+        if self.store:
+            column = env[self.model_name]._columns.get(self.name)
+            return bool(getattr(column, 'store', True))
+        if self.inherited:
+            # self is sortable if the inherited field is itself sortable
+            return self.related_field._description_sortable(env)
+        return False
 
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
@@ -588,10 +592,9 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
-        if self._origin:
-            assert isinstance(self._origin, fields._column)
-            return self._origin
 
+        # some columns are registry-dependent, like float fields (digits);
+        # duplicate them to avoid sharing between registries
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
@@ -604,6 +607,11 @@ class Field(object):
             args['type'] = self.type
             args['relation'] = self.comodel_name
             return fields.property(**args)
+
+        if isinstance(self.column, fields.function):
+            # it is too tricky to recreate a function field, so for that case,
+            # we make a stupid (and possibly incorrect) copy of the column
+            return copy(self.column)
 
         return getattr(fields, self.type)(**args)
 
@@ -765,9 +773,13 @@ class Field(object):
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
-            except MissingError:
-                # some record is missing, retry on existing records only
-                self._compute_value(records.exists())
+            except (AccessError, MissingError):
+                # some record is forbidden or missing, retry record by record
+                for record in records:
+                    try:
+                        self._compute_value(record)
+                    except Exception as exc:
+                        record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -812,7 +824,10 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        if self.compute:
+        if self.default is not None:
+            value = self.default(record) if callable(self.default) else self.default
+            record._cache[self] = self.convert_to_cache(value, record)
+        elif self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
@@ -895,6 +910,9 @@ class Integer(Field):
     type = 'integer'
 
     def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            return value.get('id', False)
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -922,9 +940,16 @@ class Float(Field):
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    def _setup_digits(self, env):
+        """ Setup the digits for `self` and its corresponding column """
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.store:
+            column = env[self.model_name]._columns[self.name]
+            column.digits_change(env.cr)
+
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        self._setup_digits(env)
 
     _related_digits = property(attrgetter('digits'))
 
@@ -1160,12 +1185,11 @@ class Selection(Field):
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
-    def _setup_regular(self, env):
-        super(Selection, self)._setup_regular(env)
-        # determine selection (applying extensions)
-        cls = type(env[self.model_name])
+    def set_class_name(self, cls, name):
+        super(Selection, self).set_class_name(cls, name)
+        # determine selection (applying 'selection_add' extensions)
         selection = None
-        for field in resolve_all_mro(cls, self.name, reverse=True):
+        for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
@@ -1326,13 +1350,11 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_regular(self, env):
-        super(Many2one, self)._setup_regular(env)
-
-        # self.inverse_fields is populated by the corresponding One2many field
-
+    def set_class_name(self, cls, name):
+        super(Many2one, self).set_class_name(cls, name)
         # determine self.delegate
-        self.delegate = self.name in env[self.model_name]._inherits.values()
+        if not self.delegate:
+            self.delegate = name in cls._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
@@ -1360,7 +1382,11 @@ class Many2one(_Relational):
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            return value.sudo().name_get()[0]
+            try:
+                return value.sudo().name_get()[0]
+            except MissingError:
+                # Should not happen, unless the foreign key is missing.
+                return False
         else:
             return value.id
 
@@ -1386,13 +1412,32 @@ class Many2one(_Relational):
                 record[self.name] = record.env[self.comodel_name].new()
 
 
+class UnionUpdate(SpecialValue):
+    """ Placeholder for a value update; when this value is taken from the cache,
+        it returns ``record[field.name] | value`` and stores it in the cache.
+    """
+    def __init__(self, field, record, value):
+        self.args = (field, record, value)
+
+    def get(self):
+        field, record, value = self.args
+        # in order to read the current field's value, remove self from cache
+        del record._cache[field]
+        # read the current field's value, and update it in cache only
+        record._cache[field] = new_value = record[field.name] | value
+        return new_value
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
         for record in records:
-            record._cache[self] = record[self.name] | value
+            if self in record._cache:
+                record._cache[self] = record[self.name] | value
+            else:
+                record._cache[self] = UnionUpdate(self, record, value)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
@@ -1411,6 +1456,7 @@ class _RelationalMulti(_Relational):
                         result += result.new(command[2])
                     elif command[0] == 1:
                         result.browse(command[1]).update(command[2])
+                        result += result.browse(command[1]) - result
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
                         result -= result.browse(command[1])
@@ -1525,8 +1571,12 @@ class One2many(_RelationalMulti):
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_fields.append(invf)
-            invf.inverse_fields.append(self)
+            # In some rare cases, a `One2many` field can link to `Int` field
+            # (res_model/res_id pattern). Only inverse the field if this is
+            # a `Many2one` field.
+            if isinstance(invf, Many2one):
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1637,6 +1687,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, MissingError
+from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

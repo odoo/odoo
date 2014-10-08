@@ -62,7 +62,7 @@ class sale_order(osv.Model):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
-        if partner.id not in document.message_follower_ids:
+        if partner not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
@@ -121,7 +121,7 @@ class account_invoice(osv.Model):
         # fetch the partner's id and subscribe the partner to the invoice
         for invoice in self.browse(cr, uid, ids, context=context):
             partner = invoice.partner_id
-            if partner.id not in invoice.message_follower_ids:
+            if partner not in invoice.message_follower_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
@@ -150,10 +150,10 @@ class mail_mail(osv.osv):
             order = so_obj.browse(cr, uid, mail.res_id, context=context)
             partner = order.partner_id
             # Add the customer in the SO as follower
-            if partner.id not in order.message_follower_ids:
+            if partner not in order.message_follower_ids:
                 so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
             # Add all recipients of the email as followers
             for p in mail.partner_ids:
-                if p.id not in order.message_follower_ids:
+                if p not in order.message_follower_ids:
                     so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)

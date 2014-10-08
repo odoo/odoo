@@ -7,7 +7,8 @@ import urllib2
 import openerp
 from openerp import tools
 from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, exception_to_unicode
+
 from openerp.tools.translate import _
 from openerp.http import request
 from datetime import datetime, timedelta
@@ -482,7 +483,7 @@ class google_calendar(osv.AbstractModel):
         return res
 
     def remove_references(self, cr, uid, context=None):
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         reset_data = {
             'google_calendar_rtoken': False,
             'google_calendar_token': False,
@@ -495,6 +496,22 @@ class google_calendar(osv.AbstractModel):
         self.pool['calendar.attendee'].write(cr, uid, all_my_attendees, {'oe_synchro_date': False, 'google_internal_event_id': False}, context=context)
         current_user.write(reset_data, context=context)
         return True
+
+    def synchronize_events_cron(self, cr, uid, context=None):
+        ids = self.pool['res.users'].search(cr, uid, [('google_calendar_last_sync_date', '!=', False)], context=context)
+        _logger.info("Calendar Synchro - Started by cron")
+
+        for user_to_sync in ids:
+            _logger.info("Calendar Synchro - Starting synchronization for a new user [%s] " % user_to_sync)
+            try:
+                resp = self.synchronize_events(cr, uid, [user_to_sync], lastSync=True, context=None)
+                if resp.get("status") == "need_reset":
+                    _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !" % user_to_sync)
+                else:
+                    _logger.info("[%s] Calendar Synchro - Done with status : %s  !" % (user_to_sync, resp.get("status")))
+            except Exception, e:
+                _logger.info("[%s] Calendar Synchro - Exception : %s !" % (user_to_sync, exception_to_unicode(e)))
+        _logger.info("Calendar Synchro - Ended by cron")
 
     def synchronize_events(self, cr, uid, ids, lastSync=True, context=None):
         if context is None:
@@ -512,7 +529,8 @@ class google_calendar(osv.AbstractModel):
         #     status, response = gs_pool._do_request(cr, uid, url, params, type='GET', context=context)
         #     return int(status) != 410
 
-        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        user_to_sync = ids and ids[0] or uid
+        current_user = self.pool['res.users'].browse(cr, SUPERUSER_ID, user_to_sync, context=context)
 
         st, current_google, ask_time = self.get_calendar_primary_id(cr, uid, context=context)
 
@@ -529,14 +547,14 @@ class google_calendar(osv.AbstractModel):
 
             if lastSync and self.get_last_sync_date(cr, uid, context=context) and not self.get_disable_since_synchro(cr, uid, context=context):
                 lastSync = self.get_last_sync_date(cr, uid, context)
-                _logger.info("Calendar Synchro - MODE SINCE_MODIFIED : %s !" % lastSync.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                _logger.info("[%s] Calendar Synchro - MODE SINCE_MODIFIED : %s !" % (user_to_sync, lastSync.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
             else:
                 lastSync = False
-                _logger.info("Calendar Synchro - MODE FULL SYNCHRO FORCED")
+                _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO FORCED" % user_to_sync)
         else:
             current_user.write({'google_calendar_cal_id': current_google}, context=context)
             lastSync = False
-            _logger.info("Calendar Synchro - MODE FULL SYNCHRO - NEW CAL ID")
+            _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO - NEW CAL ID" % user_to_sync)
 
         new_ids = []
         new_ids += self.create_new_events(cr, uid, context=context)

@@ -1,4 +1,4 @@
-(function() {
+$(document).ready(function() {
     "use strict";
 
     var website = openerp.website;
@@ -49,10 +49,10 @@
                 $(document.body).on('media-saved', self, function (o) {
                     var url = $('.cover-storage').attr('src');
                     $('.js_fullheight').css({"background-image": !_.isUndefined(url) ? 'url(' + url + ')' : "", 'min-height': vHeight});
-                    $('.cover-storage').remove();
+                    $('.cover-storage').hide();
                 });
                 editor.appendTo('body');
             },
         });
     }
-})();
+});

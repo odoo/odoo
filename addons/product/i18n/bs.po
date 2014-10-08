@@ -1,1053 +1,38 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* product
+# Bosnian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-05-10 17:46+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:53+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:25+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
-#: field:product.packaging,rows:0
-msgid "Number of Layers"
-msgstr "Broj slojeva"
-
-#. module: product
-#: help:product.pricelist.item,base:0
-msgid "Base price for computation."
-msgstr "Osnovna cijena za izračun"
-
-#. module: product
-#: help:product.product,seller_qty:0
-msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr "Ovo je minimalna količina za nabavku od glavnog dobavljača."
-
-#. module: product
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "Web kamera"
-
-#. module: product
-#: field:product.product,incoming_qty:0
-msgid "Incoming"
-msgstr "Dolazeći"
-
-#. module: product
-#: view:product.product:0
-msgid "Product Name"
-msgstr "Naziv proizvoda"
-
-#. module: product
-#: view:product.template:0
-msgid "Second Unit of Measure"
-msgstr "Sekundarna JM"
-
-#. module: product
-#: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
-msgstr ""
-"Ovaj cjenovnik će se koristiti, umjesto predefinisanog, za prodaju trenutnom "
-"partneru"
-
-#. module: product
-#: field:product.product,seller_qty:0
-msgid "Supplier Quantity"
-msgstr "Dobavljačeva količina"
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
-msgstr "Fiksno"
-
-#. module: product
-#: model:product.template,name:product.product_product_10_product_template
-msgid "Mouse, Optical"
-msgstr "Miš, optički"
-
-#. module: product
-#: view:product.template:0
-msgid "Base Prices"
-msgstr "Osnovne cijene"
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "Naziv pravila"
-
-#. module: product
-#: help:product.template,list_price:0
-msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
-"Osnovna cijena za izračuna cijene za kupca, Ponekad se naziva kataloška "
-"cijena."
-
-#. module: product
-#: model:product.template,name:product.product_product_3_product_template
-msgid "PC Assemble SC234"
+#: field:product.template,product_variant_count:0
+msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: help:product.product,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
-"da bi mogao biti ubačen u kanban pogled."
-
-#. module: product
-#: code:addons/product/pricelist.py:179
-#: code:addons/product/product.py:208
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
-msgid "Warning!"
-msgstr "Upozorenje!"
+msgid "%s (copy)"
+msgstr "%s (kopija)"
 
 #. module: product
-#: field:product.product,image_small:0
-msgid "Small-sized image"
-msgstr "Slika male veličine"
-
-#. module: product
-#: code:addons/product/product.py:176
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
+#: model:product.attribute.value,name:product.product_attribute_value_1
+msgid "16 GB"
 msgstr ""
-"Konverzija između JM Proizvoda %s i zadane JM %s nije moguća jer te dvije "
-"pripadaju različitim kategorijama!"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Average Price"
-msgstr "Prosječna cijena"
-
-#. module: product
-#: help:product.pricelist.item,name:0
-msgid "Explicit rule name for this pricelist line."
-msgstr "Eksplicitno ime pravila za ovu stavku cjenovnika."
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Koeficijent JM -> Prodajna JM"
-
-#. module: product
-#: field:product.price_list,price_list:0
-msgid "PriceList"
-msgstr "Cjenovnik"
-
-#. module: product
-#: model:product.template,name:product.product_product_4_product_template
-msgid "PC Assemble SC349"
-msgstr ""
-
-#. module: product
-#: help:product.product,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"Ovo je prosječno kašnjenje u danima između potvrde nabavne narudžbe i "
-"prijema robe za ovaj proizvod i podrazumjevanog dobavljača. Koristi ga "
-"planer da izda zahtjeve na osnovu preuređenih kašnjenja."
-
-#. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr "Podrazumjevana javna verzija cjenovnika"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "Standardna cijena"
-
-#. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
-msgid "Sale Pricelist"
-msgstr "Prodajni cjenovnik"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,type:0
-msgid "Product Type"
-msgstr "Tip proizvoda"
-
-#. module: product
-#: code:addons/product/product.py:412
-#, python-format
-msgid "Products: "
-msgstr "Proizvodi: "
-
-#. module: product
-#: constraint:decimal.precision:0
-msgid ""
-"Error! You cannot define the decimal precision of 'Account' as greater than "
-"the rounding factor of the company's main currency"
-msgstr ""
-"Greška! Nije moguće definisati decimalnu preciznost konta kao veću od "
-"faktora zaokruživanja za glavnu valutu kompanije"
-
-#. module: product
-#: field:product.category,parent_id:0
-msgid "Parent Category"
-msgstr "Nadređena kategorija"
-
-#. module: product
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "Slušalice za laptop sa usb konektorom"
-
-#. module: product
-#: model:product.category,name:product.product_category_all
-msgid "All products"
-msgstr "Svi proizvodi"
-
-#. module: product
-#: model:process.node,note:product.process_node_supplier0
-msgid "Supplier name, price, product code, ..."
-msgstr "Naziv dobavljača, cijena, šifra artikla, ..."
-
-#. module: product
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr ""
-"Greška! Nije oguće definisati faktor zaokruživaja za glavnu valutu kompanije "
-"koja je manja od decimalne preciznosti konta"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods leaving the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Količina proizvoda koja je planirana da ode.\n"
-"U kontekstu jedne lokacija zalihe, ovo uključuje robu koja odlazi sa ove "
-"lokacije, ili bilo koje podređene.\n"
-"U kontekstu jednog skladišta, ovo uključuje robu koja odlazi sa zalihe "
-"lokacije ovog skladišta, ili bilo koje podređene.\n"
-"U kontekstu jedne prodavnice, ovo uključuje robu koja odlazi sa lokacije "
-"zalihe skladišta prodavnice, ili bilo koje podređene.\n"
-"U suprotnom, ovo uključuje robu koja odlazi iz bilo koje lokacije sa "
-"'internim' tipom."
-
-#. module: product
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr ""
-"Office uređivački programi koji uključuju obradu teksta, proračunskih "
-"tablica, prezentacija, grafika, i baza..."
-
-#. module: product
-#: field:product.product,seller_id:0
-msgid "Main Supplier"
-msgstr "Glavni dobavljač"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.model,name:product.model_product_packaging
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
-msgid "Packaging"
-msgstr "Pakovanje"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If unchecked, it will allow you to hide the product without removing it."
-msgstr "Ako je označeno omogućava sakrivanje proizvoda bez brisanja."
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
-#: field:product.uom,category_id:0
-msgid "Category"
-msgstr "Kategorija"
-
-#. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Laptop E5023"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,ul_qty:0
-msgid "The number of packages by layer"
-msgstr "Broj pakiranja po sloju"
-
-#. module: product
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr ""
-
-#. module: product
-#: field:product.packaging,qty:0
-msgid "Quantity by Package"
-msgstr "Količina po paketu"
-
-#. module: product
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: product
-#: help:product.template,categ_id:0
-msgid "Select category for the current product"
-msgstr "Odabir kategorije za trenutni proizvod"
-
-#. module: product
-#: field:product.product,outgoing_qty:0
-msgid "Outgoing"
-msgstr "Odlazeći"
-
-#. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-msgid "Public Price"
-msgstr "Javna cijena"
-
-#. module: product
-#: field:product.price_list,qty5:0
-msgid "Quantity-5"
-msgstr "Količina-5"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new packaging type.\n"
-"              </p><p>\n"
-"                The packaging type define the dimensions as well as the "
-"number\n"
-"                of products per package. This will ensure salesperson sell "
-"the\n"
-"                right number of products according to the package selected.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                                          Kliknite za dodavanje novog tipa "
-"pakiranja.\n"
-"                                       </p><p>\n"
-"                                           Tip pakiranja definiše dimenzije "
-"kao i količine\n"
-"                                           proizvoda u pakiranju. Ovo "
-"omogućava prodavačima da prodaju\n"
-"                                           tačan broj proizvoda u odnosu na "
-"odabrano pakiranje.\n"
-"</p>\n"
-"            "
-
-#. module: product
-#: field:product.template,product_manager:0
-msgid "Product Manager"
-msgstr "Menadžer proizvoda"
-
-#. module: product
-#: model:product.template,name:product.product_product_7_product_template
-msgid "17” LCD Monitor"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
-msgstr "Naziv artikla dobavljača"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price Search"
-msgstr "Pretraži cijene proizvoda"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,description_sale:0
-msgid "Sale Description"
-msgstr "Opis prodaje"
-
-#. module: product
-#: help:product.packaging,length:0
-msgid "The length of the package"
-msgstr "Dužina paketa"
-
-#. module: product
-#: field:product.product,message_summary:0
-msgid "Summary"
-msgstr "Rezime"
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "Neto težina u kg."
-
-#. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
-msgid "Quantity"
-msgstr "Količina"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
-"Izračunaj cijenu proizvoda po jedinici bazirano na verziji cjenovnika."
-
-#. module: product
-#: help:product.pricelist.item,product_id:0
-msgid ""
-"Specify a product if this rule only applies to one product. Keep empty "
-"otherwise."
-msgstr ""
-"Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod. U suprotnom "
-"ostavite prazno."
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
-msgid "Weight"
-msgstr "Težina"
-
-#. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-"Prognozirana količina (izračunata kao količina pri ruci - odlazni + "
-"dolazni)\n"
-"U kontekstu jedne lokacije zalihe, ovo uključuje robu smještenu u ovoj "
-"lokaciji, ili njene podređene.\n"
-"U kontekstu jednog skladišta, ovo uključuje robu smještenu u lokaciji zalihe "
-"ovog skladišta, ili njegove podređene.\n"
-"U kontekstu jedne prodavnice, ovo uključuje robu smještenu u lokaciji zalihe "
-"skladišta ove prodavnice, ili njene podređene.\n"
-"U suprotnom, ovo uključuje robu smještenu na bilo kojoj lokaciji zalihe sa "
-"'internim' tipom."
-
-#. module: product
-#: field:product.packaging,height:0
-msgid "Height"
-msgstr "Visina"
-
-#. module: product
-#: view:product.product:0
-msgid "Procurements"
-msgstr "Naručivanja"
-
-#. module: product
-#: model:res.groups,name:product.group_mrp_properties
-msgid "Manage Properties of Product"
-msgstr "Upravljanje svojstvima proizvoda"
-
-#. module: product
-#: help:product.uom,factor:0
-msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
-"1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-"Koliko je ova jedinica veća ili manja od referentne JM za ovu kategoriju:\n"
-"1 * (referentna jedinica) = omjer * (ova jedinica)"
-
-#. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "cjenovnik.partnerinfo"
-
-#. module: product
-#: field:product.price_list,qty2:0
-msgid "Quantity-2"
-msgstr "Količina-2"
-
-#. module: product
-#: field:product.price_list,qty3:0
-msgid "Quantity-3"
-msgstr "Količina-3"
-
-#. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Količina-1"
-
-#. module: product
-#: field:product.price_list,qty4:0
-msgid "Quantity-4"
-msgstr "Količina-4"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Prodaja & Nabavka"
-
-#. module: product
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr ""
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_wtime
-msgid "Working Time"
-msgstr "Radno Vrijeme"
-
-#. module: product
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "Kancelarijski paket"
-
-#. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Tip mjerenja"
-
-#. module: product
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "Obične slučalice"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day(s)"
-msgstr "Dan(i)"
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
-msgstr ""
-"Količina proizvoda koja je planirana da stigne.\n"
-"U kontekstu jedne lokacije zalihe, ovo uključuje robu koja dolazi na ovu "
-"lokaciju, ili bilo koju podređenu.\n"
-"U kontekstu jednog skladišta, ovo uključuje robu koja dolazi na lokaciju "
-"zalihe ovog skladišta, ili bilo koje podređene.\n"
-"U kontekstu jedne prodavnice, ovo uključuje robu koja dolazi na lokaciju "
-"zalihe skladišta ove prodavnice, ili bilo koje podređene.\n"
-"U suprotnom, ovo uključuje robu koja dolazi na bilo koju lokaciju zalihe "
-"'internog' tipa."
-
-#. module: product
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-"Greška! Zadana jedinica mjere i nabavna jedinica mjere moraju biti u istoj "
-"kategoriji."
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Kategorija JM artikla"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_box
-msgid "Box 20x20x40"
-msgstr "Kutija 20x20x40"
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty"
-msgstr "Garancija"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "Izračunavanje cijene"
-
-#. module: product
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-"Unešen je neispravn \"EAN13 Barcode\", umjesto ovog možete koristiti polje "
-"\"Interna šifra\""
-
-#. module: product
-#: model:res.groups,name:product.group_purchase_pricelist
-msgid "Purchase Pricelists"
-msgstr "Nabavni cjenovnik"
-
-#. module: product
-#: model:product.template,name:product.product_product_5_product_template
-msgid "PC Assemble + Custom (PC on Demand)"
-msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
-msgstr ""
-
-#. module: product
-#: help:product.packaging,width:0
-msgid "The width of the package"
-msgstr "Širina paketa"
-
-#. module: product
-#: code:addons/product/product.py:361
-#, python-format
-msgid "Unit of Measure categories Mismatch!"
-msgstr "Ne slaganje kategorija jedinice mjere!"
-
-#. module: product
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr ""
-
-#. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr "Pogled"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_template_action_tree
-msgid "Product Templates"
-msgstr "Predlošci proizvoda"
-
-#. module: product
-#: field:product.category,parent_left:0
-msgid "Left Parent"
-msgstr "Lijevi nadređeni"
-
-#. module: product
-#: help:product.pricelist.item,price_max_margin:0
-msgid "Specify the maximum amount of margin over the base price."
-msgstr "Odredite najveći iznos marže za granicu iznad osnovne cijene."
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Greška! Ne možete dodijeliti glavni cjenovnik kao dugi cjenovnik u stavkama "
-"cjenovnika!"
-
-#. module: product
-#: view:product.price_list:0
-msgid "or"
-msgstr "ili"
-
-#. module: product
-#: constraint:product.packaging:0
-msgid "Error: Invalid ean code"
-msgstr "Greška: neispravan EAN kod"
-
-#. module: product
-#: field:product.pricelist.item,min_quantity:0
-msgid "Min. Quantity"
-msgstr "Min. količina"
-
-#. module: product
-#: model:product.template,name:product.product_product_12_product_template
-msgid "Mouse, Wireless"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor Core i5 2.70 Ghz"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr "Tip cijene"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Max. Margin"
-msgstr "Max. marža"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Base Price"
-msgstr "Osnovna cijena"
-
-#. module: product
-#: help:product.supplierinfo,name:0
-msgid "Supplier of this product"
-msgstr "Dobavljač ovog proizvoda"
-
-#. module: product
-#: help:product.pricelist.version,active:0
-msgid ""
-"When a version is duplicated it is set to non active, so that the dates do "
-"not overlaps with original version. You should change the dates and "
-"reactivate the pricelist"
-msgstr ""
-"Kada je verzija duplicirana postavlja se ne aktivno, tako da se datumi ne "
-"preklapaju sa originalnom verzijom. Potreno je promijeniti datume i "
-"reaktivirati cjenovnik."
-
-#. module: product
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_17_product_template
-msgid "HDD SH-1"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
-msgid "Supplier"
-msgstr "Dobavljač"
-
-#. module: product
-#: help:product.template,cost_method:0
-msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year). \n"
-"Average Price: The cost price is recomputed at each incoming shipment."
-msgstr ""
-"Standardna cijena: cijena koštanja je ručno ažurirana na kraju svakog "
-"perioda (obično svake godine). \n"
-"Prosječna cijena : cijena koštanja je izračunata pri svakoj dolaznoj "
-"pošiljci."
-
-#. module: product
-#: field:product.product,qty_available:0
-msgid "Quantity On Hand"
-msgstr "Količina pri ruci"
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "Naziv cijene"
-
-#. module: product
-#: help:product.product,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ako je označeno, nove poruke će zahtjevati vašu pažnju."
-
-#. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
-msgstr "EAN13 Barkod"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_product_price_list
-#: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
-#: field:product.pricelist.version,pricelist_id:0
-msgid "Price List"
-msgstr "Cjenovnik"
-
-#. module: product
-#: field:product.product,virtual_available:0
-msgid "Forecasted Quantity"
-msgstr "Predviđena količina"
-
-#. module: product
-#: view:product.product:0
-msgid "Purchase"
-msgstr "Nabavka"
-
-#. module: product
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-msgid "Suppliers"
-msgstr "Dobavljači"
-
-#. module: product
-#: model:res.groups,name:product.group_sale_pricelist
-msgid "Sales Pricelists"
-msgstr "Prodajni cjenovnici"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "New Price ="
-msgstr "Nova cijena ="
-
-#. module: product
-#: model:product.category,name:product.product_category_7
-msgid "Accessories"
-msgstr "Dodatni alati"
-
-#. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "Dobavljač artikla"
-
-#. module: product
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
-msgstr ""
-
-#. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
-msgstr ""
-"Cijena koštanja proizvoda korišćena za standardno vrednovanje zaliha u "
-"računovodstvu i koristi se kao osnovna cijena na nabavnim narudžbama."
-
-#. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
-msgstr "Podređene kategorije"
-
-#. module: product
-#: field:product.pricelist.version,date_end:0
-msgid "End Date"
-msgstr "Datum završetka"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Liter(s)"
-msgstr "Litra(e)"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Print"
-msgstr "Štampaj"
-
-#. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_main
-msgid "Pricelists"
-msgstr "Cjenovnici"
-
-#. module: product
-#: field:product.product,partner_ref:0
-msgid "Customer ref"
-msgstr "Ref. kupca"
-
-#. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "Ključ"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_pricelist
-#: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Cjenovnik"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_hour
-msgid "Hour(s)"
-msgstr "Sat(i)"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "U razvoju"
-
-#. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
-msgstr ""
-"Jedan ili više dobavljača se može povezati saartiklom. Sve informacije se "
-"nalaze na formi artikla."
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
-msgid "Price Rounding"
-msgstr "Zaokruživanje cijena"
-
-#. module: product
-#: model:product.template,name:product.product_product_1_product_template
-msgid "On Site Monitoring"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-msgid "days"
-msgstr "dani"
-
-#. module: product
-#: model:process.node,name:product.process_node_supplier0
-#: view:product.supplierinfo:0
-msgid "Supplier Information"
-msgstr "Informacije o dobavljaču"
-
-#. module: product
-#: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
-#: field:product.pricelist,currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: product
-#: model:product.template,name:product.product_product_46_product_template
-msgid "Datacard"
-msgstr ""
-
-#. module: product
-#: help:product.template,uos_coeff:0
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale\n"
-" uos = uom * coeff"
-msgstr ""
-"Koeficijent za konverziju zadate jedinice mjere u jedinicu mjere prodaje\n"
-"jm prodaje = jm * koeficijent"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:0
-msgid "Product Categories"
-msgstr "Kategorije proizvoda"
-
-#. module: product
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Naručivanja i Lokacije"
-
-#. module: product
-#: model:product.template,name:product.product_product_20_product_template
-msgid "Motherboard I9P57"
-msgstr ""
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "Ukupna težina paketa"
-
-#. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "Šifra transportnih jedinica"
-
-#. module: product
-#: view:product.price.type:0
-msgid "Products Price Type"
-msgstr "Tip cijene proizvoda"
-
-#. module: product
-#: field:product.product,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Je pratilac"
-
-#. module: product
-#: field:product.product,price_extra:0
-msgid "Variant Price Extra"
-msgstr "Ekstra cijena varijante"
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "Informacije o dobavljaču proizvoda"
-
-#. module: product
-#: help:product.uom,factor_inv:0
-msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
-"1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-"Koliko puta ova jedinica mjere je veća od referentne jedinice mjere u ovoj "
-"kategoriji:\n"
-"1 * (ova JM) = omjer * (referentna JM)"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,description_purchase:0
-msgid "Purchase Description"
-msgstr "Opis nabavke"
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Nije moguće imati dva cjenovnika koja se preklapaju!"
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-"Specificirajte minimalnu količinu za kupovinu/prodaju da bi se pravilo "
-"primjenilo."
-
-#. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "First valid date for the version."
-msgstr "Prvi važeći datum za ovu verziju."
-
-#. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
-msgstr ""
-"Vrijeme vođenja u danima između potvrde nabavne narudžbe i prijem robe u "
-"vaše skladište. Koristi ga planer za automatski izračun plana naručivanja "
-"nabave."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
@@ -1059,555 +44,13 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Skladišteni proizvod"
-
-#. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "Šifra"
-
-#. module: product
-#: model:product.template,name:product.product_product_27_product_template
-msgid "Laptop Customized"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Jedinica isporuke"
-
-#. module: product
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr ""
-
-#. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "Informacije o partneru"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:product.template,description:product.product_product_25_product_template
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
-"              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
-"                a physical product, a consumable or a service you offer to\n"
-"                customers.\n"
-"              </p><p>\n"
-"                The product form contains information to simplify the sale\n"
-"                process: price, notes in the quotation, accounting data,\n"
-"                procurement methods, etc.\n"
-"              </p>\n"
-"            "
+"17\" Monitor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
+"QWERTY keyboard"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novog proizvoda.\n"
-"              </p><p>\n"
-"                Za sve što prodajete, bez obzira da li je to trgovačka "
-"roba,\n"
-"                potrošni materijal ili usluga, morate definisati proizvod.\n"
-"              </p><p>\n"
-"                Forma proizvoda sadrži detaljne informacije za "
-"poboljšavanje\n"
-"                procesa prodaje: cijene, logistički podaci, računovodstveni "
-"podaci,\n"
-"                napomene za predračune, metode naručivanja i sl.\n"
-"              </p>\n"
-"            "
-
-#. module: product
-#: view:product.price_list:0
-msgid "Cancel"
-msgstr "Otkaži"
-
-#. module: product
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
-msgstr ""
-"Minimalna količina za nabavku kod ovog dobavljača, izraženo u dobavljačevoj "
-"jedinici mjere ako nije prazna, u suprotnom, u zadanoj jedinici mjere "
-"proizvoda."
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "Informacija"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Stavke liste cjenovnika"
-
-#. module: product
-#: view:product.packaging:0
-msgid "Other Info"
-msgstr "Ostale informacije"
-
-#. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr "Stavke cjenovnika"
-
-#. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "Jedinična cijena"
-
-#. module: product
-#: field:product.category,parent_right:0
-msgid "Right Parent"
-msgstr "Desni nadređeni"
-
-#. module: product
-#: field:product.product,price:0
-msgid "Price"
-msgstr "Cijena"
-
-#. module: product
-#: field:product.pricelist.item,price_surcharge:0
-msgid "Price Surcharge"
-msgstr "Cijena doplate"
-
-#. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Interna referenca"
-
-#. module: product
-#: model:product.template,name:product.product_product_8_product_template
-msgid "USB Keyboard, QWERTY"
-msgstr ""
-
-#. module: product
-#: model:product.category,name:product.product_category_9
-msgid "Softwares"
-msgstr ""
-
-#. module: product
-#: field:product.product,packaging:0
-msgid "Logistical Units"
-msgstr "Logističke jedinice"
-
-#. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom.categ,name:0
-msgid "Name"
-msgstr "Naziv:"
-
-#. module: product
-#: model:product.category,name:product.product_category_4
-msgid "Computers"
-msgstr "Računari"
-
-#. module: product
-#: help:product.product,message_ids:0
-msgid "Messages and communication history"
-msgstr "Poruke i istorija komunikacije"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr "kg"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Zastarjelo"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr "km"
-
-#. module: product
-#: field:product.template,standard_price:0
-msgid "Cost"
-msgstr "Cijena (koštanje)"
-
-#. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Daje redosljed sekvenci kada se prikazuje lista kategorija proizvoda."
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen(s)"
-msgstr ""
-
-#. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
-msgid "Ratio"
-msgstr "Omjer"
-
-#. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Širina"
-
-#. module: product
-#: help:product.price.type,field:0
-msgid "Associated field in the product form."
-msgstr "Povezano polje u formi proizvoda"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
-msgid "Unit of Measure"
-msgstr "Jedinica mjere"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Printing Date"
-msgstr "Datum štampanja"
-
-#. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "Jedinica prodaje"
-
-#. module: product
-#: field:product.product,message_unread:0
-msgid "Unread Messages"
-msgstr "Nepročitane poruke"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr "Kategorije jedinica mjera"
-
-#. module: product
-#: help:product.product,seller_id:0
-msgid "Main Supplier who has highest priority in Supplier List."
-msgstr "Glavni dobavljač s najvećim prioritetom u listi dobavljača"
-
-#. module: product
-#: model:product.category,name:product.product_category_5
-#: view:product.product:0
-msgid "Services"
-msgstr "Usluge"
-
-#. module: product
-#: help:product.product,ean13:0
-msgid "International Article Number used for product identification."
-msgstr ""
-"Internacionalni broj artikla koji se koristi za identifikaciju proizvoda."
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
-"                this category or to a child of this category.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Ovo je lista Vaših proizvoda klasificiranih po "
-"kategorijama.\n"
-"                Pritiskom na kategoriju dobivate listu svih proizvoda "
-"povezanih sa\n"
-"                tom ili negovom podređenom kategorijom.\n"
-"              </p>\n"
-"            "
-
-#. module: product
-#: code:addons/product/product.py:361
-#, python-format
-msgid ""
-"New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
-"as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-"Nova jedinica mjere '%s' mora pripadati istoj kategoriji jedinice mjere '%s' "
-"kao i stara jedinica mjere '%s'. Ukoliko trebate promijeniti jedinicu mjere, "
-"možete deaktivirati ovaj proizvod i kreirati novi proizvod."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_puchased
-#: model:ir.actions.act_window,name:product.product_normal_action_sell
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_products
-#: model:ir.ui.menu,name:product.prod_config_main
-#: view:product.product:0
-msgid "Products"
-msgstr "Proizvodi"
-
-#. module: product
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
-
-#. module: product
-#: help:product.packaging,rows:0
-msgid "The number of layers on a pallet or box"
-msgstr "Broj slojeva na paleti ili kutiji"
-
-#. module: product
-#: help:product.pricelist.item,price_min_margin:0
-msgid "Specify the minimum amount of margin over the base price."
-msgstr "Specificirajte minimalni iznos marže na osnovnu cijenu."
-
-#. module: product
-#: field:product.template,weight_net:0
-msgid "Net Weight"
-msgstr "Neto težina"
-
-#. module: product
-#: view:product.packaging:0
-#: view:product.product:0
-msgid "Pallet Dimension"
-msgstr "Dimenzije palete"
-
-#. module: product
-#: help:product.product,image:0
-msgid ""
-"This field holds the image used as image for the product, limited to "
-"1024x1024px."
-msgstr ""
-"Ovo polje sadrži sliku koja se koristi kao slika proizvoda, ograničena na "
-"1024x1024px."
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Specify a product category if this rule only applies to products belonging "
-"to this category or its children categories. Keep empty otherwise."
-msgstr ""
-"Upišite kategoriju proizvoda ako se ovo pravilo odnosi samo na proizvode "
-"koji pripadaju toj kategoriji ili podređenim kategorijama. Ako ne, onda "
-"ostavite prazno."
-
-#. module: product
-#: view:product.product:0
-msgid "Inventory"
-msgstr "Inventura"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "Supplier Info"
-msgstr "Informacije o dobavljaču"
-
-#. module: product
-#: code:addons/product/product.py:732
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (kopija)"
-
-#. module: product
-#: model:product.template,name:product.product_product_2_product_template
-msgid "On Site Assistance"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "Jedinice mjere"
-
-#. module: product
-#: field:product.supplierinfo,min_qty:0
-msgid "Minimal Quantity"
-msgstr "Minimalna količina"
-
-#. module: product
-#: help:product.supplierinfo,product_code:0
-msgid ""
-"This supplier's product code will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-"Dobavljačeva šifra artikla će se koristiti prilikom štampanja predračuna. "
-"Ostavite prazno za štampanje interne šifre."
-
-#. module: product
-#: model:product.template,name:product.product_product_43_product_template
-msgid "Zed+ Antivirus"
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,price_version_id:0
-msgid "Price List Version"
-msgstr "Verzija cijenovnika"
-
-#. module: product
-#: help:product.pricelist.item,sequence:0
-msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
-"item is found."
-msgstr ""
-"Daje redoslijed kojim će se provjeriti stavke cijenovnika. Najviši prioritet "
-"ima najmanja sekvenca te provjera staje čim je prvo pravilo/stavka "
-"cijenovnika zadovoljena."
-
-#. module: product
-#: view:product.product:0
-#: selection:product.template,type:0
-msgid "Consumable"
-msgstr "Potrošni"
-
-#. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr "Valuta u kojoj je polje izraženo."
-
-#. module: product
-#: help:product.template,weight:0
-msgid "The gross weight in Kg."
-msgstr "Bruto težina u kg."
-
-#. module: product
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-msgid "Procurement"
-msgstr "Naručivanje"
-
-#. module: product
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weights"
-msgstr "Težine"
-
-#. module: product
-#: view:product.product:0
-msgid "Description for Quotations"
-msgstr "Opis za predračune"
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
-msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
-msgstr ""
-"Ova cijena će se uzeti u obzir kao cijena za dobavljačevu jedinicu mjere ako "
-"postoji ili će se koristiti zadana jedinica mjere"
-
-#. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase Unit of Measure"
-msgstr "Nabavna jedinica mjere"
-
-#. module: product
-#: view:product.product:0
-msgid "Group by..."
-msgstr "Grupiši po..."
-
-#. module: product
-#: field:product.product,image_medium:0
-msgid "Medium-sized image"
-msgstr "Slika srednje veličine"
-
-#. module: product
-#: selection:product.ul,type:0
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "Jedinica"
-
-#. module: product
-#: field:product.pricelist.version,date_start:0
-msgid "Start Date"
-msgstr "Datum početka"
-
-#. module: product
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr ""
-
-#. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr "cm"
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom
-msgid "Product Unit of Measure"
-msgstr "Jedinica mjere proizvoda"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a pricelist version.\n"
-"              </p><p>\n"
-"                There can be more than one version of a pricelist, each of\n"
-"                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
-"                etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite da dodate verziju cjenovnika.\n"
-"              </p><p>\n"
-"                Može postojati više od jednog cjenovnika, svaki od ovih\n"
-"                mora biti validan tokom određenog perioda vremena. \n"
-"                Primjeri verzija su: osnovne cijene, 2010, 2011, ljetna "
-"rasprodaja,\n"
-"                itd.\n"
-"              </p>\n"
-"            "
-
-#. module: product
-#: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr ""
-"Zadana jedinica mjere korištena za nabavne narudžbe. Mora biti u istoj "
-"kategoriji kao i zadana jedinica mjere."
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price"
-msgstr "Cijena proizvoda"
 
 #. module: product
 #: model:product.template,description:product.product_product_26_product_template
@@ -1619,115 +62,51 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Preciznost zaokruživanja"
-
-#. module: product
-#: view:product.product:0
-msgid "Consumable products"
-msgstr "Potrošni proizvodi"
-
-#. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
+#: model:product.attribute.value,name:product.product_attribute_value_5
+msgid "2.4 GHz"
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_1_product_template
-#: model:product.template,description_sale:product.product_product_1_product_template
-msgid "This type of service include basic monitoring of products."
-msgstr "Ovaj tip servisa uključuje osnovno praćenje proizvoda."
-
-#. module: product
-#: help:product.pricelist.version,date_end:0
-msgid "Last valid date for the version."
-msgstr "Posljednji valjani datum verzije."
-
-#. module: product
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
+#: model:product.template,description_sale:product.product_product_8_product_template
+msgid ""
+"2.7GHz quad-core Intel Core i5\n"
+"                Turbo Boost up to 3.2GHz\n"
+"                8GB (two 4GB) memory\n"
+"                1TB hard drive1\n"
+"                Intel Iris Pro graphics\n"
+"            "
 msgstr ""
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Aktivan"
-
-#. module: product
-#: field:product.product,price_margin:0
-msgid "Variant Price Margin"
-msgstr "Promjeniva marža prodajne cijene"
-
-#. module: product
-#: field:product.pricelist,name:0
-msgid "Pricelist Name"
-msgstr "Naziv cjenovnika"
-
-#. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr "Prodajni"
-
-#. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Koeficijent omjera za ovu jedinicu mjere ne može biti 0!"
-
-#. module: product
-#: model:product.template,name:product.product_product_24_product_template
-msgid "Graphics Card"
-msgstr "Grafička karta"
-
-#. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "EAN kôd jedinice pakiranja"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "This comes from the product form."
-msgstr "Ovo dolazi iz forme proizvoda."
-
-#. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "Težina praznog paketa"
-
-#. module: product
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
+#: model:product.attribute.value,name:product.product_attribute_value_2
+msgid "32 GB"
 msgstr ""
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Polje proizvoda"
-
-#. module: product
-#: model:product.template,description:product.product_product_5_product_template
-msgid "Custom computer assembled on order based on customer's requirement."
+#: model:product.template,description_sale:product.product_product_4_product_template
+#: model:product.template,description_sale:product.product_product_4b_product_template
+#: model:product.template,description_sale:product.product_product_4c_product_template
+#: model:product.template,description_sale:product.product_product_4d_product_template
+msgid ""
+"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-#: model:ir.ui.menu,name:product.menu_product_price_type
-msgid "Price Types"
-msgstr "Tipovi cijena"
-
-#. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
-msgstr "Zadana jedinica mjere korišćena za sve operacije zaliha."
-
-#. module: product
-#: view:product.product:0
-msgid "Sales"
-msgstr "Prodaje"
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new Logistic Unit\n"
+"              </p><p>\n"
+"                The logistic unit defines the container used for the "
+"package.  \n"
+"                It has a type (e.g. pallet, box, ...) and you can specify "
+"its \n"
+"                size. \n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1754,612 +133,50 @@ msgstr ""
 "            "
 
 #. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
-msgstr ""
-"Minimalna količina za okidanje ovog pravila, izražena u jedinici mjere "
-"dobavljača ako postoji ili zadanoj jedinici mjere proizvoda u suprotnom."
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Smaller than the reference Unit of Measure"
-msgstr "Manje od referentne jedinice mjere"
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Javni cjenovnik"
-
-#. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr "Šifra artikla dobavljača"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "Ako je odznačeno, možete sakriti cjenik bez da ga brišete."
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pallet"
-msgstr "Paleta"
-
-#. module: product
-#: field:product.packaging,ul_qty:0
-msgid "Package by layer"
-msgstr "Paket po sloju"
-
-#. module: product
-#: model:ir.model,name:product.model_product_product
-#: model:process.node,name:product.process_node_product0
-#: model:process.process,name:product.process_process_productprocess0
-#: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,product_id:0
-#: model:res.request.link,name:product.req_link_product
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: product
-#: view:product.product:0
-msgid "Price:"
-msgstr "Cijena:"
-
-#. module: product
-#: field:product.template,weight:0
-msgid "Gross Weight"
-msgstr "Bruto težina"
-
-#. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "Ukupan broj artikala koje možete staviti u paletu ili kutiju."
-
-#. module: product
-#: field:product.product,variants:0
-msgid "Variants"
-msgstr "Varijante"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "Proizvodi po kategoriji"
-
-#. module: product
-#: model:product.template,name:product.product_product_16_product_template
-msgid "Computer Case"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_9_product_template
-msgid "USB Keyboard, AZERTY"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr "Dodjeljuje prioritet listi dobavljača proizvoda."
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr "Greška! Minimalna marža bi trebala biti manja od  maksimalne marže."
-
-#. module: product
-#: model:res.groups,name:product.group_uos
-msgid "Manage Secondary Unit of Measure"
-msgstr "Upravljaj sekudnarnom jedinicom mjere"
-
-#. module: product
-#: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
-"of Measure that cannot be further split, such as a piece."
-msgstr ""
-"Izračunata količina će biti množioc ove vrijednosti. Koristite 1.0 za "
-"jedinicu mjere koja ne može dalje da se razdvaja, kao što je komad."
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "Način zaokruživanja"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-msgid "Products Labels"
-msgstr "Etikete proizvoda"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_big_box
-msgid "Box 30x40x60"
-msgstr "Kutija 30x40x60"
-
-#. module: product
-#: model:product.template,name:product.product_product_47_product_template
-msgid "Switch, 24 ports"
-msgstr ""
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Bigger than the reference Unit of Measure"
-msgstr "Veće od referentne jedinice mjere"
-
-#. module: product
-#: model:product.template,name:product.product_product_consultant_product_template
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "Usluga"
-
-#. module: product
-#: view:product.template:0
-msgid "Internal Description"
-msgstr "Interni opis"
-
-#. module: product
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr ""
-
-#. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Sepcify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Ovdje odredite jedinicu mjere ukoliko se fakturisanje vrši u drugačijoj "
-"jedinici mjere od one u kojoj se vodi zaliha. Ostavite prazno ukoliko se "
-"koristi zadana jedinica mjere."
-
-#. module: product
-#: code:addons/product/product.py:208
-#, python-format
-msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr "Nije moguće promijeniti kategoriju postojeće jedinice mjere '%s'."
-
-#. module: product
-#: help:product.packaging,height:0
-msgid "The height of the package"
-msgstr "Visina paketa"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "Cjenovnik proizvoda"
-
-#. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
-msgid "Company"
-msgstr "Kompanija"
-
-#. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "Default Unit of Measure"
-msgstr "Zadana jedinica mjere"
-
-#. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr ""
-
-#. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "Naziv ove vrste cijene"
-
-#. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Other Products"
-msgstr "Ostali proizvodi"
-
-#. module: product
-#: model:product.template,description:product.product_product_9_product_template
-msgid "This product is configured with example of push/pull flows"
-msgstr ""
-
-#. module: product
-#: field:product.product,message_ids:0
-msgid "Messages"
-msgstr "Poruke"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "Unit(s)"
-msgstr "kom (komad)"
-
-#. module: product
-#: code:addons/product/product.py:176
-#, python-format
-msgid "Error!"
-msgstr "Greška!"
-
-#. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "Dužina"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr "Dužina / Udaljenost"
-
-#. module: product
-#: model:product.category,name:product.product_category_8
-msgid "Components"
-msgstr "Komponente"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-msgid "Pricelist Type"
-msgstr "Vrsta cjenovnika"
-
-#. module: product
-#: model:product.category,name:product.product_category_6
-msgid "External Devices"
-msgstr ""
-
-#. module: product
-#: field:product.product,color:0
-msgid "Color Index"
-msgstr "Indeks boje"
-
-#. module: product
-#: help:product.template,sale_ok:0
-msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
-"Specifirajte ako proizvod može biti odabran na stavci prodajne narudžbe."
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,sale_ok:0
-msgid "Can be Sold"
-msgstr "Može se prodati"
-
-#. module: product
-#: field:product.template,produce_delay:0
-msgid "Manufacturing Lead Time"
-msgstr "Vrijeme vođenja proizvodnje"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
-msgid "Supplier Pricelist"
-msgstr "Cjenovnik dobavljača"
-
-#. module: product
-#: field:product.pricelist.item,base:0
-msgid "Based on"
-msgstr "Bazirano na"
-
-#. module: product
-#: model:product.category,name:product.product_category_10
-msgid "Raw Materials"
-msgstr "Sirovine"
-
-#. module: product
-#: model:product.template,name:product.product_product_13_product_template
-msgid "RAM SR5"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+#: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
+"                Click to add a new unit of measure.\n"
 "              </p><p>\n"
-"                You must define a product for everything you purchase, "
-"whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
-"                subcontractants.\n"
-"              </p><p>\n"
-"                The product form contains detailed information to improve "
-"the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
-"                available suppliers, etc.\n"
+"                You must define a conversion rate between several Units of\n"
+"                Measure within the same category.\n"
 "              </p>\n"
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novog proizvoda.\n"
+"                Kliknite za kreiranje nove jedinice mjere.\n"
 "              </p><p>\n"
-"                Za sve što kupujete, bez obzira da li je to trgovačka roba,\n"
-"                potrošni materijal ili usluga, morate definirati proizvod.\n"
-"              </p><p>\n"
-"                Matični karton proizvoda sadrži detaljne informacije za "
-"poboljšavanje\n"
-"                procesa nabave: cijene, logistički podaci, računovodstveni "
-"podaci,\n"
-"                dobavljači, i td.\n"
+"                Potrebno je definisati omjer konverzije između više jedinica "
+"mjera\n"
+"                unutar iste kategorije. Npr. metre u centimetre, litre u "
+"decilitre i sl.\n"
 "              </p>\n"
 "            "
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
-msgid "Pricelist Version"
-msgstr "Verzija cjenovnika"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "* ( 1 + "
-msgstr "* ( 1 + "
-
-#. module: product
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr ""
-
-#. module: product
-#: field:product.product,message_follower_ids:0
-msgid "Followers"
-msgstr "Pratioci"
-
-#. module: product
-#: view:product.product:0
-msgid "Sale Conditions"
-msgstr "Uslovi prodaje"
-
-#. module: product
-#: view:product.packaging:0
-#: view:product.product:0
-msgid "Palletization"
-msgstr "Paletizacija"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Price List Name"
-msgstr "Naziv cjenovnika"
-
-#. module: product
-#: view:product.product:0
-msgid "Description for Suppliers"
-msgstr "Opis za dobavljače"
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery Lead Time"
-msgstr "Vrijeme vođenja dostave"
-
-#. module: product
-#: view:product.product:0
-msgid "months"
-msgstr "mjeseci"
-
-#. module: product
-#: help:product.uom,active:0
-msgid ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
-msgstr ""
-"Odznačavanjem polja \"aktivan\" možete deaktivirati jedinicu mjere bez da je "
-"obrišete."
-
-#. module: product
-#: field:product.product,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "Vrijeme vođenja dobavljača"
-
-#. module: product
-#: model:ir.model,name:product.model_decimal_precision
-msgid "decimal.precision"
-msgstr "decimal.precision"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "Kutija"
-
-#. module: product
-#: help:product.pricelist.item,price_surcharge:0
-msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
-"calculated with the discount."
-msgstr ""
-"Odredite fiksni iznos za dodati ili oduzeti(ukoliko je iznos negativan) "
-"iznosu sa ukalkulisanim popustom."
-
-#. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr "Trenutna količina proizvoda."
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Consumable: Will not imply stock management for this product. \n"
-"Stockable product: Will imply stock management for this product."
-msgstr ""
-"Potrošni: neće se voditi skladišno. \n"
-"Skladišni proizvod: voditi će se skladišno."
-
-#. module: product
-#: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-"Koristi se u šifri da bi se odabrala specifična cijena na osnovu konteksta. "
-"Ostavite ne promjenjeno."
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
+"                Click to add a pricelist version.\n"
 "              </p><p>\n"
-"                You must define a product for everything you buy or sell,\n"
-"                whether it's a physical product, a consumable or service.\n"
+"                There can be more than one version of a pricelist, each of\n"
+"                these must be valid during a certain period of time. Some\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer "
+"Sales,\n"
+"                etc.\n"
 "              </p>\n"
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje novog proizvoda.\n"
+"                Kliknite da dodate verziju cjenovnika.\n"
 "              </p><p>\n"
-"                Morate definisati proizvod za sve što kupujete ili "
-"prodajete,\n"
-"                bez obzira da li je to trgovačka roba, potrošni materijal "
-"ili usluga,\n"
+"                Može postojati više od jednog cjenovnika, svaki od ovih\n"
+"                mora biti validan tokom određenog perioda vremena. \n"
+"                Primjeri verzija su: osnovne cijene, 2010, 2011, ljetna "
+"rasprodaja,\n"
+"                itd.\n"
 "              </p>\n"
 "            "
-
-#. module: product
-#: view:product.product:0
-msgid "Context..."
-msgstr "Kontekst..."
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Type of Package"
-msgstr "Tip paketa"
-
-#. module: product
-#: help:product.category,type:0
-msgid ""
-"A category of the view type is a virtual category that can be used as the "
-"parent of another category to create a hierarchical structure."
-msgstr ""
-"Kategorija tipa 'pogled' je virtuelna kategorija koja se može koristiti kao "
-"nadređena drugoj kategoriji za kreiranje hijerarhijske strukture."
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "Paket"
-
-#. module: product
-#: help:product.pricelist.item,product_tmpl_id:0
-msgid ""
-"Specify a template if this rule only applies to one product template. Keep "
-"empty otherwise."
-msgstr ""
-"Specifirajte predložak ako ovo pravilo se odnosi samo na jedan predložak "
-"proizvoda. U suprotnom ostavite prazno."
-
-#. module: product
-#: model:product.template,description:product.product_product_2_product_template
-msgid ""
-"This type of service include assistance for security questions, system "
-"configuration requirements, implementation or special needs."
-msgstr ""
-"Ovaj tip servisa uključuje pomoć za sigurnosna pitanja, zahtjeve sistemske "
-"konfiguracije, implementaciju ili specifične potrebe."
-
-#. module: product
-#: field:product.product,image:0
-msgid "Image"
-msgstr "Slika"
-
-#. module: product
-#: view:product.uom.categ:0
-msgid "Units of Measure categories"
-msgstr "Kategorije jedinica mjere"
-
-#. module: product
-#: model:product.template,description_sale:product.product_product_4_product_template
-msgid ""
-"19\" LCD Monitor\n"
-"Processor Core i5 2.70 Ghz\n"
-"2GB RAM\n"
-"HDD SH-1"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-msgid "Descriptions"
-msgstr "Opisi"
-
-#. module: product
-#: model:res.groups,name:product.group_stock_packaging
-msgid "Manage Product Packaging"
-msgstr "Upravljajte pakiranjem proizvoda"
-
-#. module: product
-#: model:product.category,name:product.product_category_2
-msgid "Internal"
-msgstr "Interni"
-
-#. module: product
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
-msgstr "Daje redosljed sekvenci kada se prikazuje lista pakovanja."
-
-#. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
-msgid "Normal"
-msgstr "Normalan"
-
-#. module: product
-#: code:addons/product/pricelist.py:179
-#, python-format
-msgid ""
-"At least one pricelist has no active version !\n"
-"Please create or activate one."
-msgstr ""
-"Najmanje jedan cjenovnik nema aktivnu verziju !\n"
-"Kreirajte novu verziju ili aktivirajte postojeću."
-
-#. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Max. Price Margin"
-msgstr "Maks. marža cijene"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. marža"
-
-#. module: product
-#: help:product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-"Ovaj dobavljačev naziv proizvoda će se koristiti kada se štampaju zahtjevi "
-"za predračunima. Ostavite prazno da koristite interni naziv."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
@@ -2400,185 +217,6 @@ msgstr ""
 "            "
 
 #. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "Varijabla"
-
-#. module: product
-#: field:product.template,rental:0
-msgid "Can be Rent"
-msgstr "Može se iznajmiti"
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-msgid "Cost Price"
-msgstr "Cijena koštanja"
-
-#. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Min. Price Margin"
-msgstr "Min. marža cijene"
-
-#. module: product
-#: model:res.groups,name:product.group_uom
-msgid "Manage Multiple Units of Measure"
-msgstr "Upravljanje sa više jedinica mjere"
-
-#. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
-msgstr "Ukupna režina punog paketa, palete ili kutije."
-
-#. module: product
-#: view:product.uom:0
-msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "npr. 1 + (ova JM) = omjer * (referentna jedinica)"
-
-#. module: product
-#: model:product.template,description:product.product_product_25_product_template
-msgid ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY keyboard"
-msgstr ""
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
-msgid "Sequence"
-msgstr "Sekvenca"
-
-#. module: product
-#: help:product.template,produce_delay:0
-msgid ""
-"Average delay in days to produce this product. In the case of multi-level "
-"BOM, the manufacturing lead times of the components will be added."
-msgstr ""
-"Prosječno kašnjenje u danima za proizvodnju ovog proizvoda. U slučaju više "
-"nivoiske sastavnice, vrijeme vođenja proizvodnje komponenti će biti dodata."
-
-#. module: product
-#: model:product.template,name:product.product_assembly_product_template
-msgid "Assembly Service Cost"
-msgstr "Trošak usluge sastavljanja"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_item
-msgid "Pricelist item"
-msgstr "Stavka cjenovnika"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new unit of measure.\n"
-"              </p><p>\n"
-"                You must define a conversion rate between several Units of\n"
-"                Measure within the same category.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kliknite za kreiranje nove jedinice mjere.\n"
-"              </p><p>\n"
-"                Potrebno je definisati omjer konverzije između više jedinica "
-"mjera\n"
-"                unutar iste kategorije. Npr. metre u centimetre, litre u "
-"decilitre i sl.\n"
-"              </p>\n"
-"            "
-
-#. module: product
-#: model:product.template,name:product.product_product_11_product_template
-msgid "Mouse, Laser"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-msgid "Delays"
-msgstr "Kašnjenja"
-
-#. module: product
-#: field:product.category,type:0
-msgid "Category Type"
-msgstr "Tip kategorije"
-
-#. module: product
-#: model:process.node,note:product.process_node_product0
-msgid "Creation of the product"
-msgstr "Kreiranje proizvoda"
-
-#. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
-#: field:product.template,description:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid " ) + "
-msgstr " ) + "
-
-#. module: product
-#: field:product.template,volume:0
-#: model:product.uom.categ,name:product.product_uom_categ_vol
-msgid "Volume"
-msgstr "Volumen"
-
-#. module: product
-#: help:product.product,image_small:0
-msgid ""
-"Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Mala slika proizvoda. Automatski joj je promjenjena veličina na 64x64px, sa "
-"očuvanim omjerom. Koristite ovo polje gdje je god potrebna mala slika."
-
-#. module: product
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr ""
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Reference Unit of Measure for this category"
-msgstr "Referentna jedinica mjere za ovu kategoriju"
-
-#. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier Unit of Measure"
-msgstr "Dobavljačeva jedinica mjere"
-
-#. module: product
-#: view:product.product:0
-msgid "Product Variant"
-msgstr "Varijante proizvoda"
-
-#. module: product
-#: model:product.template,name:product.product_product_6_product_template
-msgid "15” LCD Monitor"
-msgstr ""
-
-#. module: product
-#: code:addons/product/pricelist.py:379
-#: field:product.pricelist.item,base_pricelist_id:0
-#, python-format
-msgid "Other Pricelist"
-msgstr "Drugi cjenovnici"
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -2614,29 +252,642 @@ msgstr ""
 "            "
 
 #. module: product
-#: model:ir.model,name:product.model_product_template
-#: field:product.pricelist.item,product_tmpl_id:0
-#: field:product.product,product_tmpl_id:0
-#: view:product.template:0
-msgid "Product Template"
-msgstr "Predložak proizvoda"
-
-#. module: product
-#: field:product.template,cost_method:0
-#: model:res.groups,name:product.group_costing_method
-msgid "Costing Method"
-msgstr "Metoda koštanja"
-
-#. module: product
-#: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-msgid "Product Category"
-msgstr "Kategorija proizvoda"
-
-#. module: product
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new product.\n"
+"              </p><p>\n"
+"                You must define a product for everything you buy or sell,\n"
+"                whether it's a physical product, a consumable or service.\n"
+"              </p>\n"
+"            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za kreiranje novog proizvoda.\n"
+"              </p><p>\n"
+"                Morate definisati proizvod za sve što kupujete ili "
+"prodajete,\n"
+"                bez obzira da li je to trgovačka roba, potrošni materijal "
+"ili usluga,\n"
+"              </p>\n"
+"            "
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new product.\n"
+"              </p><p>\n"
+"                You must define a product for everything you sell, whether "
+"it's\n"
+"                a physical product, a consumable or a service you offer to\n"
+"                customers.\n"
+"              </p><p>\n"
+"                The product form contains information to simplify the sale\n"
+"                process: price, notes in the quotation, accounting data,\n"
+"                procurement methods, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za kreiranje novog proizvoda.\n"
+"              </p><p>\n"
+"                Za sve što prodajete, bez obzira da li je to trgovačka "
+"roba,\n"
+"                potrošni materijal ili usluga, morate definisati proizvod.\n"
+"              </p><p>\n"
+"                Forma proizvoda sadrži detaljne informacije za "
+"poboljšavanje\n"
+"                procesa prodaje: cijene, logistički podaci, računovodstveni "
+"podaci,\n"
+"                napomene za predračune, metode naručivanja i sl.\n"
+"              </p>\n"
+"            "
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"<p>\n"
+"                Here is a list of all your products classified by category. "
+"You\n"
+"                can click a category to get the list of all products linked "
+"to\n"
+"                this category or to a child of this category.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                Ovo je lista Vaših proizvoda klasificiranih po "
+"kategorijama.\n"
+"                Pritiskom na kategoriju dobivate listu svih proizvoda "
+"povezanih sa\n"
+"                tom ili negovom podređenom kategorijom.\n"
+"              </p>\n"
+"            "
+
+#. module: product
+#: help:product.category,type:0
+msgid ""
+"A category of the view type is a virtual category that can be used as the "
+"parent of another category to create a hierarchical structure."
+msgstr ""
+"Kategorija tipa 'pogled' je virtuelna kategorija koja se može koristiti kao "
+"nadređena drugoj kategoriji za kreiranje hijerarhijske strukture."
+
+#. module: product
+#: help:product.template,description_sale:0
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: product
+#: help:product.template,description_purchase:0
+msgid ""
+"A description of the Product that you want to communicate to your suppliers. "
+"This description will be copied to every Purchase Order, Receipt and "
+"Supplier Invoice/Refund."
+msgstr ""
+
+#. module: product
+#: help:product.template,description:0
+msgid ""
+"A precise description of the Product, used only for internal information "
+"purposes."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_7
+msgid "Accessories"
+msgstr "Dodatni alati"
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.template,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: product
+#: model:product.category,name:product.product_category_all
+msgid "All"
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_37_product_template
+msgid "All in one hi-speed printer with fax and scanner."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.accessories
+msgid "Apple Accessories"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_7_product_template
+msgid "Apple In-Ear Headphones"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.apple
+msgid "Apple Products"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_9_product_template
+msgid "Apple Wireless Keyboard"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_assembly_product_template
+msgid "Assembly Service Cost"
+msgstr "Trošak usluge sastavljanja"
+
+#. module: product
+#: help:product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
+msgstr "Dodjeljuje prioritet listi dobavljača proizvoda."
+
+#. module: product
+#: help:product.price.type,field:0
+msgid "Associated field in the product form."
+msgstr "Povezano polje u formi proizvoda"
+
+#. module: product
+#: code:addons/product/pricelist.py:208
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
+"Najmanje jedan cjenovnik nema aktivnu verziju !\n"
+"Kreirajte novu verziju ili aktivirajte postojeću."
+
+#. module: product
+#: field:product.attribute.line,attribute_id:0
+#: field:product.attribute.value,attribute_id:0
+msgid "Attribute"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.value,price_extra:0
+msgid "Attribute Price Extra"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.value,price_ids:0
+msgid "Attribute Prices"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.variants_action
+#: model:ir.ui.menu,name:product.menu_variants_action
+msgid "Attribute Values"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.attribute_action
+#: model:ir.ui.menu,name:product.menu_attribute_action
+#: field:product.product,attribute_value_ids:0
+msgid "Attributes"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Base Price"
+msgstr "Osnovna cijena"
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "Base price for computation."
+msgstr "Osnovna cijena za izračun"
+
+#. module: product
+#: help:product.template,list_price:0
+msgid ""
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr ""
+"Osnovna cijena za izračuna cijene za kupca, Ponekad se naziva kataloška "
+"cijena."
+
+#. module: product
+#: field:product.pricelist.item,base:0
+msgid "Based on"
+msgstr "Bazirano na"
+
+#. module: product
+#: field:product.product,image:0
+msgid "Big-sized image"
+msgstr ""
+
+#. module: product
+#: field:product.uom,factor_inv:0
+msgid "Bigger Ratio"
+msgstr ""
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Bigger than the reference Unit of Measure"
+msgstr "Veće od referentne jedinice mjere"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_4
+msgid "Black"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_35_product_template
+msgid "Blank CD"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_36_product_template
+msgid "Blank DVD-RW"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_5b_product_template
+msgid "Bose Mini Bluetooth Speaker"
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_5b_product_template
+msgid "Bose's smallest portable Bluetooth speaker"
+msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Box"
+msgstr "Kutija"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_box
+msgid "Box 20x20x40"
+msgstr "Kutija 20x20x40"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_big_box
+msgid "Box 30x40x60"
+msgstr "Kutija 30x40x60"
+
+#. module: product
+#: help:product.uom,active:0
+msgid ""
+"By unchecking the active field you can disable a unit of measure without "
+"deleting it."
+msgstr ""
+"Odznačavanjem polja \"aktivan\" možete deaktivirati jedinicu mjere bez da je "
+"obrišete."
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Calculate Product Price per Unit Based on Pricelist Version."
+msgstr ""
+"Izračunaj cijenu proizvoda po jedinici bazirano na verziji cjenovnika."
+
+#. module: product
+#: field:product.template,rental:0
+msgid "Can be Rent"
+msgstr "Može se iznajmiti"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: field:product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr "Može se prodati"
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: product
+#: code:addons/product/product.py:210
+#, python-format
+msgid "Cannot change the category of existing Unit of Measure '%s'."
+msgstr "Nije moguće promijeniti kategoriju postojeće jedinice mjere '%s'."
+
+#. module: product
+#: model:product.public.category,name:product.case
+msgid "Case"
+msgstr "Slučaj"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: product
+#: field:product.category,type:0
+msgid "Category Type"
+msgstr "Tip kategorije"
+
+#. module: product
+#: field:product.category,child_id:0
+msgid "Child Categories"
+msgstr "Podređene kategorije"
+
+#. module: product
+#: field:product.packaging,code:0
+msgid "Code"
+msgstr "Šifra"
+
+#. module: product
+#: help:product.template,uos_coeff:0
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale\n"
+" uos = uom * coeff"
+msgstr ""
+"Koeficijent za konverziju zadate jedinice mjere u jedinicu mjere prodaje\n"
+"jm prodaje = jm * koeficijent"
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_2
+msgid "Color"
+msgstr ""
+
+#. module: product
+#: field:product.template,color:0
+msgid "Color Index"
+msgstr "Indeks boje"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_6_product_template
+msgid ""
+"Color: White\n"
+"Capacity: 16GB\n"
+"Connectivity: Wifi\n"
+"Beautiful 7.9-inch display\n"
+"Over 375,000 apps3\n"
+"Ultrafast wireless\n"
+"iOS7\n"
+"            "
+msgstr ""
+
+#. module: product
+#: field:product.pricelist,company_id:0
+#: field:product.pricelist.item,company_id:0
+#: field:product.pricelist.version,company_id:0
+#: field:product.supplierinfo,company_id:0
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr "Kompanija"
+
+#. module: product
+#: model:product.category,name:product.product_category_8
+#: model:product.public.category,name:product.Components
+msgid "Components"
+msgstr "Komponente"
+
+#. module: product
+#: model:product.template,name:product.product_product_16_product_template
+msgid "Computer Case"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.Computer_all_in_one
+msgid "Computer all-in-one"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_4
+#: model:product.public.category,name:product.computers
+#: model:product.public.category,name:product.sub_computers
+msgid "Computers"
+msgstr "Računari"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: selection:product.template,type:0
+msgid "Consumable"
+msgstr "Potrošni"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Consumable products"
+msgstr "Potrošni proizvodi"
+
+#. module: product
+#: help:product.template,type:0
+msgid ""
+"Consumable: Will not imply stock management for this product. \n"
+"Stockable product: Will imply stock management for this product."
+msgstr ""
+"Potrošni: neće se voditi skladišno. \n"
+"Skladišni proizvod: voditi će se skladišno."
+
+#. module: product
+#: help:product.uom,category_id:0
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Konverzija između jedinica mjera može samo da se pojavi ako pripadaju istoj "
+"kategoriji. Konverzija se izvršava na osnovu omjera."
+
+#. module: product
+#: code:addons/product/product.py:178
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr ""
+"Konverzija između JM Proizvoda %s i zadane JM %s nije moguća jer te dvije "
+"pripadaju različitim kategorijama!"
+
+#. module: product
+#: model:product.price.type,name:product.standard_price
+#: field:product.template,standard_price:0
+msgid "Cost Price"
+msgstr "Cijena koštanja"
+
+#. module: product
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product template used for standard stock valuation in "
+"accounting and used as a base price on purchase orders."
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,create_uid:0
+#: field:product.attribute,create_uid:0
+#: field:product.attribute.line,create_uid:0
+#: field:product.attribute.price,create_uid:0
+#: field:product.attribute.value,create_uid:0
+#: field:product.category,create_uid:0
+#: field:product.packaging,create_uid:0
+#: field:product.price.history,create_uid:0
+#: field:product.price.type,create_uid:0
+#: field:product.price_list,create_uid:0
+#: field:product.pricelist,create_uid:0
+#: field:product.pricelist.item,create_uid:0
+#: field:product.pricelist.type,create_uid:0
+#: field:product.pricelist.version,create_uid:0
+#: field:product.product,create_uid:0
+#: field:product.supplierinfo,create_uid:0
+#: field:product.template,create_uid:0
+#: field:product.ul,create_uid:0
+#: field:product.uom,create_uid:0
+#: field:product.uom.categ,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,create_date:0
+#: field:product.attribute,create_date:0
+#: field:product.attribute.line,create_date:0
+#: field:product.attribute.price,create_date:0
+#: field:product.attribute.value,create_date:0
+#: field:product.category,create_date:0
+#: field:product.packaging,create_date:0
+#: field:product.price.history,create_date:0
+#: field:product.price.type,create_date:0
+#: field:product.price_list,create_date:0
+#: field:product.pricelist,create_date:0
+#: field:product.pricelist.item,create_date:0
+#: field:product.pricelist.type,create_date:0
+#: field:product.pricelist.version,create_date:0
+#: field:product.product,create_date:0
+#: field:product.supplierinfo,create_date:0
+#: field:product.template,create_date:0
+#: field:product.ul,create_date:0
+#: field:product.uom,create_date:0
+#: field:product.uom.categ,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_res_currency
+#: field:product.price.type,currency_id:0
+#: field:product.pricelist,currency_id:0
+#: view:website:product.report_pricelist
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: product
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
+msgid "Custom computer assembled on order based on customer's requirement."
+msgstr ""
+
+#. module: product
+#: field:product.product,partner_ref:0
+msgid "Customer ref"
+msgstr "Ref. kupca"
+
+#. module: product
+#: model:product.template,name:product.product_product_46_product_template
+msgid "Datacard"
+msgstr ""
+
+#. module: product
+#: help:product.product,message_last_post:0
+#: help:product.template,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr "Dan(i)"
+
+#. module: product
+#: model:product.pricelist.version,name:product.ver0
+msgid "Default Public Pricelist Version"
+msgstr "Podrazumjevana javna verzija cjenovnika"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Default Unit of Measure"
+msgstr "Zadana jedinica mjere"
+
+#. module: product
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr "Zadana jedinica mjere korišćena za sve operacije zaliha."
+
+#. module: product
+#: help:product.template,uom_po_id:0
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr ""
+"Zadana jedinica mjere korištena za nabavne narudžbe. Mora biti u istoj "
+"kategoriji kao i zadana jedinica mjere."
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Lead Time"
+msgstr "Vrijeme vođenja dostave"
+
+#. module: product
+#: field:pricelist.partnerinfo,name:0
+#: field:product.packaging,name:0
+#: field:product.template,description:0
+#: view:website:product.report_pricelist
+msgid "Description"
+msgstr "Opis"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Description for Quotations"
+msgstr "Opis za predračune"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Description for Suppliers"
+msgstr "Opis za dobavljače"
+
+#. module: product
+#: help:product.attribute.value,sequence:0
+msgid "Determine the display order"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.devices
+msgid "Devices"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
+#: field:product.product,ean13:0
+#: field:product.template,ean13:0
+msgid "EAN13 Barcode"
+msgstr "EAN13 Barkod"
+
+#. module: product
+#: field:product.ul,weight:0
+msgid "Empty Package Weight"
+msgstr "Težina praznog paketa"
+
+#. module: product
+#: field:product.pricelist.version,date_end:0
+msgid "End Date"
+msgstr "Datum završetka"
 
 #. module: product
 #: selection:product.template,state:0
@@ -2644,12 +895,124 @@ msgid "End of Lifecycle"
 msgstr "Kraj životnog ciklusa"
 
 #. module: product
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr "Greška! Ne možete kreirati rekurzivne kategorije."
+
+#. module: product
+#: code:addons/product/product.py:178
+#, python-format
+msgid "Error!"
+msgstr "Greška!"
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid "Error! The minimum margin should be lower than the maximum margin."
+msgstr "Greška! Minimalna marža bi trebala biti manja od  maksimalne marže."
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid ""
+"Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
+msgstr ""
+"Greška! Ne možete dodijeliti glavni cjenovnik kao dugi cjenovnik u stavkama "
+"cjenovnika!"
+
+#. module: product
+#: constraint:res.currency:0
+msgid ""
+"Error! You cannot define a rounding factor for the company's main currency "
+"that is smaller than the decimal precision of 'Account'."
+msgstr ""
+"Greška! Nije oguće definisati faktor zaokruživaja za glavnu valutu kompanije "
+"koja je manja od decimalne preciznosti konta"
+
+#. module: product
+#: constraint:decimal.precision:0
+msgid ""
+"Error! You cannot define the decimal precision of 'Account' as greater than "
+"the rounding factor of the company's main currency"
+msgstr ""
+"Greška! Nije moguće definisati decimalnu preciznost konta kao veću od "
+"faktora zaokruživanja za glavnu valutu kompanije"
+
+#. module: product
+#: constraint:product.packaging:0
+msgid "Error: Invalid ean code"
+msgstr "Greška: neispravan EAN kod"
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
+msgstr ""
+"Greška! Zadana jedinica mjere i nabavna jedinica mjere moraju biti u istoj "
+"kategoriji."
+
+#. module: product
+#: help:product.pricelist.item,name:0
+msgid "Explicit rule name for this pricelist line."
+msgstr "Eksplicitno ime pravila za ovu stavku cjenovnika."
+
+#. module: product
+#: model:product.category,name:product.product_category_6
+msgid "External Devices"
 msgstr ""
 
 #. module: product
-#: help:product.product,packaging:0
+#: model:product.public.category,name:product.External_Hard_Drive
+msgid "External Hard Drive"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_28_product_template
+msgid "External Hard disk"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "First valid date for the version."
+msgstr "Prvi važeći datum za ovu verziju."
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Fixed"
+msgstr "Fiksno"
+
+#. module: product
+#: field:product.product,message_follower_ids:0
+#: field:product.template,message_follower_ids:0
+msgid "Followers"
+msgstr "Pratioci"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_7_product_template
+msgid ""
+"Frequency: 5Hz to 21kHz\n"
+"Impedance: 23 ohms\n"
+"Sensitivity: 109 dB SPL/mW\n"
+"Drivers: two-way balanced armature\n"
+"Cable length: 1065 mm\n"
+"Weight: 0.4 ounce\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_44_product_template
+msgid "Full featured image editing software."
+msgstr ""
+
+#. module: product
+#: help:product.template,packaging_ids:0
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
@@ -2658,11 +1021,1317 @@ msgstr ""
 "prikupljanja proizvoda i najčešće se koristi uz EDI modul (ako ga koristite)."
 
 #. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+"Daje redoslijed kojim će se provjeriti stavke cijenovnika. Najviši prioritet "
+"ima najmanja sekvenca te provjera staje čim je prvo pravilo/stavka "
+"cijenovnika zadovoljena."
+
+#. module: product
+#: help:product.packaging,sequence:0
+msgid "Gives the sequence order when displaying a list of packaging."
+msgstr "Daje redosljed sekvenci kada se prikazuje lista pakovanja."
+
+#. module: product
+#: help:product.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr ""
+"Daje redosljed sekvenci kada se prikazuje lista kategorija proizvoda."
+
+#. module: product
+#: model:product.template,name:product.product_product_44_product_template
+msgid "GrapWorks Software"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.graphics_card
+#: model:product.template,name:product.product_product_24_product_template
+msgid "Graphics Card"
+msgstr "Grafička karta"
+
+#. module: product
+#: field:product.template,weight:0
+msgid "Gross Weight"
+msgstr "Bruto težina"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Group by..."
+msgstr "Grupiši po..."
+
+#. module: product
+#: model:product.template,name:product.product_product_17_product_template
+msgid "HDD SH-1"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_18_product_template
+msgid "HDD SH-2"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_19_product_template
+msgid "HDD on Demand"
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_32_product_template
+msgid ""
+"Hands free headset for laptop PC with in-line microphone and headphone plug."
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.HDD
+msgid "Hard Drive"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.Headset
+msgid "Headset"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_33_product_template
+msgid "Headset USB"
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_33_product_template
+msgid "Headset for laptop PC with USB connector."
+msgstr "Slušalice za laptop sa usb konektorom"
+
+#. module: product
+#: model:product.template,name:product.product_product_32_product_template
+msgid "Headset standard"
+msgstr "Obične slučalice"
+
+#. module: product
+#: field:product.ul,height:0
+msgid "Height"
+msgstr "Visina"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_11_product_template
+#: model:product.template,description_sale:product.product_product_11b_product_template
+msgid ""
+"Height: 3.01 inches\n"
+"Width:  1.56 inches\n"
+"Depth:  0.21 inch\n"
+"Weight: 1.1 ounces"
+msgstr ""
+
+#. module: product
+#: field:product.price.history,datetime:0
+msgid "Historization Time"
+msgstr ""
+
+#. module: product
+#: field:product.price.history,cost:0
+msgid "Historized Cost"
+msgstr ""
+
+#. module: product
+#: help:product.product,message_summary:0
+#: help:product.template,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
+"da bi mogao biti ubačen u kanban pogled."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_hour
+msgid "Hour(s)"
+msgstr "Sat(i)"
+
+#. module: product
+#: help:product.uom,factor_inv:0
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
+"1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Koliko puta ova jedinica mjere je veća od referentne jedinice mjere u ovoj "
+"kategoriji:\n"
+"1 * (ova JM) = omjer * (referentna JM)"
+
+#. module: product
+#: help:product.uom,factor:0
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
+"1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Koliko je ova jedinica veća ili manja od referentne JM za ovu kategoriju:\n"
+"1 * (referentna jedinica) = omjer * (ova jedinica)"
+
+#. module: product
+#: field:pricelist.partnerinfo,id:0
+#: field:product.attribute,id:0
+#: field:product.attribute.line,id:0
+#: field:product.attribute.price,id:0
+#: field:product.attribute.value,id:0
+#: field:product.category,id:0
+#: field:product.packaging,id:0
+#: field:product.price.history,id:0
+#: field:product.price.type,id:0
+#: field:product.price_list,id:0
+#: field:product.pricelist,id:0
+#: field:product.pricelist.item,id:0
+#: field:product.pricelist.type,id:0
+#: field:product.pricelist.version,id:0
+#: field:product.product,id:0
+#: field:product.supplierinfo,id:0
+#: field:product.template,id:0
+#: field:product.ul,id:0
+#: field:product.uom,id:0
+#: field:product.uom.categ,id:0
+#: field:report.product.report_pricelist,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product
+#: help:product.product,message_unread:0
+#: help:product.template,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ako je označeno, nove poruke će zahtjevati vašu pažnju."
+
+#. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr "Ako je odznačeno, možete sakriti cjenik bez da ga brišete."
+
+#. module: product
+#: help:product.product,active:0
+#: help:product.template,active:0
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "Ako je označeno omogućava sakrivanje proizvoda bez brisanja."
+
+#. module: product
+#: model:product.category,name:product.imac
+msgid "Imac"
+msgstr ""
+
+#. module: product
+#: field:product.template,image:0
+msgid "Image"
+msgstr "Slika"
+
+#. module: product
+#: help:product.product,image:0
+msgid ""
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+
+#. module: product
+#: help:product.product,image_medium:0
+msgid ""
+"Image of the product variant (Medium-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: product
+#: help:product.product,image_small:0
+msgid ""
+"Image of the product variant (Small-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: product
+#: selection:product.template,state:0
+msgid "In Development"
+msgstr "U razvoju"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Information"
+msgstr "Informacija"
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr "Informacije o dobavljaču proizvoda"
+
+#. module: product
+#: model:product.template,name:product.product_product_38_product_template
+msgid "Ink Cartridge"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:385
+#, python-format
+msgid "Integrity Error!"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_2
+msgid "Internal"
+msgstr "Interni"
+
+#. module: product
+#: field:product.template,categ_id:0
+msgid "Internal Category"
+msgstr ""
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+#: field:product.template,default_code:0
+msgid "Internal Reference"
+msgstr "Interna referenca"
+
+#. module: product
+#: help:product.product,ean13:0
+msgid "International Article Number used for product identification."
+msgstr ""
+"Internacionalni broj artikla koji se koristi za identifikaciju proizvoda."
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Inventory"
+msgstr "Inventura"
+
+#. module: product
+#: model:product.category,name:product.ipad
+msgid "Ipad"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.ipod
+msgid "Ipod"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_is_follower:0
+#: field:product.template,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Je pratilac"
+
+#. module: product
+#: view:product.pricelist.version:product.product_pricelist_version_form_view
+msgid "Item List"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.type,key:0
+msgid "Key"
+msgstr "Ključ"
+
+#. module: product
+#: model:product.public.category,name:product.Keyboard_Mouse
+msgid "Keyboard / Mouse"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_27_product_template
+msgid "Laptop Customized"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Laptop E5023"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Laptop S3450"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.laptops
+msgid "Laptops"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_last_post:0
+#: field:product.template,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,write_uid:0
+#: field:product.attribute,write_uid:0
+#: field:product.attribute.line,write_uid:0
+#: field:product.attribute.price,write_uid:0
+#: field:product.attribute.value,write_uid:0
+#: field:product.category,write_uid:0
+#: field:product.packaging,write_uid:0
+#: field:product.price.history,write_uid:0
+#: field:product.price.type,write_uid:0
+#: field:product.price_list,write_uid:0
+#: field:product.pricelist,write_uid:0
+#: field:product.pricelist.item,write_uid:0
+#: field:product.pricelist.type,write_uid:0
+#: field:product.pricelist.version,write_uid:0
+#: field:product.product,write_uid:0
+#: field:product.supplierinfo,write_uid:0
+#: field:product.template,write_uid:0
+#: field:product.ul,write_uid:0
+#: field:product.uom,write_uid:0
+#: field:product.uom.categ,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,write_date:0
+#: field:product.attribute,write_date:0
+#: field:product.attribute.line,write_date:0
+#: field:product.attribute.price,write_date:0
+#: field:product.attribute.value,write_date:0
+#: field:product.category,write_date:0
+#: field:product.packaging,write_date:0
+#: field:product.price.history,write_date:0
+#: field:product.price.type,write_date:0
+#: field:product.price_list,write_date:0
+#: field:product.pricelist,write_date:0
+#: field:product.pricelist.item,write_date:0
+#: field:product.pricelist.type,write_date:0
+#: field:product.pricelist.version,write_date:0
+#: field:product.product,write_date:0
+#: field:product.supplierinfo,write_date:0
+#: field:product.template,write_date:0
+#: field:product.ul,write_date:0
+#: field:product.uom,write_date:0
+#: field:product.uom.categ,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_end:0
+msgid "Last valid date for the version."
+msgstr "Posljednji valjani datum verzije."
+
+#. module: product
+#: help:product.supplierinfo,delay:0
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
+#: field:product.category,parent_left:0
+msgid "Left Parent"
+msgstr "Lijevi nadređeni"
+
+#. module: product
+#: field:product.ul,length:0
+msgid "Length"
+msgstr "Dužina"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr "Dužina / Udaljenost"
+
+#. module: product
+#: view:product.template:product.product_template_only_form_view
+msgid "List of Variants"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr "Litra(e)"
+
+#. module: product
+#: model:ir.model,name:product.model_product_ul
+msgid "Logistic Unit"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_ul_form_action
+#: model:ir.ui.menu,name:product.menu_product_ul_form_action
+#: view:product.ul:product.product_ul_form_view
+#: view:product.ul:product.product_ul_tree
+msgid "Logistic Units"
+msgstr ""
+
+#. module: product
+#: field:product.template,packaging_ids:0
+msgid "Logistical Units"
+msgstr "Logističke jedinice"
+
+#. module: product
+#: field:product.template,seller_id:0
+msgid "Main Supplier"
+msgstr "Glavni dobavljač"
+
+#. module: product
+#: help:product.template,seller_id:0
+msgid "Main Supplier who has highest priority in Supplier List."
+msgstr "Glavni dobavljač s najvećim prioritetom u listi dobavljača"
+
+#. module: product
+#: model:res.groups,name:product.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "Upravljanje sa više jedinica mjere"
+
+#. module: product
+#: model:res.groups,name:product.group_stock_packaging
+msgid "Manage Product Packaging"
+msgstr "Upravljajte pakiranjem proizvoda"
+
+#. module: product
+#: model:res.groups,name:product.group_mrp_properties
+msgid "Manage Properties of Product"
+msgstr "Upravljanje svojstvima proizvoda"
+
+#. module: product
+#: model:res.groups,name:product.group_uos
+msgid "Manage Secondary Unit of Measure"
+msgstr "Upravljaj sekudnarnom jedinicom mjere"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Max. Margin"
+msgstr "Max. marža"
+
+#. module: product
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Max. Price Margin"
+msgstr "Maks. marža cijene"
+
+#. module: product
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Tip mjerenja"
+
+#. module: product
+#: field:product.product,image_medium:0
+#: field:product.template,image_medium:0
+msgid "Medium-sized image"
+msgstr "Slika srednje veličine"
+
+#. module: product
+#: help:product.template,image_medium:0
+msgid ""
+"Medium-sized image of the product. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved, only when the image exceeds "
+"one of those sizes. Use this field in form views or some kanban views."
+msgstr ""
+"Srednje velika slika proizvoda. Automatski joj je promjenjena veličina na "
+"128x128px, sa zadržanim omjerom, samo kada slika prelazi jednu od ovih "
+"veličina. Koristite ovo polje u formama i kaban pogledima."
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_1
+#: model:product.public.category,name:product.Memory
+msgid "Memory"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_ids:0
+#: field:product.template,message_ids:0
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: product
+#: help:product.product,message_ids:0
+#: help:product.template,message_ids:0
+msgid "Messages and communication history"
+msgstr "Poruke i istorija komunikacije"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Min. Margin"
+msgstr "Min. marža"
+
+#. module: product
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Min. Price Margin"
+msgstr "Min. marža cijene"
+
+#. module: product
+#: field:product.pricelist.item,min_quantity:0
+msgid "Min. Quantity"
+msgstr "Min. količina"
+
+#. module: product
+#: field:product.supplierinfo,min_qty:0
+msgid "Minimal Quantity"
+msgstr "Minimalna količina"
+
+#. module: product
+#: model:product.public.category,name:product.Modem_Router
+msgid "Modem & Router"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.motherboard
+msgid "Motherboard"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_21_product_template
+msgid "Motherboard A20Z7"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_20_product_template
+msgid "Motherboard I9P57"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_10_product_template
+msgid "Mouse, Optical"
+msgstr "Miš, optički"
+
+#. module: product
+#: model:product.template,name:product.product_product_12_product_template
+msgid "Mouse, Wireless"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_31_product_template
+msgid "Multimedia Speakers"
+msgstr ""
+
+#. module: product
+#: field:product.attribute,name:0
+#: field:product.category,complete_name:0
+#: field:product.category,name:0
+#: field:product.pricelist.type,name:0
+#: field:product.pricelist.version,name:0
+#: field:product.template,name:0
+#: field:product.ul,name:0
+#: field:product.uom.categ,name:0
+msgid "Name"
+msgstr "Naziv:"
+
+#. module: product
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr "Naziv ove vrste cijene"
+
+#. module: product
+#: field:product.template,weight_net:0
+msgid "Net Weight"
+msgstr "Neto težina"
+
+#. module: product
+#: model:product.public.category,name:product.network
+msgid "Network"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "New Price ="
+msgstr "Nova cijena ="
+
+#. module: product
+#: code:addons/product/product.py:705
+#, python-format
+msgid ""
+"New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
+"as of old Unit of Measure '%s'. If you need to change the unit of measure, "
+"you may deactivate this product from the 'Procurements' tab and create a new "
+"one."
+msgstr ""
+"Nova jedinica mjere '%s' mora pripadati istoj kategoriji jedinice mjere '%s' "
+"kao i stara jedinica mjere '%s'. Ukoliko trebate promijeniti jedinicu mjere, "
+"možete deaktivirati ovaj proizvod i kreirati novi proizvod."
+
+#. module: product
+#: selection:product.category,type:0
+#: selection:product.template,state:0
+msgid "Normal"
+msgstr "Normalan"
+
+#. module: product
+#: field:product.packaging,rows:0
+msgid "Number of Layers"
+msgstr "Broj slojeva"
+
+#. module: product
+#: selection:product.template,state:0
+msgid "Obsolete"
+msgstr "Zastarjelo"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_42_product_template
+msgid ""
+"Office Editing Software with word processing, spreadsheets, presentations, "
+"graphics, and databases..."
+msgstr ""
+"Office uređivački programi koji uključuju obradu teksta, proračunskih "
+"tablica, prezentacija, grafika, i baza..."
+
+#. module: product
+#: model:product.template,name:product.product_product_42_product_template
+msgid "Office Suite"
+msgstr "Kancelarijski paket"
+
+#. module: product
+#: model:product.template,name:product.product_product_2_product_template
+msgid "On Site Assistance"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_1_product_template
+msgid "On Site Monitoring"
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_19_product_template
+msgid "On demand hard-disk having capacity based on requirement."
+msgstr ""
+
+#. module: product
+#: field:product.template,is_product_variant:0
+msgid "Only one product variant"
+msgstr ""
+
+#. module: product
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+msgid "Other Info"
+msgstr "Ostale informacije"
+
+#. module: product
+#: code:addons/product/pricelist.py:391
+#: field:product.pricelist.item,base_pricelist_id:0
+#, python-format
+msgid "Other Pricelist"
+msgstr "Drugi cjenovnici"
+
+#. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Other Products"
+msgstr "Ostali proizvodi"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_3_product_template
+msgid "PC Assemble SC234"
+msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "Paket"
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Package Logistic Unit"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ul_qty:0
+msgid "Package by layer"
+msgstr "Paket po sloju"
+
+#. module: product
+#: model:ir.model,name:product.model_product_packaging
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+#: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
+msgid "Packaging"
+msgstr "Pakovanje"
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pallet"
+msgstr "Paleta"
+
+#. module: product
+#: field:product.packaging,ul_container:0
+msgid "Pallet Logistic Unit"
+msgstr ""
+
+#. module: product
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+msgid "Palletization"
+msgstr "Paletizacija"
+
+#. module: product
+#: field:product.category,parent_id:0
+msgid "Parent Category"
+msgstr "Nadređena kategorija"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: product
+#: field:pricelist.partnerinfo,suppinfo_id:0
+msgid "Partner Information"
+msgstr "Informacije o partneru"
+
+#. module: product
+#: model:product.public.category,name:product.Pen_Drive
+msgid "Pen Drive"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_29_product_template
+msgid "Pen drive, SP-2"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_30_product_template
+msgid "Pen drive, SP-4"
+msgstr ""
+
+#. module: product
+#: field:product.product,price:0
+#: field:product.template,price:0
+msgid "Price"
+msgstr "Cijena"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Price Computation"
+msgstr "Izračunavanje cijene"
+
+#. module: product
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "Popust"
+
+#. module: product
+#: field:product.attribute.price,price_extra:0
+msgid "Price Extra"
+msgstr ""
+
+#. module: product
+#: help:product.attribute.value,price_extra:0
+msgid ""
+"Price Extra: Extra price for the variant with this attribute value on sale "
+"price. eg. 200 price extra, 1000 + 200 = 1200."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: view:product.price_list:product.view_product_price_list
+#: field:product.pricelist.version,pricelist_id:0
+#: view:website:product.report_pricelist
+msgid "Price List"
+msgstr "Cjenovnik"
+
+#. module: product
+#: field:product.pricelist.version,items_id:0
+msgid "Price List Items"
+msgstr "Stavke cjenovnika"
+
+#. module: product
+#: view:website:product.report_pricelist
+msgid "Price List Name"
+msgstr "Naziv cjenovnika"
+
+#. module: product
+#: field:product.pricelist.item,price_version_id:0
+msgid "Price List Version"
+msgstr "Verzija cijenovnika"
+
+#. module: product
+#: field:product.price.type,name:0
+msgid "Price Name"
+msgstr "Naziv cijene"
+
+#. module: product
+#: field:product.pricelist.item,price_round:0
+msgid "Price Rounding"
+msgstr "Zaokruživanje cijena"
+
+#. module: product
+#: field:product.pricelist.item,price_surcharge:0
+msgid "Price Surcharge"
+msgstr "Cijena doplate"
+
+#. module: product
+#: model:ir.model,name:product.model_product_price_type
+msgid "Price Type"
+msgstr "Tip cijene"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr "Tipovi cijena"
+
+#. module: product
+#: view:product.product:product.product_kanban_view
+#: view:product.template:product.product_template_kanban_view
+msgid "Price:"
+msgstr "Cijena:"
+
+#. module: product
+#: field:product.price_list,price_list:0
+msgid "PriceList"
+msgstr "Cjenovnik"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.action_report_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+#: field:product.template,pricelist_id:0
+msgid "Pricelist"
+msgstr "Cjenovnik"
+
+#. module: product
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
+msgstr "Naziv cjenovnika"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_type
+#: field:product.pricelist,type:0
+msgid "Pricelist Type"
+msgstr "Vrsta cjenovnika"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist:product.product_pricelist_view
+#: view:product.pricelist.version:product.product_pricelist_version_form_view
+#: view:product.pricelist.version:product.product_pricelist_version_tree_view
+msgid "Pricelist Version"
+msgstr "Verzija cjenovnika"
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "Verzija cjenovnika"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "Stavka cjenovnika"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
+#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
+#: model:ir.ui.menu,name:product.menu_product_pricelist_main
+msgid "Pricelists"
+msgstr "Cjenovnici"
+
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "Pricelists are managed on"
+msgstr "Cjenovnicima se upravlja na"
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Print"
+msgstr "Štampaj"
+
+#. module: product
+#: view:website:product.report_pricelist
+msgid "Print date"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.printer
+msgid "Printer"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_37_product_template
+msgid "Printer, All-in-one"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.processor
+msgid "Processor"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_23_product_template
+msgid "Processor AMD 8-Core"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor Core i5 2.70 Ghz"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Procurements"
+msgstr "Naručivanja"
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: field:product.packaging,product_tmpl_id:0
+#: field:product.pricelist.item,product_id:0
+#: view:product.product:product.product_search_form_view
+#: view:product.template:product.product_template_form_view
+#: view:product.template:product.product_template_search_view
+#: view:product.template:product.product_template_tree_view
+#: model:res.request.link,name:product.req_link_product
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute
+msgid "Product Attribute"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.line,value_ids:0
+#: field:product.attribute.price,value_id:0
+msgid "Product Attribute Value"
+msgstr ""
+
+#. module: product
+#: field:product.template,attribute_line_ids:0
+msgid "Product Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
+#: view:product.category:product.product_category_form_view
+#: view:product.category:product.product_category_list_view
+#: view:product.category:product.product_category_search_view
+#: view:product.category:product.product_category_tree_view
+msgid "Product Categories"
+msgstr "Kategorije proizvoda"
+
+#. module: product
+#: model:ir.ui.menu,name:product.prod_config_main
+msgid "Product Categories & Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: field:product.pricelist.item,categ_id:0
+#: field:product.uom,category_id:0
+msgid "Product Category"
+msgstr "Kategorija proizvoda"
+
+#. module: product
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Polje proizvoda"
+
+#. module: product
+#: field:product.template,product_manager:0
+msgid "Product Manager"
+msgstr "Menadžer proizvoda"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Product Name"
+msgstr "Naziv proizvoda"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template
+#: field:product.attribute.line,product_tmpl_id:0
+#: field:product.attribute.price,product_tmpl_id:0
+#: field:product.price.history,product_template_id:0
+#: field:product.pricelist.item,product_tmpl_id:0
+#: view:product.product:product.product_search_form_view
+#: field:product.product,product_tmpl_id:0
+#: field:product.supplierinfo,product_tmpl_id:0
+#: view:product.template:product.product_template_only_form_view
+msgid "Product Template"
+msgstr "Predložak proizvoda"
+
+#. module: product
+#: field:product.template,type:0
+msgid "Product Type"
+msgstr "Tip proizvoda"
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom
+msgid "Product Unit of Measure"
+msgstr "Jedinica mjere proizvoda"
+
+#. module: product
+#: view:product.product:product.product_normal_form_view
+#: view:product.template:product.product_template_search_view
+msgid "Product Variant"
+msgstr "Varijante proizvoda"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:product.product_product_tree_view
+msgid "Product Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Kategorija JM artikla"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.ui.menu,name:product.menu_product_template_action
+#: field:product.template,product_variant_ids:0
+msgid "Products"
+msgstr "Proizvodi"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+msgid "Products Labels"
+msgstr "Etikete proizvoda"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: view:product.pricelist.item:product.product_pricelist_item_tree_view
+msgid "Products Listprices Items"
+msgstr "Stavke liste cjenovnika"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view_search
+msgid "Products Price"
+msgstr "Cijena proizvoda"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view
+#: view:product.pricelist:product.product_pricelist_view_tree
+msgid "Products Price List"
+msgstr "Cjenovnik proizvoda"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view_search
+msgid "Products Price Search"
+msgstr "Pretraži cijene proizvoda"
+
+#. module: product
+#: view:product.price.type:product.product_price_type_view
+msgid "Products Price Type"
+msgstr "Tip cijene proizvoda"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action
+#: model:ir.ui.menu,name:product.menu_products_category
+msgid "Products by Category"
+msgstr "Proizvodi po kategoriji"
+
+#. module: product
+#: code:addons/product/product.py:809
+#, python-format
+msgid "Products: "
+msgstr "Proizvodi: "
+
+#. module: product
+#: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
+#: field:product.template,lst_price:0
+msgid "Public Price"
+msgstr "Javna cijena"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Javni cjenovnik"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Purchase"
+msgstr "Nabavka"
+
+#. module: product
+#: field:product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr "Opis nabavke"
+
+#. module: product
+#: model:res.groups,name:product.group_purchase_pricelist
+msgid "Purchase Pricelists"
+msgstr "Nabavni cjenovnik"
+
+#. module: product
+#: field:product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr "Nabavna jedinica mjere"
+
+#. module: product
+#: field:pricelist.partnerinfo,min_quantity:0
+#: field:product.supplierinfo,qty:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: product
+#: field:product.packaging,qty:0
+msgid "Quantity by Package"
+msgstr "Količina po paketu"
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Količina-1"
+
+#. module: product
+#: field:product.price_list,qty2:0
+msgid "Quantity-2"
+msgstr "Količina-2"
+
+#. module: product
+#: field:product.price_list,qty3:0
+msgid "Quantity-3"
+msgstr "Količina-3"
+
+#. module: product
+#: field:product.price_list,qty4:0
+msgid "Quantity-4"
+msgstr "Količina-4"
+
+#. module: product
+#: field:product.price_list,qty5:0
+msgid "Quantity-5"
+msgstr "Količina-5"
+
+#. module: product
+#: model:product.template,name:product.product_product_14_product_template
+msgid "RAM SR2"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_15_product_template
+msgid "RAM SR3"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_13_product_template
+msgid "RAM SR5"
+msgstr ""
+
+#. module: product
+#: field:product.uom,factor:0
+msgid "Ratio"
+msgstr "Omjer"
+
+#. module: product
+#: model:product.category,name:product.product_category_10
+msgid "Raw Materials"
+msgstr "Sirovine"
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Reference Unit of Measure for this category"
+msgstr "Referentna jedinica mjere za ovu kategoriju"
+
+#. module: product
+#: field:product.category,parent_right:0
+msgid "Right Parent"
+msgstr "Desni nadređeni"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Rounding Method"
+msgstr "Način zaokruživanja"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Preciznost zaokruživanja"
+
+#. module: product
+#: model:product.template,name:product.product_product_45_product_template
+msgid "Router R430"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
+msgstr "Naziv pravila"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Sale Conditions"
+msgstr "Uslovi prodaje"
+
+#. module: product
+#: field:product.template,description_sale:0
+msgid "Sale Description"
+msgstr "Opis prodaje"
+
+#. module: product
+#: field:product.template,list_price:0
+msgid "Sale Price"
+msgstr "Prodajna cijena"
+
+#. module: product
+#: model:product.pricelist.type,name:product.pricelist_type_sale
+#: field:res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr "Prodajni cjenovnik"
+
+#. module: product
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
+msgstr "Prodajni"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Sales"
+msgstr "Prodaje"
+
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Prodaja & Nabavka"
+
+#. module: product
+#: model:res.groups,name:product.group_sale_pricelist
+msgid "Sales Pricelists"
+msgstr "Prodajni cjenovnici"
+
+#. module: product
+#: model:product.public.category,name:product.Screen
+msgid "Screen"
+msgstr ""
+
+#. module: product
+#: help:product.template,categ_id:0
+msgid "Select category for the current product"
+msgstr "Odabir kategorije za trenutni proizvod"
+
+#. module: product
+#: field:product.attribute.value,sequence:0
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+#: field:product.supplierinfo,sequence:0
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: product
+#: model:product.public.category,name:product.server
+msgid "Server"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "Usluga"
+
+#. module: product
+#: model:product.category,name:product.product_category_5
+#: model:product.public.category,name:product.services
+#: view:product.template:product.product_template_search_view
+msgid "Services"
+msgstr "Usluge"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2677,44 +2346,300 @@ msgstr ""
 "dodatak -0.01"
 
 #. module: product
-#: field:product.template,list_price:0
-msgid "Sale Price"
-msgstr "Prodajna cijena"
+#: field:product.product,image_small:0
+#: field:product.template,image_small:0
+msgid "Small-sized image"
+msgstr "Slika male veličine"
 
 #. module: product
-#: help:product.uom,category_id:0
+#: help:product.template,image_small:0
 msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
+"Small-sized image of the product. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
-"Konverzija između jedinica mjera može samo da se pojavi ako pripadaju istoj "
-"kategoriji. Konverzija se izvršava na osnovu omjera."
+"Mala slika proizvoda. Automatski joj je promjenjena veličina na 64x64px, sa "
+"očuvanim omjerom. Koristite ovo polje gdje je god potrebna mala slika."
 
 #. module: product
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "Greška! Ne možete kreirati rekurzivne kategorije."
+#: selection:product.uom,uom_type:0
+msgid "Smaller than the reference Unit of Measure"
+msgstr "Manje od referentne jedinice mjere"
 
 #. module: product
-#: help:product.product,image_medium:0
+#: model:product.category,name:product.product_category_9
+#: model:product.public.category,name:product.Software
+msgid "Software"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.Speakers
+msgid "Speakers"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
 msgid ""
-"Medium-sized image of the product. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved, only when the image exceeds "
-"one of those sizes. Use this field in form views or some kanban views."
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Srednje velika slika proizvoda. Automatski joj je promjenjena veličina na "
-"128x128px, sa zadržanim omjerom, samo kada slika prelazi jednu od ovih "
-"veličina. Koristite ovo polje u formama i kaban pogledima."
+"Upišite kategoriju proizvoda ako se ovo pravilo odnosi samo na proizvode "
+"koji pripadaju toj kategoriji ili podređenim kategorijama. Ako ne, onda "
+"ostavite prazno."
 
 #. module: product
-#: view:product.uom:0
-msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr "npr.: 1 * (referentna jm) = omjer * (ova jedinica)"
+#: help:product.pricelist.item,product_id:0
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
+msgstr ""
+"Odredite proizvod ako se ovo pravilo odnosi na jedan proizvod. U suprotnom "
+"ostavite prazno."
 
 #. module: product
-#: help:product.supplierinfo,qty:0
-msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr "Ovo je količina koja je konvertovana u zadanu jedinicu mjere."
+#: help:product.pricelist.item,product_tmpl_id:0
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
+msgstr ""
+"Specifirajte predložak ako ovo pravilo se odnosi samo na jedan predložak "
+"proizvoda. U suprotnom ostavite prazno."
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: product
+#: help:product.template,sale_ok:0
+msgid "Specify if the product can be selected in a sales order line."
+msgstr ""
+"Specifirajte ako proizvod može biti odabran na stavci prodajne narudžbe."
+
+#. module: product
+#: help:product.pricelist.item,price_surcharge:0
+msgid ""
+"Specify the fixed amount to add or substract(if negative) to the amount "
+"calculated with the discount."
+msgstr ""
+"Odredite fiksni iznos za dodati ili oduzeti(ukoliko je iznos negativan) "
+"iznosu sa ukalkulisanim popustom."
+
+#. module: product
+#: help:product.pricelist.item,price_max_margin:0
+msgid "Specify the maximum amount of margin over the base price."
+msgstr "Odredite najveći iznos marže za granicu iznad osnovne cijene."
+
+#. module: product
+#: help:product.pricelist.item,price_min_margin:0
+msgid "Specify the minimum amount of margin over the base price."
+msgstr "Specificirajte minimalni iznos marže na osnovnu cijenu."
+
+#. module: product
+#: field:product.pricelist.version,date_start:0
+msgid "Start Date"
+msgstr "Datum početka"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+#: field:product.template,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "Skladišteni proizvod"
+
+#. module: product
+#: field:product.product,message_summary:0
+#: field:product.template,message_summary:0
+msgid "Summary"
+msgstr "Rezime"
+
+#. module: product
+#: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
+msgid "Supplier"
+msgstr "Dobavljač"
+
+#. module: product
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+#: view:product.supplierinfo:product.product_supplierinfo_tree_view
+msgid "Supplier Information"
+msgstr "Informacije o dobavljaču"
+
+#. module: product
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr "Vrijeme vođenja dobavljača"
+
+#. module: product
+#: field:product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr "Cjenovnik dobavljača"
+
+#. module: product
+#: code:addons/product/pricelist.py:392
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr "Dobavljačeve cijene na formi artikla"
+
+#. module: product
+#: field:product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr "Šifra artikla dobavljača"
+
+#. module: product
+#: field:product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
+msgstr "Naziv artikla dobavljača"
+
+#. module: product
+#: field:product.template,seller_qty:0
+msgid "Supplier Quantity"
+msgstr "Dobavljačeva količina"
+
+#. module: product
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier Unit of Measure"
+msgstr "Dobavljačeva jedinica mjere"
+
+#. module: product
+#: help:product.supplierinfo,name:0
+msgid "Supplier of this product"
+msgstr "Dobavljač ovog proizvoda"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Suppliers"
+msgstr "Dobavljači"
+
+#. module: product
+#: model:product.public.category,name:product.Switch
+msgid "Switch"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_47_product_template
+msgid "Switch, 24 ports"
+msgstr ""
+
+#. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Naziv predloška"
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr "EAN kôd jedinice pakiranja"
+
+#. module: product
+#: help:product.packaging,code:0
+msgid "The code of the transport unit."
+msgstr "Šifra transportnih jedinica"
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"Izračunata količina će biti množioc ove vrijednosti. Koristite 1.0 za "
+"jedinicu mjere koja ne može dalje da se razdvaja, kao što je komad."
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "Koeficijent omjera za ovu jedinicu mjere ne može biti 0!"
+
+#. module: product
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
+msgstr "Valuta u kojoj je polje izraženo."
+
+#. module: product
+#: help:product.template,weight:0
+msgid "The gross weight in Kg."
+msgstr "Bruto težina u kg."
+
+#. module: product
+#: help:product.ul,height:0
+msgid "The height of the package"
+msgstr "Visina paketa"
+
+#. module: product
+#: help:product.ul,length:0
+msgid "The length of the package"
+msgstr "Dužina paketa"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product Unit of Measure if not empty, in the default unit of measure of the "
+"product otherwise."
+msgstr ""
+"Minimalna količina za nabavku kod ovog dobavljača, izraženo u dobavljačevoj "
+"jedinici mjere ako nije prazna, u suprotnom, u zadanoj jedinici mjere "
+"proizvoda."
+
+#. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
+"Measure if any or in the default Unit of Measure of the product otherrwise."
+msgstr ""
+"Minimalna količina za okidanje ovog pravila, izražena u jedinici mjere "
+"dobavljača ako postoji ili zadanoj jedinici mjere proizvoda u suprotnom."
+
+#. module: product
+#: help:product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr "Neto težina u kg."
+
+#. module: product
+#: help:product.packaging,rows:0
+msgid "The number of layers on a pallet or box"
+msgstr "Broj slojeva na paleti ili kutiji"
+
+#. module: product
+#: help:product.packaging,ul_qty:0
+msgid "The number of packages by layer"
+msgstr "Broj pakiranja po sloju"
+
+#. module: product
+#: code:addons/product/product.py:385
+#, python-format
+msgid ""
+"The operation cannot be completed:\n"
+"You trying to delete an attribute value with a reference on a product "
+"variant."
+msgstr ""
+
+#. module: product
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
+"Cijena ispod će se uzeti u obzir samo kada je Vaš cijenovnik postavljen na "
+"osnovu cijene dobavljača."
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_9_product_template
+msgid ""
+"The sleek aluminium Apple Wireless Keyboard.\n"
+"            "
+msgstr ""
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "Ukupan broj artikala koje možete staviti u paletu ili kutiju."
 
 #. module: product
 #: help:product.template,volume:0
@@ -2722,536 +2647,491 @@ msgid "The volume in m3."
 msgstr "Zapremina u m3"
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "Popust"
+#: help:product.packaging,weight:0
+msgid "The weight of a full package, pallet or box."
+msgstr "Ukupna režina punog paketa, palete ili kutije."
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
+#. module: product
+#: help:product.ul,width:0
+msgid "The width of the package"
+msgstr "Širina paketa"
+
+#. module: product
+#: sql_constraint:product.attribute.value:0
+msgid "This attribute value already exists !"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr "Ovo dolazi iz forme proizvoda."
+
+#. module: product
+#: help:product.product,image_variant:0
+msgid ""
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
+
+#. module: product
+#: help:product.template,image:0
+msgid ""
+"This field holds the image used as image for the product, limited to "
+"1024x1024px."
+msgstr ""
+"Ovo polje sadrži sliku koja se koristi kao slika proizvoda, ograničena na "
+"1024x1024px."
+
+#. module: product
+#: help:product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Unit of Measure."
+msgstr "Ovo je količina koja je konvertovana u zadanu jedinicu mjere."
+
+#. module: product
+#: help:product.product,price_extra:0
+msgid "This is le sum of the extra price of all attributes"
+msgstr ""
+
+#. module: product
+#: help:product.template,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr "Ovo je minimalna količina za nabavku od glavnog dobavljača."
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid ""
+"This is the average delay in days between the purchase order confirmation "
+"and the receipts for this product and for the default supplier. It is used "
+"by the scheduler to order requests based on reordering delays."
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Ova će se zabilješka prikazati na zahtjevima za ponudu ..."
+
+#. module: product
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier Unit of Measure if "
+"any or the default Unit of Measure of the product otherwise"
+msgstr ""
+"Ova cijena će se uzeti u obzir kao cijena za dobavljačevu jedinicu mjere ako "
+"postoji ili će se koristiti zadana jedinica mjere"
+
+#. module: product
+#: help:res.partner,property_product_pricelist:0
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Ovaj cjenovnik će se koristiti, umjesto predefinisanog, za prodaju trenutnom "
+"partneru"
+
+#. module: product
+#: model:product.template,description:product.product_product_9_product_template
+msgid "This product is configured with example of push/pull flows"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,product_code:0
+msgid ""
+"This supplier's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Dobavljačeva šifra artikla će se koristiti prilikom štampanja predračuna. "
+"Ostavite prazno za štampanje interne šifre."
+
+#. module: product
+#: help:product.supplierinfo,product_name:0
+msgid ""
+"This supplier's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Ovaj dobavljačev naziv proizvoda će se koristiti kada se štampaju zahtjevi "
+"za predračunima. Ostavite prazno da koristite interni naziv."
+
+#. module: product
+#: model:product.template,description:product.product_product_2_product_template
+msgid ""
+"This type of service include assistance for security questions, system "
+"configuration requirements, implementation or special needs."
+msgstr ""
+"Ovaj tip servisa uključuje pomoć za sigurnosna pitanja, zahtjeve sistemske "
+"konfiguracije, implementaciju ili specifične potrebe."
+
+#. module: product
+#: model:product.template,description:product.product_product_1_product_template
+#: model:product.template,description_sale:product.product_product_1_product_template
+msgid "This type of service include basic monitoring of products."
+msgstr "Ovaj tip servisa uključuje osnovno praćenje proizvoda."
+
+#. module: product
+#: model:product.template,name:product.product_product_39_product_template
+msgid "Toner Cartridge"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
+msgstr "Ukupna težina paketa"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: field:product.ul,type:0
+#: field:product.uom,uom_type:0
+msgid "Type"
+msgstr "Tip"
+
+#. module: product
+#: model:product.template,name:product.product_product_48_product_template
+msgid "USB Adapter"
+msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "Jedinica"
+
+#. module: product
+#: field:pricelist.partnerinfo,price:0
+msgid "Unit Price"
+msgstr "Jedinična cijena"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
+msgid "Unit of Measure"
+msgstr "Jedinica mjere"
+
+#. module: product
+#: field:product.template,uos_coeff:0
+msgid "Unit of Measure -> UOS Coeff"
+msgstr "Koeficijent JM -> Prodajna JM"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "Kategorije jedinica mjera"
+
+#. module: product
+#: code:addons/product/product.py:705
+#, python-format
+msgid "Unit of Measure categories Mismatch!"
+msgstr "Ne slaganje kategorija jedinice mjere!"
+
+#. module: product
+#: field:product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr "Jedinica prodaje"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr "kom (komad)"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:product.product_uom_form_view
+#: view:product.uom:product.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Jedinice mjere"
+
+#. module: product
+#: view:product.uom.categ:product.product_uom_categ_form_view
+msgid "Units of Measure categories"
+msgstr "Kategorije jedinica mjere"
+
+#. module: product
+#: field:product.product,message_unread:0
+#: field:product.template,message_unread:0
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: product
+#: help:product.pricelist.type,key:0
+msgid ""
+"Used in the code to select specific prices based on the context. Keep "
+"unchanged."
+msgstr ""
+"Koristi se u šifri da bi se odabrala specifična cijena na osnovu konteksta. "
+"Ostavite ne promjenjeno."
+
+#. module: product
+#: field:product.attribute.value,name:0
+msgid "Value"
+msgstr ""
+
+#. module: product
+#: field:product.attribute,value_ids:0
+msgid "Values"
+msgstr ""
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Variable"
+msgstr "Varijabla"
+
+#. module: product
+#: field:product.product,price_extra:0
+msgid "Variant Extra Price"
+msgstr ""
+
+#. module: product
+#: field:product.product,image_variant:0
+msgid "Variant Image"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_only_form_view
+msgid "Variant Prices"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.variants_template_action
+#: view:product.attribute:product.attribute_tree_view
+#: view:product.attribute.value:product.variants_template_tree_view
+#: view:product.attribute.value:product.variants_tree_view
+msgid "Variant Values"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.value,product_ids:0
+#: view:product.template:product.product_template_kanban_view
+#: view:product.template:product.product_template_only_form_view
+msgid "Variants"
+msgstr "Varijante"
+
+#. module: product
+#: model:product.public.category,name:product.video_acquisition
+msgid "Video Acquisition"
+msgstr ""
+
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr "Pogled"
+
+#. module: product
+#: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
+msgid "Volume"
+msgstr "Volumen"
+
+#. module: product
+#: code:addons/product/pricelist.py:208
+#: code:addons/product/product.py:210
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: product
+#: field:product.template,warranty:0
+msgid "Warranty"
+msgstr "Garancija"
+
+#. module: product
+#: model:product.template,name:product.product_product_34_product_template
+msgid "Webcam"
+msgstr "Web kamera"
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Težina"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Weights"
+msgstr "Težine"
+
+#. module: product
+#: help:product.pricelist.version,active:0
+msgid ""
+"When a version is duplicated it is set to non active, so that the dates do "
+"not overlaps with original version. You should change the dates and "
+"reactivate the pricelist"
+msgstr ""
+"Kada je verzija duplicirana postavlja se ne aktivno, tako da se datumi ne "
+"preklapaju sa originalnom verzijom. Potreno je promijeniti datume i "
+"reaktivirati cjenovnik."
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_3
+msgid "White"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_3
+msgid "Wi-Fi"
+msgstr ""
+
+#. module: product
+#: field:product.ul,width:0
+msgid "Width"
+msgstr "Širina"
+
+#. module: product
+#: model:product.template,name:product.product_product_40_product_template
+msgid "Windows 7 Professional"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_41_product_template
+msgid "Windows Home Server 2011"
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_wtime
+msgid "Working Time"
+msgstr "Radno Vrijeme"
+
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr "Nije moguće imati dva cjenovnika koja se preklapaju!"
+
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+"Unešen je neispravn \"EAN13 Barcode\", umjesto ovog možete koristiti polje "
+"\"Interna šifra\""
+
+#. module: product
+#: model:product.template,name:product.product_product_43_product_template
+msgid "Zed+ Antivirus"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "describe the product characteristics..."
+msgstr "opišite karakteristike proizvoda ..."
+
+#. module: product
+#: view:product.uom:product.product_uom_form_view
+msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr "npr.: 1 * (referentna jm) = omjer * (ova jedinica)"
+
+#. module: product
+#: view:product.uom:product.product_uom_form_view
+msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "npr. 1 + (ova JM) = omjer * (referentna jedinica)"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_floz
+msgid "fl oz"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_foot
+msgid "foot(ft)"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_gal
+msgid "gal(s)"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_8_product_template
+msgid "iMac"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_6_product_template
+msgid "iPad Mini"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_4_product_template
+#: model:product.template,name:product.product_product_4b_product_template
+#: model:product.template,name:product.product_product_4c_product_template
+#: model:product.template,name:product.product_product_4d_product_template
+msgid "iPad Retina Display"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_11_product_template
+#: model:product.template,name:product.product_product_11b_product_template
+msgid "iPod"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_inch
+msgid "inch(es)"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_lb
+msgid "lb(s)"
+msgstr ""
+
+#. module: product
+#: view:product.product:product.product_normal_form_view
+msgid "lst_price"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_mile
+msgid "mile(s)"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "months"
+msgstr "mjeseci"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "note to be displayed on quotations..."
+msgstr "zabilješka za prikazivanje na predračunima..."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_oz
+msgid "oz(s)"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_qt
+msgid "qt"
+msgstr ""
+
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "the parent company"
+msgstr "nadređena kompanija"
+
+#. module: product
+#: field:product.price.history,company_id:0
+msgid "unknown"
+msgstr ""
 
 #~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
+#~ "Specify the minimum quantity that needs to be bought/sold for the rule to "
+#~ "apply."
 #~ msgstr ""
-#~ "Minimalna količina koja se naručuje od ovog dobavljača, izražena u "
-#~ "podrazumjevanim jedinicama mjere."
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "Cijena proizvoda za računovodstveno vrednovanje zaliha. Ona može da služi "
-#~ "kao osnova za cijenu dobavljača."
-
-#~ msgid "Net weight"
-#~ msgstr "Neto težina"
-
-#~ msgid ""
-#~ "Determine if the product is visible in the list of products within a "
-#~ "selection from a purchase order line."
-#~ msgstr ""
-#~ "Odredite da li je proizvod vidljiv na listi proizvoda u okviru izabranih "
-#~ "stavki iz narudžbenice."
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Buduće zalihe za ovaj proizvod su na osnovu odabrane lokacije ili su sve "
-#~ "interne ako ništa nije odabrano. Izračunato kao: Realne zalihe - Odlazne + "
-#~ "Dolazne."
-
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr ""
-#~ "Postavite šablon ako se ovo pravilo primenjuje samo na šablon proizvoda. "
-#~ "Ostavite prazno za sve proizvode"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Količina proizvoda koja je planirana da stigne na odabranu lokaciju ili je "
-#~ "sve interno ako ništa nije odabrano."
-
-#~ msgid "Product Process"
-#~ msgstr "Procesi proizvoda"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neispravan naziv modela u definiciji zadatka."
-
-#~ msgid "Prices Types"
-#~ msgstr "Vrste cijena"
-
-#~ msgid "List Price"
-#~ msgstr "Spisak cijena"
-
-#~ msgid "Customer Price"
-#~ msgstr "Cijena kupca"
-
-#~ msgid "Rentable Product"
-#~ msgstr "Rentabilan proizvod"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Komplet tastatura + miš"
-
-#~ msgid "Sellable"
-#~ msgstr "Za prodaju"
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "Procesor AMD Athlon XP 2200+"
-
-#~ msgid ""
-#~ "Base price for computing the customer price. Sometimes called the catalog "
-#~ "price."
-#~ msgstr ""
-#~ "Osnovna cijena za izračunavanje cijene za kupca. Nekada se zove kataloška "
-#~ "cena."
-
-#~ msgid "Make to Stock"
-#~ msgstr "Uskladišti"
-
-#~ msgid "Weigths"
-#~ msgstr "Težina"
-
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "Datum od kada je ova verzija cijenovnika validna."
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "Možete da vidite spisak dobavljača za ovaj proizvod."
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Broj sloja na paleti ili kutiji"
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "Ukoliko je u pitanju drugi cjenovnik"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Virtualna zaliha"
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Proizvodi će generisati nalog ili posao, u skladu sa tipom proizvoda. "
-#~ "Zahtjev za porudžbinom će da pokrene nabavni nalog."
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Greška ! Ne možete kreirati rekurzivne kategorije."
-
-#~ msgid "Configuration"
-#~ msgstr "Podešavanje"
-
-#~ msgid "Default UoM"
-#~ msgstr "Standardna UoM"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Računanje cijena"
-
-#~ msgid ""
-#~ "Set a product if this rule only apply to one product. Keep empty for all "
-#~ "products"
-#~ msgstr ""
-#~ "Izaberite proizvod ako se ovo pravilo odnosi samo na njega. Ostavite prazno "
-#~ "za sve proizvode"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Broj sloja"
-
-#~ msgid ""
-#~ "Standard Price: the cost price is fixed and recomputed periodically (usually "
-#~ "at the end of the year), Average Price: the cost price is recomputed at each "
-#~ "reception of products."
-#~ msgstr ""
-#~ "Standardna cijena: cijena koštanja je fiksna i preračunava se periodično "
-#~ "(uglavnom na kraju godine), Prosiječna cijena: cijena koštanja se "
-#~ "preračunava pri svakom prijemu proizvoda."
-
-#~ msgid "Mouse"
-#~ msgstr "Miš"
-
-#~ msgid "Customer Lead Time"
-#~ msgstr "Vremenski interval za kupca"
-
-#~ msgid "Keyboard"
-#~ msgstr "Tastatura"
-
-#~ msgid "In Production"
-#~ msgstr "U proizvodnji"
-
-#~ msgid "Create new Product"
-#~ msgstr "Kreiraj novi proizvod"
-
-#~ msgid "Partners"
-#~ msgstr "Partneri"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Procesor AMD Athlon XP 1800+"
-
-#~ msgid "PCE"
-#~ msgstr "PCE"
-
-#~ msgid "Priority"
-#~ msgstr "Prioritet"
-
-#~ msgid "UOM"
-#~ msgstr "UOM"
-
-#~ msgid "Factor"
-#~ msgstr "Faktor"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD na zahtjev"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Razno"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Naziv proizvoda partnera"
-
-#~ msgid "PC"
-#~ msgstr "PC"
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "Režim za računanje cijene za ovo pravilo."
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Koristiće se ovaj cjenovnik, umesto podrazumjevanog, za prodaje ovom partneru"
-
-#~ msgid "Rules Test Match"
-#~ msgstr "Testiranje poklapanja pravila"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Količine proizvoda za koje je planirano da budu ostavljene na izabrane "
-#~ "lokacije ili je sve interno ako ništa nije odabrano."
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Odredite da li je proizvod vidljiv na listi proizvoda u okviru izabranih "
-#~ "stavki iz naloga za prodaju."
-
-#~ msgid ""
-#~ "'Make to Stock': When needed, take from the stock or wait until re-"
-#~ "supplying. 'Make to Order': When needed, purchase or produce for the "
-#~ "procurement request."
-#~ msgstr ""
-#~ "Uskladištite : Kada je potrebno, uzmi sa zaliha ili čekaj ponovnu nabavku. "
-#~ "'Napravite naručivanje': Kada je potrebno, nabavi ili proizvedi za zahtjev "
-#~ "za nabavku."
-
-#~ msgid "UoM Category"
-#~ msgstr "Kategorija JM"
-
-#~ msgid "Rack"
-#~ msgstr "Rek"
-
-#~ msgid "EAN13"
-#~ msgstr "EAN13"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"
-
-#~ msgid "HDD Seagate 7200.8 80GB"
-#~ msgstr "HDD Seagate 7200.8 80GB"
-
-#~ msgid "Processor on demand"
-#~ msgstr "Procesor na zahtjev"
-
-#~ msgid "Supply method"
-#~ msgstr "Načini nabavke"
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Naziv proizvoda za ovog partnera, koristiće se pri štampi zahtjeva za "
-#~ "ponudu. Zadržite prazno ako želite da sačuvate interni naziv."
-
-#~ msgid "IT components kits"
-#~ msgstr "Komplet IT komponenti"
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Dobavljači proizvoda"
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Količine proizvoda na odabranim lokacijama ili ako ništa nije odabrano sve "
-#~ "je interno."
-
-#~ msgid "Sales Properties"
-#~ msgstr "Karakteristike prodaje"
-
-#~ msgid "Row"
-#~ msgstr "Red"
-
-#~ msgid "Basic PC"
-#~ msgstr "Osnovni PC"
-
-#~ msgid "Regular processor config"
-#~ msgstr "Standardna konfiguracija procesora"
-
-#~ msgid "Complete PC With Peripherals"
-#~ msgstr "Kompletan PC sa periferijama"
-
-#~ msgid "Can be sold"
-#~ msgstr "Može da se proda"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Greška: Standardna JM i nabavna JM moraju pripadati istoj kategoriji."
-
-#~ msgid "Real Stock"
-#~ msgstr "Stvarne zalihe"
-
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr ""
-#~ "Pravilo će biti primjenjeno ako partner kupi/proda više od ove količine."
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr ""
-#~ "Jedinica mjere kategorije može da se konvertuje u okviru jedne kategorije."
-
-#~ msgid "DDR 256MB PC400"
-#~ msgstr "DDR 256MB PC400"
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Matična ploča ASUStek A7V8X-X"
-
-#~ msgid "Rate"
-#~ msgstr "Stopa"
-
-#~ msgid "The weight of the empty UL"
-#~ msgstr "Težina praznog UL"
-
-#~ msgid "Buy"
-#~ msgstr "Kupi"
-
-#~ msgid "IT components"
-#~ msgstr "IT komponente"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "Kupovna JM"
-
-#~ msgid "Price list"
-#~ msgstr "Cjenovnik"
-
-#~ msgid "Medium PC"
-#~ msgstr "Srednji PC"
-
-#~ msgid "Second UoM"
-#~ msgstr "Druga JM"
-
-#~ msgid "Gross weight"
-#~ msgstr "Ukupna težina"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Daje različite načine pakovanja istog proizvoda. Ovo nema uticaja na "
-#~ "otpremnicu i uglavnom se koristi kod EDI modula."
-
-#~ msgid "Storage Localisation"
-#~ msgstr "Lokalizacija skladišta"
-
-#~ msgid "Seq"
-#~ msgstr "Redoslijed"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr ""
-#~ "Prikazuje korisnika ako on može ili ne može da koristi ovaj proizvod."
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Tipovi cjenovnika"
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Koeficijent za ovu formulu:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-
-#~ msgid "Partner Product Code"
-#~ msgstr "Kod proizvoda partnera"
-
-#~ msgid "Phone Help"
-#~ msgstr "Telefonska pomoć"
-
-#~ msgid "Computer Stuff"
-#~ msgstr "Kompjuterske stvari"
-
-#~ msgid "Customizable PC"
-#~ msgstr "Prilagodljiv PC"
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "Datum završetka važenja ove verzije cjenovnika."
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "Izračunata količina će biti pomnožena sa ovim brojem. Za proizvode je 1.0, "
-#~ "ne može da se podeli."
-
-#~ msgid "HDD Seagate 7200.8 120GB"
-#~ msgstr "HDD Seagate 7200.8 120GB"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr "Ukupan broj proizvoda koji mogu da se stave na paletu ili u kutiju"
-
-#~ msgid "Onsite Intervention"
-#~ msgstr "Intervencija na terenu"
-
-#~ msgid "RAM on demand"
-#~ msgstr "RAM na zahtjev"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Kod ovog proizvoda za ovog partnera, koristiće se za štampanje zahtjeva za "
-#~ "cijenama. Zadržite prazno ako hoćete da koristite interne."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
-
-#~ msgid "Codes"
-#~ msgstr "Kodovi"
-
-#~ msgid "Warranty (months)"
-#~ msgstr "Garancija (meseci)"
-
-#~ msgid "Price type"
-#~ msgstr "Tip cijene"
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Dobavljači proizvoda, sa njihovim imenima proizvoda, cijenama, itd."
-
-#~ msgid "Produce"
-#~ msgstr "Proizvodi"
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "Ovo je prosječno vrijeme između potvrde narudžbenice kupca i isporuke "
-#~ "završenog proizvoda. Ovo je vreme koje je obećano kupcu."
-
-#~ msgid "Product Description"
-#~ msgstr "Opis proizvoda"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "Mainboard ASUStek A7N8X"
-
-#~ msgid "Products Categories"
-#~ msgstr "Kategorije proizvoda"
-
-#~ msgid "Case"
-#~ msgstr "Slučaj"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Težina cijele palete ili kutije proizvoda"
-
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "JM -> JU (jedinice usluga) Koeficijent"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Koeficijent za konvertovanje JM u JU (jedinice usluga)\n"
-#~ "uom = uos * coeff"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "Može da se kupi"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Cijene & Dobavljači"
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Koeficijent za formulu:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Proizvodi & Cjenovnici"
-
-#~ msgid "ATX Mid-size Tower"
-#~ msgstr "ATX Mid-size Tower"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Odgoda isporuke"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Prosječno vrijeme za proizvodnju ovog proizvoda. Ovo je samo za nalog za "
-#~ "proizvodnju i, ako je skup materijala sa više nivoa, samo za nivo ovog "
-#~ "proizvoda. Druga kašnjenja će biti sabrana za sve nivoe i narudžbenice."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Postavite kategoriju proizvoda ako se ovo pravilo odnosi na proizvode "
-#~ "kategorije i pod kategorije. Ostavite prazno za sve proizvode"
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Kašnjenje, u danima, između potvrde narudžbenice i prijema proizvoda u vaše "
-#~ "skladište. Koristi planer za automatsko izračunavanje plana narudžbina."
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "Podrazumevana jedinica mjere koja se koristi za narudžbenice. Mora da bude u "
-#~ "istoj kategoriji kao i podrazumjevana jedinica mere."
-
-#~ msgid "Private"
-#~ msgstr "Privatno"
-
-#~ msgid "KGM"
-#~ msgstr "KGM"
-
-#~ msgid "Onsite Senior Intervention"
-#~ msgstr "Intervencija stručnjaka na licu mjesta"
-
-#~ msgid "Procure Method"
-#~ msgstr "Metoda nabavke"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Greška : UOS mora biti u drugoj kategoriji od UOM"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Kategorije jedinica mjera"
+#~ "Specificirajte minimalnu količinu za kupovinu/prodaju da bi se pravilo "
+#~ "primjenilo."

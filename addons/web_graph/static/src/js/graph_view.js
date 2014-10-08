@@ -85,6 +85,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
             measures = groupbys.measures;
 
         if (!this.graph_widget) {
+            this.widget_config.context = _.clone(context);
+            this.widget_config.context.group_by_no_leaf = true;
             if (group_by.length) {
                 this.widget_config.row_groupby = group_by;
             }
@@ -162,6 +164,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             return;
         }
 
+        var custom_groups = this.get_custom_filter_groupbys();
+        row_groupby = row_groupby.slice(custom_groups.groupby.length);
+        col_groupby = col_groupby.slice(custom_groups.col_groupby.length);
+
         if (row_gb_changed && col_gb_changed) {
             // when two changes to the search view will be done, the method do_search
             // will be called twice, once with the correct groupby and incorrect col_groupby,
@@ -233,5 +239,46 @@ instance.web_graph.GraphView = instance.web.View.extend({
             };
         });
     },
+
+    get_custom_filter_groupbys: function () {
+        var gb = [],
+            col_gb = [];
+
+        var facet = this.search_view.query.at(0);
+        if (facet) {
+            if (facet.get('category') !== 'GroupBy' && facet.get('category') !== 'ColGroupBy') {
+                gb = get_groupby(facet);
+                col_gb = get_col_groupby(facet);
+            }
+        }
+        return {
+            groupby: gb,
+            col_groupby: col_gb,
+        }
+    }
+
 });
+
+function get_groupby(facet) {
+    var field = facet.get('field'),
+        result = [];
+    if ('get_groupby' in field) {
+        result = instance.web.pyeval.sync_eval_domains_and_contexts({
+            group_by_seq: field.get_groupby(facet)
+        }).group_by;
+    }
+    return result;
+}
+function get_col_groupby(facet) {
+    var field = facet.get('field'),
+        result = [];
+    if ('get_context' in field) {
+        result = instance.web.pyeval.sync_eval_domains_and_contexts({
+            contexts: field.get_context(facet)
+        }).context.col_group_by || [];
+    }
+    return result;
+}
+
+
 };

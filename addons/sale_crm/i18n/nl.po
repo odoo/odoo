@@ -1,57 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_crm
+# Dutch translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-09 18:40+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-16 18:22+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-17 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Onvoldoende informatie!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
+msgstr "Campagne"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Omzetten naar offerte"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Factuur analyses"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Markeren als gewonnen"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Standaard verkoopteam"
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Mijn verkoop team(s)"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Gebruikers"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr "Kanaal"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -61,21 +40,25 @@ msgstr ""
 "Vink dit aan om de prospect te sluiten nadat de verkooporder is gemaakt."
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Offerte verstuurd"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Omzetten naar offerte"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Categorieën"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Maak Offerte"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Offerte"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -83,61 +66,25 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Maken"
+#: field:crm.make.sale,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Verkoop maken"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Factuur"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Prospect: %s"
+msgid "Insufficient Data!"
+msgstr "Onvoldoende informatie!"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Prospect is <b>geconverteerd</b> naar offerte <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatst aangepast door"
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Verkooppunt"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Geen adres(sen) gedefinieerd voor deze klant."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Verkooporder bevestigd"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Verkoopteam"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Maak Offerte"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst aangepast op"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -145,9 +92,39 @@ msgid "Make Quotation"
 msgstr "Offerte maken"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Annuleren"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Verkoop maken"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Markeren als gewonnen"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr "Geen adres(sen) gedefinieerd voor deze klant."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "Prospect is <b>geconverteerd</b> naar offerte <em>%s</em>."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Prospect: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Offerte"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -155,200 +132,41 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "of"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr "Bron"
 
-#~ msgid "Analytic account"
-#~ msgstr "Kostenplaats"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr "Labels"
 
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Kans omzetten naar de prijslijst"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+"Dit is de naam welke u helpt om uw verschillende campagnes te volgen. Zoals "
+"bijvoorbeeld: Fall_drive, Christmas_Special"
 
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Kans wordt omgezet in offerte"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
+"Dit is de methode van afleveren. Bijvoorbeeld, Brief, E-mail of Banner "
+"advertantie"
 
-#~ msgid "Direct Delivery"
-#~ msgstr "Rechtstreekse levering"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"Dit is de bron van de link. Bijvoorbeeld: Search engine, ander domein of de "
+"naam van de e-mail lijst"
 
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Kans offerte"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Kans omzetten in offerte"
-
-#~ msgid "Create Quote"
-#~ msgstr "Offerte maken"
-
-#~ msgid "Make Case"
-#~ msgstr "Dossier aanmaken"
-
-#~ msgid "Close Case"
-#~ msgstr "Dossier afsluiten"
-
-#~ msgid "Products"
-#~ msgstr "Producten"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Kostenplaats"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Beoordeling afgesloten contract met klant"
-
-#~ msgid "All at once"
-#~ msgstr "Alles ineens"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Verkoop CRM zaken"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Zet kans om in offerte"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Contractvolume (prijslijst)"
-
-#~ msgid "Your action"
-#~ msgstr "Uw actie"
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "Crm offerte kans"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Contract prijslijst"
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Kans prijslijst"
-
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr ""
-#~ "Gebruik deze relatie als er geen relatie verbonden is aan het dossier"
-
-#~ msgid "Create"
-#~ msgstr "Maak"
-
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Kans analytisch"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "CRM-kans"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Omzetten naar offerte"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr ""
-#~ "Vink dit aan om het dossier af te sluiten na het aanmaken van de "
-#~ "verkoopopdracht"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "Een CRM-kans kan een offerte-aanvraag worden"
-
-#~ msgid "User Responsible"
-#~ msgstr "Verantwoordelijke gebruiker"
-
-#~ msgid "Case Section"
-#~ msgstr "Sectie dossier"
-
-#~ msgid "Case Description"
-#~ msgstr "Omschrijving dossier"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Onvoldoende data!"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Voor deze klant is geen adres ingegeven!"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Pakbon instellingen"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Orderreferentie moet uniek zijn!"
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "is omgezet naar offerte."
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Maandelijkse omzet"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Omgezet naar verkoopofferte (id:%s)."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Verkoopkans "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Deze module voegt een snelkoppeling toe bij één of meer verkoopkansen in de "
-#~ "CRM.\n"
-#~ "Deze snelkoppeling laat u een verkooporder genereren op basis van het "
-#~ "geselecteerde dossier.\n"
-#~ "Als verschillende dossiers open staan (een lijst), dan genereert het een "
-#~ "verkooporder per\n"
-#~ "dossier.\n"
-#~ "Het dossier wordt dan gesloten en gekoppeld aan de gegenereerde "
-#~ "verkooporder.\n"
-#~ "\n"
-#~ "We stellen voer dat u deze module installeert als u zowel de verkoop als crm "
-#~ "modules installeert.\n"
-#~ "    "
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Verkooporder van verkoopkans maken"
-
-#~ msgid "My Quotations"
-#~ msgstr "Mijn offertes"
-
-#~ msgid "Quotations"
-#~ msgstr "Offertes"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Verkoopkansen per stadium"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "Prospect '%s'is omgezet in een offerte"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(%s)."
-#~ msgstr "Converteer naar offerte (%s)."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Orderreferentie moet uniek zijn per bedrijf!"
-
-#~ msgid "Category"
-#~ msgstr "Categorie"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Mijn prospects"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Mijn geplande omzet per fase"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Prospect sluiten"
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Vink dit aan om de prospect af te sluiten na het maken van de verkooporder."
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Maken"

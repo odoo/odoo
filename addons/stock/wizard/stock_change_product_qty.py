@@ -55,7 +55,7 @@ class stock_change_product_qty(osv.osv_memory):
             if len(product_ids) == 1:
                 res['product_id'] = product_ids[0]
             else:
-                raise orm.except_orm(_('Warning'), _('Please use the Product Variant vue to update the product quantity.'))
+                raise orm.except_orm(_('Warning'), _('Please use the Product Variant view to update the product quantity.'))
 
         if 'location_id' in fields:
             location_id = res.get('location_id', False)
@@ -98,7 +98,8 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
-            th_qty = data.product_id.qty_available
+            product = data.product_id.with_context(location=data.location_id.id)
+            th_qty = product.qty_available
             line_data = {
                 'inventory_id': inventory_id,
                 'product_qty': data.new_quantity,

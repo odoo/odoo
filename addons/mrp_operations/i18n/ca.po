@@ -1,186 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* mrp_operations
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-10-30 16:23+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:11+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
-msgid "Work Orders"
-msgstr "Ordres de producció"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:484
-#, python-format
-msgid "Operation is already finished!"
-msgstr ""
-
-#. module: mrp_operations
-#: model:process.node,note:mrp_operations.process_node_canceloperation0
-msgid "Cancel the operation."
-msgstr "Cancel·la l'operació"
-
-#. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
-msgid "mrp_operations.operation.code"
-msgstr "mrp_operations.operation.code"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
-msgid "Group By..."
-msgstr "Agrupa per..."
-
-#. module: mrp_operations
-#: model:process.node,note:mrp_operations.process_node_workorder0
-msgid "Information from the routing definition."
-msgstr "Informació sobre la definició de la ruta"
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,uom:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "March"
-msgstr "Març"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
-msgid "Work Centers"
-msgstr "Centres de producció"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp_operations.operation.code,start_stop:0
-msgid "Resume"
-msgstr "Continua"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Product to Produce"
-msgstr "Producte per produir"
-
-#. module: mrp_operations
-#: view:mrp_operations.operation:0
-msgid "Production Operation"
-msgstr "Operació de producció"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: mrp_operations
-#: field:mrp.production,allow_reorder:0
-msgid "Free Serialisation"
-msgstr "Serialització lliure"
-
-#. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Ordre de fabricació"
-
-#. module: mrp_operations
-#: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
-msgid "Mrp Operations"
-msgstr "Operacions Mrp"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,day:0
-msgid "Day"
-msgstr "Dia"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-msgid "Cancel Order"
-msgstr ""
-
-#. module: mrp_operations
-#: model:process.node,name:mrp_operations.process_node_productionorder0
-msgid "Production Order"
-msgstr "Ordre de producció"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,production_state:0
-msgid "Picking Exception"
-msgstr "Excepció albarà"
-
-#. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_productionstart0
-msgid "Creation of the work order"
-msgstr "Creació de l'ordre de treball"
-
-#. module: mrp_operations
-#: model:process.transition,note:mrp_operations.process_transition_productionstart0
-msgid "The work orders are created on the basis of the production order."
-msgstr "Les ordres de treball son creades en base a l'ordre de producció"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#: code:addons/mrp_operations/mrp_operations.py:465
-#: code:addons/mrp_operations/mrp_operations.py:469
-#: code:addons/mrp_operations/mrp_operations.py:481
-#: code:addons/mrp_operations/mrp_operations.py:484
-#, python-format
-msgid "Error!"
-msgstr "Error!"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-#: selection:mrp_operations.operation.code,start_stop:0
-msgid "Cancelled"
-msgstr "Cancel·lada"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:477
-#, python-format
-msgid "Operation is Already Cancelled!"
-msgstr ""
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
-#: view:mrp.production.workcenter.line:0
-msgid "Operations"
-msgstr "Operacions"
-
-#. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_stock_move
-msgid "Stock Move"
-msgstr "Moviment d'estoc"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:481
-#, python-format
-msgid "No operation to cancel."
-msgstr ""
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:474
-#, python-format
-msgid ""
-"In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
+"X-Launchpad-Export-Date: 2014-09-24 09:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -188,114 +23,33 @@ msgid "# of Lines"
 msgstr "# de línies"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,production_state:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-msgid "Draft"
-msgstr "Esborrany"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Actual Production Date"
-msgstr ""
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Production Workcenter"
-msgstr ""
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_finished:0
-#: field:mrp.production.workcenter.line,date_planned_end:0
-#: field:mrp_operations.operation,date_finished:0
-msgid "End Date"
-msgstr "Data final"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,production_state:0
-msgid "In Production"
-msgstr "En producció"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
-#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
-msgid "Work Order"
-msgstr "Ordre de treball"
-
-#. module: mrp_operations
-#: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
+#: help:mrp.production.workcenter.line,state:0
 msgid ""
-"There is 1 work order per work center. The information about the number of "
-"cycles or the cycle time."
-msgstr ""
-"Hi ha una ordre de treball per centre de treball. La informació sobre el "
-"número de cicles o el temps de cicle."
-
-#. module: mrp_operations
-#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
-msgid "Work Order Analysis"
-msgstr "Anàlisi d'ordres de treball"
-
-#. module: mrp_operations
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
-msgid "Work Orders By Resource"
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
 msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Planned Date"
-msgstr "Data prevista"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,product_qty:0
-msgid "Product Qty"
-msgstr "Qtat producte"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#, python-format
-msgid "Manufacturing order cannot start in state \"%s\"!"
-msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "July"
-msgstr "Juliol"
-
-#. module: mrp_operations
-#: field:mrp_operations.operation.code,name:0
-msgid "Operation Name"
-msgstr "Nom operació"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.production.workcenter.line,state:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,state:0
-#: field:mrp_operations.operation.code,start_stop:0
-msgid "Status"
-msgstr "Estat"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Planned Year"
-msgstr ""
-
-#. module: mrp_operations
-#: field:mrp_operations.operation,order_date:0
-msgid "Order Date"
-msgstr "Data ordre"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
-msgid "Future Work Orders"
-msgstr "Ordres de producció futures"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-msgid "Finish Order"
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to start a new work order.\n"
+"          </p><p>\n"
+"            To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload.\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: mrp_operations
@@ -316,35 +70,24 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,delay:0
-msgid "The elapsed time between operation start and stop in this Work Center"
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Actual Production Date"
 msgstr ""
 
 #. module: mrp_operations
-#: model:process.node,name:mrp_operations.process_node_canceloperation0
-msgid "Operation Cancelled"
-msgstr "Operació cancel·lada"
+#: view:mrp_operations.operation:mrp_operations.operation_calendar_view
+msgid "Calendar View"
+msgstr "Vista calendari"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-msgid "Pause Work Order"
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Cancel Order"
 msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "September"
-msgstr "Setembre"
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "December"
-msgstr "Desembre"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,month:0
-msgid "Month"
-msgstr "Mes"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -352,210 +95,25 @@ msgid "Canceled"
 msgstr "Cancel·lat"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
-msgid "mrp_operations.operation"
-msgstr "mrp_operations.operation"
-
-#. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_workorder
-msgid "Work Order Report"
-msgstr "Informe ordre de treball"
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_start:0
-#: field:mrp_operations.operation,date_start:0
-msgid "Start Date"
-msgstr "Data inicial"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,production_state:0
-msgid "Waiting Goods"
-msgstr "Esperant mercaderia"
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,production_state:0
-msgid "Production Status"
-msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,state:0
-#: selection:mrp_operations.operation.code,start_stop:0
-msgid "Pause"
-msgstr "Atura"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
-msgid "In Progress"
-msgstr "En procés"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:465
-#, python-format
-msgid ""
-"In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:469
-#, python-format
-msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
-
-#. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
-msgid "Start"
-msgstr "Inici"
+msgid "Cancelled"
+msgstr "Cancel·lada"
 
 #. module: mrp_operations
-#: view:mrp_operations.operation:0
-msgid "Calendar View"
-msgstr "Vista calendari"
-
-#. module: mrp_operations
-#: model:process.transition,note:mrp_operations.process_transition_startcanceloperation0
+#: help:mrp.production,allow_reorder:0
 msgid ""
-"When the operation needs to be cancelled, you can do it in the work order "
-"form."
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
 msgstr ""
-"Quan l'operació necessita ser cancel·lada, podeu fer-ho en el formulari de "
-"l'ordre de treball."
-
-#. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-msgid "Set Draft"
-msgstr "Canvia a esborrany"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,state:0
-msgid "Pending"
-msgstr "Pendent"
-
-#. module: mrp_operations
-#: view:mrp_operations.operation.code:0
-msgid "Production Operation Code"
-msgstr "Codi operació de producció"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:461
-#, python-format
-msgid ""
-"Operation has already started! You can either Pause/Finish/Cancel the "
-"operation."
-msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "August"
-msgstr "Agost"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Started"
-msgstr "Iniciat"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Production started late"
-msgstr ""
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Planned Day"
-msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "June"
-msgstr "Juny"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
-msgid "Total Cycles"
-msgstr "Cicles totals"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,production_state:0
-msgid "Ready to Produce"
-msgstr "Llest per produir"
+"Seleccioneu aquesta opció per poder moure independentment totes les ordres "
+"de producció, sense moure els seus dependents"
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
 msgstr "Fills es mouen"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
-msgid "Work Orders Planning"
-msgstr "Planificació d'ordres de treball"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: field:mrp.workorder,date:0
-msgid "Date"
-msgstr "Data"
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "November"
-msgstr "Novembre"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Search"
-msgstr "Cerca"
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "October"
-msgstr "Octubre"
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "January"
-msgstr "Gener"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-msgid "Resume Work Order"
-msgstr ""
-
-#. module: mrp_operations
-#: model:process.node,note:mrp_operations.process_node_doneoperation0
-msgid "Finish the operation."
-msgstr "Finalitza l'operació"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
-#, python-format
-msgid "Operation is not started yet !"
-msgstr "L'operació encare no s'ha iniciat!"
-
-#. module: mrp_operations
-#: model:process.node,note:mrp_operations.process_node_productionorder0
-msgid "Information from the production order."
-msgstr "Informació de l'ordre de fabricació"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
-#: code:addons/mrp_operations/mrp_operations.py:461
-#: code:addons/mrp_operations/mrp_operations.py:474
-#: code:addons/mrp_operations/mrp_operations.py:477
-#, python-format
-msgid "Sorry!"
-msgstr "Disculpeu!"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Current"
-msgstr "Actiu"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -569,86 +127,31 @@ msgid "Confirmed Work Orders"
 msgstr "Ordres de producció confirmades"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
-msgid "Operation Codes"
-msgstr "codis d'operació"
-
-#. module: mrp_operations
-#: field:mrp.production.workcenter.line,qty:0
-msgid "Qty"
-msgstr "Qtat."
-
-#. module: mrp_operations
-#: model:process.node,name:mrp_operations.process_node_doneoperation0
-msgid "Operation Done"
-msgstr "Operació realitzada"
-
-#. module: mrp_operations
-#: selection:mrp.production.workcenter.line,production_state:0
-#: view:mrp.workorder:0
-#: selection:mrp_operations.operation.code,start_stop:0
-msgid "Done"
-msgstr "Realitzat"
-
-#. module: mrp_operations
-#: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
-msgid "Start/Stop Barcode"
-msgstr "Codi de barres Inicia/Para"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Cancel"
-msgstr "Cancel·la"
-
-#. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
-"* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+#: field:mrp_operations.operation,create_uid:0
+#: field:mrp_operations.operation.code,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: mrp_operations
-#: model:process.node,name:mrp_operations.process_node_startoperation0
-msgid "Start Operation"
-msgstr "Operació inici"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Information"
-msgstr "Informació"
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to start a new work order.\n"
-"          </p><p>\n"
-"            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
-"            operations will have different impacts on the costs of\n"
-"            manufacturing and planning depending on the available workload.\n"
-"          </p>\n"
-"        "
+#: field:mrp_operations.operation,create_date:0
+#: field:mrp_operations.operation.code,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
-msgid "Work Centers Barcode"
-msgstr "Codi de barra de centres de producció"
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Current"
+msgstr "Actiu"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Late"
-msgstr "Retardat"
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.workorder,date:0
+msgid "Date"
+msgstr "Data"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
@@ -656,26 +159,316 @@ msgid "Delay"
 msgstr "Retard"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
+#: selection:mrp.production.workcenter.line,production_state:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "Realitzat"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Esborrany"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Duration"
+msgstr "Duració"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_finished:0
+#: field:mrp.production.workcenter.line,date_planned_end:0
+#: field:mrp_operations.operation,date_finished:0
+msgid "End Date"
+msgstr "Data final"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:446
+#: code:addons/mrp_operations/mrp_operations.py:450
+#: code:addons/mrp_operations/mrp_operations.py:462
+#: code:addons/mrp_operations/mrp_operations.py:465
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Finish Order"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "Finalitzada"
+
+#. module: mrp_operations
+#: field:mrp.production,allow_reorder:0
+msgid "Free Serialisation"
+msgstr "Serialització lliure"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "Ordres de producció futures"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Group By"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
+msgid "Hours by Work Center"
+msgstr "Hores per centre de producció"
+
+#. module: mrp_operations
+#: field:mrp.workorder,id:0
+#: field:mrp_operations.operation,id:0
+#: field:mrp_operations.operation.code,id:0
+msgid "ID"
+msgstr ""
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "En producció"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "En procés"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:455
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:446
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:450
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Information"
+msgstr "Informació"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation,write_uid:0
+#: field:mrp_operations.operation.code,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp_operations.operation,write_date:0
+#: field:mrp_operations.operation.code,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Late"
+msgstr "Retardat"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordre de fabricació"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:122
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Month Planned"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:462
+#, python-format
+msgid "No operation to cancel."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr "codis d'operació"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation.code,name:0
+msgid "Operation Name"
+msgstr "Nom operació"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:442
+#, python-format
+msgid ""
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:458
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:465
+#, python-format
+msgid "Operation is already finished!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:435
+#, python-format
+msgid "Operation is not started yet!"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_calendar
+#: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_gantt
+msgid "Operations"
+msgstr "Operacions"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation,order_date:0
+msgid "Order Date"
+msgstr "Data ordre"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "Atura"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Pause Work Order"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "Pendent"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "Data prevista"
+
+#. module: mrp_operations
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Planned Month"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,product:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: field:mrp.workorder,product_id:0
+msgid "Product"
+msgstr "Producte"
+
+#. module: mrp_operations
+#: field:mrp.workorder,product_qty:0
+msgid "Product Qty"
+msgstr "Qtat producte"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Product to Produce"
+msgstr "Producte per produir"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: field:mrp.workorder,production_id:0
 #: field:mrp_operations.operation,production_id:0
 msgid "Production"
 msgstr "Producció"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Search Work Orders"
-msgstr "Cerca ordres de treball"
+#: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
+msgid "Production Operation"
+msgstr "Operació de producció"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,workcenter_id:0
-#: field:mrp_operations.operation,workcenter_id:0
-#: model:process.node,name:mrp_operations.process_node_workorder0
-msgid "Work Center"
-msgstr "Centre de treball"
+#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
+#: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_tree_view
+msgid "Production Operation Code"
+msgstr "Codi operació de producció"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,production_state:0
+msgid "Production Status"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Production started late"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,qty:0
+msgid "Qty"
+msgstr "Qtat."
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr ""
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "Llest per produir"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "Continua"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Resume Work Order"
+msgstr ""
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -683,44 +476,167 @@ msgid "Scheduled Date"
 msgstr "Data planificada"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,product:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,product_id:0
-msgid "Product"
-msgstr "Producte"
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Date by Month"
+msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Month"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Search"
+msgstr "Cerca"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "Cerca ordres de treball"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Set Draft"
+msgstr "Canvia a esborrany"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Set to Draft"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:435
+#: code:addons/mrp_operations/mrp_operations.py:442
+#: code:addons/mrp_operations/mrp_operations.py:455
+#: code:addons/mrp_operations/mrp_operations.py:458
+#, python-format
+msgid "Sorry!"
+msgstr "Disculpeu!"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "Inici"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_start:0
+#: field:mrp_operations.operation,date_start:0
+msgid "Start Date"
+msgstr "Data inicial"
+
+#. module: mrp_operations
+#: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
+msgid "Start Working"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
+msgid "Start/Stop Barcode"
+msgstr "Codi de barres Inicia/Para"
+
+#. module: mrp_operations
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+msgid "Started"
+msgstr "Iniciat"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: field:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: field:mrp.workorder,state:0
+#: field:mrp_operations.operation.code,start_stop:0
+msgid "Status"
+msgstr "Estat"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
+
+#. module: mrp_operations
+#: help:mrp.production.workcenter.line,delay:0
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.workorder,total_cycles:0
+msgid "Total Cycles"
+msgstr "Cicles totals"
+
+#. module: mrp_operations
 #: field:mrp.workorder,total_hours:0
 msgid "Total Hours"
 msgstr "Total d'hores"
 
 #. module: mrp_operations
-#: help:mrp.production,allow_reorder:0
-msgid ""
-"Check this to be able to move independently all production orders, without "
-"moving dependent ones."
+#: field:mrp.production.workcenter.line,uom:0
+msgid "Unit of Measure"
 msgstr ""
-"Seleccioneu aquesta opció per poder moure independentment totes les ordres "
-"de producció, sense moure els seus dependents"
 
 #. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "May"
-msgstr "Maig"
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr "Esperant mercaderia"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-msgid "Finished"
-msgstr "Finalitzada"
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
+#: field:mrp.workorder,workcenter_id:0
+#: field:mrp_operations.operation,workcenter_id:0
+msgid "Work Center"
+msgstr "Centre de treball"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Hours by Work Center"
-msgstr "Hores per centre de producció"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "Centres de producció"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr "Codi de barra de centres de producció"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "Ordre de treball"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Work Order Analysis"
+msgstr "Anàlisi d'ordres de treball"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr "Informe ordre de treball"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_graph
+msgid "Work Orders"
+msgstr "Ordres de producció"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "Planificació d'ordres de treball"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
@@ -728,354 +644,9 @@ msgid "Working Hours"
 msgstr "Hores de treball"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "Planned Month"
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
 msgstr ""
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "February"
-msgstr "Febrer"
-
-#. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
-msgid "Operation cancelled"
-msgstr "S'ha cancel·lat l'operació"
-
-#. module: mrp_operations
-#: model:process.node,note:mrp_operations.process_node_startoperation0
-msgid "Start the operation."
-msgstr "Inicia l'operació"
-
-#. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "April"
-msgstr "Abril"
-
-#. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
-msgid "Operation done"
-msgstr "Operació realitzada"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-msgid "#Line Orders"
-msgstr "Núm. línia ordres"
-
-#. module: mrp_operations
-#: view:mrp.production:0
-msgid "Start Working"
-msgstr ""
-
-#. module: mrp_operations
-#: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
-msgid ""
-"When the operation is finished, the operator updates the system by finishing "
-"the work order."
-msgstr ""
-"Quan es finalitza l'operació, l'operador actualitza el seu sistema "
-"finalitzant l'ordre de treball"
-
-#. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
-msgid "Details of the work order"
-msgstr "Detalls de l'ordre de treball"
-
-#. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,year:0
-msgid "Year"
-msgstr "Any"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Duration"
-msgstr "Duració"
-
-#, python-format
-#~ msgid " You cannot Resume the operation other then Pause state !"
-#~ msgstr " No podeu continuar les operacions que no estiguin en estat Aturada!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid "Operation is started"
-#~ msgstr "Operació és iniciada"
-
-#~ msgid "Start working"
-#~ msgstr "Inicia producció"
-
-#~ msgid "Operations Code"
-#~ msgstr "Codi operacions"
-
-#, python-format
-#~ msgid "Production Order Cannot start in [%s] state"
-#~ msgstr "Ordre de producció no pot començar en estat [%s]"
-
-#~ msgid "Mrp Operation Process"
-#~ msgstr "Procés operació MRP"
-
-#~ msgid "Work Order Events Using Bar Codes"
-#~ msgstr "Esdeveniments d'ordres de producció utilitzant codis de barres"
 
 #~ msgid "Date Planned"
 #~ msgstr "Data prevista"
-
-#~ msgid "Start - Stop Codes"
-#~ msgstr "Codis Inicia - Para"
-
-#~ msgid "UOM"
-#~ msgstr "UdM"
-
-#~ msgid "From production order, create the workorder"
-#~ msgstr "Des d'ordre de producció, crear l'ordre de treball"
-
-#~ msgid "Start Cancel Operation"
-#~ msgstr "Operació cancel·lació inici"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "Workcenters Barcode"
-#~ msgstr "Codi de barres centres de producció"
-
-#~ msgid "Operation is done"
-#~ msgstr "Operació és realitzada"
-
-#, python-format
-#~ msgid "Operation is already finished !"
-#~ msgstr "L'operació ja està finalitzada!"
-
-#~ msgid "Start Done Operation"
-#~ msgstr "Operació realitzat inici"
-
-#, python-format
-#~ msgid "There is no Operation to be cancelled !"
-#~ msgstr "No hi ha operació a cancel·lar!"
-
-#~ msgid "Production order for any products"
-#~ msgstr "Ordre de producció per qualsevol producte"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#, python-format
-#~ msgid "You cannot finish the operation without Starting/Resuming it !"
-#~ msgstr "No podeu finalitzar l'operació sense iniciar-la o continuar-la!"
-
-#~ msgid "This is delay between operation start and stop in this workcenter"
-#~ msgstr ""
-#~ "Aquest és el retard entre les operacions d'inici i parada en aquest centre "
-#~ "de producció"
-
-#~ msgid "From work order, define the cycles and hour for creating product"
-#~ msgstr ""
-#~ "Des d'ordre de treball, defineix els cicles i hora per crear producte"
-
-#~ msgid "Production Work Center"
-#~ msgstr "Centre de treball de producció"
-
-#, python-format
-#~ msgid "Operation is Already Cancelled  !"
-#~ msgstr "L'operació ja està cancel·lada!"
-
-#~ msgid "Production start Operation"
-#~ msgstr "Operació inici de producció"
-
-#~ msgid "Workcenter"
-#~ msgstr "Centre de producció"
-
-#~ msgid "Graph view in hours by workcenter"
-#~ msgstr "Vista gràfica en hores per centre de producció"
-
-#, python-format
-#~ msgid "You cannot Pause the Operation other then Start/Resume state !"
-#~ msgstr ""
-#~ "No podeu aturar les operacions que no estigui en estat iniciada o continuada!"
-
-#~ msgid "Work Orders to Do"
-#~ msgstr "Ordres de producció a realitzar"
-
-#~ msgid "Cancel Operation"
-#~ msgstr "Operació cancel·lació"
-
-#~ msgid "Work start Operation"
-#~ msgstr "Operació inici de treball"
-
-#~ msgid "Done Operation"
-#~ msgstr "Operació realitzada"
-
-#~ msgid "Operation is cancelled"
-#~ msgstr "Operació és cancel·lada"
-
-#, python-format
-#~ msgid ""
-#~ "Operation has already started !' 'You  can either Pause /Finish/Cancel the "
-#~ "operation"
-#~ msgstr ""
-#~ "L'operació ja s'ha iniciat! Podeu Aturar/Finalitzar/Cancel·lar l'operació"
-
-#~ msgid "Prod.State"
-#~ msgstr "Estat producció"
-
-#~ msgid "Workcenter Production start end workflow"
-#~ msgstr "Flux d'inici i fi producció del centre de producció"
-
-#~ msgid "All Work Orders"
-#~ msgstr "Totes les ordres de producció"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Month -1"
-#~ msgstr "Mes -1"
-
-#~ msgid "State"
-#~ msgstr "Estat"
-
-#, python-format
-#~ msgid ""
-#~ "Operation has already started !You  can either Pause /Finish/Cancel the "
-#~ "operation"
-#~ msgstr ""
-#~ "L'operació ha estat iniciada! Podeu posar-la en pausa / finalitza/cancel·la "
-#~ "operació"
-
-#~ msgid "This is lead time between operation start and stop in this workcenter"
-#~ msgstr ""
-#~ "Aquest és el termini d'execució entre les operacions d'inici i parada en "
-#~ "aquest centre de producció."
-
-#~ msgid "Work Center Production start end workflow"
-#~ msgstr "Flux d'inici-final de la producció en els centres de producció"
-
-#~ msgid ""
-#~ "Work Orders is the list of operations to be performed for each manufacturing "
-#~ "order. Once you start the first work order of a manufacturing order, the "
-#~ "manufacturing order is automatically marked as started. Once you finish the "
-#~ "latest operation of a manufacturing order, the MO is automatically done and "
-#~ "the related products are produced."
-#~ msgstr ""
-#~ "Les ordres de treball és la llista d'operacions que es realitzaran per a "
-#~ "cada ordre de producció. Una vegada que s'inicia el primer treball d'una "
-#~ "ordre de producció, aquesta es marca automàticament com iniciada. Una vegada "
-#~ "que acabi l'última operació d'una ordre de producció, aquesta es realitza "
-#~ "automàticament i els productes relacionats són produïts."
-
-#~ msgid "Real"
-#~ msgstr "Real"
-
-#~ msgid "Production State"
-#~ msgstr "Estat producció"
-
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "La quantitat ordenada no pot ser negativa o zero!"
-
-#~ msgid "You try to assign a lot which is not from the same product"
-#~ msgstr "Esteu intentant assignar un lot que no és del mateix producte"
-
-#~ msgid ""
-#~ "* When a work order is created it is set in 'Draft' state.\n"
-#~ "* When user sets work order in start mode that time it will be set in 'In "
-#~ "Progress' state.\n"
-#~ "* When work order is in running mode, during that time if user wants to stop "
-#~ "or to make changes in order then can set in 'Pause' state.\n"
-#~ "* When the user cancels the work order it will be set in 'Canceled' state.\n"
-#~ "* When order is completely processed that time it is set in 'Finished' state."
-#~ msgstr ""
-#~ "*Quan una ordre de treball és creada, el seu estat és 'Esborrany'.\n"
-#~ "*Quan un usuari inicia l'ordre de treball, el seu estat passarà a 'En "
-#~ "curs'.\n"
-#~ "*Quan l'ordre de treball està en manera 'En funcionament', si un usuari vol "
-#~ "detenir-la o realitzar canvis sobre ella, ha de passar-la a l'estat "
-#~ "'Pausa'.\n"
-#~ "*Quan l'usuari cancel·la l'ordre de treball passarà a l'estat "
-#~ "'Cancel·lada'.\n"
-#~ "*Quan l'ordre és completament processada, passarà a l'estat 'Acabada'."
-
-#~ msgid ""
-#~ "To manufacture or assemble products, and use raw materials and finished "
-#~ "products you must also handle manufacturing operations. Manufacturing "
-#~ "operations are often called Work Orders. The various operations will have "
-#~ "different impacts on the costs of manufacturing and planning depending on "
-#~ "the available workload."
-#~ msgstr ""
-#~ "Per fabricar o ensamblar productes, i utilitzar matèries primeres i "
-#~ "productes acabats també heu de controlar les operacions de fabricació. Les "
-#~ "operacions de fabricació normalment, es diuen ordres de treball. Les "
-#~ "diferents intervencions tindran diferents impactes en els costos de "
-#~ "fabricació i la planificació en funció de la càrrega de treball disponible."
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "Heu d'assignar un lot de producció per aquest producte"
-
-#~ msgid ""
-#~ "\n"
-#~ "     This module adds state, date_start,date_stop in production order "
-#~ "operation lines\n"
-#~ "     (in the \"Work Centers\" tab)\n"
-#~ "     State: draft, confirm, done, cancel\n"
-#~ "     When finishing/confirming,cancelling production orders set all state "
-#~ "lines to the according state\n"
-#~ "     Create menus:\n"
-#~ "         Production Management > All Operations\n"
-#~ "         Production Management > All Operations > Operations To Do "
-#~ "(state=\"confirm\")\n"
-#~ "     Which is a view on \"Work Centers\" lines in production order,\n"
-#~ "     editable tree\n"
-#~ "\n"
-#~ "    Add buttons in the form view of production order under workcenter tab:\n"
-#~ "    * start (set state to confirm), set date_start\n"
-#~ "    * done (set state to done), set date_stop\n"
-#~ "    * set to draft (set state to draft)\n"
-#~ "    * cancel set state to cancel\n"
-#~ "\n"
-#~ "    When the production order becomes \"ready to produce\", operations must\n"
-#~ "    become 'confirmed'. When the production order is done, all operations\n"
-#~ "    must become done.\n"
-#~ "\n"
-#~ "    The field delay is the delay(stop date - start date).\n"
-#~ "    So that we can compare the theoretic delay and real delay.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "     Aquest mòdul afegeix estat, data de començament, data de finalització a "
-#~ "les línies d'operació de les ordres de producció\n"
-#~ "(en la pestanya \"Centres de Treball\")\n"
-#~ "    Estat: esborrany, confirmat, fet, cancel·lat\n"
-#~ "    Quan es finalitzen, confirmen o cancel·len les ordres de producció "
-#~ "s'estableixen tots les línies a l'estat corresponent\n"
-#~ "    Menús creats:\n"
-#~ "        Gestió de productes > Totes les operacions\n"
-#~ "        Gestió de productes > Totes les operacions > Operacions a realitzar "
-#~ "(estat=\"confirmada\")\n"
-#~ "    La qual és una vista en les línies de \"Centres de Treball\" en les "
-#~ "ordres de producció,\n"
-#~ "    arbre editable\n"
-#~ "\n"
-#~ "    Afegeix botons a la vista formulari de les ordres de producció sota la "
-#~ "pestanya de centres de treball:\n"
-#~ "    * comença (canvia l'estat a 'confirmada'), omple la data d'inici\n"
-#~ "    * finalitza (canvia l'estat a 'finalitzada'), omple la data de "
-#~ "finalització\n"
-#~ "    * canvia a esborrany (canvia l'estat a 'esborrany')\n"
-#~ "    * cancel·la (canvia l'estat a cancel·lada)\n"
-#~ "\n"
-#~ "    Quan les ordress de producció estiguin \"preparades per produir-se\", "
-#~ "les operacions han de\n"
-#~ "    confirmar-se. Quan es realitzi l'ordre de producció, totes les "
-#~ "operacions\n"
-#~ "    quedar realitzades.\n"
-#~ "\n"
-#~ "    El camp 'retard' és el retard (data de finalització - data de "
-#~ "començament).\n"
-#~ "    Així podreu comparar el retard teòric amb el retard real.\n"
-#~ "\n"
-#~ "    "
