@@ -68,9 +68,16 @@ html, body {
     bottom: 0px;
     color: #FFFFFF;
 }
+.odoo_project_timesheet .pt_btn {
+    background-color: #a24689;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.odoo_project_timesheet .pt_link {
+    color: #a24689;
+}
 .odoo_project_timesheet .pt_add_activity {
     color: #0066FF;
-    cursor: pointer;
 }
 .odoo_project_timesheet .pt_activity_body {
     overflow: auto;
@@ -78,13 +85,6 @@ html, body {
 .odoo_project_timesheet .activity_row {
     height: 35px;
     cursor: pointer;
-}
-.odoo_project_timesheet .pt_btn {
-    background-color: #a24689;
-    color: #FFFFFF;
-}
-.odoo_project_timesheet .pt_link {
-    color: #a24689;
 }
 .odoo_project_timesheet .pt_input_project, 
 .odoo_project_timesheet .pt_input_task,
@@ -98,7 +98,7 @@ html, body {
 .odoo_project_timesheet .pt_input_project, .odoo_project_timesheet .pt_input_task {
     background-color: #D2D2FF;
 }
-.odoo_project_timesheet input.pt_invalid {
+.odoo_project_timesheet input.pt_invalid, .odoo_project_timesheet textarea.pt_invalid {
     border-color: red;
 }
 .odoo_project_timesheet .o_new_account, .odoo_project_timesheet .o_existing_account {
@@ -111,6 +111,9 @@ html, body {
     width: 100%;
     margin-bottom: 1px;
 }
+/*
+Jquery Textext related stuff 
+*/
 .odoo_project_timesheet .pt_m2o .text-core {
   min-height: 22px;
 }

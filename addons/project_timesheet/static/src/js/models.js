@@ -9,6 +9,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.task_id = options.task_id || null;
             this.name = options.name || null; //Actually description field
             this.hours = options.hours || null;
+            this.command = options.command || 0;
         },
         export_as_json: function() {
             //TO Implement, will return activity record
@@ -75,6 +76,22 @@ function odoo_project_timesheet_models(project_timesheet) {
                 this.get('tasks').add(task);
             }
         },
+        name_search: function(term) {
+            /*
+             * This method will search into task collection and will return key, value pairs for tasks
+             */
+            console.log("name_search for task collection ::: ");
+            var tasks = this.get('tasks');
+            var search_result = [];
+            var task_models = tasks.models
+            for (var i = 0; i < task_models.length; i++) {
+                search_result.push([task_models[i].id, task_models[i].name]);
+            }
+            if (term) {
+                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+            }
+            return search_result;
+        }
     });
 
     project_timesheet.ProjectCollection = Backbone.Collection.extend({
@@ -123,7 +140,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             });
         },
         add_project: function(data) {
-            //TO Implement, will create new object of model if data having virtual_id and add it into collection, then it will call add task for that collection model
+            //this method will create new object of model if data having virtual_id and add it into collection, then it will call add task for that collection model
             //It also finds project model from collection and add task in that model if project_id passed in data is already available
             //We can find model by id, coolection.get(id of model(e.g. id of project model)), id is magic attribute of model
             var projects_collection = this.get("projects");
@@ -138,6 +155,21 @@ function odoo_project_timesheet_models(project_timesheet) {
                 this.get('projects').add(project);
             }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
+        },
+        name_search: function(term) {
+            /*
+            * This method searches into porjects collection and will return key,value pairs for projects.
+            */
+            var projects = this.get('projects');
+            var search_result = [];
+            var project_models = projects.models
+            for (var i = 0; i < project_models.length; i++) {
+                search_result.push([project_models[i].id, project_models[i].name]);
+            }
+            if (term) {
+                search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+            }
+            return search_result;
         },
         load_stored_data: function() {
             //We should simply call add_project method for activity_record which having project and task details, 

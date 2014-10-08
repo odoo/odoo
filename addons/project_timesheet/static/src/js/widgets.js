@@ -63,6 +63,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.id_for_input = options.id_for_input;
             this.project_timesheet_db = project_timesheet.project_timesheet_model.project_timesheet_db;
             this._super.apply(this, arguments);
+            this.set({value: false});
         },
         start: function() {
             this._super.apply(this, arguments);
@@ -175,6 +176,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 });
             });
             self.$input
+            /*
             .focusin(function () {
                 self.trigger('focused');
                 self.ignore_blur = false;
@@ -184,7 +186,9 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 if (!self.ignore_blur) {
                     self.trigger('blurred');
                 }
-            }).keydown(function(e) {
+            })
+            */
+            .keydown(function(e) {
                 if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
                     self.$input.textext()[0].autocomplete().selectFromDropdown();
                 }
@@ -193,12 +197,17 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         get_search_result: function(term) {
             var self = this;
             var def = $.Deferred();
-            var data = this.project_timesheet_db.load(this.model, []);
-            if (!term) {
-                var search_data = data;
-            } else {
-                var search_data = _.compact(_(data).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+            var data;
+            if(this.model) {
+                data = this.model.name_search(term);
+                console.log("Result of name_search is ::: ", data);
             }
+            var search_data = data;
+            //if (!term) {
+            //    var search_data = data;
+            //} else {
+            //    var search_data = _.compact(_(data).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
+            //}
             var values = _.map(search_data, function(x) {
                 var label = _.str.escapeHTML(x[1].split("\n")[0]);
                 if (self.model == "tasks") {
@@ -221,7 +230,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             });
             // quick create
             //var raw_result = _(data.result).map(function(x) {return x[1];});
-            var raw_result = search_data.map(function(x) {return x[1];});
+            var raw_result = search_data ? search_data.map(function(x) {return x[1];}) : [];
             if (term.length > 0 && !_.include(raw_result, term)) {
                 values.push({
                     label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
@@ -238,11 +247,12 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
             var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
             this.$input.data("id", virtual_id);
+            this.set({value: virtual_id});
             this.$input.val(term);
         },
         add_id: function(id, name) {
-            console.log("id is ::: ",id, name);
             this.$input.data("id", id);
+            this.set({value: id});
             this.$input.val(name);
         },
     });
@@ -263,6 +273,9 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.replaceElement(QWeb.render(this.template, {widget: this, activities: this.activities}));
         },
         format_duration: function(field_val) {
+            if(!field_val) {
+                return;
+            }
             var data = field_val.toString().split(".");
             if (data[1]) {
                 data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2);

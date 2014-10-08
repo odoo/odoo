@@ -57,6 +57,18 @@ function odoo_project_timesheet_db(project_timesheet) {
             activities.push(activity);
             this.save('activities',activities);
         },
+        remove_activity: function(activity) {
+            var activities = this.load("activities", []);
+            for(var i = 0, len = activities.length; i < len; i++){
+                if(activities[i].id === activity_id){
+                    activities[i] = activity;
+                    activities.pop(i);
+                    break;
+                }
+            }
+            this.save('activities',activities);
+        },
+        //TO REMOVE: If we are using models to get m2o data
         add_new_project: function(project) {
             var projects = this.load("projects", []);
             for(var i = 0; i < projects.length; i++) {
@@ -70,6 +82,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             projects.push(project);
             this.save('projects', projects);
         },
+        //TO REMOVE: If we are using models to get m2o data
         add_new_task: function(task) {
             var tasks = this.load("tasks", []);
             for(var i = 0; i < tasks.length; i++) {
