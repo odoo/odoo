@@ -25,6 +25,7 @@ from copy import copy
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
+from types import NoneType
 import logging
 import pytz
 import xmlrpclib
@@ -983,6 +984,9 @@ class Float(Field):
     def _setup_digits(self, env):
         """ Setup the digits for `self` and its corresponding column """
         self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.digits:
+            assert isinstance(self.digits, (tuple, list)) and len(self.digits) >= 2, \
+                "Float field %s with digits %r, expecting (total, decimal)" % (self, self.digits)
         if self.store:
             column = env[self.model_name]._columns[self.name]
             column.digits_change(env.cr)
@@ -1024,6 +1028,11 @@ class Char(_String):
     """
     type = 'char'
     size = None
+
+    def _setup(self, env):
+        super(Char, self)._setup(env)
+        assert isinstance(self.size, (NoneType, int)), \
+            "Char field %s with non-integer size %r" % (self, self.size)
 
     _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
@@ -1303,6 +1312,11 @@ class Reference(Selection):
     def __init__(self, selection=None, string=None, **kwargs):
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
+    def _setup(self, env):
+        super(Reference, self)._setup(env)
+        assert isinstance(self.size, int), \
+            "Reference field %s with non-integer size %r" % (self, self.size)
+
     _related_size = property(attrgetter('size'))
 
     _column_size = property(attrgetter('size'))
@@ -1334,6 +1348,11 @@ class _Relational(Field):
     relational = True
     domain = None                       # domain for searching values
     context = None                      # context for searching values
+
+    def _setup(self, env):
+        super(_Relational, self)._setup(env)
+        assert self.comodel_name in env.registry, \
+            "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
 
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
