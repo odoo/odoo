@@ -511,7 +511,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         self.dataset.index = 0;
                     }
                 } else if (self.dataset.index >= self.records.length) {
-                    self.dataset.index = 0;
+                    self.dataset.index = self.records.length ? 0 : null;
                 }
 
                 self.compute_aggregates();

@@ -1,0 +1,44 @@
+-
+  In order to check if the last tracking is set on moves, I create a picking
+-
+  !record {model: stock.picking, id: shipment_tracking}:
+    type: out
+    location_dest_id: stock_location_output
+-
+  !record {model: stock.move, id: shipment_tracking_move1}:
+    picking_id: shipment_tracking
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
+    product_qty: 10.0
+    location_id: location_monitor
+    location_dest_id: stock_location_output
+-
+  !record {model: stock.move, id: shipment_tracking_move2}:
+    picking_id: shipment_tracking
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
+    product_qty: 10.0
+    location_id: location_monitor
+    location_dest_id: stock_location_output
+-
+  Then I call setlast_tracking on the moves and check if the tracking is correct
+-
+  !python {model: stock.move}: |
+    move_id = ref('shipment_tracking_move1')
+    move = self.browse(cr, uid, move_id)
+    assert not move.tracking_id, "Move1 must not have a tracking at this point"
+    tracking_ids = self.pool['stock.tracking'].search(cr, uid, [])
+    self.setlast_tracking(cr, uid, [move_id])
+    move.refresh()
+    tracking_id = move.tracking_id.id
+    assert tracking_id, "The move must have a tracking_id"
+    assert tracking_id not in tracking_ids, "The tracking must be a new one"
+
+    move2_id = ref('shipment_tracking_move2')
+    move2 = self.browse(cr, uid, move2_id)
+    assert not move2.tracking_id, "Move2 must not have a tracking at this point"
+    self.setlast_tracking(cr, uid, [move2_id])
+    move2.refresh()
+    tracking2_id = move2.tracking_id.id
+    assert tracking2_id, "Move2 must have a tracking_id"
+    assert tracking2_id == tracking_id, "The second move must have the same tracking than the previous one"

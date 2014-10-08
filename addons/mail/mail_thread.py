@@ -42,6 +42,8 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
+mail_header_msgid_re = re.compile('<[^<>]+>')
+
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
@@ -297,7 +299,7 @@ class mail_thread(osv.AbstractModel):
 
         if not context.get('mail_notrack'):
             # Perform the tracking
-            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+            tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         else:
             tracked_fields = None
         if tracked_fields:
@@ -916,13 +918,13 @@ class mail_thread(osv.AbstractModel):
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         if message.get('In-Reply-To'):
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To'].strip()))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
-                                                                         [x.strip() for x in decode(message['References']).split()])])
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 

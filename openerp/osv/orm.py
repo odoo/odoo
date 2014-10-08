@@ -55,6 +55,7 @@ import simplejson
 import time
 import traceback
 import types
+from collections import defaultdict
 
 import psycopg2
 from lxml import etree
@@ -1389,6 +1390,16 @@ class BaseModel(object):
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+            except Exception, e:
+                message = (_('Unknown error during import:') +
+                           u' %s: %s' % (type(e), unicode(e)))
+                moreinfo = _('Resolve other errors first')
+                messages.append(dict(info, type='error',
+                                     message=message,
+                                     moreinfo=moreinfo))
+                # Failed for some reason, perhaps due to invalid data supplied,
+                # rollback savepoint and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -2558,13 +2569,19 @@ class BaseModel(object):
         # same ordering, and can be merged in one pass.
         result = []
         known_values = {}
+
+        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
+            count_attr = '_'
+        else:
+            count_attr = groupby
+        count_attr += '_count'
+
         def append_left(left_side):
             grouped_value = left_side[groupby] and left_side[groupby][0]
             if not grouped_value in known_values:
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
-                count_attr = groupby + '_count'
                 known_values[grouped_value].update({count_attr: left_side[count_attr]})
         def append_right(right_side):
             grouped_value = right_side[0]
@@ -3000,6 +3017,9 @@ class BaseModel(object):
             if len(constraints) == 1:
                 # Is it the right constraint?
                 cons, = constraints
+                if self.is_transient() and not dest_model.is_transient():
+                    # transient foreign keys are added as cascade by default
+                    ondelete = ondelete or 'cascade'
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     # Wrong FK: drop it and recreate
@@ -4034,6 +4054,7 @@ class BaseModel(object):
         self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
+        ir_attachment_obj = self.pool.get('ir.attachment')
 
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
@@ -4071,6 +4092,13 @@ class BaseModel(object):
                     context=context)
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
+
+            # For the same reason, removing the record relevant to ir_attachment
+            # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
+            cr.execute('select id from ir_attachment where res_model = %s and res_id in %s', (self._name, sub_ids))
+            ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
+            if ir_attachment_ids:
+                ir_attachment_obj.unlink(cr, uid, ir_attachment_ids, context=context)
 
         for order, object, store_ids, fields in result_store:
             if object == self._name:
@@ -4139,6 +4167,7 @@ class BaseModel(object):
         """
         readonly = None
         self.check_field_access_rights(cr, user, 'write', vals.keys())
+        deleted_related = defaultdict(list)
         for field in vals.copy():
             fobj = None
             if field in self._columns:
@@ -4147,6 +4176,10 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
+            if fobj._type in ['one2many', 'many2many'] and vals[field]:
+                for wtuple in vals[field]:
+                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
+                        deleted_related[fobj._obj].append(wtuple[1])
             groups = fobj.write
 
             if groups:
@@ -4353,7 +4386,8 @@ class BaseModel(object):
             for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
-                    todo.append(id)
+                    if id not in deleted_related[object]:
+                        todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         self._workflow_trigger(cr, user, ids, 'trg_write', context=context)
@@ -4394,6 +4428,8 @@ class BaseModel(object):
             self._transient_vacuum(cr, user)
 
         self.check_access_rights(cr, user, 'create')
+        
+        vals = self._add_missing_default_values(cr, user, vals, context)
 
         if self._log_access:
             for f in LOG_ACCESS_COLUMNS:
@@ -4401,7 +4437,6 @@ class BaseModel(object):
                     _logger.warning(
                         'Field `%s` is not allowed when creating the model `%s`.',
                         f, self._name)
-        vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
         for v in self._inherits:

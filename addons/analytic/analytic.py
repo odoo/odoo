@@ -301,7 +301,7 @@ class account_analytic_account(osv.osv):
                 dom = []
                 for name2 in name.split('/'):
                     name = name2.strip()
-                    account_ids = self.search(cr, uid, dom + [('name', 'ilike', name)] + args, limit=limit, context=context)
+                    account_ids = self.search(cr, uid, dom + [('name', operator, name)] + args, limit=limit, context=context)
                     if not account_ids: break
                     dom = [('parent_id','in',account_ids)]
         else:

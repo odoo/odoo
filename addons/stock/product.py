@@ -283,6 +283,8 @@ class product_product(osv.osv):
         if prodlot_id:
             prodlot_clause = ' and prodlot_id = %s '
             where += [prodlot_id]
+        elif 'prodlot_id' in context and not prodlot_id:
+            prodlot_clause = ' and prodlot_id is null '
 
         # TODO: perhaps merge in one query.
         if 'in' in what:

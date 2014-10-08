@@ -49,7 +49,7 @@ class account_coda_import(osv.osv_memory):
         return tmp_account_id
 
     _defaults = {
-        'coda_fname': lambda *a: '',
+        'coda_fname': 'coda.txt',
         'temporary_account_id': _get_default_tmp_account,
     }
 

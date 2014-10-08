@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2014-01-21 06:03+0000\n"
-"Last-Translator: Lionel Sausin - Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2014-07-13 11:26+0000\n"
+"Last-Translator: Florian Hatat <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-22 06:13+0000\n"
-"X-Generator: Launchpad (build 16901)\n"
+"X-Launchpad-Export-Date: 2014-07-14 07:05+0000\n"
+"X-Generator: Launchpad (build 17111)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -4932,6 +4932,8 @@ msgstr "Mois"
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
 msgstr ""
+"Vous ne pouvez pas changer le code d'un compte qui contient des entrées de "
+"journal !"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -5680,7 +5682,7 @@ msgstr "Mouvements"
 #: field:account.bank.statement,details_ids:0
 #: view:account.journal:0
 msgid "CashBox Lines"
-msgstr ""
+msgstr "Lignes de caisse"
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
@@ -6347,6 +6349,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Ce délai de paiement sera utilisé à la place de celui par défaut pour les "
+"bons de commande et les factures fournisseurs"
 
 #. module: account
 #: code:addons/account/account_invoice.py:474
@@ -6645,7 +6649,7 @@ msgstr "Nb. de lignes"
 #. module: account
 #: view:account.invoice:0
 msgid "(update)"
-msgstr ""
+msgstr "(mise à jour)"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -6708,6 +6712,12 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"Toutes les nouvelles entrées de journal créées manuellement sont "
+"généralement à l'état \"Non validé\", mais vous pouvez définir l'option  de "
+"sauter ce statut dans le journal lié. Dans ce cas, elles se comporteront "
+"comme des entrées de journal créées automatiquement par le système de "
+"validation de document (factures, relevés bancaires, etc.) et seront créées "
+"avec le statut \"Validé\"."
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6781,7 +6791,7 @@ msgstr "Société associée à ce journal"
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr ""
+msgstr "Vous permet un environnement multi-devises"
 
 #. module: account
 #: view:account.subscription:0
@@ -7716,7 +7726,7 @@ msgstr "Sélection du journal"
 #: code:addons/account/account.py:434
 #, python-format
 msgid "Opening Balance"
-msgstr ""
+msgstr "Solde d'ouverture"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
@@ -8025,7 +8035,7 @@ msgstr "Prix"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,closing_details_ids:0
 msgid "Closing Cashbox Lines"
-msgstr ""
+msgstr "Fermeture des lignes de caisses"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -9883,6 +9893,8 @@ msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
 "payment method '%s'."
 msgstr ""
+"Vérifier que le champ \"Compte de transfert interne\" est renseigné dans la "
+"méthode de paiement \"%s\"."
 
 #. module: account
 #: field:account.vat.declaration,display_detail:0

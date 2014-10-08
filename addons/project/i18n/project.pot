@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,12 +79,6 @@ msgid "Start Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr ""
-
-#. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
@@ -127,8 +121,9 @@ msgid "Holds the Chatter summary (number of messages, ...). This summary is dire
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -384,7 +379,7 @@ msgid "Assigned to"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr ""
@@ -1117,7 +1112,7 @@ msgid "Done by"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1183,9 +1178,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1230,6 +1225,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Team"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
 msgstr ""
 
 #. module: project
@@ -1382,7 +1383,7 @@ msgid "Estimated time to do the task, usually set by the project manager when th
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1393,7 +1394,7 @@ msgid "Issue Version"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid "You cannot delete a project containing tasks. You can either delete all the project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
@@ -1493,7 +1494,7 @@ msgid "Overpassed Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid "Child task still open.\n"
 "Please cancel or complete child task first."
@@ -1549,12 +1550,6 @@ msgid "CHECK: "
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr ""
-
-#. module: project
 #: view:project.project:0
 msgid "Pending Projects"
 msgstr ""
@@ -1603,6 +1598,11 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
+msgstr ""
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
 msgstr ""
 
 #. module: project
@@ -1768,7 +1768,7 @@ msgid "Starting Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1923,7 +1923,7 @@ msgid "Reevaluation Task"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr ""

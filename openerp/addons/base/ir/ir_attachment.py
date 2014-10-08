@@ -28,6 +28,8 @@ import re
 from openerp import tools
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -121,7 +123,7 @@ class ir_attachment(osv.osv):
         if context is None:
             context = {}
         result = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         bin_size = context.get('bin_size')
         for attach in self.browse(cr, uid, ids, context=context):
             if location and attach.store_fname:
@@ -136,7 +138,7 @@ class ir_attachment(osv.osv):
             return True
         if context is None:
             context = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         file_size = len(value.decode('base64'))
         if location:
             attach = self.browse(cr, uid, id, context=context)
@@ -189,12 +191,14 @@ class ir_attachment(osv.osv):
         more complex ones apply there.
         """
         res_ids = {}
+        require_employee = False
         if ids:
             if isinstance(ids, (int, long)):
                 ids = [ids]
             cr.execute('SELECT DISTINCT res_model, res_id FROM ir_attachment WHERE id = ANY (%s)', (ids,))
             for rmod, rid in cr.fetchall():
                 if not (rmod and rid):
+                    require_employee = True
                     continue
                 res_ids.setdefault(rmod,set()).add(rid)
         if values:
@@ -205,9 +209,17 @@ class ir_attachment(osv.osv):
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
-            mids = self.pool.get(model).exists(cr, uid, mids)
+            if not self.pool.get(model):
+                require_employee = True
+                continue
+            existing_ids = self.pool.get(model).exists(cr, uid, mids)
+            if len(existing_ids) != len(mids):
+                require_employee = True
             ima.check(cr, uid, model, mode)
-            self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
+            self.pool.get(model).check_access_rule(cr, uid, existing_ids, mode, context=context)
+        if require_employee:
+            if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
+                raise except_orm(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,
@@ -284,7 +296,7 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'ir_attachment.location')
         if location:
             for attach in self.browse(cr, uid, ids, context=context):
                 if attach.store_fname:

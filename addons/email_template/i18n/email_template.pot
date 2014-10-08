@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -149,6 +149,12 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr ""
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid "Name to use for the generated report file (may contain placeholders)\n"
@@ -168,9 +174,8 @@ msgid "Sidebar action"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language code, e.g. ${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
 msgstr ""
 
 #. module: email_template
@@ -223,8 +228,9 @@ msgid "Advanced"
 msgstr ""
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: email_template
@@ -329,9 +335,9 @@ msgid "Add context action"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid "Optional translation language (ISO code) to select when sending out an email. If not set, the english version will be used. This should usually be a placeholder expression that provides the appropriate language, e.g. ${object.partner_id.lang}."
 msgstr ""
 
 #. module: email_template
@@ -436,6 +442,12 @@ msgstr ""
 #. module: email_template
 #: view:res.partner:0
 msgid "Suppliers"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Sender email is missing or empty after template rendering. Specify one to deliver your message"
 msgstr ""
 
 #. module: email_template

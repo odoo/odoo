@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-14 00:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,6 @@ msgstr ""
 
 #. module: analytic
 #: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr ""
 
@@ -85,6 +84,13 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -172,13 +178,6 @@ msgid "Sets the higher limit of time to work on the contract, based on the times
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "If you set a company, the currency selected has to be the same as it's currency. \n"
-"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
 msgstr ""
@@ -206,6 +205,11 @@ msgstr ""
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
 msgstr ""
 
 #. module: analytic

@@ -74,7 +74,7 @@ class sale_order_line(osv.osv):
         result=res['value']
         pricelist_obj=self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
-        if product:
+        if product and pricelist:
             if result.get('price_unit',False):
                 price=result['price_unit']
             else:
@@ -84,10 +84,17 @@ class sale_order_line(osv.osv):
             list_price = pricelist_obj.price_get(cr, uid, [pricelist],
                     product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })
 
-            pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
+            so_pricelist = pricelist_obj.browse(cr, uid, pricelist, context=context)
 
             new_list_price = get_real_price(list_price, product.id, qty, uom, pricelist)
-            if len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0 and new_list_price != 0:
+            if so_pricelist.visible_discount and list_price[pricelist] != 0 and new_list_price != 0:
+                if product.company_id and so_pricelist.currency_id.id != product.company_id.currency_id.id:
+                    # new_list_price is in company's currency while price in pricelist currency
+                    ctx = context.copy()
+                    ctx['date'] = date_order
+                    new_list_price = self.pool['res.currency'].compute(cr, uid,
+                        product.company_id.currency_id.id, so_pricelist.currency_id.id,
+                        new_list_price, context=ctx)
                 discount = (new_list_price - price) / new_list_price * 100
                 if discount > 0:
                     result['price_unit'] = new_list_price
@@ -96,4 +103,6 @@ class sale_order_line(osv.osv):
                     result['discount'] = 0.0
             else:
                 result['discount'] = 0.0
+        else:
+            result['discount'] = 0.0
         return res

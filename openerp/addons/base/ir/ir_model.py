@@ -361,6 +361,10 @@ class ir_model_fields(osv.osv):
             if self.pool.get(vals['model']):
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     self.pool[vals['model']]._rec_name = 'x_name'
+
+                if self.pool.fields_by_model is not None:
+                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
+                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
@@ -440,7 +444,7 @@ class ir_model_fields(osv.osv):
                     column_rename = (obj, (obj._table, item.name, vals['name']))
                     final_name = vals['name']
 
-                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                if 'model_id' in vals and vals['model_id'] != item.model_id.id:
                     raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
 
                 if 'ttype' in vals and vals['ttype'] != item.ttype:

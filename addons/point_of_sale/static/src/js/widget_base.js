@@ -33,9 +33,9 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                     amount = amount.toFixed(decimals);
                 }
                 if(this.currency.position === 'after'){
-                    return amount + ' ' + this.currency.symbol;
+                    return amount + ' ' + (this.currency.symbol || '');
                 }else{
-                    return this.currency.symbol + ' ' + amount;
+                    return (this.currency.symbol || '') + ' ' + amount;
                 }
             }
 

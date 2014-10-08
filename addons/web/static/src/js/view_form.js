@@ -2720,7 +2720,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || '100%');
+            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -5194,6 +5194,20 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.render_value();
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // By default, on binary images read, the server returns the binary size
+        // This is possible that two images have the exact same size
+        // Therefore we trigger the change in case the image value hasn't changed
+        // So the image is re-rendered correctly
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 
