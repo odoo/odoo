@@ -71,6 +71,9 @@ class account_bank_statement_import(osv.TransientModel):
         vals_bank_statement.update({'balance_end_real': total,
                                     'line_ids': line_ids,
                                     'journal_id': journal_id})
-        return [vals_bank_statement]
+        return {
+            'account_number': False,
+            'bank_statement_vals': [vals_bank_statement],
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
