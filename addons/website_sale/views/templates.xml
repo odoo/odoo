@@ -1017,6 +1017,14 @@
           </ul>
           <h1 class="mb32">Validate Order</h1>
           <div class="row">
+          <div class="col-lg-8 col-sm-9">
+              <t t-foreach="errors" t-as="error">
+              <div class="alert alert-danger" t-if="error">
+                <h4><t t-esc="error[0]"/></h4>
+                <t t-esc="error[1]"/>
+              </div>
+            </t>
+          </div>
           <div class="col-lg-8 col-sm-9 oe_cart">
               <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
               <table class='table table-striped table-condensed' id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
