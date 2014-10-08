@@ -43,7 +43,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
-        if (!this.options.$buttons.length) {
+        if (!this.options.$buttons || !this.options.$buttons.length) {
             this.options.$buttons = false;
         }
     },
