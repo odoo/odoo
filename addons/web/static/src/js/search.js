@@ -944,6 +944,11 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     toggle: function (filter, options) {
         this.searchview.query.toggle(this.make_facet([this.make_value(filter)]), options);
     },
+    is_visible: function () {
+        return _.some(this.filters, function (filter) {
+            return !filter.attrs.invisible;
+        });
+    },
     complete: function (item) {
         var self = this;
         item = item.toLowerCase();
@@ -1442,8 +1447,10 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
         this.$apply_filter = this.$('.oe-apply-filter');
         this.$add_filter_menu = this.$('.oe-add-filter-menu');
         _.each(this.filters, function (group) {
-            group.insertBefore(self.$add_filter);
-            $('<li>').addClass('divider').insertBefore(self.$add_filter);
+            if (group.is_visible()) {
+                group.insertBefore(self.$add_filter);
+                $('<li>').addClass('divider').insertBefore(self.$add_filter);
+            }
         });
         this.append_proposition().then(function (prop) {
             prop.$el.hide();
