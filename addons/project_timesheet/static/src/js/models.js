@@ -115,6 +115,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.project_timesheet_db = new project_timesheet.project_timesheet_db();
             this.screen_data = {};  //see ScreenSelector
             //Try to check localstorage having session, we do not reload session like web module(core.js), instead stored in localstorage
+            console.log("project_timesheet is ::: ", project_timesheet, openerp);
             if(!project_timesheet.session && !_.isEmpty(this.project_timesheet_db.load("session", {}))) {
                 var stored_session = this.project_timesheet_db.load("session", {});
                 project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {session_id: stored_session['session_id']});

@@ -498,16 +498,16 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $form_data.val('');
             this.$el.find(".pt_activity_body h2").removeClass("o_hidden");
             this.$el.find(".pt_btn_add_activity").removeClass("o_hidden");
+            self.$el.find(".pt_btn_remove_activity").addClass("o_hidden");
             if(!this.$el.find(".pt_btn_edit_activity").hasClass("o_hidden")) {
                 this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
             }
             $form_data.removeData();
-            //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
-            
             this.activity_list = new project_timesheet.ActivityListView();
             this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
             this.activity_list.$el.find(".activity_row").on('click', this.on_click_row);
             this._super();
+            //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, this.set_project_model);
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
@@ -572,9 +572,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.current_id = screen_data['id'];
             this.$el.find(".pt_activity_body table").remove();
             this.$el.find(".pt_activity_body h2").addClass("o_hidden");
+            self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity").toggleClass("o_hidden");
             self.$el.find(".pt_btn_add_activity").toggleClass("o_hidden");
-            self.$el.find(".pt_btn_remove_activity").toggleClass("o_hidden");
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":
