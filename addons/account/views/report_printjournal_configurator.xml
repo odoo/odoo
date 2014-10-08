@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_printjournal_configurator" inherit_id="account.report_journal_configurator" primary="True">
+    <xpath expr="//select[@name='filter']" position="replace">
+    </xpath>
+    <xpath expr="//label[@for='filter']" position="replace">
+        <label for="sort_selection">Enties Sorted by :</label>
+        <select name="sort_selection" class="form-control">
+            <option t-if="data['form']['sort_selection'] == 'am_name'" selected="selected" value="am_name">Journal Entry Number</option>
+            <option t-if="data['form']['sort_selection'] != 'am_name'" value="am_name">Journal Entry Number</option>
+            <option t-if="data['form']['sort_selection'] == 'l.date'" selected="selected" value="l.date">Date</option>
+            <option t-if="data['form']['sort_selection'] != 'l.date'" value="l.date">Date</option>
+        </select>
+    </xpath>
+</template>
+</data>
+</openerp>

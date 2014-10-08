@@ -1,0 +1,190 @@
+from openerp import models, fields
+import time
+
+
+class AccountReportsConfigurator(models.AbstractModel):
+    _name = 'account.report.configurator'
+
+    def get_configurator(self, reportname):
+        return self.env['configurator.%s' % reportname]
+
+
+class AccountReportsConfiguratorCommon(models.TransientModel):
+    _name = 'configurator.common'
+
+    def _get_default_account(self):
+        return self._get_accounts()[0]['id']
+
+    def _get_accounts(self):
+        user = self.env['res.users'].browse(self.env.uid)
+        domain = [('parent_id', '=', False), ('company_id', '=', user.company_id.id)]
+        return self.env['account.account'].search_read(fields=['name'], domain=domain)
+
+    def _get_default_fiscalyear(self):
+        return self._get_fiscalyears()[0]['id']
+
+    def _get_fiscalyears(self):
+        now = time.strftime('%Y-%m-%d')
+        company_id = False
+        ids = self.env.context.get('active_ids', [])
+        if ids and self.env.context.get('active_model') == 'account.account':
+            company_id = self.env['account.account'].browse(ids[0]).company_id.id
+        else:  # use current company id
+            company_id = self.env.user.company_id.id
+        domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
+        return self.env['account.fiscalyear'].search_read(domain=domain, fields=['name'])
+
+    def _get_default_journals(self):
+        return self.env['account.journal'].search([])
+
+    chart_account_id = fields.Integer(default=_get_default_account)
+    fiscalyear_id = fields.Integer(default=_get_default_fiscalyear)
+    filter = fields.Char(default='filter_no')
+    period_from = fields.Integer(default=False)
+    period_to = fields.Integer(default=False)
+    journal_ids = fields.Many2many('account.journal', default=_get_default_journals)
+    date_from = fields.Date(default=False)
+    date_to = fields.Date(default=False)
+    target_move = fields.Char(default='posted')
+
+    def _get_periods(self, fiscalyear_id):
+        domain = [('fiscalyear_id', '=', fiscalyear_id)]
+        periods = self.env['account.period'].search_read(domain=domain, fields=['name'])
+        return periods
+
+    def _get_journals(self):
+        return self.env['account.journal'].search_read(domain=[], fields=['name'])
+
+    def _build_contexts(self, form_data):
+        result = {}
+        result['fiscalyear'] = 'fiscalyear_id' in form_data and form_data['fiscalyear_id'] or False
+        result['journal_ids'] = 'journal_ids' in form_data and form_data['journal_ids'] or False
+        result['chart_account_id'] = 'chart_account_id' in form_data and form_data['chart_account_id'] or False
+        result['state'] = 'target_move' in form_data and form_data['target_move'] or ''
+        if form_data['filter'] == 'filter_date':
+            result['date_from'] = form_data['date_from']
+            result['date_to'] = form_data['date_to']
+        elif form_data['filter'] == 'filter_period':
+            result['period_from'] = form_data['period_from']
+            result['period_to'] = form_data['period_to']
+        return result
+
+    def _get_content_data(self, fiscalyear_id):
+        content_data = {}
+        content_data['accounts'] = self._get_accounts()
+        content_data['fiscalyears'] = self._get_fiscalyears()
+        content_data['journals'] = self._get_journals()
+        content_data['periods'] = self._get_periods(fiscalyear_id)
+        return content_data
+
+    def to_report_sxw_dict(self, **kwargs):
+        context = self.env.context
+
+
+        form_data = {}
+        for field in self.fields_get().keys():
+            if field in kwargs:
+                form_data[field] = kwargs[field]
+                if form_data[field] == 'True':
+                    form_data[field] = True
+                try:
+                    form_data[field] = int(form_data[field])
+                except ValueError:
+                    pass
+            else:
+                res = self.default_get([field])
+                if field in res:
+                    form_data[field] = res[field]
+
+        if isinstance(form_data['journal_ids'][0], tuple):
+            form_data['journal_ids'] = form_data['journal_ids'][0][2]
+        if 'journal_ids' in kwargs and kwargs['journal_ids']:
+            journal_ids = kwargs['journal_ids'].lstrip('[').rstrip(']')
+            temp = journal_ids.split(',')
+            form_data['journal_ids'] = []
+            for x in temp:
+                form_data['journal_ids'].append(int(str(x).lstrip(" u'").rstrip("'")))
+
+        if 'add_journal' in kwargs and 'add_journal_id' in kwargs:
+            form_data['journal_ids'].append(int(str(kwargs['add_journal_id']).lstrip(" u'").rstrip("'")))
+        if 'remove_journal' in kwargs and 'remove_journal_id' in kwargs:
+            form_data['journal_ids'].remove(int(kwargs['remove_journal_id']))
+
+        used_context = self._build_contexts(form_data)
+        form_data['periods'] = used_context.get('periods', False) and used_context['periods'] or []
+        form_data['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
+        fy_ids = form_data['fiscalyear_id'] and [form_data['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')]).ids
+        period_list = form_data['periods'] or self.env['account.period'].search([('fiscalyear_id', 'in', fy_ids)]).ids
+        form_data['active_ids'] = self.env['account.journal.period'].search(
+            [('journal_id', 'in', form_data['journal_ids']), ('period_id', 'in', period_list)]
+        ).ids
+
+        return {'model': context.get('active_model', 'ir.ui.menu'), 'ids': context.get('active_ids', []),
+                'content': self._get_content_data(form_data['fiscalyear_id']), 'form': form_data, }
+
+        # data = {}
+        # context = self.env.context
+        # data['model'] = context.get('active_model', 'ir.ui.menu')
+        # data['ids'] = context.get('active_ids', [])
+        # data['content'] = {}
+        # data['content']['accounts'] = self._get_accounts()
+        # data['content']['fiscalyears'] = self._get_fiscalyears()
+        # data['content']['journals'] = self._get_journals()
+        # data['form'] = {}
+        # data['form']['amount_currency'] = False
+        # if 'journal_ids' in kwargs and kwargs['journal_ids']:
+        #     journal_ids = kwargs['journal_ids'].lstrip('[').rstrip(']')
+        #     print journal_ids
+        #     temp = journal_ids.split(',')
+        #     data['form']['journal_ids'] = []
+        #     for x in temp:
+        #         data['form']['journal_ids'].append(int(str(x).lstrip(" u'").rstrip("'")))
+        # else:
+        #     data['form']['journal_ids'] = []
+        #     for x in data['content']['journals']:
+        #         data['form']['journal_ids'].append(x['id'])
+        # if 'add_journal' in kwargs and 'journal_id' in kwargs:
+        #     data['form']['journal_ids'].append(int(str(kwargs['journal_id']).lstrip(" u'").rstrip("'")))
+        # if 'remove_journal' in kwargs:
+        #     data['form']['journal_ids'].remove(int(kwargs['remove_journal']))
+        # if 'chart_account_id' in kwargs:
+        #     data['form']['chart_account_id'] = int(kwargs['chart_account_id'])
+        # else:
+        #     data['form']['chart_account_id'] = data['content']['accounts'][0]['id']
+        # if 'fiscalyear_id' in kwargs:
+        #     data['form']['fiscalyear_id'] = int(kwargs['fiscalyear_id'])
+        # else:
+        #     data['form']['fiscalyear_id'] = data['content']['fiscalyears'][0]['id']
+        # if 'target_move' in kwargs:
+        #     data['form']['target_move'] = kwargs['target_move']
+        # else:
+        #     data['form']['target_move'] = 'posted'
+        # if 'filter' in kwargs:
+        #     data['form']['filter'] = kwargs['filter']
+        # else:
+        #     data['form']['filter'] = 'filter_no'
+        # if 'date_to' not in kwargs:
+        #     data['form']['date_to'] = False
+        # else:
+        #     data['form']['date_to'] = kwargs['date_to']
+        # if 'date_from' not in kwargs:
+        #     data['form']['date_from'] = False
+        # else:
+        #     data['form']['date_from'] = kwargs['date_from']
+        # if 'period_from' not in kwargs:
+        #     data['form']['period_from'] = False
+        # else:
+        #     data['form']['period_from'] = int(kwargs['period_from'])
+        # if 'period_to' not in kwargs:
+        #     data['form']['period_to'] = False
+        # else:
+        #     data['form']['period_to'] = int(kwargs['period_to'])
+        # used_context = self._build_contexts(data)
+        # data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
+        # data['form']['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
+        # fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')])
+        # period_list = data['form']['periods'] or self.env['account.period'].search([('fiscalyear_id', 'in', fy_ids)])
+        # data['form']['active_ids'] = self.env['account.journal.period'].search(
+        #     [('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list.ids)]
+        # ).ids
+        # data['content']['periods'] = self._get_periods(data['form']['fiscalyear_id'])
