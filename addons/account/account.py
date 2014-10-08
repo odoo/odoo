@@ -35,6 +35,7 @@ from openerp.tools.float_utils import float_round as round
 import openerp.addons.decimal_precision as dp
 
 from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -77,15 +78,14 @@ class account_payment_term(models.Model):
     note = fields.Text(string='Description', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
 
-    def compute(self, cr, uid, id, value, date_ref=False, context=None):
+    @api.one
+    def compute(self, value, date_ref=False):
         if not date_ref:
             date_ref = datetime.now().strftime('%Y-%m-%d')
-        pt = self.browse(cr, uid, id, context=context)
         amount = value
         result = []
-        obj_precision = self.pool.get('decimal.precision')
-        prec = obj_precision.precision_get(cr, uid, 'Account')
-        for line in pt.line_ids:
+        prec = self.env['decimal.precision'].precision_get('Account')
+        for line in self.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
             elif line.value == 'procent':
@@ -95,7 +95,7 @@ class account_payment_term(models.Model):
             if amt:
                 next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
-                    next_first_date = next_date + relativedelta(day=1,months=1) #Getting 1st of next month
+                    next_first_date = next_date + relativedelta(day=1, months=1) #Getting 1st of next month
                     next_date = next_first_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
@@ -127,15 +127,11 @@ class account_payment_term_line(models.Model):
         help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month).")
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
 
-    def _check_percent(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context=context)
-        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 100.0):
-            return False
-        return True
-
-    _constraints = [
-        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 100.', ['value_amount']),
-    ]
+    @api.one
+    @api.constrains('value', 'value_amount')
+    def _check_percent(self):
+        if self.value == 'procent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
+            raise Warning(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 
 class account_account_type(models.Model):
@@ -217,14 +213,14 @@ class account_account(models.Model):
         return super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _get_children_and_consol(self, cr, uid, ids, context=None):
+    @api.multi
+    def _get_children_and_consol(self):
         #this function search for all the consolidated children (recursively) of the given account ids
         ids3 = []
-        for rec in self.browse(cr, uid, ids, context=context):
-            for child in rec.child_consol_ids:
-                ids3.append(child.id)
+        for rec in self:
+            ids3 = [child.id for child in rec.child_consol_ids]
         if ids3:
-            ids3 = self._get_children_and_consol(cr, uid, ids3, context)
+            ids3 = self._get_children_and_consol(ids3)
         return ids3
 
     @api.multi
@@ -597,18 +593,14 @@ class account_journal(models.Model):
         ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
     ]
 
-    def _check_currency(self, cr, uid, ids, context=None):
-        for journal in self.browse(cr, uid, ids, context=context):
-            if journal.currency:
-                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency.id:
-                    return False
-                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency.id:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
-    ]
+    @api.one
+    @api.constrains('currency', 'default_credit_account_id', 'default_debit_account_id')
+    def _check_currency(self):
+        if self.currency:
+            if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency.id:
+                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
+            if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
+                raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = dict(context or {})
