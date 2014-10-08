@@ -226,9 +226,9 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             }
             var data = field_val.toString().split(".");
             if (data[1]) {
-                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2);
+                data[1] = Math.ceil((data[1]*60*10)/100).toString();
             }
-            return data.join(".");
+            return data.join(":");
         },
     });
 

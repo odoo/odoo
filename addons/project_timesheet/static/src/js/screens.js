@@ -399,14 +399,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_button_timer: function() {
             //TO Implement
         },
-        //TODO: Improve method, its not working, add 36 hour and 36 minutes
-        format_duration: function(field_val) {
-            var data = field_val.toString().split(".");
-            if (data[1]) {
-                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2);
-            }
-            return data.join(".");
-        },
     });
 
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
@@ -569,7 +561,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         format_duration: function(field_val) {
             var data = field_val.toString().split(".");
             if (data[1]) {
-                data[1] = (Math.ceil((data[1]*60)/100)/100).toString().slice(0, 2)
+                data[1] = Math.round((data[1]*60*10)/100).toString();
             }
             return data;
         },
