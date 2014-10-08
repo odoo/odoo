@@ -22,8 +22,11 @@
                     <div>                       
                         <group>
                             <div class="analytics_settings">
-                                <label for="google_analytics_confirm" string="Google Analytics"/>
-                                <field name="google_analytics_confirm" class="oe_inline" />  
+                                <group>
+                                    <field string="Client ID" name="ga_client_id"/> 
+                                    <field string="Client Secret" name="ga_client_secret" />
+                                    <field name="google_management_authorization" widget="rtoken"/>
+                                </group> 
                             </div>
                         </group> 
 

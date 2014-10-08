@@ -46,9 +46,9 @@
         },
         
         create_snapshot: function() {
-            var m_names = new Array("January", "February", "March", 
-                "April", "May", "June", "July", "August", "September", 
-                "October", "November", "December");
+            var m_names = new Array("jan", "feb", "mar", 
+                "apr", "may", "jun", "jul", "aug", "sep", 
+                "oct", "nov", "dec");
             var d = new Date();
             var curr_date = d.getDate();
             var curr_month = d.getMonth();
@@ -57,7 +57,7 @@
                 id: "editor_new_version",
                 window_title: _t("New version"),
                 input: "Version name" ,
-                default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
+                default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name }).then(function (result) {
