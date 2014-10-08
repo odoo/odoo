@@ -231,8 +231,12 @@ class google_management(osv.AbstractModel):
         gs_pool = self.pool['google.service']
         website = self.pool['website'].browse(cr, uid, website_id, context=context)[0]
         webPropertyId = website.google_analytics_key
+        if not webPropertyId:
+            raise Warning("You must give a Google Analytics Key.")
         accountId = webPropertyId.split('-')[1] 
         profileId = website.google_analytics_view_id
+        if not profileId:
+            raise Warning("You must give a Google view ID.")
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments?access_token=%s' % (accountId, webPropertyId, profileId, self.get_token(cr, uid, context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
