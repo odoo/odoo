@@ -1134,7 +1134,7 @@ openerp.testing.section('search.groupby', {
     templates: true,
 }, function (test) {
     test('basic', {
-        asserts: 7,
+        asserts: 12,
         setup: function (instance, $s, mock) {
             mock('dummy.model:fields_view_get', function () {
                 return {
@@ -1154,23 +1154,20 @@ openerp.testing.section('search.groupby', {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
         .done(function () {
-            // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
-            // and 1 SaveFilter widget
-            debugger;
-            equal(view.drawer.inputs.length, 8,
-                  'should have 8 inputs total');
-            var group = _.find(view.drawer.inputs, function (f) {
-                return f instanceof instance.web.search.GroupbyGroup;
-            });
-            ok(group, "should have a GroupbyGroup input");
-            ok(group.getParent() === view.drawer,
-                "group's parent should be the drawer");
+            equal(view.search_fields.length, 0); // 0 fields
+            equal(view.filters.length, 0); // 0 filters (in filter menu)
+            equal(view.groupbys.length, 1); // 1 group of groupbys
+            var group = view.groupbys[0];
+            ok(group instanceof instance.web.search.GroupbyGroup, 
+                    'should have a GroupbyGroup input');
+            equal(group.filters.length, 3); // 3 group bys in group
+            ok(group.getParent() === view,
+                "group's parent should be the searchview");
 
             group.toggle(group.filters[0]);
             group.toggle(group.filters[2]);
 
             var results = view.build_search_data();
-            deepEqual(results.errors, [], "should have no errors");
             deepEqual(results.domains, [], "should have no domain");
             deepEqual(results.contexts, [
                 new instance.web.CompoundContext(
@@ -1180,10 +1177,14 @@ openerp.testing.section('search.groupby', {
                 "{'group_by': 'foo'}",
                 "{'group_by': 'baz'}"
             ], "should have sequence of contexts");
+
+            ok(view.filter_menu instanceof instance.web.search.FilterMenu, 'should have a filter menu');
+            ok(view.groupby_menu instanceof instance.web.search.GroupByMenu, 'should have a group by menu');
+            ok(view.favorite_menu instanceof instance.web.search.FavoriteMenu, 'should have a favorite menu');
         });
     });
     test('unified multiple groupby groups', {
-        asserts: 4,
+        asserts: 3,
         setup: function (instance, $s, mock) {
             mock('dummy.model:fields_view_get', function () {
                 return {
@@ -1205,14 +1206,7 @@ openerp.testing.section('search.groupby', {
         var view = makeSearchView(instance);
         return view.appendTo($fix)
         .done(function () {
-            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters,
-            // and 1 SaveFilter widget
-            equal(view.drawer.inputs.length, 10, "should have 10 inputs total");
-
-            var groups = _.filter(view.drawer.inputs, function (f) {
-                return f instanceof instance.web.search.GroupbyGroup;
-            });
-
+            var groups = view.groupbys;
             equal(groups.length, 3, "should have 3 GroupbyGroups");
 
             groups[0].toggle(groups[0].filters[0]);
@@ -1220,7 +1214,6 @@ openerp.testing.section('search.groupby', {
             equal(view.query.length, 1,
                   "should have unified groupby groups in single facet");
             deepEqual(view.build_search_data(), {
-                errors: [],
                 domains: [],
                 contexts: [new instance.web.CompoundContext(
                     "{'group_by': 'foo'}", "{'group_by': 'baz'}")],
@@ -1242,10 +1235,10 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $span = $fix.find('.oe_searchview_custom_list span:first').click();
+                var $li = view.favorite_menu.$el.find('li:first').click();
 
-                ok($span.hasClass('badge'), "should check/select the filter's row");
-                ok($span.hasClass("oe_searchview_custom_private"),
+                ok($li.hasClass('selected'), "should check/select the filter's row");
+                ok($li.hasClass("oe_searchview_custom_private"),
                     "should have private filter note/class");
                 equal(view.query.length, 1, "should have only one facet");
                 var values = view.query.at(0).values;
@@ -1265,10 +1258,10 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                var $row = view.favorite_menu.$el.find('li:first').click();
 
                 view.query.remove(view.query.at(0));
-                ok(!$row.hasClass('badge'),
+                ok(!$row.hasClass('selected'),
                     "should not be checked anymore");
             });
     });
@@ -1280,7 +1273,7 @@ openerp.testing.section('search.filters.saved', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $row = $fix.find('.oe_searchview_custom_list span:first').click();
+                var $row = view.favorite_menu.$el.find('li:first').click();
                 equal(view.query.length, 1, "should have one facet");
                 $row.click();
                 equal(view.query.length, 0, "should have removed facet");
@@ -1296,13 +1289,13 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
             .done(function () {
-                $fix.find('.oe_searchview_custom_list span:eq(0)').click();
+                view.favorite_menu.$el.find('li:first').click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
                     {'private': 1},
                     "should have selected first filter");
-                $fix.find('.oe_searchview_custom_list span:eq(1)').click();
+                view.favorite_menu.$el.find('li').eq(1).click();
                 equal(view.query.length, 1, "should have one facet");
                 deepEqual(
                     view.query.at(0).get('field').get_context(),
@@ -1325,10 +1318,8 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
         .then(function () {
-            $fix.find('.oe_searchview_savefilter input#oe_searchview_custom_input')
-                    .val("filter name")
-                .end()
-                .find('.oe_searchview_savefilter button').click();
+            view.favorite_menu.$el.find('.oe-save-name input').first().val("filter name");
+            view.favorite_menu.$el.find('.oe-save-name button').click();
             return done.promise();
         });
     });
@@ -1343,16 +1334,16 @@ openerp.testing.section('search.advanced', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $advanced = $fix.find('.oe_searchview_advanced');
+                var $filter_menu = view.filter_menu.$el;
                 // open advanced search (not actually useful)
-                $advanced.find('> h4').click();
+                $filter_menu.find('.oe-add-filter').click();
                 // select proposition (only one)
-                var $prop = $advanced.find('> form li:first');
+                var $prop = $filter_menu.find('.oe-filter-condition');
                 // field select should have two possible values, dummy and id
-                equal($prop.find('.searchview_extended_prop_field option').length,
+                equal($prop.find('select:first option').length,
                       2, "advanced search should provide choice between two fields");
                 // field should be dummy
-                equal($prop.find('.searchview_extended_prop_field').val(),
+                equal($prop.find('select:first').val(),
                       'dummy',
                       "only field should be dummy");
                 // operator should be "contains"/'ilike'
@@ -1362,8 +1353,7 @@ openerp.testing.section('search.advanced', {
                 $prop.find('.searchview_extended_prop_value input')
                      .val("stupid value");
                 // validate advanced search
-                $advanced.find('button.oe_apply').click();
-
+                $filter_menu.find('button.oe-apply-filter').click();
                 // resulting search
                 equal(view.query.length, 1, "search query should have a single facet");
                 var facet = view.query.at(0);
@@ -1379,34 +1369,35 @@ openerp.testing.section('search.advanced', {
 
         return view.appendTo($fix)
             .done(function () {
-                var $advanced = $fix.find('.oe_searchview_advanced');
+                var $filter_menu = view.filter_menu.$el;
                 // open advanced search (not actually useful)
-                $advanced.find('> h4').click();
+                $filter_menu.find('.oe-add-filter').click();
                 // open second condition
-                $advanced.find('button.oe_add_condition').click();
+                $filter_menu.find('a.oe-add-condition').click();
+
                 // select first proposition
-                var $prop1 = $advanced.find('> form li:first');
-                $prop1.find('.searchview_extended_prop_field').val('dummy').change();
-                $prop1.find('.searchview_extended_prop_op').val('ilike');
+                var $prop1 = $filter_menu.find('.oe-filter-condition:first');
+                $prop1.find('select.searchview_extended_prop_field').val("dummy").change();
+                $prop1.find('select.searchview_extended_prop_op').val('ilike');
                 $prop1.find('.searchview_extended_prop_value input')
                      .val("stupid value");
 
                 // select first proposition
-                var $prop2 = $advanced.find('> form li:last');
+                var $prop2 = $filter_menu.find('.oe-filter-condition:last');
                 // need to trigger event manually or op not changed
-                $prop2.find('.searchview_extended_prop_field').val('id').change();
-                $prop2.find('.searchview_extended_prop_op').val('=');
+                $prop2.find('select.searchview_extended_prop_field').val('id').change();
+                $prop2.find('select.searchview_extended_prop_op').val('=');
                 $prop2.find('.searchview_extended_prop_value input')
                      .val(42);
                 // validate advanced search
-                $advanced.find('button.oe_apply').click();
+                $filter_menu.find('button.oe-apply-filter').click();
 
                 // resulting search
                 equal(view.query.length, 1, "search query should have a single facet");
                 var facet = view.query.at(0);
                 ok(!facet.get('field').get_context(facet),
                    "advanced search facets should yield no context");
-                deepEqual(facet.get('field').get_domain(facet),
+                deepEqual(facet.get('field').get_domain(facet).eval(),
                           ['|', ['dummy', 'ilike', "stupid value"],
                                 ['id', '=', 42]],
                           "advanced search facet should return proposed domain");
@@ -1414,6 +1405,8 @@ openerp.testing.section('search.advanced', {
     });
     // TODO: UI tests?
 });
+
+
 openerp.testing.section('search.invisible', {
     dependencies: ['web.search'],
     rpc: 'mock',
