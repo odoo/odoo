@@ -7,6 +7,7 @@ import random
 
 from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp.addons.website.models.website import slug
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -173,6 +174,23 @@ class BlogPost(osv.Model):
                 }
                 history.create(cr, uid, res)
 
+    def _check_for_publication(self, cr, uid, ids, vals, context=None):
+        if vals.get('website_published'):
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+            for post in self.browse(cr, uid, ids, context=context):
+                post.blog_id.message_post(
+                    body='<p>%(post_publication)s <a href="%(base_url)s/blog/%(blog_slug)s/post/%(post_slug)s">%(post_link)s</a></p>' % {
+                        'post_publication': _('A new post %s has been published on the %s blog.') % (post.name, post.blog_id.name),
+                        'post_link': _('Click here to access the post.'),
+                        'base_url': base_url,
+                        'blog_slug': slug(post.blog_id),
+                        'post_slug': slug(post),
+                    },
+                    subtype='website_blog.mt_blog_blog_published',
+                    context=context)
+            return True
+        return False
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -181,6 +199,7 @@ class BlogPost(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
         self.create_history(cr, uid, [post_id], vals, context)
+        self._check_for_publication(cr, uid, [post_id], vals, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -188,6 +207,7 @@ class BlogPost(osv.Model):
             vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
+        self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
 
 class BlogPostHistory(osv.Model):
