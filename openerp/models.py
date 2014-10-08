@@ -2271,28 +2271,13 @@ class BaseModel(object):
                 if val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
-    def _check_selection_field_value(self, cr, uid, field, value, context=None):
-        """Raise except_orm if value is not among the valid values for the selection field"""
-        if self._columns[field]._type == 'reference':
-            val_model, val_id_str = value.split(',', 1)
-            val_id = False
-            try:
-                val_id = long(val_id_str)
-            except ValueError:
-                pass
-            if not val_id:
-                raise except_orm(_('ValidateError'),
-                                 _('Invalid value for reference field "%s.%s" (last part must be a non-zero integer): "%s"') % (self._table, field, value))
-            val = val_model
-        else:
-            val = value
-        if isinstance(self._columns[field].selection, (tuple, list)):
-            if val in dict(self._columns[field].selection):
-                return
-        elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
-            return
-        raise except_orm(_('ValidateError'),
-                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._name, field))
+    @api.model
+    def _check_selection_field_value(self, field, value):
+        """ Check whether value is among the valid values for the given
+            selection/reference field, and raise an exception if not.
+        """
+        field = self._fields[field]
+        field.convert_to_cache(value, self)
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints

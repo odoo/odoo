@@ -8,10 +8,10 @@ class mother(models.Model):
     _columns = {
         # check interoperability of field inheritance with old-style fields
         'name': osv.fields.char('Name', required=True),
+        'state': osv.fields.selection([('a', 'A'), ('b', 'B')], string='State'),
     }
 
     surname = fields.Char(compute='_compute_surname')
-    state = fields.Selection([('a', 'A'), ('b', 'B')])
 
     @api.one
     @api.depends('name')

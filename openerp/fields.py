@@ -592,11 +592,9 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
-        if self.column:
-            # some columns are registry-dependent, like float fields (digits);
-            # duplicate them to avoid sharing between registries
-            return copy(self.column)
 
+        # some columns are registry-dependent, like float fields (digits);
+        # duplicate them to avoid sharing between registries
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
@@ -609,6 +607,11 @@ class Field(object):
             args['type'] = self.type
             args['relation'] = self.comodel_name
             return fields.property(**args)
+
+        if isinstance(self.column, fields.function):
+            # it is too tricky to recreate a function field, so for that case,
+            # we make a stupid (and possibly incorrect) copy of the column
+            return copy(self.column)
 
         return getattr(fields, self.type)(**args)
 
@@ -1182,12 +1185,11 @@ class Selection(Field):
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
-    def _setup_regular(self, env):
-        super(Selection, self)._setup_regular(env)
-        # determine selection (applying extensions)
-        cls = type(env[self.model_name])
+    def set_class_name(self, cls, name):
+        super(Selection, self).set_class_name(cls, name)
+        # determine selection (applying 'selection_add' extensions)
         selection = None
-        for field in resolve_all_mro(cls, self.name, reverse=True):
+        for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
@@ -1348,13 +1350,11 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_regular(self, env):
-        super(Many2one, self)._setup_regular(env)
-
-        # self.inverse_fields is populated by the corresponding One2many field
-
+    def set_class_name(self, cls, name):
+        super(Many2one, self).set_class_name(cls, name)
         # determine self.delegate
-        self.delegate = self.name in env[self.model_name]._inherits.values()
+        if not self.delegate:
+            self.delegate = name in cls._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
