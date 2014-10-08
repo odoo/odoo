@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_sale_menu" model="ir.actions.client">
+            <field name="name">Open Sale Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_sale_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <record model="ir.cron" id="cronjob_sales_coupon_expire">
+            <field name='name'>Sales Coupon Expiration</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="doall" eval="False" />
+            <field name="model">sales.coupon</field>
+            <field name="function">check_cron_expiration</field>
+            <field name="args">()</field>
+        </record>
+    </data>
+</openerp>

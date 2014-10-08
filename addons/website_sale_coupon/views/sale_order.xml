@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="sale_coupon_form">
+             <field name="name">sale.coupon.form</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <field name="price_unit" position="after">
+                    <field name="sales_coupon_type_id"/>
+                </field>
+             </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_coupon_tree">
+             <field name="name">sale.coupon.tree</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <xpath expr="//page[@name='order_lines']//tree/field[@name='price_unit']" position="after">
+                    <field name="sales_coupon_type_id"/>
+                </xpath>
+             </field>
+        </record>
+
+        <record model="ir.ui.view" id="coupon_sale_order_line_tree">
+            <field name="name">Orders</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Order Lines" create="false">
+                    <field name="product_id"/>
+                    <field name="order_id"/>
+                    <field name="order_partner_id"/>
+                    <field name="name"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="salesman_id"/>
+                    <field name="price_unit"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_open_sale_order_line_view">
+            <field name="name">Orders</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="coupon_sale_order_line_tree"/>
+        </record>
+
+    </data>
+</openerp>
+

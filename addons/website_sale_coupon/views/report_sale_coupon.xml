@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_sales_coupon" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@class='oe_structure'][last()]" position="after">
+                <t t-if="o.has_coupon">
+                    <p><b> Coupon <t t-esc="coupan_report"/></b></p>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Coupon Code</th>
+                                <th>Expiration Date</th>
+                                <th>Expiration Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.order_line" t-as="l">
+                                <tr t-foreach="o.order_line.coupon_id" t-as="coupon">
+                                    <t t-if="not l.is_coupon">
+                                        <td>
+                                           <span t-field="coupon.product_id"/>
+                                        </td>
+                                        <td>
+                                           <span t-field="coupon.code"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="l.sales_coupon_type_id.duration == 0">
+                                                <span>no limit</span>
+                                            </t>
+                                            <t t-if="l.sales_coupon_type_id.duration != 0">
+                                                <span t-field="coupon.expiration_date"/>
+                                            </t>
+                                       </td>
+                                       <td>
+                                            <t t-if="l.sales_coupon_type_id.expiration_use == 0">
+                                                <span>no limit</span>
+                                            </t>
+                                            <t t-if="l.sales_coupon_type_id.expiration_use != 0">
+                                                <span t-field="coupon.expiration_use"/> uses
+                                            </t>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</openerp>
