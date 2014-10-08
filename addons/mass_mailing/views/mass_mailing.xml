@@ -628,13 +628,24 @@
                                     </button>
                                     <button name="mass_mailing_statistics_action"
                                         type="object" class="oe_stat_button">
-                                        <field name="clicks_ratio" string="clicks" widget="percentpie"/>
+                                        <field name="clicks_ratio" widget="percentpie" string="Clicks"/>
+                                    </button>
+                                    <button name="%(action_view_mass_mailings_from_campaign)d"
+                                        type="action" class="oe_inline oe_stat_button" icon="fa-envelope-o">
+                                        <field name="total_mailings" widget="statinfo" string="Mailings"/>
                                     </button>
                                 </div>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Related Mailing(s)">
+                            <page string="Tracking">
+                                <group>
+                                    <field name="campaign_id" attrs="{'invisible': True}"/>
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
+                                </group>
+                            </page>
+                            <page string="Related Mailings" groups="base.group_no_one">
                                 <field name="mass_mailing_ids" readonly="1" string="Related Mailing(s)">
                                     <tree>
                                         <field name="name"/>
@@ -648,14 +659,20 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Tracking">
-                                <group>
-                                    <field name="campaign_id" attrs="{'invisible': True}"/>
-                                    <field name="medium_id" />
-                                    <field name="source_id" />
-                                </group>
-                            </page>
                         </notebook>
+                        <separator string="Related Mailing(s)" groups="base.group_no_one"/>
+                        <field name="mass_mailing_ids" readonly="1" groups="base.group_no_one">
+                            <tree>
+                                <field name="name"/>
+                                <field name="sent_date"/>
+                                <field name="state"/>
+                                <field name="delivered"/>
+                                <field name="opened"/>
+                                <field name="replied"/>
+                                <field name="bounced"/>
+                                <button name="action_duplicate" type="object" string="Duplicate"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
