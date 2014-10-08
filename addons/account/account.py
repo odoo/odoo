@@ -69,14 +69,13 @@ class res_company(models.Model):
 class account_payment_term(models.Model):
     _name = "account.payment.term"
     _description = "Payment Term"
+    _order = "name"
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(string='Active', default=True,
         help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
-
-    _order = "name"
 
     def compute(self, cr, uid, id, value, date_ref=False, context=None):
         if not date_ref:
@@ -109,9 +108,11 @@ class account_payment_term(models.Model):
             result.append( (time.strftime('%Y-%m-%d'), dist) )
         return result
 
+
 class account_payment_term_line(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
+    _order = "value desc,days"
 
     value = fields.Selection([
             ('balance', 'Balance'),
@@ -125,8 +126,6 @@ class account_payment_term_line(models.Model):
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
         help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month).")
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
-
-    _order = "value desc,days"
 
     def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
@@ -142,6 +141,7 @@ class account_payment_term_line(models.Model):
 class account_account_type(models.Model):
     _name = "account.account.type"
     _description = "Account Type"
+    _order = "code"
 
     name = fields.Char(string='Account Type', required=True, translate=True)
     code = fields.Char(string='Code', size=32, required=True, index=True)
@@ -173,8 +173,6 @@ class account_account_type(models.Model):
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations)."),
     note = fields.Text(string='Description')
-
-    _order = "code"
 
 
 #----------------------------------------------------------
@@ -533,6 +531,7 @@ class account_account(models.Model):
 class account_journal(models.Model):
     _name = "account.journal"
     _description = "Journal"
+    _order = 'code'
 
     with_last_closing_balance = fields.Boolean(string='Opening With Last Closing Balance', default=True,
         help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents.")
@@ -590,8 +589,6 @@ class account_journal(models.Model):
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
         ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
     ]
-
-    _order = 'code'
 
     def _check_currency(self, cr, uid, ids, context=None):
         for journal in self.browse(cr, uid, ids, context=context):
@@ -692,6 +689,7 @@ class account_journal(models.Model):
 class account_fiscalyear(models.Model):
     _name = "account.fiscalyear"
     _description = "Fiscal Year"
+    _order = "date_start, id"
 
     name = fields.Char(string='Fiscal Year', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
@@ -701,8 +699,6 @@ class account_fiscalyear(models.Model):
     state = fields.Selection([('draft','Open'), ('done','Closed')], string='Status', readonly=True, copy=False, default='draft')
     end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
         readonly=True, copy=False)
-
-    _order = "date_start, id"
 
     def _check_duration(self, cr, uid, ids, context=None):
         obj_fy = self.browse(cr, uid, ids[0], context=context)
@@ -773,6 +769,7 @@ class account_fiscalyear(models.Model):
 class account_period(models.Model):
     _name = "account.period"
     _description = "Account period"
+    _order = "date_start, special desc"
 
     name = fields.Char(string='Period Name', required=True)
     code = fields.Char(string='Code', size=12)
@@ -782,9 +779,7 @@ class account_period(models.Model):
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', required=True, states={'done': [('readonly', True)]}, index=True)
     state = fields.Selection([('draft', 'Open'), ('done', 'Closed')], string='Status', readonly=True, copy=False, default='draft',
         help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.')
-    company_id = fields.Many2one(related='fiscalyear_id.company_id', 'res.company', string='Company', store=True, readonly=True)
-
-    _order = "date_start, special desc"
+    company_id = fields.Many2one('res.company', related='fiscalyear_id.company_id', string='Company', store=True, readonly=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
@@ -898,31 +893,31 @@ class account_period(models.Model):
         return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
 
 
-class account_journal_period(osv.osv):
+class account_journal_period(models.Model):
     _name = "account.journal.period"
     _description = "Journal Period"
+    _order = "period_id"
 
-    def _icon_get(self, cr, uid, ids, field_name, arg=None, context=None):
-        result = {}.fromkeys(ids, 'STOCK_NEW')
-        for r in self.read(cr, uid, ids, ['state']):
-            result[r['id']] = {
-                'draft': 'STOCK_NEW',
-                'printed': 'STOCK_PRINT_PREVIEW',
-                'done': 'STOCK_DIALOG_AUTHENTICATION',
-            }.get(r['state'], 'STOCK_NEW')
-        return result
+#     def _icon_get(self, cr, uid, ids, field_name, arg=None, context=None):
+#         result = {}.fromkeys(ids, 'STOCK_NEW')
+#         for r in self.read(cr, uid, ids, ['state']):
+#             result[r['id']] = {
+#                 'draft': 'STOCK_NEW',
+#                 'printed': 'STOCK_PRINT_PREVIEW',
+#                 'done': 'STOCK_DIALOG_AUTHENTICATION',
+#             }.get(r['state'], 'STOCK_NEW')
+#         return result
 
-    _columns = {
-        'name': fields.char('Journal-Period Name', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
-        'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-        'icon': fields.function(_icon_get, string='Icon', type='char'),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True,
-                                  help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.'),
-        'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
-    }
+    name = fields.Char(string='Journal-Period Name', required=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, ondelete='cascade')
+    period_id = fields.Many2one('account.period', string='Period', required=True, ondelete='cascade')
+    icon = fields.Char(string='Icon')
+    active = fields.Boolean(string='Active', default=True,
+        help="If the active field is set to False, it will allow you to hide the journal period without removing it.")
+    state = fields.Selection([('draft', 'Draft'), ('printed', 'Printed'), ('done', 'Done')], string='Status', required=True, readonly=True, default='draft',
+        help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.')
+    fiscalyear_id = fields.Many2one('account.fiscalyear', related='period_id.fiscalyear_id', string='Fiscal Year')
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
 
     def _check(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -947,11 +942,6 @@ class account_journal_period(osv.osv):
         self._check(cr, uid, ids, context=context)
         return super(account_journal_period, self).unlink(cr, uid, ids, context=context)
 
-    _defaults = {
-        'state': 'draft',
-        'active': True,
-    }
-    _order = "period_id"
 
 #----------------------------------------------------------
 # Entries
@@ -1017,7 +1007,7 @@ class account_move(models.Model):
     period_id = fields.Many2one('account.period', string='Period', required=True, states={'posted': [('readonly', True)]},
         default=lambda self: self._get_period)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
-    state = fields.selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
+    state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
       help='All manually created new journal entries are usually in the status \'Unposted\', '
            'but you can set the option to skip that status on the related journal. '
@@ -1028,11 +1018,11 @@ class account_move(models.Model):
         states={'posted': [('readonly', True)]}, copy=True)
     to_check = fields.Boolean(string='To Review',
         help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
-    partner_id = fields.Many2one(related='line_id.partner_id', 'res.partner', string="Partner", store=True)
+    partner_id = fields.Many2one('res.partner', related='line_id.partner_id', string="Partner", store=True)
     amount = fields.Float(compute='_amount_compute', string='Amount', digits=dp.get_precision('Account'), search='_search_amount')
     date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     narration = fields.Text(string='Internal Note')
-    company_id = fields.Many2one(related='journal_id.company_id', 'res.company', string='Company', store=True, readonly=True,
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
     balance = fields.Float(string='balance', digits=dp.get_precision('Account'),
         help="This is a field only used for internal purpose and shouldn't be displayed")
@@ -2190,7 +2180,6 @@ class account_tax_code_template(models.Model):
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
     ]
-    _order = 'code,name'
 
 
 class account_chart_template(models.Model):
