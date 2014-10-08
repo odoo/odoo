@@ -385,10 +385,10 @@ class account_account(models.Model):
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
-    type = fields.Selection(related='user_type.type',
-        selection = [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+    type = fields.Selection(
+        [('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
         ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], store=True, string="Internal Type"),
+        ], string="Internal Type", default='view')
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate "\
         "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
@@ -1996,13 +1996,12 @@ class account_account_template(models.Model):
     name = fields.Char(string='Name', required=True, index=True),
     currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
-    type = fields.Selection(related='user_type.type', default='view',
-        selection =[('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
-        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
-        ], store=True, string='Internal Type')
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
+    type = fields.Selection([('view', 'View'), ('other', 'Regular'), ('receivable', 'Receivable'), ('payable', 'Payable'),
+        ('liquidity','Liquidity'), ('consolidation', 'Consolidation'),
+        ], string='Internal Type', default='view')
     financial_report_ids = fields.Many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id',
         string='Financial Reports')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,

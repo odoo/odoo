@@ -310,7 +310,8 @@ class account_move_line(osv.osv):
         'account_tax_id':fields.many2one('account.tax', 'Tax', copy=False),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company',
-                            string='Company', store=True, readonly=True)
+                            string='Company', store=True, readonly=True),
+        'invoice': fields.many2one('account.invoice', 'Invoice'),
     }
 
     def _get_date(self, cr, uid, context=None):
