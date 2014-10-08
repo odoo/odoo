@@ -43,7 +43,7 @@ class Goals(osv.Model):
         'google_ref': fields.char(string="Reference Google", size=256, required=True),        
     }
 
-EXPERIMENT_STATES = [('draft','Draft'),('ready_to_run', 'Ready to run'),('running','Running'),('ended','Ended')]
+EXPERIMENT_STATES = [('draft','Draft'),('running','Running'),('ended','Ended')]
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
