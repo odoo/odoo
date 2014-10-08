@@ -35,6 +35,11 @@ import account_entries_report
 import account_analytic_entries_report
 import account_treasury_report
 import account_financial_report
+import account_configurator_common
+import account_configurator_journal
+import account_configurator_generaljournal
+import account_configurator_printjournal
+import account_configurator_salepurchasejournal
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

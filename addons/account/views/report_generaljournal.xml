@@ -2,48 +2,51 @@
 <openerp>
 <data>
 <template id="report_generaljournal">
+    <t t-call="account.report_journal_configurator"></t>
     <t t-call="report.html_container">
         <t t-foreach="periods(docs)" t-as="o">
             <t t-call="report.internal_layout">
                 <div class="page">
                     <h2>General Journal</h2>
 
-                    <div class="row mt32">
-                        <div class="col-xs-3">
-                            <strong>Chart of Accounts:</strong>
-                            <p t-esc="get_account(data)"/>
-                        </div>
-                        <div class="col-xs-3">
-                            <strong>Fiscal Year:</strong>
-                            <p t-esc="get_fiscalyear(data)"/>
-                        </div>
-                        <div class="col-xs-3">
-                            <strong>Journals:</strong>
-                            <p t-esc="', '.join([ lt or '' for lt in get_journal(data)])"/>
-                        </div>
-                        <div class="col-xs-3">
-                            <strong>Filter By:</strong>
-                            <p>
-                                <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
-                                <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
-                                <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
-                                <p t-if="data['form']['filter'] == 'filter_period'">
-                                    Start Period: <span t-esc="get_start_period(data)"/>
-                                    End Period: <span t-esc="get_end_period(data)"/>
+                    <t class="oe_printonly">
+                        <div class="row mt32">
+                            <div class="col-xs-3">
+                                <strong>Chart of Accounts:</strong>
+                                <p t-esc="get_account(data)"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Fiscal Year:</strong>
+                                <p t-esc="get_fiscalyear(data)"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Journals:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in get_journal(data)])"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Filter By:</strong>
+                                <p>
+                                    <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
+                                    <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
+                                    <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
+                                    <p t-if="data['form']['filter'] == 'filter_period'">
+                                        Start Period: <span t-esc="get_start_period(data)"/>
+                                        End Period: <span t-esc="get_end_period(data)"/>
+                                    </p>
+                                    <p t-if="data['form']['filter'] == 'filter_date'">
+                                        Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
+                                        Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                                    </p>
                                 </p>
-                                <p t-if="data['form']['filter'] == 'filter_date'">
-                                    Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
-                                    Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
-                                </p>
-                            </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb32">
-                        <div class="col-xs-3">
-                            <strong>Target Moves:</strong>
-                            <p t-esc="get_target_move(data)"/>
+                        <div class="row mb32">
+                            <div class="col-xs-3">
+                                <strong>Target Moves:</strong>
+                                <p t-esc="get_target_move(data)"/>
+                            </div>
                         </div>
-                    </div>
+                    </t>
 
                     <table class="table table-condensed">
                         <thead>

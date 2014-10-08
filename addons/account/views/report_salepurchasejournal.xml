@@ -2,6 +2,7 @@
 <openerp>
 <data>
 <template id="report_salepurchasejournal">
+    <t t-call="account.report_printjournal_configurator"></t>
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="report.internal_layout">

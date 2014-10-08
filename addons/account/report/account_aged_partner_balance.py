@@ -396,4 +396,13 @@ class report_agedpartnerbalance(osv.AbstractModel):
     _template = 'account.report_agedpartnerbalance'
     _wrapped_report_class = aged_trial_report
 
+# class report_agedpartnerbalance_configurator(osv.AbstractModel):
+#     _name = 'account.report.configurator.report_agedpartnerbalance'
+#     _inherit = 'account.report.configurator'
+
+#     def get_default_currency_amount(self, cr, uid, ids, arg, context=None):
+#         pass
+
+#     currency_amount = get_default_currency_amount
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
