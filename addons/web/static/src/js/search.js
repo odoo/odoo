@@ -662,10 +662,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         function eval_item (item) {
             var category = 'filters';
             if (item.attrs.context) {
-                var context = instance.web.pyeval.eval('context', item.attrs.context);
-                if (context.group_by) {
-                    category = 'group_by';
-                }
+                try {
+                    var context = instance.web.pyeval.eval('context', item.attrs.context);
+                    if (context.group_by) {
+                        category = 'group_by';
+                    }                    
+                } catch (e) {}
             }
             return {
                 item: item,
