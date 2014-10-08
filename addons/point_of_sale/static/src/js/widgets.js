@@ -605,11 +605,31 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 'message': _t('Change Cashier'),
                 list: list,
                 confirm: function(cashier){
-                    this.pos.cashier = cashier;
-                    self.renderElement();
+                    self.set_cashier(cashier);
                 },
             });
 
+        },
+        set_cashier: function(cashier){
+            var self = this;
+            if (cashier.pos_security_pin) {
+                this.pos_widget.screen_selector.show_popup('password',{
+                    'message': _t('Password'),
+                    confirm: function(password) {
+                        if (password === cashier.pos_security_pin) {
+                            self.pos.cashier = cashier;
+                            self.renderElement();
+                        } else {
+                            this.pos_widget.screen_selector.show_popup('error',{
+                                'message':_t('Password Incorrect'),
+                            });
+                        }
+                    },
+                });
+            } else {
+                this.pos.cashier = cashier;
+                this.renderElement();
+            }
         },
         get_name: function(){
             var user = this.pos.cashier || this.pos.user;

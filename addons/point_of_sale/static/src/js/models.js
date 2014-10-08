@@ -166,7 +166,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },{
             model:  'res.users',
-            fields: ['name','barcode'],
+            fields: ['name','pos_security_pin','barcode'],
             domain: null,
             loaded: function(self,users){ self.users = users; },
         },{
