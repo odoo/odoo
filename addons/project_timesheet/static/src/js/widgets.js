@@ -68,60 +68,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         start: function() {
             this._super.apply(this, arguments);
             this.prepare_autocomplete();
-            /*
-            //Not needed if we are going to use textext lib
-            this.$dropdown = this.$el.find(".pt_m2o_drop_down_button");
-            this.$dropdown.on("click", function(event) {
-                var $target = $(event.target).is("img") ? $(event.target).parent() : $(event.target);
-                var $input = $target.siblings("input");
-                $input.focus();
-                $input.autocomplete("search");
-            });
-            */
         },
         prepare_autocomplete: function() {
             var self = this;
             this.$input = this.$el.find("textarea");
-            //this.$input = this.$el.find("input");
-            /*
-            this.$input.autocomplete({
-                source: function(req, resp) {
-                    self.get_search_result(req.term).done(function(result) {
-                        resp(result);
-                    });
-                },
-                select: function(event, ui) {
-                    isSelecting = true;
-                    var item = ui.item;
-                    
-                    if (item.id) {
-                        self.$input.data("id", item.id);
-                        self.$input.val(item.name);
-                        return false;
-                    } else if (item.action) {
-                        item.action(event);
-                        return false;
-                    }
-                },
-                focus: function(e, ui) {
-                    e.preventDefault();
-                },
-                html: true,
-                minLength: 0,
-                delay: 0 //We having local data, so no need to apply any delay
-            });
-            // set position for list of suggestions box
-            self.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
-            self.$input.autocomplete("widget").openerpClass();
-            // used to correct a bug when selecting an element by pushing 'enter' in an editable list
-            self.$input.keyup(function(e) {
-                if (e.which === 13) { // ENTER
-                    if (isSelecting)
-                        e.stopPropagation();
-                }
-                isSelecting = false;
-            });
-            */
             this.$input.textext({
                 plugins: 'arrow autocomplete',
                 autocomplete: {
@@ -200,7 +150,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var data;
             if(this.model) {
                 data = this.model.name_search(term);
-                console.log("Result of name_search is ::: ", data);
             }
             var search_data = data;
             //if (!term) {
@@ -229,7 +178,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 };
             });
             // quick create
-            //var raw_result = _(data.result).map(function(x) {return x[1];});
             var raw_result = search_data ? search_data.map(function(x) {return x[1];}) : [];
             if (term.length > 0 && !_.include(raw_result, term)) {
                 values.push({

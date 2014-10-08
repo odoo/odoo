@@ -15,39 +15,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         });
     };
 
-    // jquery autocomplete tweak to allow html and classnames
-    (function() {
-        var proto = $.ui.autocomplete.prototype,
-            initSource = proto._initSource;
-    
-        function filter( array, term ) {
-            var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
-            return $.grep( array, function(value_) {
-                return matcher.test( $( "<div>" ).html( value_.label || value_.value || value_ ).text() );
-            });
-        }
-    
-        $.extend( proto, {
-            _initSource: function() {
-                if ( this.options.html && $.isArray(this.options.source) ) {
-                    this.source = function( request, response ) {
-                        response( filter( this.options.source, request.term ) );
-                    };
-                } else {
-                    initSource.call( this );
-                }
-            },
-    
-            _renderItem: function( ul, item) {
-                return $( "<li></li>" )
-                    .data( "item.autocomplete", item )
-                    .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
-                    .appendTo( ul )
-                    .addClass(item.classname);
-            }
-        });
-    })();
-
     var opened_modal = [];
     project_timesheet.Dialog = openerp.Widget.extend({
         //template: "ProjectTimesheetDialog",
