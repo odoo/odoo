@@ -753,8 +753,8 @@ class Field(object):
             # normal record -> read or compute value for this field
             self.determine_value(record)
         else:
-            # new record -> compute default value for this field
-            record.add_default_value(self)
+            # draft record -> compute the value or let it be null
+            self.determine_draft_value(record)
 
         # the result should be in cache now
         return record._cache[self]
@@ -861,12 +861,9 @@ class Field(object):
             # this is a non-stored non-computed field
             record._cache[self] = self.null(env)
 
-    def determine_default(self, record):
-        """ determine the default value of field `self` on `record` """
-        if self.default:
-            value = self.default(record)
-            record._cache[self] = self.convert_to_cache(value, record)
-        elif self.compute:
+    def determine_draft_value(self, record):
+        """ Determine the value of `self` for the given draft `record`. """
+        if self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
@@ -1469,15 +1466,6 @@ class Many2one(_Relational):
 
     def convert_to_display_name(self, value):
         return ustr(value.display_name)
-
-    def determine_default(self, record):
-        super(Many2one, self).determine_default(record)
-        if self.delegate:
-            # special case: fields that implement inheritance between models
-            value = record[self.name]
-            if not value:
-                # the default value cannot be null, use a new record instead
-                record[self.name] = record.env[self.comodel_name].new()
 
 
 class UnionUpdate(SpecialValue):
