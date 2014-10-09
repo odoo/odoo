@@ -62,11 +62,10 @@ def raise_qweb_exception(etype=None, **kw):
         raise
 
 class QWebContext(dict):
-    def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
+    def __init__(self, cr, uid, data, loader=None, context=None):
         self.cr = cr
         self.uid = uid
         self.loader = loader
-        self.templates = templates or {}
         self.context = context
         dic = dict(data)
         super(QWebContext, self).__init__(dic)
@@ -82,7 +81,6 @@ class QWebContext(dict):
     def copy(self):
         return QWebContext(self.cr, self.uid, dict.copy(self),
                            loader=self.loader,
-                           templates=self.templates,
                            context=self.context)
 
     def __copy__(self):
@@ -155,14 +153,13 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def add_template(self, qwebcontext, name, node):
-        """Add a parsed template in the context. Used to preprocess templates."""
-        qwebcontext.templates[name] = node
+    def get_template(self, name, qwebcontext):
+        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
+        try:
+            document = qwebcontext.loader(name)
+        except ValueError:
+            raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
 
-    def load_document(self, document, res_id, qwebcontext):
-        """
-        Loads an XML document and installs any contained template in the engine
-        """
         if hasattr(document, 'documentElement'):
             dom = document
         elif document.startswith("<?xml"):
@@ -170,25 +167,10 @@ class QWeb(orm.AbstractModel):
         else:
             dom = etree.parse(document)
 
+        res_id = isinstance(name, (int, long)) and name or None
         for node in dom:
-            if node.get('t-name'):
-                name = str(node.get("t-name"))
-                self.add_template(qwebcontext, name, node)
-            if res_id and node.tag == "t":
-                self.add_template(qwebcontext, res_id, node)
-                res_id = None
-
-    def get_template(self, name, qwebcontext):
-        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
-        if qwebcontext.loader and name not in qwebcontext.templates:
-            try:
-                xml_doc = qwebcontext.loader(name)
-            except ValueError:
-                raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
-            self.load_document(xml_doc, isinstance(name, (int, long)) and name or None, qwebcontext=qwebcontext)
-
-        if name in qwebcontext.templates:
-            return qwebcontext.templates[name]
+            if node.get('t-name') or (res_id and node.tag == "t"):
+                return node
 
         raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
