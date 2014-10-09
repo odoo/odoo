@@ -450,6 +450,7 @@
                             </group>
                             <group>
                                 <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="lost_reason"/>
                             </group>
                         </group>
 
@@ -558,6 +559,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="stage_id" domain="[]"/>
                     <field name="probability"/>
+                    <field name="lost_reason"/>
                     <separator/>
                     <filter string="New" name="new"
                             domain="[('probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
@@ -585,6 +587,7 @@
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
             </field>

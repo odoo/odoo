@@ -107,8 +107,38 @@
 
         <menuitem action="crm_tracking_source_action" id="menu_crm_tracking_source" parent="base.menu_crm_config_lead" sequence="4" groups="base.group_no_one"/>
 
-        <!-- CRM STAGE VIEWS -->
+        <!-- CRM.LOST.REASON VIEWS -->
+        <record id="crm_lost_reason_view_form" model="ir.ui.view">
+            <field name="name">crm.lost.reason.form</field>
+            <field name="model">crm.lost.reason</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="crm_lost_reason_action" model="ir.actions.act_window">
+            <field name="name">Lost Reasons</field>
+            <field name="res_model">crm.lost.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new lost reason.
+              </p><p>
+                Use lost reasons to explain why an opportunity is lost.
+              </p><p>
+                Some examples of lost reasons: "We don't have people/skill", "Price too high"
+              </p>
+            </field>
+        </record>
 
+        <menuitem action="crm_lost_reason_action" id="menu_crm_lost_reason" parent="base.menu_crm_config_lead" sequence="6" groups="base.group_no_one"/>
+
+        
+        <!-- CRM STAGE VIEWS -->
         <record model="ir.ui.view" id="crm_stage_tree">
             <field name="name">crm.stage.tree</field>
             <field name="model">crm.stage</field>
