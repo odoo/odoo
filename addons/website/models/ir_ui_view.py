@@ -182,7 +182,6 @@ class view(osv.osv):
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:
                 qcontext['main_object'] = view_obj
-
             values = qcontext
 
         return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)

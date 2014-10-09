@@ -11,9 +11,9 @@
         start: function() {
             var self = this;
             $('#master_edit_button').click(function() {
-                var m_names = new Array("January", "February", "March", 
-                "April", "May", "June", "July", "August", "September", 
-                "October", "November", "December");
+                var m_names = new Array("jan", "feb", "mar", 
+                "apr", "may", "jun", "jul", "aug", "sep", 
+                "oct", "nov", "dec");
                 var d = new Date();
                 var curr_date = d.getDate();
                 var curr_month = d.getMonth();
