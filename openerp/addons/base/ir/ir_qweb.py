@@ -397,12 +397,19 @@ class QWeb(orm.AbstractModel):
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
 
+        old_context = qwebcontext.context
+        add_context = template_attributes.get('context')
+        if add_context:
+            add_context = self.eval_object(add_context, qwebcontext)
+            qwebcontext.context = dict(qwebcontext.context.items() + add_context.items())
         template = self.eval_format(template_attributes["call"], d)
         try:
             template = int(template)
         except ValueError:
             pass
-        return self.render(cr, uid, template, d)
+        content = self.render(cr, uid, template, d)
+        qwebcontext.context = old_context
+        return content
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
