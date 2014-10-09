@@ -264,7 +264,7 @@ class Field(object):
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
     manual = False              # whether the field is a custom field
-    copyable = True             # whether the field is copied over by BaseModel.copy()
+    copy = True                 # whether the field is copied over by BaseModel.copy()
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
@@ -316,9 +316,6 @@ class Field(object):
         if attrs.get('related'):
             # by default, related fields are not stored
             attrs['store'] = attrs.get('store', False)
-        if 'copy' in attrs:
-            # attribute is copyable because there is also a copy() method
-            attrs['copyable'] = attrs.pop('copy')
 
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
@@ -662,7 +659,7 @@ class Field(object):
         return getattr(fields, self.type)(**args)
 
     # properties used by to_column() to create a column instance
-    _column_copy = property(attrgetter('copyable'))
+    _column_copy = property(attrgetter('copy'))
     _column_select = property(attrgetter('index'))
     _column_manual = property(attrgetter('manual'))
     _column_string = property(attrgetter('string'))
@@ -1630,7 +1627,7 @@ class One2many(_RelationalMulti):
     inverse_name = None                 # name of the inverse field
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    copyable = False                    # o2m are not copied by default
+    copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
