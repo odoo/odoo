@@ -276,7 +276,6 @@ openerp.account = function (instance) {
             this.decorateMoveLine = this.getParent().decorateMoveLine;
             this.formatCurrencies = this.getParent().formatCurrencies;
 
-            // TODO : ?
             if (context.initial_data_provided) {
                 // Process data
                 _.each(context.reconciliation_proposition, function(line) {
@@ -880,7 +879,7 @@ openerp.account = function (instance) {
         
             return deferred_tax.then(function(){
                 // Format amounts
-                var rounding = 1/self.map_currency_id_rounding[self.st_line.currency_id];
+                var rounding = 1/self.map_currency_id_rounding[self.currency_id || self.st_line.currency_id];
                 $.each(line_created_being_edited, function(index, val) {
                     if (val.amount) {
                         line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
@@ -2159,6 +2158,10 @@ openerp.account = function (instance) {
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
             this.currency_id = context.data.currency_id;
+            _.each(context.data.reconciliation_proposition, function(line) {
+                this.decorateMoveLine(line);
+            }, this);
+            this.set("mv_lines_selected", context.data.reconciliation_proposition);
             this.presets = this.getParent().presets;
             // Make sure a partial reconciliation will appear only once by excluding siblings of a selected partially reconciled move line
             this.excluded_move_lines_ids = [];
@@ -2284,6 +2287,15 @@ openerp.account = function (instance) {
 
         /* Model */
 
+        loadReconciliationProposition: function() {
+            var self = this;
+            return self.model_aml
+                .call("get_reconciliation_proposition", [self.data.account_id, self.data.partner_id || undefined])
+                .then(function(lines) {
+                    self.set("mv_lines_selected", lines);
+                });
+        },
+
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
             var self = this;
             excluded_ids = excluded_ids.concat(self.excluded_move_lines_ids);
@@ -2308,7 +2320,7 @@ openerp.account = function (instance) {
             var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
             return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).then(function() {
                 self.initializeCreateForm();
-                self.set("mv_lines_selected", []);
+                self.loadReconciliationProposition();
                 self.set("lines_created", []);
                 self.set("mode", "match");
                 self.balanceChanged();

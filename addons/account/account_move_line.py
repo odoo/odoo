@@ -825,9 +825,12 @@ class account_move_line(osv.osv):
         rows = [row for row in rows if row['account_id'] in allowed_ids]
 
         # Fetch other data
+        excluded_ids = []
         for row in rows:
             account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], excluded_ids=excluded_ids, context=context)
+            excluded_ids += row['reconciliation_proposition']
 
         return rows
     
@@ -898,11 +901,47 @@ class account_move_line(osv.osv):
         rows = [row for row in rows if row['account_id'] in allowed_ids]
 
         # Fetch other data
+        excluded_ids = []
         for row in rows:
             account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], excluded_ids=excluded_ids, context=context)
+            excluded_ids += row['reconciliation_proposition']
 
         return rows
+
+    def get_reconciliation_proposition(self, cr, uid, account_id, partner_id=False, excluded_ids=None, context=None):
+        """ Returns two lines whose amount are opposite """
+        partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
+
+        # Get pairs
+        cr.execute(
+            """ SELECT a.id, b.id
+                FROM account_move_line a, account_move_line b
+                WHERE ((a.debit = b.credit AND a.debit <> 0) OR
+                      (a.currency_id = b.currency_id AND a.amount_currency = b.amount_currency AND a.amount_currency <> 0))
+                AND a.reconcile_partial_id IS NULL AND b.reconcile_partial_id IS NULL
+                AND a.state = 'valid' AND b.state = 'valid' AND a.reconcile_id IS NULL AND b.reconcile_id IS NULL
+                AND a.account_id = %d AND b.account_id = %d
+                %s
+                ORDER BY a.date asc
+                LIMIT 10
+            """ % (account_id, account_id, partner_id_condition))
+        pairs = cr.fetchall()
+
+        # Apply ir_rules by filtering out
+        all_pair_ids = [element for tupl in pairs for element in tupl]
+        allowed_ids = set(self.pool.get('account.move.line').search(cr, uid, [('id', 'in', all_pair_ids)], context=context))
+        pairs = [pair for pair in pairs if pair[0] in allowed_ids and pair[1] in allowed_ids]
+
+        # Return lines formatted
+        if len(pairs) > 0:
+            account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
+            target_currency = account.currency_id or account.company_currency_id
+            lines = self.browse(cr, uid, list(pairs[0]), context=context)
+            return self.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, context=context)
+        else:
+            return []
 
     def get_move_lines_for_manual_reconciliation(self, cr, uid, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
