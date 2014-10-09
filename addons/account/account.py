@@ -39,25 +39,6 @@ from openerp.exceptions import Warning
 
 _logger = logging.getLogger(__name__)
 
-def check_cycle(self, cr, uid, ids, context=None):
-    """ climbs the ``self._table.parent_id`` chains for 100 levels or
-    until it can't find any more parent(s)
-
-    Returns true if it runs out of parents (no cycle), false if
-    it can recurse 100 times without ending all chains
-    """
-    level = 100
-    while len(ids):
-        cr.execute('SELECT DISTINCT parent_id '\
-                    'FROM '+self._table+' '\
-                    'WHERE id IN %s '\
-                    'AND parent_id IS NOT NULL',(tuple(ids),))
-        ids = map(itemgetter(0), cr.fetchall())
-        if not level:
-            return False
-        level -= 1
-    return True
-
 class res_company(models.Model):
     _inherit = "res.company"
 
@@ -699,15 +680,11 @@ class account_fiscalyear(models.Model):
     end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
         readonly=True, copy=False)
 
-    def _check_duration(self, cr, uid, ids, context=None):
-        obj_fy = self.browse(cr, uid, ids[0], context=context)
-        if obj_fy.date_stop < obj_fy.date_start:
-            return False
-        return True
-
-    _constraints = [
-        (_check_duration, 'Error!\nThe start date of a fiscal year must precede its end date.', ['date_start','date_stop'])
-    ]
+    @api.one
+    @api.constrains('date_start', 'date_stop')
+    def _check_duration(self):
+        if self.date_stop < self.date_start:
+            raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
 
     def create_period3(self, cr, uid, ids, context=None):
         return self.create_period(cr, uid, ids, context, 3)
@@ -784,11 +761,11 @@ class account_period(models.Model):
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
 
-    def _check_duration(self,cr,uid,ids,context=None):
-        obj_period = self.browse(cr, uid, ids[0], context=context)
-        if obj_period.date_stop < obj_period.date_start:
-            return False
-        return True
+    @api.one
+    @api.constrains('date_start', 'date_stop')
+    def _check_duration(self):
+        if self.date_stop < self.date_start:
+            raise Warning(_('Error!\nThe duration of the Period(s) is/are invalid.'))
 
     def _check_year_limit(self,cr,uid,ids,context=None):
         for obj_period in self.browse(cr, uid, ids, context=context):
@@ -808,7 +785,6 @@ class account_period(models.Model):
         return True
 
     _constraints = [
-        (_check_duration, 'Error!\nThe duration of the Period(s) is/are invalid.', ['date_stop']),
         (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
     ]
 
@@ -1555,9 +1531,8 @@ class account_tax_code(models.Model):
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
-    _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
 
 def get_precision_tax():
@@ -2174,9 +2149,8 @@ class account_tax_code_template(models.Model):
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 
-    _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
     ]
 
 
