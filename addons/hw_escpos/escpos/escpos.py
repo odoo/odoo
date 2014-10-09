@@ -438,7 +438,12 @@ class Escpos:
             f.seek(0)
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
-            img.paste(img_rgba, mask=img_rgba.split()[3]) 
+            channels = img_rgba.split()
+            kwargs = {}
+            if len(channels) > 1:
+                # use alpha channel as mask
+                kwargs['mask'] = img_rgba.split()[3]
+            img.paste(img_rgba, **kwargs)
 
             print 'convert image'
         
