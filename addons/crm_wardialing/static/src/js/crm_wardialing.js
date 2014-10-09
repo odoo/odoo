@@ -112,7 +112,7 @@ openerp.crm_wardialing = function(instance) {
         search_phonecalls_status: function() {
             var phonecall_model = new openerp.web.Model("crm.phonecall");
 
-            this.$el.find(".oe_dial_phonecalls").css('max-height','235px');
+            this.$el.find(".oe_dial_phonecalls").css('height','235px');
 
             var self = this;
             return phonecall_model.query(['id', 'partner_id', 'to_call', 'description', 'opportunity_id'])
@@ -206,7 +206,7 @@ openerp.crm_wardialing = function(instance) {
             self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
             if(classes.indexOf("oe_dial_selected_phonecall") == -1){
                 phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
-                this.$el.find(".oe_dial_phonecalls").animate({'max-height' : '178px'},'slow');   
+                this.$el.find(".oe_dial_phonecalls").animate({'height' : '178px'});   
                 this.$el.find(".oe_dial_email").css("display","none");
                 if(phonecall_widget.get('email')){
                     this.$el.find(".oe_dial_email").css("display","inline");
@@ -215,7 +215,7 @@ openerp.crm_wardialing = function(instance) {
                     this.$el.find(".oe_dial_changelog").css("width", "90%");
                 }
             }else{
-                this.$el.find(".oe_dial_phonecalls").animate({'max-height' : '235px'},'slow'); 
+                this.$el.find(".oe_dial_phonecalls").animate({'height' : '235px'}); 
             }
             
         },
