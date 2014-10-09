@@ -144,7 +144,7 @@ class Report(osv.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
-    @api.v7
+    # @api.v7
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
         """
@@ -165,10 +165,11 @@ class Report(osv.Model):
             }
             return self.render(cr, uid, [], report.report_name, docargs, context=context)
 
-    @api.v8
-    def get_html(self, records, report_name, data=None):
-        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
-                                    data=data, context=self._context)
+    # FIXME PLZ
+    # @api.v8
+    # def get_html(self, records, report_name, data=None):
+    #     return self._model.get_html(self._cr, self._uid, records.ids, report_name,
+    #                                 data=data, context=self._context)
 
     @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):

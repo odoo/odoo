@@ -13,15 +13,27 @@
                         <div class="row mt32">
                             <div class="col-xs-3">
                                 <strong>Chart of Accounts:</strong>
-                                <p t-esc="get_account(data)"/>
+                                <p>
+                                    <a t-esc="get_account(data)" t-att-href="data['webclient_link']('account.account', data['form']['chart_account_id'])" />
+                                </p>
                             </div>
                             <div class="col-xs-3">
                                 <strong>Fiscal Year:</strong>
-                                <p t-esc="get_fiscalyear(data)"/>
+                                <p> 
+                                    <a t-esc="get_fiscalyear(data)" t-att-href="data['webclient_link']('account.fiscalyear', data['form']['fiscalyear_id'])" />
+                                </p>
                             </div>
                             <div class="col-xs-3">
                                 <strong>Journals:</strong>
-                                <p t-esc="', '.join([ lt or '' for lt in get_journal(data)])"/>
+                                <p>
+                                    <t t-foreach="data['form']['journal_ids']" t-as="jnl_id">
+                                        <t t-foreach="data['form']['content']['journals']" t-as="j">
+                                            <t t-if="j['id'] == jnl_id">
+                                                <a t-esc="j['code']" t-att-href="data['webclient_link']('account.journal', jnl_id)"/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </p>
                             </div>
                             <div class="col-xs-3">
                                 <strong>Filter By:</strong>
@@ -69,7 +81,7 @@
                         </thead>
                         <tbody>
                             <tr style="font-weight: bold;">
-                                <td><span t-field="o.name"/>:</td>
+                                <td><a t-att-href="data['webclient_link']('account.period', o.id)"><span t-field="o.name" /></a>:</td>
                                 <td></td>
                                 <td><span t-esc="formatLang(sum_debit_period(o.id))"/></td>
                                 <td><span t-esc="formatLang(sum_credit_period(o.id))"/></td>
@@ -99,3 +111,4 @@
 </template>
 </data>
 </openerp>
+ 

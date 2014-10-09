@@ -22,12 +22,18 @@
 from openerp.addons.web.http import Controller, route, request
 
 
+def webclient_link(res_model, res_id):
+    return u'/web#view_type=form&model={model}&id={id}'.format(model=res_model, id=res_id)
+
+
 class AccountReportsConfiguratorController(Controller):
 
     @route('/account/reportconfigurator/<reportname>', type='http', auth='user', website=True)
     def configurator(self, reportname, **kwargs):
-        html = request.env['report'].get_html(
-            request.env['account.account'].search([], limit=0), 'account.report_%s' % reportname,
-            data=request.env['account.report.configurator'].get_configurator(reportname).create({}).to_report_sxw_dict(**kwargs)
-        )
-        return request.make_response(html)
+        template_name = 'account.report_%s' % reportname
+        configurator_obj = request.env['account.report.configurator']
+        # record with only default values
+        configurator_rec = configurator_obj.get_configurator(reportname).create({})
+        report_sxw_dict = configurator_rec.to_report_sxw_dict(**kwargs)
+        report_sxw_dict['webclient_link'] = webclient_link
+        return request.make_response(request.env['report'].get_html(template_name, data=report_sxw_dict))

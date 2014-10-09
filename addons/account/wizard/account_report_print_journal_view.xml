@@ -27,14 +27,9 @@
             </field>
         </record>
 
-        <record id="action_account_print_journal" model="ir.actions.act_window">
+        <record id="action_account_print_journal" model="ir.actions.act_url">
             <field name="name">Account Print Journal</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.print.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="view_id" ref="account_report_print_journal"/>
+            <field name="url">/account/reportconfigurator/printjournal</field>
         </record>
         <menuitem
             name="Journals"

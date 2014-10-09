@@ -3,6 +3,7 @@
 <data>
 
 <template id="report_generalledger">
+    <t t-call="account.report_configurator_generalledger"></t>
     <t t-call="report.html_container">
         <t t-set="data_report_margin_top" t-value="12"/>
         <t t-set="data_report_header_spacing" t-value="9"/>

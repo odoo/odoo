@@ -28,6 +28,14 @@ class AccountReportsConfiguratorJournal(models.TransientModel):
 
     amount_currency = fields.Boolean(default=False)
 
+    def _specific_format(self, form_data):
+        fy_ids = form_data['fiscalyear_id'] and [form_data['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')]).ids
+        period_list = form_data['periods'] or self.env['account.period'].search([('fiscalyear_id', 'in', fy_ids)]).ids
+        form_data['active_ids'] = self.env['account.journal.period'].search(
+            [('journal_id', 'in', form_data['journal_ids']), ('period_id', 'in', period_list)]
+        ).ids
+        return form_data
+
     def _build_contexts(self, form_data):
         result = super(AccountReportsConfiguratorJournal, self)._build_contexts(form_data)
 

@@ -12,6 +12,10 @@ class AccountReportsConfigurator(models.AbstractModel):
 class AccountReportsConfiguratorCommon(models.TransientModel):
     _name = 'configurator.common'
 
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Default methods
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     def _get_default_account(self):
         return self._get_accounts()[0]['id']
 
@@ -47,13 +51,17 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
     date_to = fields.Date(default=False)
     target_move = fields.Char(default='posted')
 
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Others methods
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     def _get_periods(self, fiscalyear_id):
         domain = [('fiscalyear_id', '=', fiscalyear_id)]
         periods = self.env['account.period'].search_read(domain=domain, fields=['name'])
         return periods
 
     def _get_journals(self):
-        return self.env['account.journal'].search_read(domain=[], fields=['name'])
+        return self.env['account.journal'].search_read(domain=[], fields=['name', 'code'])
 
     def _build_contexts(self, form_data):
         result = {}
@@ -77,9 +85,11 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
         content_data['periods'] = self._get_periods(fiscalyear_id)
         return content_data
 
+    def _specific_format(self, form_data):
+        return form_data
+
     def to_report_sxw_dict(self, **kwargs):
         context = self.env.context
-
 
         form_data = {}
         for field in self.fields_get().keys():
@@ -113,12 +123,8 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
         used_context = self._build_contexts(form_data)
         form_data['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         form_data['used_context'] = dict(used_context, lang=context.get('lang', 'en_US'))
-        fy_ids = form_data['fiscalyear_id'] and [form_data['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')]).ids
-        period_list = form_data['periods'] or self.env['account.period'].search([('fiscalyear_id', 'in', fy_ids)]).ids
-        form_data['active_ids'] = self.env['account.journal.period'].search(
-            [('journal_id', 'in', form_data['journal_ids']), ('period_id', 'in', period_list)]
-        ).ids
-
         form_data['content'] = self._get_content_data(form_data['fiscalyear_id'])
+
+        form_data = self._specific_format(form_data)
 
         return {'model': context.get('active_model', 'ir.ui.menu'), 'ids': context.get('active_ids', []), 'form': form_data}

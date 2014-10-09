@@ -12,15 +12,19 @@
                     <div class="row mt32">
                         <div class="col-xs-3">
                             <strong>Chart of Accounts:</strong>
-                            <p t-esc="get_account(data)"/>
+                            <p>
+                                <a t-esc="get_account(data)" t-att-href="data['webclient_link']('account.account', data['form']['chart_account_id'])" />
+                            </p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Fiscal Year:</strong>
-                            <p t-esc="get_fiscalyear(data)"/>
+                            <p> 
+                                <a t-esc="get_fiscalyear(data)" t-att-href="data['webclient_link']('account.fiscalyear', data['form']['fiscalyear_id'])" />
+                            </p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Journal:</strong>
-                            <p t-field="o.journal_id.name"/>
+                            <a t-att-href="data['webclient_link']('account.journal', o.journal_id.id)"><p t-field="o.journal_id.name"/></a>
                         </div>
                         <div class="col-xs-3">
                             <strong>Period:</strong>

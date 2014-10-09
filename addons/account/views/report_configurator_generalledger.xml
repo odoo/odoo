@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_generalledger_configurator" inherit_id="account.report_account_configurator" primary="True">
+    <xpath expr="//select[@name='fiscalyear_id']" position="after">
+        <div class="checkbox">
+            <label> 
+                <input t-if="data['form']['landscape'] == False" type="checkbox" name="landscape" value="True" />
+                <input t-if="data['form']['landscape'] == True" type="checkbox" name="landscape" value="True" checked="checked" />
+                Landscape Mode
+            </label>
+        </div>
+    </xpath>
+    <xpath expr="//select[@name='target_move']" position="after">
+        <div class="checkbox">
+            <label> 
+                <input t-if="data['form']['amount_currency'] == False" type="checkbox" name="amount_currency" value="True" />
+                <input t-if="data['form']['amount_currency'] == True" type="checkbox" name="amount_currency" value="True" checked="checked" />
+                With currency
+            </label>
+            <div class="checkbox">
+            <label> 
+                <input t-if="data['form']['initial_balance'] == False" type="checkbox" name="initial_balance" value="True" />
+                <input t-if="data['form']['initial_balance'] == True" type="checkbox" name="initial_balance" value="True" checked="checked" />
+                Include initial balances
+            </label>
+        </div>
+        </div>
+    </xpath>
+</template>
+</data>
+</openerp>

@@ -19,23 +19,21 @@
 #
 ##############################################################################
 
-
 from openerp import models, fields
 
 
-class AccountReportsConfiguratorPrintJournal(models.TransientModel):
-    _name = 'configurator.printjournal'
-    _inherit = 'configurator.journal'
+class AccountReportsConfiguratorGeneralLedger(models.TransientModel):
+    _name = 'configurator.generalledger'
+    _inherit = 'configurator.account'
 
-    def _get_journals(self):
-        return self.env['account.journal'].search_read(
-            domain=[('type', 'not in', ('sale', 'purchase', 'sale_refund', 'purchase_refund'))], fields=['name']
-        )
+    landscape = fields.Boolean(default=True)
+    initial_balance = fields.Boolean(default=False)
+    amount_currency = fields.Boolean(default=True)
+    sortby = fields.Char(default='sort_date')
 
-    def _get_default_journals(self):
-        return self.env['account.journal'].search([('type', 'not in', ('sale', 'purchase', 'sale_refund', 'purchase_refund'))])
-
-    journal_ids = fields.Many2many('account.journal', default=_get_default_journals)
-
-    filter = fields.Char(default='filter_period')
-    sort_selection = fields.Char(default='am.name')
+    def _specific_format(self, form_data):
+        if form_data['landscape'] is False:
+            form_data.pop('landscape')
+        else:
+            self.env.context['landscape'] = form_data['landscape']
+        return form_data

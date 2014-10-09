@@ -14,14 +14,9 @@
             </field>
         </record>
 
-        <record id="action_account_central_journal" model="ir.actions.act_window">
+        <record id="action_account_central_journal" model="ir.actions.act_url">
             <field name="name">Account Central Journal</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.central.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="view_id" ref="view_account_central_journal"/>
+            <field name="url">/account/reportconfigurator/centraljournal</field>
         </record>
 
         <menuitem

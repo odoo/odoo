@@ -7,8 +7,8 @@
     <xpath expr="//label[@for='filter']" position="replace">
         <label for="sort_selection">Enties Sorted by :</label>
         <select name="sort_selection" class="form-control">
-            <option t-if="data['form']['sort_selection'] == 'am_name'" selected="selected" value="am_name">Journal Entry Number</option>
-            <option t-if="data['form']['sort_selection'] != 'am_name'" value="am_name">Journal Entry Number</option>
+            <option t-if="data['form']['sort_selection'] == 'am_name'" selected="selected" value="am.name">Journal Entry Number</option>
+            <option t-if="data['form']['sort_selection'] != 'am_name'" value="am.name">Journal Entry Number</option>
             <option t-if="data['form']['sort_selection'] == 'l.date'" selected="selected" value="l.date">Date</option>
             <option t-if="data['form']['sort_selection'] != 'l.date'" value="l.date">Date</option>
         </select>

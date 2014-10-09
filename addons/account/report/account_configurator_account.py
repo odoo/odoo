@@ -19,23 +19,11 @@
 #
 ##############################################################################
 
-
 from openerp import models, fields
 
 
-class AccountReportsConfiguratorPrintJournal(models.TransientModel):
-    _name = 'configurator.printjournal'
-    _inherit = 'configurator.journal'
+class AccountReportsConfiguratorAccount(models.TransientModel):
+    _name = 'configurator.account'
+    _inherit = 'configurator.common'
 
-    def _get_journals(self):
-        return self.env['account.journal'].search_read(
-            domain=[('type', 'not in', ('sale', 'purchase', 'sale_refund', 'purchase_refund'))], fields=['name']
-        )
-
-    def _get_default_journals(self):
-        return self.env['account.journal'].search([('type', 'not in', ('sale', 'purchase', 'sale_refund', 'purchase_refund'))])
-
-    journal_ids = fields.Many2many('account.journal', default=_get_default_journals)
-
-    filter = fields.Char(default='filter_period')
-    sort_selection = fields.Char(default='am.name')
+    display_account = fields.Char(default='movement')

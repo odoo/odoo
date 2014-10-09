@@ -140,6 +140,4 @@ class common_report_header(object):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
         return ''
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+#from xlwr import Workbook
 from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
@@ -164,5 +165,20 @@ class report_generaljournal(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_generaljournal'
     _wrapped_report_class = journal_print
+
+#     def get_csv(self, data):
+#         book = Workbook()
+#         sheet = book.add_sheet()
+
+#         sheet.write(0, 0, 'Code')
+#         sheet.write(0, 1, 'Journal Name')
+#         sheet.write(0, 2, 'Debit')
+#         sheet.write(0, 3, 'Credit')
+#         sheet.write(0, 4, 'Balance')
+#         if display_currency(data):
+#             sheet.write(0, 5, 'Currency')
+
+#         sheet.write(1, 0, 'Total:')
+#         sheet.write(1, 2, sum_debit)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
