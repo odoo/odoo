@@ -1080,6 +1080,54 @@
                   <h2>Thank you for your order.</h2>
                   <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                   </div>
+                  <h3 class="mt32"><strong>Order Details:</strong></h3>
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th>Products</th>
+                              <th>Quantity</th>
+                              <th class="text-right" width="100">Unit Price</th>
+                              <th class="text-right" width="100">Subtotal</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr t-foreach="order.order_line" t-as="line">
+                              <td>
+                                  <div>
+                                      <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                          <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                      </a>
+                                  </div>
+                                  <div class="text-muted" t-field="line.name"/>
+                              </td>
+                              <td>
+                                  <div id="quote_qty">
+                                      <span t-field="line.product_uom_qty"/>
+                                      <span t-field="line.product_uom"/>
+                                  </div>
+                              </td>
+                              <td>
+                                  <strong class="text-right">
+                                      <div t-field="line.price_unit"
+                                          t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                  </strong>
+                              </td>
+                              <td>
+                                  <div class="text-right"
+                                      t-field="line.price_subtotal"
+                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td></td><td></td>
+                              <td class="text-right"><strong>Total:</strong></td>
+                              <td class="text-right">
+                                  <strong t-field="order.amount_total"
+                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
                   <div class="clearfix"/>
                   <div class="oe_structure"/>
               </div>
