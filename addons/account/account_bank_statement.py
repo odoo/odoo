@@ -640,8 +640,6 @@ class account_bank_statement_line(osv.osv):
             mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=[(amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))])
         ret = []
         total = 0
-        # get_move_lines_for_bank_reconciliation inverts debit and credit
-        amount_field = 'debit' if amount_field == 'credit' else 'credit'
         for line in mv_lines:
             if total + line[amount_field] <= abs(st_line.amount):
                 ret.append(line)
