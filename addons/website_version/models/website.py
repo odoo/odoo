@@ -11,6 +11,7 @@ class NewWebsite(osv.Model):
 
     _columns = {
         'google_analytics_view_id': fields.char('View ID'),
+        'google_management_authorization': fields.char('Google authorization')
     }
 
     def get_running_experiment_number(self,cr,uid,context=None):

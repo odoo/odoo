@@ -85,8 +85,9 @@ class TableExporter(http.Controller):
         if view.website_id and view.snapshot_id:
             master_id = obj.search(cr, uid, [('key','=',key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             if master_id:
+                assert view.id not in master_id
                 obj.unlink(cr, uid, master_id, context=context)
-            obj.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
+            obj.copy(cr, uid, view.id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
         request.session['snapshot_id'] = 0
         request.session['master'] = 1
         return view.snapshot_id.id
