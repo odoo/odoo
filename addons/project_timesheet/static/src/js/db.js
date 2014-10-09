@@ -37,10 +37,8 @@ function odoo_project_timesheet_db(project_timesheet) {
         },
         //TODO: We should handle it better way, if same id activity is there then replace it otherwise add it and then save whole activities list in db
         add_activities: function(activities) {
-            //This method will replace activities, inshort reload with new activities
-            //var activities = this.load("activities", []);
-            //activities = activities.concat(data);
-            this.save("activities", activities);
+            var self = this;
+            _.each(activities, function(activity) {self.add_activity(activity)});
         },
         add_activity: function(activity) {
             activity_id = activity.id;

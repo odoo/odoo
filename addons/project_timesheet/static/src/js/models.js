@@ -97,7 +97,6 @@ function odoo_project_timesheet_models(project_timesheet) {
     //Also add the logic of destroy model
 
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
-        //initialize: function(session, attributes) {
         initialize: function(attributes) {
             var self = this;
             Backbone.Model.prototype.initialize.call(this, attributes);
@@ -108,26 +107,38 @@ function odoo_project_timesheet_models(project_timesheet) {
             });
             this.project_timesheet_db = new project_timesheet.project_timesheet_db();
             this.screen_data = {};  //see ScreenSelector
-            //Try to check localstorage having session, we do not reload session like web module(core.js), instead stored in localstorage
+            //Try to check localstorage having session, we do not reload session like web module(core.js), instead stored in localstorage to keep persistent origin
             console.log("project_timesheet is ::: ", project_timesheet, openerp);
             if(!project_timesheet.session && !_.isEmpty(this.project_timesheet_db.load("session", {}))) {
                 var stored_session = this.project_timesheet_db.load("session", {});
-                project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {session_id: stored_session['session_id']});
+                //project_timesheet.session = new openerp.Session(undefined, stored_session['origin'], {session_id: stored_session['session_id']});
+                project_timesheet.session = new openerp.Session(undefined, stored_session['origin']);
             }
-            //TODO: Check if user is already logged in then load server data and update stored data else use old stored data
-            //Try to load server data initially, if rpc fails then no worry we will load stored data in local storage
+            //If we have stored session then replace project_timesheet.session with new Session object with stored session origin
             if (!_.isEmpty(project_timesheet.session)) {
-                def = project_timesheet.session.check_session_id().done(function() {
+                project_timesheet.session.check_session_id().done(function() {
                     //Important Note: check_session_id may replace session_id each time when server_origin is different then origin,
                     //so we will update the localstorage session
                     self.project_timesheet_db.save("session", project_timesheet.session);
                     console.log("Here we go, you can do rpc, we having session ID.");
+                    console.log("project_timesheet.session is ::: ", project_timesheet.session);
                     //Load server data and update localstorage
-                    return self.load_server_data();
+                    def = self.load_server_data();
+                }).fail(function() {
+                    def.reject();
                 });
             } else {
-                console.log("Inside elseeee ");
-                def.resolve();
+                //If we do not have previous stored session then try to check whether we having session with window origin (say for example session with localhost:9000)
+                console.log("Inside elseeee, we do not have old session stored with origin in db");
+                var window_origin = location.protocol + "//" + location.host;
+                var session = new openerp.Session(undefined, window_origin);
+                session.session_reload().done(function() {
+                    console.log("We having session with window origin ::: ");
+                    project_timesheet.session = session;
+                    def = self.load_server_data();
+                }).fail(function() {
+                    def.reject();
+                });
             }
             //Always Load locally stored data, whether server is running(or def may fail, because server is not up, still we will load local data)
             $.when(def).always(function() {
@@ -168,6 +179,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             //We should simply call add_project method for activity_record which having project and task details, 
             //project model will call add_task, also check if project model is also available then will not create new model else create new model and push it into projects collection
             var self = this;
+            console.log("Inside load_stored_data ::: ");
             var stored_activities = this.project_timesheet_db.load("activities");
             _.each(stored_activities, function(record) {
                 self.add_project(record);
@@ -190,7 +202,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                     fields: ['id', 'project_id', "priority"]
                 }).then(function(tasks_read) {
                     var projects = [];
-
                     //set project_id in activities, where task_id is projects.id
                     _.each(tasks_read, function(task) {
                         var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id});
@@ -198,6 +209,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                             activity['project_id'] = task['project_id'];
                         });
                     });
+                    self.project_timesheet_db.add_activities(work_activities);
                 });
             });
         },
