@@ -676,6 +676,7 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(
@@ -683,6 +684,10 @@ class website_sale(http.Controller):
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
+
+        # confirm the quotation
+        if tx.acquirer_id.auto_confirm == 'at_pay_now':
+            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
