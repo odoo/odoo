@@ -455,10 +455,6 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        # special case: required
-        if not self.required:
-            self.required = all(field.required for field in fields)
-
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         # when related_sudo, bypass access rights checks when reading values
