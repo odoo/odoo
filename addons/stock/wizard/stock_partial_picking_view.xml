@@ -18,7 +18,7 @@
                     <field name="hide_tracking" invisible="1"/>
                     <separator string="Transfer Products" name="product_separator"/>
                     <field name="move_ids" context="{'hide_tracking': hide_tracking}">
-                        <tree editable="bottom" string="Product Moves">
+                        <tree editable="bottom" string="Product Moves" create="false">
                             <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             <field name="quantity" />
                             <field name="product_uom" groups="product.group_uom"/>
