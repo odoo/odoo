@@ -289,14 +289,9 @@ class Field(object):
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._free_attrs = []
 
-    def copy(self, **kwargs):
-        """ copy(item) -> test
-
-        make a copy of `self`, possibly modified with parameters `kwargs` """
-        field = copy(self)
-        field._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        field._free_attrs = list(self._free_attrs)
-        return field
+    def new(self, **kwargs):
+        """ Return a field of the same type as `self`, with its own parameters. """
+        return type(self)(**kwargs)
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of `self`. """
@@ -434,12 +429,17 @@ class Field(object):
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
-        # determine the related field, and make sure it is set up
+        # determine the chain of fields, and make sure they are all set up
+        fields = []
         recs = env[self.model_name]
-        for name in self.related[:-1]:
+        for name in self.related:
+            fields.append(recs._fields[name])
             recs = recs[name]
-        field = self.related_field = recs._fields[self.related[-1]]
-        field.setup(env)
+
+        for field in fields:
+            field.setup(env)
+
+        self.related_field = field = fields[-1]
 
         # check type consistency
         if self.type != field.type:
@@ -457,6 +457,10 @@ class Field(object):
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
+
+        # special case: required
+        if not self.required:
+            self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
@@ -486,6 +490,7 @@ class Field(object):
         return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
+    _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
@@ -1353,6 +1358,17 @@ class _Relational(Field):
         super(_Relational, self)._setup(env)
         assert self.comodel_name in env.registry, \
             "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
+
+    @property
+    def _related_domain(self):
+        if callable(self.domain):
+            # will be called with another model than self's
+            return lambda recs: self.domain(recs.env[self.model_name])
+        else:
+            # maybe not correct if domain is a string...
+            return self.domain
+
+    _related_context = property(attrgetter('context'))
 
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))

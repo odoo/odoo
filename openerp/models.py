@@ -811,7 +811,7 @@ class BaseModel(object):
         cls._fields = {}
         for attr, field in getmembers(cls, Field.__instancecheck__):
             if not field.inherited:
-                cls._add_field(attr, field.copy())
+                cls._add_field(attr, field.new())
 
         # introduce magic fields
         cls._add_magic_fields()
@@ -2914,7 +2914,7 @@ class BaseModel(object):
         for parent_model, parent_field in reversed(cls._inherits.items()):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
-                    cls._add_field(attr, field.copy(
+                    cls._add_field(attr, field.new(
                         inherited=True,
                         related=(parent_field, attr),
                         related_sudo=False,
