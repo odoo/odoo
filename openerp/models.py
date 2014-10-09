@@ -3755,6 +3755,8 @@ class BaseModel(object):
             upd0.append('write_uid=%s')
             upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
+            direct.append('write_uid')
+            direct.append('write_date')
 
         if len(upd0):
             self.check_access_rule(cr, user, ids, 'write', context=context)
@@ -3776,6 +3778,11 @@ class BaseModel(object):
                             self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
+        # invalidate and mark new-style fields to recompute; do this before
+        # setting other fields, because it can require the value of computed
+        # fields, e.g., a one2many checking constraints on records
+        recs.modified(direct)
+
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
@@ -3788,6 +3795,9 @@ class BaseModel(object):
         for field in upd_todo:
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
+
+        # for recomputing new-style fields
+        recs.modified(upd_todo)
 
         unknown_fields = updend[:]
         for table in self._inherits:
@@ -3871,9 +3881,6 @@ class BaseModel(object):
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
         result.sort()
-
-        # for recomputing new-style fields
-        recs.modified(modified_fields)
 
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
@@ -4084,7 +4091,6 @@ class BaseModel(object):
 
         id_new, = cr.fetchone()
         recs = self.browse(cr, user, id_new, context)
-        upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
@@ -4111,6 +4117,14 @@ class BaseModel(object):
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
                 recs.invalidate_cache(['parent_left', 'parent_right'])
 
+        # invalidate and mark new-style fields to recompute; do this before
+        # setting other fields, because it can require the value of computed
+        # fields, e.g., a one2many checking constraints on records
+        recs.modified([u[0] for u in updates])
+
+        # call the 'set' method of fields which are not classic_write
+        upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
+
         # default element in context must be remove when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
@@ -4121,14 +4135,11 @@ class BaseModel(object):
         for field in upd_todo:
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
 
+        # for recomputing new-style fields
+        recs.modified(upd_todo)
+
         # check Python constraints
         recs._validate_fields(vals)
-
-        # invalidate and mark new-style fields to recompute
-        modified_fields = list(vals)
-        if self._log_access:
-            modified_fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
-        recs.modified(modified_fields)
 
         if context.get('recompute', True):
             result += self._store_get_values(cr, user, [id_new],
