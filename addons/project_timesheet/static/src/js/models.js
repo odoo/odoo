@@ -3,7 +3,6 @@ function odoo_project_timesheet_models(project_timesheet) {
     project_timesheet.task_activity_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            //this.session = session;
             this.id = options.id || null;
             this.date = options.date || null;
             this.task_id = options.task_id || null;
@@ -24,7 +23,6 @@ function odoo_project_timesheet_models(project_timesheet) {
     project_timesheet.task_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            //this.session = session;
             this.project_timesheet_widget = attributes.project_timesheet_widget;
             this.id = options.id || null;
             this.name = options.name || null;
@@ -32,7 +30,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.set({
                 task_activities: new project_timesheet.TaskActivityCollection(),
             });
-            //this.task_activities = new project_timesheet.TaskActivityCollection();
         },
         export_as_json: function() {
             //TO Implement, will return task record along with its activities collection
@@ -51,14 +48,12 @@ function odoo_project_timesheet_models(project_timesheet) {
     project_timesheet.project_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
-            //this.session = session;
             this.project_timesheet_model = attributes.project_timesheet_model;
             this.id = options.id || null; //If no real id, we will have virtual id, at sync time virtual id will be skipped while sending data to server
             this.name = options.name || null;
             this.set({
                 tasks: new project_timesheet.TaskCollection(),
             });
-            //this.tasks = new project_timesheet.TaskCollection();
         },
         export_as_json: function() {
             //TO Implement, will return project record along with its task collection
@@ -71,7 +66,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                 task_model.add_activity(data);
             } else {
                 var task = new project_timesheet.task_model({}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
-                this.project_timesheet_model.project_timesheet_db.add_new_task(data['task_id'])
                 task.add_activity(data);
                 this.get('tasks').add(task);
             }
@@ -150,8 +144,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                 project_model.add_task(data);
             } else {
                 var project = new project_timesheet.project_model({project_timesheet_model: this}, {id: data['project_id'][0], name: data['project_id'][1]});
-                //Project is not available also add, project in projects key in localstorage
-                this.project_timesheet_db.add_new_project(data['project_id'])
                 project.add_task(data);
                 this.get('projects').add(project);
             }
@@ -183,7 +175,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         load_server_data: function() {
             var self = this;
-            //TO Implement, load last 30 days data and updated localstorage and then reload models(done by load_stored_data method)
+            //Load last 30 days data and updated localstorage and then reload models(done by load_stored_data method)
             var momObj = new moment();
             var end_date = project_timesheet.datetime_to_str(momObj._d);
             var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
@@ -193,32 +185,19 @@ function odoo_project_timesheet_models(project_timesheet) {
             }).then(function(work_activities) {
                 var tasks = _.pluck(work_activities, "task_id");
                 tasks = _.pluck(_.groupBy(tasks), 0);
-                //self.project_timesheet_db.save("tasks", tasks);
                 return new project_timesheet.Model(project_timesheet.session, "project.task").call("search_read", {
                     domain: [["id", "in", _.map(tasks, function(task) {return task[0];})]],
                     fields: ['id', 'project_id', "priority"]
                 }).then(function(tasks_read) {
                     var projects = [];
-                    _.each(tasks, function(task) {
-                        _.each(tasks_read, function(task_read) {
-                            if(task[0] == task_read.id) {
-                                task[1] = task[1] +"\n"+ task_read.priority;
-                            }
-                        });
-                    });
-                    self.project_timesheet_db.save("tasks", tasks);
 
                     //set project_id in activities, where task_id is projects.id
                     _.each(tasks_read, function(task) {
                         var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id});
                         _.each(activities, function(activity) {
                             activity['project_id'] = task['project_id'];
-                            if (!_.contains(projects, task['project_id'])) {
-                                projects.push(task['project_id']);
-                            }
                         });
                     });
-                    self.project_timesheet_db.save("projects", projects);
                 });
             });
         },

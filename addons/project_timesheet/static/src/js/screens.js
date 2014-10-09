@@ -561,7 +561,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         format_duration: function(field_val) {
             var data = field_val.toString().split(".");
             if (data[1]) {
-                data[1] = Math.round((data[1]*60*10)/100).toString();
+                data[1] = Math.round((field_val%1)*60);
             }
             return data;
         },
