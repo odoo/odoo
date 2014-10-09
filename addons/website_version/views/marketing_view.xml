@@ -85,8 +85,12 @@
                         <h1><field name="name"/></h1>
                         <group col="4">
                             <field name="website_id"/>
-                            <field name="objectives"/>
-                            <button icon="gtk-ok" name="update_goals" string="Update goals" type="object" context="{'website_id': website_id}" class="oe_highlight"/>
+                            <field name="google_id"/>
+                            <label for="objectives"/>
+                            <div>
+                                <field name="objectives" class="oe_inline"/>
+                                <button name="update_goals" string="(Sync)" type="object" context="{'website_id': website_id}" class="oe_link oe_edit_only"/>
+                            </div>
                         </group>
                         <notebook colspan="4">
                             <page string="Variations in experiment" colspan="4" >
