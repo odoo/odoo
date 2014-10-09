@@ -172,7 +172,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         $dialog_content.openerpClass();
 
         this.$dialog_box.on('hidden.bs.modal', this, function() {
-            self.close();
+            self.destroy();
         });
         this.$dialog_box.modal('show');
 
