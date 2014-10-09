@@ -701,7 +701,7 @@ class purchase_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
-            price_unit *= order_line.product_uom.factor
+            price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
