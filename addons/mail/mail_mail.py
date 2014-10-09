@@ -330,3 +330,8 @@ class mail_mail(osv.Model):
             if auto_commit == True:
                 cr.commit()
         return True
+        
+    def get_partners_to_notify(self, cr, uid, ids, context=None):
+        for mail in self.browse(cr, uid, ids, context=context):
+                res = map(lambda x: x.id, mail.partner_ids)
+        return self.send(cr, uid, ids, recipient_ids= res, context=context)
