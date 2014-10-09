@@ -669,7 +669,7 @@ function openerp_picking_widgets(instance){
                     .call('read',[[parseInt(picking_id)], [], new instance.web.CompoundContext()])
                     .then(function(picking){
                         self.picking = picking[0];
-
+                        self.picking_type_id = picking[0].picking_type_id[0];
                         return load_picking_list(self.picking.picking_type_id[0]);
                     });
             }else{
