@@ -12,6 +12,7 @@ Reference
     reference/module
     reference/cmdline
     reference/security
+    reference/testing
 
     reference/http
     reference/qweb
