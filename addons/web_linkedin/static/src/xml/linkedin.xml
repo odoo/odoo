@@ -9,12 +9,12 @@
     </t>
     <t t-name="Linkedin.popup">
         <div>
-            <h2 style="margin-top:-10px;">Contacts</h2>
+            <h2 class="oe_linkedin_popup">Contacts</h2>
             <div class="oe_linkedin_pop_p">
                 <div class="oe_linkedin_people_entities"></div>
                 <div class="oe_linkedin_show_more"></div>
             </div>
-            <h2>Companies</h2>
+            <h2 class="oe_linkedin_popup">Companies</h2>
             <div class="oe_linkedin_pop_c">
                 <div class="oe_linkedin_company_entities"></div>
                 <div class="oe_linkedin_show_more"></div>
@@ -57,20 +57,19 @@
         </div>
     </t>
 
-    <t t-name="LinkedIn.InitialDialog">
-        <div class="oe_linkedin_initial_dialog_button">
-            Well done! You can use Web Linkedin Integration now, 
-            If you still not set API key and Secret key of linkedin application then follow the tutorial by clicking button Set API Key,
-            If you already set the API key and Secret key then you can import your Linkedin contacts here by clicking Import Contact button.   
-        </div>
-    </t>
-
     <t t-name="KanbanView.linkedinButton">
         <t t-if="widget.is_action_enabled('create')">
             <span class="oe_fade">or</span>
         </t>
         <div class="oe_kanban_import_contact">
-            <a href="#" class="oe_bold">Import Contacts from Linkedin</a>
+            <a t-if="result.redirect_url" t-attf-href="#{result.redirect_url}" class="oe_bold">Import Contacts from Linkedin</a>
+            <a t-if="!result.redirect_url" href="#" class="oe_bold">Import Contacts from Linkedin</a>
+        </div>
+    </t>
+
+    <t t-name="LinkedIn.PeopleAccess">
+        <div class="oe_linkedin_popup">
+            <strong class="text-danger">You does not have access to People Search. </strong><strong><a href='https://help.linkedin.com/app/api-dvr' target='NEW'>Click Here</a> to access People search using <a href='https://developer.linkedin.com/blog/vetted-api-access' target='NEW'>Vetted API Access. </a></strong>
         </div>
     </t>
 </templates>

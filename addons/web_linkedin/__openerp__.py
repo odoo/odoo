@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name' : 'LinkedIn Integration',
     'version': '0.1',
@@ -5,10 +6,12 @@
     'complexity': 'easy',
     'description':
         """
-OpenERP Web LinkedIn module.
+Odoo Web LinkedIn module.
 ============================
-This module provides the Integration of the LinkedIn with OpenERP.
+This module provides the Integration of the LinkedIn with Odoo.
         """,
+    'author': 'Odoo SA',
+    'website': 'http://odoo.com',
     'data': [
         'views/web_linkedin_view.xml',
         'views/web_linkedin.xml',

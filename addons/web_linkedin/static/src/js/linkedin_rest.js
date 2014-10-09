@@ -31,7 +31,6 @@ var LinkedinTester = core.Class.extend({
         this.is_set_keys = false;
     },
     test_linkedin: function (show_dialog) {
-        debugger;
         var self = this;
         if (this.is_set_keys) {
             return $.when(this.is_key_set=true);
@@ -477,7 +476,6 @@ var EntityWidget = Widget.extend({
         }
     },
 });
-
     /*
     Kanban include for adding import button on button bar for res.partner model to import linkedin contacts
     */
@@ -486,7 +484,7 @@ var EntityWidget = Widget.extend({
             this.display_dm = new utils.DropMisordered(true);
             return this._super.apply(this, arguments);
         },
-        load_kanban: function() {
+        import_linkedin_contact: function() {
             var self = this;
             var super_res = this._super.apply(this, arguments);
             if(this.dataset.model == 'res.partner') {
@@ -503,19 +501,23 @@ var EntityWidget = Widget.extend({
                                 if (confirm(_t("You will be redirected to LinkedIn authentication page, once authenticated after that you use this widget."))) {
                                     framework.redirect(result.url);
                                 }
-                            } else {
-                                if (result.status && result.status == "AccessError") {
-                                    var message = _.str.sprintf("Total %s records retrieved from Linkedin\n\n", result._total);
-                                    _(result.fail_warnings).each(function(msg) {
-                                        message += _.str.sprintf("%s      %s\n\n", msg[0], msg[1]);
-                                    });
-                                    alert(message);
+                            }).fail(function (error, event) {
+                                if (error.data.arguments[0] == 401) {
+                                    var url = error.data.arguments[2].url || "";
+                                    instance.web.redirect(url);
+                                    //prevent crashmanager to diplay error
+                                    event.preventDefault();
                                 }
-                                self.do_reload();
-                            }
+                            });
                         });
-                    });
+                    }
                 });
+        },
+        load_kanban: function() {
+            var self = this;
+            var super_res = this._super.apply(this, arguments);
+            if(this.dataset.model == 'res.partner' && !this.dataset.child_name) {
+               self.import_linkedin_contact();
             }
             return super_res;
         }

@@ -1,64 +1,61 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record id="view_linkedin_partner_form" model="ir.ui.view">
-            <field name="name">res.partner.linkedin.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="name" position="replace">
-                    <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
-                </field>
-                <field name="website" position="after">
-                    <field name="linkedin_id" invisible="1"/>
-                    <field name="linkedin_url" nolabel="1" widget="linkedin_url"/>
-                </field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_linkedin_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.linkedin.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
             </field>
-       </record>
-        
-        <record id="view_linkedin_config_settings" model="ir.ui.view">
-            <field name="name">linkedin_settings</field>
-            <field name="model">sale.config.settings</field>
-            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
-            <field name="arch" type="xml">
-                <div name="LinkedIn" position="inside">
-                    <div attrs="{'invisible':[('module_web_linkedin','=',False)]}">
-                        <p>
-                            To use the LinkedIn module with this database, an API Key and Secret key is required. Please follow this procedure:
-                        </p>
-                        <ul>
-                            <li>Go to this URL: 
-                                <a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a>.
-                            </li>
-                            <li>Log into LinkedIn.</li>
-                            <li>Add a new application and fill the form:
+            <field name="website" position="after">
+                <field name="linkedin_id" invisible="1"/>
+                <field name="linkedin_url" nolabel="1" widget="linkedin_url"/>
+            </field>
+        </field>
+   </record>
+
+    <record id="view_linkedin_config_settings" model="ir.ui.view">
+        <field name="name">linkedin_settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+        <field name="arch" type="xml">
+            <div name="module_web_linkedin" position="inside">
+                <div attrs="{'invisible':[('module_web_linkedin','=',False)]}">
+                    <div>
+                        <b>To use the LinkedIn module with this database, an API Key and Secret key is required.</b><br/><br/>
+                        <label for="linkedin_cus_sync"/>
+                        <field name="linkedin_cus_sync" class="oe_inline"/>
+                        <div attrs="{'invisible':[('linkedin_cus_sync','=',False)]}">
+                            <br/><b>Please follow this procedure:</b>
+                            <ul>
+                                <li>Go to this URL: <a href='https://www.linkedin.com/secure/developer' target='_blank'>https://www.linkedin.com/secure/developer</a></li>
+                                <li>Log into LinkedIn.</li>
+                                <li>Add a new application and fill the form:</li>
                                 <ul>
-                                    <li>Website URL: <field name="server_domain" readonly="1" style="width:0;white-space: nowrap;"/></li>
-                                    <li>Website URL inside "Oauth2 Redirect URL" field</li>
+                                    <li><b>Company :</b><field name="company_name" readonly="1" style="width:0;white-space: nowrap;"/></li>
+                                    <li><b>Application Name :</b>Odoo Sales Integration</li>
+                                    <li><b>Description :</b>Odoo Sales Integration </li>
+                                    <li><b>Website URL : </b><field name="linkedin_domain" readonly="1" style="width:0;white-space: nowrap;"/></li>
+                                    <li><b>Application Use :</b>Sales (CRM), Marketing</li>
+                                    <li><b>Live status :</b>Live</li>
+                                    <li><b>Developer Contact Email :</b>Your email address</li>
+                                    <li><b>Phone :</b>Your phone number</li>
+                                    <li><b>Default Scope :</b>Tick r_network (To Access the people Search)</li>
+                                    <li><b>OAuth 2.0 Redirect URLs : </b><field name="redirect_url" readonly="1" style="width:0;white-space: nowrap;"/></li>
+                                    <li><b>Agreement Language :</b>Browser Locale Setting</li>
+                                    <li>Tick "Agree"</li>
+                                    <li>Click on Add Aplication</li>
                                 </ul>
-                            </li>
-                            <li>Copy the <strong>API key and Secret key</strong> here:
-                                <field name="api_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline"/>
-                                <field name="secret_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline"/>
-                            </li>
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
+                    Copy the <strong>API key and Secret key</strong> here:
+                        <field name="api_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline" placeholder="API key"/>
+                        <field name="secret_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline" placeholder="Secret key"/>
                 </div>
-            </field>
-        </record>
+            </div>
+        </field>
+    </record>
 
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_crm_client" model="ir.actions.client">
-            <field name="name">CRM Client Action</field>
-            <field name="tag">crm.linkedin.dialog</field>
-            <field name="params" eval="{'menu_id': ref('base.menu_partner_form')}"/>
-        </record>
-
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_crm_client"/>
-            <field name="type">automatic</field>
-            <field name="state">open</field>
-        </record>
-        
-   </data>
-</openerp>
+</odoo>
