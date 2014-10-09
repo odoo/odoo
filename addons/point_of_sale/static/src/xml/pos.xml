@@ -973,7 +973,7 @@
                 </tr>
                 <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
                     <tr>
-                        <td><t t-esc="taxdetail.tax.name" /></td>
+                        <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(taxdetail.amount)" />
                         </td>
