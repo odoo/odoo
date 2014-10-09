@@ -10,8 +10,14 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.hours = options.hours || null;
             this.command = options.command || 0;
         },
-        export_as_json: function() {
-            //TO Implement, will return activity record
+        export_as_JSON: function() {
+            return {
+                id: this.id,
+                date: this.date,
+                task_id: this.task_id,
+                name: this.name,
+                hours: this.hours,
+            };
         },
     });
 
@@ -36,7 +42,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         add_activity: function(data) {
             //TO Implement, will create new model object of activity and add it into activities collection
-            var task_activity = new project_timesheet.task_activity_model({}, {id: data['id'], name: data['name'], task_id: data['task_id'][0], date: data['date'], hours: data['hours']});
+            var task_activity = new project_timesheet.task_activity_model({}, {id: data['id'], name: data['name'], task_id: data['task_id'][0], date: data['date'], hours: data['hours'], command: (data['command'] || 0)});
             this.get('task_activities').add(task_activity);
         },
     });

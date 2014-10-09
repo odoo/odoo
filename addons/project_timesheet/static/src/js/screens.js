@@ -456,6 +456,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var date = project_timesheet.datetime_to_str(momObj._d);
             project_activity_data['date'] = date; //Current date in accepted format
             project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
@@ -465,6 +466,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             }
             var project_activity_data = this.get_from_data();
             project_activity_data['id'] = this.current_id; //Activity Existing ID
+            project_activity_data['command'] = 1;
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
@@ -483,10 +485,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     if (this.current_id.toString().match(this.project_timesheet_db.virtual_id_regex)) {
                         task_activity_collection.remove(task_activity);
                         this.project_timesheet_db.remove_activity(task_activity);
-                        //Remove activity from db also
                     } else {
-                        console.log("Inside set command for existing record in database.");
                         task_activity.set({command: 2});
+                        project_activity_data.command = 2;
+                        this.project_timesheet_db.add_activity(project_activity_data);
                     }
                 }
             }

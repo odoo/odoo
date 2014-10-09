@@ -35,16 +35,15 @@ function odoo_project_timesheet_db(project_timesheet) {
             }
             return activity;
         },
-        //TODO: We should handle it better way, if same id activity is there then replace it otherwise add it and then save whole activities list in db
         add_activities: function(activities) {
             var self = this;
-            _.each(activities, function(activity) {self.add_activity(activity)});
+            _.each(activities, function(activity) {self.add_activity(activity);});
         },
         add_activity: function(activity) {
             activity_id = activity.id;
             var activities = this.load("activities", []);
             // if the order was already stored, we overwrite its data
-            for(var i = 0, len = activities.length; i < len; i++){
+            for(var i = 0, len = activities.length; i < len; i++) {
                 if(activities[i].id === activity_id){
                     activities[i] = activity;
                     this.save('activities',activities);
@@ -58,9 +57,9 @@ function odoo_project_timesheet_db(project_timesheet) {
         remove_activity: function(activity) {
             var activities = this.load("activities", []);
             for(var i = 0, len = activities.length; i < len; i++){
-                if(activities[i].id === activity_id){
+                if(activities[i].id === activity.id){
                     activities[i] = activity;
-                    activities.pop(i);
+                    activities.splice(i, 1);
                     break;
                 }
             }
