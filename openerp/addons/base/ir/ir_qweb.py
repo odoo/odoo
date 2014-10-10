@@ -641,13 +641,13 @@ class DateConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        if not value: return ''
+        if not value or len(value)<10: return ''
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
-                value, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
+                value[:10], openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
 
         if options and 'format' in options:
             pattern = options['format']
