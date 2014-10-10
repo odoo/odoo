@@ -706,29 +706,31 @@ class account_fiscalyear(models.Model):
                 ds = ds + relativedelta(months=interval)
         return True
 
-    def find(self, cr, uid, dt=None, exception=True, context=None):
-        res = self.finds(cr, uid, dt, exception, context=context)
+    @api.model
+    def find(self, dt=None, exception=True):
+        res = self.finds(dt, exception)
         return res and res[0] or False
 
-    def finds(self, cr, uid, dt=None, exception=True, context=None):
-        if context is None: context = {}
+    @api.model
+    def finds(self, dt=None, exception=True):
         if not dt:
-            dt = fields.date.context_today(self,cr,uid,context=context)
+            dt = fields.Date.context_today()
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if context.get('company_id', False):
-            company_id = context['company_id']
+        if self._context.get('company_id', False):
+            company_id = self._context['company_id']
         else:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            company_id = self.env.user.company_id.id
         args.append(('company_id', '=', company_id))
-        ids = self.search(cr, uid, args, context=context)
-        if not ids:
+        recs = self.search(args)
+        if not recs:
             if exception:
-                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
+                action = self.env.ref('account.action_account_fiscalyear')
                 msg = _('No accounting period is covering this date: %s.') % dt
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _(' Configure Fiscal Year Now'))
+                raise openerp.exceptions.RedirectWarning(msg, action, _(' Configure Fiscal Year Now'))
             else:
                 return []
-        return ids
+        # Temporary not returning 'recs' itself because it breaks other methods where it is called.
+        return recs.ids
 
 
 class account_period(models.Model):
