@@ -26,5 +26,5 @@ class TestOfxFile(TransactionCase):
         self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
         statement_id = self.bank_statement_model.search(cr, uid, [('name', '=', '000000123')])[0]
         bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)
-        self.assertEquals(bank_st_record.balance_start, 2156.56)
-        self.assertEquals(bank_st_record.balance_end_real, 1796.56)
+        self.assertEquals(bank_st_record.balance_start, 2516.56)
+        self.assertEquals(bank_st_record.balance_end_real, 2156.56)

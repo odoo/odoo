@@ -62,8 +62,8 @@ class account_bank_statement_import(osv.TransientModel):
             period_ids = period_obj.find(cr, uid, st_start_date, context=context)
         vals_bank_statement = {
             'name': ofx.account.routing_number,
-            'balance_start': ofx.account.statement.balance,
-            'balance_end_real': float(ofx.account.statement.balance) + total_amt,
+            'balance_start': float(ofx.account.statement.balance) - total_amt,
+            'balance_end_real': float(ofx.account.statement.balance),
             'period_id': period_ids and period_ids[0] or False,
             'journal_id': journal_id
         }
