@@ -126,7 +126,8 @@ if tools.config['db_name']:
             tools.convert_yaml_import(cr, 'base', file(tools.config["test_file"]), {}, 'test', True)
             cr.rollback()
 
-        pool.get('ir.cron')._poolJobs(db.dbname)
+        if not tools.config["stop_after_init"]:
+            pool.get('ir.cron')._poolJobs(db.dbname)
 
         cr.close()
 
