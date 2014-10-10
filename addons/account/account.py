@@ -572,13 +572,13 @@ class account_journal(models.Model):
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
                 raise Warning(_('Configuration error!\nThe currency chosen should be shared by the default accounts too.'))
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = dict(context or {})
-        journal = self.browse(cr, uid, id, context=context)
+    @api.one
+    def copy(self, default=None):
+        default = dict(default or {})
         default.update(
-            code=_("%s (copy)") % (journal['code'] or ''),
-            name=_("%s (copy)") % (journal['name'] or ''))
-        return super(account_journal, self).copy(cr, uid, id, default, context=context)
+            code=_("%s (copy)") % (self.code or ''),
+            name=_("%s (copy)") % (self.name or ''))
+        return super(account_journal, self).copy(default)
 
     @api.multi
     def write(self, vals):
@@ -645,15 +645,15 @@ class account_journal(models.Model):
             res += [(rs.id, name)]
         return res
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args = []
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             domain = [('code', operator, name), ('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+        recs = self.search(expression.AND([domain, args]), limit=limit)
+        return recs.name_get()
 
 
 class account_fiscalyear(models.Model):
