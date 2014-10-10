@@ -148,7 +148,7 @@ class account_account_type(models.Model):
         help="The 'Internal Type' is used for features available on "\
         "different types of accounts: view can not have journal items, consolidation are accounts that "\
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
-        "partners accounts (for debit/credit computations)."),
+        "partners accounts (for debit/credit computations).")
     note = fields.Text(string='Description')
 
 
@@ -610,12 +610,12 @@ class account_journal(models.Model):
         return self.env['ir.sequence'].create(seq)
 
     @api.model
-    @api.returns('self')
+    @api.returns('self', lambda value: value.id)
     def create(self, vals):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             # if we have the right to create a journal, we should be able to
             # create it's sequence.
-            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals)})
+            vals.update({'sequence_id': self.sudo().create_sequence(vals).id})
         return super(account_journal, self).create(vals)
 
     @api.multi
@@ -639,7 +639,7 @@ class account_journal(models.Model):
             else:
                 currency = journal.company_id.currency_id
             name = "%s (%s)" % (journal.name, currency.name)
-            res += [(rs.id, name)]
+            res += [(journal.id, name)]
         return res
 
     @api.model
@@ -742,7 +742,7 @@ class account_period(models.Model):
     code = fields.Char(string='Code', size=12)
     special = fields.Boolean(string='Opening/Closing Period', help="These periods can overlap.")
     date_start = fields.Date(string='Start of Period', required=True, states={'done': [('readonly', True)]})
-    date_stop = fields.Date(string='End of Period', required=True, states={'done': [('readonly', True)]}),
+    date_stop = fields.Date(string='End of Period', required=True, states={'done': [('readonly', True)]})
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', required=True, states={'done': [('readonly', True)]}, index=True)
     state = fields.Selection([('draft', 'Open'), ('done', 'Closed')], string='Status', readonly=True, copy=False, default='draft',
         help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.')
@@ -759,8 +759,8 @@ class account_period(models.Model):
             raise Warning(_('Error!\nThe duration of the Period(s) is/are invalid.'))
 
     @api.one
-    @api.constrains('fiscalyear_id', 'date_start', 'date_stop', 'fiscalyear_id.date_start', 'fiscalyear_id.date_stop')
-    def _check_year_limit(self,cr,uid,ids,context=None):
+    @api.constrains('fiscalyear_id', 'date_start', 'date_stop')
+    def _check_year_limit(self):
         if not self.special:
 
             if self.fiscalyear_id.date_stop < self.date_stop or \
@@ -829,7 +829,7 @@ class account_period(models.Model):
     @api.multi
     def write(self, vals):
         if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('period_id', 'in', ids)])
+            move_lines = self.env['account.move.line'].search([('period_id', 'in', self.ids)])
             if move_lines:
                 raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
         return super(account_period, self).write(vals)
@@ -994,7 +994,7 @@ class account_move(models.Model):
         help="This is a field only used for internal purpose and shouldn't be displayed")
 
     @api.one
-    @api.constrains('fiscalyear_id', 'date_start', 'date_stop', 'fiscalyear_id.date_start', 'fiscalyear_id.date_stop')
+    @api.constrains('period_id', 'journal_id')
     def _check_centralisation(self):
         if self.journal_id.centralisation:
             moves = self.search([
@@ -1029,7 +1029,7 @@ class account_move(models.Model):
                 if new_name:
                     move.write({'name':new_name})
 
-        cr.execute('UPDATE account_move '\
+        self._cr.execute('UPDATE account_move '\
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
@@ -1052,51 +1052,50 @@ class account_move(models.Model):
             self.invalidate_cache()
         return True
 
-    @api.multi
-    def write(self, vals):
-        ctx = dict(self._context)
-        ctx['novalidate'] = True
-        result = super(account_move, self).with_context(ctx).write(vals)
-        self.validate()
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        c = context.copy()
+        c['novalidate'] = True
+        result = super(account_move, self).write(cr, uid, ids, vals, c)
+        self.validate(cr, uid, ids, context=context)
         return result
 
     #
     # TODO: Check if period is closed !
     #
-    @api.model
-    @api.returns('self')
-    def create(self, vals):
-        ctx = dict(self._context or {})
+    def create(self, cr, uid, vals, context=None):
+        context = dict(context or {})
         if vals.get('line_id'):
             if vals.get('journal_id'):
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
-                ctx['journal_id'] = vals['journal_id']
+                context['journal_id'] = vals['journal_id']
             if 'period_id' in vals:
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = vals['period_id']
-                ctx['period_id'] = vals['period_id']
+                context['period_id'] = vals['period_id']
             else:
-                default_period = self.with_context(ctx)._get_period()
+                default_period = self._get_period(cr, uid, context)
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = default_period
-                ctx['period_id'] = default_period
+                context['period_id'] = default_period
 
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(ctx)._get_period()
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
-            result = super(account_move, self).with_context(c).create(vals)
-            tmp = result.with_context.validate()
-            journal = self.env['account.journal'].with_context(ctx).browse(vals['journal_id'])
+            result = super(account_move, self).create(cr, uid, vals, c)
+            tmp = self.validate(cr, uid, [result], context)
+            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
             if journal.entry_posted and tmp:
-                result.with_context(ctx).button_validate()
+                self.button_validate(cr,uid, [result], context)
         else:
-            result = super(account_move, self).with_context(ctx).create(vals)
+            result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
     @api.multi
@@ -1340,7 +1339,7 @@ class account_move_reconcile(models.Model):
     # on all lines. We allow that only for opening/closing period
     @api.one
     @api.constrains('line_id')
-    def _check_same_partner(self, cr, uid, ids, context=None):
+    def _check_same_partner(self):
         for reconcile in self:
             move_lines = []
             if not reconcile.opening_reconciliation:
@@ -1941,7 +1940,7 @@ class account_account_template(models.Model):
     _description ='Templates for Accounts'
     _order = "code"
 
-    name = fields.Char(string='Name', required=True, index=True),
+    name = fields.Char(string='Name', required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(string='Code', size=64, required=True, index=True)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
@@ -2181,7 +2180,7 @@ class account_tax_template(models.Model):
     account_collected_id = fields.Many2one('account.account.template', string='Invoice Tax Account')
     account_paid_id = fields.Many2one('account.account.template', string='Refund Tax Account')
     parent_id = fields.Many2one('account.tax.template', string='Parent Tax Account', index=True)
-    child_depend = fields.Boolean(string='Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
+    child_depend = fields.Boolean(string='Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount.")
     python_compute = fields.Text(string='Python Code',
         default='''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''')
     python_compute_inv = fields.Text(string='Python Code (reverse)',
