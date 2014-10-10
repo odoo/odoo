@@ -245,7 +245,7 @@ class WebKitParser(report_sxw):
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
         if report_xml.precise_mode:
-            objs = self.parser_instance.localcontext['objects']
+            objs = parser_instance.localcontext['objects']
             for obj in objs:
                 parser_instance.localcontext['objects'] = [obj]
                 try :
