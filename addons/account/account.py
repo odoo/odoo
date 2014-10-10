@@ -1488,24 +1488,20 @@ class account_tax_code(models.Model):
     sequence = fields.Integer(string='Sequence',
         help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'")
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        if not args:
-            args = []
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=80):
+        args = args or []
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             domain = [('code', operator, name), ('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+        recs = self.search(expression.AND([domain, args]), limit=limit)
+        return recs.name_get()
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
+    @api.multi
+    @api.depends('name', 'code')
+    def name_get(self):
+        reads = self.read(['name','code'], context=context, load='_classic_write')
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
