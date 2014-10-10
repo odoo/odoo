@@ -1071,13 +1071,12 @@ class account_move(models.Model):
             self.invalidate_cache()
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        c = context.copy()
-        c['novalidate'] = True
-        result = super(account_move, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context=context)
+    @api.multi
+    def write(self, vals):
+        ctx = dict(self._context)
+        ctx['novalidate'] = True
+        result = super(account_move, self).with_context(ctx).write(vals)
+        self.validate()
         return result
 
     #
