@@ -70,7 +70,10 @@ class base_language_export(osv.osv_memory):
             filename = get_iso_codes(lang)
         elif len(mods) == 1:
             filename = mods[0]
-        name = "%s.%s" % (filename, this.format)
+        extension = this.format
+        if not lang and extension == 'po':
+            extension = 'pot'
+        name = "%s.%s" % (filename, extension)
         this.write({ 'state': 'get', 'data': out, 'name': name })
         return {
             'type': 'ir.actions.act_window',
