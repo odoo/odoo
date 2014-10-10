@@ -228,9 +228,18 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var data = field_val.toString().split(".");
             if (data[1]) {
                 data[1] = Math.round((field_val%1)*60);
+                if (data[1] == 60) {
+                    data[1] = 0;
+                    data[0] = parseInt(data[0]) + 1;
+                }
             }
             return data.join(":");
         },
+        get_total: function() {
+            var total = 0;
+            _.each(this.activities, function(activity) { total += activity.hours;});
+            return this.format_duration(total);
+        }
     });
 
 }

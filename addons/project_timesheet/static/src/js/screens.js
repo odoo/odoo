@@ -369,6 +369,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
             });
             this.$el.find(".activity_row").on("click", this.on_row_click);
+            this.$el.find(".pt_total").html(this.get_total());
         },
         hide: function() {
             if(this.activity_list) {
@@ -399,6 +400,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_button_timer: function() {
             //TO Implement
         },
+        get_pending_lines: function() {
+            return this.project_timesheet_model.get_pending_records();
+        },
+        get_total: function() {
+            return this.activity_list.get_total();
+        }
     });
 
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
@@ -564,6 +571,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var data = field_val.toString().split(".");
             if (data[1]) {
                 data[1] = Math.round((field_val%1)*60);
+                if (data[1] == 60) {
+                    data[1] = 0;
+                    data[0] = parseInt(data[0]) + 1;
+                }
             }
             return data;
         },
@@ -700,6 +711,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_reporting_duration").on("click", function() {
                 
             });
+        },
+        get_pending_lines: function() {
+            return this.project_timesheet_model.get_pending_records();
         }
     });
 }

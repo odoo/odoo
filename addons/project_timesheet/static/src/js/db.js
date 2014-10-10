@@ -65,5 +65,17 @@ function odoo_project_timesheet_db(project_timesheet) {
             }
             this.save('activities',activities);
         },
+        get_pending_records: function() {
+            /*
+             * This method will return Timesheet Lines which having some command that is it has been edited
+             *  or line which having virtual_id that is to_create
+             */ 
+            var self = this;
+            var activities = this.load('activities');
+            pending_records = _.filter(activities, function(activity) {
+                return (activity.command || (self.virtual_id_regex.test(activity.id)));
+            });
+            return pending_records.length;
+        },
     });
 }

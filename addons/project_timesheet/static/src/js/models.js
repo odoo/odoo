@@ -315,6 +315,9 @@ function odoo_project_timesheet_models(project_timesheet) {
         flush_data: function() {
             //TO Implement, this method will flush localstorage data once it has been sync
         },
+        get_pending_records: function() {
+           return this.project_timesheet_db.get_pending_records();
+        }
         //Note here
         //Here we will have logic of add projects, which will add project models' instance in this.get('projects').add(project)
     });

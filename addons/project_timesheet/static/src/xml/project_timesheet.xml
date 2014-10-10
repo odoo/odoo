@@ -235,6 +235,7 @@
                                 </div>
                                 <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
                                     <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
                                 </div>
                                 <div class="col-md-4 col-xs-4 col-sm-4 pt_reporting_duration">
                                     <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span>Reporting</span></a>
@@ -255,9 +256,10 @@
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
                     <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
                 </div>
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
-                    <span class="pull-right">6h 30min</span>
+                    <span class="pull-right pt_total"></span>
                 </div>
             </div>
         </div>
