@@ -513,16 +513,27 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line. """
+    def _domain_reconciliation_proposition(self, cr, uid, st_line,
+                                           excluded_ids=None, context=None):
         if excluded_ids is None:
             excluded_ids = []
+        domain = [('ref', '=', st_line.name),
+                  ('reconcile_id', '=', False),
+                  ('state', '=', 'valid'),
+                  ('account_id.reconcile', '=', True),
+                  ('id', 'not in', excluded_ids)]
+        return domain
+
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line. """
         mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
         if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
-            match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
+            domain = self._domain_reconciliation_proposition(cr, uid, st_line,
+                                                             excluded_ids=excluded_ids,
+                                                             context=context)
+            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=1, context=context)
             if match_id:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
