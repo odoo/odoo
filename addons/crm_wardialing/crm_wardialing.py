@@ -8,10 +8,6 @@ from openerp import models, fields, api
 # Models
 #----------------------------------------------------------
 
-
-
-
-
 class crm_phonecall(models.Model):
 	_inherit = "crm.phonecall"
 
@@ -20,16 +16,17 @@ class crm_phonecall(models.Model):
 	to_call = fields.Boolean("Call Center Call", default = False)
 	made_call = fields.Boolean("Made Call", default = False)
 	sequence = fields.Integer('Sequence', select=True, help="Gives the sequence order when displaying a list of Phonecalls.", default = 10)
-	
-	
 
 	@api.multi
 	def call_partner(self):
 		print("CALL FUNCTION")
 		print(self)
 		print(self.partner_id.phone)
-
 	
+	@api.multi
+	def get_information_call(self):
+		print("GET INFORMATION")
+
 class crm_lead(models.Model):
 	_inherit = "crm.lead"
 
@@ -44,7 +41,6 @@ class crm_lead(models.Model):
 		phonecall.partner_id = self.partner_id
 		phonecall.state = 'pending'
 
-
 class crm_phonecall_log_wizard(models.TransientModel):
 	_name = 'crm.phonecall.log.wizard';
 
@@ -53,11 +49,14 @@ class crm_phonecall_log_wizard(models.TransientModel):
 		if(self._context.get('phonecall').get('description') == "There is no description"):
 			return ""
 		else:
-			return self._context.get('phonecall').get('description')
-		
-		
-	description = fields.Text('Description', default = _default_description)
+			return self._context.get('phonecall').get('description')		
+	
+	@api.multi
+	def _default_phonecall(self):
+		return self._context.get('phonecall').get('opportunity_id')[1]
 
+	description = fields.Text('Description', default = _default_description)
+	opportunity_name = fields.Char(default = _default_phonecall, readonly=True)
 	@api.multi
 	def save(self):
 		phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall').get('id'))

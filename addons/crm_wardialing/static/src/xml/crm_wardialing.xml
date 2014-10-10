@@ -4,54 +4,111 @@
 <templates xml:space="preserve">
 <t t-name="crm_wardialing.PhonecallWidget">
     <div rel='popover' data-trigger="hover" data-placement='right' class="oe_dial_phonecall ui-draggable">
-        <div>
-            <span class="phonecall_id" style="display:none"><t t-esc="widget.get('id')"/></span>
-
-            <span class="oe_dial_phonecall_clip">
-                <img t-att-src="'data:image/jpg;base64,'+widget.get('image_small')" class="oe_dial_phonecall_avatar"/>
-            </span>
-            <span  class="oe_dial_phonecall_name"><t t-esc="widget.get('partner')"/></span>
-        </div>
-        
+         <table class="oe_form_group">
+            <tr class="oe_form_group_row">
+                <td class="oe_form_group_cell oe_form_group_cell_label">
+                    <span class="phonecall_id" style="display:none"><t t-esc="widget.get('id')"/></span>
+                    <span class="oe_dial_phonecall_clip">
+                        <img t-att-src="'data:image/jpg;base64,'+widget.get('image_small')" class="oe_dial_phonecall_avatar"/>
+                    </span>
+                </td>
+                <td class="oe_form_group_cell">
+                    <span class="oe_dial_phonecall_name"><t t-esc="widget.get('partner')"/></span><br/>
+                    <span><t t-esc="widget.get('opportunity')"/></span>
+                </td>
+            </tr>
+        </table>       
     </div>
 </t>
+
 <t t-name="crm_wardialing.DialingPanel">
     <div class="oe_dial">
-        <div class="oe_dial_frame_header_button">
-            <a href="#">
-                    <img class="oe_dial_header_dialbutton_icon" src="/web/static/src/img/icons/gtk-goto-bottom.png"/>
-            </a>
-            <a href="#">
-                    <img class="oe_dial_header_refresh_icon" src="/web/static/src/img/icons/gtk-refresh.png"/>
-            </a>
-        </div>
         <div class="oe_dial_frame_header">
-            <span class="oe_e oe_dial_search_icon">ô</span>
+            <button class="oe_e oe_dial_search_icon" title="Refresh the list">ô</button>
             <input class="oe_dial_searchbox" t-att-placeholder="_t('Search phonecalls...')"/>
             <span class="oe_e oe_dial_search_clear">[</span>
+            <a href="#">
+                    <i style="float:right;" class="oe_dial_header_dialbutton_icon fa fa-times"></i>
+            </a>
         </div>
         <div class="oe_dial_phonecalls"></div>
         <div class="oe_dial_content">
             <div class="oe_dial_callingbuttons">
                 <button type="button" class="oe_dial_buttons oe_dial_callbutton">Call</button>
-                <button type="button" class="oe_dial_buttons oe_dial_nextcallbutton">Next Call</button>
+                <button type="button" class="oe_dial_buttons oe_dial_nextcallbutton">Next Call/Change priority</button>
                 <button type="button" class="oe_dial_buttons oe_dial_hangupbutton">Hang Up</button>
                 <button type="button" class="oe_dial_buttons oe_dial_transferbutton">Transfer</button>
             </div>
             <div class="oe_dial_optionalbuttons">
-                <button type="button" class="oe_dial_buttons oe_dial_changelog">Call Log</button>
+                <button type="button" class="oe_dial_buttons oe_dial_changelog">Log Call</button>
                 <button type="button" class="oe_dial_buttons oe_dial_email">Send Email</button>
             </div>
             <div class="oe_dial_redirectbuttons">
-                <button type="button" class="oe_dial_buttons oe_dial_to_client"><Customer</button>
-                <button type="button" class="oe_dial_buttons oe_dial_to_lead">Opportunity</button>
+                <button type="button" class="oe_dial_buttons oe_dial_to_client"><i class="fa fa-arrow-circle-o-right"></i> Customer</button>
+                <button type="button" class="oe_dial_buttons oe_dial_to_lead"><i class="fa fa-arrow-circle-o-right"></i> Opp.</button>
             </div>
         </div>
     </div>
 </t>
 
+<t t-name="crm_wardialing_Tooltip">
+    <table class="oe_form_group">
+        <tr class="oe_form_group_row">
+            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
+                <span class=" oe_form_label oe_align_right"> Contact </span>
+            </td>
+            <td class="oe_form_group_cell oe_wardialing_td">
+                <span class="oe_form_field oe_form_field_char"><t t-esc="partner_name"/></span>
+            </td>
+        </tr>
+        <tr class="oe_form_group_row">
+            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
+                <span class=" oe_form_label oe_align_right"> Tel </span>
+            </td>
+            <td class="oe_wardialing_td oe_form_group_cell">
+                <t t-if="phone">
+                    <span class="oe_form_field oe_form_field_char"><t t-esc="phone"/></span><br/>
+                </t>
+                <t t-if="mobile">
+                    <span class="oe_form_field oe_form_field_char"><t t-esc="mobile"/></span>
+                </t>
+            </td>
+        </tr>
+        <tr class="oe_form_group_row">
+            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
+                <span class=" oe_form_label oe_align_right"> Mail </span>
+            </td>
+            <td class="oe_wardialing_td oe_form_group_cell">
+                <span class="oe_form_field oe_form_field_char"><t t-esc="email"/></span>
+            </td>
+        </tr>
+        <tr class="oe_form_group_row">
+            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
+                <span class=" oe_form_label oe_align_right"> Next Action </span>
+            </td>
+            <td class="oe_wardialing_td oe_form_group_cell">
+                <t t-if="title_action">
+                    <span class="oe_form_field oe_form_field_char"><t t-esc="title_action"/></span>
+                </t>
+            </td>
+        </tr>
+        <tr class="oe_form_group_row">
+            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
+                <span class=" oe_form_label oe_align_right"> Expected Revenue </span>
+            </td>
+            <td class="oe_wardialing_td oe_form_group_cell">
+                
+                <span><t t-esc="company_currency"/></span><br/>
+                <span class="oe_form_field oe_form_field_char" t-field-options='{"widget": "monetary","display_currency": t-esc="company_currency"}'>
+                    <t t-esc="planned_revenue"/>
+                </span>
+            </td>
+        </tr>
+    </table>
+</t>
 
-
-
-
+<t t-name="crm_wardialing_Tooltip_title">
+    <span><t t-esc="opportunity"/></span>
+    <span style="float: right;" t-field-options='{"widget": "priority"}'><t t-esc="priority"/></span>
+</t>
 </templates>

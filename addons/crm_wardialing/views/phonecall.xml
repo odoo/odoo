@@ -126,6 +126,8 @@
             <field name="model">crm.phonecall.log.wizard</field>
             <field name="arch" type="xml">
                 <form string="Edit the log">
+                    <h2 style="display: inline;"> Log the call: <field style="display: inline !important" name="opportunity_name"/></h2>
+
                     <group>
                         <field name="description" placeholder="Description..."/>
                     </group>
@@ -133,7 +135,7 @@
                         <button name="save" type="object"
                                 string="Save" class="oe_highlight"/>
                         or
-                        <button special="cancel" string="Cancel"/>
+                        <button class="oe_button oe_form_button oe_link" special="cancel" string="Cancel"/>
                     </footer>
                 </form>
             </field>

@@ -39,6 +39,13 @@ openerp.crm_wardialing = function(instance) {
             }
             this.set("image_small", image_small);
             this.set("email", email);
+            if(phonecall.opportunity_id[1].length < 24){
+                this.set("opportunity", phonecall.opportunity_id[1]);
+            }else{
+                var opportunity = phonecall.opportunity_id[1].substring(0,23) + '...';
+                this.set("opportunity", opportunity);
+            }
+            
                        
         },
         start: function() {
@@ -112,35 +119,55 @@ openerp.crm_wardialing = function(instance) {
         search_phonecalls_status: function() {
             var phonecall_model = new openerp.web.Model("crm.phonecall");
 
-            this.$el.find(".oe_dial_phonecalls").css('height','235px');
+            this.$el.find(".oe_dial_phonecalls").css('height','280px');
 
             var self = this;
+
             return phonecall_model.query(['id', 'partner_id', 'to_call', 'description', 'opportunity_id'])
                 .filter([['to_call','=',true],['partner_id', 'ilike', this.get("current_search")]])
                 .limit(CALLS_LIMIT)
                 .all().then(function(result) {
                     self.$(".oe_dial_input").val("");
-                    var old_widgets = self.widgets;
+                    var old_widgets = self.widgets;                   
                     self.widgets = {};
                     self.phonecalls = {};
                     _.each(result, function(phonecall) {
-                        new openerp.web.Model("res.partner").query(["name","image_small","email"])
+                        new openerp.web.Model("res.partner").query(["name","image_small","email", "title", "phone", "mobile"])
                             .filter([["id","=",phonecall.partner_id[0]]])
                             .first().then(function(partner){
-                                    var widget = new openerp.crm_wardialing.PhonecallWidget(self, phonecall,partner.image_small, partner.email);
-                                    widget.appendTo(self.$(".oe_dial_phonecalls"));
-                                    widget.on("select_call", self, self.select_call);
-                                    self.widgets[phonecall.id] = widget;
-                                    if(! phonecall.description){
-                                        phonecall.description = "There is no description";
-                                    }
-                                    $("[rel='popover']").popover({
-                                        placement : 'right', // top, bottom, left or right
-                                        title : 'Opportunity: ' + phonecall.opportunity_id[1], 
-                                        html: 'true', 
-                                        content : '<img src="data:image/jpg;base64,'+partner.image_small+'"</img><div id="popOverBox">' + phonecall.description +'</div>'
+                                    var opportunity = new openerp.web.Model("crm.lead").query(["name","priority","planned_revenue","title_action","company_currency"])
+                                        .filter([["id","=",phonecall.opportunity_id[0]]])
+                                        .first().then(function(opportunity){
+                                            var widget = new openerp.crm_wardialing.PhonecallWidget(self, phonecall,partner.image_small, partner.email);
+                                            widget.appendTo(self.$(".oe_dial_phonecalls"));
+                                            widget.on("select_call", self, self.select_call);
+                                            self.widgets[phonecall.id] = widget;
+                                            if(! phonecall.description){
+                                                phonecall.description = "There is no description";
+                                            }
+                                            if(! partner.title){
+                                                var partner_name = partner.name;
+                                            }else{
+                                                var partner_name = partner.title[1] + ' ' + partner.name;
+                                            }
+                                            $("[rel='popover']").popover({
+                                                placement : 'right', // top, bottom, left or right
+                                                title : QWeb.render("crm_wardialing_Tooltip_title", {
+                                                    opportunity: phonecall.opportunity_id[1], priority: opportunity.priority}), 
+                                                html: 'true', 
+                                                content :  QWeb.render("crm_wardialing_Tooltip",{
+                                                    partner_name: partner_name,
+                                                    phone: partner.phone,
+                                                    mobile: partner.mobile,
+                                                    email: partner.email,
+                                                    title_action: opportunity.title_action,
+                                                    planned_revenue: opportunity.planned_revenue,
+                                                    company_currency: opportunity.company_currency[0]
+
+                                                }),
+                                            });
+                                            self.phonecalls[phonecall.id] = phonecall;
                                     });
-                                    self.phonecalls[phonecall.id] = phonecall;
                             });
                     });
                     _.each(old_widgets, function(w) {
@@ -206,7 +233,7 @@ openerp.crm_wardialing = function(instance) {
             self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
             if(classes.indexOf("oe_dial_selected_phonecall") == -1){
                 phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
-                this.$el.find(".oe_dial_phonecalls").animate({'height' : '178px'});   
+                this.$el.find(".oe_dial_phonecalls").animate({'height' : '225px'});   
                 this.$el.find(".oe_dial_email").css("display","none");
                 if(phonecall_widget.get('email')){
                     this.$el.find(".oe_dial_email").css("display","inline");
@@ -215,7 +242,7 @@ openerp.crm_wardialing = function(instance) {
                     this.$el.find(".oe_dial_changelog").css("width", "90%");
                 }
             }else{
-                this.$el.find(".oe_dial_phonecalls").animate({'height' : '235px'}); 
+                this.$el.find(".oe_dial_phonecalls").animate({'height' : '280px'}); 
             }
             
         },
@@ -294,7 +321,7 @@ openerp.crm_wardialing = function(instance) {
                         $('.oe_dial_header_dialbutton_icon').parent().on("click", dial, _.bind(dial.switch_display, dial));
 
                         //bind the action to refresh the panel information
-                        $('.oe_dial_header_refresh_icon').parent().on("click", dial, _.bind(dial.search_phonecalls_status, dial));
+                        $('.oe_dial_search_icon').parent().on("click", dial, _.bind(dial.search_phonecalls_status, dial));
                     });
                 }
                 return this._super.apply(this, arguments);

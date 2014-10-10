@@ -1,8 +1,17 @@
+/*Tooltip css */
+
 .popover{
-    white-space: pre;
-    max-width: none;
+    
+    max-width: none;    
+    min-width: 300px;
 }
 
+.oe_wardialing_td{
+    padding-right: 10px;
+    padding-bottom: 5px;
+    width: 80px;
+    vertical-align: top;
+}
 .tooltip {
     z-index: 10000 !important;
 }
@@ -30,9 +39,26 @@
     top: -8px;
 }
 
-.oe_dial_header_dialbutton_icon{
-    float: right;
+.oe_dial_search_icon{
+    font-size: 1px;
+    letter-spacing: -1px;
+    color: transparent;
+    text-shadow: none;
+    font-weight: normal;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    padding: 0;
+    border: none;
+    background: transparent;
 }
+
 .oe_dial_callbutton{
     background-color: #009900;
     position: relative;
@@ -145,7 +171,7 @@
 .oe_dial_phonecalls {
 
     overflow-y: scroll !important;
-    height: 235px; 
+    height: 280px; 
 }
 .oe_dial_phonecall {
     position: relative;
