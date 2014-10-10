@@ -444,19 +444,14 @@ class account_account(models.Model):
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['code']:
-                name = record['code'] + ' ' + name
-            res.append((record['id'], name))
-        return res
+    @api.multi
+    @api.depends('name', 'code')
+    def name_get(self):
+        result = []
+        for account in self:
+            name = account.name + ' ' + account.code
+            result.append((account.id, name))
+        return result
 
     def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
         default = {} if default is None else default.copy()
