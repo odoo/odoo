@@ -300,6 +300,12 @@ function openerp_restaurant_floors(instance,module){
     module.FloorScreenWidget = module.ScreenWidget.extend({
         template: 'FloorScreenWidget',
         show_leftpane: false,
+
+        // Ignore products, discounts, and client barcodes
+        barcode_product_action: function(code){},
+        barcode_discount_action: function(code){},
+        barcode_client_action: function(code){},
+
         init: function(parent, options) {
             this._super(parent, options);
             this.floor = this.pos.floors[0];
