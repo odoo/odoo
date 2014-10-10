@@ -1,8 +1,0 @@
-demo_data = {
-    projects: [[1, "Project 1"], [2, "Project 2"], [3, "Project 3"], [4, "Project 4"], [5, "Project 5"]],
-    tasks: [[1, "Task 1"], [2, "Task 2"], [3, "Task 3"], [4, "Task 4"], [5, "Task 5"]],
-    activities: [{id: 1, project_id: 1, task_id: 1, date: "10-20-2014 00:20:15", hours: 3, name: "Testing Summary 1"}, 
-                    {id: 2, project_id: 2, task_id: 2, date: "10-20-2014 10:20:15", hours: 3, name: "Testing Summary 2"}, 
-                    {id: 3, project_id: 2, task_id: 3, date: "10-20-2014 20:20:15", hours: 3, name: "Testing Summary 3"}], 
-    //Activities data activity_id: {project_id: val, task_id: val, hour: val}, when comes to load these records in models, then we will convert data into group_by project and then group_by task, each record will have one temp field command which shows whether this record is going to create, delete or write
-}
