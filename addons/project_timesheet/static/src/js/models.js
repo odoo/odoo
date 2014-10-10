@@ -306,6 +306,12 @@ function odoo_project_timesheet_models(project_timesheet) {
                     self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("write", [id, record]).then(function(res) {
                         //Remove record from localstorage if write get success
                         self.project_timesheet_db.remove_project_activities(id);
+                    }).fail(function(error, event) {
+                        console.log("error, event aare ::: ", error, event);
+                        if (error.data.arguments[0] == "MissingError") {
+                            //TO ASK: Remove records which are Missing in database
+                            self.project_timesheet_db.remove_project_activities(id);
+                        }
                     }));
                 }
             });

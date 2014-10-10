@@ -674,6 +674,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 //Get Model data and sync with Server and then Retrieve data and store in localstorage
                 self.project_timesheet_model.save_to_server().then(function() {
                     //Change Screen to Initial Screen, with new data loaded
+                    console.log("Inside save to server completed ::: ");
+                    self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
                 });
             });
         },
