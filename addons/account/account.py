@@ -762,20 +762,18 @@ class account_period(models.Model):
     @api.one
     @api.constrains('fiscalyear_id', 'date_start', 'date_stop', 'fiscalyear_id.date_start', 'fiscalyear_id.date_stop')
     def _check_year_limit(self,cr,uid,ids,context=None):
-        for period in self:
-            if period.special:
-                continue
+        if not self.special:
 
-            if period.fiscalyear_id.date_stop < period.date_stop or \
-               period.fiscalyear_id.date_stop < period.date_start or \
-               period.fiscalyear_id.date_start > period.date_start or \
-               period.fiscalyear_id.date_start > period.date_stop:
+            if self.fiscalyear_id.date_stop < self.date_stop or \
+               self.fiscalyear_id.date_stop < self.date_start or \
+               self.fiscalyear_id.date_start > self.date_start or \
+               self.fiscalyear_id.date_start > self.date_stop:
                 raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
-
-            recs = self.search([('date_stop', '>=', period.date_start), ('date_start', '<=', period.date_stop),
-                ('special', '=', False), ('id', '!=', period.id)])
-            for rec in recs:
-                if rec.fiscalyear_id.company_id.id == period.fiscalyear_id.company_id.id:
+    
+            periods = self.search([('date_stop', '>=', self.date_start), ('date_start', '<=', self.date_stop),
+                ('special', '=', False), ('id', '!=', self.id)])
+            for period in periods:
+                if period.fiscalyear_id.company_id.id == self.fiscalyear_id.company_id.id:
                     raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
 
     @api.returns('self')
@@ -808,25 +806,26 @@ class account_period(models.Model):
             raise openerp.exceptions.RedirectWarning(msg, action_id, _('Configure Periods Now'))
         return result
 
-    def action_draft(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_draft(self):
         mode = 'draft'
-        for period in self.browse(cr, uid, ids):
+        for period in self:
             if period.fiscalyear_id.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
-        cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
-        cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
-        self.invalidate_cache(cr, uid, context=context)
+        cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
+        cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
+        self.invalidate_cache()
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if args is None:
-            args = []
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             domain = [('code', operator, name), ('name', operator, name)]
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+        recs = self.search(expression.AND([domain, args]), limit=limit)
+        return recs.name_get(cr, user, ids, context=context)
 
     @api.multi
     def write(self, vals):
@@ -922,20 +921,17 @@ class account_move(models.Model):
     _description = "Account Entry"
     _order = 'id desc'
 
-    def name_get(self, cursor, user, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if not ids:
-            return []
-        res = []
-        data_move = self.pool.get('account.move').browse(cursor, user, ids, context=context)
-        for move in data_move:
-            if move.state=='draft':
+    @api.multi
+    @api.depends('name', 'state')
+    def name_get(self):
+        result = []
+        for move in self:
+            if move.state == 'draft':
                 name = '*' + str(move.id)
             else:
                 name = move.name
-            res.append((move.id, name))
-        return res
+            result.append((move.id, name))
+        return result
 
     @api.model
     def _get_period(self):
@@ -998,22 +994,16 @@ class account_move(models.Model):
     balance = fields.Float(string='balance', digits=dp.get_precision('Account'),
         help="This is a field only used for internal purpose and shouldn't be displayed")
 
-    def _check_centralisation(self, cursor, user, ids, context=None):
-        for move in self.browse(cursor, user, ids, context=context):
-            if move.journal_id.centralisation:
-                move_ids = self.search(cursor, user, [
-                    ('period_id', '=', move.period_id.id),
-                    ('journal_id', '=', move.journal_id.id),
-                    ])
-                if len(move_ids) > 1:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_centralisation,
-            'You cannot create more than one move per period on a centralized journal.',
-            ['journal_id']),
-    ]
+    @api.one
+    @api.constrains('fiscalyear_id', 'date_start', 'date_stop', 'fiscalyear_id.date_start', 'fiscalyear_id.date_stop')
+    def _check_centralisation(self):
+        if self.journal_id.centralisation:
+            moves = self.search([
+                ('period_id', '=', self.period_id.id),
+                ('journal_id', '=', self.journal_id.id),
+                ])
+            if len(moves) > 1:
+                raise Warning(_('You cannot create more than one move per period on a centralized journal.'))
 
     def post(self, cr, uid, ids, context=None):
         if context is None:
