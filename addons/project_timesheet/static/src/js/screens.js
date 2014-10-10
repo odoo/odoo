@@ -493,7 +493,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         task_activity_collection.remove(task_activity);
                         this.project_timesheet_db.remove_activity(task_activity);
                     } else {
-                        task_activity.set({command: 2});
+                        //task_activity.set({command: 2});
+                        task_activity.command = 2;
                         project_activity_data.command = 2;
                         this.project_timesheet_db.add_activity(project_activity_data);
                     }

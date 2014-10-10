@@ -58,7 +58,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                     var id = exported_data.id;
                     delete exported_data.id;
                     delete exported_data.command;
-                    work_records.push([1, id, exported_data]);
+                    work_records.push([2, id, false]);
                 } else {
                     var id = exported_data.id;
                     work_records.push([4, id, false]); //link the record if no condition match
@@ -294,22 +294,24 @@ function odoo_project_timesheet_models(project_timesheet) {
             }
             _.each(records, function(record) {
                 if (self.project_timesheet_db.virtual_id_regex.test(record.id)) {
+                    var project_id = record.id;
                     delete record.id;
                     self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("create", [record]).then(function(res) {
-                        //Remove record from localstorage if create success
+                        //Remove record from localstorage if create get success
+                        self.project_timesheet_db.remove_project_activities(project_id);
                     }));
                 } else {
                     var id = record.id;
                     delete record.id;
                     self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("write", [id, record]).then(function(res) {
-                        //Remove record from localstorage if create success
+                        //Remove record from localstorage if write get success
+                        self.project_timesheet_db.remove_project_activities(id);
                     }));
                 }
             });
-            console.log("records collected are ::: ", records);
             return $.when.apply($, this.defs).then(function(){
                 //Load latest data of 30 days
-                console.log("Inside project create loop completed ::: ");
+                return self.load_server_data();
             });
         },
         flush_data: function() {

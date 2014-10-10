@@ -65,6 +65,17 @@ function odoo_project_timesheet_db(project_timesheet) {
             }
             this.save('activities',activities);
         },
+        remove_project_activities: function(project_id) {
+            var activities = this.load("activities", []);
+            var indexes = [];
+            for(var i = 0, len = activities.length; i < len; i++){
+                if(activities[i].project_id[0] === project_id){
+                    indexes.push(i);
+                }
+            }
+            _.each(indexes, function(index) {activities.splice(index, 1);});
+            this.save('activities',activities);
+        },
         get_pending_records: function() {
             /*
              * This method will return Timesheet Lines which having some command that is it has been edited
