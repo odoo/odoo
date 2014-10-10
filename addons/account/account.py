@@ -618,9 +618,11 @@ class account_journal(models.Model):
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals)})
         return super(account_journal, self).create(vals)
 
-    def name_get(self, cr, user, ids, context=None):
+    @api.multi
+    @api.depends('name', 'currency', 'company_id', 'company_id.currency_id')
+    def name_get(self):
         """
-        Returns a list of tupples containing id, name.
+        Returns a list of tuples containing id, name.
         result format: {[(id, name), (id, name), ...]}
 
         @param cr: A database cursor
@@ -628,20 +630,15 @@ class account_journal(models.Model):
         @param ids: list of ids for which name should be read
         @param context: context arguments, like lang, time zone
 
-        @return: Returns a list of tupples containing id, name
+        @return: Returns a list of tuples containing id, name
         """
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        result = self.browse(cr, user, ids, context=context)
         res = []
-        for rs in result:
-            if rs.currency:
-                currency = rs.currency
+        for journal in self:
+            if journal.currency:
+                currency = journal.currency
             else:
-                currency = rs.company_id.currency_id
-            name = "%s (%s)" % (rs.name, currency.name)
+                currency = journal.company_id.currency_id
+            name = "%s (%s)" % (journal.name, currency.name)
             res += [(rs.id, name)]
         return res
 
