@@ -759,26 +759,24 @@ class account_period(models.Model):
         if self.date_stop < self.date_start:
             raise Warning(_('Error!\nThe duration of the Period(s) is/are invalid.'))
 
+    @api.one
+    @api.constrains('fiscalyear_id', 'date_start', 'date_stop', 'fiscalyear_id.date_start', 'fiscalyear_id.date_stop')
     def _check_year_limit(self,cr,uid,ids,context=None):
-        for obj_period in self.browse(cr, uid, ids, context=context):
-            if obj_period.special:
+        for period in self:
+            if period.special:
                 continue
 
-            if obj_period.fiscalyear_id.date_stop < obj_period.date_stop or \
-               obj_period.fiscalyear_id.date_stop < obj_period.date_start or \
-               obj_period.fiscalyear_id.date_start > obj_period.date_start or \
-               obj_period.fiscalyear_id.date_start > obj_period.date_stop:
-                return False
+            if period.fiscalyear_id.date_stop < period.date_stop or \
+               period.fiscalyear_id.date_stop < period.date_start or \
+               period.fiscalyear_id.date_start > period.date_start or \
+               period.fiscalyear_id.date_start > period.date_stop:
+                raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
 
-            pids = self.search(cr, uid, [('date_stop','>=',obj_period.date_start),('date_start','<=',obj_period.date_stop),('special','=',False),('id','<>',obj_period.id)])
-            for period in self.browse(cr, uid, pids):
-                if period.fiscalyear_id.company_id.id==obj_period.fiscalyear_id.company_id.id:
-                    return False
-        return True
-
-    _constraints = [
-        (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
-    ]
+            recs = self.search([('date_stop', '>=', period.date_start), ('date_start', '<=', period.date_stop),
+                ('special', '=', False), ('id', '!=', period.id)])
+            for rec in recs:
+                if rec.fiscalyear_id.company_id.id == period.fiscalyear_id.company_id.id:
+                    raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
 
     @api.returns('self')
     def next(self, cr, uid, period, step, context=None):
