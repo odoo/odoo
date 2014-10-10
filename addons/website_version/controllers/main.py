@@ -97,8 +97,18 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         obj = request.registry['website_version.snapshot']
         snapshot = obj.browse(cr, uid, [int(snapshot_id)],context)[0]
+        del_l = []
         for view in snapshot.view_ids:
-            self.publish(view.id)
+            master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
+            del_l += master_id
+        if del_l:
+            print "SUPP VIEWS=%s" % del_l
+            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)
+        
+        for view in obj.browse(cr, uid, [int(snapshot_id)],context).view_ids:
+            view.copy({'snapshot_id': None})
+        request.session['snapshot_id'] = 0
+        request.session['master'] = 1
         return snapshot.id
 
     @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
