@@ -269,7 +269,7 @@ class res_partner(osv.Model, format_address):
         'phone': fields.char('Phone'),
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
-        'birthdate': fields.char('Birthdate'),
+        'birthdate': fields.date('Birthdate'),
         'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
