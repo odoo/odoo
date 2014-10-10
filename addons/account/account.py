@@ -714,7 +714,7 @@ class account_fiscalyear(models.Model):
     @api.model
     def finds(self, dt=None, exception=True):
         if not dt:
-            dt = fields.Date.context_today()
+            dt = fields.Date.context_today(self)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if self._context.get('company_id', False):
             company_id = self._context['company_id']
@@ -782,27 +782,27 @@ class account_period(models.Model):
             return ids[step-1]
         return False
 
+    @api.model
     @api.returns('self')
-    def find(self, cr, uid, dt=None, context=None):
-        if context is None: context = {}
+    def find(self, dt=None):
         if not dt:
-            dt = fields.date.context_today(self, cr, uid, context=context)
+            dt = fields.Date.context_today(self)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if context.get('company_id', False):
-            args.append(('company_id', '=', context['company_id']))
+        if self._context.get('company_id', False):
+            args.append(('company_id', '=', self._context['company_id']))
         else:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            company_id = self.env.user.company_id.id
             args.append(('company_id', '=', company_id))
         result = []
-        if context.get('account_period_prefer_normal', True):
+        if self._context.get('account_period_prefer_normal', True):
             # look for non-special periods first, and fallback to all if no result is found
-            result = self.search(cr, uid, args + [('special', '=', False)], context=context)
+            result = self.search(args + [('special', '=', False)])
         if not result:
-            result = self.search(cr, uid, args, context=context)
+            result = self.search(args)
         if not result:
-            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_period')
+            action = self.env.ref('account.action_account_period')
             msg = _('No accounting period is covering this date: %s.') % dt
-            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Configure Periods Now'))
+            raise openerp.exceptions.RedirectWarning(msg, action, _('Configure Periods Now'))
         return result
 
     @api.multi
@@ -1063,38 +1063,40 @@ class account_move(models.Model):
     #
     # TODO: Check if period is closed !
     #
-    def create(self, cr, uid, vals, context=None):
-        context = dict(context or {})
+    @api.model
+    @api.returns('self')
+    def create(self, vals):
+        ctx = dict(self._context or {})
         if vals.get('line_id'):
             if vals.get('journal_id'):
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
-                context['journal_id'] = vals['journal_id']
+                ctx['journal_id'] = vals['journal_id']
             if 'period_id' in vals:
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = vals['period_id']
-                context['period_id'] = vals['period_id']
+                ctx['period_id'] = vals['period_id']
             else:
-                default_period = self._get_period(cr, uid, context)
+                default_period = self.with_context(ctx)._get_period()
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = default_period
-                context['period_id'] = default_period
+                ctx['period_id'] = default_period
 
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(ctx)._get_period()
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
-            result = super(account_move, self).create(cr, uid, vals, c)
-            tmp = self.validate(cr, uid, [result], context)
-            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
+            result = super(account_move, self).with_context(c).create(vals)
+            tmp = result.with_context.validate()
+            journal = self.env['account.journal'].with_context(ctx).browse(vals['journal_id'])
             if journal.entry_posted and tmp:
-                self.button_validate(cr,uid, [result], context)
+                result.with_context(ctx).button_validate()
         else:
-            result = super(account_move, self).create(cr, uid, vals, context)
+            result = super(account_move, self).with_context(ctx).create(vals)
         return result
 
     def unlink(self, cr, uid, ids, context=None, check=True):
