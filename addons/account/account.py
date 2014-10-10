@@ -306,11 +306,11 @@ class account_account(models.Model):
             account.adjusted_balance = 0.0
             account.unrealized_gain_loss = 0.0
 
-    def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
-        return result
+    @api.depends('company_id', 'company_id.currency_id')
+    @api.multi
+    def _get_company_currency(self):
+        for account in self:
+            account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
 
     def _set_credit_debit(self, cr, uid, account_id, name, value, arg, context=None):
         if context.get('config_invisible', True):
@@ -472,44 +472,38 @@ class account_account(models.Model):
         done_list.append(account.id)
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
-    def _check_moves(self, cr, uid, ids, method, context=None):
-        line_obj = self.pool.get('account.move.line')
-
-        if line_obj.search(cr, uid, [('account_id', 'in', ids)], context=context):
+    @api.multi
+    def _check_moves(self, method):
+        if self.env['account.move.line'].search([('account_id', 'in', self.ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
-        values = ['account.account,%s' % (account_id,) for account_id in ids]
-        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','in', values)], context=context)
+        values = ['account.account,%s' % (account_id,) for account_id in self.ids]
+        partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)])
         if partner_prop_acc:
             raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if not ids:
-            return True
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def write(self, vals):
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)], context=context)
+            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)])
             if move_lines:
                 # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
+                for i in [i['company_id'][0] for i in self.read(['company_id'])]:
                     if vals['company_id']!=i:
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'deprecated' in vals and not vals['deprecated']:
-            self._check_moves(cr, uid, ids, "write", context=context)
-        return super(account_account, self).write(cr, uid, ids, vals, context=context)
+            self._check_moves('write')
+        return super(account_account, self).write(vals)
 
-    def unlink(self, cr, uid, ids, context=None):
-        self._check_moves(cr, uid, ids, "unlink", context=context)
-        return super(account_account, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def unlink(self):
+        self._check_moves('unlink')
+        return super(account_account, self).unlink()
 
 
 class account_journal(models.Model):
@@ -591,19 +585,18 @@ class account_journal(models.Model):
             name=_("%s (copy)") % (journal['name'] or ''))
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for journal in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def write(self, vals):
+        for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+                move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)])
                 if move_lines:
                     raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
-        return super(account_journal, self).write(cr, uid, ids, vals, context=context)
+        return super(account_journal, self).write(vals)
 
-    def create_sequence(self, cr, uid, vals, context=None):
+    @api.model
+    @api.returns('ir.sequence')
+    def create_sequence(self, vals):
         """ Create new no_gap entry sequence for every new Joural
         """
         # in account.journal code is actually the prefix of the sequence
@@ -619,14 +612,16 @@ class account_journal(models.Model):
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
-        return self.pool.get('ir.sequence').create(cr, uid, seq)
+        return self.env['ir.sequence'].create(seq)
 
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    @api.returns('self')
+    def create(self, vals):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             # if we have the right to create a journal, we should be able to
             # create it's sequence.
-            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context)})
-        return super(account_journal, self).create(cr, uid, vals, context)
+            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals)})
+        return super(account_journal, self).create(vals)
 
     def name_get(self, cr, user, ids, context=None):
         """
@@ -686,14 +681,16 @@ class account_fiscalyear(models.Model):
         if self.date_stop < self.date_start:
             raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
 
-    def create_period3(self, cr, uid, ids, context=None):
-        return self.create_period(cr, uid, ids, context, 3)
+    @api.multi
+    def create_period3(self):
+        return self.create_period(3)
 
-    def create_period(self, cr, uid, ids, context=None, interval=1):
-        period_obj = self.pool.get('account.period')
-        for fy in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def create_period(self, interval=1):
+        PeriodObj = self.env['account.period']
+        for fy in self:
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
-            period_obj.create(cr, uid, {
+            PeriodObj.create({
                     'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
                     'code': ds.strftime('00/%Y'),
                     'date_start': ds,
@@ -707,7 +704,7 @@ class account_fiscalyear(models.Model):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
-                period_obj.create(cr, uid, {
+                PeriodObj.create({
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
                     'date_start': ds.strftime('%Y-%m-%d'),
@@ -838,12 +835,13 @@ class account_period(models.Model):
         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
+            move_lines = self.env['account.move.line'].search([('period_id', 'in', ids)])
             if move_lines:
                 raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
-        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+        return super(account_period, self).write(vals)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
         if period_from_id == period_to_id:
@@ -894,28 +892,33 @@ class account_journal_period(models.Model):
     fiscalyear_id = fields.Many2one('account.fiscalyear', related='period_id.fiscalyear_id', string='Fiscal Year')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
 
-    def _check(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _check(self):
+        for obj in self:
             cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
             res = cr.fetchall()
             if res:
                 raise osv.except_osv(_('Error!'), _('You cannot modify/delete a journal with entries for this period.'))
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
-        self._check(cr, uid, ids, context=context)
+    @api.multi
+    def write(self, vals):
+        self._check()
         return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        period_id = vals.get('period_id',False)
+    @api.model
+    @api.returns('self')
+    def create(self, vals):
+        period_id = vals.get('period_id', False)
         if period_id:
-            period = self.pool.get('account.period').browse(cr, uid, period_id, context=context)
-            vals['state']=period.state
-        return super(account_journal_period, self).create(cr, uid, vals, context)
+            period = self.env['account.period'].browse(period_id)
+            vals['state'] = period.state
+        return super(account_journal_period, self).create(vals)
 
-    def unlink(self, cr, uid, ids, context=None):
-        self._check(cr, uid, ids, context=context)
-        return super(account_journal_period, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def unlink(self):
+        self._check()
+        return super(account_journal_period, self).unlink()
 
 
 #----------------------------------------------------------
@@ -941,9 +944,9 @@ class account_move(models.Model):
             res.append((move.id, name))
         return res
 
-    def _get_period(self, cr, uid, context=None):
-        ctx = dict(context or {})
-        period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
+    @api.model
+    def _get_period(self):
+        period_ids = self.env['account.period'].find(cr, uid, context=ctx)
         return period_ids[0]
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
@@ -1052,18 +1055,20 @@ class account_move(models.Model):
         self.invalidate_cache(cr, uid, context=context)
         return True
 
-    def button_validate(self, cursor, user, ids, context=None):
-        return self.post(cursor, user, ids, context=context)
+    @api.multi
+    def button_validate(self):
+        return self.post()
 
-    def button_cancel(self, cr, uid, ids, context=None):
-        for line in self.browse(cr, uid, ids, context=context):
-            if not line.journal_id.update_posted:
+    @api.multi
+    def button_cancel(self):
+        for move in self:
+            if not move.journal_id.update_posted:
                 raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if ids:
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
-                       'WHERE id IN %s', ('draft', tuple(ids),))
-            self.invalidate_cache(cr, uid, context=context)
+                       'WHERE id IN %s', ('draft', tuple(self.ids),))
+            self.invalidate_cache()
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
