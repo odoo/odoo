@@ -1005,16 +1005,15 @@ class account_move(models.Model):
             if len(moves) > 1:
                 raise Warning(_('You cannot create more than one move per period on a centralized journal.'))
 
-    def post(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        invoice = context.get('invoice', False)
-        valid_moves = self.validate(cr, uid, ids, context)
+    @api.multi
+    def post(self):
+        invoice = self._context.get('invoice', False)
+        valid_moves = self.validate()
 
         if not valid_moves:
             raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
-        obj_sequence = self.pool.get('ir.sequence')
-        for move in self.browse(cr, uid, valid_moves, context=context):
+        SequenceObj = self.env['ir.sequence']
+        for move in self.browse(valid_moves):
             if move.name =='/':
                 new_name = False
                 journal = move.journal_id
@@ -1023,19 +1022,19 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
+                        ctx = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+                        new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
                     else:
                         raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
 
                 if new_name:
-                    self.write(cr, uid, [move.id], {'name':new_name})
+                    move.write({'name':new_name})
 
         cr.execute('UPDATE account_move '\
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
-        self.invalidate_cache(cr, uid, context=context)
+        self.invalidate_cache()
         return True
 
     @api.multi
