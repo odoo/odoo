@@ -410,7 +410,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            var pre_dialog = this.dialog;
+            var pre_dialog = (this.dialog && !this.dialog.isDestroyed()) ? this.dialog : null;
             if (pre_dialog){
                 // prevent previous dialog to consider itself closed,
                 // right now, as we're opening a new one (prevents
