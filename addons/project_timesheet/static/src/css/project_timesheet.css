@@ -20,7 +20,7 @@ html, body {
 .odoo_project_timesheet .pt_activity {
     height: 100%;
 }
-.odoo_project_timesheet .activity_screen {
+.odoo_project_timesheet .activity_screen, .odoo_project_timesheet .stat_screen {
     margin-bottom: 0px !important;
 }
 .o_hidden {
@@ -35,7 +35,6 @@ html, body {
     font-size: 35px;
     position: relative;
     top: 0px;
-    //color: rgb(129, 128, 128);
     color: #a24689;
 }
 .odoo_project_timesheet .pt_timer_button button {
@@ -46,8 +45,15 @@ html, body {
     cursor: pointer;
     border-radius: 6px !important;
 }
-.odoo_project_timesheet .pt_activity_col {
+.odoo_project_timesheet .pt_activity_col, .odoo_project_timesheet .pt_stat_body {
     height: 75%;
+}
+.odoo_project_timesheet .pt_stat_header {
+    height: 15%;
+}
+.odoo_project_timesheet .pt_reporting_duration a {
+    text-decoration: none;
+    color: #FFFFFF;
 }
 .odoo_project_timesheet .pt_description_task {
     color: #999999;
@@ -97,6 +103,9 @@ html, body {
 }
 .odoo_project_timesheet .pt_input_project, .odoo_project_timesheet .pt_input_task {
     background-color: #D2D2FF;
+}
+.odoo_project_timesheet input.pt_required, .odoo_project_timesheet textarea.pt_required {
+    background-color: #d2d2ff !important;
 }
 .odoo_project_timesheet input.pt_invalid, .odoo_project_timesheet textarea.pt_invalid {
     border-color: red;

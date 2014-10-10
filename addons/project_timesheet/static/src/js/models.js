@@ -14,9 +14,9 @@ function odoo_project_timesheet_models(project_timesheet) {
             return {
                 id: this.id,
                 date: this.date,
-                task_id: this.task_id,
                 name: this.name,
                 hours: this.hours,
+                command: this.command,
             };
         },
     });
@@ -30,6 +30,7 @@ function odoo_project_timesheet_models(project_timesheet) {
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.project_timesheet_widget = attributes.project_timesheet_widget;
+            this.project_timesheet_db = attributes.project_timesheet_db;
             this.id = options.id || null;
             this.name = options.name || null;
             this.project_id = options.project_id || null;
@@ -37,8 +38,37 @@ function odoo_project_timesheet_models(project_timesheet) {
                 task_activities: new project_timesheet.TaskActivityCollection(),
             });
         },
-        export_as_json: function() {
+        export_as_JSON: function() {
             //TO Implement, will return task record along with its activities collection
+            var self = this;
+            var work_records = [];
+            (this.get('task_activities')).each(_.bind( function(item) {
+                var exported_data = item.export_as_JSON();
+                if (self.project_timesheet_db.virtual_id_regex.test(exported_data.id)) {
+                    delete exported_data.id;
+                    delete exported_data.command;
+                    exported_data['user_id'] = project_timesheet.session.uid;
+                    work_records.push([0, 0, exported_data]);
+                } else if(exported_data.command == 1) {
+                    var id = exported_data.id;
+                    delete exported_data.id;
+                    delete exported_data.command;
+                    work_records.push([1, id, exported_data]);
+                } else if (exported_data.command == 2) {
+                    var id = exported_data.id;
+                    delete exported_data.id;
+                    delete exported_data.command;
+                    work_records.push([1, id, exported_data]);
+                } else {
+                    var id = exported_data.id;
+                    work_records.push([4, id, false]); //link the record if no condition match
+                }
+            }, this));
+            return {
+                id: this.id,
+                name: this.name,
+                work_ids: work_records,
+            };
         },
         add_activity: function(data) {
             //TO Implement, will create new model object of activity and add it into activities collection
@@ -55,23 +85,41 @@ function odoo_project_timesheet_models(project_timesheet) {
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.project_timesheet_model = attributes.project_timesheet_model;
+            this.project_timesheet_db = attributes.project_timesheet_db;
             this.id = options.id || null; //If no real id, we will have virtual id, at sync time virtual id will be skipped while sending data to server
             this.name = options.name || null;
             this.set({
                 tasks: new project_timesheet.TaskCollection(),
             });
         },
-        export_as_json: function() {
+        export_as_JSON: function() {
             //TO Implement, will return project record along with its task collection
+            var self = this;
+            var tasks = [];
+            (this.get('tasks')).each(_.bind( function(item) {
+                var exported_data = item.export_as_JSON();
+                if (self.project_timesheet_db.virtual_id_regex.test(exported_data.id)) {
+                    delete exported_data.id;
+                    tasks.push([0, 0, exported_data]);
+                } else {
+                    var id = exported_data.id;
+                    delete exported_data.id;
+                    tasks.push([1, id, exported_data]);
+                }
+            }, this));
+            return {
+                id: this.id,
+                name: this.name,
+                tasks: tasks,
+            };
         },
         add_task: function(data) {
-            //TO Implement, will create new model object of task and add it into tasks collection
             tasks_collection = this.get("tasks");
             if (tasks_collection.get(data.task_id[0])) {
                 var task_model = tasks_collection.get(data.task_id[0]);
                 task_model.add_activity(data);
             } else {
-                var task = new project_timesheet.task_model({}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
+                var task = new project_timesheet.task_model({project_timesheet_db: this.project_timesheet_db}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
                 task.add_activity(data);
                 this.get('tasks').add(task);
             }
@@ -83,7 +131,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             console.log("name_search for task collection ::: ");
             var tasks = this.get('tasks');
             var search_result = [];
-            var task_models = tasks.models
+            var task_models = tasks.models;
             for (var i = 0; i < task_models.length; i++) {
                 search_result.push([task_models[i].id, task_models[i].name]);
             }
@@ -160,7 +208,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 var project_model = projects_collection.get(data.project_id[0]);
                 project_model.add_task(data);
             } else {
-                var project = new project_timesheet.project_model({project_timesheet_model: this}, {id: data['project_id'][0], name: data['project_id'][1]});
+                var project = new project_timesheet.project_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['project_id'][0], name: data['project_id'][1]});
                 project.add_task(data);
                 this.get('projects').add(project);
             }
@@ -172,7 +220,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             */
             var projects = this.get('projects');
             var search_result = [];
-            var project_models = projects.models
+            var project_models = projects.models;
             for (var i = 0; i < project_models.length; i++) {
                 search_result.push([project_models[i].id, project_models[i].name]);
             }
@@ -233,7 +281,36 @@ function odoo_project_timesheet_models(project_timesheet) {
             return this.screen_data[key];
         },
         save_to_server: function() {
-            //TO Implement, this method will save data to server
+            //TODO: Load model data in JSON format, check whether project is to create, task is to create, and activity is to create, write or delete
+            //Once we done with data collection from model, save each record by calling project's create method, remove record from localstorage and then in last reload last 30 days data, that is call load_server_data
+            //If record is failed in record creation then do not remove it from localstorage and keep it's state = pending'
+            var self = this;
+            this.defs = [];
+            var records = [];
+            var project_collection = this.get('projects');
+            var project_models = project_collection.models;
+            for (var i = 0; i < project_models.length; i++) {
+                records.push(project_models[i].export_as_JSON());
+            }
+            _.each(records, function(record) {
+                if (self.project_timesheet_db.virtual_id_regex.test(record.id)) {
+                    delete record.id;
+                    self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("create", [record]).then(function(res) {
+                        //Remove record from localstorage if create success
+                    }));
+                } else {
+                    var id = record.id;
+                    delete record.id;
+                    self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("write", [id, record]).then(function(res) {
+                        //Remove record from localstorage if create success
+                    }));
+                }
+            });
+            console.log("records collected are ::: ", records);
+            return $.when.apply($, this.defs).then(function(){
+                //Load latest data of 30 days
+                console.log("Inside project create loop completed ::: ");
+            });
         },
         flush_data: function() {
             //TO Implement, this method will flush localstorage data once it has been sync

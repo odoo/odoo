@@ -620,12 +620,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.$el.find(".o_new_account").toggleClass("o_active");
                 self.$el.find(".o_existing_account").toggleClass("o_active");
             });
-            /*
-            this.$el.find("#pt_new_user,#pt_existing_user").on("click", function() {
-                self.$el.find(".o_existing_account").toggleClass("o_active")
-            });
-            */
-            this.$el.find(".pt_btn_synchronize").on("click", this.on_authenticate_and_sync)
+            this.$el.find(".pt_btn_synchronize").on("click", this.on_authenticate_and_sync);
         },
         on_authenticate_and_sync: function() {
             var self = this;
@@ -639,6 +634,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.set_required();
                 return;
             }
+            //TODO: Check whether we already having session, if yes then use it by just reloading session
             var session = new openerp.Session(undefined, origin);
             project_timesheet.session = session;
             //if (!openerp.get_cookie("session_id")) { //use check_session_id
@@ -646,7 +642,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     //TODO: Create generic method set_cookie
                     document.cookie = ["session_id="+session.session_id,'path='+origin,
                         'max-age=' + (24*60*60*365),
-                        'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';')
+                        'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';');
 
                         //Store session object in local storage, we need it, so that user don't have to enter login detail each time while sync
                         //Note that, session_id is created new each time for cross domain policy
@@ -664,6 +660,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $.when(def).done(function() {
                 console.log("You can go ahead to sync data and retrieve data");
                 //Get Model data and sync with Server and then Retrieve data and store in localstorage
+                self.project_timesheet_model.save_to_server().then(function() {
+                    //Change Screen to Initial Screen, with new data loaded
+                });
             });
         },
         set_required: function() {
@@ -687,9 +686,20 @@ function odoo_project_timesheet_screens(project_timesheet) {
         template: "StatisticScreen",
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
         },
         start: function() {
+            var self = this;
             this._super.apply(this, arguments);
+            this.$el.find(".pt_back").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
+            });
+            this.$el.find(".pt_sync").on("click", function() {
+                self.project_timesheet_widget.screen_selector.set_current_screen("sync");
+            });
+            this.$el.find(".pt_reporting_duration").on("click", function() {
+                
+            });
         }
     });
 }

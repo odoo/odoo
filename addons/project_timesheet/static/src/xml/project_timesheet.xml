@@ -90,7 +90,7 @@
                   <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Update Activity</button>
                   or
                   <a class="btn pt_link pt_btn_cancel">Cancel</a>
-                  <i class="btn fa fa-trash o_hidden pt_btn_remove_activity"></i>
+                  <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
                 </div>
                 <hr/>
                 <div class="pt_activity_body">
@@ -210,13 +210,41 @@
     </t>
 
     <t t-name="StatisticScreen">
-        <div class="content_area">
-            <div class="container pt_activity">
-                <div class="row">
-                    <span>Heyyy, here content will come...</span>
-                </div>
-            </div>
-        </div>
+        <table class="table table-responsive stat_screen" style="height: 100%;">
+            <tbody>
+                <tr>
+                    <td class="pt_stat_header">
+                        <div class="row">
+          
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="pt_stat_body">
+                        <div>
+                            <span>Heyyy, here there will be statistical graph...</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="pt_footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_back">
+                                    <span class="glyphicon glyphicon-chevron-left"></span><span class="pt_pl_3">Back</span>
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
+                                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_reporting_duration">
+                                    <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span>Reporting</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </t>
 
     <t t-name="Footer">
