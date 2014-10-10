@@ -1099,29 +1099,29 @@ class account_move(models.Model):
             result = super(account_move, self).with_context(ctx).create(vals)
         return result
 
-    def unlink(self, cr, uid, ids, context=None, check=True):
-        context = dict(context or {})
-        if isinstance(ids, (int, long)):
-            ids = [ids]
+    @api.multi
+    def unlink(self, check=True):
+        context = dict(self._context or {})
         toremove = []
-        obj_move_line = self.pool.get('account.move.line')
-        for move in self.browse(cr, uid, ids, context=context):
+        for move in self:
             if move['state'] != 'draft':
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
                                 move['name'])
-            for line in move.line_id:
-                if line.invoice:
-                    raise osv.except_osv(_('User Error!'),
-                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
-                                    (line.invoice.number,move.name))
-            line_ids = map(lambda x: x.id, move.line_id)
-            context['journal_id'] = move.journal_id.id
-            context['period_id'] = move.period_id.id
-            obj_move_line._update_check(cr, uid, line_ids, context)
-            obj_move_line.unlink(cr, uid, line_ids, context=context)
+              # About to remove 'invoice' field from 'account.move.line' object
+#             for line in move.line_id:
+#                 if line.invoice:
+#                     raise osv.except_osv(_('User Error!'),
+#                             _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
+#                                     (line.invoice.number,move.name))
+            move_lines = move.line_id
+            ctx = dict(context)
+            ctx['journal_id'] = move.journal_id.id
+            ctx['period_id'] = move.period_id.id
+            move_lines.with_context(ctx)._update_check()
+            move_lines.with_context(ctx).unlink()
             toremove.append(move.id)
-        result = super(account_move, self).unlink(cr, uid, toremove, context)
+        result = super(account_move, self).with_context(ctx).unlink(toremove)
         return result
 
     def _compute_balance(self, cr, uid, id, context=None):
