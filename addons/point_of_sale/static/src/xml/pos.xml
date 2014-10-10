@@ -660,7 +660,10 @@
                 <t t-if='receipt.company.website'>
                     <div><t t-esc='receipt.company.website' /></div>
                 </t>
-                <t t-if='receipt.header'>
+                <t t-if='receipt.header_xml'>
+                    <t t-raw='receipt.header_xml' />
+                </t>
+                <t t-if='!receipt.header_xml and receipt.header'>
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
@@ -764,9 +767,13 @@
             </t>
 
             <!-- Footer -->
-            <t t-if='receipt.footer'>
+            <t t-if='receipt.footer_xml'>
+                <t t-raw='receipt.footer_xml' />
+            </t>
+
+            <t t-if='!receipt.footer_xml and receipt.footer'>
                 <br/>
-                <pre><t t-esc='receipt.footer' /></pre>
+                <t t-esc='receipt.footer' />
                 <br/>
                 <br/>
             </t>
@@ -1198,9 +1205,9 @@
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
-            <t t-if="widget.pos.config.receipt_header">
+            <t t-if="header">
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_header" />
+                    <t t-raw="header" />
                 </div>
                 <br />
             </t>
@@ -1273,10 +1280,10 @@
                     <t t-esc="widget.format_currency(order.getChange())"/>
                     </td></tr>
             </table>
-            <t t-if="widget.pos.config.receipt_footer">
+            <t t-if="footer">
                 <br />
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_footer" />
+                    <t t-raw="footer" />
                 </div>
             </t>
         </div>

@@ -1227,6 +1227,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // exports a JSON for receipt printing
         export_for_printing: function(){
             var orderlines = [];
+            var self = this;
+
             this.get('orderLines').each(function(orderline){
                 orderlines.push(orderline.export_for_printing());
             });
@@ -1239,9 +1241,27 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var cashier = this.pos.cashier || this.pos.user;
             var company = this.pos.company;
             var shop    = this.pos.shop;
-            var date = new Date();
+            var date    = new Date();
 
-            return {
+            function is_xml(subreceipt){
+                return subreceipt ? (subreceipt.split('\n')[0].indexOf('<!DOCTYPE QWEB') >= 0) : false;
+            }
+
+            function render_xml(subreceipt){
+                if (!is_xml(subreceipt)) {
+                    return subreceipt;
+                } else {
+                    subreceipt = subreceipt.split('\n').slice(1).join('\n');
+                    var qweb = new QWeb2.Engine();
+                        qweb.debug = instance.session.debug;
+                        qweb.default_dict = _.clone(QWeb.default_dict);
+                        qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
+                    
+                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.pos_widget,'order':self, 'receipt': receipt}) ;
+                }
+            }
+
+            var receipt = {
                 orderlines: orderlines,
                 paymentlines: paymentlines,
                 subtotal: this.getSubtotal(),
@@ -1288,6 +1308,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 },
                 currency: this.pos.currency,
             };
+            
+            if (is_xml(this.pos.config.receipt_header)){
+                receipt.header_xml = render_xml(this.pos.config.receipt_header);
+            }
+
+            if (is_xml(this.pos.config.receipt_footer)){
+                receipt.footer_xml = render_xml(this.pos.config.receipt_footer);
+            }
+
+            return receipt;
         },
         export_as_JSON: function() {
             var orderLines, paymentLines;

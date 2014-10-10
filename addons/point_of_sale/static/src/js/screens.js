@@ -1337,6 +1337,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.$('.next').removeClass('highlight');
             }
         },
+        print_escpos_receipt: function(){
+            var env = {
+                widget:  this,
+                pos:     this.pos,
+                order:   this.pos.get_order(),
+                receipt: this.pos.get_order().export_for_printing(),
+            };
+
+            this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',env));
+        },
+
         // Check if the order is paid, then sends it to the backend,
         // and complete the sale process
         validate_order: function() {
@@ -1406,10 +1417,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             } else {
                 this.pos.push_order(order) 
                 if (this.pos.config.iface_print_via_proxy) {
-                    var receipt = order.export_for_printing();
-                    this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',{
-                        receipt: receipt, widget: self,
-                    }));
+                    this.print_escpos_receipt();
                     order.finalize();    //finish order and go back to scan screen
                 } else {
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);

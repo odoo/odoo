@@ -305,7 +305,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         renderElement: function(){
             var self = this;
-            console.log('Re-Rendering Orders...',this.pos.get_order_list());
             this._super();
             this.$('.order-button.select-order').click(function(event){
                 self.order_click_handler(event,$(this));

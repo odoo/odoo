@@ -615,7 +615,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
 
             function is_number(char){
-                n = char.charCodeAt(0);
+                var n = char.charCodeAt(0);
                 return n >= 48 && n <= 57;
             }
 
@@ -676,6 +676,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
         
         scan: function(code){
+            debugger;
             if(code.length < 3){
                 return;
             }else if(code.length === 13 && this.check_ean(code)){

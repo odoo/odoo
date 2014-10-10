@@ -61,6 +61,19 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
             return value.toFixed(decimals);
         },
+        format_fixed: function(value,integer_width,decimal_width){
+            value = value.toFixed(decimal_width || 0);
+            var width = value.indexOf('.');
+            if (width < 0 ) {
+                width = value.length;
+            }
+            var missing = integer_width - width;
+            while (missing > 0) {
+                value = '0' + value;
+                missing--;
+            }
+            return value;
+        },
     });
 
 }
