@@ -635,13 +635,11 @@ def trans_generate(lang, modules, cr):
     dbname = cr.dbname
 
     registry = openerp.registry(dbname)
-    trans_obj = registry.get('ir.translation')
-    model_data_obj = registry.get('ir.model.data')
+    trans_obj = registry['ir.translation']
+    model_data_obj = registry['ir.model.data']
     uid = 1
-    l = registry.models.items()
-    l.sort()
 
-    query = 'SELECT name, model, res_id, module'    \
+    query = 'SELECT name, model, res_id, module' \
             '  FROM ir_model_data'
 
     query_models = """SELECT m.id, m.model, imd.module
@@ -661,15 +659,16 @@ def trans_generate(lang, modules, cr):
 
     cr.execute(query, query_param)
 
-    _to_translate = []
+    _to_translate = set()
     def push_translation(module, type, name, id, source, comments=None):
-        tuple = (module, source, name, id, type, comments or [])
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
         if not source or len(source.strip()) <= 1:
             return
-        if tuple not in _to_translate:
-            _to_translate.append(tuple)
+
+        tnx = (module, source, name, id, type, tuple(comments or ()))
+        if tnx not in _to_translate:
+            _to_translate.add(tnx)
 
     def encode(s):
         if isinstance(s, unicode):
@@ -698,15 +697,15 @@ def trans_generate(lang, modules, cr):
             _logger.error("Unable to find object %r", model)
             continue
 
-        if not registry[model]._translate:
+        Model = registry[model]
+        if not Model._translate:
             # explicitly disabled
             continue
 
-        exists = registry[model].exists(cr, uid, res_id)
-        if not exists:
+        obj = Model.browse(cr, uid, res_id)
+        if not obj.exists():
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
-        obj = registry[model].browse(cr, uid, res_id)
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
@@ -824,9 +823,9 @@ def trans_generate(lang, modules, cr):
         if model_obj._sql_constraints:
             push_local_constraints(module, model_obj, 'sql_constraints')
 
-    modobj = registry['ir.module.module']
-    installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
-    installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
+    installed_modules = map(
+        lambda m: m['name'],
+        registry['ir.module.module'].search_read(cr, uid, [('state', '=', 'installed')], fields=['name']))
 
     path_list = list(openerp.modules.module.ad_paths)
     # Also scan these non-addon paths
@@ -835,14 +834,12 @@ def trans_generate(lang, modules, cr):
 
     _logger.debug("Scanning modules at paths: %s", path_list)
 
-    mod_paths = list(path_list)
-
     def get_module_from_path(path):
-        for mp in mod_paths:
-            if path.startswith(mp) and (os.path.dirname(path) != mp):
+        for mp in path_list:
+            if path.startswith(mp) and os.path.dirname(path) != mp:
                 path = path[len(mp)+1:]
                 return path.split(os.path.sep)[0]
-        return 'base'   # files that are not in a module are considered as being in 'base' module
+        return 'base' # files that are not in a module are considered as being in 'base' module
 
     def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
@@ -857,20 +854,20 @@ def trans_generate(lang, modules, cr):
                                extra_comments=None, extract_keywords={'_': None}):
         module, fabsolutepath, _, display_path = verified_module_filepaths(fname, path, root)
         extra_comments = extra_comments or []
-        if module:
-            src_file = open(fabsolutepath, 'r')
-            try:
-                for extracted in extract.extract(extract_method, src_file,
-                                                 keywords=extract_keywords):
-                    # Babel 0.9.6 yields lineno, message, comments
-                    # Babel 1.3 yields lineno, message, comments, context
-                    lineno, message, comments = extracted[:3] 
-                    push_translation(module, trans_type, display_path, lineno,
-                                     encode(message), comments + extra_comments)
-            except Exception:
-                _logger.exception("Failed to extract terms from %s", fabsolutepath)
-            finally:
-                src_file.close()
+        if not module: return
+        src_file = open(fabsolutepath, 'r')
+        try:
+            for extracted in extract.extract(extract_method, src_file,
+                                             keywords=extract_keywords):
+                # Babel 0.9.6 yields lineno, message, comments
+                # Babel 1.3 yields lineno, message, comments, context
+                lineno, message, comments = extracted[:3]
+                push_translation(module, trans_type, display_path, lineno,
+                                 encode(message), comments + extra_comments)
+        except Exception:
+            _logger.exception("Failed to extract terms from %s", fabsolutepath)
+        finally:
+            src_file.close()
 
     for path in path_list:
         _logger.debug("Scanning files of modules at %s", path)
@@ -893,11 +890,10 @@ def trans_generate(lang, modules, cr):
                                         extra_comments=[WEB_TRANSLATION_COMMENT])
 
     out = []
-    _to_translate.sort()
     # translate strings marked as to be translated
-    for module, source, name, id, type, comments in _to_translate:
+    for module, source, name, id, type, comments in sorted(_to_translate):
         trans = '' if not lang else trans_obj._get_source(cr, uid, name, type, lang, source)
-        out.append([module, type, name, id, source, encode(trans) or '', comments])
+        out.append((module, type, name, id, source, encode(trans) or '', comments))
     return out
 
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
