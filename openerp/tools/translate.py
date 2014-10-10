@@ -505,13 +505,8 @@ def trans_export(lang, modules, buffer, format, cr):
             raise Exception(_('Unrecognized extension: must be one of '
                 '.csv, .po, or .tgz (received .%s).' % format))
 
-    trans_lang = lang
-    if not trans_lang and format == 'csv':
-        # CSV files are meant for translators and they need a starting point,
-        # so we at least put the original term in the translation column
-        trans_lang = 'en_US'
     translations = trans_generate(lang, modules, cr)
-    modules = set([t[0] for t in translations[1:]])
+    modules = set(t[0] for t in translations)
     _process(format, modules, translations, buffer, lang)
     del translations
 
