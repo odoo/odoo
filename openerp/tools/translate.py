@@ -566,18 +566,17 @@ def trans_parse_view(element, callback):
         :param callable callback: a callable in the form ``f(term, source_line)``,
             that will be called for each extracted term.
     """
-    if (not isinstance(element, SKIPPED_ELEMENT_TYPES)
-            and element.tag.lower() not in SKIPPED_ELEMENTS
-            and element.text):
-        _push(callback, element.text, element.sourceline)
-    if element.tail:
-        _push(callback, element.tail, element.sourceline)
-    for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
-        value = element.get(attr)
-        if value:
-            _push(callback, value, element.sourceline)
-    for n in element:
-        trans_parse_view(n, callback)
+    for el in element.iter():
+        if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
+                and el.tag.lower() not in SKIPPED_ELEMENTS
+                and el.text):
+            _push(callback, el.text, el.sourceline)
+        if el.tail:
+            _push(callback, el.tail, el.sourceline)
+        for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+            value = el.get(attr)
+            if value:
+                _push(callback, value, el.sourceline)
 
 # tests whether an object is in a list of modules
 def in_modules(object_name, modules):
@@ -598,9 +597,9 @@ def _extract_translatable_qweb_terms(element, callback):
         a QWeb template, and call ``callback(term)`` for each
         translatable term that is found in the document.
 
-        :param ElementTree element: root of etree document to extract terms from
-        :param callable callback: a callable in the form ``f(term, source_line)``,
-            that will be called for each extracted term.
+        :param etree._Element element: root of etree document to extract terms from
+        :param Callable callback: a callable in the form ``f(term, source_line)``,
+                                  that will be called for each extracted term.
     """
     # not using elementTree.iterparse because we need to skip sub-trees in case
     # the ancestor element had a reason to be skipped
@@ -620,6 +619,7 @@ def _extract_translatable_qweb_terms(element, callback):
 
 def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     """Babel message extractor for qweb template files.
+
     :param fileobj: the file-like object the messages should be extracted from
     :param keywords: a list of keywords (i.e. function names) that should
                      be recognized as translation functions
@@ -628,7 +628,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
     :param options: a dictionary of additional options (optional)
     :return: an iterator over ``(lineno, funcname, message, comments)``
              tuples
-    :rtype: ``iterator``
+    :rtype: Iterable
     """
     result = []
     def handle_text(text, lineno):
