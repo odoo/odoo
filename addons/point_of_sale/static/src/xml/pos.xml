@@ -1205,9 +1205,9 @@
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
-            <t t-if="header">
+            <t t-if="receipt.header">
                 <div style='text-align:center'>
-                    <t t-raw="header" />
+                    <t t-esc="receipt.header" />
                 </div>
                 <br />
             </t>
@@ -1280,10 +1280,10 @@
                     <t t-esc="widget.format_currency(order.getChange())"/>
                     </td></tr>
             </table>
-            <t t-if="footer">
+            <t t-if="receipt.footer">
                 <br />
                 <div style='text-align:center'>
-                    <t t-raw="footer" />
+                    <t t-esc="receipt.footer" />
                 </div>
             </t>
         </div>
