@@ -143,6 +143,53 @@ X-Attachment-Id: f_hkpb27k00
 dGVzdAo=
 --089e01536c4ed4d17204e49b8e96--"""
 
+MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+    charset=us-ascii
+
+First and second part
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Type: multipart/mixed;
+ boundary="Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F"
+
+--Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+    charset=us-ascii
+
+<html><head></head><body>First part</body></html>
+
+--Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
+Content-Disposition: inline;
+    filename=thetruth.pdf
+Content-Type: application/pdf;
+    name="thetruth.pdf"
+Content-Transfer-Encoding: base64
+
+SSBhbSB0aGUgQmF0TWFuCg==
+
+--Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html;
+    charset=us-ascii
+
+<html><head></head><body>Second part</body></html>
+--Apple-Mail=_CA6C687E-6AA0-411E-B0FE-F0ABB4CFED1F--
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
+"""
 
 class TestMailgateway(TestMail):
 
@@ -163,6 +210,14 @@ class TestMailgateway(TestMail):
                          'message_parse: text version should not be in body after parsing multipart/mixed')
         self.assertIn('<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res.get('body', ''),
                       'message_parse: html version should be in body after parsing multipart/mixed')
+
+        res = self.mail_thread.message_parse(cr, uid, MAIL_MULTIPART_MIXED_TWO)
+        self.assertNotIn('First and second part', res.get('body', ''),
+                         'message_parse: text version should not be in body after parsing multipart/mixed')
+        self.assertIn('First part', res.get('body', ''),
+                      'message_parse: first part of the html version should be in body after parsing multipart/mixed')
+        self.assertIn('Second part', res.get('body', ''),
+                      'message_parse: second part of the html version should be in body after parsing multipart/mixed')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):
