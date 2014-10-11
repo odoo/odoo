@@ -62,6 +62,16 @@ class TableExporter(http.Controller):
             request.session['snapshot_id'] = 0
             request.session['master'] = 1
         return snapshot_id
+
+    @http.route(['/website_version/check_snapshot'], type = 'json', auth = "user", website = True)
+    def check_snapshot(self, snapshot_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        Exp = request.registry['website_version.experiment']
+        result = Exp.search(cr, uid, [('state','=','running'),('experiment_snapshot_ids.snapshot_id', '=', int(snapshot_id))],context=context)
+        if result:
+            return True
+        else:
+            return False
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
     def get_all_snapshots(self, view_id):

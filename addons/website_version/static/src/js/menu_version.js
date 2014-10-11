@@ -86,8 +86,19 @@
         delete_snapshot: function(event) {
             var snapshot_id = $(event.currentTarget).parent().data("snapshot_id");
             console.log(snapshot_id);
-            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                    location.reload();
+            openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                    if (result){
+                        if (confirm('Are you sure you want to delete a version which is in a running experiment?')){
+                            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                                location.reload();
+                            });
+                        }
+                    }
+                    else{
+                        openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                            location.reload();
+                        });
+                    }
                 });
         },
 
@@ -141,7 +152,7 @@
                     console.log(objectives);
                     if(check){
                         openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
-                            alert("Your experiment " + name + " is created.");
+                            alert("Your experiment " + name + " is created. Now you can manage this experiment by clicking on Manage your experiments.");
                             location.reload();
                         });
                     } 
