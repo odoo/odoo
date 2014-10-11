@@ -37,6 +37,21 @@ class TableExporter(http.Controller):
         request.session['master'] = 0
         return new_snapshot_id
 
+    @http.route(['/website_version/create_new_snapshot'], type = 'json', auth = "user", website = True)
+    def create_new_snapshot(self,name):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        if name == "":
+            name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        snapshot_id = context.get('snapshot_id')
+        iuv = request.registry['ir.ui.view']
+        snap = request.registry['website_version.snapshot']
+        website_id = request.website.id
+        new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
+        request.session['snapshot_id'] = new_snapshot_id
+        request.context['snapshot_id'] = new_snapshot_id
+        request.session['master'] = 0
+        return new_snapshot_id
+
     @http.route(['/website_version/delete_snapshot'], type = 'json', auth = "user", website = True)
     def delete_snapshot(self, snapshot_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context

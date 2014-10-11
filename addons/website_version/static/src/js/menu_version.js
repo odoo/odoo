@@ -148,6 +148,14 @@
                 });
             });
         },
+
+        manage_experiment: function() {
+            window.location.href = '/web#return_label=Website&action=website_version.action_experiment';
+        },
+
+        statistics: function() {
+            window.open('https://www.google.com/analytics/web/?authuser=0#report/siteopt-experiments/','_blank');
+        }
         
     });
 
