@@ -28,33 +28,44 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h4 class="modal-title">Create an experiment</h4>
-              </div> 
-              <div class="modal-body">
-                <div class="form-group row">
-                    <label for="formFieldEditor-label" class="col-md-3 control-label">Name :</label>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control form-field-label name"/>
-                    </div>
-                </div>
-                <t t-foreach="snapshots" t-as="item">       
-                    <div class="form-group row">
-                        <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
-                        <div class="col-md-9 col-sm-8 ">
-                            <input type="checkbox" class="form-field-required" t-att-data-version_id="item.id" />
-                        </div>
-                    </div>
-                </t>
-                <div class="form-group row">
-                    <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
-                    <select class="selectpicker col-md-3">
-                        <t t-foreach="goals" t-as="item">
-                            <option t-att-value="item.id"><t t-esc="item.name"></t></option>
-                        </t>
-                    </select>
-                </div>
               </div>
+                <div class="modal-body">
+                    <t t-if="snapshots.length != 0 ">                
+                        <div class="form-group row">
+                            <label for="formFieldEditor-label" class="col-md-3 control-label">Name :</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-field-label name"/>
+                            </div>
+                        </div>
+                        
+                        <t t-foreach="snapshots" t-as="item">       
+                            <div class="form-group row">
+                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
+                                <div class="col-md-9 col-sm-8 ">
+                                    <input type="checkbox" class="form-field-required" t-att-data-version_id="item.id" />
+                                </div>
+                            </div>
+                        </t>
+                        <div class="form-group row">
+                            <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
+                            <select class="selectpicker col-md-3">
+                                <t t-foreach="goals" t-as="item">
+                                    <option t-att-value="item.id"><t t-esc="item.name"></t></option>
+                                </t>
+                            </select>
+                        </div>
+                    </t>
+                    <t t-if="snapshots.length == 0 ">
+                        <div>
+                            <p>You must have at least one version to create a new experiment.</p>
+                        </div>
+                    </t>
+
+                </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary create">Create</button>
+                <t t-if="snapshots.length != 0 "> 
+                    <button type="button" class="btn btn-primary create">Create</button>
+                </t>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div><!-- /.modal-content -->
