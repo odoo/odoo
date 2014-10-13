@@ -80,7 +80,7 @@ class TableExporter(http.Controller):
         v = view.browse(cr,uid,[int(view_id)],context=context)
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
-        ids = snap.search(cr, uid, [('website_id','=',website_id),('view_ids.key','=',v.key)],context=context)
+        ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
         result = snap.read(cr, uid, ids,['id','name'],context=context)
         snap_id = request.context.get('snapshot_id')
         for x in result:
