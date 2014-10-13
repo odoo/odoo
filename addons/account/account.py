@@ -452,19 +452,11 @@ class account_account(models.Model):
             result.append((account.id, name))
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
-        default = {} if default is None else default.copy()
-        if done_list is None:
-            done_list = []
-        account = self.browse(cr, uid, id, context=context)
-        new_child_ids = []
-        default.update(code=_("%s (copy)") % (account['code'] or ''))
-        if not local:
-            done_list = []
-        if account.id in done_list:
-            return False
-        done_list.append(account.id)
-        return super(account_account, self).copy(cr, uid, id, default, context=context)
+    @api.one
+    def copy(self, default=None):
+        default = dict(default or {})
+        default.update(code=_("%s (copy)") % (self.code or ''))
+        return super(account_account, self).copy(default)
 
     @api.multi
     def _check_moves(self, method):
