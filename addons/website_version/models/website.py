@@ -25,7 +25,7 @@ class NewWebsite(osv.Model):
 
         if not snapshot_id:
             request.context['snapshot_id'] = 0
-            return (0, 'master')
+            return (0, '')
         return snap.name_get(cr, uid, [snapshot_id], context=context)[0];
 
     def get_current_website(self, cr, uid, context=None):
