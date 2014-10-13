@@ -409,7 +409,7 @@ and it's possible to write directly on the delegated field:
 Domains
 =======
 
-A domain is a list of criterion, each criterion being a triple (either a
+A domain is a list of criteria, each criterion being a triple (either a
 ``list`` or a ``tuple``) of ``(field_name, operator, value)`` where:
 
 ``field_name`` (``str``)
@@ -417,9 +417,51 @@ A domain is a list of criterion, each criterion being a triple (either a
     a :class:`~openerp.fields.Many2one` using dot-notation e.g. ``'street'``
     or ``'partner_id.country'``
 ``operator`` (``str``)
-    a comparison operator between the criterion's field and value.
+    an operator used to compare the ``field_name`` with the ``value``. Valid
+    operators are:
 
-    .. todo:: list and detail operators, original list is way incomplete
+    ``=``
+        equals to
+    ``!=``
+        not equals to
+    ``>``
+        greater than
+    ``>=``
+        greater than or equal to
+    ``<``
+        less than
+    ``<=``
+        less than or equal to
+    ``=?``
+        unset or equals to (returns true if ``value`` is either ``None`` or
+        ``False``, otherwise behaves like ``=``)
+    ``=like``
+        matches ``field_name`` against the ``value`` pattern. An underscore
+        ``_`` in the pattern stands for (matches) any single character; a
+        percent sign ``%`` matches any string of zero or more characters.
+    ``like``
+        matches ``field_name`` against the ``%value%`` pattern. Similar to
+        ``=like`` but wraps ``value`` with '%' before matching
+    ``not like``
+        doesn't match against the ``%value%`` pattern
+    ``ilike``
+        case insensitive ``like``
+    ``not ilike``
+        case insensitive ``not like``
+    ``=ilike``
+        case insensitive ``=like``
+    ``in``
+        is equal to any of the items from ``value``, ``value`` should be a
+        list of items
+    ``not in``
+        is unequal to all of the items from ``value``
+    ``child_of``
+        is a child (descendant) of a ``value`` record.
+
+        Takes the semantics of the model into account (i.e following the
+        relationship field named by
+        :attr:`~openerp.models.Model._parent_name`).
+
 ``value``
     variable type, must be comparable (through ``operator``) to the named
     field
