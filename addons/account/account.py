@@ -1128,7 +1128,8 @@ class account_move(models.Model):
             amount += (line.debit - line.credit)
         return amount
 
-    def _centralise(self, move, mode):
+    @api.one
+    def _centralise(self, mode):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         cr = self._cr
         currency_obj = self.env['res.currency']
@@ -1219,24 +1220,25 @@ class account_move(models.Model):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
+    @api.multi
     def validate(self, cr, uid, ids, context=None):
-        if context and ('__last_update' in context):
+        context = dict(self._context or {})
+        if '__last_update' in context:
             del context['__last_update']
 
         valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
-        obj_analytic_line = self.pool.get('account.analytic.line')
-        obj_move_line = self.pool.get('account.move.line')
-        for move in self.browse(cr, uid, ids, context):
+        obj_move_line = self.env['account.move.line']
+        for move in self:
             journal = move.journal_id
             amount = 0
-            line_ids = []
-            line_draft_ids = []
+            lines = []
+            draft_lines = []
             company_id = None
             for line in move.line_id:
                 amount += line.debit - line.credit
-                line_ids.append(line.id)
+                lines.append(line)
                 if line.state=='draft':
-                    line_draft_ids.append(line.id)
+                    draft_lines.append(line)
 
                 if not company_id:
                     company_id = line.account_id.company_id.id
@@ -1255,13 +1257,13 @@ class account_move(models.Model):
 
                 # Check whether the move lines are confirmed
 
-                if not line_draft_ids:
+                if not draft_lines:
                     continue
                 # Update the move lines (set them as valid)
 
-                obj_move_line.write(cr, uid, line_draft_ids, {
+                draft_lines.with_context(context).write({
                     'state': 'valid'
-                }, context, check=False)
+                }, check=False)
 
                 account = {}
                 account2 = {}
@@ -1277,10 +1279,10 @@ class account_move(models.Model):
                             code = account[line.account_id.id][0]
                             amount = account[line.account_id.id][1] * (line.debit + line.credit)
                         if (code or amount) and not (line.tax_code_id or line.tax_amount):
-                            obj_move_line.write(cr, uid, [line.id], {
+                            line.with_context(context).write({
                                 'tax_code_id': code,
                                 'tax_amount': amount
-                            }, context, check=False)
+                            }, check=False)
             elif journal.centralisation:
                 # If the move is not balanced, it must be centralised...
 
@@ -1291,22 +1293,22 @@ class account_move(models.Model):
                 #
                 # Update the move lines (set them as valid)
                 #
-                self._centralise(cr, uid, move, 'debit', context=context)
-                self._centralise(cr, uid, move, 'credit', context=context)
-                obj_move_line.write(cr, uid, line_draft_ids, {
+                move.with_context(context)._centralise('debit')
+                move.with_context(context)._centralise('credit')
+                draft_lines.with_context(context).write({
                     'state': 'valid'
-                }, context, check=False)
+                }, check=False)
             else:
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
-                not_draft_line_ids = list(set(line_ids) - set(line_draft_ids))
-                if not_draft_line_ids:
-                    obj_move_line.write(cr, uid, not_draft_line_ids, {
+                not_draft_lines = list(set(lines) - set(draft_lines))
+                if not_draft_lines:
+                    not_draft_lines.with_context(context).write({
                         'state': 'draft'
-                    }, context, check=False)
+                    }, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
-            obj_move_line.create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
+            obj_move_line.with_context(context).create_analytic_lines([line.id for line in record.line_id])
 
         valid_moves = [move.id for move in valid_moves]
         return len(valid_moves) > 0 and valid_moves or False
