@@ -196,10 +196,10 @@
             this.prefix = 'link-filter-';
         },
         get_link: function() {
-            return "<a id='"+ this.prefix + this.code + "' href='#'>" + this.name + "</a>";
+            return "<li id='"+ this.prefix + this.code + "'><a  href='#'>" + this.name + "</a></li>";
         },
         get_span: function() {
-            return "<span id='" + this.prefix + this.code + "'>" + this.name + "</span>";
+            return "<li class='active' id='" + this.prefix + this.code + "'><a>" + this.name + "</a></li>";
         },
         activate: function() {
             var self = this;
@@ -234,7 +234,7 @@
             var html_filters = _.map(this.filters, function (f) {
                 return f.get_link();
             });
-            this.$el.replaceWith(html_filters.join(' | '));
+            this.$el.replaceWith(html_filters.join(''));
 
             _.each(this.filters, function (f) {
                 f.activate();
@@ -285,7 +285,7 @@
             .then(function() {
                     recent_links = new openerp.website_url.RecentLinks($("#recent_links"));
                     var filters = new openerp.website_url.Filters(recent_links);
-                    filters.appendTo($('#filters'));
+                    filters.appendTo($('#filters-links'));
                 });
         
         // Clipboard Library
@@ -315,9 +315,17 @@
                         if('error' in result) {
                             var $url_form_group = $('#url-form-group')
                             $url_form_group.addClass('has-error');
+
+                            if(result['error'] == 'empty_url')  {
+                                $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
+                            }
+                            else if(result['error'] == 'url_not_found') {
+                                $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
+                            }
                         }
                         else {
                             var link = result[0];
+                            $('.notification').html('');
                             $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
                             $("#url-form-group .control-label").html('To share');
                             $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");

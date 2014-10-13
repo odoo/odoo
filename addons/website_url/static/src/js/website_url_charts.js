@@ -11,7 +11,6 @@
             this.begin_date = begin_date;
             this.end_date = end_date;
             this.number_of_days = this.end_date.diff(this.begin_date, 'days') + 2;
-            console.log(this.end_date.diff(this.begin_date, 'days'));
             this.dates = dates;
         },
         start: function() {
@@ -26,7 +25,6 @@
             for(var i = 0 ; i < this.number_of_days ; i++) {
 
                 var date_key = begin_date_copy.format('YYYY-MM-DD');
-                console.log(date_key);
                 clicks_array.push([date_key, (date_key in this.dates) ? this.dates[date_key] : 0]);
                 begin_date_copy.add(1, 'days');
             }
@@ -35,13 +33,8 @@
                 chart_data[0]['key'] = '# of clicks';
                 chart_data[0]['values'] = clicks_array;
 
-            console.log(chart_data);
-
             var minDate = getDate(chart_data[0]['values'][0]),
                 maxDate = getDate(chart_data[0]['values'][chart_data[0]['values'].length - 1]);
-
-            //var x = d3.time.scale().domain([minDate, maxDate]).range([0, 450]);
-            //var scale = d3.scale.ordinal();
 
             nv.addGraph(function() {
                 var chart = nv.models.lineChart()
@@ -49,10 +42,7 @@
                         return getDate(d);
                     })
                     .y(function(d) { return d[1] })
-                    //.color(d3.scale.category10().range())
                     .tooltips(true)
-                    // .showControls(false)
-                    // .rotateLabels(45)
                     .transitionDuration(0)
                     .showYAxis(true)
                     .showXAxis(true)
@@ -62,8 +52,6 @@
                     return moment(d).format('DD/MM/YYYY');
                 });
 
-                // chart.yAxis
-                //     .tickFormat(d3.format('f'));
                 chart.yAxis
                         .tickFormat(d3.format("d"))
                         .ticks(chart_data[0]['values'].length - 1)
@@ -139,11 +127,11 @@
                 var last_month_clicks_by_country = result['last_month_clicks_by_country'];
                 var last_week_clicks_by_country = result['last_week_clicks_by_country'];
 
-                if(total_clicks) {
+                // Process dashboard data
+                $('#total_clicks_data').html(total_clicks);
+                $('#number_of_countries_data').html(clicks_by_country.length);
 
-                    // Process dashboard data
-                    $('#total_clicks_data').html(total_clicks);
-                    $('#number_of_countries_data').html(clicks_by_country.length);
+                if(total_clicks) {     
 
                     // Flat clicks by day data
                     var result_dic = {}
@@ -178,45 +166,14 @@
 
                     var last_week_pie_chart = new openerp.website_url.PieChart('#last_week_countries_charts svg', last_week_clicks_by_country);
                     last_week_pie_chart.start();
-
-
-                    // Process country data
-
-
-
-                    // var clicks_by_country_data = [];
-                    // for(var i = 0 ; i < clicks_by_country.length ; i++) {
-
-                    //     if(clicks_by_country[i]['name']) {
-                    //         clicks_by_country_data.push({'label':clicks_by_country[i]['name'] + ' (' + clicks_by_country[i]['count'] + ')',
-                    //                                      'value':clicks_by_country[i]['count']});
-                    //     }
-                    //     else {
-                    //         clicks_by_country_data.push({'label':'Undefined (' + clicks_by_country[i]['count'] + ')',
-                    //                                      'value':clicks_by_country[i]['count']});
-                    //     }
-                    // }
-
-                    // // Country Chart
-                    // nv.addGraph(function() {
-                    //     var chart = nv.models.pieChart()
-                    //         .x(function(d) { return d.label })
-                    //         .y(function(d) { return d.value })
-                    //         .showLabels(true);
-
-
-                    //     d3.select("#all_time_countries_charts svg")
-                    //         .datum(clicks_by_country_data)
-                    //         .transition().duration(1200)
-                    //         .call(chart);
-
-                    //     nv.utils.windowResize(chart.update);
-
-                    //     return chart;
-                    // });
                 }
                 else {
-                    $('#all_time_chart').prepend('There is no data to show');
+                    $('#all_time_clicks_chart').prepend('There is no data to show');
+                    $('#all_time_countries_charts').prepend('There is no data to show');
+                    $('#last_month_clicks_chart').prepend('There is no data to show');
+                    $('#last_month_countries_charts').prepend('There is no data to show');
+                    $('#last_week_clicks_chart').prepend('There is no data to show');
+                    $('#last_week_countries_charts').prepend('There is no data to show');
                 }
             });   
     });

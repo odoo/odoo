@@ -119,9 +119,8 @@
                         <h2>Your tracked links</h2>
                     </div>
                     <div class="col-sm-4">
-                        <h5 class="text-muted" >Filter by : 
-                            <span id="filters" style="font-weight: normal;"></span>
-                        </h5>
+                        <ul id="filters-links" class="nav nav-tabs nav-tabs-inline"></ul>
+                        <span id="filters">Filter by : </span>
                     </div>
                 </div>
                 
@@ -188,6 +187,15 @@
                                     <p><t t-esc="short_url"/></p>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p><strong>Total clicks</strong></p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p><span id="total_clicks_data"></span> clicks in <span id="number_of_countries_data"></span> countries</p>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <t t-if="campaign_id['name']">
@@ -235,7 +243,7 @@
                                 <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
                                 <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
                             </ul>
-                            <span id="filters" style="">Filter by :</span>
+                            <span id="filters">Filter by :</span>
                         </div>
                     </div>
 

@@ -123,6 +123,7 @@ class website_alias(models.Model):
                 p = parse(page)
                 title = p.find('.//title').text
             except:
+                raise BaseException("URL not found")
                 title = 'Page not found (404)'
                 
             # Try to get the favicon of the page
