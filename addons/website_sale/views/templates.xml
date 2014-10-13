@@ -629,7 +629,8 @@
                         <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
                             <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <a class="btn btn-primary mt8 a-submit">Post</a>
+                            <a t-if="website.user_id==user_id" t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-primary mt8">Post</a>
+                            <button t-if="website.user_id != user_id" type="submit" class="btn btn-primary mt8 a-submit">Post</button>
                         </div>
                     </form>
                 </div>
