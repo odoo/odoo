@@ -1067,6 +1067,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
                     widget:this,
                     order: order,
+                    receipt: order.export_for_printing(),
                     orderlines: order.get('orderLines').models,
                     paymentlines: order.get('paymentLines').models,
                 }));
