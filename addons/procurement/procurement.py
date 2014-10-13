@@ -73,6 +73,23 @@ class StockMove(osv.osv):
         default['procurements'] = []
         return super(StockMove, self).copy_data(cr, uid, id, default, context=context)
 
+    def cancel_assign(self, cr, uid, ids, context=None):
+        res = super(StockMove, self).cancel_assign(cr, uid, ids,
+                                                   context=context)
+        wf_service = netsvc.LocalService("workflow")
+        proc_obj = self.pool['procurement.order']
+        proc_ids = proc_obj.search(cr, uid,
+                                   [('move_id', 'in', ids),
+                                    ('procure_method', '=', 'make_to_stock'),
+                                    ('state', '=', 'ready')],
+                                   context=context)
+        for proc_id in proc_ids:
+            wf_service.trg_delete(uid, 'procurement.order', proc_id, cr)
+            wf_service.trg_create(uid, 'procurement.order', proc_id, cr)
+            wf_service.trg_validate(uid, 'procurement.order',
+                                    proc_id, 'button_confirm', cr)
+        return True
+
 StockMove()
 
 class procurement_order(osv.osv):
