@@ -1975,11 +1975,20 @@ class BaseModel(object):
         qualified_field = self._inherits_join_calc(split[0], query)
         if temporal:
             display_formats = {
-                'day': 'dd MMM YYYY', 
-                'week': "'W'w YYYY", 
-                'month': 'MMMM YYYY', 
-                'quarter': 'QQQ YYYY', 
-                'year': 'YYYY'
+                # Careful with week/year formats:
+                #  - yyyy (lower) must always be used, *except* for week+year formats
+                #  - YYYY (upper) must always be used for week+year format
+                #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
+                #                         and W1 2006 for others
+                #
+                # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
+                # such as 2006-01-01 being formatted as "January 2005" in some locales.
+                # Cfr: http://babel.pocoo.org/docs/dates/#date-fields
+                'day': 'dd MMM yyyy', # yyyy = normal year
+                'week': "'W'w YYYY",  # w YYYY = ISO week-year
+                'month': 'MMMM yyyy',
+                'quarter': 'QQQ yyyy',
+                'year': 'yyyy',
             }
             time_intervals = {
                 'day': dateutil.relativedelta.relativedelta(days=1),
