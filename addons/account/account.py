@@ -402,15 +402,15 @@ class account_account(models.Model):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
         if not args:
             args = []
         args = args[:]
-        ids = []
         try:
             if name and str(name).startswith('partner:'):
                 part_id = int(name.split(':')[1])
-                part = self.pool.get('res.partner').browse(cr, user, part_id, context=context)
+                part = self.env['res.partner'].browse(part_id)
                 args += [('id', 'in', (part.property_account_payable.id, part.property_account_receivable.id))]
                 name = False
             if name and str(name).startswith('type:'):
@@ -427,21 +427,21 @@ class account_account(models.Model):
                     'like': ('=like', plus_percent),
                 }.get(operator, (operator, lambda n: n))
 
-                ids = self.search(cr, user, ['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                accounts = self.search(['|', ('code', code_op, code_conv(name)), '|', ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
 
-                if not ids and len(name.split()) >= 2:
+                if not accounts and len(name.split()) >= 2:
                     #Separating code and name of account for searching
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
+                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
             else:
-                ids = self.search(cr, user, ['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
+                accounts = self.search(['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
                 # as negation want to restric, do if already have results
-                if ids and len(name.split()) >= 2:
+                if accounts and len(name.split()) >= 2:
                     operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2), ('id', 'in', ids)]+ args, limit=limit)
+                    accounts = self.search([('code', operator, operand1), ('name', operator, operand2), ('id', 'in', accounts.ids)]+ args, limit=limit)
         else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
-        return self.name_get(cr, user, ids, context=context)
+            accounts = self.search(args, limit=limit)
+        return accounts.name_get()
 
     @api.multi
     @api.depends('name', 'code')
