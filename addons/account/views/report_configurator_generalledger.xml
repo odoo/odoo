@@ -18,13 +18,13 @@
                 <input t-if="data['form']['amount_currency'] == True" type="checkbox" name="amount_currency" value="True" checked="checked" />
                 With currency
             </label>
-            <div class="checkbox">
+        </div>
+        <div class="checkbox">
             <label> 
                 <input t-if="data['form']['initial_balance'] == False" type="checkbox" name="initial_balance" value="True" />
                 <input t-if="data['form']['initial_balance'] == True" type="checkbox" name="initial_balance" value="True" checked="checked" />
                 Include initial balances
             </label>
-        </div>
         </div>
     </xpath>
 </template>

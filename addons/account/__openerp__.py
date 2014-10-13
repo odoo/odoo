@@ -133,7 +133,8 @@ for a particular financial year and for preparation of vouchers there is a modul
         'views/report_configurator_journal.xml',
         'views/report_configurator_printjournal.xml',
         'views/report_configurator_account.xml',
-        'views/report_configurator_generalledger.xml'
+        'views/report_configurator_generalledger.xml',
+        'views/report_configurator_financial.xml',
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",

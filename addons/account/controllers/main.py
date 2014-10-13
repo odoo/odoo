@@ -30,10 +30,27 @@ class AccountReportsConfiguratorController(Controller):
 
     @route('/account/reportconfigurator/<reportname>', type='http', auth='user', website=True)
     def configurator(self, reportname, **kwargs):
-        template_name = 'account.report_%s' % reportname
+        if reportname == 'printjournal':
+            template_name = 'account.report_journal'
+        else:
+            template_name = 'account.report_%s' % reportname
         configurator_obj = request.env['account.report.configurator']
         # record with only default values
         configurator_rec = configurator_obj.get_configurator(reportname).create({})
         report_sxw_dict = configurator_rec.to_report_sxw_dict(**kwargs)
-        report_sxw_dict['webclient_link'] = webclient_link
-        return request.make_response(request.env['report'].get_html(template_name, data=report_sxw_dict))
+        if 'print' in kwargs:
+            response = request.make_response(None,
+                headers=[('Content-Type', 'application/vnd.ms-excel'),
+                         ('Content-Disposition', 'attachment; filename=table.xls;')])
+            request.env['report.account.report_%s' % reportname].get_csv(report_sxw_dict, response)
+            return response
+        else:
+            report_sxw_dict['webclient_link'] = webclient_link
+            return request.make_response(request.env['report'].get_html(template_name, data=report_sxw_dict))
+
+    @route('/account/reportconfigurator/download/<reportname>', type='http', auth='user', method="post", website=True)
+    def htmltopdftoredirect(self, reportname, html=None):
+        report_obj = request.registry['report']
+        pdf = report_obj.get_pdf(request.cr, request.uid, [], reportname, html=html, context=request.context)
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)

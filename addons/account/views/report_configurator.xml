@@ -126,11 +126,16 @@
                     </table> -->
                 </div>
             </div>
-            <div class="row mt32">
+            <div class="mt32">
                 <input type="hidden" name="journal_ids" t-att-value="data['form']['journal_ids']" />
                 <input type="submit" class="btn btn-primary" value="Update" />
+                <input type="submit" name="print" class="btn btn-primary" value="XML" />
             </div>
         </div>
+    </form>
+    <form role="form" method="POST" name="form" action="/account/reportconfigurator/download/account.report_financial">
+        <input type="hidden" name="html" id="js_html"/>
+        <button class="btn btn-primary getPDF">PDF</button>
     </form>
 </template>
 </data>

@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-#from xlwr import Workbook
+from xlwt import Workbook, easyxf
 from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
@@ -166,19 +166,54 @@ class report_generaljournal(osv.AbstractModel):
     _template = 'account.report_generaljournal'
     _wrapped_report_class = journal_print
 
-#     def get_csv(self, data):
-#         book = Workbook()
-#         sheet = book.add_sheet()
+    def get_csv(self, data, response):
+        book = Workbook()
+        sheet = book.add_sheet('General Journal')
 
-#         sheet.write(0, 0, 'Code')
-#         sheet.write(0, 1, 'Journal Name')
-#         sheet.write(0, 2, 'Debit')
-#         sheet.write(0, 3, 'Credit')
-#         sheet.write(0, 4, 'Balance')
-#         if display_currency(data):
-#             sheet.write(0, 5, 'Currency')
+        report = journal_print(self.env.cr, self.env.uid, '', context=self.env.context)
+        report.set_context(None, data, None)
 
-#         sheet.write(1, 0, 'Total:')
-#         sheet.write(1, 2, sum_debit)
+        title_style = easyxf('font: bold true;', 'borders: bottom thick;')
+        bold_style = easyxf('font: bold true;')
+
+        sheet.col(1).width = 10000
+
+        sheet.write(0, 0, 'Code', title_style)
+        sheet.write(0, 1, 'Journal Name', title_style)
+        sheet.write(0, 2, 'Debit', title_style)
+        sheet.write(0, 3, 'Credit', title_style)
+        sheet.write(0, 4, 'Balance', title_style)
+
+        sheet.write(1, 0, 'Total:', title_style)
+        sheet.write(1, 1, None, title_style)
+        sheet.write(1, 2, report._sum_debit())
+        sheet.write(1, 3, report._sum_credit())
+        sheet.write(1, 4, report._sum_credit() - report._sum_debit())
+
+        if report._display_currency(data):
+            sheet.write(0, 5, 'Currency', title_style)
+            sheet.write(1, 5, None, title_style)
+
+        x_offset = 2
+
+        for o in report.periods(self.env['account.journal.period'].browse(data['form']['active_ids'])):
+            sheet.write(x_offset, 0, o.name, bold_style)
+            sheet.write(x_offset, 2, report._sum_debit_period(o.id), bold_style)
+            sheet.write(x_offset, 3, report._sum_credit_period(o.id), bold_style)
+            sheet.write(x_offset, 4, report._sum_credit_period(o.id) - report._sum_debit_period(o.id), bold_style)
+            x_offset += 1
+
+            lines = report.lines(o.id)
+            for x in range(0, len(lines)):
+                sheet.write(x_offset + x, 0, lines[x]['code'])
+                sheet.write(x_offset + x, 1, lines[x]['name'])
+                sheet.write(x_offset + x, 2, lines[x]['credit'])
+                sheet.write(x_offset + x, 3, lines[x]['debit'])
+                sheet.write(x_offset + x, 4, lines[x]['credit'] - lines[x]['debit'])
+                if report._display_currency(data) and lines[x]['currency_code']:
+                    sheet.write(x_offset + x, 5, ''.join([str(lines[x]['amount_currency']), str(lines[x]['currency_code'])]))
+            x_offset += len(lines)
+
+        book.save(response.stream)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

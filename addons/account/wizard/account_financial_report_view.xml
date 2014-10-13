@@ -61,14 +61,10 @@
         </record>
         <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="action_account_report_pl" id="menu_account_report_pl" parent="final_accounting_reports"/>
 
-        <record id="action_account_report" model="ir.actions.act_window">
+        <record id="action_account_report" model="ir.actions.act_url">
              <field name="name">Financial Reports</field>
-             <field name="res_model">accounting.report</field>
-             <field name="type">ir.actions.act_window</field>
-             <field name="view_type">form</field>
-             <field name="view_mode">form</field>
-             <field name="view_id" ref="accounting_report_view"/>
-             <field name="target">new</field>
+             <field name="url">/account/reportconfigurator/financial</field>
+             <field name="tag">financial_report</field>
         </record>
         <menuitem icon="STOCK_PRINT" name="Financial Report" action="action_account_report" id="menu_account_report" parent="final_accounting_reports" sequence="100"/>
 

@@ -43,6 +43,7 @@ import account_configurator_salepurchasejournal
 import account_configurator_centraljournal
 import account_configurator_account
 import account_configurator_generalledger
+import account_configurator_financial
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

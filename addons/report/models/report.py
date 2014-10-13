@@ -171,17 +171,18 @@ class Report(osv.Model):
     #     return self._model.get_html(self._cr, self._uid, records.ids, report_name,
     #                                 data=data, context=self._context)
 
-    @api.v7
+    # @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
+        # import pudb; pudb.set_trace();
         if context is None:
             context = {}
 
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 
-        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
+        # html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
@@ -263,10 +264,10 @@ class Report(osv.Model):
             paperformat, specific_paperformat_args, save_in_attachment
         )
 
-    @api.v8
-    def get_pdf(self, records, report_name, html=None, data=None):
-        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+    # @api.v8
+    # def get_pdf(self, records, report_name, html=None, data=None):
+    #     return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
+    #                                html=html, data=data, context=self._context)
 
     @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):

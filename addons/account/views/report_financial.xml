@@ -3,6 +3,11 @@
 <data>
 <template id="report_financial">
     <t t-call="report.html_container">
+        <span class="oe_account_footnote">
+        <t t-call-assets="web.assets_common" t-css="false" />
+        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+        <script type="text/javascript" src="/account/static/src/js/account_footnote.js"></script>
+        <t t-call="account.report_financial_configurator"></t>
         <t t-foreach="docs" t-as="o">
             <t t-call="report.internal_layout">
                 <div class="page">
@@ -11,11 +16,11 @@
                     <div class="row mt32 mb32">
                         <div class="col-xs-3">
                             <strong>Chart of Accounts:</strong>
-                            <p t-esc="get_account(data)"/>
+                            <p><a t-esc="get_account(data)" t-att-href="data['webclient_link']('account.account', data['form']['chart_account_id'])" /></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Fiscal Year:</strong>
-                            <p t-esc="get_fiscalyear(data)"/>
+                            <p><a t-esc="get_fiscalyear(data)" t-att-href="data['webclient_link']('account.fiscalyear', data['form']['fiscalyear_id'])" /></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Filter By:</strong>
@@ -55,17 +60,18 @@
                                     <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
 
                                     <td>
-                                        <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                        <span t-att-style="style" t-esc="a.get('name')"/>
+                                        <span class="foldable">&gt;</span>
+                                        <span class="level" style="color: white;" t-esc="'..' * a.get('level', 0)"/>
+                                        <span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
                                     <td class="text-right" style="white-space: nowrap;">
-                                        <span t-att-style="style" t-esc="formatLang(a.get('debit'), currency_obj=res_company.currency_id)"/>
+                                        <span class="annotable" t-att-style="style" t-esc="formatLang(a.get('debit'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right" style="white-space: nowrap;">
-                                        <span t-att-style="style" t-esc="formatLang(a.get('credit'), currency_obj=res_company.currency_id)"/>
+                                        <span class="annotable" t-att-style="style" t-esc="formatLang(a.get('credit'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                     <td class="text-right" style="white-space: nowrap;">
-                                        <span t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/>
+                                        <span class="annotable" t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/>
                                     </td>
                                 </t>
                             </tr>
@@ -86,10 +92,11 @@
                                     <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
 
                                     <td>
-                                        <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                        <span t-att-style="style" t-esc="a.get('name')"/>
+                                        <span class="foldable">&gt;</span>
+                                        <span class="level" style="color: white;" t-esc="'..' * a.get('level', 0)"/>
+                                        <span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
-                                    <td class="text-right"><span t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/></td>
                                 </t>
                             </tr>
                         </tbody>
@@ -110,11 +117,12 @@
                                     <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
 
                                     <td>
-                                        <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                        <span t-att-style="style" t-esc="a.get('name')"/>
+                                        <span class="foldable">&gt;</span>
+                                        <span class="level" style="color: white;" t-esc="'..' * a.get('level', 0)"/>
+                                        <span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
-                                    <td class="text-right"><span t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-att-style="style" t-esc="formatLang(a.get('balance_cmp'), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="formatLang(a.get('balance'), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span class="annotable" title="Click to add a footnote" t-att-style="style" t-esc="formatLang(a.get('balance_cmp'), currency_obj=res_company.currency_id)"/></td>
                                 </t>
                             </tr>
                         </tbody>
@@ -122,6 +130,7 @@
                 </div>
             </t>
         </t>
+    </span>
     </t>
 </template>
 </data>

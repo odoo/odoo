@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_financial_configurator" inherit_id="account.report_configurator" primary="True">
+    <xpath expr="//select[@name='target_move']" position="after">
+        <div class="checkbox">
+            <label> 
+                <input t-if="data['form']['enable_filter'] == False" type="checkbox" name="enable_filter" value="True" />
+                <input t-if="data['form']['enable_filter'] == True" type="checkbox" name="enable_filter" value="True" checked="checked" />
+                Enable Comparison
+            </label>
+        </div>
+    </xpath>
+    <xpath expr="//select[@name='filter']" position="after">
+        <div class="checkbox" t-if="data['form']['enable_filter'] == False">
+            <label> 
+                <input t-if="data['form']['debit_credit'] == False" type="checkbox" name="debit_credit" value="True" />
+                <input t-if="data['form']['debit_credit'] == True" type="checkbox" name="debit_credit" value="True" checked="checked" />
+                Display Debit/Credit Columns
+            </label>
+        </div>
+    </xpath>
+    <xpath expr="//label[@for='journal_ids']/.." position="replace">
+        <div class="col-xs-3">
+            <label for="account_report_id">Account Reports</label>
+            <select name="account_report_id" class="form-control">
+                <t t-foreach="data['form']['content']['account_reports']" t-as="a"> 
+                    <option t-if="a['id'] == data['form']['account_report_id']" selected="selected" t-att-value="a['id']">
+                        <t t-esc="a['name']"></t>
+                    </option>
+                    <option t-if="a['id'] != data['form']['account_report_id']" t-att-value="a['id']">
+                        <t t-esc="a['name']"></t>
+                    </option>
+                </t>   
+            </select>
+        </div>
+    </xpath>
+    <xpath expr="//input[@name='journal_ids']/.." position="before">
+        <div class="mt32" t-if="data['form']['enable_filter'] == True">
+            <div class="col-xs-3">
+                <h3>Comparison :</h3>
+            </div>
+            <div class="col-xs-3">
+                <label for="label_filter">Column Label</label>
+                <input type="text" name="label_filter" t-att-value="data['form']['label_filter']" class="form-control" />
+            </div>
+            <div class="col-xs-3">
+                <label for="fiscalyear_id_cmp">Fiscal year :</label>
+                <select name="fiscalyear_id_cmp" class="form-control">
+                    <option t-att-value="-1"></option>
+                    <t t-foreach="data['form']['content']['fiscalyears']" t-as="fy">
+                        <option t-if="fy['id'] == data['form']['fiscalyear_id_cmp']" selected="selected" t-att-value="fy['id']">
+                            <t t-esc="fy['name']"></t>
+                        </option>
+                        <option t-if="fy['id'] != data['form']['fiscalyear_id_cmp']" t-att-value="fy['id']">
+                            <t t-esc="fy['name']"></t>
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <div class="col-xs-3">
+                <label for="filter_cmp">Filter by :</label>
+                    <select name="filter_cmp" class="form-control">
+                        <option t-if="data['form']['filter_cmp'] == 'filter_no'" selected="selected" value="filter_no">No Filter</option>
+                        <option t-if="data['form']['filter_cmp'] != 'filter_no'" value="filter_no">No Filter</option>
+                        <option t-if="data['form']['filter_cmp'] == 'filter_date'" selected="selected" value="filter_date">Date</option>
+                        <option t-if="data['form']['filter_cmp'] != 'filter_date'" value="filter_date">Date</option>
+                        <option t-if="data['form']['filter_cmp'] == 'filter_period'" selected="selected" value="filter_period">Period</option>
+                        <option t-if="data['form']['filter_cmp'] != 'filter_period'" value="filter_period">Period</option>
+                    </select>
+                    <t t-if="data['form']['filter_cmp'] == 'filter_date'">
+                        <label for="date_from_cmp">Start Date :</label>
+                        <input type="date" class="form-control" name="date_from_cmp" t-att-value="data['form']['date_from_cmp']"></input>
+                        <label for="date_to_cmp">End Date :</label>
+                        <input type="date" class="form-control" name="date_to_cmp" t-att-value="data['form']['date_to_cmp']"></input>
+                    </t>
+                    <t t-if="data['form']['filter_cmp'] == 'filter_period'">
+                        <label for="period_from_cmp">Start Period :</label>
+                        <select name="period_from_cmp" class="form-control">
+                            <t t-foreach="data['form']['content']['periods']" t-as="p">
+                                <option t-if="p['id'] == data['form']['period_from_cmp']" selected="selected" t-att-value="p['id']">
+                                    <t t-esc="p['name']"></t>
+                                </option>
+                                <option t-if="p['id'] != data['form']['period_from_cmp']" t-att-value="p['id']">
+                                    <t t-esc="p['name']"></t>
+                                </option>
+                            </t>
+                        </select>
+                        <label for="period_to_cmp">End Period :</label>
+                        <select name="period_to_cmp" class="form-control">
+                            <t t-foreach="data['form']['content']['periods']" t-as="p">
+                                <option t-if="p['id'] == data['form']['period_to_cmp']" selected="selected" t-att-value="p['id']">
+                                    <t t-esc="p['name']"></t>
+                                </option>
+                                <option t-if="p['id'] != data['form']['period_to_cmp']" t-att-value="p['id']">
+                                    <t t-esc="p['name']"></t>
+                                </option>
+                            </t>
+                        </select>
+                    </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+</data>
+</openerp>
