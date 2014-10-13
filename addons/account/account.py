@@ -160,10 +160,9 @@ class account_account(models.Model):
     _name = "account.account"
     _description = "Account"
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        context = dict(self._context or {})
         pos = 0
 
         while pos < len(args):
@@ -174,25 +173,25 @@ class account_account(models.Model):
                 if not args[pos][2]:
                     del args[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
+                jour = self.env['account.journal'].browse(args[pos][2])
                 if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
                     args[pos] = ('type','not in',('consolidation','view'))
                     continue
                 ids3 = map(lambda x: x.id, jour.type_control_ids)
-                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
+                ids1 = super(account_account, self).search([('user_type', 'in', ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id', 'in', ids1)
             pos += 1
 
         if context and context.has_key('consolidate_children'): #add consolidated children of accounts
-            ids = super(account_account, self).search(cr, uid, args, offset, limit,
-                order, context=context, count=count)
-            for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
+            ids = super(account_account, self).search(args, offset, limit,
+                order, count=count)
+            for consolidate_child in self.browse(context['account_id']).child_consol_ids:
                 ids.append(consolidate_child.id)
             return ids
 
-        return super(account_account, self).search(cr, uid, args, offset, limit,
-                order, context=context, count=count)
+        return super(account_account, self).search(args, offset, limit,
+                order, count=count)
 
     @api.multi
     def _get_children_and_consol(self):
