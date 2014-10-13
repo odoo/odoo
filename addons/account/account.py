@@ -766,11 +766,12 @@ class account_period(models.Model):
                 if period.fiscalyear_id.company_id.id == self.fiscalyear_id.company_id.id:
                     raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
 
+    @api.model
     @api.returns('self')
-    def next(self, cr, uid, period, step, context=None):
-        ids = self.search(cr, uid, [('date_start','>',period.date_start)])
-        if len(ids)>=step:
-            return ids[step-1]
+    def next(self, period, step):
+        periods = self.search([('date_start','>',period.date_start)])
+        if len(periods)>=step:
+            return periods[step-1]
         return False
 
     @api.model
@@ -825,13 +826,14 @@ class account_period(models.Model):
                 raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
         return super(account_period, self).write(vals)
 
-    def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+    @api.model
+    def build_ctx_periods(self, period_from_id, period_to_id):
         if period_from_id == period_to_id:
             return [period_from_id]
-        period_from = self.browse(cr, uid, period_from_id)
+        period_from = self.browse(period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
-        period_to = self.browse(cr, uid, period_to_id)
+        period_to = self.browse(period_to_id)
         period_date_stop = period_to.date_stop
         company2_id = period_to.company_id.id
         if company1_id != company2_id:
@@ -844,8 +846,8 @@ class account_period(models.Model):
 
         #for period from = january, we want to exclude the opening period (but it has same date_from, so we have to check if period_from is special or not to include that clause or not in the search).
         if period_from.special:
-            return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
-        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
+            return self.search([('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
+        return self.search([('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
 
 
 class account_journal_period(models.Model):
