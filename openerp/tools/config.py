@@ -282,6 +282,8 @@ class configmanager(object):
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+        group.add_option("--geoip_db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat', action="store_true",
+                         help="Absolute path to the GeoIP database file.")
         parser.add_option_group(group)
 
         if os.name == 'posix':
