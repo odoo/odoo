@@ -1481,7 +1481,7 @@ class account_tax_code(models.Model):
     parent_id = fields.Many2one('account.tax.code', string='Parent Code', index=True)
     child_ids = fields.One2many('account.tax.code', 'parent_id', string='Child Codes')
     line_ids = fields.One2many('account.move.line', 'tax_code_id', string='Lines')
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company())
     sign = fields.Float(string='Coefficent for parent', required=True, default=1.0,
         help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.')
     notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
@@ -1593,7 +1593,7 @@ class account_tax(models.Model):
     ref_tax_sign = fields.Float(string='Refund Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
     include_base_amount = fields.Boolean(string='Included in base amount', default=False,
         help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company())
     description = fields.Char(string='Tax Code')
     price_include = fields.Boolean(string='Tax Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -2036,7 +2036,7 @@ class account_add_tmpl_wizard(models.TransientModel):
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
         return res and res[0] or False
 
-    cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent,
+    cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent(),
         help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)])
 
     def action_create(self,cr,uid,ids,context=None):
