@@ -700,7 +700,8 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
-            if not order.procurement_group_id:
+            group_id = order.procurement_group_id.id
+            if not group_id:
                 group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
                 order.write({'procurement_group_id': group_id}, context=context)
 
