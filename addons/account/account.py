@@ -1121,20 +1121,21 @@ class account_move(models.Model):
         result = super(account_move, self).with_context(ctx).unlink(toremove)
         return result
 
-    def _compute_balance(self, cr, uid, id, context=None):
-        move = self.browse(cr, uid, id, context=context)
+    @api.one
+    def _compute_balance(self):
         amount = 0
-        for line in move.line_id:
-            amount+= (line.debit - line.credit)
+        for line in self.line_id:
+            amount += (line.debit - line.credit)
         return amount
 
-    def _centralise(self, cr, uid, move, mode, context=None):
+    def _centralise(self, move, mode):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        currency_obj = self.pool.get('res.currency')
-        account_move_line_obj = self.pool.get('account.move.line')
-        context = dict(context or {})
+        cr = self._cr
+        currency_obj = self.env['res.currency']
+        account_move_line_obj = self.env['account.move.line']
+        context = dict(self._context or {})
 
-        if mode=='credit':
+        if mode == 'credit':
             account_id = move.journal_id.default_debit_account_id.id
             mode2 = 'debit'
             if not account_id:
@@ -1157,7 +1158,7 @@ class account_move(models.Model):
             line_id = res[0]
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-            line_id = account_move_line_obj.create(cr, uid, {
+            line_id = account_move_line_obj.with_context(context).create({
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'partner_id': False,
@@ -1168,7 +1169,7 @@ class account_move(models.Model):
                 'date': move.period_id.date_stop,
                 'debit': 0.0,
                 'credit': 0.0,
-            }, context)
+            })
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
@@ -1181,24 +1182,24 @@ class account_move(models.Model):
 
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
-        cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
-        account_move_line_obj.invalidate_cache(cr, uid, [mode2], [line_id], context=context)
+        cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id.id))
+        account_move_line_obj.with_context(context).invalidate_cache([mode2], [line_id.id])
 
         #adjust also the amount in currency if needed
         cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
         for row in cr.dictfetchall():
-            currency_id = currency_obj.browse(cr, uid, row['currency_id'], context=context)
-            if not currency_obj.is_zero(cr, uid, currency_id, row['amount_currency']):
+            currency_id = currency_obj.with_context(context).browse(row['currency_id'])
+            if not currency_obj.is_zero(currency_id, row['amount_currency']):
                 amount_currency = row['amount_currency'] * -1
                 account_id = amount_currency > 0 and move.journal_id.default_debit_account_id.id or move.journal_id.default_credit_account_id.id
                 cr.execute('select id from account_move_line where move_id=%s and centralisation=\'currency\' and currency_id = %slimit 1', (move.id, row['currency_id']))
                 res = cr.fetchone()
                 if res:
                     cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
-                    account_move_line_obj.invalidate_cache(cr, uid, ['amount_currency', 'account_id'], [res[0]], context=context)
+                    account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-                    line_id = account_move_line_obj.create(cr, uid, {
+                    line_id = account_move_line_obj.with_context(context).create(cr, uid, {
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
                         'partner_id': False,
@@ -1211,7 +1212,7 @@ class account_move(models.Model):
                         'credit': 0.0,
                         'currency_id': row['currency_id'],
                         'amount_currency': amount_currency,
-                    }, context)
+                    })
 
         return True
 
