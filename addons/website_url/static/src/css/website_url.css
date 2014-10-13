@@ -1,0 +1,54 @@
+.truncate_text {
+  white-space: nowrap;
+  width: 100%;                   /* IE6 needs any width */
+  overflow: hidden;              /* "overflow" value must be different from  visible"*/ 
+  -o-text-overflow: ellipsis;    /* Opera < 11*/
+  text-overflow:    ellipsis;    /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
+}
+
+.form-horizontal .control-label{
+  text-align:left
+}
+
+.recent_link_buttons {
+  display: none;
+}
+
+#filters {
+  float:right;
+  padding-bottom: 5px;
+  font-weight: bold;
+  color: #999;
+}
+
+.nav-tabs-inline {
+  float: right;
+  padding-bottom: 5px;
+  display: inline;
+  border-color: transparent;
+}
+
+.nav-tabs-inline > li > a,
+.nav-tabs-inline > li.active > a, 
+.nav-tabs-inline > li.active > a.active,
+.nav-tabs-inline > li.active > a:hover, 
+.nav-tabs-inline > li.active > a:focus, 
+.nav-tabs-inline > li > a:hover {
+  padding: 0px 5px;
+  border-radius: 0px;
+  border: 0px;
+  border-color: transparent;
+  border-right: 1px solid #000000;
+  padding-bottom: 0;
+  background-color: #FFFFFF;
+}
+
+.nav-tabs-inline > li.active > a {
+  color: #999;
+}
+
+.nav-tabs-inline li:last-child a,
+.nav-tabs-inline li:last-child a:hover,
+.nav-tabs-inline li:last-child a:focus {
+  border-right: 0px;
+}

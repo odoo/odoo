@@ -1,8 +1,10 @@
 import string
 import random
 import datetime
-from urlparse import urlparse
+from urllib2 import urlopen
+from lxml.html import parse
 from urlparse import urljoin
+from urlparse import urlparse
 from openerp import models, fields, api, _
 
 ALLOWED_SCHEMES = ['http', 'https', 'ftp', 'ftps']
@@ -22,10 +24,12 @@ class website_alias(models.Model):
 
     url = fields.Char(string='Full URL', required=True)
     code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
-    count = fields.Integer(string='Number of Clicks', compute='_count_url')
+    count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
     short_url = fields.Char(string="Short URL", compute='_short_url')
     alias_click_ids = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
     is_archived = fields.Boolean(string='Archived', default=False)
+    title = fields.Char(string="Title of the alias", store=True)
+    favicon = fields.Char(string="Favicon", store=True)
 
     @api.one
     @api.depends('alias_click_ids')
@@ -56,9 +60,8 @@ class website_alias(models.Model):
 
         # We use a custom method to convert the record to a dictionnary (instead of .read)
         # because we insert the names of the UTMs (like source_id.name)
-
-        return {'code':self.code, 'count':self.count, 'url':self.url, 'write_date':self.write_date, 
-                'short_url':self.short_url, 'stats_url':self.short_url + '+',
+        return {'title':self.title, 'code':self.code, 'count':self.count, 'url':self.url, 'host':urlparse(self.url).netloc, 'write_date':self.write_date, 
+                'short_url':self.short_url, 'stats_url':self.short_url + '+', 'icon_src':'data:image/png;base64,' + self.favicon,
                     'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
                     'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
                     'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
@@ -83,12 +86,18 @@ class website_alias(models.Model):
         }
 
     @api.model
-    def recent_links(self):
-        return self.search([('is_archived', '=', False)], order='write_date ASC')
+    def recent_links(self, filter):
+        if filter == 'newest':
+            return self.search([('is_archived', '=', False)], order='create_date DESC', limit=20)
+        elif filter == 'most-clicked':
+            return self.search([('is_archived', '=', False)], order='count DESC', limit=20)
+        elif filter == 'recently-used':
+            return self.search([('is_archived', '=', False), ('count', '!=', 0)], order='write_date DESC', limit=20)
+        else:
+            return {'Error':"THis filter doesn't exist."}
 
     @api.model
     def create_shorten_url(self, url, tracking_fields):
-
         url = VALIDATE_URL(url)
 
         # Check if there is already an alias with the same URL and UTMs
@@ -107,9 +116,24 @@ class website_alias(models.Model):
             # (recent links are sorted by 'write_date')
             result.update({'is_archived':False})
             return result
+        else:
+            # Try to get the title of the page
+            try:
+                page = urlopen(url)
+                p = parse(page)
+                title = p.find('.//title').text
+            except:
+                title = 'Page not found (404)'
+                
+            # Try to get the favicon of the page
+            try:
+                icon = urlopen('http://www.google.com/s2/favicons?domain=' + url).read()
+                icon_base64 = icon.encode('base64').replace("\n", "")
+            except:
+                icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
 
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        alias = self.create(dict({'url':url}.items() + tracking_fields.items()))
+        alias = self.create(dict({'url':url, 'title':title, 'favicon':icon_base64}.items() + tracking_fields.items()))
 
         return alias
 

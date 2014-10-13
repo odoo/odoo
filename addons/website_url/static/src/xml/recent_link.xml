@@ -2,32 +2,31 @@
 
 <templates id="template" xml:space="preserve">
     <t t-name="website_url.RecentLink">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="row" style="margin-bottom: 20px;">
-                    <div class="col-sm-1">
-                        <h3><t t-esc="widget.link_obj.count"/>
-                        <small>clicks</small></h3>
-                    </div>
-                    <div class="col-sm-7">
-                        <h4 class="truncate_text"><t t-esc="widget.link_obj.url"/></h4>
-                        <h6 class="text-muted"><t t-esc="widget.link_obj.short_url"/></h6>
-                        <span class="label label-success"><t t-esc="widget.link_obj.campaign_id.name"/></span> 
-                        <span class="label label-success"><t t-esc="widget.link_obj.medium_id.name"/></span>
-                        <span class="label label-success"><t t-esc="widget.link_obj.source_id.name"/></span>
-                        <a t-att-href="widget.link_obj.stats_url">View stats</a> | 
-                        <a class="archive" href="#">Archive</a>
-                        <p> <small><span t-field="widget.link_obj.write_date" t-field-options='{"format": "d MMMM yyyy"}'/></small></p>
+        <div class="page-header" style="margin-top: 0px;padding-top:0px;">
+        <div class="row">
+            <div class="col-sm-1 col-xs-2 text-center">
+                <h4><t t-esc="widget.link_obj.count"/></h4>
+                <p class="text-muted" style="margin-top: -5px;">clicks</p>
+            </div>
+            <div class="col-sm-7 col-xs-10">
+                
+                <h4 class="truncate_text"><img t-att-src="widget.link_obj.icon_src"/> <t t-esc="widget.link_obj.title"/></h4>
+                <p class="text-muted" style="margin-top: -5px;"><t t-esc="widget.link_obj.host"/>
+                <span class="label label-success"><t t-esc="widget.link_obj.campaign_id.name"/></span> 
+                <span class="label label-success"><t t-esc="widget.link_obj.medium_id.name"/></span>
+                <span class="label label-success"><t t-esc="widget.link_obj.source_id.name"/></span>
+                </p>
+                
+                <p> <small><span t-field="widget.link_obj.write_date" t-field-options='{"format": "d MMMM yyyy"}'/></small></p>
 
-                        <div class="notification"></div>
-                    </div>
-                    <div class="col-sm-4">
-                        <h2> </h2>
-                        <!-- <button class="btn btn-primary">Copy to clipboard</button> -->
-                        <button class="btn btn-primary btn_shorten_url_clipboard" t-att-data-clipboard-text="widget.link_obj.short_url">Copy link to clipboard</button>
-                    </div>
-                </div>
+                <div class="notification"></div>
+            </div>
+            <div class="col-sm-4 recent_link_buttons">
+                <h2></h2>
+                <button class="btn btn-default btn_shorten_url_clipboard" t-att-data-clipboard-text="widget.link_obj.short_url">Copy to clipboard</button>
+                <a t-att-href="widget.link_obj.stats_url" class="btn btn-warning">Stats</a>
             </div>
         </div>
+    </div>
     </t>
 </templates>

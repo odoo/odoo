@@ -9,7 +9,7 @@
     website.EditorBarContent = openerp.Widget.extend({
         start: function() {
             var self = this;
-            self.$el.on('click', 'a', function(ev) {
+            self.$el.on('click', 'a[data-action]', function(ev) {
                 ev.preventDefault();
                 var $content_item = $(this);
                 self[$content_item.data('action')]();

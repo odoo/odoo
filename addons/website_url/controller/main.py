@@ -15,11 +15,8 @@ class Website_Url(http.Controller):
 
         tracking_fields = {}
         for key, field in request.registry['crm.tracking.mixin'].tracking_fields():
-
             if field in post:
                 tracking_fields.update({field:post[field]})
-
-        print tracking_fields
 
         alias = request.registry['website.alias'].create_shorten_url(cr, uid, post['url'], tracking_fields, context=context)
 
@@ -34,7 +31,7 @@ class Website_Url(http.Controller):
     @http.route(['/r/recent_links'], type='json', auth='user')
     def recent_links(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        return request.registry['website.alias'].recent_links(cr, uid, context=context).to_json()
+        return request.registry['website.alias'].recent_links(cr, uid, post['filter'], context=context).to_json()
 
     @http.route(['/r/archive'], type='json', auth='user', methods=['POST'])
     def archive_link(self, **post):

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <template id="assets_website_url">
             <script type="text/javascript" src="/website_url/static/src/js/website_url.js"/>
             <script type="text/javascript" src="/website_url/static/src/js/ZeroClipboard.min.js"/>
+            <script type="text/javascript" src="/website_url/static/src/js/purl.js"/>
             <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/styles.css"/>
+            <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/website_url.css" />
         </template>
 
         <template id="assets_website_url_charts">
             <script type="text/javascript" src="/website_url/static/src/js/website_url_charts.js"/>
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"/>
+            <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/website_url.css" />
         </template>
 
         <template id="assets_nvd3">
@@ -19,75 +21,111 @@
             <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
         </template>
 
+        <template id="share_page_menu" inherit_id="website.user_navbar">
+            <xpath expr="//li[@groups='base.group_website_designer']" position="replace">
+                <li groups="base.group_website_designer">
+                    <a id="promote-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Promote <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu oe_content_menu" role="menu">
+                        <li>
+                            <a data-action="promote-current-page" href="#">
+                                <span title="Promote page on the web">Optimise SEO...</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/r" id="share_page_link_menu">
+                                <span title="Track this page to count clicks">Share this Page</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </xpath>
+        </template>
+
+        <template id="asset_website_url_menu" inherit_id="website.assets_editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_url/static/src/js/website_url_menu.js"></script>
+            </xpath>
+        </template>
+
         <template id="create_shorten_url">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h2 class="text-center">Link Tracker</h2>
-                        <h3 class="text-muted text-center">Count clicks on links you share</h3>
+                        <h1>Link Tracker</h1>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="notification">
-                            
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group" id="url-form-group">
-                            <label>Copy the link to track</label>
-<!--                             <div class="input-group"> -->
-                                <input type="text" id="url" class="form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus"/>
-
-                               
-<!--                             </div> -->
-                            <p class="help-block">Campaign, channel et source are optional. With them, you will able to compare links with each others and know which campaign or source drive more traffic.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="utms">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Campaign</label>
-                                <input type="hidden" class="form-control" id="campaign-select"/>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Channel</label>
-                                <input type="hidden" class="form-control" id="channel-select" />
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label>Source</label>
-                                <input type="hidden" class="form-control" id="source-select" />
-                            </div>
-                        </div>
+                        <div class="notification"></div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-12 text-center">
-<!--                          <span class="input-group-btn"> -->
-                            <button class="btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Get tracked link</button>
-<!--                             </span> -->
+                    <div class="col-sm-7">
+                        <form class="form-horizontal" id="link-tracker-form">
+                    
+                            <div class="form-group" id="url-form-group">
+                                <label class="col-sm-2 control-label text-left">Link</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" id="url" class="form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus" style="background-color: #CECDFF;"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Campaign</label>
+
+                                <div class="col-sm-10">
+                                    <input type="hidden" class="form-control" id="campaign-select"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Channel</label>
+
+                                <div class="col-sm-10">
+                                    <input type="hidden" class="form-control" id="channel-select" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Source</label>
+
+                                <div class="col-sm-10">
+                                    <input type="hidden" class="form-control" id="source-select" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10 col-sm-offset-3">
+                                    <button type="submit" class="form-control btn btn-primary" data-clipboard-target="url" id="btn_shorten_url">Get tracked link</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-3">
+                        <label>Help</label>
+                        <p class="help-block text-justify">Campaign, channel and source are optional.</p>
+
+                        <p class="help-block text-justify">With them, you will able to compare links with each others and know which campaign or source drive more traffic.</p>
                     </div>
                 </div>
                 
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h2>Recently used links</h2>
+                <div class="row page-header" style="display: flex;align-items:flex-end;">
+                    <div class="col-sm-8">
+                        <h2>Your tracked links</h2>
+                    </div>
+                    <div class="col-sm-4">
+                        <h5 class="text-muted" >Filter by : 
+                            <span id="filters" style="font-weight: normal;"></span>
+                        </h5>
                     </div>
                 </div>
-
-                <div id="recent_links">
+                
+                <div id="recent_links" style="min-height:30em;">
                     <div class="notification"></div>
                 </div>
             </div>
@@ -98,58 +136,112 @@
                 <t t-set="head">
                     <t t-call-assets="website_url.assets_nvd3"/>
                     <t t-call-assets="website_url.assets_website_url_charts"/>
-
                 </t>
+
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-12">
-
+                        <div class="col-sm-12 text-left">
                             <input type="hidden" id="code" t-att-value="code" />
+                        </div>
+                    </div>
 
-                            <h1 class="text-center">Statistics</h1>
-                            <h3 class="text-muted text-center">
-                                <t t-esc="url"/>
-                            </h3>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ol class="breadcrumb" style="margin: 10px 0px 0px 0px;">
+                              <li><a href="/r">Link Tracker</a></li>
+                              <li class="active"><t t-esc="host"/></li>
+                            </ol>
+                        </div>
+                    </div>
 
+                    <div class="row page-header">
+                        <div class="col-sm-12">
+                            <h1>Details</h1>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-sm-6">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <h4>
-                                                <span class="fa fa-circle-o-notch"></span> <span id="total_clicks_data"></span> total clicks
-                                            </h4>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4">
+                                    <p><strong>Title</strong></p>
                                 </div>
-
-                                <div class="col-sm-6">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <h4>
-                                                <span class="fa fa-flag"></span> <span id="number_of_countries_data"></span> countries
-                                            </h4>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-8">
+                                    <p class="truncate_text"><t t-esc="title"/></p>
                                 </div>
                             </div>
 
-                            <!-- Tabs -->
-                            <ul class="nav nav-tabs hidden-print graph-tabs">
-                                <li class="active">
-                                    <a href="#all_time_chart" data-toggle="tab">All Time</a>
-                                </li>
-                                <li>
-                                    <a href="#last_month_chart" data-toggle="tab">Last Month</a>
-                                </li>
-                                <li>
-                                    <a href="#last_week_chart" data-toggle="tab">Last Week</a>
-                                </li>
-                                <li>
-                                    <a href="#clicks_by_country" data-toggle="tab">Countries</a>
-                                </li>
-                            </ul>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p><strong>Host</strong></p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p><t t-esc="host"/></p>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p><strong>Tracked Link</strong></p>
+                                </div>
+                                <div class="col-sm-8">
+                                    <p><t t-esc="short_url"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <t t-if="campaign_id['name']">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p><strong>Campaign</strong></p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p><t t-esc="campaign_id['name']"/></p>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <t t-if="medium_id['name']">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p><strong>Channel</strong></p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p><t t-esc="medium_id['name']"/></p>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <t t-if="source_id['name']">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p><strong>Source</strong></p>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <p><t t-esc="source_id['name']"/></p>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="row page-header" style="display: flex;align-items:flex-end;padding-bottom: 0px;">
+                        <div class="col-sm-8">
+                            <h2>Statistics</h2>
+                        </div>
+                        <div class="col-sm-4">
+                            <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
+                                <li class="active"><a href="#all_time_chart" role="tab" data-toggle="tab">All Time</a></li>
+                                <li><a href="#last_month_chart" role="tab" data-toggle="tab">Last Month</a></li>
+                                <li><a href="#last_week_chart" role="tab" data-toggle="tab">Last Week</a></li>
+                            </ul>
+                            <span id="filters" style="">Filter by :</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <h3>Clicks</h3>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="all_time_chart">
                                     <svg style="height:20em"></svg>
@@ -160,9 +252,12 @@
                                 <div class="tab-pane" id="last_week_chart">
                                     <svg style="height:20em"></svg>
                                 </div>
-                                <div class="tab-pane" id="clicks_by_country">
-                                    <svg style="height:20em;"></svg>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <h3>Countries</h3>
+                            <div class="tab-pane" id="clicks_by_country">
+                                <svg style="height:20em;"></svg>
                             </div>
                         </div>
                     </div>
@@ -178,7 +273,6 @@
                 <t t-call="website_url.create_shorten_url"/>
             </t>
         </template>
-
     </data>
 </openerp>
 
