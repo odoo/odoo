@@ -930,16 +930,14 @@ class account_move(models.Model):
         period_ids = self.env['account.period'].find(cr, uid, context=ctx)
         return period_ids[0]
 
-    def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
-        if not ids: return {}
-        cr.execute( 'SELECT move_id, SUM(debit) '\
-                    'FROM account_move_line '\
-                    'WHERE move_id IN %s '\
-                    'GROUP BY move_id', (tuple(ids),))
-        result = dict(cr.fetchall())
-        for id in ids:
-            result.setdefault(id, 0.0)
-        return result
+    @api.multi
+    @api.depends('line_id')
+    def _amount_compute(self):
+        for move in self:
+            total = 0.0
+            for line in move.line_id:
+                total += line.debit
+            move.amount = total
 
     def _search_amount(self, cr, uid, obj, name, args, context):
         ids = set()
@@ -1045,13 +1043,17 @@ class account_move(models.Model):
             self.invalidate_cache()
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
+    @api.multi
+    def write(self, vals):
+        context = dict(self._context or {})
         c = context.copy()
         c['novalidate'] = True
-        result = super(account_move, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context=context)
+        #Temporary workaround to get rid of Error: maximum recursion depth exceeded while calling a Python object.
+        # Not able directly write: super(account_move, self).with_context(c).write(vals)
+        self.with_context(c)
+        result = super(account_move, self).write(vals)
+        self.with_context(context)
+        self.validate()
         return result
 
     #
