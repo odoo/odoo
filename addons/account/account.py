@@ -927,7 +927,7 @@ class account_move(models.Model):
 
     @api.model
     def _get_period(self):
-        period_ids = self.env['account.period'].find(cr, uid, context=ctx)
+        period_ids = self.env['account.period'].find()
         return period_ids[0]
 
     @api.multi
@@ -962,7 +962,7 @@ class account_move(models.Model):
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     period_id = fields.Many2one('account.period', string='Period', required=True, states={'posted': [('readonly', True)]},
-        default=lambda self: self._get_period)
+        default=lambda self: self._get_period())
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
@@ -1059,8 +1059,9 @@ class account_move(models.Model):
     #
     # TODO: Check if period is closed !
     #
-    def create(self, cr, uid, vals, context=None):
-        context = dict(context or {})
+    @api.model
+    def create(self, vals):
+        context = dict(self._context or {})
         if vals.get('line_id'):
             if vals.get('journal_id'):
                 for l in vals['line_id']:
@@ -1073,7 +1074,7 @@ class account_move(models.Model):
                         l[2]['period_id'] = vals['period_id']
                 context['period_id'] = vals['period_id']
             else:
-                default_period = self._get_period(cr, uid, context)
+                default_period = self.with_context(context)._get_period().id
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = default_period
@@ -1081,16 +1082,18 @@ class account_move(models.Model):
 
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(context)._get_period().id
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
-            result = super(account_move, self).create(cr, uid, vals, c)
-            tmp = self.validate(cr, uid, [result], context)
-            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context)
+            self.with_context(c)
+            result = super(account_move, self).create(vals)
+            tmp = result.with_context(context).validate()
+            journal = self.env['account.journal'].with_context(context).browse(vals['journal_id'])
             if journal.entry_posted and tmp:
-                self.button_validate(cr,uid, [result], context)
+                result.with_context(context).button_validate()
         else:
-            result = super(account_move, self).create(cr, uid, vals, context)
+            self.with_context(context)
+            result = super(account_move, self).create(vals)
         return result
 
     @api.multi
