@@ -211,3 +211,29 @@ class website_alias_click(models.Model):
         """, (alias_id, ))
 
         return self.env.cr.dictfetchall()
+
+    @api.model
+    def get_last_month_clicks_by_country(self, alias_id):
+        self.env.cr.execute("""
+            SELECT rc.name, COUNT(wac.id)
+            FROM website_alias_click wac
+            LEFT OUTER JOIN res_country rc
+            ON wac.country_id = rc.id
+            WHERE wac.alias_id = '%s' AND wac.create_date > now() - interval '1 month'
+            GROUP BY wac.country_id, rc.name
+        """, (alias_id, ))
+
+        return self.env.cr.dictfetchall()
+
+    @api.model
+    def get_last_week_clicks_by_country(self, alias_id):
+        self.env.cr.execute("""
+            SELECT rc.name, COUNT(wac.id)
+            FROM website_alias_click wac
+            LEFT OUTER JOIN res_country rc
+            ON wac.country_id = rc.id
+            WHERE wac.alias_id = '%s' AND wac.create_date > now() - interval '7 days'
+            GROUP BY wac.country_id, rc.name
+        """, (alias_id, ))
+
+        return self.env.cr.dictfetchall()

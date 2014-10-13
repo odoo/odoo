@@ -65,9 +65,17 @@ class Website_Url(http.Controller):
 
         total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id[0], context=context)
         clicks_by_day = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
+
         clicks_by_country = request.registry['website.alias.click'].get_clicks_by_country(cr, uid, alias_id[0], context=context)
 
-        return {'total_clicks':total_clicks, 'clicks_by_day':clicks_by_day, 'clicks_by_country':clicks_by_country}
+        last_month_clicks_by_country = request.registry['website.alias.click'].get_last_month_clicks_by_country(cr, uid, alias_id[0], context=context)
+        last_week_clicks_by_country = request.registry['website.alias.click'].get_last_week_clicks_by_country(cr, uid, alias_id[0], context=context)
+
+        return {'total_clicks':total_clicks, 
+                'clicks_by_day':clicks_by_day, 
+                'clicks_by_country':clicks_by_country, 
+                'last_month_clicks_by_country':last_month_clicks_by_country, 
+                'last_week_clicks_by_country':last_week_clicks_by_country}
 
     @http.route(['/r/<string:code>'] , type='http', auth="none", website=True)
     def full_url_redirect(self, code, **post):

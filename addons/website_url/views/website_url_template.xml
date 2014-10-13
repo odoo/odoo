@@ -231,9 +231,9 @@
                         </div>
                         <div class="col-sm-4">
                             <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
-                                <li class="active"><a href="#all_time_chart" role="tab" data-toggle="tab">All Time</a></li>
-                                <li><a href="#last_month_chart" role="tab" data-toggle="tab">Last Month</a></li>
-                                <li><a href="#last_week_chart" role="tab" data-toggle="tab">Last Week</a></li>
+                                <li class="active"><a href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
+                                <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
+                                <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
                             </ul>
                             <span id="filters" style="">Filter by :</span>
                         </div>
@@ -242,22 +242,48 @@
                     <div class="row">
                         <div class="col-sm-7">
                             <h3>Clicks</h3>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="all_time_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                                <div class="tab-pane" id="last_month_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                                <div class="tab-pane" id="last_week_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                            </div>
                         </div>
                         <div class="col-sm-5">
                             <h3>Countries</h3>
-                            <div class="tab-pane" id="clicks_by_country">
-                                <svg style="height:20em;"></svg>
+                        </div>
+                    </div>
+
+                    
+                    <div class="tab-content">
+
+                        <!-- All Time Charts -->
+                        <div class="tab-pane active" id="all_time_charts">
+                            <div class="row">
+                                <div class="col-sm-7" id="all_time_clicks_chart">
+                                    <svg style="height:20em"></svg>
+                                </div>
+                                <div class="col-sm-5" id="all_time_countries_charts">
+                                    <svg style="height:20em;"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Last Month Charts -->
+                        <div class="tab-pane" id="last_month_charts">
+                            <div class="row">
+                                <div class="col-sm-7" id="last_month_clicks_chart">
+                                    <svg style="height:20em"></svg>
+                                </div>
+                                <div class="col-sm-5" id="last_month_countries_charts">
+                                    <svg style="height:20em;"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Last Week Charts -->
+                        <div class="tab-pane" id="last_week_charts">
+                            <div class="row">
+                                <div class="col-sm-7" id="last_week_clicks_chart">
+                                    <svg style="height:20em"></svg>
+                                </div>
+                                <div class="col-sm-5" id="last_week_countries_charts">
+                                    <svg style="height:20em;"></svg>
+                                </div>
                             </div>
                         </div>
                     </div>

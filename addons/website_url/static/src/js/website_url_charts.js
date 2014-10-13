@@ -79,6 +79,46 @@
         },
     });
 
+    openerp.website_url.PieChart = openerp.Widget.extend({
+        init: function($element, data) {
+            this.data = data;
+            this.$element = $element;
+        },
+        start: function() {
+
+            var self = this;
+
+            var processed_data = [];
+            for(var i = 0 ; i < this.data.length ; i++) {
+                if(this.data[i]['name']) {
+                    processed_data.push({'label':this.data[i]['name'] + ' (' + this.data[i]['count'] + ')',
+                                                 'value':this.data[i]['count']});
+                }
+                else {
+                    processed_data.push({'label':'Undefined (' + this.data[i]['count'] + ')',
+                                                 'value':this.data[i]['count']});
+                }
+            }
+
+            nv.addGraph(function() {
+                var chart = nv.models.pieChart()
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .showLabels(true);
+
+
+                d3.select(self.$element)
+                    .datum(processed_data)
+                    .transition().duration(1200)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+            });
+        },
+    });
+
    $(document).ready(function() {
 
         $(".graph-tabs li a").click(function (e) {
@@ -96,6 +136,8 @@
                 var total_clicks = result['total_clicks'];
                 var clicks_by_day = result['clicks_by_day'];
                 var clicks_by_country = result['clicks_by_country'];
+                var last_month_clicks_by_country = result['last_month_clicks_by_country'];
+                var last_week_clicks_by_country = result['last_week_clicks_by_country'];
 
                 if(total_clicks) {
 
@@ -109,55 +151,69 @@
                         result_dic[clicks_by_day[i].to_char] = clicks_by_day[i].count;
                     }
 
-                    // Process all time data
+                    // Process all time line chart data
                     var begin_date = moment(clicks_by_day[clicks_by_day.length - 1].to_char);
                     var end_date = moment(clicks_by_day[0].to_char);
                     var now = moment();
 
-                    var all_time_chart = new openerp.website_url.BarChart('#all_time_chart svg', begin_date, end_date, result_dic);
+                    var all_time_chart = new openerp.website_url.BarChart('#all_time_clicks_chart svg', begin_date, end_date, result_dic);
                     all_time_chart.start();
 
-                    // Process month data
+                    // Process month line chart data
                     var begin_date = moment().subtract(30, 'days');
-                    var month_chart = new openerp.website_url.BarChart('#last_month_chart svg', begin_date, now, result_dic);
+                    var month_chart = new openerp.website_url.BarChart('#last_month_clicks_chart svg', begin_date, now, result_dic);
                     month_chart.start();
 
-                    // Processus week data
+                    // Process week line chart data
                     var begin_date = moment().subtract(7, 'days');
-                    var week_chart = new openerp.website_url.BarChart('#last_week_chart svg', begin_date, now, result_dic);
+                    var week_chart = new openerp.website_url.BarChart('#last_week_clicks_chart svg', begin_date, now, result_dic);
                     week_chart.start();
 
+                    // Process pie charts
+                    var all_time_pie_chart = new openerp.website_url.PieChart('#all_time_countries_charts svg', clicks_by_country);
+                    all_time_pie_chart.start();
+
+                    var last_month_pie_chart = new openerp.website_url.PieChart('#last_month_countries_charts svg', last_month_clicks_by_country);
+                    last_month_pie_chart.start();
+
+                    var last_week_pie_chart = new openerp.website_url.PieChart('#last_week_countries_charts svg', last_week_clicks_by_country);
+                    last_week_pie_chart.start();
+
+
                     // Process country data
-                    var clicks_by_country_data = [];
-                    for(var i = 0 ; i < clicks_by_country.length ; i++) {
-
-                        if(clicks_by_country[i]['name']) {
-                            clicks_by_country_data.push({'label':clicks_by_country[i]['name'] + ' (' + clicks_by_country[i]['count'] + ')',
-                                                         'value':clicks_by_country[i]['count']});
-                        }
-                        else {
-                            clicks_by_country_data.push({'label':'Undefined (' + clicks_by_country[i]['count'] + ')',
-                                                         'value':clicks_by_country[i]['count']});
-                        }
-                    }
-
-                    // Country Chart
-                    nv.addGraph(function() {
-                        var chart = nv.models.pieChart()
-                            .x(function(d) { return d.label })
-                            .y(function(d) { return d.value })
-                            .showLabels(true);
 
 
-                        d3.select("#clicks_by_country svg")
-                            .datum(clicks_by_country_data)
-                            .transition().duration(1200)
-                            .call(chart);
 
-                        nv.utils.windowResize(chart.update);
+                    // var clicks_by_country_data = [];
+                    // for(var i = 0 ; i < clicks_by_country.length ; i++) {
 
-                        return chart;
-                    });
+                    //     if(clicks_by_country[i]['name']) {
+                    //         clicks_by_country_data.push({'label':clicks_by_country[i]['name'] + ' (' + clicks_by_country[i]['count'] + ')',
+                    //                                      'value':clicks_by_country[i]['count']});
+                    //     }
+                    //     else {
+                    //         clicks_by_country_data.push({'label':'Undefined (' + clicks_by_country[i]['count'] + ')',
+                    //                                      'value':clicks_by_country[i]['count']});
+                    //     }
+                    // }
+
+                    // // Country Chart
+                    // nv.addGraph(function() {
+                    //     var chart = nv.models.pieChart()
+                    //         .x(function(d) { return d.label })
+                    //         .y(function(d) { return d.value })
+                    //         .showLabels(true);
+
+
+                    //     d3.select("#all_time_countries_charts svg")
+                    //         .datum(clicks_by_country_data)
+                    //         .transition().duration(1200)
+                    //         .call(chart);
+
+                    //     nv.utils.windowResize(chart.update);
+
+                    //     return chart;
+                    // });
                 }
                 else {
                     $('#all_time_chart').prepend('There is no data to show');
