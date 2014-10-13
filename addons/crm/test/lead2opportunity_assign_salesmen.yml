@@ -66,7 +66,7 @@
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("test_crm_lead_01"), ref("test_crm_lead_02"), ref("test_crm_lead_03"), ref("test_crm_lead_04"), ref("test_crm_lead_05"), ref("test_crm_lead_06")], 'active_id': ref("test_crm_lead_01")})
-    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')])], 'section_id': ref('sales_team.section_sales_department'), 'deduplicate': False, 'force_assignation': True}, context=context)
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')])], 'team_id': ref('sales_team.team_sales_department'), 'deduplicate': False, 'force_assignation': True}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   The leads should now be opps with a salesman and a salesteam.  Also, salesmen should have been assigned following a round-robin method.

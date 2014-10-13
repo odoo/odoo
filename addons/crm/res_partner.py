@@ -41,7 +41,7 @@ class res_partner(osv.osv):
         return res
 
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'team_id': fields.many2one('crm.team', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Opportunities', domain=[('type', '=', 'opportunity')]),
         'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
@@ -69,9 +69,8 @@ class res_partner(osv.osv):
         return value
 
     def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
-        categ_obj = self.pool.get('crm.case.categ')
-        categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
         lead_obj = self.pool.get('crm.lead')
+        tag_ids = self.pool['crm.lead.tag'].search(cr, uid, [])
         opportunity_ids = {}
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner_id:
@@ -81,7 +80,7 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'categ_ids' : categ_ids and categ_ids[0:1] or [],
+                'tag_ids' : tag_ids and tag_ids[0] or [],
                 'type': 'opportunity'
             }, context=context)
             opportunity_ids[partner_id] = opportunity_id

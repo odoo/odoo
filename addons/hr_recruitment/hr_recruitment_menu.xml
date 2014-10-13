@@ -2,7 +2,7 @@
 <openerp>
     <data>
         ######################## JOB OPPORTUNITIES (menu) ###########################
-         <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
+         <record model="ir.actions.act_window" id="crm_case_category0_act_job">
             <field name="name">Applications</field>
             <field name="res_model">hr.applicant</field>
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
@@ -25,28 +25,28 @@
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="hr_kanban_view_applicant"/>
-            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+            <field name="act_window_id" ref="crm_case_category0_act_job"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_hr_sec_tree_view_act_job">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm_case_tree_view_job"/>
-            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+            <field name="act_window_id" ref="crm_case_category0_act_job"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job">
             <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_case_form_view_job"/>
-            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+            <field name="act_window_id" ref="crm_case_category0_act_job"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_hr_sec_graph_view_act_job">
             <field name="sequence" eval="4"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm_case_graph_view_job"/>
-            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+            <field name="act_window_id" ref="crm_case_category0_act_job"/>
         </record>
 
         <menuitem
@@ -60,6 +60,6 @@
         <menuitem
             name="Applications"
             parent="base.menu_crm_case_job_req_main"
-            id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2"/>
+            id="menu_crm_case_category0_act_job" action="crm_case_category0_act_job" sequence="2"/>
     </data>
 </openerp>

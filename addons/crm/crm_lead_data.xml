@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <!-- Crm stages -->
-        <record model="crm.case.stage" id="stage_lead1">
+        <record model="crm.stage" id="stage_lead1">
             <field name="name">New</field>
             <field name="case_default">1</field>
             <field name="probability">0</field>
@@ -11,7 +11,7 @@
             <field name="sequence">1</field>
             <field name="type">both</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead2">
+        <record model="crm.stage" id="stage_lead2">
             <field name="name">Dead</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -20,7 +20,7 @@
             <field name="sequence">30</field>
             <field name="type">lead</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead3">
+        <record model="crm.stage" id="stage_lead3">
             <field name="name">Qualification</field>
             <field name="case_default">1</field>
             <field name="probability">20</field>
@@ -28,21 +28,21 @@
             <field name="sequence">40</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead4">
+        <record model="crm.stage" id="stage_lead4">
             <field name="name">Proposition</field>
             <field name="case_default">1</field>
             <field name="probability">40</field>
             <field name="sequence">50</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead5">
+        <record model="crm.stage" id="stage_lead5">
             <field name="name">Negotiation</field>
             <field name="case_default">1</field>
             <field name="probability">60</field>
             <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead6">
+        <record model="crm.stage" id="stage_lead6">
             <field name="name">Won</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -51,7 +51,7 @@
             <field name="sequence">70</field>
             <field name="type">opportunity</field>
         </record>
-        <record model="crm.case.stage" id="stage_lead7">
+        <record model="crm.stage" id="stage_lead7">
             <field name="name">Lost</field>
             <field name="case_default">1</field>
             <field name="fold">1</field>
@@ -61,7 +61,7 @@
             <field name="type">opportunity</field>
         </record>
         
-        <record model="crm.case.section" id="sales_team.section_sales_department">
+        <record model="crm.team" id="sales_team.team_sales_department">
             <field name="stage_ids" eval="[ (4, ref('stage_lead1')), (4, ref('stage_lead2')),
                                             (4, ref('stage_lead3')), (4, ref('stage_lead4')),
                                             (4, ref('stage_lead5')), (4, ref('stage_lead6')),
@@ -71,60 +71,52 @@
         <!-- Crm Campain -->
         <record model="crm.tracking.campaign" id="crm_campaign_fall_drive">
             <field name="name">Fall Drive</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
         <record model="crm.tracking.campaign" id="crm_campaign_christmas_special">
             <field name="name">Christmas Special</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
         <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_services">
             <field name="name">Email Campaign - Services</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
         <record model="crm.tracking.campaign" id="crm_campaign_email_campaign_products">
             <field name="name">Email Campaign - Products</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
         <!--  crm categories -->
-        <record model="crm.case.categ" id="categ_oppor1">
+        <record model="crm.lead.tag" id="categ_oppor1">
             <field name="name">Product</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor2">
+        <record model="crm.lead.tag" id="categ_oppor2">
             <field name="name">Software</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor3">
+        <record model="crm.lead.tag" id="categ_oppor3">
             <field name="name">Services</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor4">
+        <record model="crm.lead.tag" id="categ_oppor4">
             <field name="name">Information</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor5">
+        <record model="crm.lead.tag" id="categ_oppor5">
             <field name="name">Design</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor6">
+        <record model="crm.lead.tag" id="categ_oppor6">
             <field name="name">Training</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor7">
+        <record model="crm.lead.tag" id="categ_oppor7">
             <field name="name">Consulting</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
-        <record model="crm.case.categ" id="categ_oppor8">
+        <record model="crm.lead.tag" id="categ_oppor8">
             <field name="name">Other</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
         </record>
 
         <!-- CRM-related subtypes for messaging / Chatter -->
@@ -157,32 +149,32 @@
         <record id="mt_salesteam_lead" model="mail.message.subtype">
             <field name="name">Lead Created</field>
             <field name="sequence">10</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_create')"/>
-            <field name="relation_field">section_id</field>
+            <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
             <field name="name">Opportunity Stage Changed</field>
             <field name="sequence">11</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="parent_id" eval="ref('mt_lead_stage')"/>
-            <field name="relation_field">section_id</field>
+            <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_won" model="mail.message.subtype">
             <field name="name">Opportunity Won</field>
             <field name="sequence">12</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="parent_id" eval="ref('mt_lead_won')"/>
-            <field name="relation_field">section_id</field>
+            <field name="relation_field">team_id</field>
         </record>
         <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
             <field name="name">Opportunity Lost</field>
             <field name="sequence">13</field>
-            <field name="res_model">crm.case.section</field>
+            <field name="res_model">crm.team</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_lost')"/>
-            <field name="relation_field">section_id</field>
+            <field name="relation_field">team_id</field>
         </record>
 
         <!--Definition of an email template with an empty body that will be used in opportunity mailing.

@@ -108,7 +108,6 @@ Dashboard for CRM will include:
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
         'test/crm_lead_cancel.yml',
-        'test/segmentation.yml',
         'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',

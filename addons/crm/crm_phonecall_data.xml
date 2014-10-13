@@ -4,16 +4,13 @@
     <!--
     Phonecall Categories
     -->
-    <record model="crm.case.categ" id="categ_phone1">
+    <record model="crm.phonecall.category" id="categ_phone1">
         <field name="name">Inbound</field>
-        <field name="section_id" ref="sales_team.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
-
+        <field name="team_id" ref="sales_team.team_sales_department"/>
     </record>
-    <record model="crm.case.categ" id="categ_phone2">
+    <record model="crm.phonecall.category" id="categ_phone2">
         <field name="name">Outbound</field>
-        <field name="section_id" ref="sales_team.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
     </record>
 
 </data>

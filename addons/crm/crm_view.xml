@@ -109,9 +109,9 @@
 
         <!-- CRM Stage Tree View -->
 
-        <record model="ir.ui.view" id="crm_case_stage_tree">
-            <field name="name">crm.case.stage.tree</field>
-            <field name="model">crm.case.stage</field>
+        <record model="ir.ui.view" id="crm_stage_tree">
+            <field name="name">crm.stage.tree</field>
+            <field name="model">crm.stage</field>
             <field name="arch" type="xml">
                 <tree string="Stages">
                     <field name="sequence" widget="handle"/>
@@ -124,9 +124,9 @@
 
         <!-- CRM Stage Form View -->
 
-        <record model="ir.ui.view" id="crm_case_stage_form">
-            <field name="name">crm.case.stage.form</field>
-            <field name="model">crm.case.stage</field>
+        <record model="ir.ui.view" id="crm_stage_form">
+            <field name="name">crm.stage.form</field>
+            <field name="model">crm.stage</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
@@ -146,48 +146,18 @@
                     </group>
                     <separator string="Requirements"/>
                     <field name="requirements" nolabel="1"/>
-                    <field name="section_ids" invisible="1"/>
+                    <field name="team_ids" invisible="1"/>
                 </form>
             </field>
         </record>
 
         <!-- CRM Stage Action -->
 
-        <record id="crm_case_stage_act" model="ir.actions.act_window">
+        <record id="crm_stage_act" model="ir.actions.act_window">
             <field name="name">Stages</field>
-            <field name="res_model">crm.case.stage</field>
+            <field name="res_model">crm.stage</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_stage_tree"/>
-        </record>
-
-
-        <!-- Case Categories Form View -->
-
-        <record id="crm_case_categ-view" model="ir.ui.view">
-            <field name="name">crm.case.categ.form</field>
-            <field name="model">crm.case.categ</field>
-            <field name="arch" type="xml">
-                <form string="Case Category">
-                    <group>
-                        <field name="name"/>
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
-                        <field name="object_id" invisible="1"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- Case Categories Tree View -->
-
-        <record id="crm_case_categ_tree-view" model="ir.ui.view">
-            <field name="name">crm.case.categ.tree</field>
-            <field name="model">crm.case.categ</field>
-            <field name="arch" type="xml">
-                <tree string="Case Category">
-                    <field name="name"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
-                </tree>
-            </field>
+            <field name="view_id" ref="crm_stage_tree"/>
         </record>
 
         <!-- Resource Type of case Tree View -->
@@ -198,7 +168,7 @@
             <field name="arch" type="xml">
                 <tree string="Campaign">
                     <field name="name"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                 </tree>
             </field>
         </record>
@@ -212,7 +182,7 @@
                 <form string="Campaign">
                     <group>
                         <field name="name"/>
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
                     </group>
                 </form>
             </field>
@@ -231,164 +201,6 @@
             id="menu_crm_tracking_campaign_act" sequence="4"
             groups="base.group_no_one"
             parent="base.menu_crm_config_lead"/>
-
-
-        <!-- Segmentation line Tree View  -->
-
-        <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
-            <field name="name">crm.segmentation.line.tree</field>
-            <field name="model">crm.segmentation.line</field>
-            <field name="arch" type="xml">
-                <tree string="Partner Segmentation Lines">
-                    <field name="name"/>
-                    <field name="expr_name"/>
-                    <field name="expr_operator"/>
-                    <field name="expr_value"/>
-                    <field name="operator"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Segmentation line Form View  -->
-
-        <record id="crm_segmentation_line-view" model="ir.ui.view">
-            <field name="name">crm.segmentation.line.form</field>
-            <field name="model">crm.segmentation.line</field>
-            <field name="arch" type="xml">
-                <form string="Partner Segmentation Lines">
-                    <group col="4">
-                        <field colspan="4" name="name"/>
-                        <group col="2" colspan="4">
-                            <field name="expr_name"/>
-                            <field name="expr_operator"/>
-                            <field name="expr_value"/>
-                        </group>
-                        <field name="operator"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- CRM Segmentation  Form View  -->
-
-        <record id="crm_segmentation-view" model="ir.ui.view">
-            <field name="name">crm.segmentation.form</field>
-            <field name="model">crm.segmentation</field>
-            <field name="arch" type="xml">
-                <form string="Partner Segmentation">
-                    <header>
-                        <button name="process_start"
-                            states="not running"
-                            string="Compute Segmentation" type="object"
-                            icon="gtk-execute"/>
-                        <button name="process_stop" states="running"
-                            string="Stop Process" type="object"
-                            icon="gtk-cancel"/>
-                        <button name="process_continue" states="running"
-                            string="Continue Process" type="object"
-                            icon="gtk-go-forward"/>
-                        <field name="state" widget="statusbar"/>
-                    </header>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="categ_id"/>
-                        <field name="exclusif"/>
-                    </group>
-                    <notebook>
-                       <page string="Sales Purchase" name="sale_purchase">
-                           <group>
-                               <field name="sales_purchase_active"/>
-                           </group>
-                           <separator string="Segmentation Test Criteria"/>
-                           <field name="segmentation_line" widget="one2many_list"/>
-                       </page>
-                       <page string="Description" name="description">
-                           <field name="description"/>
-                       </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-
-        <!-- CRM Segmentation  Tree View  -->
-
-        <record id="crm_segmentation_tree-view" model="ir.ui.view">
-            <field name="name">crm.segmentation.tree</field>
-            <field name="model">crm.segmentation</field>
-            <field name="arch" type="xml">
-                <tree string="Partner Segmentations">
-                    <field name="name"/>
-                    <field name="description"/>
-                    <field name="categ_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="crm_segmentation-act" model="ir.actions.act_window">
-            <field name="name">Segmentation</field>
-            <field name="res_model">crm.segmentation</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_segmentation-view"/>
-        </record>
-
-        <record id="crm_segmentation_tree-act" model="ir.actions.act_window">
-            <field name="name">Contacts Segmentation</field>
-            <field name="res_model">crm.segmentation</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new customer segmentation.
-              </p><p>
-                Create specific categories which you can assign to your
-                contacts to better manage your interactions with them. The
-                segmentation tool is able to assign categories to contacts
-                according to criteria you set.
-              </p>
-            </field>
-        </record>
-
-       <menuitem action="crm_segmentation_tree-act"
-            id="menu_crm_segmentation-act"
-            groups="base.group_no_one" sequence="4"
-            parent="base.menu_localisation"/>
-
-        <!-- Payment Mode Tree View -->
-
-        <record model="ir.ui.view" id="view_crm_payment_mode_tree">
-            <field name="name">crm.payment.mode.tree</field>
-            <field name="model">crm.payment.mode</field>
-            <field name="arch" type="xml">
-                <tree string="Payment Mode">
-                    <field name="name"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Payment Mode Form View -->
-
-        <record model="ir.ui.view" id="view_crm_payment_mode_form">
-            <field name="name">crm.payment.mode.form</field>
-            <field name="model">crm.payment.mode</field>
-            <field name="arch" type="xml">
-                <form string="Payment Mode">
-                    <group>
-                        <field name="name"/>
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- Payment Mode Action -->
-
-        <record id="action_crm_payment_mode" model="ir.actions.act_window">
-            <field name="name">Payment Mode</field>
-            <field name="res_model">crm.payment.mode</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
 
     </data>
 </openerp>

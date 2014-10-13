@@ -11,8 +11,8 @@
                         <field name="name" class="oe_inline"/>
                     </group>
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, section_id, context)"/>
-                        <field name="section_id" class="oe_inline" groups="base.group_multi_salesteams"/>
+                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="team_id" class="oe_inline" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Opportunities">
                         <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
@@ -26,7 +26,7 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="section_id" groups="base.group_multi_salesteams"/>
+                                <field name="team_id" groups="base.group_multi_salesteams"/>
                             </tree>
                         </field>
                     </group>
@@ -56,7 +56,7 @@
                         <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
                     </group>
                     <group string="Assign opportunities to">
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
                         <field name="user_ids" widget="many2many_tags"/>
                         <!-- Uncomment me in trunk -->
                         <!-- <field name="force_assignation" /> -->
@@ -74,7 +74,7 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="section_id" groups="base.group_multi_salesteams"/>
+                                <field name="team_id" groups="base.group_multi_salesteams"/>
                             </tree>
                         </field>
                     </group>

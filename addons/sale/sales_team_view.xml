@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="crm_case_section_salesteams_view_form" model="ir.ui.view">
-            <field name="name">crm.case.section.form</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+        <record id="crm_team_salesteams_view_form" model="ir.ui.view">
+            <field name="name">crm.team.form</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[@name='options_active']" position="inside">
@@ -18,10 +18,10 @@
             </field>
         </record>
 
-        <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
-            <field name="name">crm.case.section.kanban</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+        <record id="crm_team_salesteams_view_kanban" model="ir.ui.view">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='name']" position="after">

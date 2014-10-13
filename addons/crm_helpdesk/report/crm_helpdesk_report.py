@@ -41,7 +41,7 @@ class crm_helpdesk_report(osv.osv):
     _columns = {
         'date': fields.datetime('Date', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Team', readonly=True),
         'nbr': fields.integer('# of Requests', readonly=True),  # TDE FIXME master: rename into nbr_requests
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
@@ -51,9 +51,7 @@ class crm_helpdesk_report(osv.osv):
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
         'channel_id': fields.many2one('crm.tracking.medium', 'Channel'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.helpdesk')]"),
+        'categ_id': fields.many2one('crm.helpdesk.category', 'Category'),
         'planned_cost': fields.float('Planned Costs'),
         'create_date': fields.datetime('Creation Date' , readonly=True, select=True),
         'date_closed': fields.datetime('Close Date', readonly=True, select=True),
@@ -78,7 +76,7 @@ class crm_helpdesk_report(osv.osv):
                     c.date_closed,
                     c.state,
                     c.user_id,
-                    c.section_id,
+                    c.team_id,
                     c.partner_id,
                     c.company_id,
                     c.priority,
@@ -94,7 +92,7 @@ class crm_helpdesk_report(osv.osv):
                     crm_helpdesk c
                 where c.active = 'true'
                 group by c.date,\
-                     c.state, c.user_id,c.section_id,c.priority,\
+                     c.state, c.user_id,c.team_id,c.priority,\
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
                      c.categ_id,c.channel_id,c.planned_cost,c.id
             )""")
