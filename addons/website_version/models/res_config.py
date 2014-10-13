@@ -4,6 +4,7 @@ class analytics_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
     
     _columns = {
+        'ga_sync': fields.boolean("Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"),
         'ga_client_id': fields.char('Client ID'),
         'ga_client_secret': fields.char('Client Secret'),
         'google_management_authorization': fields.char('Google authorization')
