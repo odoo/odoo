@@ -2,6 +2,11 @@
 from openerp.osv import osv,fields
 from openerp.http import request
 
+from lxml import etree
+
+from openerp import tools
+from openerp.osv import osv, fields
+
 
 class ViewVersion(osv.Model):
     _inherit = "ir.ui.view"
@@ -67,30 +72,65 @@ class ViewVersion(osv.Model):
                 self.unlink(cr, uid, master_id, context=context)
             self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
+    _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id'))
+
+    @tools.ormcache_context(**_read_template_cache)
+    def _read_template(self, cr, uid, view_id, context=None):
+        arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
+        arch_tree = etree.fromstring(arch)
+
+        if 'lang' in context:
+            arch_tree = self.translate_qweb(cr, uid, view_id, arch_tree, context['lang'], context)
+
+        self.distribute_branding(arch_tree)
+        root = etree.Element('templates')
+        root.append(arch_tree)
+        arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+        return arch
+
+    @tools.ormcache(size=0)
+    def read_template(self, cr, uid, xml_id, context=None):
+        if isinstance(xml_id, (int, long)):
+            view_id = xml_id
+        else:
+            if '.' not in xml_id:
+                raise ValueError('Invalid template id: %r' % (xml_id,))
+            view_id = self.get_view_id(cr, uid, xml_id, context=context)
+        return self._read_template(cr, uid, view_id, context=context)
+
+    def clear_cache(self):
+        self._read_template.clear_cache(self)
+        self.get_view_id.clear_cache(self)
+
+
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         arch = super(ViewVersion, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
-        if context and context.get('website_id'):
+        v = self.browse(cr, uid, [view_id],context)[0]
+        if context and context.get('website_id') and v.type == 'qweb':
+            # if v.key == 'website.footer_custom':
+            #     from pudb import set_trace; set_trace()
             dico = {}
             view_arch = dict([(v, a) for a, v in arch])
-            keys = self.read(cr, 1, view_arch.keys(), ['key','snapshot_id','website_id'], context)
+            keys = self.read(cr, uid, view_arch.keys(), ['key','snapshot_id','website_id'], context)
             for k in keys:
                 if context.get('snapshot_id'):
-                    if k['snapshot_id'] == context.get('snapshot_id'):
+                    if k['snapshot_id'] and k['snapshot_id'][0] == context.get('snapshot_id'):
                         dico[k['key']] = k['id']
-                    elif k['snapshot_id'] == False and k['website_id'] == context.get('website_id') and not dico.get(k['key']):
+                    elif k['snapshot_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id') and not dico.get(k['key']):
                         dico[k['key']] = k['id']
                     elif k['snapshot_id'] == False and k['website_id'] == False and not dico.get(k['key']):
                         dico[k['key']] = k['id']
                 else:
-                    if k['snapshot_id'] == False and k['website_id'] == context.get('website_id'):
+                    if k['snapshot_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id'):
                         dico[k['key']] = k['id']
                     elif k['snapshot_id'] == False and k['website_id'] == False and not dico.get(k['key']):
                         dico[k['key']] = k['id']
             result = []
             for x in arch:
-                if x[1] in dico:
+                if x[1] in dico.values():
                     result.append(x)
-            #from pudb import set_trace; set_trace()
+            # if len(result)>0 and len(arch)>0:
+            #     from pudb import set_trace; set_trace()
             return result
         return arch 
 
