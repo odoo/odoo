@@ -3127,25 +3127,27 @@ class BaseModel(object):
         if len(records) > PREFETCH_MAX:
             records = records[:PREFETCH_MAX] | self
 
-        # by default, simply fetch field
-        fnames = {field.name}
-
-        if self.env.in_draft:
-            # we may be doing an onchange, do not prefetch other fields
-            pass
-        elif self.env.field_todo(field):
-            # field must be recomputed, do not prefetch records to recompute
-            records -= self.env.field_todo(field)
-        elif not self._context.get('prefetch_fields', True):
-            # do not prefetch other fields
-            pass
-        elif self._columns[field.name]._prefetch:
-            # here we can optimize: prefetch all classic and many2one fields
-            fnames = set(fname
+        # determine which fields can be prefetched
+        if not self.env.in_draft and \
+                self._context.get('prefetch_fields', True) and \
+                self._columns[field.name]._prefetch:
+            # prefetch all classic and many2one fields that the user can access
+            fnames = {fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
-            )
+            }
+        else:
+            fnames = {field.name}
+
+        # important: never prefetch fields to recompute!
+        get_recs_todo = self.env.field_todo
+        for fname in list(fnames):
+            if get_recs_todo(self._fields[fname]):
+                if fname == field.name:
+                    records -= get_recs_todo(field)
+                else:
+                    fnames.discard(fname)
 
         # fetch records with read()
         assert self in records and field.name in fnames
