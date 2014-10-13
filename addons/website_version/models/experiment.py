@@ -103,7 +103,7 @@ class Experiment(osv.Model):
                 if obj_metric:
                     current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
                     if current[1]["status"] == 'RUNNING' or current[1]["status"] == 'ENDED':
-                        raise Warning("You cannot modify the objective of an ended or running experiement.")
+                        raise Warning("You cannot modify the objective of an ended or running experiment.")
                     temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
                 if exp_snaps:
                     index = 0
@@ -173,7 +173,7 @@ class Experiment(osv.Model):
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
-        'objectives': fields.many2one('website_version.goals',string="Objectives"),
+        'objectives': fields.many2one('website_version.goals',string="Objective"),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),

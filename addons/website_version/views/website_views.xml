@@ -9,6 +9,15 @@
                 <!-- find field name, and insert field name before it -->
                 <field name="name" position="replace">
                 </field>
+                <!-- <field name="google_analytics_key" position="before">
+                    <label for="tuto_sync"/> 
+                    <field name="tuto_sync"/>                           
+                    <div> 
+                        <div attrs="{'invisible':[('tuto_sync','=',False)]}">
+                            <br/><h2>How to get the Google Analytics Key and the View ID</h2>                                   
+                        </div>
+                    </div>
+                </field> -->
                 <field name="google_analytics_key" position="after">
                         <field name="google_analytics_view_id" placeholder="7654321"/>
                         <field name="google_management_authorization" widget="rtoken"/>

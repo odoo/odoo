@@ -10,6 +10,7 @@ class NewWebsite(osv.Model):
     _inherit = "website"
 
     _columns = {
+        'tuto_sync': fields.boolean("Show tutorial"),
         'google_analytics_view_id': fields.char('View ID'),
         'google_management_authorization': fields.char('Google authorization')
     }
