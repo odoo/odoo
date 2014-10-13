@@ -42,6 +42,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             //TO Implement, will return task record along with its activities collection
             var self = this;
             var work_records = [];
+            var id;
             (this.get('task_activities')).each(_.bind( function(item) {
                 var exported_data = item.export_as_JSON();
                 if (self.project_timesheet_db.virtual_id_regex.test(exported_data.id)) {
@@ -50,17 +51,17 @@ function odoo_project_timesheet_models(project_timesheet) {
                     exported_data['user_id'] = project_timesheet.session.uid;
                     work_records.push([0, 0, exported_data]);
                 } else if(exported_data.command == 1) {
-                    var id = exported_data.id;
+                    id = exported_data.id;
                     delete exported_data.id;
                     delete exported_data.command;
                     work_records.push([1, id, exported_data]);
                 } else if (exported_data.command == 2) {
-                    var id = exported_data.id;
+                    id = exported_data.id;
                     delete exported_data.id;
                     delete exported_data.command;
                     work_records.push([2, id, false]);
                 } else {
-                    var id = exported_data.id;
+                    id = exported_data.id;
                     work_records.push([4, id, false]); //link the record if no condition match
                 }
             }, this));
@@ -96,13 +97,14 @@ function odoo_project_timesheet_models(project_timesheet) {
             //TO Implement, will return project record along with its task collection
             var self = this;
             var tasks = [];
+            var id;
             (this.get('tasks')).each(_.bind( function(item) {
                 var exported_data = item.export_as_JSON();
                 if (self.project_timesheet_db.virtual_id_regex.test(exported_data.id)) {
                     delete exported_data.id;
                     tasks.push([0, 0, exported_data]);
                 } else {
-                    var id = exported_data.id;
+                    id = exported_data.id;
                     delete exported_data.id;
                     tasks.push([1, id, exported_data]);
                 }
@@ -128,7 +130,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             /*
              * This method will search into task collection and will return key, value pairs for tasks
              */
-            console.log("name_search for task collection ::: ");
             var tasks = this.get('tasks');
             var search_result = [];
             var task_models = tasks.models;
@@ -258,7 +259,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                     var projects = [];
                     //set project_id in activities, where task_id is projects.id
                     _.each(tasks_read, function(task) {
-                        var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id});
+                        var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id;});
                         _.each(activities, function(activity) {
                             activity['project_id'] = task['project_id'];
                         });
@@ -293,22 +294,25 @@ function odoo_project_timesheet_models(project_timesheet) {
                 records.push(project_models[i].export_as_JSON());
             }
             _.each(records, function(record) {
+                var id;
                 if (self.project_timesheet_db.virtual_id_regex.test(record.id)) {
-                    var project_id = record.id;
+                    var project_id = record['id'];
                     delete record.id;
                     self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("create", [record]).then(function(res) {
                         //Remove record from localstorage if create get success
                         self.project_timesheet_db.remove_project_activities(project_id);
                     }));
                 } else {
-                    var id = record.id;
+                    id = record['id'];
                     delete record.id;
                     self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("write", [id, record]).then(function(res) {
                         //Remove record from localstorage if write get success
+                        console.log("Inside Success idddddd is ::: ", id);
                         self.project_timesheet_db.remove_project_activities(id);
                     }).fail(function(error, event) {
-                        console.log("error, event aare ::: ", error, event);
+                        console.log("error, event are ::: ", error, event);
                         if (error.data.arguments[0] == "MissingError") {
+                            console.log("Inside MissingError iddddd is ::: ", id);
                             //TO ASK: Remove records which are Missing in database
                             self.project_timesheet_db.remove_project_activities(id);
                         }

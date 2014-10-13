@@ -354,11 +354,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 $row.prependTo(this.$el.find(".activity_row:first").parent());
             }
 
+            this.$el.find(".pt_timer_button button").on("click", this.on_timer);
             //When Cancel is clicked it should move user to Activity List screen
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
-            this.$el.find(".pt_timer_button").on("click", this.on_button_timer);
             this.$el.find(".pt_add_activity").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
             });
@@ -397,15 +397,114 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
             }
         },
-        on_button_timer: function() {
-            //TO Implement
-        },
         get_pending_lines: function() {
+            console.log("get_pending_lines are inside ActivityScreen ::: ");
             return this.project_timesheet_model.get_pending_records();
         },
         get_total: function() {
             return this.activity_list.get_total();
-        }
+        },
+        get_current_UTCDate: function() {
+            var d = new Date();
+            return d.getUTCFullYear() +"-"+ (d.getUTCMonth()+1) +"-"+d.getUTCDate()+" "+_.str.sprintf("%02d", d.getUTCHours())+":"+_.str.sprintf("%02d", d.getUTCMinutes())+":"+_.str.sprintf("%02d", d.getUTCSeconds());//+"."+d.getUTCMilliseconds();
+        },
+        get_date_diff: function(new_date, old_date) {
+            var difference = moment.duration(moment(new_date).diff(moment(old_date))).asHours();
+            console.log("difference is ::: ", difference);
+            return parseFloat(difference.toFixed(2));
+        },
+        //TODO: Save timer Current time when Start Timer is clicked in localstoprage as a separate entry
+        //When Activity list screen is displayed at that time read localstorage entry time and set timer value
+        //Also setInterval of 1 second
+        initialize_timer: function() {
+            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Select a project", id_for_input: "project_id"});
+            this.project_m2o.on("change:value", this, function() {
+                var project = [this.project_m2o.get('value'), this.project_m2o.$input.val()];
+                this.project_timesheet_db.set_current_timer_activity({project_id: project});
+                this.set_project_model();
+            });
+            this.project_m2o.appendTo(this.$el.find(".project_m2o"));
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, classname: "pt_input_task pt_required", label: "Select a task", id_for_input: "task_id"});
+            this.task_m2o.on("change:value", this, function() {
+                var task = [this.task_m2o.get('value'), this.task_m2o.$input.val()];
+                this.project_timesheet_db.set_current_timer_activity({task_id: task});
+            });
+            this.task_m2o.appendTo(this.$el.find(".task_m2o"));
+        },
+        //Duplicate method same as Add Activity screen
+        set_project_model: function() {
+            var project_id = this.project_m2o.get('value');
+            var projects_collection = this.project_timesheet_model.get('projects');
+            var project_model = projects_collection.get(project_id);
+            this.task_m2o.model = project_model;
+        },
+        on_timer: function(e) {
+            var self = this;
+            if ($(e.target).hasClass("pt_timer_start")) {
+                var current_date = this.get_current_UTCDate();
+                this.project_timesheet_db.set_current_timer_activity({date: current_date});
+                this.start_interval();
+                this.initialize_timer();
+                this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+            } else {
+                //Read database current timer entry and add into activities list of db, remove current timer activity
+                //Also destroy m2o and reset timer
+                if (!this.is_valid_data()) {
+                    alert("Please fill up the required fields ");
+                    return;
+                }
+                if (this.intervalTimer) { clearInterval(this.intervalTimer);}
+                var activity = this.project_timesheet_db.load("timer_activity");
+                activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+                var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date);
+                activity['hours'] = hours;
+                activity['command'] = 0; //By default command = 0, activity which is to_create
+                console.log("Inside timer activity ::: ", activity);
+                this.project_timesheet_model.add_project(activity);
+                this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+                this.reset_timer();
+                this.reload_activity_list();
+            }
+        },
+        start_interval: function() {
+            var timer_activity = this.project_timesheet_db.get_current_timer_activity();
+            var self = this;
+            this.intervalTimer = setInterval(function(){
+                self.$el.find(".pt_duration").each(function() {
+                    var el_hour = $(this).find("span.hours");
+                    var el_minute = $(this).find("span.minutes");
+                    var minute = parseInt(el_minute.text());
+                    if(minute >= 60) {
+                        el_hour.text(_.str.sprintf("%02d", parseInt(el_hour.text()) + 1));
+                        minute = 0;
+                    }
+                    el_minute.text(_.str.sprintf("%02d", minute));
+                    var el_second = $(this).find("span.seconds");
+                    var seconds = parseInt(el_second.text()) + 1;
+                    if(seconds > 60) {
+                        el_minute.text(_.str.sprintf("%02d", parseInt(el_minute.text()) + 1));
+                        seconds = 0;
+                    }
+                    el_second.text(_.str.sprintf("%02d", seconds));
+                });
+            }, 1000);
+        },
+        is_valid_data: function() {
+            if (!this.project_m2o.get('value') || !this.task_m2o.get('value')) {
+                return false;
+            }
+            return true;
+        },
+        reset_timer: function() {
+            this.$el.find(".pt_duration .hours,.pt_duration .minutes,.pt_duration .seconds").text("00");
+            this.project_m2o.destroy();
+            this.task_m2o.destroy();
+            this.project_timesheet_db.save('timer_activity', {});
+        },
+        reload_activity_list: function() {
+            if (this.activity_list) {this.activity_list.destroy();}
+            this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, true, true);
+        },
     });
 
     project_timesheet.AddActivityScreen = project_timesheet.ScreenWidget.extend({
@@ -565,7 +664,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var project_id = this.project_m2o.get('value');
             var projects_collection = this.project_timesheet_model.get('projects');
             var project_model = projects_collection.get(project_id);
-            console.log("project_model is ::: ", projects_collection, project_model);
             this.task_m2o.model = project_model;
         },
         format_duration: function(field_val) {

@@ -200,8 +200,8 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
         add_id: function(id, name) {
             this.$input.data("id", id);
-            this.set({value: id});
             this.$input.val(name);
+            this.set({value: id});
         },
     });
 

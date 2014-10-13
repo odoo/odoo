@@ -68,13 +68,17 @@ function odoo_project_timesheet_db(project_timesheet) {
         remove_project_activities: function(project_id) {
             var activities = this.load("activities", []);
             var indexes = [];
-            for(var i = 0, len = activities.length; i < len; i++){
+            for(var i = 0, len = activities.length; i < len; i++) {
+                console.log("Inside remove_project_activities project_id are ::: ", activities[i].project_id[0], project_id, typeof activities[i].project_id[0], typeof project_id);
                 if(activities[i].project_id[0] === project_id){
                     indexes.push(i);
                 }
             }
-            _.each(indexes, function(index) {activities.splice(index, 1);});
-            this.save('activities',activities);
+            //_.each(indexes, function(index) {activities.splice(index, 1);});
+            console.log("filtered_activities.length is before ::: ", activities.length);
+            var filtered_activities = _.reject(activities, function(activity, index) { return _.contains(indexes, index); });
+            console.log("filtered_activities.length is after ::: ", filtered_activities.length);
+            this.save('activities', filtered_activities);
         },
         get_pending_records: function() {
             /*
@@ -88,5 +92,15 @@ function odoo_project_timesheet_db(project_timesheet) {
             });
             return pending_records.length;
         },
+        get_current_timer_activity: function() {
+            return this.load("timer_activity") || {};
+        },
+        set_current_timer_activity: function(data) {
+            var current_timer_activity = this.load("timer_activity") || {};
+            _.each(data, function(value, key) {
+                current_timer_activity[key] = value;
+            });
+            this.save("timer_activity", current_timer_activity);
+        }
     });
 }
