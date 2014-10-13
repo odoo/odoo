@@ -27,7 +27,7 @@ class Experiment_snapshot(osv.Model):
     _columns = {
         'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ,ondelete='cascade'),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True,ondelete='cascade'),
-        'frequency': fields.selection([('10','Rare'),('50','Sometimes'),('100','Offen')], 'Frequency'),
+        'frequency': fields.selection([('10','Once'),('50','Twice'),('80','More')], 'Frequency'),
         'google_index': fields.function(_get_index,type='integer', string='Google_index'),
     }
 
