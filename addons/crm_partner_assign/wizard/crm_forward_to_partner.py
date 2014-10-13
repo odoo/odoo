@@ -139,8 +139,6 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
             if stage_id:
                 values['stage_id'] = stage_id
-            if partner_leads['partner'].user_id:
-                values['section_id'] = partner_leads['partner'].user_id.default_section_id.id
             lead_obj.write(cr, uid, lead_ids, values)
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True

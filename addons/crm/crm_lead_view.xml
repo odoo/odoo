@@ -7,7 +7,7 @@
         <!-- Stage Search view -->
         <record id="crm_lead_stage_search" model="ir.ui.view">
             <field name="name">Stage - Search</field>
-            <field name="model">crm.case.stage</field>
+            <field name="model">crm.stage</field>
             <field name="arch" type="xml">
                 <search string="Stage Search">
                     <field name="name"/>
@@ -21,9 +21,9 @@
         <!-- Stage Form view -->
         <record id="crm_lead_stage_act" model="ir.actions.act_window">
             <field name="name">Stages</field>
-            <field name="res_model">crm.case.stage</field>
+            <field name="res_model">crm.stage</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_stage_tree"/>
+            <field name="view_id" ref="crm.crm_stage_tree"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to set a new stage in your lead/opportunity pipeline.
@@ -40,14 +40,35 @@
             LEADS/OPPORTUNITIES CATEGORIES
         -->
 
-        <!-- Categories Form View -->
-        <record id="crm_lead_categ_action" model="ir.actions.act_window">
+        <record id="crm_lead_tag_form" model="ir.ui.view">
+            <field name="name">crm.lead.tag.form</field>
+            <field name="model">crm.lead.tag</field>
+            <field name="arch" type="xml">
+                <form string="Sales Tags">
+                    <group>
+                        <field name="name"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_lead_tag_tree" model="ir.ui.view">
+            <field name="name">crm.lead.tag.tree</field>
+            <field name="model">crm.lead.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Tags">
+                    <field name="name"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="crm_lead_tag_action" model="ir.actions.act_window">
             <field name="name">Sales Tags</field>
-            <field name="res_model">crm.case.categ</field>
+            <field name="res_model">crm.lead.tag</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_categ_tree-view"/>
-            <field name="context" eval="{'object_id': ref('model_crm_lead')}"/>
-            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+            <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new sales tag.
@@ -60,7 +81,7 @@
             </field>
         </record>
 
-        <menuitem action="crm_lead_categ_action"
+        <menuitem action="crm_lead_tag_action"
             id="menu_crm_lead_categ" name="Tags"
             parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
 
@@ -95,7 +116,7 @@
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
-                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
@@ -103,7 +124,7 @@
                     <div class="oe_right oe_button_box" name="buttons">
                         <button class="oe_inline oe_stat_button" type="action"
                             context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}"
-                            name="%(crm.crm_case_categ_phone_incoming0)d" icon="fa-phone">
+                            name="%(crm.crm_phonecall_category_phone_incoming0)d" icon="fa-phone">
                             <div>Calls</div>
                         </button>
                     </div>
@@ -116,9 +137,8 @@
                             <field name="partner_name" string="Company Name"/>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
-                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}"/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
@@ -146,22 +166,18 @@
                         <group>
                             <field name="user_id" on_change="on_change_user(user_id, context)"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'] }"/>
-                            <label for="section_id" groups="base.group_multi_salesteams"/>
+                            <label for="team_id" groups="base.group_multi_salesteams"/>
                             <div groups="base.group_multi_salesteams">
-                                <field name="section_id"/>
+                                <field name="team_id"/>
                                 <button name="case_escalate" string="Escalate"
                                         type="object" class="oe_link"
-                                        attrs="{'invisible': ['|', ('section_id','=',False), ('probability', '=', 100)]}"/>
+                                        attrs="{'invisible': ['|', ('team_id','=',False), ('probability', '=', 100)]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
                             <field name="priority" widget="priority"/>
-                            <field name="categ_ids"
-                                widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"
-                                context="{'object_name': 'crm.lead'}"
-                            />
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -228,7 +244,7 @@
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="probability" invisible="1"/>
                     <field name="campaign_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
@@ -277,8 +293,8 @@
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
-                                        <li><a type="action" name="%(crm.crm_case_categ_phone_incoming0)d" >Calls</a></li>
+                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
+                                        <li><a type="action" name="%(crm.crm_phonecall_category_phone_incoming0)d">Calls</a></li>
                                         <li><a name="action_schedule_meeting" type="object">Schedule Meeting</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -325,8 +341,8 @@
             <field name="arch" type="xml">
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
-                    <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="create_date"/>
@@ -346,7 +362,7 @@
                             help="Leads that did not ask not to be included in mass mailing campaigns"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
@@ -376,12 +392,12 @@
                         <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
-                            domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
+                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
                         <div name="buttons" class="oe_right oe_button_box">
                             <button class="oe_inline oe_stat_button" type="action"
-                                name="%(crm.crm_case_categ_phone_incoming0)d" icon="fa-phone"
+                                name="%(crm.crm_phonecall_category_phone_incoming0)d" icon="fa-phone"
                                 context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}">
                                 <div>Calls</div>
                             </button>
@@ -425,19 +441,15 @@
 
                             <group>
                                 <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
-                                <label for="section_id" groups="base.group_multi_salesteams"/>
+                                <label for="team_id" groups="base.group_multi_salesteams"/>
                                 <div groups="base.group_multi_salesteams">
-                                    <field name="section_id" widget="selection"/>
+                                    <field name="team_id" widget="selection"/>
                                     <button name="case_escalate" string="Escalate" type="object" class="oe_link"
-                                            attrs="{'invisible': ['|', ('section_id','=',False), ('probability', '=', 100)]}"/>
+                                            attrs="{'invisible': ['|', ('team_id','=',False), ('probability', '=', 100)]}"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="categ_ids"
-                                    widget="many2many_tags"
-                                    context="{'object_name': 'crm.lead'}"
-                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
-
+                                <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>
 
@@ -490,7 +502,6 @@
                         </page>
                         <page string="Fund Raising" groups="crm.group_fund_raising">
                             <group>
-                                <field name="payment_mode"/>
                                 <field name="planned_cost"/>
                             </group>
                         </page>
@@ -523,7 +534,7 @@
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" avg="Avg. of Probability"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
@@ -541,8 +552,8 @@
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                    <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="stage_id" domain="[]"/>
@@ -564,7 +575,7 @@
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>

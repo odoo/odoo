@@ -5,8 +5,8 @@
     uid: 'crm_res_users_salesmanager'
 -
   !python {model: crm.lead}: |
-    section_id = self.pool.get('crm.case.section').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("sales_team.crm_case_section_2")})
-    self.write(cr, uid, [ref("crm_case_1")], {'section_id': section_id})
+    team_id = self.pool.get('crm.team').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("sales_team.crm_team_2")})
+    self.write(cr, uid, [ref("crm_case_1")], {'team_id': team_id})
 -
   Salesman check unqualified lead .
 -
@@ -21,4 +21,4 @@
   Salesman check the lead is correctly escalated to the parent team.
 -
   !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
-    - section_id.name == "Marketing"
+    - team_id.name == "Marketing"

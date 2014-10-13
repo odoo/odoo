@@ -50,31 +50,11 @@
         <record model="crm.tracking.medium" id="crm_medium_google_adwords">
             <field name="name">Google Adwords</field>
         </record>
-        <record model="crm.case.section" id="sales_team.section_sales_department">
+
+
+        <record model="crm.team" id="sales_team.team_sales_department">
             <field name="use_leads">True</field>
             <field name="alias_name">sales</field>
-        </record>
-
-        <!-- Payment Mode -->
-
-        <record model="crm.payment.mode" id="payment_mode_1">
-            <field name="name">Cash</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-        </record>
-
-        <record model="crm.payment.mode" id="payment_mode_2">
-            <field name="name">Check</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-        </record>
-
-        <record model="crm.payment.mode" id="payment_mode_3">
-            <field name="name">Credit Card</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
-        </record>
-
-        <record model="crm.payment.mode" id="payment_mode_4">
-            <field name="name">Demand Draft</field>
-            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
         <!--default alias for leads-->
@@ -82,7 +62,7 @@
             <field name="alias_name">info</field>
             <field name="alias_model_id" ref="model_crm_lead"/>
             <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_parent_model_id" ref="model_crm_case_section"/>
+            <field name="alias_parent_model_id" ref="model_crm_team"/>
         </record>
 
         <!-- notify all employees of module installation -->
