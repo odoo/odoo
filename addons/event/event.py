@@ -288,7 +288,7 @@ class event_registration(models.Model):
     @api.model
     def create(self, vals):
         registration = super(event_registration, self).create(vals)
-        if registration._check_auto_confirmation():
+        if registration._check_auto_confirmation()[0]:
             registration.sudo().confirm_registration()
         return registration
 
