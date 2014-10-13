@@ -90,7 +90,14 @@
     					})
     					.fail(function() {DefferedForm.reject();});
     				}
-    				$('#oe_snippets').removeClass('hidden');
+    				$('#oe_snippets')   .removeClass('hidden')
+                                        .find('.active')
+                                            .removeClass('active');
+
+                    $('a[href=#snippet_form]').parent()
+                                        .addClass('active');
+                    $('#oe_snippets').find('#snippet_form')
+                                        .addClass('active');
     				self.wizard.modal('hide');
         		});	
     		};
@@ -133,7 +140,7 @@
 	       		});
         		
 
-				
+				self.organizeForm();
 				self.wizard.find('select').on('change',_.bind(self.organizeForm,self));
 				self.wizard.find('.validate').on('click',self.validate(DefFormPopUp));
     		});

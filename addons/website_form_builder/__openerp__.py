@@ -1,7 +1,7 @@
 {
-    'name': 'Contact Form',
+    'name': 'Website Form Builder',
     'category': 'Website',
-    'summary': 'Create Leads From Contact Form',
+    'summary': 'Build your contact form and link it to the database',
     'version': '1.0',
     'description': """
 OpenERP Contact Form
