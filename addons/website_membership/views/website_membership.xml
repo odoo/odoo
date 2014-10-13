@@ -86,7 +86,7 @@
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
             <t t-foreach="countries">
-                <li t-if="country_id" t-att-class="country_id[0] == current_country_id and 'active' or ''">
+                <li t-if="country_id" t-att-class="country_id and country_id[0] == current_country_id and 'active' or ''">
                     <a t-attf-href="/members/#{ membership and 'association/%s/' % membership.id or '' }#{ country_id[0] and 'country/%s/' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
                         <span class="badge pull-right"><t t-esc="country_id_count or '0'"/></span>
                     </a>
