@@ -606,6 +606,7 @@
                 <button class="oe_dropdown_toggle oe_dropdown_arrow" t-if="section.name != 'buttons'">
                     <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
+                    <i class="fa fa-caret-down"/>
                 </button>
                 <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
                     <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
