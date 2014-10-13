@@ -67,5 +67,32 @@ class ViewVersion(osv.Model):
                 self.unlink(cr, uid, master_id, context=context)
             self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
+    def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
+        arch = super(ViewVersion, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
+        if context and context.get('website_id'):
+            dico = {}
+            view_arch = dict([(v, a) for a, v in arch])
+            keys = self.read(cr, 1, view_arch.keys(), ['key','snapshot_id','website_id'], context)
+            for k in keys:
+                if context.get('snapshot_id'):
+                    if k['snapshot_id'] == context.get('snapshot_id'):
+                        dico[k['key']] = k['id']
+                    elif k['snapshot_id'] == False and k['website_id'] == context.get('website_id') and not dico.get(k['key']):
+                        dico[k['key']] = k['id']
+                    elif k['snapshot_id'] == False and k['website_id'] == False and not dico.get(k['key']):
+                        dico[k['key']] = k['id']
+                else:
+                    if k['snapshot_id'] == False and k['website_id'] == context.get('website_id'):
+                        dico[k['key']] = k['id']
+                    elif k['snapshot_id'] == False and k['website_id'] == False and not dico.get(k['key']):
+                        dico[k['key']] = k['id']
+            result = []
+            for x in arch:
+                if x[1] in dico:
+                    result.append(x)
+            #from pudb import set_trace; set_trace()
+            return result
+        return arch 
+
         
                 

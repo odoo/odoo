@@ -230,3 +230,13 @@ class view(osv.osv):
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
 
+    # def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
+    #     arch = super(view, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
+    #     #from pudb import set_trace; set_trace()
+    #     view_arch = dict([(v, a) for a, v in arch])
+    #     if context and 'website_id' in context:
+    #         for view_rec in self.browse(cr, 1, view_arch.keys(), context):
+    #             if view_rec.website_id and view_rec.website_id.id != context['website_id']:
+    #                 view_arch.pop(view_rec.id)
+    #     return [(arch, view_id) for view_id, arch in view_arch.items()]
+
