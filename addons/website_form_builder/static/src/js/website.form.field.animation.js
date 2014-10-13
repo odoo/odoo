@@ -21,7 +21,16 @@
 				var args = {"context": openerp.website.get_context()};
 				self.$target.find('.form-data').each(function(i,elem){
 					
-					if($(elem).find('input[type=radio]').length != 0) {
+					if($(elem).is('input[type=file]')) {
+						var len = $(elem).prop('files').length;
+
+						$.each($(elem).prop('files'), function (i, val) {
+							var name = $(elem).prop('name');
+							if(len > 1) name = name+'-'+i;
+							args[name] = val;
+						});
+					}
+					else if($(elem).find('input[type=radio]').length != 0) {
 						var subelem = $(elem).find('input[type=radio]:checked');
 						args[$(subelem).prop('name')] = subelem.val();
 					} 
@@ -44,7 +53,29 @@
 						args[name] = subargs; 	
 					} else  args[$(elem).prop('name')] = ($(elem).val()) ? $(elem).val() : 0;
 				});
-				openerp.jsonRpc('/contactus/'+model, 'call', args).then(function (data) {
+				
+				var progress = $(openerp.qweb.render('website.form.editor.progress'))
+									.appendTo('body')
+									.modal({"keyboard" :true});
+				var display_size = function(size) {
+					var i=0;
+					var newsize = size;
+					while((newsize > 0) && (i < 4)) {
+						i++;
+						newsize = newsize >> 10;
+					}
+					newsize = size >> (i*10-10);
+					switch(i) {
+						case 2 : return newsize+' Ko';
+						case 3 : return newsize+' Mo'; 
+						case 4 : return newsize+' Go'; 
+						default: return newsize+' o'; 
+					}
+				};
+				/*openerp.jsonRpc('/contactus/'+model, 'call', args)*/
+				openerp.post('/contactus/'+model,args)
+				.then(function (data) {
+						progress.remove();
 				    	if(data) {
 				    		if(data.id) $(location).attr('href',"contactus_success");
 				    		else {
@@ -68,6 +99,20 @@
 				    			});
 				    		}
 				    	}
+				})
+				.fail(function(data){
+					$(location).attr('href',"contactus_fail");
+				})
+				.progress(function(data){
+					var label = (data.pcent == 100) ? 'Please wait ...':data.pcent+'%';
+					console.log('progress', data);
+					progress.find('.progress-bar')
+								.attr('aria-valuenow',data.pcent)
+								.html(label)
+								.width(data.pcent+'%');
+					console.log(display_size(data.loaded));
+					progress.find('.download-size').html(display_size(data.loaded));
+					progress.find('.total-size').html(display_size(data.total));
 				});
 			};
 		}

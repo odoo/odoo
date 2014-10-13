@@ -101,6 +101,9 @@
     		else 
     			this.wizard.find('.form-action-mailto').addClass('hidden');
     	},
+    	execute: function (type, value, $li) {
+    		if (type == 'click') this.on_prompt();		
+    	},
         on_prompt: function () {
             var self = this;
             var DefFormPopUp = $.Deferred();
@@ -143,7 +146,6 @@
             this.on_prompt().fail(function () {  self.editor.on_remove(); });
         },
         start : function () {
-        	this.$el.find(".js_action_form_list").on("click", _.bind(this.on_prompt, this));
         	this._super();        
         },
         clean_for_save: function () {},
@@ -764,7 +766,12 @@
     			else 			DefferedForm.reject();
     		};
     	},
-    	
+    	execute: function (type, value, $li) {
+    		if (type == 'click') {
+   				var self = this;
+        		this.on_prompt().then(function() {self.removeAction(); });	
+        	}
+    	},
         on_prompt: function () {
         	
             var self 	= this;
@@ -842,18 +849,11 @@
 		        }
 		    });
         },
-        launcher : function() {
-        	var self = this;
-        	self.on_prompt().then(function() {self.removeAction(); });
-        },
         start : function () {
         	
             var self = this;
             if(this.$target.data('form') == 'hidden') this.$target.addClass('website-form-editor-hidden-under-edit');
-            model.init(this.$target.parent().attr('data-model')).then(function() {
-            	console.log(model);
-	            self.$el.find(".js_action_form_list").on("click", _.bind(self.launcher, self));
-	       });
+            model.init(this.$target.parent().attr('data-model'));
 	       this._super();
         },
         clean_for_save: function () {

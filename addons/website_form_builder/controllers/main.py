@@ -137,7 +137,7 @@ class contactus(http.Controller):
     def fail(self, **kwargs):
          return request.website.render("website_form_builder.contactus_fail") 
      
-    @http.route('/contactus/<model>', type='json', auth="public", website=True)     
+    @http.route('/contactus/<model>', type='http', auth="public", website=True)     
     def contactus(self,model, **kwargs):
         
         self._MODEL_WHITE_LIST = []
@@ -156,7 +156,7 @@ class contactus(http.Controller):
         self._MODEL_WHITE_LIST = request.registry['website.form'].get_authorized_models(request.cr, SUPERUSER_ID)
         
         if not self.checkModel(model) :
-            return False
+            return request.website.render("website_form_builder.xmlresponse",{'response':False})
         
         self._BLACKLIST = request.registry['website.form'].get_blacklist(request.cr, SUPERUSER_ID, self._model)
         self._REQUIRED = request.registry['website.form'].get_required_fields(request.cr, SUPERUSER_ID, self._model)
@@ -180,5 +180,10 @@ class contactus(http.Controller):
             self.linkAttachment(id)
         
         print self.error
-        
-        return self.error and {'id': id, 'fail_required' : self.error} or {'id': id, 'fail_required': None} 
+
+        if self.error : 
+            response = json.dumps({'id': id, 'fail_required' : self.error});
+        else : 
+            response = json.dumps({'id': id, 'fail_required': None});
+
+        return request.website.render("website_form_builder.xmlresponse",{'response':response})

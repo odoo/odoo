@@ -802,6 +802,68 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
     }
 });
 
+openerp.post = function (controller_url, data) {
+
+    var progressHandler = function (deferred) {
+        return function (state) {
+            if(state.lengthComputable)
+                deferred.notify({
+                    loaded  : state.loaded,
+                    total   : state.total,
+                    pcent   : Math.round((state.loaded/state.total)*100)
+                });
+        };
+    };
+
+    var compatibility = (typeof(FormData) != undefined);
+    var def = $.Deferred();
+    var xhr = new XMLHttpRequest();
+
+    
+
+    xhr.onreadystatechange = function(d) {
+        switch(xhr.readyState) {
+            case 0: // object under construction
+            case 1: // object successfully initialized
+            case 2: // header received
+            case 3: // loading response
+                break;
+            case 4: // end of communication
+                var result = $(xhr.responseText).data('json');
+                if(((xhr.status == 200) || 
+                    (xhr.status == 0))  &&
+                    (result != false))      def.resolve(result);
+                else                        def.reject(result);
+        }
+    };
+
+    var postData = compatibility ? new FormData() : new FormDataCompatibility(); 
+   
+    $.each(data, function(i,val) {
+        postData.append(i, val);
+    });
+
+    if(compatibility) {
+        if(xhr.upload != undefined) xhr.upload.addEventListener('progress', progressHandler(def), false);
+        xhr.open("POST", controller_url, true);
+        xhr.send(postData);
+    }
+    else {
+        xhr.open("POST", controller_url, true);
+        postData.setContentTypeHeader(xhr);
+        xhr.sendAsBinary(postData.buildBody());
+    }
+ 
+    return def;
+},
+openerp.uploadFile = function(controller_url, files) {
+    var data = [];
+    $.each(files,function(i,file){
+        data.append({'name': file.name, 'value': file});
+    });
+    return genericAsyncPost(controller_url,data);
+};
+
 var genericJsonRpc = function(fct_name, params, fct) {
     var data = {
         jsonrpc: "2.0",
