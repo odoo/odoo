@@ -407,50 +407,52 @@ class account_bank_statement(models.Model):
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
                     st_line.bank_account_id.write({'partner_id': st_line.partner_id.id})
 
-class account_bank_statement_line(osv.osv):
+class account_bank_statement_line(models.Model):
 
-    def unlink(self, cr, uid, ids, context=None):
-        for item in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def unlink(self):
+        for item in self:
             if item.journal_entry_id:
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
                 )
-        return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
+        return super(account_bank_statement_line, self).unlink()
 
-    def cancel(self, cr, uid, ids, context=None):
-        account_move_obj = self.pool.get('account.move')
-        move_ids = []
-        for line in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def cancel(self):
+        moves = []
+        for line in self:
             if line.journal_entry_id:
-                move_ids.append(line.journal_entry_id.id)
+                moves.append(line.journal_entry_id)
                 for aml in line.journal_entry_id.line_id:
                     if aml.reconcile_id:
-                        move_lines = [l.id for l in aml.reconcile_id.line_id]
-                        move_lines.remove(aml.id)
-                        self.pool.get('account.move.reconcile').unlink(cr, uid, [aml.reconcile_id.id], context=context)
+                        move_lines = [l for l in aml.reconcile_id.line_id]
+                        move_lines.remove(aml)
+                        aml.reconcile_id.unlink()
                         if len(move_lines) >= 2:
-                            self.pool.get('account.move.line').reconcile_partial(cr, uid, move_lines, 'auto', context=context)
-        if move_ids:
-            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
-            account_move_obj.unlink(cr, uid, move_ids, context)
+                            move_lines.reconcile_partial('auto')
+        if moves:
+            moves.button_cancel()
+            moves.unlink()
 
-    def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, search_reconciliation_proposition=True, context=None):
+    @api.multi
+    def get_data_for_reconciliations(self, excluded_ids=None, search_reconciliation_proposition=True):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
         ret = []
         if excluded_ids is None:
             excluded_ids = []
 
-        for st_line in self.browse(cr, uid, ids, context=context):
+        for st_line in self:
             reconciliation_data = {}
             if search_reconciliation_proposition:
-                reconciliation_proposition = self.get_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
+                reconciliation_proposition = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
                 for mv_line in reconciliation_proposition:
                     excluded_ids.append(mv_line['id'])
                 reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
             else:
                 reconciliation_data['reconciliation_proposition'] = []
-            st_line = self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context)
+            st_line = st_line.get_statement_line_for_reconciliation()
             reconciliation_data['st_line'] = st_line
             ret.append(reconciliation_data)
 
@@ -754,45 +756,46 @@ class account_bank_statement_line(osv.osv):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _inherit = ['ir.needaction_mixin']
-    _columns = {
-        'name': fields.char('Communication', required=True),
-        'date': fields.date('Date', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
-        'account_id': fields.many2one('account.account', 'Account', domain=[('deprecated', '=', False)], help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
-        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
-        'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
-        'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
-        'ref': fields.char('Reference'),
-        'note': fields.text('Notes'),
-        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
-        'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
-        'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
-    }
-    _defaults = {
-        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
-    }
 
-class account_statement_operation_template(osv.osv):
+    name = fields.Char(string='Communication', required=True, default=lambda self: self.env['ir.sequence'].get('account.bank.statement.line'))
+    date = fields.Date(string='Date', required=True, default=lambda self: self._context.get('date', fields.Date.context_today))
+    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
+    account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
+        help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account")
+    statement_id = fields.Many2one('account.bank.statement', string='Statement', index=True, required=True, ondelete='cascade')
+    journal_id = fields.Many2one('account.journal', related='statement_id.journal_id', string='Journal', store=True, readonly=True)
+    partner_name = fields.Char(string='Partner Name',
+        help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found).")
+    ref = fields.Char(string='Reference')
+    note = fields.Text(string='Notes')
+    sequence = fields.Integer(string='Sequence', index=True, help="Gives the sequence order when displaying a list of bank statement lines.")
+    company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
+    journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False),
+    amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.",
+        digits=dp.get_precision('Account'))
+    currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+
+
+class account_statement_operation_template(models.Model):
     _name = "account.statement.operation.template"
     _description = "Preset for the lines that can be created in a bank statement reconciliation"
-    _columns = {
-        'name': fields.char('Button Label', required=True),
-        'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view'), ('deprecated', '=', False)]),
-        'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
-        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='cascade'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
-    }
-    _defaults = {
-        'amount_type': 'percentage_of_balance',
-        'amount': 100.0
-    }
+
+    name = fields.Char(string='Button Label', required=True)
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    label = fields.Char(string='Label')
+    amount_type = fields.Selection([
+            ('fixed', 'Fixed'),
+            ('percentage_of_total', 'Percentage of total amount'),
+            ('percentage_of_balance', 'Percentage of open balance')
+        ],
+        string='Amount type', required=True, default='percentage_of_balance')
+    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'),
+        help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').",
+        required=True, default=100.0)
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='cascade')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='cascade')
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
