@@ -1968,11 +1968,9 @@ openerp.mail = function (session) {
          * @param {Object} defaults ??
          */
         load_searchview: function (defaults) {
-            var self = this;
-            var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
-            var options = {
-                $buttons: this.$('.oe-search-options')
-            };
+            var self = this,
+                ds_msg = new session.web.DataSetSearch(this, 'mail.message'),
+                options = { $buttons: this.$('.oe-search-options') };
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, options);
             this.searchview.on('search_data', this, this.do_searchview_search);
             this.searchview.appendTo(this.$('.oe-view-manager-search-view')).then(function () {

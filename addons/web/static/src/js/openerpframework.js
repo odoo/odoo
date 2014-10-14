@@ -287,7 +287,17 @@ openerp.ParentedMixin = {
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
-    }
+    },
+    /**
+     * Find the closest ancestor matching predicate
+     */
+    findAncestor: function (predicate) {
+        var ancestor = this;
+        while (!(predicate(ancestor)) && ancestor && ancestor.getParent) {
+            ancestor = ancestor.getParent();
+        }
+        return ancestor;
+    },
 };
 
 /**

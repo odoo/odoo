@@ -3,7 +3,7 @@ var _t = instance.web._t;
 var QWeb = instance.web.qweb;
 instance.web.ViewManagerAction.include({
     on_debug_changed:function(evt){
-        var val = $(evt.target).data().action,
+        var val = $(evt.target).data('action'),
             current_view = this.active_view.controller;
         if(val === "manage_views"){
             if (current_view.fields_view && current_view.fields_view.arch) {

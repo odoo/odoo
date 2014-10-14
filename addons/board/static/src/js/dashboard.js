@@ -8,6 +8,16 @@ if (!instance.board) {
 }
 
 instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
+    events: {
+        'click .oe_dashboard_link_reset': 'on_reset',
+        'click .oe_dashboard_link_change_layout': 'on_change_layout',
+        'click h2.oe_header span.oe_header_txt': function (ev) {
+            if(ev.target === ev.currentTarget)
+                self.on_header_string($(ev.target).parent());
+        },
+        'click .oe_dashboard_column .oe_fold': 'on_fold_action',
+        'click .oe_dashboard_column .oe_close': 'on_close_action',
+    },
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';
@@ -27,16 +37,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var old_title = this.__parentedParent.get('title');
         this.__parentedParent.on('load_record', self, function(){
             self.__parentedParent.set({ 'title': old_title});
-        })
-        // Events
-        this.$('.oe_dashboard_link_reset').click(this.on_reset);
-        this.$('.oe_dashboard_link_change_layout').click(this.on_change_layout);
-        this.$('h2.oe_header span.oe_header_txt').click(function(ev){
-            if(ev.target === ev.currentTarget)
-                self.on_header_string($(ev.target).parent());
         });
-        this.$el.delegate('.oe_dashboard_column .oe_fold', 'click', this.on_fold_action);
-        this.$el.delegate('.oe_dashboard_column .oe_close', 'click', this.on_close_action);
 
         // Init actions
         _.each(this.node.children, function(column, column_index) {
@@ -332,10 +333,10 @@ instance.web.search.FavoriteMenu.include({
         var self = this;
         this._super(filters);
         this.$('.favorites-menu').append(QWeb.render('SearchView.addtodashboard'));
-        this.$add_to_dashboard = this.$('.add-to-dashboard');
-        this.$add_dashboard_btn = this.$add_to_dashboard.eq(2).find('button');
-        this.$add_dashboard_input = this.$add_to_dashboard.eq(1).find('input');
-        this.$add_dashboard_link = this.$add_to_dashboard.first().find('a');
+        var $add_to_dashboard = this.$('.add-to-dashboard');
+        this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
+        this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
+        this.$add_dashboard_link = $add_to_dashboard.first().find('a');
         var title = this.searchview.getParent().title;
         this.$add_dashboard_input.val(title);
         this.$add_dashboard_link.click(function () {
@@ -344,12 +345,12 @@ instance.web.search.FavoriteMenu.include({
         this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
     },
     toggle_dashboard_menu: function (is_open) {
-        this.$add_to_dashboard.first()
+        this.$add_dashboard_link
             .toggleClass('closed-menu', !is_open)
             .toggleClass('open-menu', is_open);
         this.$add_dashboard_btn.toggle(is_open);
         this.$add_dashboard_input.toggle(is_open);
-        if (this.$add_to_dashboard.first().hasClass('open-menu')) {
+        if (this.$add_dashboard_link.hasClass('open-menu')) {
             this.$add_dashboard_input.focus();
         }
     },
@@ -358,12 +359,10 @@ instance.web.search.FavoriteMenu.include({
         this._super();
     },
     add_dashboard: function () {
-        var self = this;
-        var view_manager = this.getParent();
-        while (!(view_manager instanceof instance.web.ViewManager) &&
-                view_manager && view_manager.getParent) {
-            view_manager = view_manager.getParent();
-        }
+        var self = this,
+            view_manager = this.findAncestor(function (a) {
+                return a instanceof instance.web.ViewManager
+            });
         if (!view_manager.action) {
             this.do_warn(_t("Can't find dashboard action"));
             return;
@@ -401,10 +400,10 @@ instance.web.search.FavoriteMenu.include({
                     name: name,
                 });
             }).then(function (r) {
-                if (r === false) {
-                    self.do_warn(_t("Could not add filter to dashboard"));
+                if (r) {
+                    self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
                 } else {
-                    self.do_notify(_t("'"+name + "' added to dashboard"), '');
+                    self.do_warn(_t("Could not add filter to dashboard"));
                 }
             });
     },

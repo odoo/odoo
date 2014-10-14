@@ -122,7 +122,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
-        return [];
+        // this method is disabled for now.  This requires extensive changes because the
+        // search view works quite differently:  But the graph view is going to be split 
+        // soon in pivot view and graph view.  The pivot view will then properly handle 
+        // groupbys.  
+        return [];  
         var self = this;
 
         var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {

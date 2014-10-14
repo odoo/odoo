@@ -119,19 +119,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_widget = null;            
         }
     },
-    add_breadcrumb_url: function (url, label) {
-        // Add a pseudo breadcrumb that will redirect to an url
-        // this.push_breadcrumb({
-        //     show: function() {
-        //         instance.web.redirect(url);
-        //     },
-        //     hide: function() {},
-        //     destroy: function() {},
-        //     get_title: function() {
-        //         return label;
-        //     }
-        // });
-    },
     do_push_state: function(state) {
         if (!this.webclient || !this.webclient.do_push_state || this.dialog) {
             return;
@@ -179,12 +166,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
-        if (!warm && 'return_label' in state) {
-            var return_url = state.return_url || document.referrer;
-            if (return_url) {
-                this.add_breadcrumb_url(return_url, state.return_label);
-            }
-        }
         if (state.action) {
             if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
                 var action_client = {
@@ -517,7 +498,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this._super(parent);
 
-        this.flags = flags;
+        this.flags = flags || {};
         this.dataset = dataset;
         this.view_order = [];
         this.url_states = {};
@@ -785,16 +766,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     },    
     do_load_state: function(state, warm) {
         var self = this,
-            defs = [];
+            def = this.active_view.created;
         if (state.view_type && state.view_type !== this.active_view.type) {
-            defs.push(
-                this.active_view.created.then(function() {
-                    return self.switch_mode(state.view_type, true);
-                })
-            );
-        }
-
-        $.when(this.active_view ? this.active_view.created : null, defs).done(function() {
+            def = def.then(function() {
+                return self.switch_mode(state.view_type, true);
+            });
+        } 
+        def.done(function() {
             self.active_view.controller.do_load_state(state, warm);
         });
     },

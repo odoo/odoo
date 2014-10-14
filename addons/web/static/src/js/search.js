@@ -333,9 +333,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         },
         'click .oe_searchview_unfold_drawer': function (e) {
             e.stopImmediatePropagation();
-            $(e.target).toggleClass('fa-caret-down')
-                       .toggleClass('fa-caret-up');
-            localStorage.visible_search_menu = !(localStorage.visible_search_menu === 'true');
+            $(e.target).toggleClass('fa-caret-down fa-caret-up');
+            localStorage.visible_search_menu = (localStorage.visible_search_menu !== 'true');
             this.toggle_buttons();
         },
         'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
@@ -380,7 +379,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
-        this.visible_filters = !!(localStorage.visible_search_menu === 'true');
+        this.visible_filters = (localStorage.visible_search_menu === 'true');
         this.input_subviews = []; // for user input in searchbar
         this.defaults = defaults || {};
         this.headless = this.options.hidden &&  _.isEmpty(this.defaults);
@@ -410,8 +409,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$('.oe_searchview_unfold_drawer')
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
-        return $.when(this._super(), this.alive($.when(load_view))
-            .then(this.view_loaded.bind(this)));
+        return this.alive($.when(this._super(), load_view.then(this.view_loaded.bind(this))));
     },
     view_loaded: function (r) {
         var self = this;
@@ -433,7 +431,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         }
         return $.when(custom_filters_ready).then(this.proxy('set_default_filters'));
     },
-    set_default_filters: function (a, b) {
+    set_default_filters: function () {
         var self = this,
             default_custom_filter = this.$buttons && this.favorite_menu.get_default_filter();
         if (default_custom_filter) {
@@ -523,8 +521,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
             delay: 0,
-            get_search_string: function () { 
-                return self.$('div.oe_searchview_input').text(); 
+            get_search_string: function () {
+                return self.$('div.oe_searchview_input').text();
             },
         });
         this.autocomplete.appendTo(this.$el);
@@ -632,10 +630,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$el.addClass('active');
     },
     childBlurred: function () {
-        var val = this.$el.val();
-        this.$el.val('');
-        this.$el.removeClass('active')
-                     .trigger('blur');
+        this.$el.val('').removeClass('active').trigger('blur');
         this.autocomplete.close();
     },
     /**
@@ -789,16 +784,6 @@ instance.web.search.Input = instance.web.Widget.extend( /** @lends instance.web.
      */
     visible: function () {
         return !this.attrs.modifiers.invisible;
-
-        // var parent = this;
-        // while ((parent = parent.getParent()) &&
-        //        (   (parent instanceof instance.web.search.Group)
-        //         || (parent instanceof instance.web.search.Input))) {
-        //     if (!parent.visible()) {
-        //         return false;
-        //     }
-        // }
-        // return true;
     },
 });
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
@@ -1449,7 +1434,7 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
         _.each(this.filters, function (group) {
             if (group.is_visible()) {
                 group.insertBefore(self.$add_filter);
-                $('<li>').addClass('divider').insertBefore(self.$add_filter);
+                $('<li class="divider">').insertBefore(self.$add_filter);
             }
         });
         this.append_proposition().then(function (prop) {
@@ -1477,25 +1462,24 @@ instance.web.search.FilterMenu = instance.web.Widget.extend({
         });
     },
     remove_proposition: function (prop) {
-        this.propositions = _.reject(this.propositions, function (p) { return p === prop});
+        this.propositions = _.without(this.propositions, prop);
         if (!this.propositions.length) {
             this.$apply_filter.prop('disabled', true);
         }
         prop.destroy();
     },
     commit_search: function () {
-        var self = this,
-            filters = _.invoke(this.propositions, 'get_filter'),
+        var filters = _.invoke(this.propositions, 'get_filter'),
             filters_widgets = _.map(filters, function (filter) {
-            return new my.Filter(filter, self);
-        });
-        var filter_group = new my.FilterGroup(filters_widgets, this.searchview);
+                return new my.Filter(filter, this);
+            }),
+            filter_group = new my.FilterGroup(filters_widgets, this.searchview),
+            facets = filters_widgets.map(function (filter) {
+                return filter_group.make_facet([filter_group.make_value(filter)]);
+            });
         filter_group.insertBefore(this.$add_filter);
-        $('<li>').addClass('divider').insertBefore(self.$add_filter);
-        
-        filters_widgets.forEach(function (filter) {
-            self.searchview.query.add(filter_group.make_facet([filter_group.make_value(filter)]), {silent: true});
-        });
+        $('<li class="divider">').insertBefore(this.$add_filter);
+        this.searchview.query.add(facets, {silent: true});
         this.searchview.query.trigger('reset');
 
         _.invoke(this.propositions, 'destroy');
@@ -1608,8 +1592,8 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
 
-        var $shared_filter = $(this.$inputs[1]),
-            $default_filter = $(this.$inputs[2]);
+        var $shared_filter = this.$inputs.eq(1),
+            $default_filter = this.$inputs.eq(2);
         $shared_filter.click(function () {$default_filter.prop('checked', false)});
         $default_filter.click(function () {$shared_filter.prop('checked', false)});
 
