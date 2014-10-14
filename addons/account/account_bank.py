@@ -19,60 +19,61 @@
 #
 ##############################################################################
 
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
+from openerp import models, fields, api, _
 
-class bank(osv.osv):
+class bank(models.Model):
     _inherit = "res.partner.bank"
-    _columns = {
-        'journal_id': fields.many2one('account.journal', 'Account Journal', help="This journal will be created automatically for this bank account when you save the record"),
-        'currency_id': fields.related('journal_id', 'currency', type="many2one", relation='res.currency', readonly=True,
-            string="Currency", help="Currency of the related account journal."),
-    }
-    def create(self, cr, uid, data, context=None):
-        result = super(bank, self).create(cr, uid, data, context=context)
-        self.post_write(cr, uid, [result], context=context)
+
+    journal_id = fields.many2one('account.journal', string='Account Journal', help="This journal will be created automatically for this bank account when you save the record")
+    currency_id = fields.many2one('res.currency', related='journal_id', string='Currency', readonly=True, help="Currency of the related account journal.")
+
+    @api.model
+    @api.returns('self')
+    def create(self, data):
+        result = super(bank, self).create(data)
+        self.post_write([result])
         return result
 
-    def write(self, cr, uid, ids, data, context=None):
-        result = super(bank, self).write(cr, uid, ids, data, context=context)
-        self.post_write(cr, uid, ids, context=context)
+    @api.multi
+    def write(self, data):
+        result = super(bank, self).write(data)
+        self.post_write(ids)
         return result
 
+    @api.model
     def _prepare_name(self, bank):
         "Return the name to use when creating a bank journal"
         return (bank.bank_name or '') + ' ' + (bank.acc_number or '')
 
-    def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
+    @api.model
+    def _prepare_name_get(self, bank_dicts):
         """Add ability to have %(currency_name)s in the format_layout of res.partner.bank.type"""
         currency_ids = list(set(data['currency_id'][0] for data in bank_dicts if data.get('currency_id')))
-        currencies = self.pool.get('res.currency').browse(cr, uid, currency_ids, context=context)
+        currencies = self.env['res.currency'].browse(currency_ids)
         currency_name = dict((currency.id, currency.name) for currency in currencies)
 
         for data in bank_dicts:
             data['currency_name'] = data.get('currency_id') and currency_name[data['currency_id'][0]] or ''
-        return super(bank, self)._prepare_name_get(cr, uid, bank_dicts, context=context)
+        return super(bank, self)._prepare_name_get(bank_dicts)
 
-    def post_write(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-          ids = [ids]
+    @api.multi
+    def post_write(self):
+        AccountObj = self.env['account.account']
+        JournalObj = self.env['account.journal']
 
-        obj_acc = self.pool.get('account.account')
-        obj_data = self.pool.get('ir.model.data')
-
-        for bank in self.browse(cr, uid, ids, context):
+        for bank in self:
             if bank.company_id and not bank.journal_id:
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], context=context)
+                ids = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)])
                 # No liquidity account exists, no template available
                 if not ids: continue
 
-                ref_acc_bank = obj_acc.browse(cr, uid, ids[0], context=context)
+                ref_acc_bank = ids[0]
                 while True:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
-                    ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', bank.company_id.id)])
+                    ids = AccountObj.search([('code', '=', new_code), ('company_id', '=', bank.company_id.id)])
                     if not ids:
                         break
                     current_num += 1
@@ -85,13 +86,12 @@ class bank(osv.osv):
                     'reconcile': False,
                     'company_id': bank.company_id.id,
                 }
-                acc_bank_id  = obj_acc.create(cr,uid,acc,context=context)
+                acc_bank_id  = AccountObj.create(acc)
 
-                jour_obj = self.pool.get('account.journal')
                 new_code = 1
                 while True:
                     code = _('BNK')+str(new_code)
-                    ids = jour_obj.search(cr, uid, [('code','=',code)], context=context)
+                    ids = JournalObj.search([('code','=',code)])
                     if not ids:
                         break
                     new_code += 1
@@ -106,9 +106,9 @@ class bank(osv.osv):
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
                 }
-                journal_id = jour_obj.create(cr, uid, vals_journal, context=context)
+                journal_id = JournalObj.create(vals_journal)
 
-                self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
+                bank.write({'journal_id': journal_id})
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
