@@ -173,16 +173,21 @@
             <field name="name">snapshot.form</field>
             <field name="model">website_version.snapshot</field> 
             <field name="arch" type="xml">
-                <form string="Snapshot Form">
-                    <group colspan="4">
-                        <field name="name" colspan="4" />
-                        <field name="website_id" colspan="4" />
-                        <field name="create_date" colspan="4"/>
-                    </group>
-                    <group colspan="4">
-                        <field name="view_ids" widget="handle" colspan="4"/>
-                    </group>
-                </form>
+                <sheet string="Snap">
+                    <form string="Snapshot Form">
+                        <group>
+                            <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right" 
+                                context="{'active_id': active_id}"/>
+                        </group>
+                        <h1><field name="name"/></h1>
+                        <group col="4">
+                            <field name="website_id"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="view_ids" widget="handle" colspan="4"/>
+                        </group>
+                    </form>
+                </sheet>
             </field>
         </record>
 
