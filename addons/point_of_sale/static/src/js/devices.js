@@ -676,7 +676,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
         
         scan: function(code){
-            debugger;
             if(code.length < 3){
                 return;
             }else if(code.length === 13 && this.check_ean(code)){
