@@ -184,7 +184,8 @@ class account_bank_statement(models.Model):
     def button_dummy(self):
         return self.write({})
 
-    def _prepare_move(self, cr, uid, st_line, st_line_number, context=None):
+    @api.model
+    def _prepare_move(self, st_line, st_line_number):
         """Prepare the dict of values to create the move from a
            statement line. This method may be overridden to implement custom
            move generation (making sure to call super() to establish
@@ -203,7 +204,8 @@ class account_bank_statement(models.Model):
             'ref': st_line.ref,
         }
 
-    def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
+    @api.model
+    def _get_counter_part_account(self, st_line):
         """Retrieve the account to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
@@ -213,7 +215,8 @@ class account_bank_statement(models.Model):
             return st_line.statement_id.journal_id.default_credit_account_id.id
         return st_line.statement_id.journal_id.default_debit_account_id.id
 
-    def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
+    @api.model
+    def _get_counter_part_partner(self, st_line):
         """Retrieve the partner to use in the counterpart move.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
@@ -221,7 +224,8 @@ class account_bank_statement(models.Model):
         """
         return st_line.partner_id and st_line.partner_id.id or False
 
-    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
+    @api.model
+    def _prepare_bank_move_line(self, st_line, move_id, amount, company_currency_id):
         """Compute the args to build the dict of values to create the counter part move line from a
            statement line by calling the _prepare_move_line_vals. 
 
@@ -231,8 +235,8 @@ class account_bank_statement(models.Model):
            :param int/long company_currency_id: ID of currency of the concerned company
            :return: dict of value to create() the bank account.move.line
         """
-        account_id = self._get_counter_part_account(cr, uid, st_line, context=context)
-        partner_id = self._get_counter_part_partner(cr, uid, st_line, context=context)
+        account_id = self._get_counter_part_account(st_line)
+        partner_id = self._get_counter_part_partner(st_line)
         debit = ((amount > 0) and amount) or 0.0
         credit = ((amount < 0) and -amount) or 0.0
         cur_id = False
@@ -243,12 +247,13 @@ class account_bank_statement(models.Model):
         elif st_line.currency_id and st_line.amount_currency:
             amt_cur = st_line.amount_currency
             cur_id = st_line.currency_id.id
-        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
+        return self._prepare_move_line_vals(st_line, move_id, debit, credit,
             amount_currency=amt_cur, currency_id=cur_id, account_id=account_id,
-            partner_id=partner_id, context=context)
+            partner_id=partner_id)
 
-    def _prepare_move_line_vals(self, cr, uid, st_line, move_id, debit, credit, currency_id=False,
-                amount_currency=False, account_id=False, partner_id=False, context=None):
+    @api.model
+    def _prepare_move_line_vals(self, st_line, move_id, debit, credit, currency_id=False,
+                amount_currency=False, account_id=False, partner_id=False):
         """Prepare the dict of values to create the move line from a
            statement line.
 
@@ -283,36 +288,36 @@ class account_bank_statement(models.Model):
             'amount_currency': amount_currency,
         }
 
-    def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
-        st = self.browse(cr, uid, st_id, context=context)
-        if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001)):
+    @api.one
+    def balance_check(self, journal_type='bank'):
+        if not ((abs((self.balance_end or 0.0) - self.balance_end_real) < 0.0001) or (abs((self.balance_end or 0.0) - self.balance_end_real) < 0.0001)):
             raise osv.except_osv(_('Error!'),
-                    _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
+                    _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
         return True
 
-    def statement_close(self, cr, uid, ids, journal_type='bank', context=None):
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+    @api.multi
+    def statement_close(self, journal_type='bank'):
+        return self.write({'state':'confirm'})
 
-    def check_status_condition(self, cr, uid, state, journal_type='bank'):
+    @api.model
+    def check_status_condition(self, state, journal_type='bank'):
         return state in ('draft','open')
 
-    def button_confirm_bank(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        for st in self.browse(cr, uid, ids, context=context):
+    @api.model
+    def button_confirm_bank(self):
+        for st in self:
             j_type = st.journal_id.type
-            if not self.check_status_condition(cr, uid, st.state, journal_type=j_type):
+            if not self.check_status_condition(st.state, journal_type=j_type):
                 continue
 
-            self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
+            st.balance_check(journal_type=j_type)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configuration Error!'), _('Please verify that an account is defined in the journal.'))
             for line in st.move_line_ids:
                 if line.state != 'valid':
                     raise osv.except_osv(_('Error!'), _('The account entries lines are not in valid state.'))
-            move_ids = []
+            moves = []
             for st_line in st.line_ids:
                 if not st_line.amount:
                     continue
@@ -324,33 +329,35 @@ class account_bank_statement(models.Model):
                         'account_id': st_line.account_id.id,
                         'name': st_line.name
                     }
-                    self.pool.get('account.bank.statement.line').process_reconciliation(cr, uid, st_line.id, [vals], context=context)
+                    st_line.process_reconciliation([vals])
                 elif not st_line.journal_entry_id.id:
                     raise osv.except_osv(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
-                move_ids.append(st_line.journal_entry_id.id)
-            if move_ids:
-                self.pool.get('account.move').post(cr, uid, move_ids, context=context)
-            self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
-        self.link_bank_to_partner(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm', 'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")}, context=context)
+                moves.append(st_line.journal_entry_id)
+            if moves:
+                moves.post()
+            st.message_post(body=_('Statement %s confirmed, journal items were created.') % (st.name,))
+        self.link_bank_to_partner()
+        return self.write({'state': 'confirm', 'closing_date': time.strftime("%Y-%m-%d %H:%M:%S")})
 
-    def button_cancel(self, cr, uid, ids, context=None):
-        bnk_st_line_ids = []
-        for st in self.browse(cr, uid, ids, context=context):
-            bnk_st_line_ids += [line.id for line in st.line_ids]
-        self.pool.get('account.bank.statement.line').cancel(cr, uid, bnk_st_line_ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+    @api.multi
+    def button_cancel(self):
+        bnk_st_lines = []
+        for st in self:
+            bnk_st_lines += [line.id for line in st.line_ids]
+        bnk_st_lines.cancel()
+        return self.write({'state': 'draft'})
 
-    def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
+    @api.model
+    def _compute_balance_end_real(self, journal_id):
         res = False
         if journal_id:
-            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            journal = self.env['account.journal'].browse(journal_id)
             if journal.with_last_closing_balance:
                 cr.execute('SELECT balance_end_real \
                       FROM account_bank_statement \
                       WHERE journal_id = %s AND NOT state = %s \
                       ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-                res = cr.fetchone()
+                res = self._cr.fetchone()
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
@@ -364,38 +371,41 @@ class account_bank_statement(models.Model):
             res['cash_control'] = journal.cash_control
         return {'value': res}
 
-    def unlink(self, cr, uid, ids, context=None):
-        for item in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def unlink(self):
+        for item in self:
             if item.state != 'draft':
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
-        return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
+        return super(account_bank_statement, self).unlink()
 
-    def button_journal_entries(self, cr, uid, ids, context=None):
-        ctx = (context or {}).copy()
-        ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
+    @api.multi
+    def button_journal_entries(self):
+        ctx = dict(self._context or {})
+        ctx['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Items'),
-            'view_type':'form',
-            'view_mode':'tree',
-            'res_model':'account.move.line',
-            'view_id':False,
-            'type':'ir.actions.act_window',
-            'domain':[('statement_id','in',ids)],
-            'context':ctx,
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('statement_id', 'in', ids)],
+            'context': ctx,
         }
 
-    def number_of_lines_reconciled(self, cr, uid, ids, context=None):
-        bsl_obj = self.pool.get('account.bank.statement.line')
-        return bsl_obj.search_count(cr, uid, [('statement_id', 'in', ids), ('journal_entry_id', '!=', False)], context=context)
+    @api.multi
+    def number_of_lines_reconciled(self):
+        return self.env['account.bank.statement.line'].search_count([('statement_id', 'in', self.ids), ('journal_entry_id', '!=', False)])
 
-    def link_bank_to_partner(self, cr, uid, ids, context=None):
-        for statement in self.browse(cr, uid, ids, context=context):
+    @api.model
+    def link_bank_to_partner(self):
+        for statement in self:
             for st_line in statement.line_ids:
                 if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id.id != st_line.partner_id.id:
-                    self.pool.get('res.partner.bank').write(cr, uid, [st_line.bank_account_id.id], {'partner_id': st_line.partner_id.id}, context=context)
+                    st_line.bank_account_id.write({'partner_id': st_line.partner_id.id})
 
 class account_bank_statement_line(osv.osv):
 
