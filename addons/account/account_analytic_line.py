@@ -30,7 +30,7 @@ class account_analytic_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     general_account_id = fields.Many2one('account.account', string='Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)])
     move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
-    journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True),
+    journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True)
     code = fields.Char(string='Code', size=8)
     ref = fields.Char(string='Ref.')
     currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)

@@ -19,64 +19,70 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
-from openerp.report import report_sxw
-
 import time
 
-class account_bank_statement(osv.osv):
-    def create(self, cr, uid, vals, context=None):
+from openerp import models, fields, api, _
+import openerp.addons.decimal_precision as dp
+from openerp.exceptions import Warning
+from openerp.report import report_sxw
+
+
+class account_bank_statement(models.Model):
+
+    @api.model
+    @api.returns('self')
+    def create(self, vals):
         if vals.get('name', '/') == '/':
-            journal_id = vals.get('journal_id', self._default_journal_id(cr, uid, context=context))
-            vals['name'] = self._compute_default_statement_name(cr, uid, journal_id, context=context)
+            journal_id = vals.get('journal_id', self._default_journal_id().id)
+            vals['name'] = self._compute_default_statement_name(journal_id)
         if 'line_ids' in vals:
             for idx, line in enumerate(vals['line_ids']):
                 line[2]['sequence'] = idx + 1
-        return super(account_bank_statement, self).create(cr, uid, vals, context=context)
+        return super(account_bank_statement, self).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
-        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        for statement in self.browse(cr, uid, ids, context):
+    @api.multi
+    def write(self, vals):
+        res = super(account_bank_statement, self).write(vals)
+        for statement in self:
             for idx, line in enumerate(statement.line_ids):
-                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': idx + 1}, context=context)
+                line.write({'sequence': idx + 1})
         return res
 
-    def _default_journal_id(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        journal_pool = self.pool.get('account.journal')
+    @api.model
+    def _default_journal_id(self):
+        context = dict(self._context or {})
+        JournalObj = self.env['account.journal']
         journal_type = context.get('journal_type', False)
-        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=context)
+        company_id = self.env['res.company']._company_default_get('account.bank.statement')
         if journal_type:
-            ids = journal_pool.search(cr, uid, [('type', '=', journal_type),('company_id','=',company_id)])
-            if ids:
-                return ids[0]
+            Journals = JournalObj.search([('type', '=', journal_type), ('company_id', '=', company_id)])
+            if Journals:
+                return Journals[0]
         return False
 
-    def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        res = {}
-        for statement in self.browse(cursor, user, ids, context=context):
-            res[statement.id] = statement.balance_start
+    @api.multi
+    @api.depends('line_ids','move_line_ids','balance_start', 'line_ids.amount')
+    def _end_balance(self):
+        for statement in self:
+            total = statement.balance_start
             for line in statement.line_ids:
-                res[statement.id] += line.amount
-        return res
+                total += line.amount
+            statement.balance_end = total
 
-    def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
+    @api.model
+    def _get_period(self):
+        periods = self.env['account.period'].find()
         if periods:
             return periods[0]
         return False
 
-    def _compute_default_statement_name(self, cr, uid, journal_id, context=None):
-        context = dict(context or {})
-        obj_seq = self.pool.get('ir.sequence')
-        period = self.pool.get('account.period').browse(cr, uid, self._get_period(cr, uid, context=context), context=context)
+    @api.model
+    def _compute_default_statement_name(self, journal_id):
+        context = dict(self._context or {})
+        period = self._get_period()
         context['fiscalyear_id'] = period.fiscalyear_id.id
-        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, None)
-        return obj_seq.next_by_id(cr, uid, journal.sequence_id.id, context=context)
+        journal = self.env['account.journal'].browse(journal_id)
+        return self.env['ir.sequence'].with_context(context).next_by_id(journal.sequence_id.id)
 
     def _currency(self, cursor, user, ids, name, args, context=None):
         res = {}
@@ -98,85 +104,60 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
-    def _get_statement(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
-            result[line.statement_id.id] = True
-        return result.keys()
-
-    def _all_lines_reconciled(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for statement in self.browse(cr, uid, ids, context=context):
-            res[statement.id] = all([line.journal_entry_id.id for line in statement.line_ids])
-        return res
+    @api.multi
+    @api.depends('line_ids.journal_entry_id')
+    def _all_lines_reconciled(self):
+        for statement in self:
+            statement.all_lines_reconciled = all([line.journal_entry_id.id for line in statement.line_ids])
 
     _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _inherit = ['mail.thread']
-    _columns = {
-        'name': fields.char(
-            'Reference', states={'draft': [('readonly', False)]},
-            readonly=True, # readonly for account_cash_statement
-            copy=False,
-            help='if you give the Name other then /, its created Accounting Entries Move '
-                 'will be with same name as statement name. '
-                 'This allows the statement entries to have the same references than the '
-                 'statement itself'),
-        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]},
-                            select=True, copy=False),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True,
-            readonly=True, states={'draft':[('readonly',False)]}),
-        'period_id': fields.many2one('account.period', 'Period', required=True,
-            states={'confirm':[('readonly', True)]}),
-        'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
-            states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
-            states={'confirm': [('readonly', True)]}, help="Computed using the cash control lines"),
-        'balance_end': fields.function(_end_balance,
-            store = {
-                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids','balance_start'], 10),
-                'account.bank.statement.line': (_get_statement, ['amount'], 10),
-            },
-            string="Computed Balance", help='Balance as calculated based on Opening Balance and transaction lines'),
-        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'line_ids': fields.one2many('account.bank.statement.line',
-                                    'statement_id', 'Statement lines',
-                                    states={'confirm':[('readonly', True)]}, copy=True),
-        'move_line_ids': fields.one2many('account.move.line', 'statement_id',
-                                         'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'New'),
-                                   ('open','Open'), # used by cash statements
-                                   ('confirm', 'Closed')],
-                                   'Status', required=True, readonly="1",
-                                   copy=False,
-                                   help='When new statement is created the status will be \'Draft\'.\n'
-                                        'And after getting confirmation from the bank it will be in \'Confirmed\' status.'),
-        'currency': fields.function(_currency, string='Currency',
-            type='many2one', relation='res.currency'),
-        'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
-        'cash_control': fields.related('journal_id', 'cash_control' , type='boolean', relation='account.journal',string='Cash control'),
-        'all_lines_reconciled': fields.function(_all_lines_reconciled, string='All lines reconciled', type='boolean'),
-    }
 
-    _defaults = {
-        'name': '/', 
-        'date': fields.date.context_today,
-        'state': 'draft',
-        'journal_id': _default_journal_id,
-        'period_id': _get_period,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
-    }
+    name = fields.Char(string='Reference', states={'draft': [('readonly', False)]},
+        readonly=True, # readonly for account_cash_statement
+        copy=False, default='/',
+        help='if you give the Name other then /, its created Accounting Entries Move '
+             'will be with same name as statement name. '
+             'This allows the statement entries to have the same references than the '
+             'statement itself')
+    date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]},
+        select=True, copy=False, default=fields.Date.context_today)
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
+        readonly=True, states={'draft':[('readonly',False)]}, default=lambda self: self._default_journal_id())
+    period_id = fields.Many2one('account.period', 'Period', required=True, states={'confirm':[('readonly', True)]},
+        default=lambda self: self._get_period())
+    balance_start = fields.Float(string='Starting Balance', digits=dp.get_precision('Account'), states={'confirm':[('readonly',True)]})
+    balance_end_real = fields.Float('Ending Balance', digits=dp.get_precision('Account'),
+        states={'confirm': [('readonly', True)]}, help="Computed using the cash control lines")
+    balance_end = fields.Float(compute='_end_balance', store=True,
+        string="Computed Balance", help='Balance as calculated based on Opening Balance and transaction lines')
+    company_id = fields.Many2one('res.company', related='journal_id.company_id',  string='Company', store=True, readonly=True,
+        default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
+    line_ids = fields.One2many('account.bank.statement.line', 'statement_id', string='Statement lines',
+        states={'confirm':[('readonly', True)]}, copy=True)
+    move_line_ids = fields.One2many('account.move.line', 'statement_id',
+        string='Entry lines', states={'confirm':[('readonly',True)]})
+    state = fields.Selection([
+            ('draft', 'New'),
+            ('open', 'Open'), # used by cash statements
+            ('confirm', 'Closed')
+        ],
+        string='Status', required=True, readonly=True, copy=False, default='draft',
+        help='When new statement is created the status will be \'Draft\'.\n'
+             'And after getting confirmation from the bank it will be in \'Confirmed\' status.')
+    currency = fields.Many2one('res.currency', compute='_currency', string='Currency')
+    account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', string='Account used in this journal',
+        readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.')
+    cash_control = fields.Boolean(related='journal_id.cash_control', string='Cash control')
+    all_lines_reconciled = fields.Boolean(compute='_all_lines_reconciled', string='All lines reconciled')
 
-    def _check_company_id(self, cr, uid, ids, context=None):
-        for statement in self.browse(cr, uid, ids, context=context):
-            if statement.company_id.id != statement.period_id.company_id.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_company_id, 'The journal and period chosen have to belong to the same company.', ['journal_id','period_id']),
-    ]
+    @api.one
+    @api.constrains('journal_id', 'period_id')
+    def _check_company_id(self):
+        if self.company_id.id != self.period_id.company_id.id:
+            raise Warning(_('The journal and period chosen have to belong to the same company.'))
 
     def onchange_date(self, cr, uid, ids, date, company_id, context=None):
         """
@@ -199,8 +180,9 @@ class account_bank_statement(osv.osv):
             'context':context,
         }
 
-    def button_dummy(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {}, context=context)
+    @api.multi
+    def button_dummy(self):
+        return self.write({})
 
     def _prepare_move(self, cr, uid, st_line, st_line_number, context=None):
         """Prepare the dict of values to create the move from a
