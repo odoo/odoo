@@ -9,15 +9,42 @@
                 <!-- find field name, and insert field name before it -->
                 <field name="name" position="replace">
                 </field>
-                <!-- <field name="google_analytics_key" position="before">
-                    <label for="tuto_sync"/> 
+                <field name="google_analytics_key" position="before">
                     <field name="tuto_sync"/>                           
-                    <div> 
+                    <div colspan="4"> 
                         <div attrs="{'invisible':[('tuto_sync','=',False)]}">
-                            <br/><h2>How to get the Google Analytics Key and the View ID</h2>                                   
+                            <br/><h2>How to get the Google Analytics Key and the View ID</h2>
+                            <ul> 
+                                <li> Go to <a href='https://www.google.com/analytics/' target='_blank'>https://www.google.com/analytics/</a>
+                                and connect you.
+                                    <br/><br/><img src='/website_version/static/src/img/Login.png' class='analytics_img_tuto'/> 
+                                </li>
+                                <li> 
+                                    Click on <b>"Admin"</b>.
+                                    <br/><br/><img src='/website_version/static/src/img/Home.png' class='analytics_img_tuto'/>    
+                                </li>
+                                <li> 
+                                    Click on <b>"Tracking info"</b>.
+                                    <br/><br/><img src='/website_version/static/src/img/Property.png' class='analytics_img_tuto'/>  
+                                </li>
+                                <li> 
+                                    Click on <b>"Tracking Code"</b> and copy the <b>"Tracking ID"</b>.
+                                    <br/><br/><img src='/website_version/static/src/img/Tracking_ID.png' class='analytics_img_tuto'/>   
+                                </li>
+                                <li> 
+                                    Click on <b>"View Settings"</b>.
+                                    <br/><br/><img src='/website_version/static/src/img/View.png' class='analytics_img_tuto'/>  
+                                </li>
+                                <li> 
+                                    Copy the <b>"View ID"</b>.
+                                    <br/><br/><img src='/website_version/static/src/img/View_ID.png' class='analytics_img_tuto'/>  
+                                </li>
+                                <a href="#" class="oe_link">Return at Top</a> 
+                                                                        
+                            </ul>                                
                         </div>
                     </div>
-                </field> -->
+                </field>
                 <field name="google_analytics_key" position="after">
                         <field name="google_analytics_view_id" placeholder="7654321"/>
                         <field name="google_management_authorization" widget="rtoken"/>
