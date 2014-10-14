@@ -2244,8 +2244,9 @@ instance.web.form.ReinitializeWidgetMixin =  {
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
     reinitialize: function() {
         instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
+        var res = this.render_value();
         if (this.view && this.view.render_value_defs){
-            this.view.render_value_defs.push(this.render_value());
+            this.view.render_value_defs.push(res);
         }
     },
 });
