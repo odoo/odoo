@@ -394,8 +394,8 @@ class Field(object):
             if `self` has already been set up.
         """
         if not self.setup_done:
-            self.setup_done = True
             self._setup(env)
+            self.setup_done = True
 
     def _setup(self, env):
         """ Do the actual setup of `self`. """
@@ -427,16 +427,13 @@ class Field(object):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
-        fields = []
         recs = env[self.model_name]
         for name in self.related:
-            fields.append(recs._fields[name])
+            field = recs._fields[name]
+            field.setup(env)
             recs = recs[name]
 
-        for field in fields:
-            field.setup(env)
-
-        self.related_field = field = fields[-1]
+        self.related_field = field
 
         # check type consistency
         if self.type != field.type:
