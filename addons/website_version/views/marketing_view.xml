@@ -127,11 +127,9 @@
             <field name="model">website_version.experiment</field>
             <field name="arch" type="xml">
                 <search string="Search Experiment">
-                    <field name="name" />
                     <field name="website_id"/>
                     <field name="state"/>
                     <group string="Group By">
-                        <filter string="name" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="website_id" domain="[]" name="my_exps" context="{'group_by':'website_id'}"/>
                         <filter string="state" domain="[]" context="{'group_by':'state'}"/>
                     </group>
@@ -197,8 +195,22 @@
             <field name="arch" type="xml">
                 <tree string="Snapshot tree">
                     <field name="name" />
+                    <field name="website_id" />
                     <field name="create_date" />
                 </tree>
+            </field>
+        </record>
+
+        <record id="snapshot_search" model="ir.ui.view">
+            <field name="name">snapshot.search</field>
+            <field name="model">website_version.snapshot</field>
+            <field name="arch" type="xml">
+                <search string="Search Snapshot">
+                    <field name="website_id"/>
+                    <group string="Group By">
+                        <filter string="website_id" domain="[]" context="{'group_by':'website_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
