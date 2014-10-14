@@ -231,7 +231,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             category:'ColGroupBy',
             values: this.make_groupby_values(groupbys, 'col_group_by'),
-            icon:'fa fa-bars fa-rotate-90',
+            icon:'fa fa-level-down',
             field: this.col_search_field
         };
     },

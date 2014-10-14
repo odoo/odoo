@@ -900,6 +900,21 @@ $sheet-padding: 16px
         display: table-row
         background-color: rgb(240, 238, 238)
         border-bottom: 1px solid #afafb6
+        .selected
+            display: block
+            a
+                font-weight: bold
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 6px
+                top: 3px
+                content: "\f00c"
+        .dropdown-menu
+            li
+                position: relative
+                a
+                    padding: 3px 25px
         .oe-right-toolbar
             float: right
             > div
@@ -942,6 +957,22 @@ $sheet-padding: 16px
         .oe-view-manager-sidebar
             display: inline-block
             float: right
+            .oe_form_binary_form
+                cursor: pointer
+                span
+                    padding: 3px 20px
+                input.oe_form_binary_file
+                    width: 100%
+
+            .oe_form_binary_form:hover
+                background-color: #f5f5f5
+            .oe_file_attachment
+                display: inline
+                padding: 3px 20px
+            .oe_sidebar_delete_item
+                display: inline
+                padding: 0
+
         .oe_form_buttons
             padding: 0
         .oe-pager-buttons
@@ -1010,7 +1041,7 @@ $sheet-padding: 16px
                 .label
                     @include radius(0px)
             .oe_searchview_input
-                padding: 0 0 0 6px
+                padding: 2px 0 0 6px
                 font-size: 12px
                 height: 16px
                 &:focus
@@ -1109,16 +1140,6 @@ $sheet-padding: 16px
             margin-left: 10px
             padding-left: 0
             padding-right: 10px
-        .selected
-            display: block
-            a
-                font-weight: bold
-            a:before
-                font-family: FontAwesome
-                position: absolute
-                left: 6px
-                top: 3px
-                content: "\f00c"
         .oe-group-selector
             margin: 3px 25px
             min-width: calc(100% - 40px)

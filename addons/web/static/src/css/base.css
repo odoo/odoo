@@ -1035,6 +1035,25 @@
   background-color: #f0eeee;
   border-bottom: 1px solid #afafb6;
 }
+.openerp .oe-view-manager-header .selected {
+  display: block;
+}
+.openerp .oe-view-manager-header .selected a {
+  font-weight: bold;
+}
+.openerp .oe-view-manager-header .selected a:before {
+  font-family: FontAwesome;
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  content: "";
+}
+.openerp .oe-view-manager-header .dropdown-menu li {
+  position: relative;
+}
+.openerp .oe-view-manager-header .dropdown-menu li a {
+  padding: 3px 25px;
+}
 .openerp .oe-view-manager-header .oe-right-toolbar {
   float: right;
 }
@@ -1095,6 +1114,26 @@
 .openerp .oe-view-manager-header .oe-view-manager-sidebar {
   display: inline-block;
   float: right;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_form_binary_form {
+  cursor: pointer;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_form_binary_form span {
+  padding: 3px 20px;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_form_binary_form input.oe_form_binary_file {
+  width: 100%;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_form_binary_form:hover {
+  background-color: #f5f5f5;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_file_attachment {
+  display: inline;
+  padding: 3px 20px;
+}
+.openerp .oe-view-manager-header .oe-view-manager-sidebar .oe_sidebar_delete_item {
+  display: inline;
+  padding: 0;
 }
 .openerp .oe-view-manager-header .oe_form_buttons {
   padding: 0;
@@ -1171,7 +1210,7 @@
   border-radius: 0px;
 }
 .openerp .oe_searchview .oe_searchview_facets .oe_searchview_input {
-  padding: 0 0 0 6px;
+  padding: 2px 0 0 6px;
   font-size: 12px;
   height: 16px;
 }
@@ -1297,19 +1336,6 @@
   margin-left: 10px;
   padding-left: 0;
   padding-right: 10px;
-}
-.openerp .oe-search-options .selected {
-  display: block;
-}
-.openerp .oe-search-options .selected a {
-  font-weight: bold;
-}
-.openerp .oe-search-options .selected a:before {
-  font-family: FontAwesome;
-  position: absolute;
-  left: 6px;
-  top: 3px;
-  content: "";
 }
 .openerp .oe-search-options .oe-group-selector {
   margin: 3px 25px;

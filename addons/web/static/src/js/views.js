@@ -1152,7 +1152,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             this.$el.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
-            this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
+            this.$('.oe_sidebar_add_attachment a').text(_t('Uploading...'));
             instance.web.blockUI();
         }
     },

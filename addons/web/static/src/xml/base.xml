@@ -618,7 +618,7 @@
                             <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
                         </t>
                     </t>
-                    <a t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
+                    <a class="oe_file_attachment" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
                         <t t-raw="item.label"/>
                     </a>
                      <a t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
@@ -1678,10 +1678,10 @@
         <li class="oe-save-search closed-menu"><a>Save current search</a></li>
         <li class="oe-save-name"><input type="text" class="form-control"></input></li>
         <li class="oe-save-name">
-            <span><input type="checkbox"/>Share with all users</span>
+            <span><input type="checkbox"/>Use by default</span>
         </li>
         <li class="oe-save-name">
-            <span><input type="checkbox"/>Use by default</span>
+            <span><input type="checkbox"/>Share with all users</span>
         </li>
         <li class="oe-save-name"><button class="btn btn-default">Save</button></li>
     </ul>

@@ -333,8 +333,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         },
         'click .oe_searchview_unfold_drawer': function (e) {
             e.stopImmediatePropagation();
-            $(e.target).toggleClass('fa-chevron-right')
-                       .toggleClass('fa-chevron-down');
+            $(e.target).toggleClass('fa-caret-down')
+                       .toggleClass('fa-caret-up');
             localStorage.visible_search_menu = !(localStorage.visible_search_menu === 'true');
             this.toggle_buttons();
         },
@@ -408,8 +408,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             context: this.dataset.get_context(),
         });
         this.$('.oe_searchview_unfold_drawer')
-            .toggleClass('fa-chevron-right', !this.visible_filters)
-            .toggleClass('fa-chevron-down', this.visible_filters);
+            .toggleClass('fa-caret-down', !this.visible_filters)
+            .toggleClass('fa-caret-up', this.visible_filters);
         return $.when(this._super(), this.alive($.when(load_view))
             .then(this.view_loaded.bind(this)));
     },
