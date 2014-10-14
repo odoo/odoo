@@ -13,6 +13,14 @@
     <xpath expr="//head" position="inside">
         <style type="text/css">
             <t t-call="report.style"/>
+            /* To avoid broken snippets in report rendering */
+            .jumbotron, .panel, .carousel{
+                page-break-inside:avoid;
+            }
+            /* Wkhtmltopdf don't support very well the media-print CSS (depends on the version) */
+            .hidden-print{
+                display:none;
+            }
         </style>
     </xpath>
     <xpath expr="//body" position="attributes">
@@ -26,7 +34,7 @@
 
 <template id="website_html_container" inherit_id="report.html_container">
     <xpath expr="//t[@t-call='report.layout']" position="replace">
-        <t t-call="website_report.layout">          
+        <t t-call="website_report.layout">
             <t t-raw="0"/>
         </t>
     </xpath>
