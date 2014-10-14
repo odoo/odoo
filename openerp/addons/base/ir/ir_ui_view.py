@@ -248,7 +248,7 @@ class view(osv.osv):
         return values
 
     def create(self, cr, uid, values, context=None):
-        if 'type' not in values:
+        if not values.get('type'):
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:

@@ -1234,9 +1234,13 @@ class mail_thread(osv.AbstractModel):
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
             alternative = False
+            mixed = False
+            html = u''
             for part in message.walk():
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
+                if part.get_content_type() == 'multipart/mixed':
+                    mixed = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 # part.get_filename returns decoded value if able to decode, coded otherwise.
@@ -1263,8 +1267,11 @@ class mail_thread(osv.AbstractModel):
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
+                    # mutlipart/alternative have one text and a html part, keep only the second
+                    # mixed allows several html parts, append html content
+                    append_content = not alternative or (html and mixed)
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
-                    if alternative:
+                    if not append_content:
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
