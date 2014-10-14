@@ -525,12 +525,14 @@ class mail_thread(osv.AbstractModel):
 
             # find subtypes and post messages or log if no subtype found
             subtypes = []
-            for field, track_info in self._track.items():
-                if field not in changes:
-                    continue
-                for subtype, method in track_info.items():
-                    if method(self, cr, uid, browse_record, context):
-                        subtypes.append(subtype)
+            # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
+            if not context.get('mail_track_log_only'):
+                for field, track_info in self._track.items():
+                    if field not in changes:
+                        continue
+                    for subtype, method in track_info.items():
+                        if method(self, cr, uid, browse_record, context):
+                            subtypes.append(subtype)
 
             posted = False
             for subtype in subtypes:
