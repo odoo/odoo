@@ -185,7 +185,7 @@ class Experiment(osv.Model):
         'sequence': 1,
     }
 
-    def _check_page(self, cr, uid, ids, context=None):
+    def _check_view(self, cr, uid, ids, context=None):
         exp_ids = self.search(cr,uid,[],context=context)
         exps = self.browse(cr,uid,exp_ids,context=context)
         check_a = set()
@@ -203,7 +203,7 @@ class Experiment(osv.Model):
         return True
 
     _constraints = [
-        (_check_page, 'This experiment contains a page which is already used in another running experience', ['state']),
+        (_check_view, 'This experiment contains a view which is already used in another running experience', ['state']),
     ]
 
     _order = 'sequence'

@@ -192,7 +192,7 @@ class TableExporter(http.Controller):
         snap = request.registry['website_version.snapshot']
         goal = request.registry['website_version.goals']
         website_id = request.website.id
-        snap_ids = snap.search(cr, uid, [('website_id','=',website_id),('view_ids.key','=',v.key)],context=context)
+        snap_ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
         r1 = snap.read(cr, uid, snap_ids,['id','name'],context=context)
         goal_ids = goal.search(cr, uid, [],context=context)
         r2 = goal.read(cr, uid, goal_ids,['id','name'],context=context)
