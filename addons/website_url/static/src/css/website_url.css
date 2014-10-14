@@ -6,12 +6,26 @@
   text-overflow:    ellipsis;    /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
 }
 
+.required-form-control {
+  background-color: #CECDFF;
+}
+
+.bottom-align-cols {
+  display: flex;
+  align-items:flex-end;
+  padding-bottom: 0px;
+}
+
 .form-horizontal .control-label{
   text-align:left
 }
 
 .recent_link_buttons {
   display: none;
+}
+
+.page-header-near {
+  margin-top: 10px;
 }
 
 #filters {
@@ -28,6 +42,15 @@
   border-color: transparent;
 }
 
+#recent_links {
+  min-height:30em;
+}
+
+.recent_link_inner_buttons {
+  margin: 10px;
+}
+
+/* Redefine Bootstrap tabs to inline in page-header */
 .nav-tabs-inline > li > a,
 .nav-tabs-inline > li.active > a, 
 .nav-tabs-inline > li.active > a.active,

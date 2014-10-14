@@ -16,45 +16,54 @@
         start: function() {
             var self = this;
 
-            function getDate(d) {
-                return new Date(d[0])
+            // Accessor functions
+            function getDate(d) { return new Date(d[0]); }
+            function getNbClicks(d) { return d[1]; }
+
+            // Prune tick values for visibility purpose
+            function getPrunedTickValues(ticks, nb_desired_ticks) {
+                var nb_values = ticks.length;
+                var keep_one_of = Math.max(1, Math.floor(nb_values / nb_desired_ticks));
+
+                return _.filter(ticks, function(d, i) {
+                    return i % keep_one_of == 0;
+                });
             }
 
+            // Fill data for each day (with 0 click for days without data)
             var clicks_array = [];
             var begin_date_copy = this.begin_date;
             for(var i = 0 ; i < this.number_of_days ; i++) {
-
                 var date_key = begin_date_copy.format('YYYY-MM-DD');
                 clicks_array.push([date_key, (date_key in this.dates) ? this.dates[date_key] : 0]);
                 begin_date_copy.add(1, 'days');
             }
 
+            // Fit data into the NVD3 scheme
             var chart_data = [{}];
                 chart_data[0]['key'] = '# of clicks';
                 chart_data[0]['values'] = clicks_array;
 
-            var minDate = getDate(chart_data[0]['values'][0]),
-                maxDate = getDate(chart_data[0]['values'][chart_data[0]['values'].length - 1]);
-
             nv.addGraph(function() {
                 var chart = nv.models.lineChart()
-                    .x(function(d) {
-                        return getDate(d);
-                    })
-                    .y(function(d) { return d[1] })
+                    .x(function(d) { return getDate(d); })
+                    .y(function(d) { return getNbClicks(d); })
                     .tooltips(true)
                     .transitionDuration(0)
                     .showYAxis(true)
-                    .showXAxis(true)
-                ;
+                    .showXAxis(true);
 
-                chart.xAxis.tickFormat(function(d) {
-                    return moment(d).format('DD/MM/YYYY');
-                });
+                // Reduce the number of labels on the X axis for visibility
+                var tick_values = getPrunedTickValues(chart_data[0]['values'], 10);
+
+                chart.xAxis
+                    .tickFormat(function(d) { return d3.time.format("%d/%m/%y")(new Date(d)); })
+                    .tickValues(_.map(tick_values, function(d) { return getDate(d).getTime(); }))
+                    .rotateLabels(55);
 
                 chart.yAxis
-                        .tickFormat(d3.format("d"))
-                        .ticks(chart_data[0]['values'].length - 1)
+                    .tickFormat(d3.format("d"))
+                    .ticks(chart_data[0]['values'].length - 1)
 
                 d3.select(self.element)
                     .datum(chart_data)
@@ -73,19 +82,13 @@
             this.$element = $element;
         },
         start: function() {
-
             var self = this;
 
+            // Process country data to fit into the NVD3 scheme
             var processed_data = [];
             for(var i = 0 ; i < this.data.length ; i++) {
-                if(this.data[i]['name']) {
-                    processed_data.push({'label':this.data[i]['name'] + ' (' + this.data[i]['count'] + ')',
-                                                 'value':this.data[i]['count']});
-                }
-                else {
-                    processed_data.push({'label':'Undefined (' + this.data[i]['count'] + ')',
-                                                 'value':this.data[i]['count']});
-                }
+                var country_name = this.data[i]['name'] ? this.data[i]['name'] : 'Undefined';
+                processed_data.push({'label':country_name + ' (' + this.data[i]['count'] + ')', 'value':this.data[i]['count']});
             }
 
             nv.addGraph(function() {
@@ -94,14 +97,12 @@
                     .y(function(d) { return d.value })
                     .showLabels(true);
 
-
                 d3.select(self.$element)
                     .datum(processed_data)
                     .transition().duration(1200)
                     .call(chart);
 
                 nv.utils.windowResize(chart.update);
-
                 return chart;
             });
         },
@@ -109,12 +110,15 @@
 
    $(document).ready(function() {
 
+        // Resize the chart when a tab is opened, because NVD3 automatically reduce the size
+        // of the chart to 5px width when the bootstrap tab is closed.
         $(".graph-tabs li a").click(function (e) {
             e.preventDefault();
             $(this).tab('show');
             $(window).trigger('resize'); // Force NVD3 to redraw the chart
         });
 
+        // Get the code of the link
         var code = $('#code').val();
 
         openerp.jsonRpc('/r/' + code + '/chart', 'call', {})

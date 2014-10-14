@@ -18,13 +18,10 @@
                 self.objects = results;
 
                 $element.select2({
-                    initSelection: {id: 0, text: 'Test'},
                     placeholder: self.placeholder,
                     allowClear: true,
                     createSearchChoice:function(term, data) {
-                        if(self.object_exists(term)) { 
-                            return null; 
-                        }
+                        if(self.object_exists(term)) { return null; }
 
                         return {id:term, text:_.str.sprintf("Create '%s'", term)};
                     },
@@ -40,29 +37,19 @@
         },
         fetch_objects: function() {
             return openerp.jsonRpc('/r/' + this.path, 'call').then(function(results) {
-
-                var objects = [];
-                for(var i = 0 ; i < results.length ; i++) {
-                    objects.push({id: results[i].id, text: results[i].name});
-                }
-                return objects;
+                return _.map(results, function(val) {
+                    return {id: val.id, text: val.name}
+                });
             });
         },
         object_exists: function(query) {
-            var self = this;
-
-            for(var i = 0 ; i < self.objects.length ; i++) {
-                if(self.objects[i].text.toLowerCase() == query.toLowerCase()) {
-                    return true;
-                }
-            }
-            return false;
+            return _.filter(this.objects, function(val) {
+                return val.text.toLowerCase() == query.toLowerCase();
+            }).length > 0;
         },
         on_change: function(e) {
-            var self = this;
-
             if(e.added && _.isString(e.added.id)) {
-                self.create_object(e.added.id);
+                this.create_object(e.added.id);
             }
         },
         create_object: function(name) {
@@ -86,11 +73,6 @@
 
             new ZeroClipboard(this.$('.btn_shorten_url_clipboard'));
 
-            this.$('.archive').click(function(event) {
-                event.preventDefault();
-                self.archive();
-            });
-
             this.$('.btn_shorten_url_clipboard').click(function() {
                 self.toggle_copy_button();
             });
@@ -100,17 +82,6 @@
             }, function() {
                 self.$el.find('.recent_link_buttons').hide();
             });
-        },
-        archive: function() {
-            var self = this;
-
-            openerp.jsonRpc('/r/archive', 'call', {'code' : self.link_obj.code})
-                .then(function(result) {
-                    self.remove();
-                })
-                .fail(function() {
-                    self.notification('Error: Unable to archive this link.');
-                });
         },
         toggle_copy_button: function() {
             var self = this;
@@ -144,10 +115,9 @@
 
             openerp.jsonRpc('/r/recent_links', 'call', {'filter':filter.code})
                 .then(function(result) {
-                    var ordered_result = result.reverse();
-                    for(var  i = 0 ; i < ordered_result.length ; i++) {
-                        self.add_link(ordered_result[i]);
-                    }
+                    _.each(result.reverse(), function(link) {
+                        self.add_link(link);
+                    });
 
                     if(nb_links == 0) {
                         self.update_notification();
@@ -158,7 +128,6 @@
                 });            
         },
         add_link: function(link) {
-            var self = this;
             var nb_links = this.getChildren().length;
 
             var recent_link_box = new openerp.website_url.RecentLinkBox(this, link);
@@ -170,9 +139,10 @@
         },
         remove_links: function() {
             var links = this.getChildren();
-            for(var i = 0 ; i < links.length ; i++) {
-                links[i].remove();
-            }
+
+            _.each(links, function(link) {
+                link.remove();
+            });
         },
         remove_link: function(link) {
             link.$el.remove();
@@ -180,10 +150,10 @@
         },
         update_notification: function() {
             if(this.getChildren().length == 0) {
-                this.$el.find('.notification').append("<div class='alert alert-info'>You don't have any recent links.</div>");
+                this.$el.find('.recent-links-notification').append("<div class='alert alert-info'>You don't have any recent links.</div>");
             }
             else {
-                this.$el.find('.notification').empty();
+                this.$el.find('.recent-links-notification').empty();
             }
         },
     });
@@ -270,7 +240,7 @@
 
         ZeroClipboard.config({swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" });
 
-        // Init Widgets
+        // UTMS selects widgets
         var campaign_select = new openerp.website_url.SelectBox('campaigns');
         campaign_select.start($("#campaign-select"), 'e.g. Promotion of June, Winter Newsletter, ..');
 
@@ -280,6 +250,7 @@
         var source_select = new openerp.website_url.SelectBox('sources');
         source_select.start($("#source-select"), 'e.g. Search Engine, Website page, ..');
 
+        // Recent Links Widgets
         var recent_links;
         openerp.website.add_template_file('/website_url/static/src/xml/recent_link.xml')
             .then(function() {
@@ -297,6 +268,8 @@
             event.preventDefault();
 
             if($('#btn_shorten_url').attr('class').indexOf('btn_copy') === -1) {
+
+                // Get URL and UTMs
                 var url = $("#url").val();
                 var campaign_id = $('#campaign-select').attr('value');
                 var medium_id = $('#channel-select').attr('value');
@@ -313,21 +286,26 @@
                 openerp.jsonRpc("/r/new", 'call', params)
                     .then(function (result) {
                         if('error' in result) {
-                            var $url_form_group = $('#url-form-group')
-                            $url_form_group.addClass('has-error');
-
+                            // Handle errors
                             if(result['error'] == 'empty_url')  {
                                 $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
                             }
                             else if(result['error'] == 'url_not_found') {
                                 $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
                             }
+                            else {
+                                $('.notification').html("<div class='alert alert-danger'>An error occur while trying to generate your link. Try again later.</div>");
+                            }
                         }
                         else {
+                            // Link generated, clean the form and show the link
                             var link = result[0];
+
                             $('.notification').html('');
+
                             $("#url").data("last_result", link.short_url).val(link.short_url).focus().select();
                             $("#url-form-group .control-label").html('To share');
+
                             $("#btn_shorten_url").text("Copy to clipboard").removeClass("btn_shorten btn-primary").addClass("btn_copy btn-success");
                             recent_links.add_link(link);
 
@@ -344,10 +322,11 @@
             if ($(this).data("last_result") != $("#url").val()) {
                 $("#url-form-group .control-label").html('Link');
                 $("#btn_shorten_url").text("Get tracked link").removeClass("btn_copy btn-success").addClass("btn_shorten btn-primary");
-                $('#url-form-group').removeClass('has-error');
+                $('.notification').html('');
             }
         });
 
+        // Paste the URL in param into the form
         var param = purl(window.location.href).param('u');
         if(param) {
             $("#url").val(param);

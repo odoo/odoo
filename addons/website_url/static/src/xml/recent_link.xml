@@ -17,14 +17,17 @@
                 <span class="label label-success"><t t-esc="widget.link_obj.source_id.name"/></span>
                 </p>
                 
-                <p> <small><span t-field="widget.link_obj.write_date" t-field-options='{"format": "d MMMM yyyy"}'/></small></p>
-
-                <div class="notification"></div>
+                <p>
+                    <small>
+                        <span t-field="widget.link_obj.write_date" t-field-options='{"format": "d MMMM yyyy"}'/>
+                    </small>
+                </p>
             </div>
             <div class="col-sm-4 recent_link_buttons">
-                <h2></h2>
-                <button class="btn btn-default btn_shorten_url_clipboard" t-att-data-clipboard-text="widget.link_obj.short_url">Copy to clipboard</button>
-                <a t-att-href="widget.link_obj.stats_url" class="btn btn-warning">Stats</a>
+                <div class="recent_link_inner_buttons">
+                    <button class="btn btn-default btn_shorten_url_clipboard" t-att-data-clipboard-text="widget.link_obj.short_url">Copy to clipboard</button>
+                    <a t-att-href="widget.link_obj.stats_url" class="btn btn-warning">Stats</a>
+                </div>
             </div>
         </div>
     </div>

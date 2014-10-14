@@ -5,20 +5,7 @@
             <script type="text/javascript" src="/website_url/static/src/js/website_url.js"/>
             <script type="text/javascript" src="/website_url/static/src/js/ZeroClipboard.min.js"/>
             <script type="text/javascript" src="/website_url/static/src/js/purl.js"/>
-            <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/styles.css"/>
             <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/website_url.css" />
-        </template>
-
-        <template id="assets_website_url_charts">
-            <script type="text/javascript" src="/website_url/static/src/js/website_url_charts.js"/>
-            <script type="text/javascript" src="/web/static/lib/moment/moment.js"/>
-            <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/website_url.css" />
-        </template>
-
-        <template id="assets_nvd3">
-            <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
-            <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
-            <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
         </template>
 
         <template id="share_page_menu" inherit_id="website.user_navbar">
@@ -71,7 +58,7 @@
                                 <label class="col-sm-2 control-label text-left">Link</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" id="url" class="form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus" style="background-color: #CECDFF;"/>
+                                    <input type="text" id="url" class="form-control required-form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus"/>
                                 </div>
                             </div>
 
@@ -114,7 +101,7 @@
                     </div>
                 </div>
                 
-                <div class="row page-header" style="display: flex;align-items:flex-end;">
+                <div class="row page-header bottom-align-cols">
                     <div class="col-sm-8">
                         <h2>Your tracked links</h2>
                     </div>
@@ -124,179 +111,10 @@
                     </div>
                 </div>
                 
-                <div id="recent_links" style="min-height:30em;">
-                    <div class="notification"></div>
+                <div id="recent_links">
+                    <div class="recent-links-notification"></div>
                 </div>
             </div>
-        </template>
-
-        <template id="graphs">
-            <t t-call="website.layout">
-                <t t-set="head">
-                    <t t-call-assets="website_url.assets_nvd3"/>
-                    <t t-call-assets="website_url.assets_website_url_charts"/>
-                </t>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12 text-left">
-                            <input type="hidden" id="code" t-att-value="code" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <ol class="breadcrumb" style="margin: 10px 0px 0px 0px;">
-                              <li><a href="/r">Link Tracker</a></li>
-                              <li class="active"><t t-esc="host"/></li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="row page-header">
-                        <div class="col-sm-12">
-                            <h1>Details</h1>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p><strong>Title</strong></p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p class="truncate_text"><t t-esc="title"/></p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p><strong>Host</strong></p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p><t t-esc="host"/></p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p><strong>Tracked Link</strong></p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p><t t-esc="short_url"/></p>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p><strong>Total clicks</strong></p>
-                                </div>
-                                <div class="col-sm-8">
-                                    <p><span id="total_clicks_data"></span> clicks in <span id="number_of_countries_data"></span> countries</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <t t-if="campaign_id['name']">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <p><strong>Campaign</strong></p>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <p><t t-esc="campaign_id['name']"/></p>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <t t-if="medium_id['name']">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <p><strong>Channel</strong></p>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <p><t t-esc="medium_id['name']"/></p>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <t t-if="source_id['name']">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <p><strong>Source</strong></p>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <p><t t-esc="source_id['name']"/></p>
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-
-                    <div class="row page-header" style="display: flex;align-items:flex-end;padding-bottom: 0px;">
-                        <div class="col-sm-8">
-                            <h2>Statistics</h2>
-                        </div>
-                        <div class="col-sm-4">
-                            <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
-                                <li class="active"><a href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
-                                <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
-                                <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
-                            </ul>
-                            <span id="filters">Filter by :</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-7">
-                            <h3>Clicks</h3>
-                        </div>
-                        <div class="col-sm-5">
-                            <h3>Countries</h3>
-                        </div>
-                    </div>
-
-                    
-                    <div class="tab-content">
-
-                        <!-- All Time Charts -->
-                        <div class="tab-pane active" id="all_time_charts">
-                            <div class="row">
-                                <div class="col-sm-7" id="all_time_clicks_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                                <div class="col-sm-5" id="all_time_countries_charts">
-                                    <svg style="height:20em;"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Last Month Charts -->
-                        <div class="tab-pane" id="last_month_charts">
-                            <div class="row">
-                                <div class="col-sm-7" id="last_month_clicks_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                                <div class="col-sm-5" id="last_month_countries_charts">
-                                    <svg style="height:20em;"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Last Week Charts -->
-                        <div class="tab-pane" id="last_week_charts">
-                            <div class="row">
-                                <div class="col-sm-7" id="last_week_clicks_chart">
-                                    <svg style="height:20em"></svg>
-                                </div>
-                                <div class="col-sm-5" id="last_week_countries_charts">
-                                    <svg style="height:20em;"></svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
         </template>
 
         <template id="page_shorten_url">

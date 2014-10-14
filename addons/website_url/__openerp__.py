@@ -11,6 +11,7 @@ To shorten URL and To show url click statistics.
     'data' : [
         'views/website_url.xml',
         'views/website_url_template.xml',
+        'views/website_url_graphs.xml',
         'security/ir.model.access.csv',
     ],
     'qweb': ['static/src/xml/*.xml'],

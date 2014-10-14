@@ -13,6 +13,7 @@ class Website_Url(http.Controller):
         if not 'url' in post or post['url'] == '':
             return {'error':'empty_url'}
 
+        # Get trackings fields returned by the users
         tracking_fields = {}
         for key, field in request.registry['crm.tracking.mixin'].tracking_fields():
             if field in post:
@@ -66,6 +67,7 @@ class Website_Url(http.Controller):
         alias_obj = request.registry['website.alias']
         alias_id = alias_obj.search(cr, uid, [('code', '=', code)], context=context)
 
+        # Stats on clicks and clicks by countries
         total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id[0], context=context)
         clicks_by_day = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
 
