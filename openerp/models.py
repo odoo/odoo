@@ -804,10 +804,11 @@ class BaseModel(object):
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
 
-        # retrieve new-style fields and duplicate them (to avoid clashes with
-        # inheritance between different models)
+        # retrieve new-style fields (from above registry class) and duplicate
+        # them (to avoid clashes with inheritance between different models)
         cls._fields = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
+        above = cls.__bases__[0]
+        for attr, field in getmembers(above, Field.__instancecheck__):
             if not field.inherited:
                 cls._add_field(attr, field.new())
 
