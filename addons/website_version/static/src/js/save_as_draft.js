@@ -23,7 +23,7 @@
                     id: "editor_new_version",
                     window_title: _t("New version"),
                     input: "Version name" ,
-                    default :(curr_date + "-" + m_names[curr_month] + "-" + curr_year),
+                    default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
                 }).then(function (name) {
                     var context = website.get_context();
                     openerp.jsonRpc( '/website_version/create_new_snapshot', 'call', { 'name': name }).then(function (result) {
@@ -40,18 +40,18 @@
             return this._super();
         },
 
-        edit: function () {
-            var self = this;
-            var view_id = $('html').attr('data-view-xmlid');
-            openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
-                .then(function (result) {
-                    if(result){
-                        self.$('#master_edit').show();
-                    }
-                });
+        // edit: function () {
+        //     var self = this;
+        //     var view_id = $('html').attr('data-view-xmlid');
+        //     openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
+        //         .then(function (result) {
+        //             if(result){
+        //                 self.$('#master_edit').show();
+        //             }
+        //         });
 
-            return this._super();
-        },
+        //     return this._super();
+        // },
 
     });
 
