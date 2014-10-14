@@ -1223,6 +1223,10 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def _setup(self, env):
+        super(Selection, self)._setup(env)
+        assert self.selection is not None, "Field %s without selection" % self
+
     def _setup_related(self, env):
         super(Selection, self)._setup_related(env)
         # selection must be computed on related field
