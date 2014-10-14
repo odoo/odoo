@@ -137,7 +137,7 @@ class account_cash_statement(models.Model):
 
         return result
 
-    total_entry_encoding = fields.Float(compute='_get_sum_entry_encoding', string="Total Transactions", store=True
+    total_entry_encoding = fields.Float(compute='_get_sum_entry_encoding', string="Total Transactions", store=True,
         help="Total of cash transaction lines.")
     closing_date = fields.Datetime(string="Closed On")
     details_ids = fields.One2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines', copy=True)
@@ -148,7 +148,7 @@ class account_cash_statement(models.Model):
         help="Difference between the theoretical closing balance and the real closing balance.")
     last_closing_balance = fields.Float(compute='_compute_last_closing_balance', string='Last Closing Balance')
     state = fields.Selection(default='default')
-    date = fields.Date(default=lambda self: self._context.get('date', time.strftime("%Y-%m-%d %H:%M:%S"))
+    date = fields.Date(default=lambda self: self._context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")))
 
     @api.model
     def _get_cash_open_box_lines(self, journal_id):
@@ -210,7 +210,7 @@ class account_cash_statement(models.Model):
         """ Changes statement state to Running."""
 
         SequenceObj = self.pool.get('ir.sequence')
-        for statement in self
+        for statement in self:
             vals = {}
             if not self._user_allow(statement.id):
                 raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
