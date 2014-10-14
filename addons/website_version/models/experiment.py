@@ -137,17 +137,7 @@ class Experiment(osv.Model):
 
 
     def _get_version_number(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        for exp in self.browse(cr, uid, ids, context=context):
-            result[exp.id] = 0
-            sum_pond = 0
-            for exp_snap in exp.experiment_snapshot_ids:
-                    sum_pond += int(exp_snap.frequency)
-                    result[exp.id] += 1
-            if sum_pond < 100:
-                #We must considerate master
-                result[exp.id] += 1
-        return result
+        return len(ids)+1
 
     def _get_objective(self,cr,uid,ids,name,args,context=None):
         return [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]

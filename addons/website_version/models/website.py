@@ -37,8 +37,7 @@ class NewWebsite(osv.Model):
         if not 'EXP' in request.httprequest.cookies:
             EXP = request.context.get('EXP')
             if not EXP:
-                EXP = {}
-            
+                EXP = {}            
         else:
             EXP = json.loads(request.httprequest.cookies.get('EXP'))
         for exp in exps:
@@ -49,16 +48,15 @@ class NewWebsite(osv.Model):
                     result.append([int(exp_snap.frequency)+pond_sum, exp_snap.snapshot_id.id])
                     pond_sum+=int(exp_snap.frequency)
                 if pond_sum:
-                    #RANDOM
-                    if pond_sum<100:
-                        pond_sum = 100
-                        #by default on master
-                        EXP[str(exp.id)] = str(0)
-                    x = random.getrandbits(128)%pond_sum
-                    for res in result:
-                        if x<res[0]:
-                            EXP[str(exp.id)] = str(res[1])
-                            break
+                    #by default master has a frequency of 50
+                    pond_sum = pond_sum + 50
+                    #by default on master
+                    EXP[str(exp.id)] = str(0)
+                x = random.getrandbits(128)%pond_sum
+                for res in result:
+                    if x<res[0]:
+                        EXP[str(exp.id)] = str(res[1])
+                        break
         request.context['EXP'] = EXP
      
 
