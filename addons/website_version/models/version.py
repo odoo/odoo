@@ -100,7 +100,7 @@ class ViewVersion(osv.Model):
 
     def clear_cache(self):
         self._read_template.clear_cache(self)
-        self.get_view_id.clear_cache(self)
+        #self.get_view_id.clear_cache(self)
 
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
