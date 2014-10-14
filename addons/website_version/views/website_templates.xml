@@ -21,8 +21,6 @@
                             </t>
                             <li class="first_divider divider"> </li>
                             <li><a href="#" data-action="create_snapshot">Create a new version</a></li>
-                            <!-- <li><a href="#" data-action="google_analytics">Statistics  
-                            <span class="badge"><t t-esc="website.get_running_experiment_number(context=context)"></t></span></a></li> -->
                             <t t-if="website.get_current_snapshot(context=context)[0] != 0 ">
                                 <li><a href="#" data-action="publish_version" 
                                     t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">Publish this version</a>
@@ -30,21 +28,17 @@
                             </t>
                             <li class="divider publish_version"> </li>
                             <li><a href="#" data-action="create_experiment">Create an experiment</a></li>
-                            <li><a href="#" data-action="manage_experiment">Manage your experiments</a></li>
+                            <li><a href="#" data-action="manage_experiment">Manage your experiments
+                            <span class="badge"><t t-esc="website.get_experiment_number(context=context)"></t></span></a></li>
                             <li><a href="#" data-action="statistics">Statistics</a></li>
                         </ul>
                     </li>
-            </xpath>
-            <!-- <xpath expr="//ul[contains(@class, 'dropdown-menu oe_content_menu')]/li" position="after">
-                <li class="divider"> </li>
-                <li groups="base.group_website_designer"><a href="#" data-action="ab_testing">A/B testing</a></li>
-            </xpath> -->   
+            </xpath> 
         </template>
 
         <template id="assets_frontend_menu_version" name="website_menu_version assets" inherit_id="website.assets_editor">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/website_version/static/src/js/menu_version.js"></script>
-                <!-- <script type="text/javascript" src="/website_version/static/src/js/AB_testing.js"></script> -->
                 <script type="text/javascript" src="/website_version/static/src/js/save_as_draft.js"></script>
             </xpath>
         </template>

@@ -75,7 +75,7 @@ class Experiment(osv.Model):
         state = vals.get('state')
         exp_snaps = vals.get('experiment_snapshot_ids')
         obj_metric = vals.get('objectives')
-        #some write operation doesn't need to synchronise with Google
+        #some write operation doesn't need to synchronise with Google (frequency or sequence)
         if name or state or exp_snaps or obj_metric:
             print 'WRITE EXP'
             for exp in self.browse(cr, uid, ids, context=context):

@@ -15,9 +15,8 @@ class NewWebsite(osv.Model):
         'google_management_authorization': fields.char('Google authorization')
     }
 
-    def get_running_experiment_number(self,cr,uid,context=None):
-        print context
-        exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('state','=','running'),('website_id','=',context.get('website_id'))], context=context)
+    def get_experiment_number(self,cr,uid,context=None):
+        exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('website_id','=',context.get('website_id'))], context=context)
         return len(exp_run_ids)
 
     def get_current_snapshot(self,cr,uid,context=None):

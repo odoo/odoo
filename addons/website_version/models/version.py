@@ -66,7 +66,6 @@ class ViewVersion(osv.Model):
         view = self.browse(cr, uid, [view_id],context)[0]
         key = view.key
         if view.website_id and view.snapshot_id:
-            #from pudb import set_trace; set_trace()
             master_id = self.search(cr, uid, [('key','=',key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             if master_id:
                 self.unlink(cr, uid, master_id, context=context)
@@ -102,13 +101,11 @@ class ViewVersion(osv.Model):
         self._read_template.clear_cache(self)
         #self.get_view_id.clear_cache(self)
 
-
+    #To take the right inheriting views
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         arch = super(ViewVersion, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
         v = self.browse(cr, uid, [view_id],context)[0]
         if context and context.get('website_id') and v.type == 'qweb':
-            # if v.key == 'website.footer_custom':
-            #     from pudb import set_trace; set_trace()
             dico = {}
             view_arch = dict([(v, a) for a, v in arch])
             keys = self.read(cr, uid, view_arch.keys(), ['key','snapshot_id','website_id'], context)
@@ -129,8 +126,6 @@ class ViewVersion(osv.Model):
             for x in arch:
                 if x[1] in dico.values():
                     result.append(x)
-            # if len(result)>0 and len(arch)>0:
-            #     from pudb import set_trace; set_trace()
             return result
         return arch 
 

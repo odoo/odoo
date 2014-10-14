@@ -127,9 +127,7 @@ class TableExporter(http.Controller):
             master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             del_l += master_id
         if del_l:
-            print "SUPP VIEWS=%s" % del_l
-            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)
-        
+            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)        
         for view in obj.browse(cr, uid, [int(snapshot_id)],context).view_ids:
             view.copy({'snapshot_id': None})
         request.session['snapshot_id'] = 0
@@ -168,7 +166,7 @@ class TableExporter(http.Controller):
 
         client_id = gs_obj.get_client_id(request.cr, request.uid, 'management', context=kw.get('local_context'))
         client_secret = gs_obj.get_client_secret(request.cr, request.uid, 'management', context=None)
-        if not client_id or client_id == '':
+        if not client_id or client_id == '' or not client_secret or client_secret == '':
             dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'website_version', 'action_config_settings_google_management')
             return {
                 "status": "need_config_from_admin",
