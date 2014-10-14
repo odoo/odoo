@@ -1490,6 +1490,10 @@
                 .on("mousedown", function () {
                     self.$target.transfo("hide");
                 });
+
+            if (this.$target.is("[data-oe-model]") || this.$target.parent().is("[data-oe-model]")) {
+                this.$el.hide();
+            }
         },
         resetTransfo: function () {
             var self = this;

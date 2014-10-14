@@ -61,7 +61,7 @@
     <div class="header">
         <div class="row">
             <div class="col-xs-3">
-                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+                <div t-field="company.logo" t-field-options='{"widget": "image", "class": "img-responsive-height"}' style="height: 45px;"/>
             </div>
             <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
         </div>
