@@ -25,6 +25,7 @@ from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
+from openerp.osv import osv
 
 
 class account_bank_statement(models.Model):
@@ -84,25 +85,26 @@ class account_bank_statement(models.Model):
         journal = self.env['account.journal'].browse(journal_id)
         return self.env['ir.sequence'].with_context(context).next_by_id(journal.sequence_id.id)
 
-    def _currency(self, cursor, user, ids, name, args, context=None):
-        res = {}
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-        default_currency = res_users_obj.browse(cursor, user,
-                user, context=context).company_id.currency_id
-        for statement in self.browse(cursor, user, ids, context=context):
+    @api.multi
+    @api.depends('journal_id')
+    def _currency(self):
+#         res = {}
+#         res_currency_obj = self.pool.get('res.currency')
+        default_currency = self.env.user.company_id.currency_id
+        for statement in self:
             currency = statement.journal_id.currency
             if not currency:
                 currency = default_currency
-            res[statement.id] = currency.id
-        currency_names = {}
-        for currency_id, currency_name in res_currency_obj.name_get(cursor,
-                user, [x for x in res.values()], context=context):
-            currency_names[currency_id] = currency_name
-        for statement_id in res.keys():
-            currency_id = res[statement_id]
-            res[statement_id] = (currency_id, currency_names[currency_id])
-        return res
+#             res[statement.id] = currency.id
+            statement.currency = currency.id
+#         currency_names = {}
+#         for currency_id, currency_name in res_currency_obj.name_get(cursor,
+#                 user, [x for x in res.values()], context=context):
+#             currency_names[currency_id] = currency_name
+#         for statement_id in res.keys():
+#             currency_id = res[statement_id]
+#             res[statement_id] = (currency_id, currency_names[currency_id])
+#         return res
 
     @api.multi
     @api.depends('line_ids.journal_entry_id')
@@ -458,12 +460,11 @@ class account_bank_statement_line(models.Model):
 
         return ret
 
-    def get_statement_line_for_reconciliation(self, cr, uid, st_line, context=None):
+    @api.one
+    def get_statement_line_for_reconciliation():
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
-        if context is None:
-            context = {}
         statement_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
-        rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_asl', context=context)
+        rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_asl', context=self._context)
 
         if st_line.amount_currency and st_line.currency_id:
             amount = st_line.amount_currency
@@ -501,24 +502,24 @@ class account_bank_statement_line(models.Model):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
+    @api.one
+    def get_reconciliation_proposition(self, excluded_ids=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line. """
         if excluded_ids is None:
             excluded_ids = []
-        mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
         if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
-            match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
-            if match_id:
-                mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
+            structured_com_match_domain = [('ref', '=', st_line.name), ('reconcile_id', '=', False), ('state', '=', 'valid'),
+                ('account_id.reconcile', '=', True), ('id', 'not in', excluded_ids)]
+            move_lines = self.env['account.move.line'].search(structured_com_match_domain, offset=0, limit=1)
+            if move_lines:
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
-                mv_line = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, mv_line_br, target_currency=target_currency, target_date=st_line.date, context=context)[0]
+                mv_line = move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)[0]
                 mv_line['has_no_partner'] = not bool(st_line.partner_id.id)
                 # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
                 if (mv_line['partner_id']):
-                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
+                    st_line.write({'partner_id': mv_line['partner_id']})
                     mv_line['has_no_partner'] = False
                 return [mv_line]
 
@@ -540,25 +541,25 @@ class account_bank_statement_line(models.Model):
             if st_line.amount < 0:
                 sign = -1
 
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        match_id = st_line.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_id:
             return [match_id[0]]
 
         return []
 
-    def get_move_lines_for_reconciliation_by_statement_line_id(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
+    @api.one
+    def get_move_lines_for_reconciliation_by_statement_line_id(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
         """ Bridge between the web client reconciliation widget and get_move_lines_for_reconciliation (which expects a browse record) """
         if excluded_ids is None:
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-        st_line = self.browse(cr, uid, st_line_id, context=context)
-        return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
+        return self.get_move_lines_for_reconciliation(excluded_ids, str, offset, limit, count, additional_domain)
 
-    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
+    @api.one
+    def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
-            :param st_line: the browse record of the statement line
             :param integers list excluded_ids: ids of move lines that should not be fetched
             :param boolean count: just return the number of records
             :param tuples list additional_domain: additional domain restrictions
@@ -567,12 +568,11 @@ class account_bank_statement_line(models.Model):
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-        mv_line_pool = self.pool.get('account.move.line')
 
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
-        if st_line.partner_id.id:
-            domain += [('partner_id', '=', st_line.partner_id.id),
+        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
+        if self.partner_id.id:
+            domain += [('partner_id', '=', self.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
                 ('account_id.type', '=', 'payable')]
         else:
@@ -585,8 +585,7 @@ class account_bank_statement_line(models.Model):
             domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
 
         # Get move lines
-        line_ids = mv_line_pool.search(cr, uid, domain, offset=offset, limit=limit, order="date_maturity asc, id asc", context=context)
-        lines = mv_line_pool.browse(cr, uid, line_ids, context=context)
+        lines = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
         
         # Either return number of lines
         if count:
@@ -602,34 +601,35 @@ class account_bank_statement_line(models.Model):
         
         # Or return list of dicts representing the formatted move lines
         else:
-            target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
-            mv_lines = mv_line_pool.prepare_move_lines_for_reconciliation_widget(cr, uid, lines, target_currency=target_currency, target_date=st_line.date, context=context)
-            has_no_partner = not bool(st_line.partner_id.id)
+            target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
+            mv_lines = lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
+            has_no_partner = not bool(self.partner_id.id)
             for line in mv_lines:
                 line['has_no_partner'] = has_no_partner
             return mv_lines
 
-    def get_currency_rate_line(self, cr, uid, st_line, currency_diff, move_id, context=None):
+    @api.one
+    def get_currency_rate_line(self, currency_diff, move_id):
         if currency_diff < 0:
-            account_id = st_line.company_id.expense_currency_exchange_account_id.id
+            account_id = self.company_id.expense_currency_exchange_account_id.id
             if not account_id:
                 raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
-            account_id = st_line.company_id.income_currency_exchange_account_id.id
+            account_id = self.company_id.income_currency_exchange_account_id.id
             if not account_id:
                 raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         return {
             'move_id': move_id,
-            'name': _('change') + ': ' + (st_line.name or '/'),
-            'period_id': st_line.statement_id.period_id.id,
-            'journal_id': st_line.journal_id.id,
-            'partner_id': st_line.partner_id.id,
-            'company_id': st_line.company_id.id,
-            'statement_id': st_line.statement_id.id,
+            'name': _('change') + ': ' + (self.name or '/'),
+            'period_id': self.statement_id.period_id.id,
+            'journal_id': self.journal_id.id,
+            'partner_id': self.partner_id.id,
+            'company_id': self.company_id.id,
+            'statement_id': self.statement_id.id,
             'debit': currency_diff < 0 and -currency_diff or 0,
             'credit': currency_diff > 0 and currency_diff or 0,
             'amount_currency': 0.0,
-            'date': st_line.date,
+            'date': self.date,
             'account_id': account_id
             }
 
@@ -748,9 +748,9 @@ class account_bank_statement_line(models.Model):
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
     # return [('journal_entry_id', '=', False)]
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
-    def _needaction_domain_get(self, cr, uid, context=None):
-        user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False)]
+    @api.model
+    def _needaction_domain_get(self):
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [self.env.user.company_id.id]), ('journal_entry_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
