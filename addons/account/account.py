@@ -850,61 +850,6 @@ class account_period(models.Model):
         return self.search([('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
 
 
-class account_journal_period(models.Model):
-    _name = "account.journal.period"
-    _description = "Journal Period"
-    _order = "period_id"
-
-#     def _icon_get(self, cr, uid, ids, field_name, arg=None, context=None):
-#         result = {}.fromkeys(ids, 'STOCK_NEW')
-#         for r in self.read(cr, uid, ids, ['state']):
-#             result[r['id']] = {
-#                 'draft': 'STOCK_NEW',
-#                 'printed': 'STOCK_PRINT_PREVIEW',
-#                 'done': 'STOCK_DIALOG_AUTHENTICATION',
-#             }.get(r['state'], 'STOCK_NEW')
-#         return result
-
-    name = fields.Char(string='Journal-Period Name', required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, ondelete='cascade')
-    period_id = fields.Many2one('account.period', string='Period', required=True, ondelete='cascade')
-    icon = fields.Char(string='Icon')
-    active = fields.Boolean(string='Active', default=True,
-        help="If the active field is set to False, it will allow you to hide the journal period without removing it.")
-    state = fields.Selection([('draft', 'Draft'), ('printed', 'Printed'), ('done', 'Done')], string='Status', required=True, readonly=True, default='draft',
-        help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.')
-    fiscalyear_id = fields.Many2one('account.fiscalyear', related='period_id.fiscalyear_id', string='Fiscal Year')
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
-
-    @api.multi
-    def _check(self):
-        for obj in self:
-            cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
-            res = cr.fetchall()
-            if res:
-                raise osv.except_osv(_('Error!'), _('You cannot modify/delete a journal with entries for this period.'))
-        return True
-
-    @api.multi
-    def write(self, vals):
-        self._check()
-        return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
-
-    @api.model
-    @api.returns('self')
-    def create(self, vals):
-        period_id = vals.get('period_id', False)
-        if period_id:
-            period = self.env['account.period'].browse(period_id)
-            vals['state'] = period.state
-        return super(account_journal_period, self).create(vals)
-
-    @api.multi
-    def unlink(self):
-        self._check()
-        return super(account_journal_period, self).unlink()
-
-
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------

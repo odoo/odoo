@@ -1543,26 +1543,6 @@
             res_model="account.move.line"
             src_model="account.move.reconcile"/>
 
-        <!-- TODO: Print Journal (and change state), Close Journal (and verify that there is no draft Entry Lines) -->
-        <record id="view_journal_period_tree" model="ir.ui.view">
-            <field name="name">account.journal.period.tree</field>
-            <field name="model">account.journal.period</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';gray:state == 'done';black:state == 'printed'" string="Journals">
-                    <field icon="icon" name="fiscalyear_id"/>
-                    <field name="period_id"/>
-                    <field name="journal_id"/>
-                    <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_account_journal_period_tree" model="ir.actions.act_window">
-            <field name="name">Journals</field>
-            <field name="res_model">account.journal.period</field>
-            <field name="view_type">tree</field>
-        </record>
-
         <!-- Payment Terms -->
         <record id="view_payment_term_line_tree" model="ir.ui.view">
             <field name="name">account.payment.term.line.tree</field>
