@@ -26,12 +26,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // TODO: templates orverwritten could be called by t-call="__super__" ?
 // TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
-    expressions_cache: {
-        // special case for template bodies, __content__ doesn't work in
-        // Python impl because safe_eval -> assert_no_dunder_name so use
-        // Python impl's magical 0 variable instead
-        '0': 'dict[0]',
-    },
+    expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
     ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
@@ -594,6 +589,12 @@ QWeb2.Element = (function() {
             QWeb2.expressions_cache[e] = r;
             return r;
         },
+        format_str: function (e) {
+            if (e == '0') {
+                return 'dict[0]';
+            }
+            return this.format_expression(e);
+        },
         string_interpolation : function(s) {
             var _this = this;
             if (!s) {
@@ -608,7 +609,7 @@ QWeb2.Element = (function() {
                 // extract literal string between previous and current match
                 append_literal(s.slice(start, re.lastIndex - m[0].length));
                 // extract matched expression
-                r.push('(' + this.format_expression(m[2] || m[1]) + ')');
+                r.push('(' + this.format_str(m[2] || m[1]) + ')');
                 // update position of new matching
                 start = re.lastIndex;
             }
@@ -737,7 +738,7 @@ QWeb2.Element = (function() {
                     + "));");
         },
         compile_action_raw : function(value) {
-            this.top("r.push(" + (this.format_expression(value)) + ");");
+            this.top("r.push(" + (this.format_str(value)) + ");");
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");
