@@ -39,6 +39,7 @@ and get rewards.
     'depends': ['point_of_sale'],
     'data': [
         'views/views.xml',
+        'security/ir.model.access.csv',
         'views/templates.xml'
     ],
     'qweb': ['static/src/xml/loyalty.xml'],

@@ -42,6 +42,7 @@ This module unlocks several advanced barcode features for the point of sale:
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [
         'barcodes_view.xml',
+        'security/ir.model.access.csv',
         'views/templates.xml',
     ],
     'installable': True,
