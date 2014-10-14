@@ -947,7 +947,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.$el.find('[title]').each(function(){
             $(this).tooltip({
                 delay: { show: 500, hide: 0},
-                container: $(this),
                 title: function() {
                     var template = $(this).attr('tooltip');
                     if (!self.view.qweb.has_template(template)) {

@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-19 19:10+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-30 19:32+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-20 06:28+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-10-01 06:33+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:142
+#: code:addons/stock_landed_costs/stock_landed_costs.py:150
+#, python-format
+msgid " already out"
+msgstr " ya fuera"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -103,6 +110,11 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: stock_landed_costs
+#: field:stock.landed.cost.lines,price_unit:0
+msgid "Cost"
+msgstr "Coste"
+
+#. module: stock_landed_costs
 #: field:stock.valuation.adjustment.lines,cost_line_id:0
 msgid "Cost Line"
 msgstr "Línea de coste"
@@ -163,8 +175,8 @@ msgstr "Igual"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/stock_landed_costs.py:74
-#: code:addons/stock_landed_costs/stock_landed_costs.py:110
-#: code:addons/stock_landed_costs/stock_landed_costs.py:149
+#: code:addons/stock_landed_costs/stock_landed_costs.py:112
+#: code:addons/stock_landed_costs/stock_landed_costs.py:192
 #, python-format
 msgid "Error!"
 msgstr "Error"
@@ -308,7 +320,7 @@ msgid "Pickings"
 msgstr "Albaranes"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:110
+#: code:addons/stock_landed_costs/stock_landed_costs.py:112
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -408,11 +420,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: stock_landed_costs
-#: field:stock.landed.cost.lines,price_unit:0
-msgid "Unit Price"
-msgstr "Precio unitario"
-
-#. module: stock_landed_costs
 #: field:stock.landed.cost,message_unread:0
 msgid "Unread Messages"
 msgstr "Mensajes sin leer"
@@ -449,11 +456,11 @@ msgid "Weight"
 msgstr "Peso"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:149
+#: code:addons/stock_landed_costs/stock_landed_costs.py:192
 #, python-format
-msgid "You cannot validate a landed cost which has no valuation line."
+msgid "You cannot validate a landed cost which has no valid valuation lines."
 msgstr ""
-"No puede validar un coste en destino que no tiene línea de valorización"
+"No puede validar un coste en destino que no tiene líneas de valorización."
 
 #. module: stock_landed_costs
 #: view:product.product:stock_landed_costs.view_stock_landed_cost_type_form

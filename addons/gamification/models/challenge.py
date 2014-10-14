@@ -292,6 +292,9 @@ class gamification_challenge(osv.Model):
 
         :param list(int) ids: the ids of the challenges to update, if False will
         update only challenges in progress."""
+        if not ids:
+            return True
+
         if isinstance(ids, (int,long)):
             ids = [ids]
 
@@ -705,6 +708,7 @@ class gamification_challenge(osv.Model):
         """
         if isinstance(ids, (int,long)):
             ids = [ids]
+        commit = context.get('commit_gamification', False)
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
@@ -733,6 +737,8 @@ class gamification_challenge(osv.Model):
                                 continue
                         self.reward_user(cr, uid, user_id, challenge.reward_id.id, challenge.id, context=context)
                         rewarded_users.append(user_id)
+                        if commit:
+                            cr.commit()
 
             if challenge_ended:
                 # open chatter message
@@ -765,6 +771,8 @@ class gamification_challenge(osv.Model):
                     partner_ids=[user.partner_id.id for user in challenge.user_ids],
                     body=message_body,
                     context=context)
+                if commit:
+                    cr.commit()
 
         return True
 

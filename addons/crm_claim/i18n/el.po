@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:02+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:03+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_claim
 #: field:res.partner,claim_count:0
@@ -29,8 +29,8 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
-msgid "# of Cases"
-msgstr "# από Υποθέσεις"
+msgid "# of Claims"
+msgstr ""
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
@@ -87,7 +87,6 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
@@ -133,7 +132,6 @@ msgstr "Κατηγορίες Απαιτήσεων"
 
 #. module: crm_claim
 #: field:crm.claim,date:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,claim_date:0
 msgid "Claim Date"
 msgstr ""
@@ -150,6 +148,7 @@ msgstr "Περιγραφή Αξίωσης"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
 msgstr ""
 
@@ -171,6 +170,7 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,name:0
+#: field:crm.claim.report,subject:0
 msgid "Claim Subject"
 msgstr ""
 
@@ -438,11 +438,6 @@ msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-msgid "My company"
-msgstr ""
-
-#. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 msgid "New"
 msgstr ""
@@ -512,7 +507,6 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "Προτεραιότητα"
@@ -650,7 +644,6 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Type"
 msgstr "Τύπος"
 
@@ -698,3 +691,11 @@ msgstr ""
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
 msgstr ""
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
+msgstr ""
+
+#~ msgid "# of Cases"
+#~ msgstr "# από Υποθέσεις"

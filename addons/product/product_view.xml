@@ -50,6 +50,7 @@
             <field name="arch" type="xml">
                 <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
+                    <field name='product_variant_count' invisible='1'/>
                     <sheet>
                         <field name="id" invisible="True"/>
                         <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
@@ -77,8 +78,6 @@
                                     </group>
                                     <group>
                                         <field name="active"/>
-                                        <field name="ean13" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
-                                        <field name="default_code" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
                                     </group>
                                 </group>
                                 <group colspan="4">
@@ -111,6 +110,9 @@
                                         <field digits="(14, 3)" name="weight"/>
                                         <field digits="(14, 3)" name="weight_net"/>
                                     </group>
+                                </group>
+                                <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">
+                                    <field name="packaging_ids" string="Configurations" context="{'tree_view_ref':'product.product_packaging_tree_view_product', 'form_view_ref': 'product.product_packaging_form_view_without_product'}"/>
                                 </group>
                             </page>
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
@@ -235,6 +237,10 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="name">Product Template</attribute>
                 </xpath>
+                <field name="active" position="after">
+                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                </field>
                 <xpath expr="//page[@string='Sales']" position="after">
                     <page name="variants" string="Variants">
                         <div class="oe_right">
@@ -337,6 +343,10 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
+                <field name="active" position="after">
+                    <field name="ean13"/>
+                    <field name="default_code"/>
+                </field>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>
@@ -703,9 +713,24 @@
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
+                    <field name="product_tmpl_id"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
+                    <field name="ul_container"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_packaging_tree_view_product" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view.product</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <tree string="Packaging">
+                    <field name="qty"/>
+                    <field name="ul"/>
+                    <field name="ul_qty"/>
+                    <field name="rows"/>
                     <field name="ul_container"/>
                 </tree>
             </field>
@@ -719,6 +744,29 @@
                     <group col="4">
                         <field name="product_tmpl_id"/>
                         <newline/>
+                        <field name="ean"/>
+                        <field name="sequence" invisible="1"/>
+                        <newline/>
+                        <field name="qty"/>
+                        <field name="ul"/>
+                        <separator colspan="4" string="Palletization"/>
+                        <field name="ul_qty"/>
+                        <field name="rows"/>
+                        <field name="ul_container"/>
+                        <field name="weight"/>
+                        <separator colspan="4" string="Other Info"/>
+                        <field colspan="4" name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_packaging_form_view_without_product" model="ir.ui.view">
+            <field name="name">product.packaging.form.view.without.product</field>
+            <field name="model">product.packaging</field>
+            <field name="arch" type="xml">
+                <form string="Packaging">
+                    <group col="4">
                         <field name="ean"/>
                         <field name="sequence" invisible="1"/>
                         <newline/>

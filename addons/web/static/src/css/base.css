@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -18,6 +19,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 #oe_main_menu_navbar {
   min-height: 34px;
   z-index: 1001;
@@ -739,11 +741,6 @@
   text-decoration: none;
 }
 .openerp .oe_dropdown_arrow:after {
-  width: 0;
-  height: 0;
-  display: inline-block;
-  content: "&darr";
-  text-indent: -99999px;
   vertical-align: top;
   margin-top: 8px;
   margin-left: 3px;
@@ -3026,6 +3023,7 @@
     top: 0px;
   }
 }
+
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;
@@ -3259,6 +3257,9 @@ body.oe_single_form .oe_single_form_container {
   .openerp {
     text-shadow: none;
   }
+  .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
+    overflow: visible;
+  }
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;
   }
@@ -3293,6 +3294,10 @@ body.oe_single_form .oe_single_form_container {
   }
   .openerp .openerp div.oe_mail_wall {
     overflow: hidden !important;
+  }
+
+  .openerp.openerp_webclient_container {
+    overflow: visible;
   }
 }
 .tooltip {
@@ -3354,6 +3359,9 @@ body.oe_single_form .oe_single_form_container {
   height: 18px;
   font-size: 20px;
 }
+.modal .modal-body {
+  overflow-x: auto;
+}
 .modal .modal-footer {
   text-align: left;
 }
@@ -3362,7 +3370,6 @@ body.oe_single_form .oe_single_form_container {
 }
 .modal .oe_act_window.modal-body {
   padding: 0;
-  overflow-x: auto;
 }
 
 .ui-datepicker {

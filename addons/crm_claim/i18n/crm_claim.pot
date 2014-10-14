@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-23 16:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
-msgid "# of Cases"
+msgid "# of Claims"
 msgstr ""
 
 #. module: crm_claim
@@ -75,7 +75,6 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr ""
@@ -121,7 +120,6 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,date:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,claim_date:0
 msgid "Claim Date"
 msgstr ""
@@ -138,6 +136,7 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
 msgstr ""
 
@@ -159,6 +158,7 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,name:0
+#: field:crm.claim.report,subject:0
 msgid "Claim Subject"
 msgstr ""
 
@@ -418,11 +418,6 @@ msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-msgid "My company"
-msgstr ""
-
-#. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 msgid "New"
 msgstr ""
@@ -492,7 +487,6 @@ msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr ""
@@ -625,7 +619,6 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Type"
 msgstr ""
 
@@ -672,5 +665,10 @@ msgstr ""
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
 msgstr ""
 

@@ -645,11 +645,6 @@ $sheet-padding: 16px
                 &:hover
                     text-decoration: none
     .oe_dropdown_arrow:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
         vertical-align: top
         margin-top: 8px
         //margin-left set at 3px to avoid a strange overflow
@@ -2661,6 +2656,8 @@ body.oe_single_form
 // @media print {{{
 @media print
     .openerp
+        .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body
+            overflow: visible
         .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default, .oe_topbar, .oe_leftbar, .oe_loading
             // We use !important here because jQuery adds @style = display: block on elements when using $.fn.show()
             display: none !important
@@ -2691,6 +2688,8 @@ body.oe_single_form
             background: none
         .openerp div.oe_mail_wall
             overflow: hidden !important
+    .openerp.openerp_webclient_container
+        overflow: visible
 // }}}
 
 // End of customize
@@ -2747,13 +2746,14 @@ body.oe_single_form
         padding: 1px
         height: 18px
         font-size: 20px
+    .modal-body
+        overflow-x: auto
     .modal-footer
         text-align: left
     .oe_button
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
-        overflow-x: auto
 
 .ui-datepicker
     z-index: 1500 !important

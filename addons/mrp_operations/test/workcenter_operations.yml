@@ -79,7 +79,7 @@
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     order.workcenter_lines[0].signal_workflow('button_cancel')
 -
-  I reset first work operation and start after resolving techninal fault of work center.
+  I reset first work operation and start after resolving technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
