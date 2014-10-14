@@ -141,7 +141,7 @@ class account_cash_statement(models.Model):
         help="Total of cash transaction lines.")
     closing_date = fields.Datetime(string="Closed On")
     details_ids = fields.One2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines', copy=True)
-    opening_details_ids = fieldsOne2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines')
+    opening_details_ids = fields.One2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines')
     closing_details_ids = fields.One2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines')
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
     difference = fields.Float(compute='_compute_difference', string="Difference",
