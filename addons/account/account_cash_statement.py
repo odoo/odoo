@@ -55,7 +55,7 @@ class account_cashbox_line(models.Model):
     number_closing = fields.Integer(string='Number of Units', help='Closing Unit Numbers')
     subtotal_opening = fields.Float(compute='_sub_total', string='Opening Subtotal', digits=dp.get_precision('Account'))
     subtotal_closing = fields.Float(compute='_sub_total', string='Closing Subtotal', digits=dp.get_precision('Account'))
-    bank_statement_id = fields.Many2one('account.bank.statement', string='Bank Statement' ondelete='cascade')
+    bank_statement_id = fields.Many2one('account.bank.statement', string='Bank Statement', ondelete='cascade')
 
 class account_cash_statement(models.Model):
     _inherit = 'account.bank.statement'
