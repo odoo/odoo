@@ -296,7 +296,7 @@ class account_journal_cashbox_line(models.Model):
     _rec_name = 'pieces'
     _order = 'pieces asc'
 
-    pieces = fields.float(string='Values', digits=dp.get_precision('Account'))
-    journal_id = fields.many2one('account.journal', string='Journal', required=True, index=True, ondelete="cascade")
+    pieces = fields.Float(string='Values', digits=dp.get_precision('Account'))
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, index=True, ondelete="cascade")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
