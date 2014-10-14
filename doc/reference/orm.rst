@@ -138,7 +138,6 @@ Model
 
     .. automethod:: default_get
     .. automethod:: copy
-    .. automethod:: add_default_value
     .. automethod:: name_get
     .. automethod:: name_create
 
