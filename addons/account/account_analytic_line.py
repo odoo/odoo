@@ -19,30 +19,27 @@
 #
 ##############################################################################
 
-from openerp.osv import fields
-from openerp.osv import osv
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class account_analytic_line(osv.osv):
+class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
-    _columns = {
-        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
-        'product_id': fields.many2one('product.product', 'Product'),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)]),
-        'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
-        'code': fields.char('Code', size=8),
-        'ref': fields.char('Ref.'),
-        'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
-        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
-    }
+    _order = 'date desc'
+
+    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    product_id = fields.Many2one('product.product', string='Product')
+    general_account_id = fields.Many2one('account.account', string='Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)])
+    move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
+    journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True),
+    code = fields.Char(string='Code', size=8)
+    ref = fields.Char(string='Ref.')
+    currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
+    amount_currency = fields.Float(related='move_id.amount_currency', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
+    partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
-    _order = 'date desc'
 
     def _check_company(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
@@ -128,27 +125,24 @@ class account_analytic_line(osv.osv):
             }
         }
 
-    def view_header_get(self, cr, user, view_id, view_type, context=None):
-        if context is None:
-            context = {}
+    @api.model
+    def view_header_get(self, view_id, view_type):
+        context = dict(self._context or {})
         if context.get('account_id', False):
             # account_id in context may also be pointing to an account.account.id
-            cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))
-            res = cr.fetchone()
+            self._cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))
+            res = self._cr.fetchone()
             if res:
                 res = _('Entries: ')+ (res[0] or '')
             return res
         return False
 
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
     """ Inherits partner and adds contract information in the partner form """
     _inherit = 'res.partner'
 
-    _columns = {
-        'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts', readonly=True),
-    }
+    contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
