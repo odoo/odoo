@@ -1011,17 +1011,17 @@
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-                def.resolve('mailto:' + val, false, label);
+                def.resolve('mailto:' + val, false, label, classes);
             } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    def.resolve(data.id, false, data.text);
+                    def.resolve(data.id, false, label || data.text, classes);
                 } else {
                     // Create the page, get the URL back
                     $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            def.resolve(response, false, data.id);
+                            def.resolve(response, false, data.id, classes);
                         });
                 }
             } else {
