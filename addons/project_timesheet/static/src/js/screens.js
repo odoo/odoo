@@ -15,6 +15,67 @@ function odoo_project_timesheet_screens(project_timesheet) {
         });
     };
 
+    //Block UI Stuff
+    project_timesheet.Throbber = openerp.Widget.extend({
+        template: "Throbber",
+        start: function() {
+            var opts = {
+              lines: 13, // The number of lines to draw
+              length: 7, // The length of each line
+              width: 4, // The line thickness
+              radius: 10, // The radius of the inner circle
+              rotate: 0, // The rotation offset
+              color: '#FFF', // #rgb or #rrggbb
+              speed: 1, // Rounds per second
+              trail: 60, // Afterglow percentage
+              shadow: false, // Whether to render a shadow
+              hwaccel: false, // Whether to use hardware acceleration
+              className: 'spinner', // The CSS class to assign to the spinner
+              zIndex: 2e9, // The z-index (defaults to 2000000000)
+              top: 'auto', // Top position relative to parent in px
+              left: 'auto' // Left position relative to parent in px
+            };
+            this.spin = new Spinner(opts).spin(this.$el[0]);
+            this.start_time = new Date().getTime();
+            this.act_message();
+        },
+        act_message: function() {
+            var self = this;
+            setTimeout(function() {
+                if (self.isDestroyed())
+                    return;
+                var seconds = (new Date().getTime() - self.start_time) / 1000;
+                var mes;
+                _.each(messages_by_seconds(), function(el) {
+                    if (seconds >= el[0])
+                        mes = el[1];
+                });
+                self.$(".oe_throbber_message").html(mes);
+                self.act_message();
+            }, 1000);
+        },
+        destroy: function() {
+            if (this.spin)
+                this.spin.stop();
+            this._super();
+        },
+    });
+    project_timesheet.Throbber.throbbers = [];
+    
+    project_timesheet.blockUI = function() {
+        var tmp = $.blockUI.apply($, arguments);
+        var throbber = new project_timesheet.Throbber();
+        project_timesheet.Throbber.throbbers.push(throbber);
+        throbber.appendTo($(".oe_blockui_spin_container"));
+        return tmp;
+    };
+    project_timesheet.unblockUI = function() {
+        _.each(project_timesheet.Throbber.throbbers, function(el) {
+            el.destroy();
+        });
+        return $.unblockUI.apply($, arguments);
+    };
+
     var opened_modal = [];
     project_timesheet.Dialog = openerp.Widget.extend({
         //template: "ProjectTimesheetDialog",

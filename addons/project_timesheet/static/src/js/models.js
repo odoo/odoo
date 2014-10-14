@@ -154,9 +154,11 @@ function odoo_project_timesheet_models(project_timesheet) {
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
         initialize: function(attributes) {
             var self = this;
+            var callback_function;
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.project_timesheet_widget = attributes.project_timesheet_widget;
-            var def = $.Deferred();
+            this.def = $.Deferred();
+            this.ready = $.Deferred();
             this.set({
                 projects: new project_timesheet.ProjectCollection()
             });
@@ -171,32 +173,37 @@ function odoo_project_timesheet_models(project_timesheet) {
             }
             //If we have stored session then replace project_timesheet.session with new Session object with stored session origin
             if (!_.isEmpty(project_timesheet.session)) {
-                project_timesheet.session.check_session_id().done(function() {
+                callback_function = function (){
                     //Important Note: check_session_id may replace session_id each time when server_origin is different then origin,
                     //so we will update the localstorage session
                     self.project_timesheet_db.save("session", project_timesheet.session);
                     console.log("Here we go, you can do rpc, we having session ID.");
-                    console.log("project_timesheet.session is ::: ", project_timesheet.session);
-                    //Load server data and update localstorage
-                    def = self.load_server_data();
-                }).fail(function() {
-                    def.reject();
-                });
+                };
+                this.def = project_timesheet.session.check_session_id();
             } else {
+                callback_function = function (){
+                    project_timesheet.session = session;
+                };
                 //If we do not have previous stored session then try to check whether we having session with window origin (say for example session with localhost:9000)
                 console.log("Inside elseeee, we do not have old session stored with origin in db");
-                var window_origin = location.protocol + "//" + location.host;
-                var session = new openerp.Session(undefined, window_origin);
-                session.session_reload().done(function() {
-                    console.log("We having session with window origin ::: ");
-                    project_timesheet.session = session;
-                    def = self.load_server_data();
-                }).fail(function() {
-                    def.reject();
-                });
+                var isLocal = location.protocol === "file:";
+                if (isLocal) {
+                    this.def.reject();
+                } else {
+                    var window_origin = location.protocol + "//" + location.host;
+                    var session = new openerp.Session(undefined, window_origin);
+                    this.def = session.session_reload();
+                }
             }
             //Always Load locally stored data, whether server is running(or def may fail, because server is not up, still we will load local data)
-            $.when(def).always(function() {
+            this.def.done(function() {
+                callback_function();
+                self.load_server_data().done(function() {
+                    self.ready.resolve();
+                    self.load_stored_data();
+                });
+            }).fail(function() {
+                self.ready.reject();
                 self.load_stored_data();
             });
         },
@@ -234,8 +241,8 @@ function odoo_project_timesheet_models(project_timesheet) {
             //We should simply call add_project method for activity_record which having project and task details, 
             //project model will call add_task, also check if project model is also available then will not create new model else create new model and push it into projects collection
             var self = this;
-            console.log("Inside load_stored_data ::: ");
             var stored_activities = this.project_timesheet_db.load("activities");
+            console.log("Inside load_stored_data ::: ", stored_activities);
             _.each(stored_activities, function(record) {
                 self.add_project(record);
             });
@@ -266,7 +273,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                     });
                     self.project_timesheet_db.add_activities(work_activities);
                 });
-            });
+            }).promise();
         },
         set_screen_data: function(key,value){
             if(arguments.length === 2){
@@ -288,6 +295,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var self = this;
             this.defs = [];
             var records = [];
+            project_timesheet.blockUI();
             var project_collection = this.get('projects');
             var project_models = project_collection.models;
             for (var i = 0; i < project_models.length; i++) {
@@ -316,6 +324,8 @@ function odoo_project_timesheet_models(project_timesheet) {
                             //TO ASK: Remove records which are Missing in database
                             self.project_timesheet_db.remove_project_activities(id);
                         }
+                    }).always(function() {
+                        project_timesheet.unblockUI();
                     }));
                 }
             });

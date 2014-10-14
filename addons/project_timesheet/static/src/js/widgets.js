@@ -13,14 +13,12 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model({project_timesheet_widget: this}); //May be store in this, we'll not have session initially, need to discuss how to manage session
         },
         start: function() {
+            var self = this;
             this._super.apply(this, arguments);
-            //Add the concept of screen, screen will decide which widgets to render at which position
-            //var pt_activity = new project_timesheet.ActivityScreen(this, {});
-            //pt_activity.replace(this.$el.find(".content_area"));
-            //var pt_footer = new project_timesheet.FooterWidget(this, {});
-            //pt_footer.replace(this.$el.find(".pt_footer"));
-            this.build_widgets();
-            this.screen_selector.set_default_screen();
+            $.when(project_timesheet.project_timesheet_model.ready).always(function() {
+                self.build_widgets();
+                self.screen_selector.set_default_screen();
+            });
         },
         build_widgets: function() {
             //Creates all widgets instances and add into this object
