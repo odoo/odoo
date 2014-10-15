@@ -98,14 +98,6 @@ $(document).ready(function() {
                 openerp.jsonRpc('/blogpost/change_size', 'call', {'blogpost_id': self.blogpost_id, 'x': index[0], 'y': index[1]})
                     .then(self.reload);
             });
-
-            this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
-                $(event.currentTarget).addClass("oe_hover");
-            });
-            this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
-                $(event.currentTarget).removeClass("oe_hover");
-            });
-            
         },
         go_to: function (type, value) {
             if(type !== "click") return;
