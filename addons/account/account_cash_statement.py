@@ -184,9 +184,9 @@ class account_cash_statement(models.Model):
         journal_id = vals.get('journal_id')
         if journal_id and not vals.get('opening_details_ids'):
             vals['opening_details_ids'] = vals.get('opening_details_ids') or self._get_cash_open_box_lines(journal_id)
-        res_id = super(account_cash_statement, self).create(vals)
-        self._update_balances([res_id])
-        return res_id
+        res = super(account_cash_statement, self).create(vals)
+        res._update_balances()
+        return res
 
     @api.multi
     def write(self, vals):
@@ -194,11 +194,10 @@ class account_cash_statement(models.Model):
         @param vals: dict of new values to be set
         """
         if vals.get('journal_id', False):
-            cashbox_line_obj = self.env('account.cashbox.line')
-            cashbox_ids = cashbox_line_obj.search([('bank_statement_id', 'in', self.ids)])
-            cashbox_line_obj.unlink(cr, uid, cashbox_ids, context)
-        res = super(account_cash_statement, self).write(self.ids, vals)
-        self._update_balances(self.ids)
+            cashbox_ids = self.env['account.cashbox.line'].search([('bank_statement_id', 'in', self.ids)])
+            cashbox_ids.unlink()
+        res = super(account_cash_statement, self).write(vals)
+        self._update_balances()
         return res
 
     @api.model
@@ -279,7 +278,7 @@ class account_cash_statement(models.Model):
 class account_journal(models.Model):
     _inherit = 'account.journal'
 
-    @model
+    @api.model
     def _default_cashbox_line_ids(self):
         # Return a list of coins in Euros.
         result = [
@@ -288,7 +287,7 @@ class account_journal(models.Model):
         return result
 
     cashbox_line_ids = fields.One2many('account.journal.cashbox.line', 'journal_id',
-        string='CashBox', copy=True, default=_default_cashbox_line_ids)
+        string='CashBox', copy=True, default=lambda self: self._default_cashbox_line_ids())
 
 
 class account_journal_cashbox_line(models.Model):

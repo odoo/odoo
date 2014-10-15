@@ -131,7 +131,7 @@ for a particular financial year and for preparation of vouchers there is a modul
     'demo': [
         'demo/account_demo.xml',
         'demo/account_minimal.xml',
-        'demo/account_invoice_demo.xml',
+#         'demo/account_invoice_demo.xml',
         'demo/account_bank_statement.xml',
 #         'account_unit_test.xml',
     ],

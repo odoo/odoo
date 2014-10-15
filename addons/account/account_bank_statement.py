@@ -772,7 +772,7 @@ class account_bank_statement_line(models.Model):
     note = fields.Text(string='Notes')
     sequence = fields.Integer(string='Sequence', index=True, help="Gives the sequence order when displaying a list of bank statement lines.")
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
-    journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False),
+    journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.",
         digits=dp.get_precision('Account'))
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
