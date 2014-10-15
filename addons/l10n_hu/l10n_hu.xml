@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_res_partner_form_hu" model="ir.ui.view">
+           <field name="name">res.partner.form.hu</field>
+           <field name="model">res.partner</field>
+           <field name="inherit_id" ref="base.view_partner_form" />
+           <field name="arch" type="xml">
+                <field name="debit" position="after">
+                    <field name="vat"/>
+                </field>
+           </field>
+        </record>
+
+    </data>
+</openerp>
