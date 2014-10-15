@@ -8,10 +8,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
                     <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight"
-                        attrs="{'invisible': ['|',('template_id','=',False),('quote_viewed','=',True)]}"/>
+                        attrs="{'invisible': ['|',('template_id','=',False),('state','=','draft')]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" attrs="{'invisible': ['|',('template_id','=',False),('quote_viewed','=',False)]}"/>
+                    <button name="open_quotation" string="Preview Quotation" type="object" attrs="{'invisible': ['|',('template_id','=',False),('state','!=','draft')]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
                     <button name="action_quotation_send" string="Send by Email" type="object"
