@@ -115,6 +115,7 @@ class purchase_requisition(osv.osv):
         res['context'] = {
             'search_default_groupby_product': True,
             'search_default_hide_cancelled': True,
+            'tender_id': ids[0],
         }
         res['domain'] = [('id', 'in', [line.id for line in po_lines])]
         return res
