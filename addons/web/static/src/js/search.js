@@ -1625,8 +1625,8 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     save_favorite: function () {
         var self = this,
             filter_name = this.$inputs[0].value,
-            shared_filter = this.$inputs[1].checked,
-            default_filter = this.$inputs[2].checked;
+            default_filter = this.$inputs[1].checked,
+            shared_filter = this.$inputs[2].checked;
         if (!filter_name.length){
             this.do_warn(_t("Error"), _t("Filter name is required."));
             this.$inputs.first().focus();
