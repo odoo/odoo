@@ -414,7 +414,8 @@ QWeb2.Engine = (function() {
             }
         },
         extend : function(template, extend_node) {
-            if (!this.jQuery) {
+            var jQuery = this.jQuery;
+            if (!jQuery) {
                 return this.tools.exception("Can't extend template " + template + " without jQuery");
             }
             var template_dest = this.templates[template];
@@ -426,18 +427,25 @@ QWeb2.Engine = (function() {
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
-                        target = this.jQuery(jquery, template_dest);
+                        target = jQuery(jquery, template_dest);
                     } else {
                         this.tools.exception(error_msg + "No expression given");
                     }
                     error_msg += "' (expression='" + jquery + "') : ";
                     if (operation) {
-                        var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
+                        var allowed_operations = "append,prepend,before,after,replace,inner,attributes".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](child.cloneNode(true).childNodes);
+                        if (operation === 'attributes') {
+                            jQuery('attribute', child).each(function () {
+                                var attrib = jQuery(this);
+                                target.attr(attrib.attr('name'), attrib.text());
+                            });
+                        } else {
+                            target[operation](child.cloneNode(true).childNodes);
+                        }
                     } else {
                         try {
                             var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
@@ -445,7 +453,7 @@ QWeb2.Engine = (function() {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
                         try {
-                            f.apply(target, [this.jQuery, template_dest.ownerDocument]);
+                            f.apply(target, [jQuery, template_dest.ownerDocument]);
                         } catch(error) {
                             return this.tools.exception("Runtime " + error_msg + error);
                         }
