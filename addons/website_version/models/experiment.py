@@ -32,7 +32,7 @@ class Experiment_snapshot(osv.Model):
     }
 
     _defaults = {
-        'frequency': '10',
+        'frequency': '50',
     }
 
 class Goals(osv.Model):
