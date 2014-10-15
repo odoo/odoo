@@ -152,9 +152,12 @@
   PROMPT_CLASS     = "cleditorPrompt",  // prompt popup divs inside body
   MSG_CLASS        = "cleditorMsg",     // message popup div inside body
 
-  // Test for ie
-  ie = $.browser.msie,
-  ie6 = /msie\s6/i.test(navigator.userAgent),
+  // Browser detection
+  ua = navigator.userAgent.toLowerCase(),
+  ie = /msie/.test(ua),
+  ie6 = /msie\s6/.test(ua),
+  iege11 = /(trident)(?:.*rv:([\w.]+))?/.test(ua),
+  webkit = /webkit/.test(ua),
 
   // Test for iPhone/iTouch/iPad
   iOS = /iphone|ipad|ipod/i.test(navigator.userAgent),
@@ -833,14 +836,14 @@
 
     // Work around for bug in IE which causes the editor to lose
     // focus when clicking below the end of the document.
-    if (ie)
+    if (ie || iege11)
       $doc.click(function() {focus(editor);});
 
     // Load the content
     updateFrame(editor);
 
     // Bind the ie specific iframe event handlers
-    if (ie) {
+    if (ie || iege11) {
 
       // Save the current user selection. This code is needed since IE will
       // reset the selection just after the beforedeactivate event and just
@@ -887,6 +890,7 @@
     $doc.click(hidePopups)
       .bind("keyup mouseup", function() {
         refreshButtons(editor);
+        updateTextArea(editor, true);
       });
 
     // Show the textarea for iPhone/iTouch/iPad or
@@ -991,8 +995,12 @@
 
   // restoreRange - restores the current ie selection
   function restoreRange(editor) {
-    if (ie && editor.range)
-      editor.range[0].select();
+    if (editor.range) {
+      if (ie)
+        editor.range[0].select();
+      else if (iege11)
+        getSelection(editor).addRange(editor.range[0]);
+    }
   }
 
   // select - selects all the text in either the textarea or iframe
