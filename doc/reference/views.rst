@@ -127,8 +127,8 @@ will override their auto-generation from access-rights.
 
 .. _reference/views/list:
 
-Lists
------
+Lists (Tree views)
+------------------
 
 The root element of list views is ``<tree>``\ [#treehistory]_. The list view's
 root can have the following attributes:
@@ -160,7 +160,14 @@ root can have the following attributes:
     * ``expr`` should be a Python expression evaluated with the current
       record's attributes as context values. Other context values are ``uid``
       (the id of the current user) and ``current_date`` (the current date as
-      a string of the form ``yyyy-MM-dd``)
+      a string of the form ``yyyy-MM-dd``).
+      Note that some characters like < or > has to encoded as &lt; and &gt;
+      For instance, code like::
+
+        <tree string="Colorful tree" colors="#000000:duration&lt;3;red:duration&gt;10">
+
+      sets black color for records having duration attribute less than 3 
+      and red color for the records having duration greater than 10.
 ``fonts``
     allows changing a row's font style based on the corresponding record's
     attributes.
