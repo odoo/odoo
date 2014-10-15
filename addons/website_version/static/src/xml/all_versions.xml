@@ -37,20 +37,12 @@
                 <div class="modal-body">
                     <t t-if="snapshots.length != 0 ">                
                         <div class="form-group row">
-                            <label for="formFieldEditor-label" class="col-md-3 control-label">Name :</label>
+                            <label for="formFieldEditor-label" class="col-md-3 control-label">Experiment Name</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control form-field-label name"/>
                             </div>
                         </div>
-                        
-                        <t t-foreach="snapshots" t-as="item">       
-                            <div class="form-group row">
-                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
-                                <div class="col-md-9 col-sm-8 ">
-                                    <input type="checkbox" class="form-field-required" t-att-data-version_id="item.id" />
-                                </div>
-                            </div>
-                        </t>
+
                         <div class="form-group row">
                             <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
                             <select class="selectpicker col-md-3">
@@ -59,6 +51,22 @@
                                 </t>
                             </select>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Original</label>
+                            <div class="col-md-9 col-sm-8 ">
+                                <input type="checkbox" class="form-field-required" checked="checked" disabled="disabled"/>
+                            </div>
+                        </div>
+                        
+                        <t t-foreach="snapshots" t-as="item">       
+                            <div class="form-group row">
+                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
+                                <div class="col-md-9 col-sm-8 ">
+                                    <input type="checkbox" class="form-field-required version" t-att-data-version_id="item.id" />
+                                </div>
+                            </div>
+                        </t>
                     </t>
                     <t t-if="snapshots.length == 0 ">
                         <div>

@@ -135,7 +135,7 @@
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.create', function(){
                     var name = $('.name').val();
-                    var tab = self.wizard.find('.form-field-required');
+                    var tab = self.wizard.find('.form-field-required version');
                     var result = [];
                     var i;
                     for (i = 0; i < tab.length; i++) {
