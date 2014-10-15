@@ -299,7 +299,7 @@ class account_move_line(models.Model):
         "You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True,
         index=True, default=lambda self: self._get_date, store=True)
-    date_created = fields.Date(string='Creation date', index=True, default=fields.date.context_today)
+    date_created = fields.Date(string='Creation date', index=True, default=fields.Date.context_today)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     centralisation = fields.Selection([('normal','Normal'),('credit','Credit Centralisation'), ('debit','Debit Centralisation'),
         ('currency','Currency Adjustment')], default='normal', string='Centralisation', size=8)
@@ -378,9 +378,8 @@ class account_move_line(models.Model):
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
-    @api.cr_context
     def _auto_init(self, cr, context=None):
-        res = super(account_move_line, self)._auto_init()
+        res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
@@ -1019,7 +1018,7 @@ class account_move_line(models.Model):
             context['period_id'] = period_candidate_ids[0][0]
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-        self._update_journal_check.with_context(context).(context['journal_id'], context['period_id'])
+        self.with_context(context)._update_journal_check(context['journal_id'], context['period_id'])
         move_id = vals.get('move_id', False)
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
