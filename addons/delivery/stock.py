@@ -140,6 +140,14 @@ class stock_picking(osv.osv):
         'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
     }
 
+    def do_partial(self, cr, uid, ids, partial_datas, context=None):
+        res = super(stock_picking, self).do_partial(cr, uid, ids, partial_datas, context=context)
+        for backorder_id, picking_vals in res.iteritems():
+            # remove carrier ref from backorder
+            if backorder_id != picking_vals.get('delivered_picking'):
+                self.write(cr, uid, backorder_id, {'carrier_tracking_ref': ''}, context=context)
+        return res
+
 stock_picking()
 
 class stock_move(osv.osv):
