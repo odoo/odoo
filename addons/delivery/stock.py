@@ -121,8 +121,9 @@ class stock_picking(osv.osv):
 
     def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
         invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_obj = self.pool.get('account.invoice')
         invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        invoice = self.browse(cr, uid, invoice_id, context=context)
+        invoice = invoice_obj.browse(cr, uid, invoice_id, context=context)
         invoice_line = self._prepare_shipping_invoice_line(cr, uid, picking, invoice, context=context)
         if invoice_line:
             invoice_line_obj.create(cr, uid, invoice_line)
