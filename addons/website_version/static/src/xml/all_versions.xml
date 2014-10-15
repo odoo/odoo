@@ -9,8 +9,7 @@
                     <a href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
                 </t>
                 <t t-if="item.bold == 1 ">
-                    <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id" 
-                        style="display: inline-block;"> <b><t t-esc="item.name"></t></b> </a>
+                    <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id"> <b><t t-esc="item.name"></t></b> </a>
                 </t>
             </li>
         </t>
