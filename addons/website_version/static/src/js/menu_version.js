@@ -40,6 +40,12 @@
                     //     });
 
                 });
+                openerp.jsonRpc( '/website_version/has_experiments', 'call', { 'view_id': view_id }).then(function (result) {
+                    self.$el.find(".experiment").remove();
+                    if(result){
+                        self.$el.find(".first_divider").after(QWeb.render("experiment_menu", {experiment:result}));
+                    }
+                });
                 
             });
             return this._super();

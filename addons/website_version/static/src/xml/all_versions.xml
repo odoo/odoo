@@ -16,6 +16,12 @@
         </t>
     </t>
 
+    <t t-name="experiment_menu">
+        <li class="experiment"><a href="#" data-action="manage_experiment">Manage your experiments
+            <span class="badge"><t t-esc="website.get_experiment_number(context=context)"></t></span></a></li>
+        <li class="experiment"><a href="#" data-action="statistics">Statistics</a></li>
+    </t>
+
     <t t-name="website_version.GoogleAccess">
         <div id="CheckGoogleAccess" class="odoo_google_token" >
                 <button class="GoogleAccess"> Authorize google </button>
@@ -57,7 +63,7 @@
                     </t>
                     <t t-if="snapshots.length == 0 ">
                         <div>
-                            <p>You must have at least one version to create a new experiment.</p>
+                            <p>You must have at least one version for this page to create a new experiment.</p>
                         </div>
                     </t>
 
