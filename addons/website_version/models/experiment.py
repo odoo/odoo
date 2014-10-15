@@ -54,12 +54,12 @@ class Experiment(osv.Model):
         exp['name'] = vals['name']
         exp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [vals['objectives']],context)[0].google_ref
         exp['status'] = vals['state']
-        exp['variations'] =[{'name':'master','url': 'http://0.0.0.0:8069/master'}]
+        exp['variations'] =[{'name':'master','url': 'http://localhost/master'}]
         l =  vals.get('experiment_snapshot_ids')
         if l:
             for snap in l:
                 name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
-                exp['variations'].append({'name':name, 'url': 'http://0.0.0.0:8069/'+name})
+                exp['variations'].append({'name':name, 'url': 'http://localhost/'+name})
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
             raise Warning("Please verify you give the authorizations to use google analytics api ...")
@@ -75,6 +75,7 @@ class Experiment(osv.Model):
         #some write operation doesn't need to synchronise with Google (frequency or sequence)
         if name or state or exp_snaps or obj_metric:
             for exp in self.browse(cr, uid, ids, context=context):
+                #temp is the data to send to Googe
                 temp={}
                 if name:
                     temp['name'] = name
@@ -103,21 +104,22 @@ class Experiment(osv.Model):
                     temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
                 if exp_snaps:
                     index = 0
-                    temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
+                    temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
                     for exp_s in exp.experiment_snapshot_ids:
                         for li in exp_snaps:
+                            #l[0] == 2 means DELETE(magic number)
                             if not li[0] == 2 and li[1] == exp_s.id:
-                                temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
+                                temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://localhost/'+exp_s.snapshot_id.name})
                         index+=1
                     while index< len(exp_snaps):
                         snap_id = exp_snaps[index][2]['snapshot_id']
                         snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
-                        temp['variations'].append({'name':snap_name, 'url': 'http://0.0.0.0:8069/'+snap_name})
+                        temp['variations'].append({'name':snap_name, 'url': 'http://localhost/'+snap_name})
                         index+=1
                 else:
-                    temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
+                    temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
                     for exp_s in exp.experiment_snapshot_ids:
-                        temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
+                        temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://localhost/'+exp_s.snapshot_id.name})
                 #to check the constraints before to write on the google analytics account 
                 x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
@@ -141,9 +143,6 @@ class Experiment(osv.Model):
             result[exp.id] += 1
         return result
 
-    def _get_objective(self,cr,uid,ids,name,args,context=None):
-        return [("ga:bounces","bounces"),("ga:pageviews","pageviews"),("ga:sessionDuration","sessionDuration")]
-
     def update_goals(self,cr,uid,ids,context=None):
         gm_obj = self.pool['google.management']
         goals_obj = self.pool['website_version.goals']
@@ -152,7 +151,6 @@ class Experiment(osv.Model):
         if not website_id:
             raise Warning("You must specify the website.")
         x = gm_obj.get_goal_info(cr, uid, website_id, context=context)
-        #goals_obj.unlink(cr, uid, ids, context=context)
         for y in x[1]['items']:
             if not goals_obj.search(cr, uid, [('name','=',y['name'])],context=context):
                 vals ={'name':y['name'], 'google_ref':'ga:goal'+y['id']+'Completions'}
