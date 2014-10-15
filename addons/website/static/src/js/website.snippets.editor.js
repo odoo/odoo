@@ -196,7 +196,7 @@
         },
         fetch_snippet_templates: function () {
             var self = this;
-            openerp.jsonRpc(this._get_snippet_url(), 'call', {})
+            return openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
                     var $html = $(html);
 

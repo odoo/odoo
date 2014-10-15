@@ -329,7 +329,7 @@
             <field name="arch" type="xml">
                 <form string="Mass Mailing">
                     <header style="min-height:31px;">
-                        <button name="action_test_mailing" type="object" class="oe_highlight" attrs="{'invisible': [('body_html', '=', False)]}" string="Test Mailing"/>
+                        <button name="action_test_mailing" type="object" class="oe_highlight" attrs="{'invisible': [('body_html', '=', False)]}" string="Send a Test Mail"/>
                         <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('body_html', '=', False)]}" class="oe_highlight" string="Send to All"/>
                         <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
                         <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
@@ -396,7 +396,8 @@
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
                                     options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain'}"
-                                    context="{'search_default_not_opt_out':1}"/>
+                                    context="{'search_default_not_opt_out':1}"
+                                    attrs="{'invisible': [('mailing_model', 'in', ['mail.mass_mailing.contact'])]}"/>
 
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
@@ -414,7 +415,7 @@
                                     attrs="{'invisible': [('body_html', '=', False)]}"/>
                                 <div attrs="{'invisible' : ['|', ('state', '=', 'done'), ('body_html','!=',False)]}" class="oe_view_nocontent oe_clear">
                                     <p class="oe_view_nocontent_create">
-                                        Click to design your email.
+                                        Click here to design your email.
                                     </p>
                                 </div>
                                 <field name="body_html" readonly="1"/>

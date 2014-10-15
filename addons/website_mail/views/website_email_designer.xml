@@ -2,76 +2,85 @@
 <openerp>
     <data>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Email Designer">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
-    </xpath>
-</template>
-
 <!-- Template Choice page -->
 <template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
-        <div id="wrap" class="container" t-ignore="True">
-            <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
-                <a class="mt16 btn btn-default pull-right css_editable_mode_hidden" 
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Back
-                </a>
-                <h1 class="page-header mt16">
-                    Choose an Email Template
-                </h1>
-                <div class="row">
-                    <div class="col-md-3 col-sm-4 text-center img-border">
-                        <div class="email_preview_border">
-                            <div class="email_preview js_content"/>
+        <div id="wrap" t-ignore="True">
+            <div class="container">
+                <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
+                    <a class="btn btn-default pull-right" id="back_button"
+                      t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;action=#{action}&amp;view_type=form">
+                        Back
+                    </a>
+                    <a class="btn btn-success email_template_theme_select pull-right create_new" id="create_new" style="margin-right: 5px;"> 
+                    <i class="fa fa-file-o"></i> 
+                        <span >Start with Blank</span>
+                    </a>
+                    
+                    <h1 class="page-header mt16 email_head panel-primary" t-if="model!='mail.template' and len(templates) &gt;= 1">
+                        Choose an Email Template 
+                        <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can use predefined email template &lt;b&gt; or  &lt;/b&gt; you can design your own email from scratch"></button>
+                    </h1>
+                    <h1 class="page-header mt16 email_head panel-primary" t-if="model=='mail.template'">
+                        Duplicate your previously designed template
+                        <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can duplicate previously designed template"></button>
+                    </h1>
+                    <div class="row">
+                        <div t-foreach="templates" t-as="template" class="col-md-2 col-sm-3 text-center email_template">
+                            <div class="template_options">
+                                <button class="btn btn-primary js_template_set" t-att-data-snippet-xmlid="template.theme_xml_id">
+                                    <span t-if="model!='mail.template'">Select</span>
+                                    <span t-if="model=='mail.template'">Duplicate &amp; Edit</span>
+                                </button>
+                            </div>
+                            <div class="email_preview_border template_thumbnail">
+                                <div t-field="template.body_html" class="email_preview js_content"/>
+                            </div>
+                            <h4 class="template_name" t-field="template.name"/>
                         </div>
-                        <h4>New Template</h4>
-                        <button class="btn btn-primary js_template_set">Select</button>
-                    </div>
-                    <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
-                        <div class="email_preview_border">
-                            <div t-raw="html_sanitize(template.body_html)" class="email_preview js_content"/>
-                        </div>
-                        <h4 t-field="template.name"/>
-                        <button class="btn btn-primary js_template_set">Select</button>
                     </div>
                 </div>
             </div>
-            <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
-                <a class="mt16 btn btn-primary pull-right" id="save_and_continue"
-                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Back to the mass mailing
-                </a>
-                <h1 class="page-header mt16">
-                    Design Your Email
-                </h1>
-                <div class="form-horizontal">
-                    <!-- email_from fields-->
-                    <div class="form-group" t-if="email_from_field == 'email_from'">
-                        <label class="col-sm-2 control-label">From:</label>
-                        <div class="col-sm-7"><span t-field="record.email_from" class="form-control"/></div>
+            <div class="container">
+                <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
+                    <a class="btn btn-default pull-right editable_mode_hidden email_template_theme_select" style="margin-left:10px;">
+                        <i class="fa fa-tint"></i> Change Theme
+                    </a>
+                    <a class="btn btn-primary pull-right editable_mode_hidden" 
+                      t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;action=#{action}&amp;view_type=form">
+                        Continue
+                    </a>
+                    <h1 class="page-header mt16">
+                        Design Your Email
+                    </h1>
+                    <div class="form-horizontal">
+                        <!-- email_from fields-->
+                        <div class="form-group" t-if="email_from_field == 'email_from'">
+                            <label class="col-sm-2 control-label">From:</label>
+                            <div class="col-sm-7"><span t-field="record.email_from" class="form-control"/></div>
+                        </div>
+                        <div class="form-group" t-if="email_from_field == 'email'">
+                            <label class="col-sm-2 control-label">From:</label>
+                            <div class="col-sm-7"><span t-field="record.email" class="form-control"/></div>
+                        </div>
+                        <!-- email_from fields-->
+                        <div class="form-group" t-if="subject_field == 'subject'">
+                            <label class="col-sm-2 control-label">Subject:</label>
+                            <div class="col-sm-7"><span t-field="record.subject" class="form-control"/></div>
+                        </div>
+                        <div class="form-group" t-if="subject_field == 'name'">
+                            <label class="col-sm-2 control-label">Subject:</label>
+                            <div class="col-sm-7"><span t-field="record.name" class="form-control"/></div>
+                        </div>
                     </div>
-                    <div class="form-group" t-if="email_from_field == 'email'">
-                        <label class="col-sm-2 control-label">From:</label>
-                        <div class="col-sm-7"><span t-field="record.email" class="form-control"/></div>
+                    <hr/>
+                    <!-- body fields -->
+                    <div t-if="body_field == 'body_html'" class="col-sm-offset-2">
+                        <div t-field="record.body_html" id="email_body_html" class="o_mail_body"/>
                     </div>
-                    <!-- email_from fields-->
-                    <div class="form-group" t-if="subject_field == 'subject'">
-                        <label class="col-sm-2 control-label">Subject:</label>
-                        <div class="col-sm-7"><span t-field="record.subject" class="form-control"/></div>
+                    <div t-if="body_field == 'body'" class="col-sm-offset-2">
+                        <div t-field="record.body" id="email_body" class="o_mail_body"/>
                     </div>
-                    <div class="form-group" t-if="subject_field == 'name'">
-                        <label class="col-sm-2 control-label">Subject:</label>
-                        <div class="col-sm-7"><span t-field="record.name" class="form-control"/></div>
-                    </div>
-                </div>
-                <hr/>
-                <!-- body fields -->
-                <div t-if="body_field == 'body_html'" class="col-sm-offset-2">
-                    <div t-field="record.body_html" id="email_body_html" class="o_mail_body"/>
-                </div>
-                <div t-if="body_field == 'body'" class="col-sm-offset-2">
-                    <div t-field="record.body" id="email_body" class="o_mail_body"/>
                 </div>
             </div>
         </div>
@@ -79,8 +88,39 @@
     <t t-set="website.footer"></t>
 </template>
 
+<template id="dialog_email_template_theme" name="Theme Modal for Email Template">
+  <div id="email_template_theme" class="modal fade">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header text-center">
+                  <button type="button" class="close">×</button>
+                  <h4 class="modal-title">Select Theme For Template</h4>
+              </div>
+              <div class="modal-body">
+                    <t t-set="col_size" t-value="3"/>
+                    <t t-call="website_mail.mass_mail_theme_list"/>
+                </div>
+          </div>
+      </div>
+  </div>
+</template>
+
+<template id="extended_theme_selector" inherit_id="website_mail.email_designer" customize_show="True" name="Extended Theme Selector">
+    <xpath expr="//a[@id='back_button']" position="replace">
+        <t t-set="col_size" t-value="2"/>
+        <a class="btn btn-default pull-right mb32" 
+            t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;action=#{action}&amp;view_type=form">
+            Back
+        </a>
+        <h1 class="page-header mt16 email_head panel-primary">
+            Start from scratch and Select a theme 
+            <button type="button" class="btn btn-sm btn-default info_popover fa fa-info-circle" data-toggle="popover" data-trigger="focus" title="Help" data-content="Here you can design your own template from scratch by selecting your favorite theme."></button>
+        </h1>  
+        <t t-call="website_mail.mass_mail_theme_list"/>
+    </xpath>
+    <xpath expr="//a[@id='create_new']" position="replace">
+    </xpath>
+</template>
+
     </data>
 </openerp>
-
-
-

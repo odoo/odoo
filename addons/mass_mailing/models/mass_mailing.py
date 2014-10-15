@@ -42,14 +42,14 @@ class MassMailingContact(osv.Model):
     _columns = {
         'name': fields.char('Name'),
         'email': fields.char('Email', required=True),
-        'create_date': fields.datetime('Create Date'),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'list_id': fields.many2one(
             'mail.mass_mailing.list', string='Mailing List',
             ondelete='cascade', required=True,
         ),
         'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive mails anymore from this list'),
         'unsubscription_date': fields.datetime('Unsubscription Date'),
-        'message_bounce': fields.integer('Bounce', help='Counter of the number of bounced emails for this contact.'),
+        'message_bounce': fields.integer('Bounce', help='Counter of the number of bounced emails for this contact.', readonly=True),
     }
 
     def _get_latest_list(self, cr, uid, context={}):
@@ -594,6 +594,8 @@ class MassMailing(osv.Model):
             _get_next_departure, string='Next Departure',
             type='datetime'
         ),
+        'theme_xml_id': fields.char('Theme XML id',
+            help='Last selected theme used for designing mail.'),
     }
 
     def mass_mailing_statistics_action(self, cr, uid, ids, context=None):
@@ -726,11 +728,12 @@ class MassMailing(osv.Model):
         if not len(ids) == 1:
             raise ValueError('One and only one ID allowed for this action')
         mail = self.browse(cr, uid, ids[0], context=context)
-        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&template_model=%s&enable_editor=1' % (ids[0], mail.mailing_model)
+        action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_view_mass_mailings')
+        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&action=%d&template_model=%s&enable_editor=1' % (ids[0], action_id, mail.mailing_model)
         return {
             'name': _('Open with Visual Editor'),
             'type': 'ir.actions.act_url',
-            'url': url,
+            'url': url + '&theme_id=%s' % (mail.theme_xml_id) if mail.theme_xml_id else url,
             'target': 'self',
         }
 
@@ -809,6 +812,8 @@ class MassMailing(osv.Model):
             res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
             
             for match in re.findall(URL_REGEX, res[mass_mailing.id]):
+                if '/unsubscribe_from_list' in match[1]:
+                    continue
                 href = match[0]
                 long_url = match[1]
 
@@ -868,6 +873,8 @@ class MailMail(models.Model):
         """Override to add Statistic_id in shorted urls """
         if mail.mailing_id and mail.body_html:
             for match in re.findall(URL_REGEX, mail.body_html):
+                if '/unsubscribe_from_list' in match[1]:
+                    continue
                 href = match[0]
                 url = match[1]
                 if mail.statistics_ids:
