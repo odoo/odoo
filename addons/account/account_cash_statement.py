@@ -101,9 +101,9 @@ class account_cash_statement(models.Model):
 
     @api.multi
     @api.depends('balance_end_real', 'balance_end')
-    def _compute_difference(self, cr, uid, ids, fieldnames, args, context=None):
+    def _compute_difference(self):
         for statement in self:
-            difference = statement.balance_end_real - statement.balance_end
+            statement.difference = statement.balance_end_real - statement.balance_end
 
     @api.multi
     @api.depends('balance_end_real', 'balance_end')
@@ -147,7 +147,6 @@ class account_cash_statement(models.Model):
     difference = fields.Float(compute='_compute_difference', string="Difference",
         help="Difference between the theoretical closing balance and the real closing balance.")
     last_closing_balance = fields.Float(compute='_compute_last_closing_balance', string='Last Closing Balance')
-    state = fields.Selection(default='default')
     date = fields.Date(default=lambda self: self._context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")))
 
     @api.model

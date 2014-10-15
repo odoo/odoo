@@ -355,18 +355,19 @@ class account_bank_statement(models.Model):
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
             if journal.with_last_closing_balance:
-                cr.execute('SELECT balance_end_real \
+                self._cr.execute('SELECT balance_end_real \
                       FROM account_bank_statement \
                       WHERE journal_id = %s AND NOT state = %s \
                       ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
                 res = self._cr.fetchone()
         return res and res[0] or 0.0
 
-    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+    @api.multi
+    def onchange_journal_id(self, journal_id):
         if not journal_id:
             return {}
-        balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
-        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+        balance_start = self._compute_balance_end_real(journal_id)
+        journal = self.env['account.journal'].browse(journal_id)
         currency = journal.currency or journal.company_id.currency_id
         res = {'balance_start': balance_start, 'company_id': journal.company_id.id, 'currency': currency.id}
         if journal.type == 'cash':
@@ -509,39 +510,39 @@ class account_bank_statement_line(models.Model):
             excluded_ids = []
 
         # Look for structured communication
-        if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name), ('reconcile_id', '=', False), ('state', '=', 'valid'),
+        if self.name:
+            structured_com_match_domain = [('ref', '=', self.name), ('reconcile_id', '=', False), ('state', '=', 'valid'),
                 ('account_id.reconcile', '=', True), ('id', 'not in', excluded_ids)]
             move_lines = self.env['account.move.line'].search(structured_com_match_domain, offset=0, limit=1)
             if move_lines:
-                target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
-                mv_line = move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)[0]
-                mv_line['has_no_partner'] = not bool(st_line.partner_id.id)
+                target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
+                mv_line = move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)[0]
+                mv_line['has_no_partner'] = not bool(self.partner_id.id)
                 # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
                 if (mv_line['partner_id']):
-                    st_line.write({'partner_id': mv_line['partner_id']})
+                    self.write({'partner_id': mv_line['partner_id']})
                     mv_line['has_no_partner'] = False
                 return [mv_line]
 
         # If there is no identified partner or structured communication, don't look further
-        if not st_line.partner_id.id:
+        if not self.partner_id.id:
             return []
 
         # Look for a move line whose amount matches the statement line's amount
-        company_currency = st_line.journal_id.company_id.currency_id.id
-        statement_currency = st_line.journal_id.currency.id or company_currency
+        company_currency = self.journal_id.company_id.currency_id.id
+        statement_currency = self.journal_id.currency.id or company_currency
         sign = 1
         if statement_currency == company_currency:
             amount_field = 'credit'
             sign = -1
-            if st_line.amount > 0:
+            if self.amount > 0:
                 amount_field = 'debit'
         else:
             amount_field = 'amount_currency'
-            if st_line.amount < 0:
+            if self.amount < 0:
                 sign = -1
 
-        match_id = st_line.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
+        match_id = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, offset=0, limit=1, additional_domain=[(amount_field, '=', (sign * self.amount))])
         if match_id:
             return [match_id[0]]
 
