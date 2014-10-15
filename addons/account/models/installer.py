@@ -33,21 +33,21 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
-from openerp.tools.translate import _
 from openerp.osv import fields, osv
-
+from openerp import models, fields, api, _
 _logger = logging.getLogger(__name__)
 
-class account_installer(osv.osv_memory):
+class account_installer(models.TransientModel):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
 
-    def _get_charts(self, cr, uid, context=None):
-        modules = self.pool.get('ir.module.module')
+    @api.model
+    def _get_charts(self):
+        ModuleObj = self.env['ir.module.module']
 
         # try get the list on apps server
         try:
-            apps_server = self.pool.get('ir.module.module').get_apps_server(cr, uid, context=context)
+            apps_server = ModuleObj.get_apps_server()
 
             up = urlparse.urlparse(apps_server)
             url = '{0.scheme}://{0.netloc}/apps/charts?serie={1}'.format(up, serie)
@@ -60,92 +60,90 @@ class account_installer(osv.osv_memory):
             charts = dict()
 
         # Looking for the module with the 'Account Charts' category
-        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
-        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
+        category_name, category_id = self.env['ir.model.data'].get_object_reference('base', 'module_category_localization_account_charts')
+        ids = ModuleObj.search([('category_id', '=', category_id)])
         if ids:
-            charts.update((m.name, m.shortdesc) for m in modules.browse(cr, uid, ids, context=context))
+            charts.update((m.name, m.shortdesc) for m in ids)
 
         charts = sorted(charts.items(), key=itemgetter(1))
         charts.insert(0, ('configurable', _('Custom')))
         return charts
 
-    _columns = {
-        # Accounting
-        'charts': fields.selection(_get_charts, 'Accounting Package',
-            required=True,
-            help="Installs localized accounting charts to match as closely as "
-                 "possible the accounting needs of your company based on your "
-                 "country."),
-        'date_start': fields.date('Start Date', required=True),
-        'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'has_default_company': fields.boolean('Has Default Company', readonly=True),
-    }
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id and user.company_id.id or False
+    # Accounting
+    charts = fields.Selection(_get_charts, string='Accounting Package', required=True, default='configurable',
+        help="Installs localized accounting charts to match as closely as "
+             "possible the accounting needs of your company based on your "
+             "country.")
+    date_start = fields.Date(string='Start Date', required=True, default=lambda *a: time.strftime('%Y-01-01'))
+    date_stop = fields.Date(string='End Date', required=True, default=lambda *a: time.strftime('%Y-12-31'))
+    period = fields.Selection([('month', 'Monthly'), ('3months', '3 Monthly')], 
+        string='Periods', required=True, default='month')
+    company_id = fields.Many2one('res.company', string='Company',
+        required=True, default=lambda self: self._default_company)
+    has_default_company = fields.Boolean(string='Has Default Company',
+        readonly=True, default=lambda self: self._default_has_default_company)
 
-    def _default_has_default_company(self, cr, uid, context=None):
-        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+
+    @api.model
+    def _default_company(self):
+        return self.user.company_id and self.user.company_id.id or False
+
+    @api.model
+    def _default_has_default_company(self):
+        count = self.env['res.company'].search_count([])
         return bool(count == 1)
 
-    _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-01-01'),
-        'date_stop': lambda *a: time.strftime('%Y-12-31'),
-        'period': 'month',
-        'company_id': _default_company,
-        'has_default_company': _default_has_default_company,
-        'charts': 'configurable'
-    }
 
-    def get_unconfigured_cmp(self, cr, uid, context=None):
+    @api.model
+    def get_unconfigured_cmp(self):
         """ get the list of companies that have not been configured yet
         but don't care about the demo chart of accounts """
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
-        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
-        configured_cmp = [r[0] for r in cr.fetchall()]
+        company_ids = self.env['res.company'].search([])
+        self._cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        configured_cmp = [r[0] for r in self._cr.fetchall()]
         return list(set(company_ids)-set(configured_cmp))
 
-    def check_unconfigured_cmp(self, cr, uid, context=None):
+    @api.model
+    def check_unconfigured_cmp(self):
         """ check if there are still unconfigured companies """
-        if not self.get_unconfigured_cmp(cr, uid, context=context):
+        if not self.get_unconfigured_cmp():
             raise osv.except_osv(_('No Unconfigured Company!'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None: context = {}
-        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(account_installer, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
         # display in the widget selection only the companies that haven't been configured yet
-        unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
+        unconfigured_cmp = self.get_unconfigured_cmp()
         for field in res['fields']:
             if field == 'company_id':
                 res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    cmp_select = [(line.id, line.name) for line in self.env['res.company'].browse(unconfigured_cmp)]
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    def on_change_start_date(self, cr, uid, id, start_date=False):
+    @api.multi
+    def on_change_start_date(self, start_date=False):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
 
-    def execute(self, cr, uid, ids, context=None):
-        self.execute_simple(cr, uid, ids, context)
-        return super(account_installer, self).execute(cr, uid, ids, context=context)
+    @api.multi
+    def execute(self):
+        self.execute_simple()
+        return super(account_installer, self).execute()
 
-    def execute_simple(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        fy_obj = self.pool.get('account.fiscalyear')
-        for res in self.read(cr, uid, ids, context=context):
+    @api.multi
+    def execute_simple(self):
+        fy_obj = self.env['account.fiscalyear']
+        for res in self.read(self.ids):
             if 'date_start' in res and 'date_stop' in res:
-                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
+                f_ids = fy_obj.search([('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])])
                 if not f_ids:
                     name = code = res['date_start'][:4]
                     if int(name) != int(res['date_stop'][:4]):
@@ -158,19 +156,17 @@ class account_installer(osv.osv_memory):
                         'date_stop': res['date_stop'],
                         'company_id': res['company_id'][0]
                     }
-                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+                    fiscal_id = fy_obj.create(vals)
                     if res['period'] == 'month':
-                        fy_obj.create_period(cr, uid, [fiscal_id])
+                        fy_obj.create_period([fiscal_id])
                     elif res['period'] == '3months':
-                        fy_obj.create_period3(cr, uid, [fiscal_id])
+                        fy_obj.create_period3([fiscal_id])
 
-    def modules_to_install(self, cr, uid, ids, context=None):
-        modules = super(account_installer, self).modules_to_install(
-            cr, uid, ids, context=context)
-        chart = self.read(cr, uid, ids, ['charts'],
-                          context=context)[0]['charts']
-        _logger.debug('Installing chart of accounts %s', chart)
-        return (modules | set([chart])) - set(['has_default_company', 'configurable'])
+    @api.multi
+    def modules_to_install(self):
+        modules = super(account_installer, self).modules_to_install()
+        _logger.debug('Installing chart of accounts %s', self.chart)
+        return (modules | set([self.chart])) - set(['has_default_company', 'configurable'])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
