@@ -101,6 +101,17 @@ class TableExporter(http.Controller):
             result = True
         return result
 
+    @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
+    def has_experiments(self, view_id):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        v = request.registry['ir.ui.view'].browse(cr, uid, [int(view_id)],context)[0]
+        website_id = context.get('website_id')
+        result = request.registry["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)], context=context)
+        if result:
+            return True
+        else:
+            return False
+
     @http.route(['/website_version/publish'], type = 'json', auth = "public", website = True)
     def publish(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context

@@ -19,17 +19,16 @@
                                 <li><a href="#" data-action="master">Master</a></li>
                             </t>
                             <li class="first_divider divider"> </li>
-                            <li><a href="#" data-action="create_snapshot">Create a new version</a></li>
+                            <li><a href="#" data-action="create_snapshot">New Version</a></li>
                             <t t-if="website.get_current_snapshot(context=context)[0] != 0 ">
                                 <li><a href="#" data-action="publish_version" 
-                                    t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">Publish this version</a>
+                                    t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">Publish Version</a>
                                 </li>
                             </t>
                             <li class="divider publish_version"> </li>
-                            <li><a href="#" data-action="create_experiment">Create an experiment</a></li>
-                            <li><a href="#" data-action="manage_experiment">Manage your experiments
-                            <span class="badge"><t t-esc="website.get_experiment_number(context=context)"></t></span></a></li>
-                            <li><a href="#" data-action="statistics">Statistics</a></li>
+                            <li class="create_experiment"><a href="#" data-action="create_experiment">New Experiment</a></li>
+                            <!-- <li><a href="#" data-action="manage_experiment">Manage Experiments</a></li>
+                            <li><a href="#" data-action="statistics">Statistics</a></li> -->
                         </ul>
                     </li>
             </xpath> 
