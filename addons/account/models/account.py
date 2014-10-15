@@ -1902,16 +1902,15 @@ class account_account_template(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template',
         help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
 
+    @api.multi
+    @api.depends('name', 'code')
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['name','code'], context=context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['code']:
-                name = record['code']+' '+name
-            res.append((record['id'],name ))
+        for record in self:
+            name = record.name
+            if record.code:
+                name = record.code + ' ' + name
+            res.append((record.id, name))
         return res
 
     def generate_account(self, cr, uid, chart_template_id, tax_template_ref, acc_template_ref, code_digits, company_id, context=None):
@@ -1963,30 +1962,31 @@ class account_add_tmpl_wizard(models.TransientModel):
     With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
     _name = 'account.addtmpl.wizard'
 
-    def _get_def_cparent(self, cr, uid, context=None):
-        acc_obj = self.pool.get('account.account')
-        tmpl_obj = self.pool.get('account.account.template')
-        tids = tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
+    @api.model
+    def _get_def_cparent(self):
+        context = dict(self._context or {})
+        tmpl_obj = self.env['account.account.template']
+
+        tids = tmpl_obj.read([context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
-        ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]], ['code'])
-        res = None
+        ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
+        accounts = None
         if not ptids or not ptids[0]['code']:
             raise osv.except_osv(_('Error!'), _('There is no parent code for the template account.'))
-            res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
-        return res and res[0] or False
+            accounts = self.env['account.account'].search([('code', '=', ptids[0]['code'])])
+        return accounts.ids and accounts.ids[0] or False
 
     cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent(),
         help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)])
 
-    def action_create(self,cr,uid,ids,context=None):
-        if context is None:
-            context = {}
-        acc_obj = self.pool.get('account.account')
-        tmpl_obj = self.pool.get('account.account.template')
-        data = self.read(cr, uid, ids)[0]
-        company_id = acc_obj.read(cr, uid, [data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
-        account_template = tmpl_obj.browse(cr, uid, context['tmpl_ids'])
+    @api.multi
+    def action_create(self):
+        context = dict(self._context or {})
+        AccountObj = self.pool.get('account.account')
+        data = self.read()[0]
+        company_id = AccountObj.read([data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
+        account_template = self.env['account.account.template'].browse(context['tmpl_ids'])
         vals = {
             'name': account_template.name,
             'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -1999,10 +1999,11 @@ class account_add_tmpl_wizard(models.TransientModel):
             'parent_id': data['cparent_id'][0],
             'company_id': company_id,
             }
-        acc_obj.create(cr, uid, vals)
+        AccountObj.create(vals)
         return {'type':'state', 'state': 'end' }
 
-    def action_cancel(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_cancel(self):
         return { 'type': 'state', 'state': 'end' }
 
 
