@@ -177,8 +177,8 @@
             <field name="name">snapshot.form</field>
             <field name="model">website_version.snapshot</field> 
             <field name="arch" type="xml">
-                <sheet string="Snap">
-                    <form string="Snapshot Form">
+                <form string="Snapshot Form">
+                    <sheet string="Snap">
                         <group>
                             <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right" 
                                 context="{'active_id': active_id}"/>
@@ -195,8 +195,8 @@
                         <group colspan="4">
                             <field name="view_ids" widget="handle" colspan="4"/>
                         </group>
-                    </form>
-                </sheet>
+                    </sheet>
+                </form>
             </field>
         </record>
 
