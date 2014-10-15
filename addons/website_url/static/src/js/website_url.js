@@ -76,21 +76,15 @@
             this.$('.btn_shorten_url_clipboard').click(function() {
                 self.toggle_copy_button();
             });
-
-            this.$el.hover(function() {
-                self.$el.find('.recent_link_buttons').show();
-            }, function() {
-                self.$el.find('.recent_link_buttons').hide();
-            });
         },
         toggle_copy_button: function() {
             var self = this;
 
             this.clipboard_btn = this.$('.btn_shorten_url_clipboard');
-            this.clipboard_btn.text("Copied to clipboard").removeClass("btn-default").addClass("btn-success");
+            this.clipboard_btn.text("Copied").removeClass("btn-info").addClass("btn-success");
 
             setTimeout(function() {
-                self.clipboard_btn.text("Copy to clipboard").removeClass("btn-success").addClass("btn-default");
+                self.clipboard_btn.text("Copy").removeClass("btn-success").addClass("btn-info");
             }, '5000');
         },
         remove: function() {

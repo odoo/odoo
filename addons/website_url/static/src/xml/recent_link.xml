@@ -2,34 +2,29 @@
 
 <templates id="template" xml:space="preserve">
     <t t-name="website_url.RecentLink">
-        <div class="page-header" style="margin-top: 0px;padding-top:0px;">
-        <div class="row">
+        <div class="row mb16">
             <div class="col-sm-1 col-xs-2 text-center">
                 <h4><t t-esc="widget.link_obj.count"/></h4>
                 <p class="text-muted" style="margin-top: -5px;">clicks</p>
             </div>
-            <div class="col-sm-7 col-xs-10">
+            <div class="col-sm-7 col-xs-7">
                 
-                <h4 class="truncate_text"><img t-att-src="widget.link_obj.icon_src"/> <t t-esc="widget.link_obj.title"/></h4>
-                <p class="text-muted" style="margin-top: -5px;"><t t-esc="widget.link_obj.host"/>
-                <span class="label label-success"><t t-esc="widget.link_obj.campaign_id.name"/></span> 
-                <span class="label label-success"><t t-esc="widget.link_obj.medium_id.name"/></span>
-                <span class="label label-success"><t t-esc="widget.link_obj.source_id.name"/></span>
-                </p>
-                
-                <p>
-                    <small>
-                        <span t-field="widget.link_obj.write_date" t-field-options='{"format": "d MMMM yyyy"}'/>
-                    </small>
+                <h4>
+                    <img t-att-src="widget.link_obj.icon_src"/> 
+                    <t t-esc="widget.link_obj.title"/>
+                </h4>
+                <p class="text-muted" style="margin-top: -5px;">
+                    <t t-esc="widget.link_obj.host"/>
+                    <span class="label label-success"><t t-esc="widget.link_obj.campaign_id.name"/></span> 
+                    <span class="label label-success"><t t-esc="widget.link_obj.medium_id.name"/></span>
+                    <span class="label label-success"><t t-esc="widget.link_obj.source_id.name"/></span>
                 </p>
             </div>
-            <div class="col-sm-4 recent_link_buttons">
-                <div class="recent_link_inner_buttons">
-                    <button class="btn btn-default btn_shorten_url_clipboard" t-att-data-clipboard-text="widget.link_obj.short_url">Copy to clipboard</button>
-                    <a t-att-href="widget.link_obj.stats_url" class="btn btn-warning">Stats</a>
-                </div>
+
+            <div class="col-sm-4 col-xs-2">
+                <button class="btn btn-info btn_shorten_url_clipboard mt8" t-att-data-clipboard-text="widget.link_obj.short_url">Copy</button>
+                <a t-att-href="widget.link_obj.stats_url" class="btn btn-warning mt8">Stats</a>
             </div>
         </div>
-    </div>
     </t>
 </templates>

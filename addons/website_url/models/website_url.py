@@ -30,6 +30,7 @@ class website_alias(models.Model):
     is_archived = fields.Boolean(string='Archived', default=False)
     title = fields.Char(string="Title of the alias", store=True)
     favicon = fields.Char(string="Favicon", store=True)
+    alias_code_ids = fields.One2many('website.alias.code', 'alias_id', string='Codes')
 
     @api.one
     @api.depends('alias_click_ids')
@@ -46,7 +47,7 @@ class website_alias(models.Model):
                 if not x: 
                     size += 1 
                 else:
-                    return x + str(id)
+                    return x
         self.code = random_string(self.id)
 
     @api.one
@@ -182,6 +183,13 @@ class website_alias(models.Model):
     sql_constraints = [
         ('code', 'unique( code )', 'Code must be unique.'),
     ]
+
+class website_alias_code(models.Model):
+    _name = "website.alias.code"
+
+    code = fields.Char(string='Short URL Code', store=True)
+    alias_id = fields.Many2one('website.alias', 'Alias', required=True)
+
 
 class website_alias_click(models.Model):
     _name = "website.alias.click"
