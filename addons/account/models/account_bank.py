@@ -31,13 +31,12 @@ class bank(models.Model):
     @api.returns('self')
     def create(self, data):
         result = super(bank, self).create(data)
-        self.post_write([result])
-        return result
+        return result.post_write()
 
     @api.multi
     def write(self, data):
         result = super(bank, self).write(data)
-        self.post_write(ids)
+        self.post_write()
         return result
 
     @api.model
