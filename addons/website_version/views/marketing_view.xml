@@ -43,7 +43,8 @@
                               <field name="name"/> on <field name="website_id"/>
                             </div>
                             <div class="oe_clear"></div>
-                            <div> <field name="version_number"/> variation </div>
+                            <div> <field name="version_number"/> versions </div>
+                            <div> Creation :<field name="create_date" /> </div>
                             <div class="oe_right">
                               <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                                 <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
