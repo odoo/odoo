@@ -1426,7 +1426,7 @@ class account_tax_code(models.Model):
     parent_id = fields.Many2one('account.tax.code', string='Parent Code', index=True)
     child_ids = fields.One2many('account.tax.code', 'parent_id', string='Child Codes')
     line_ids = fields.One2many('account.move.line', 'tax_code_id', string='Lines')
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company())
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     sign = fields.Float(string='Coefficent for parent', required=True, default=1.0,
         help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.')
     notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
@@ -1451,12 +1451,6 @@ class account_tax_code(models.Model):
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
     _constraints = [
         (osv.osv._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
@@ -1480,12 +1474,12 @@ class account_tax(models.Model):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
-    def copy_data(self, cr, uid, id, default=None, context=None):
+    @api.one
+    def copy_data(self, default=None):
         if default is None:
             default = {}
-        this = self.browse(cr, uid, id, context=context)
-        tmp_default = dict(default, name=_("%s (Copy)") % this.name)
-        return super(account_tax, self).copy_data(cr, uid, id, default=tmp_default, context=context)
+        default = dict(default, name=_("%s (Copy)") % self.name)
+        return super(account_tax, self).copy_data(default=default)
 
     _name = 'account.tax'
     _description = 'Tax'
@@ -1538,7 +1532,7 @@ class account_tax(models.Model):
     ref_tax_sign = fields.Float(string='Refund Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
     include_base_amount = fields.Boolean(string='Included in base amount', default=False,
         help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self._default_company())
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     description = fields.Char(string='Tax Code')
     price_include = fields.Boolean(string='Tax Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -1548,7 +1542,8 @@ class account_tax(models.Model):
         ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
     ]
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=80):
         """
         Returns a list of tupples containing id, name, as internally it is called {def name_get}
         result format: {[(id, name), (id, name), ...]}
@@ -1569,46 +1564,40 @@ class account_tax(models.Model):
             domain = [('description', operator, name), ('name', operator, name)]
         else:
             domain = ['|', ('description', operator, name), ('name', operator, name)]
-        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+        taxes = self.search(expression.AND([domain, args]), limit=limit)
+        return taxes.name_get()
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         if vals.get('type', False) and vals['type'] in ('none', 'code'):
             vals.update({'amount': 0.0})
-        return super(account_tax, self).write(cr, uid, ids, vals, context=context)
+        return super(account_tax, self).write(vals)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        journal_pool = self.pool.get('account.journal')
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        context = dict(self._context or {})
 
         if context.get('type'):
-            if context.get('type') in ('out_invoice','out_refund'):
-                args += [('type_tax_use','in',['sale','all'])]
-            elif context.get('type') in ('in_invoice','in_refund'):
-                args += [('type_tax_use','in',['purchase','all'])]
+            if context.get('type') in ('out_invoice', 'out_refund'):
+                args += [('type_tax_use', 'in', ['sale', 'all'])]
+            elif context.get('type') in ('in_invoice', 'in_refund'):
+                args += [('type_tax_use', 'in', ['purchase', 'all'])]
 
         if context.get('journal_id'):
-            journal = journal_pool.browse(cr, uid, context.get('journal_id'))
+            journal = self.env['account.journal'].browse(context.get('journal_id'))
             if journal.type in ('sale', 'purchase'):
-                args += [('type_tax_use','in',[journal.type,'all'])]
+                args += [('type_tax_use', 'in', [journal.type, 'all'])]
 
-        return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
+        return super(account_tax, self).search(args, offset, limit, order, count)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
+    @api.multi
+    @api.depends('name', 'description')
+    def name_get(self):
         res = []
-        for record in self.read(cr, uid, ids, ['description','name'], context=context):
-            name = record['description'] and record['description'] or record['name']
-            res.append((record['id'],name ))
+        for record in self:
+            name = record.description and record.description or record.name
+            res.append((record.id, name ))
         return res
-
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     def _applicable(self, cr, uid, taxes, price_unit, product=None, partner=None):
         res = []
