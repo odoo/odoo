@@ -83,7 +83,12 @@
                         </div> -->
                         <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
                             type="action" class="oe_stat_button pull-right" />
-                        <h1><field name="name"/></h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                         <group col="4">
                             <field name="website_id"/>
                             <!-- <field name="google_id"/> -->
@@ -178,7 +183,12 @@
                             <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right" 
                                 context="{'active_id': active_id}"/>
                         </group>
-                        <h1><field name="name"/></h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                         <group col="4">
                             <field name="website_id"/>
                         </group>
