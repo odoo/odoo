@@ -1011,17 +1011,17 @@
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-                def.resolve('mailto:' + val, false, label);
+                def.resolve('mailto:' + val, false, label, classes);
             } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    def.resolve(data.id, false, data.text);
+                    def.resolve(data.id, false, label || data.text, classes);
                 } else {
                     // Create the page, get the URL back
                     $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            def.resolve(response, false, data.id);
+                            def.resolve(response, false, data.id, classes);
                         });
                 }
             } else {
@@ -1924,9 +1924,10 @@
                     return false;
                 }
                 switch(m.type) {
-                case 'attributes': // ignore .cke_focus being added or removed
-                    // ignore id modification
-                    if (m.attributeName === 'id') { return false; }
+                case 'attributes':
+                    // ignore special attributes and .cke_focus class being added or removed
+                    var ignored_attrs = ['id', 'contenteditable', 'attributeeditable']
+                    if (_.contains(ignored_attrs, m.attributeName)) { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 

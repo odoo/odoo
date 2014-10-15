@@ -103,7 +103,7 @@
 
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
-          <div class="input-group">
+          <div class="input-group oe_website_spinner">
               <span class="input-group-addon hidden-print">
                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                       <span class="fa fa-minus"/>

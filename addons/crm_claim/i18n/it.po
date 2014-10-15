@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-03 06:37+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:02+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_claim
 #: field:res.partner,claim_count:0
 msgid "# Claims"
-msgstr ""
+msgstr "# Reclami"
 
 #. module: crm_claim
 #: field:crm.claim.report,email:0
@@ -29,14 +29,14 @@ msgstr "# Email"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
-msgid "# of Cases"
-msgstr "Numero di Casi"
+msgid "# of Claims"
+msgstr "# di reclami"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copia)"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -50,6 +50,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"Copy text \t\n"
+"<p class=\"oe_view_nocontent_create\">\n"
+"Record e traccie dei reclami cliente. I reclami possono essere collegati a "
+"ordini di ventia o a un lotto. Potrete inviare mail con allegati e tenere "
+"traccia della completa storia di un reclamo (e-mails spedite, tipi di "
+"interventi e via dicendo) . I reclami possono automaticamente essere "
+"collegati ad un indirizzo e-mail utilizzando il modulo Mail Gateway.\n"
+"</p>\n"
+"            "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
@@ -63,6 +72,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Click per creare una categoria di reclamo.\n"
+"</p><p>\n"
+"Crea una categoria di raclamo per gestire meglio e classificare i propri\n"
+"reclami. Alcuni esempi di reclamo possono essere: azioni preventive, \n"
+"azioni correttive.</p>\n"
+"            "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
@@ -79,15 +95,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Click per importare un nuovo stage nel processo per i reclami.\n"
+"</p><p>\n"
+"Potete creare uno stage di reclamo per categorizzare lo stato di ogni\n"
+"reclamo inserito nel sistema. Gli stage definiscono tutti i passi\n"
+"richiesti per una risoluzione del reclamo.</p>\n"
+"            "
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Action Description..."
-msgstr ""
+msgstr "Descrizione azione..."
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "Tipo azione"
@@ -133,7 +155,6 @@ msgstr "Categorie reclami"
 
 #. module: crm_claim
 #: field:crm.claim,date:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,claim_date:0
 msgid "Claim Date"
 msgstr "Data reclamo"
@@ -141,7 +162,7 @@ msgstr "Data reclamo"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Claim Date by Month"
-msgstr ""
+msgstr "Data reclamo per mese"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -150,8 +171,9 @@ msgstr "Descrizione del reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
-msgstr ""
+msgstr "Mese reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -171,6 +193,7 @@ msgstr "Fasi del Reclamo"
 
 #. module: crm_claim
 #: field:crm.claim,name:0
+#: field:crm.claim.report,subject:0
 msgid "Claim Subject"
 msgstr "Oggetto del reclamo"
 
@@ -249,12 +272,12 @@ msgstr "Data creazione"
 #: field:crm.claim,create_uid:0
 #: field:crm.claim.stage,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: crm_claim
 #: field:crm.claim.stage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -269,7 +292,7 @@ msgstr "Data di chiusura"
 #. module: crm_claim
 #: help:crm.claim,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data dell'ultimo messaggio postato per questo record"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -327,7 +350,7 @@ msgstr "Followers"
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -387,18 +410,18 @@ msgstr "E' un Follower"
 #. module: crm_claim
 #: field:crm.claim,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Ultimo Messaggio"
 
 #. module: crm_claim
 #: field:crm.claim,write_uid:0
 #: field:crm.claim.stage,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima modifica di"
 
 #. module: crm_claim
 #: field:crm.claim.stage,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
@@ -444,11 +467,6 @@ msgstr "La mia azienda"
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Sales Team(s)"
 msgstr "I Miei Team di Vendita"
-
-#. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-msgid "My company"
-msgstr "La mia azienda"
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
@@ -520,7 +538,6 @@ msgstr "Azione preventiva"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "Priorità"
@@ -663,7 +680,6 @@ msgstr "Responsabile Problematiche"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Type"
 msgstr "Tipo"
 
@@ -705,9 +721,20 @@ msgstr "Email osservatori"
 #. module: crm_claim
 #: field:crm.claim,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggi sito"
 
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Storico comunicazione sito"
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
+msgstr "Carico di lavoro"
+
+#~ msgid "# of Cases"
+#~ msgstr "Numero di Casi"
+
+#~ msgid "My company"
+#~ msgstr "La mia azienda"

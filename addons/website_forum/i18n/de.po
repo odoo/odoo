@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-17 20:01+0000\n"
-"Last-Translator: openbig.org - Thorsten Vocks <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-03 19:17+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-19 08:22+0000\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:50+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: website_forum
 #: view:website:website_forum.header
-#: view:website:website_forum.post_comment
 msgid "&times;"
 msgstr ""
 
@@ -31,13 +31,13 @@ msgstr "(nur eine einzige Antwort wird zugelassen)"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- it really helps to select the best questions and answers!"
-msgstr "- es ist hilfreich bei der Auswahl der besten Fragen und Antworten!"
+msgstr ""
+"- das ist sehr hilfreich für eine Auswahl der besten Fragen und Antworten !"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "- no need to answer the same question twice. Also, please"
-msgstr ""
-"- eine Frage muss nicht nochmals zu beantworten. Demnach bitten wir Sie,"
+msgstr "- eine Frage sollte nicht nochmals beantwortet werden müssen."
 
 #. module: website_forum
 #: selection:forum.post.vote,vote:0
@@ -73,7 +73,7 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
 msgstr ""
-"Ein Tag ist eine Kennzeichnung für thematisch vergleichbare\n"
+"Schlagwörter kennzeichnen thematisch vergleichbare\n"
 "          Fragen. Durch die konsequente und richtige Anwendung\n"
 "          ist es für alle Benutzer einfacher die richtigen Infos zu finden."
 
@@ -259,7 +259,7 @@ msgstr "Stadt"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Close"
-msgstr "Beenden"
+msgstr "Beendet"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -347,7 +347,7 @@ msgstr "Erstellungsdatum"
 #: field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
-msgstr "Erstellt am"
+msgstr "Gefragt durch"
 
 #. module: website_forum
 #: field:forum.forum,create_date:0
@@ -445,7 +445,7 @@ msgstr "Geben Sie Ihre Frage ein"
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr "Gute Antwort"
+msgstr "Erstklassige Frage"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
@@ -508,12 +508,13 @@ msgstr "Verfolger"
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,forum_id:0
+#: field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr "Forum"
+msgstr "Hilfeforum"
 
 #. module: website_forum
 #: field:gamification.badge,level:0
@@ -535,7 +536,7 @@ msgstr "Forum Nachricht"
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr "Forum Nachrichten"
+msgstr "Forum Beiträge"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
@@ -544,7 +545,7 @@ msgstr "Forum Nachrichten"
 #: model:ir.ui.menu,name:website_forum.menu_forum
 #: view:website:website.layout
 msgid "Forums"
-msgstr "Foren"
+msgstr "Forenverzeichnis"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
@@ -577,7 +578,7 @@ msgstr "Gute Frage"
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr "Gute Antwort"
+msgstr "Sehr gute Antwort"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
@@ -769,7 +770,7 @@ msgstr "Karma für neue Fragen"
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Karma to change question tags"
-msgstr "Karma für das Ändern von Tags"
+msgstr "Karma für das Ändern von Schlagwörtern"
 
 #. module: website_forum
 #: field:forum.post,karma_close:0
@@ -1043,7 +1044,7 @@ msgstr "Anzahl der Siber Auszeichnungen"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Offensive"
-msgstr "Unqualifiziert"
+msgstr "Disqualifiziert"
 
 #. module: website_forum
 #: view:website:website_forum.forum_all
@@ -1091,7 +1092,7 @@ msgstr "Bitte erinnern Sie sich, daß Sie immer"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "Please try to give a substantial answer."
-msgstr "Bitte geben Sie eine substanzielle Antwort"
+msgstr "Bitte geben Sie eine substanzielle Antwort."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -1149,7 +1150,12 @@ msgstr "Senden Sie Ihre Frage"
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr "Nachrichten"
+msgstr "Beiträge"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Public profile"
+msgstr "Öffentliche Aufgaben"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -1161,7 +1167,7 @@ msgstr "Experte"
 #. module: website_forum
 #: view:website:website.layout
 msgid "Q&A"
-msgstr "F&A"
+msgstr "Hilfe"
 
 #. module: website_forum
 #: field:forum.post,parent_id:0
@@ -1184,7 +1190,7 @@ msgstr "Frage wurde nicht gefunden!"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Question tools"
-msgstr "Fragen Tools"
+msgstr "Hilfeforum"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1207,7 +1213,7 @@ msgstr "Re: %s"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Read Guidelines"
-msgstr "Leserichtlinie"
+msgstr "Leitfaden"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -1333,7 +1339,7 @@ msgstr "Tag"
 #: view:website:website_forum.header
 #: view:website:website_forum.tag
 msgid "Tags"
-msgstr "Tags"
+msgstr "Schlagwörter"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -1355,6 +1361,11 @@ msgid "The question has been closed"
 msgstr "Die Frage wurde beendet"
 
 #. module: website_forum
+#: help:forum.post.vote,recipient_id:0
+msgid "The user receiving the vote"
+msgstr "Der Benutzer der Abstimmung erhält"
+
+#. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
 msgstr "Dieses Profil ist privat!"
@@ -1362,7 +1373,12 @@ msgstr "Dieses Profil ist privat!"
 #. module: website_forum
 #: field:forum.post,name:0
 msgid "Title"
-msgstr "Titel"
+msgstr "Überschrift"
+
+#. module: website_forum
+#: field:forum.post.vote,recipient_id:0
+msgid "To"
+msgstr "Bis"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1583,12 +1599,12 @@ msgstr "Beteiligungen"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "don't forget to vote"
-msgstr "Vergessen Sie nicht Ihre Bewertung"
+msgstr "Vergessen Sie außerdem nicht Ihre Bewertung abzugeben"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate question"
-msgstr "Dupliziere Frage"
+msgstr "bereits beantwortete Frage"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1643,12 +1659,12 @@ msgstr "nicht mehr relevant oder abgelaufen"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr "off-topic oder nicht mehr relevant"
+msgstr "ohne-Bezug zur Frage oder irrelevant"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "please, try to make your question interesting to others"
-msgstr "bitte, versuchen Sie Ihre Fragen interessant zu formulieren"
+msgstr "Bitte versuchen Sie Ihre Fragen möglichst interessant zu formulieren"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1658,7 +1674,9 @@ msgstr "Profil"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "provide enough details and, if possible, give an example"
-msgstr "bieten Sie genug Details und möglichst auch ein Beispiel"
+msgstr ""
+"Formularieren Sie möglichst detailliert und bieten Sie idealerweise ein "
+"Beispiel"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
@@ -1668,7 +1686,7 @@ msgstr "haben eine Auszeichnung erhalten:"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "revise your answers"
-msgstr "Bewerten Sie Ihre Antworten"
+msgstr "Ihre Antwort überprüfen"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
@@ -1688,17 +1706,17 @@ msgstr "Statistik"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr "Zeit"
+msgstr "-mal"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr "Mal"
+msgstr "-mal"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr "zu sehr Perspektive der Lokalisierung"
+msgstr "zu länderpezifische Frage"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
@@ -1713,7 +1731,7 @@ msgstr "unbekannt"
 #. module: website_forum
 #: view:website:website_forum.post_answer
 msgid "use the commenting tool."
-msgstr "Benutzen Sie das Kommentarwerkzeug"
+msgstr "die Kommentare Funktion zu nutzen."
 
 #. module: website_forum
 #: view:website:website_forum.badge_user

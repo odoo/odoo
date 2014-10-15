@@ -349,20 +349,18 @@ class TestNewFields(common.TransactionCase):
         message.body = BODY = "May the Force be with you."
         self.assertEqual(message.discussion, discussion)
         self.assertEqual(message.body, BODY)
-
+        self.assertFalse(message.author)
         self.assertNotIn(message, discussion.messages)
 
         # check computed values of fields
-        user = self.env.user
-        self.assertEqual(message.author, user)
-        self.assertEqual(message.name, "[%s] %s" % (discussion.name, user.name))
+        self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
         self.assertEqual(message.size, len(BODY))
 
     def test_41_defaults(self):
         """ test default values. """
         fields = ['discussion', 'body', 'author', 'size']
         defaults = self.env['test_new_api.message'].default_get(fields)
-        self.assertEqual(defaults, {'author': self.env.uid, 'size': 0})
+        self.assertEqual(defaults, {'author': self.env.uid})
 
         defaults = self.env['test_new_api.mixed'].default_get(['number'])
         self.assertEqual(defaults, {'number': 3.14})

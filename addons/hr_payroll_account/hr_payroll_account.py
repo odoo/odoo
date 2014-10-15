@@ -23,7 +23,7 @@ import time
 from datetime import date, datetime, timedelta
 
 from openerp.osv import fields, osv
-from openerp.tools import config, float_compare
+from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
 
 class hr_payslip(osv.osv):
@@ -104,6 +104,8 @@ class hr_payslip(osv.osv):
             }
             for line in slip.details_by_salary_rule_category:
                 amt = slip.credit_note and -line.total or line.total
+                if float_is_zero(amt, precision_digits=precision):
+                    continue
                 partner_id = line.salary_rule_id.register_id.partner_id and line.salary_rule_id.register_id.partner_id.id or default_partner_id
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
@@ -175,6 +177,7 @@ class hr_payslip(osv.osv):
                     'credit': 0.0,
                 })
                 line_ids.append(adjust_debit)
+
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id, 'period_id' : period_id}, context=context)

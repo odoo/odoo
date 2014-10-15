@@ -176,7 +176,7 @@ class procurement_order(osv.osv):
             'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.rule_id.partner_address_id.id or (procurement.group_id and procurement.group_id.partner_id.id) or False,
             'location_id': procurement.rule_id.location_src_id.id,
-            'location_dest_id': procurement.rule_id.location_id.id,
+            'location_dest_id': procurement.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'procurement_id': procurement.id,
             'rule_id': procurement.rule_id.id,
@@ -303,7 +303,7 @@ class procurement_order(osv.osv):
         return {}
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
-        date_planned = start_date
+        date_planned = start_date + relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):

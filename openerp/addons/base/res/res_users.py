@@ -190,8 +190,8 @@ class res_users(osv.osv):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = openerp.fields.Char(related='partner_id.name')
-    email = openerp.fields.Char(related='partner_id.email')
+    name = openerp.fields.Char(related='partner_id.name', inherited=True)
+    email = openerp.fields.Char(related='partner_id.email', inherited=True)
 
     def on_change_login(self, cr, uid, ids, login, context=None):
         if login and tools.single_email_re.match(login):
@@ -358,7 +358,7 @@ class res_users(osv.osv):
         if not context:
             context={}
         ids = []
-        if name:
+        if name and operator in ['=', 'ilike']:
             ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)

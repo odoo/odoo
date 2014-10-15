@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-18 13:44+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-04 08:11+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-19 08:20+0000\n"
+"X-Launchpad-Export-Date: 2014-10-05 07:26+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:472
+#: code:addons/mass_mailing/models/mass_mailing.py:473
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -273,6 +273,7 @@ msgstr "Textkörper"
 #: field:mail.mail.statistics,bounced:0
 #: field:mail.mass_mailing,bounced:0
 #: field:mail.mass_mailing.campaign,bounced:0
+#: field:mail.statistics.report,bounced:0
 msgid "Bounced"
 msgstr "Verworfen"
 
@@ -388,6 +389,11 @@ msgid "Date of technical error leading to the email not being sent"
 msgstr "Datum der Fehlerursache"
 
 #. module: mass_mailing
+#: help:mail.mass_mailing.contact,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Datum der zuletzt gesendeten Nachricht"
+
+#. module: mass_mailing
 #: help:mail.mail.statistics,scheduled:0
 msgid "Date when the email has been created"
 msgstr "Datum der E-Mailerstellung"
@@ -422,6 +428,7 @@ msgstr "Löschen"
 #. module: mass_mailing
 #: field:mail.mass_mailing,delivered:0
 #: field:mail.mass_mailing.campaign,delivered:0
+#: field:mail.statistics.report,delivered:0
 msgid "Delivered"
 msgstr "Zugestellt"
 
@@ -452,6 +459,7 @@ msgstr "Domäne"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,state:0
+#: selection:mail.statistics.report,state:0
 msgid "Draft"
 msgstr "Entwurf"
 
@@ -511,13 +519,24 @@ msgid "Exclude Opt Out"
 msgstr "Exkludiere Kündigung"
 
 #. module: mass_mailing
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+msgid "Extended Filters..."
+msgstr "Erweiterte Filter"
+
+#. module: mass_mailing
 #: field:mail.mass_mailing,failed:0
 #: field:mail.mass_mailing.campaign,failed:0
 msgid "Failed"
 msgstr "Fehlgeschlagen"
 
 #. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_follower_ids:0
+msgid "Followers"
+msgstr "Followers"
+
+#. module: mass_mailing
 #: field:mail.mass_mailing,email_from:0
+#: field:mail.statistics.report,email_from:0
 msgid "From"
 msgstr "Von"
 
@@ -529,6 +548,21 @@ msgid "Group By"
 msgstr "Gruppierung"
 
 #. module: mass_mailing
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+msgid "Group By..."
+msgstr "Gruppierung..."
+
+#. module: mass_mailing
+#: help:mail.mass_mailing.contact,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Beinhaltet die Chatter Historie (Anzahl der Nachrichten, etc.) Diese "
+"Zusammenfassung ist im html Format und kann in Kanban Ansichten benutzt "
+"werden."
+
+#. module: mass_mailing
 #: field:mail.mail.statistics,id:0
 #: field:mail.mass_mailing,id:0
 #: field:mail.mass_mailing.campaign,id:0
@@ -537,6 +571,7 @@ msgstr "Gruppierung"
 #: field:mail.mass_mailing.list,id:0
 #: field:mail.mass_mailing.stage,id:0
 #: field:mail.mass_mailing.test,id:0
+#: field:mail.statistics.report,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -552,6 +587,11 @@ msgstr ""
 "für verschiedene Controller und Aktionen benötigt."
 
 #. module: mass_mailing
+#: help:mail.mass_mailing.contact,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Bei Aktivierung erfordern neue Mitteilungen Ihre Aufmerksamkeit."
+
+#. module: mass_mailing
 #: help:mail.mass_mailing.campaign,unique_ab_testing:0
 msgid ""
 "If checked, recipients will be mailed only once, allowing to sendvarious "
@@ -564,6 +604,16 @@ msgstr ""
 #: selection:mail.mass_mailing,reply_to_mode:0
 msgid "In Document"
 msgstr "In Dokument"
+
+#. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Ist bereits Follower"
+
+#. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_last_post:0
+msgid "Last Message Date"
+msgstr "Datum der letzten Nachricht"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,write_uid:0
@@ -626,7 +676,7 @@ msgid "Mailing"
 msgstr "E-Mail Versand"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:343
+#: code:addons/mass_mailing/models/mass_mailing.py:344
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: field:mail.compose.message,mailing_list_ids:0
 #: field:mail.mass_mailing.contact,list_id:0
@@ -683,6 +733,16 @@ msgid "Manage mass mailign using Campaigns"
 msgstr "Verwalten Sie Massenmailings mit Kampagnen"
 
 #. module: mass_mailing
+#: field:mail.statistics.report,name:0
+msgid "Mass Mail"
+msgstr "Massenmail"
+
+#. module: mass_mailing
+#: field:mail.statistics.report,campaign:0
+msgid "Mass Mail Campaign"
+msgstr "Massenmail Kampagne"
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_campaign
 #: field:mail.compose.message,mass_mailing_id:0
@@ -690,8 +750,15 @@ msgstr "Verwalten Sie Massenmailings mit Kampagnen"
 #: field:mail.mail,mailing_id:0
 #: field:mail.mail.statistics,mass_mailing_id:0
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
+#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_graph
 msgid "Mass Mailing"
 msgstr "Massenmailing"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
+#: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_report
+msgid "Mass Mailing Analysis"
+msgstr "Statistik Massenmailing"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
@@ -699,6 +766,7 @@ msgstr "Massenmailing"
 #: field:mail.mail.statistics,mass_mailing_campaign_id:0
 #: field:mail.mass_mailing,mass_mailing_campaign_id:0
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "Massenmail Kampagne"
 
@@ -730,6 +798,25 @@ msgid "Mass Mailing Stages"
 msgstr "Massenmail Stufen"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mail_statistics_report
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_graph
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+msgid "Mass Mailing Statistics"
+msgstr "Statistik Massenmailing"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_mail_statistics_report
+msgid ""
+"Mass Mailing Statistics allows you to check different mailing related "
+"information like number of bounced mails, opened mails, replied mails. You "
+"can sort out your analysis by different groups to get accurate grained "
+"analysis."
+msgstr ""
+"Die Statistiken zum Massenmailing zeigen wie viele E-Mails geöffnet, "
+"gelesen, oder gelöscht wurden. Durch die veschiedenen Merkmale zur "
+"Gruppierung ist eine differenzierte Analyse Ihrer Kampagne möglich."
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailings
@@ -745,6 +832,16 @@ msgstr "Massenmailings"
 #: field:mail.mail.statistics,message_id:0
 msgid "Message-ID"
 msgstr "Nachricht-ID"
+
+#. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_ids:0
+msgid "Messages"
+msgstr "Mitteilungen"
+
+#. module: mass_mailing
+#: help:mail.mass_mailing.contact,message_ids:0
+msgid "Messages and communication history"
+msgstr "Nachrichten- und Kommunikationshistorie"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,name:0
@@ -774,7 +871,7 @@ msgid "Open Marketing Menu"
 msgstr "Öffne Marketingmenü"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:554
+#: code:addons/mass_mailing/models/mass_mailing.py:555
 #, python-format
 msgid "Open with Visual Editor"
 msgstr "Mit visueller Tastatur bearbeiten"
@@ -788,6 +885,7 @@ msgstr "Mit visueller Tastatur bearbeiten"
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: field:mail.mass_mailing.campaign,opened:0
+#: field:mail.statistics.report,opened:0
 msgid "Opened"
 msgstr "Geöffnet"
 
@@ -875,6 +973,7 @@ msgstr "Verknüpfte(s) Mailing(s)"
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: field:mail.mass_mailing.campaign,replied:0
+#: field:mail.statistics.report,replied:0
 msgid "Replied"
 msgstr "Beantwortet"
 
@@ -923,6 +1022,16 @@ msgid "Scheduled"
 msgstr "Eingeplant"
 
 #. module: mass_mailing
+#: field:mail.statistics.report,scheduled_date:0
+msgid "Scheduled Date"
+msgstr "Geplantes Datum"
+
+#. module: mass_mailing
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+msgid "Scheduled Month"
+msgstr "Geplanter Monat"
+
+#. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
 msgstr "Wähle Empfängerliste"
@@ -964,8 +1073,16 @@ msgstr "An alle senden"
 #: field:mail.mass_mailing,sent:0
 #: selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
+#: field:mail.statistics.report,sent:0
+#: selection:mail.statistics.report,state:0
 msgid "Sent"
 msgstr "Gesendete"
+
+#. module: mass_mailing
+#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
+msgid "Sent By"
+msgstr "Gesendet durch"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,sent_date:0
@@ -976,6 +1093,11 @@ msgstr "Sendedatum"
 #: field:mail.mass_mailing.campaign,sent:0
 msgid "Sent Emails"
 msgstr "Gesendete E-Mails"
+
+#. module: mass_mailing
+#: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
+msgid "Sent Month"
+msgstr "Gesendeter Monat"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.stage,sequence:0
@@ -1000,6 +1122,7 @@ msgstr "Stufe"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
+#: view:mail.statistics.report:mass_mailing.view_mail_statistics_report_search
 msgid "State"
 msgstr "Status"
 
@@ -1010,6 +1133,7 @@ msgstr "Statistik"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,state:0
+#: field:mail.statistics.report,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -1024,13 +1148,18 @@ msgid "Subscribe"
 msgstr "Anmelden"
 
 #. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_summary:0
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#. module: mass_mailing
 #: view:email.template:mass_mailing.email_template_form_minimal
 #: model:ir.actions.act_window,name:mass_mailing.action_email_template_marketing
 msgid "Templates"
 msgstr "Vorlagen"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:540
+#: code:addons/mass_mailing/models/mass_mailing.py:541
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1038,6 +1167,7 @@ msgstr "Test E-Mail"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,state:0
+#: selection:mail.statistics.report,state:0
 msgid "Tested"
 msgstr "Getestet"
 
@@ -1074,6 +1204,21 @@ msgstr ""
 #: field:mail.mass_mailing.campaign,total:0
 msgid "Total"
 msgstr "Gesamt"
+
+#. module: mass_mailing
+#: field:mail.mass_mailing.contact,message_unread:0
+msgid "Unread Messages"
+msgstr "Ungelesene Nachrichten"
+
+#. module: mass_mailing
+#: field:mail.mass_mailing.contact,website_message_ids:0
+msgid "Website Messages"
+msgstr "Webseite Nachrichten"
+
+#. module: mass_mailing
+#: help:mail.mass_mailing.contact,website_message_ids:0
+msgid "Website communication history"
+msgstr "Webseite Kommunikationshistorie"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form

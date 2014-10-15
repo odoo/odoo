@@ -409,7 +409,7 @@
 
 <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
   <xpath expr="//a[@id='add_to_cart']" position="before">
-    <div class="css_quantity input-group" style="width: 108px;">
+    <div class="css_quantity input-group oe_website_spinner">
         <span class="input-group-addon">
             <a t-attf-href="#" class="mb8 js_add_cart_json">
                 <i class="fa fa-minus"></i>
@@ -697,7 +697,7 @@
                                  }'/>
                               </td>
                               <td class="text-center">
-                                  <div class="input-group">
+                                  <div class="input-group oe_website_spinner">
                                       <span class="input-group-addon">
                                           <a t-attf-href="#" class="mb8 js_add_cart_json" data-no-instant="">
                                               <i class="fa fa-minus"></i>
@@ -854,9 +854,9 @@
                       <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                   </div>
                   <div t-if="has_check_vat" class="clearfix"/>
-                  <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="street2" style="font-weight: normal">Company Name</label>
-                      <input type="text" name="street2" class="form-control" t-att-value="checkout.get('street2')"/>
+                  <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
+                      <label class="control-label" for="street" style="font-weight: normal">Company Name</label>
+                      <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
                   </div>
                   <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="vat" style="font-weight: normal">VAT Number</label>
@@ -871,9 +871,9 @@
                       <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                   </div>
 
-                  <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="street">Street</label>
-                      <input type="text" name="street" class="form-control" t-att-value="checkout.get('street')"/>
+                  <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
+                      <label class="control-label" for="street2">Street</label>
+                      <input type="text" name="street2" class="form-control" t-att-value="checkout.get('street2')"/>
                   </div>
                   <div class="clearfix"/>
 
@@ -1017,6 +1017,14 @@
           </ul>
           <h1 class="mb32">Validate Order</h1>
           <div class="row">
+          <div class="col-lg-8 col-sm-9">
+              <t t-foreach="errors" t-as="error">
+              <div class="alert alert-danger" t-if="error">
+                <h4><t t-esc="error[0]"/></h4>
+                <t t-esc="error[1]"/>
+              </div>
+            </t>
+          </div>
           <div class="col-lg-8 col-sm-9 oe_cart">
               <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
               <table class='table table-striped table-condensed' id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">

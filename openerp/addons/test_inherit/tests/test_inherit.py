@@ -17,12 +17,15 @@ class test_inherits(common.TransactionCase):
 
     def test_field_extension(self):
         """ check the extension of a field in an inherited model """
-        # the field mother.name should inherit required=True, and have a default
-        # value
+        # the field mother.name should inherit required=True, and have "Bar" as
+        # a default value
         mother = self.env['test.inherit.mother']
         field = mother._fields['name']
         self.assertTrue(field.required)
-        self.assertEqual(field.default, 'Unknown')
+
+        self.assertEqual(field.default(mother), "Bar")
+        self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
+        self.assertEqual(mother._defaults.get('name'), "Bar")
 
         # the field daugther.template_id should inherit
         # model_name='test.inherit.mother', string='Template', required=True
@@ -43,10 +46,12 @@ class test_inherits(common.TransactionCase):
     def test_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
         mother = self.env['test.inherit.mother']
-        field = mother._fields['state']
 
-        # the extra values are added
-        self.assertEqual(field.selection, [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+        # the extra values are added, both in the field and the column
+        self.assertEqual(mother._fields['state'].selection,
+                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+        self.assertEqual(mother._columns['state'].selection,
+                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

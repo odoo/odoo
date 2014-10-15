@@ -173,7 +173,7 @@ class hr_analytic_timesheet(osv.osv):
         if ids:
             new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
-                warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
+                warning = {'title':_('User Alert!'),'message':_('Changing the date will let this entry appear in the timesheet of the new date.')}
                 return {'value':{},'warning':warning}
         return {'value':{}}
 

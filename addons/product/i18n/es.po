@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-25 11:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-01 01:02+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-26 08:41+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-10-02 06:43+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
 #: field:product.template,product_variant_count:0
@@ -23,8 +23,8 @@ msgid "# of Product Variants"
 msgstr "Variantes de productos"
 
 #. module: product
-#: code:addons/product/product.py:724
-#: code:addons/product/product.py:1062
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -531,12 +531,12 @@ msgid "Blank DVD-RW"
 msgstr "DVD-RW virgen"
 
 #. module: product
-#: model:product.template,name:product.product_product_5_product_template
+#: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
 msgstr "Altavoz Bose mini bluetooth"
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_5_product_template
+#: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
 msgstr "El altavoz bluetooth portátil de Bose más pequeño"
 
@@ -597,6 +597,11 @@ msgstr ""
 #: model:product.public.category,name:product.case
 msgid "Case"
 msgstr "Caja"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "Categoría"
 
 #. module: product
 #: field:product.category,type:0
@@ -685,6 +690,11 @@ msgstr "Ordenador todo-en-uno"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Ordenadores"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr "Configuraciones"
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -805,6 +815,7 @@ msgstr "Portátil personalizado basado en los requisitos del cliente."
 
 #. module: product
 #: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
 msgstr ""
 "Ordenador personalizado ensamblado bajo pedido basado en los requisitos del "
@@ -1012,6 +1023,15 @@ msgstr "Fijo"
 #: field:product.template,message_follower_ids:0
 msgid "Followers"
 msgstr "Seguidores"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
+"Para aplicar la regla, la cantidad comprada/vendida debe ser mayor o igual a "
+"la cantidad mínima indicada en este campo."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1679,7 +1699,7 @@ msgid "New Price ="
 msgstr "Nuevo Precio ="
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1745,6 +1765,7 @@ msgstr "Sólo una variante de producto"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Other Info"
 msgstr "Otra información"
 
@@ -1759,6 +1780,11 @@ msgstr "Otra tarifa"
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Otros productos"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr "PC ensamblado + personalizado (PC bajo demanda) "
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1783,7 +1809,10 @@ msgstr "Paquetes por piso"
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 #: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
 msgid "Packaging"
 msgstr "Empaquetado"
 
@@ -1799,6 +1828,7 @@ msgstr "Unidad logística pallet"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
 msgstr "Paletización"
 
@@ -2171,7 +2201,7 @@ msgid "Products by Category"
 msgstr "Productos por categoría"
 
 #. module: product
-#: code:addons/product/product.py:805
+#: code:addons/product/product.py:809
 #, python-format
 msgid "Products: "
 msgstr "Productos: "
@@ -2483,15 +2513,6 @@ msgstr "Especifique el importe máximo de margen sobre el precio base."
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Especifique el importe mínimo del margen sobre el precio base."
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-"Especifique la cantidad mínima que debe ser comprada/vendida para aplicar "
-"esta regla."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -2890,7 +2911,7 @@ msgid "Unit of Measure Categories"
 msgstr "Categorías de las unidades de medida"
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr "¡Categorías de las unidades de medida no coincidentes!"
@@ -3200,3 +3221,10 @@ msgstr "La empresa matriz"
 #: field:product.price.history,company_id:0
 msgid "unknown"
 msgstr "desconocido"
+
+#~ msgid ""
+#~ "Specify the minimum quantity that needs to be bought/sold for the rule to "
+#~ "apply."
+#~ msgstr ""
+#~ "Especifique la cantidad mínima que debe ser comprada/vendida para aplicar "
+#~ "esta regla."

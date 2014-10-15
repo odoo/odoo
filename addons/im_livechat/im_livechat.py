@@ -55,7 +55,7 @@ class im_livechat_channel(osv.Model):
 
     def _script_external(self, cr, uid, ids, name, arg, context=None):
         values = {
-            "url": self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),
+            "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
             "dbname":cr.dbname
         }
         res = {}
@@ -66,7 +66,7 @@ class im_livechat_channel(osv.Model):
 
     def _script_internal(self, cr, uid, ids, name, arg, context=None):
         values = {
-            "url": self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),
+            "url": self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url'),
             "dbname":cr.dbname
         }
         res = {}
@@ -78,7 +78,7 @@ class im_livechat_channel(osv.Model):
     def _web_page(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url') + \
+            res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url') + \
                 "/im_livechat/support/%s/%i" % (cr.dbname, record.id)
         return res
 

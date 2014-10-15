@@ -56,11 +56,13 @@ class QWeb(orm.AbstractModel):
         super(QWeb, self).add_template(qcontext, name, node)
 
     def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
-        att, val = super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext)
+        URL_ATTRS = self.URL_ATTRS.get(element.tag)
+        is_website = request.website
+        for att, val in super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext):
+            if is_website and att == URL_ATTRS and isinstance(val, basestring):
+                val = qwebcontext.get('url_for')(val)
+            yield (att, val)
 
-        if request.website and att == self.URL_ATTRS.get(element.tag) and isinstance(val, basestring):
-            val = qwebcontext.get('url_for')(val)
-        return att, val
 
     def get_converter_for(self, field_type):
         return self.pool.get(

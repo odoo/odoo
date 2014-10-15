@@ -42,6 +42,7 @@ import logging
 import pytz
 import re
 import xmlrpclib
+from operator import itemgetter
 from psycopg2 import Binary
 
 import openerp
@@ -115,6 +116,7 @@ class _column(object):
         self.group_operator = args.get('group_operator', False)
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
+        self._args = args
         for a in args:
             setattr(self, a, args[a])
 
@@ -130,8 +132,8 @@ class _column(object):
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
-        items = [
-            ('_origin', self),                  # field interfaces self
+        base_items = [
+            ('column', self),                   # field interfaces self
             ('copy', self.copy),
             ('index', self.select),
             ('manual', self.manual),
@@ -141,15 +143,17 @@ class _column(object):
             ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
-            ('change_default', self.change_default),
-            ('deprecated', self.deprecated),
-        ]
-        return dict(item for item in items if item[1])
+        ])
+        return dict(base_items + truthy_items + self._args.items())
 
     def restart(self):
         pass

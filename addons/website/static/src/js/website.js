@@ -93,7 +93,7 @@
         options = _.extend({
             window_title: '',
             field_name: '',
-            default: '',
+            'default': '', // dict notation for IE<9
             init: function() {}
         }, options || {});
 
@@ -106,7 +106,7 @@
         var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
-        field.val(options.default);
+        field.val(options['default']); // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.is('select')) {
                 var select = field[0];
@@ -284,6 +284,9 @@
                 // display button if they are at least one editable zone in the page (check the branding)
                 if (!!$('[data-oe-model]').size()) {
                     $("#oe_editzone").show();
+
+                    //backwards compatibility with 8.0RC1 templates - Drop next line in master!
+                    $("#oe_editzone button").show();
                 }
 
                 if ($('html').data('website-id')) {

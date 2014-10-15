@@ -525,12 +525,14 @@ class mail_thread(osv.AbstractModel):
 
             # find subtypes and post messages or log if no subtype found
             subtypes = []
-            for field, track_info in self._track.items():
-                if field not in changes:
-                    continue
-                for subtype, method in track_info.items():
-                    if method(self, cr, uid, browse_record, context):
-                        subtypes.append(subtype)
+            # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
+            if not context.get('mail_track_log_only'):
+                for field, track_info in self._track.items():
+                    if field not in changes:
+                        continue
+                    for subtype, method in track_info.items():
+                        if method(self, cr, uid, browse_record, context):
+                            subtypes.append(subtype)
 
             posted = False
             for subtype in subtypes:
@@ -1234,9 +1236,13 @@ class mail_thread(osv.AbstractModel):
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
             alternative = False
+            mixed = False
+            html = u''
             for part in message.walk():
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
+                if part.get_content_type() == 'multipart/mixed':
+                    mixed = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 # part.get_filename returns decoded value if able to decode, coded otherwise.
@@ -1263,8 +1269,11 @@ class mail_thread(osv.AbstractModel):
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
+                    # mutlipart/alternative have one text and a html part, keep only the second
+                    # mixed allows several html parts, append html content
+                    append_content = not alternative or (html and mixed)
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
-                    if alternative:
+                    if not append_content:
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
