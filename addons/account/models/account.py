@@ -1599,11 +1599,12 @@ class account_tax(models.Model):
             res.append((record.id, name ))
         return res
 
-    def _applicable(self, cr, uid, taxes, price_unit, product=None, partner=None):
+    @api.multi
+    def _applicable(self, price_unit, product=None, partner=None):
         res = []
-        for tax in taxes:
-            if tax.applicable_type=='code':
-                localdict = {'price_unit':price_unit, 'product':product, 'partner':partner}
+        for tax in self:
+            if tax.applicable_type == 'code':
+                localdict = {'price_unit': price_unit, 'product': product, 'partner': partner}
                 exec tax.python_applicable in localdict
                 if localdict.get('result', False):
                     res.append(tax)
@@ -1611,16 +1612,17 @@ class account_tax(models.Model):
                 res.append(tax)
         return res
 
-    def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
-        taxes = self._applicable(cr, uid, taxes, price_unit ,product, partner)
+    @api.multi
+    def _unit_compute(self, price_unit, product=None, partner=None, quantity=0):
+        taxes = self._applicable(price_unit ,product, partner)
         res = []
-        cur_price_unit=price_unit
+        cur_price_unit = price_unit
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
-            data = {'id':tax.id,
-                    'name':tax.description and tax.description + " - " + tax.name or tax.name,
-                    'account_collected_id':tax.account_collected_id.id,
-                    'account_paid_id':tax.account_paid_id.id,
+            data = {'id': tax.id,
+                    'name': tax.description and tax.description + " - " + tax.name or tax.name,
+                    'account_collected_id': tax.account_collected_id.id,
+                    'account_paid_id': tax.account_paid_id.id,
                     'account_analytic_collected_id': tax.account_analytic_collected_id.id,
                     'account_analytic_paid_id': tax.account_analytic_paid_id.id,
                     'base_code_id': tax.base_code_id.id,
@@ -1635,21 +1637,21 @@ class account_tax(models.Model):
                     'ref_tax_code_id': tax.ref_tax_code_id.id,
             }
             res.append(data)
-            if tax.type=='percent':
+            if tax.type == 'percent':
                 amount = cur_price_unit * tax.amount
                 data['amount'] = amount
 
-            elif tax.type=='fixed':
+            elif tax.type == 'fixed':
                 data['amount'] = tax.amount
-                data['tax_amount']=quantity
+                data['tax_amount'] = quantity
                # data['amount'] = quantity
-            elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+            elif tax.type == 'code':
+                localdict = {'price_unit': cur_price_unit, 'product': product, 'partner': partner}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
-            elif tax.type=='balance':
-                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+            elif tax.type == 'balance':
+                data['amount'] = cur_price_unit - reduce(lambda x, y: y.get('amount', 0.0) + x, res, 0.0)
                 data['balance'] = cur_price_unit
 
             amount2 = data.get('amount', 0.0)
@@ -1657,32 +1659,32 @@ class account_tax(models.Model):
                 if tax.child_depend:
                     latest = res.pop()
                 amount = amount2
-                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, product, partner, quantity)
+                child_tax = tax.child_ids._unit_compute(amount, product, partner, quantity)
                 res.extend(child_tax)
                 for child in child_tax:
                     amount2 += child.get('amount', 0.0)
                 if tax.child_depend:
                     for r in res:
-                        for name in ('base','ref_base'):
-                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
-                                r[name+'_code_id'] = latest[name+'_code_id']
-                                r[name+'_sign'] = latest[name+'_sign']
+                        for name in ('base', 'ref_base'):
+                            if latest[name + '_code_id'] and latest[name + '_sign'] and not r[name + '_code_id']:
+                                r[name + '_code_id'] = latest[name + '_code_id']
+                                r[name + '_sign'] = latest[name + '_sign']
                                 r['price_unit'] = latest['price_unit']
-                                latest[name+'_code_id'] = False
-                        for name in ('tax','ref_tax'):
-                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
-                                r[name+'_code_id'] = latest[name+'_code_id']
-                                r[name+'_sign'] = latest[name+'_sign']
+                                latest[name + '_code_id'] = False
+                        for name in ('tax', 'ref_tax'):
+                            if latest[name + '_code_id'] and latest[name + '_sign'] and not r[name + '_code_id']:
+                                r[name + '_code_id'] = latest[name + '_code_id']
+                                r[name + '_sign'] = latest[name + '_sign']
                                 r['amount'] = data['amount']
-                                latest[name+'_code_id'] = False
+                                latest[name + '_code_id'] = False
             if tax.include_base_amount:
-                cur_price_unit+=amount2
+                cur_price_unit += amount2
         return res
 
-    def compute_for_bank_reconciliation(self, cr, uid, tax_id, amount, context=None):
+    @api.one
+    def compute_for_bank_reconciliation(self, amount):
         """ Called by RPC by the bank statement reconciliation widget """
-        tax = self.browse(cr, uid, tax_id, context=context)
-        return self.compute_all(cr, uid, [tax], amount, 1) # TOCHECK may use force_exclude parameter
+        return self.compute_all(amount, 1) # TOCHECK may use force_exclude parameter
 
     @api.v7
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
@@ -1741,11 +1743,13 @@ class account_tax(models.Model):
             self._cr, self._uid, self, price_unit, quantity,
             product=product, partner=partner, force_excluded=force_excluded)
 
-    def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
+    @api.multi
+    def compute(self, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
-        return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
+        return self._compute(price_unit, quantity, product, partner)
 
-    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+    @api.multi
+    def _compute(self, price_unit, quantity, product=None, partner=None, precision=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -1755,48 +1759,49 @@ class account_tax(models.Model):
             one tax for each tax id in IDS and their children
         """
         if not precision:
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
+            precision = self.env['decimal.precision'].precision_get('Account')
+        res = self._unit_compute(price_unit, product, partner, quantity)
         total = 0.0
         for r in res:
-            if r.get('balance',False):
+            if r.get('balance', False):
                 r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
             else:
                 r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
                 total += r['amount']
         return res
 
-    def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
-        taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
+    @api.multi
+    def _unit_compute_inv(self, price_unit, product=None, partner=None):
+        taxes = self._applicable(price_unit,  product, partner)
         res = []
         taxes.reverse()
         cur_price_unit = price_unit
 
         tax_parent_tot = 0.0
         for tax in taxes:
-            if (tax.type=='percent') and not tax.include_base_amount:
+            if (tax.type == 'percent') and not tax.include_base_amount:
                 tax_parent_tot += tax.amount
 
         for tax in taxes:
-            if (tax.type=='fixed') and not tax.include_base_amount:
+            if (tax.type == 'fixed') and not tax.include_base_amount:
                 cur_price_unit -= tax.amount
 
         for tax in taxes:
-            if tax.type=='percent':
+            if tax.type == 'percent':
                 if tax.include_base_amount:
                     amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
                 else:
                     amount = (cur_price_unit / (1 + tax_parent_tot)) * tax.amount
 
-            elif tax.type=='fixed':
+            elif tax.type == 'fixed':
                 amount = tax.amount
 
-            elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+            elif tax.type == 'code':
+                localdict = {'price_unit': cur_price_unit, 'product': product, 'partner': partner}
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
-            elif tax.type=='balance':
-                amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+            elif tax.type == 'balance':
+                amount = cur_price_unit - reduce(lambda x, y: y.get('amount', 0.0) + x, res, 0.0)
 
             if tax.include_base_amount:
                 cur_price_unit -= amount
@@ -1828,7 +1833,7 @@ class account_tax(models.Model):
                     del res[-1]
                     amount = price_unit
 
-            parent_tax = self._unit_compute_inv(cr, uid, tax.child_ids, amount, product, partner)
+            parent_tax = tax.child_ids._unit_compute_inv(amount, product, partner)
             res.extend(parent_tax)
 
         total = 0.0
@@ -1840,7 +1845,8 @@ class account_tax(models.Model):
             r['todo'] = 0
         return res
 
-    def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+    @api.multi
+    def compute_inv(self, price_unit, quantity, product=None, partner=None, precision=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
         Price Unit is a Tax included price
@@ -1851,11 +1857,11 @@ class account_tax(models.Model):
             one tax for each tax id in IDS and their children
         """
         if not precision:
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
+            precision = self.env['decimal.precision'].precision_get('Account')
+        res = self._unit_compute_inv(price_unit, product, partner=None)
         total = 0.0
         for r in res:
-            if r.get('balance',False):
+            if r.get('balance', False):
                 r['amount'] = round(r['balance'] * quantity, precision) - total
             else:
                 r['amount'] = round(r['amount'] * quantity, precision)
