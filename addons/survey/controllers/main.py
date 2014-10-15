@@ -32,6 +32,7 @@ from openerp.addons.web.http import request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from openerp.tools.safe_eval import safe_eval
 
+from openerp.addons.website.models.website import slug
 
 _logger = logging.getLogger(__name__)
 
@@ -74,6 +75,12 @@ class WebsiteSurvey(http.Controller):
 
     ## ROUTES HANDLERS ##
 
+    @http.route(['/survey/load/<model("survey.survey"):survey>/<string:token>'], type='http', auth='public', website=True)
+    def survey_load(self, survey, token=None, **post):
+       data = {'survey': survey, 'page': None, 'token': token}
+       return request.website.render('survey.survey_init', data)
+
+
     # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
@@ -88,8 +95,7 @@ class WebsiteSurvey(http.Controller):
             _logger.info("[survey] Phantom mode")
             user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.redirect('/survey/load/%s/%s' % (slug(survey), user_input.token))
         # END Test mode
 
         # Controls if the survey can be displayed
@@ -119,8 +125,7 @@ class WebsiteSurvey(http.Controller):
 
         # Select the right page
         if user_input.state == 'new':  # Intro page
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.website.render('survey.survey_init', data)
+            return request.redirect('/survey/load/%s/%s' % (slug(survey), user_input.token))
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
