@@ -785,6 +785,9 @@
                         }, 0);
                     });
 
+                // cke change address tag and add a contentEditable true. Need to avoid edition
+                $('[data-oe-type="contact"]').attr('contentEditable', false);
+
                 self.trigger('rte:ready');
                 def.resolve();
             });
