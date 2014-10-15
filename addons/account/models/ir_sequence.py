@@ -42,15 +42,14 @@ class ir_sequence(models.Model):
 
     fiscal_ids = fields.One2many('account.sequence.fiscalyear', 'sequence_main_id', string='Sequences', copy=True)
 
-    @api.cr_uid_ids_context
-    def _next(self, cr, uid, seq_ids, context=None):
-        if context is None:
-            context = {}
-        for seq in self.browse(cr, uid, seq_ids, context):
+    @api.multi
+    def _next(self):
+        context = dict(self._context or {})
+        for seq in self:
             for line in seq.fiscal_ids:
                 if line.fiscalyear_id.id == context.get('fiscalyear_id'):
-                    return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
-        return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
+                    return super(ir_sequence, self)._next([line.sequence_id.id])
+        return super(ir_sequence, self)._next()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
