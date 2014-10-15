@@ -8,11 +8,13 @@ import threading
 import traceback
 import tempfile
 import zipfile
+import json
+import socket
 
 import psycopg2
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import api, SUPERUSER_ID
 from openerp.exceptions import Warning
 import openerp.release
 import openerp.sql_db
@@ -184,10 +186,39 @@ def dump_db(db, stream, format='odoo'):
         with openerp.tools.osutil.tempdir() as dump_dir:
             registry = openerp.modules.registry.RegistryManager.get(db)
             with registry.cursor() as cr:
+                # collect some information
+                pg_version = \
+                    "%d.%d" % divmod(cr._obj.connection.server_version / 100,
+                                     100)
+                with api.Environment.manage():
+                    modules = [
+                        x['name']
+                        for x in registry['ir.module.module'].read(
+                            cr, SUPERUSER_ID,
+                            registry['ir.module.module'].search(
+                                cr, SUPERUSER_ID, [('state','=','installed')]),
+                            ['name'])
+                    ]
+                    users = registry['res.users'].search(cr, 1, [], count=True)
+                # build manifest
+                with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
+                    manifest = {
+                        'version': openerp.release.version,
+                        'version_info': openerp.release.version_info,
+                        'major_version': openerp.release.major_version,
+                        'pg_version': pg_version,
+                        'modules': modules,
+                        'users': users,
+                        'hostname': socket.gethostname(),
+                    }
+                    json.dump(manifest, fh, indent=4)
+                    fh.write("\n")
+                # copy filestore
                 filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
                 if os.path.exists(filestore):
                     shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
 
+            # database dump
             dump_file = os.path.join(dump_dir, 'dump.sql')
             cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]
             if openerp.tools.config['db_user']:
