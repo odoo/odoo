@@ -16,6 +16,15 @@
         </t>
     </t>
 
+    <t t-extend="website.editorbar">
+        <t t-jquery=".navbar-header form button" t-operation="after">
+            <span id="master_edit">
+                <a href="#" id="master_edit_button" data-action="save_as_draft" class="btn btn-link btn-xs">Save as Draft</a>
+            </span>
+            
+        </t>
+    </t>
+
     <t t-name="experiment_menu">
         <li class="experiment"><a href="#" data-action="manage_experiment">Manage Experiments</a></li>
         <li class="experiment"><a href="#" data-action="statistics">Statistics</a></li>
