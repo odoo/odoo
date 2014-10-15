@@ -52,63 +52,45 @@
 </t>
 
 <t t-name="crm_wardialing_Tooltip">
-    <table class="oe_form_group">
-        <tr class="oe_form_group_row">
-            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
-                <span class=" oe_form_label oe_align_right"> Contact </span>
-            </td>
-            <td class="oe_form_group_cell oe_wardialing_td">
-                <span class="oe_form_field oe_form_field_char"><t t-esc="partner_name"/></span>
-            </td>
-        </tr>
-        <tr class="oe_form_group_row">
-            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
-                <span class=" oe_form_label oe_align_right"> Tel </span>
-            </td>
-            <td class="oe_wardialing_td oe_form_group_cell">
-                <t t-if="phone">
-                    <span class="oe_form_field oe_form_field_char"><t t-esc="phone"/></span><br/>
-                </t>
-                <t t-if="mobile">
-                    <span class="oe_form_field oe_form_field_char"><t t-esc="mobile"/></span>
-                </t>
-            </td>
-        </tr>
-        <tr class="oe_form_group_row">
-            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
-                <span class=" oe_form_label oe_align_right"> Mail </span>
-            </td>
-            <td class="oe_wardialing_td oe_form_group_cell">
-                <span class="oe_form_field oe_form_field_char"><t t-esc="email"/></span>
-            </td>
-        </tr>
-        <tr class="oe_form_group_row">
-            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
-                <span class=" oe_form_label oe_align_right"> Next Action </span>
-            </td>
-            <td class="oe_wardialing_td oe_form_group_cell">
-                <t t-if="title_action">
-                    <span class="oe_form_field oe_form_field_char"><t t-esc="title_action"/></span>
-                </t>
-            </td>
-        </tr>
-        <tr class="oe_form_group_row">
-            <td class="oe_wardialing_td oe_form_group_cell oe_form_group_cell_label">
-                <span class=" oe_form_label oe_align_right"> Expected Revenue </span>
-            </td>
-            <td class="oe_wardialing_td oe_form_group_cell">
-                
-                <span><t t-esc="company_currency"/></span><br/>
-                <span class="oe_form_field oe_form_field_char" t-field-options='{"widget": "monetary","display_currency": t-esc="company_currency"}'>
-                    <t t-esc="planned_revenue"/>
-                </span>
-            </td>
-        </tr>
-    </table>
+    <div style="font-weight: bold;">
+        <span class="oe_form_field oe_form_field_char"><t t-esc="partner_name"/></span>
+    </div>
+        
+    <div style="font-style: italic;">
+        <t t-if="phone">
+            <span class="oe_form_field oe_form_field_char"><t t-esc="phone"/></span><br/>
+        </t>
+        <t t-if="mobile">
+            <span class="oe_form_field oe_form_field_char"><t t-esc="mobile"/></span>
+        </t>
+    </div>
+
+    <div>
+        <span class="oe_form_field oe_form_field_char"><t t-esc="email"/></span>
+    </div>
+    <div style="margin-top:5px;margin-bottom:5px;">
+        <t t-if="title_action">
+            <span class=" oe_form_label oe_align_right"> Next Action: </span><br/>
+            <span class="oe_form_field oe_form_field_char"><t t-esc="title_action"/></span>
+        </t>
+    </div>
+    <div>
+        <span class=" oe_form_label oe_align_right"> Expected Revenue </span><br/>
+        <t t-esc="planned_revenue"/> at <t t-esc="probability"/> %
+    </div>
 </t>
 
 <t t-name="crm_wardialing_Tooltip_title">
-    <span><t t-esc="opportunity"/></span>
-    <span style="float: right;" t-field-options='{"widget": "priority"}'><t t-esc="priority"/></span>
+    <div>
+        <span><t t-esc="opportunity"/></span>
+        <div>
+            <t t-foreach="priority" t-as="prior">
+                <i class="fa fa-star"></i>
+            </t>
+            <t t-foreach="empty_star" t-as="empty">
+                <i class="fa fa-star-o"></i>
+            </t>
+        </div>
+    </div>
 </t>
 </templates>

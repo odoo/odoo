@@ -73,18 +73,27 @@ openerp.crm_wardialing = function(instance) {
             this.shown = false;
             this.set("current_search", "");
             this.phonecalls = {};
-            this.widgets = {};     
+            this.widgets = {};
+            this.formatCurrency;
         },
         start: function() {
             var self = this;
             
+            //To get the formatCurrency function from the server
+            new instance.web.Model("res.currency")
+                .call("get_format_currencies_js_function")
+                .then(function(data) {
+                    self.formatCurrency = new Function("amount, currency_id", data);
+                    //update of the pannel's list
+                    self.on("change:current_search", self, self.search_phonecalls_status);
+                    self.search_phonecalls_status();
+                });
             this.$el.css("bottom", -this.$el.outerHeight());
             $(window).scroll(_.bind(this.calc_box, this));
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
             
-            this.on("change:current_search", this, this.search_phonecalls_status);
-            this.search_phonecalls_status();
+            
             this.$el.find(".oe_dial_callbutton").click(function() {
                 self.call_button();
             });
@@ -101,7 +110,7 @@ openerp.crm_wardialing = function(instance) {
                 self.to_lead();
             });
 
-
+            
             return;
         },
         calc_box: function() {
@@ -135,7 +144,7 @@ openerp.crm_wardialing = function(instance) {
                         new openerp.web.Model("res.partner").query(["name","image_small","email", "title", "phone", "mobile"])
                             .filter([["id","=",phonecall.partner_id[0]]])
                             .first().then(function(partner){
-                                    var opportunity = new openerp.web.Model("crm.lead").query(["name","priority","planned_revenue","title_action","company_currency"])
+                                    var opportunity = new openerp.web.Model("crm.lead").query(["name","priority","planned_revenue","title_action","company_currency","probability"])
                                         .filter([["id","=",phonecall.opportunity_id[0]]])
                                         .first().then(function(opportunity){
                                             var widget = new openerp.crm_wardialing.PhonecallWidget(self, phonecall,partner.image_small, partner.email);
@@ -150,10 +159,11 @@ openerp.crm_wardialing = function(instance) {
                                             }else{
                                                 var partner_name = partner.title[1] + ' ' + partner.name;
                                             }
+                                            var empty_star = 4 - parseInt(opportunity.priority);
                                             $("[rel='popover']").popover({
                                                 placement : 'right', // top, bottom, left or right
                                                 title : QWeb.render("crm_wardialing_Tooltip_title", {
-                                                    opportunity: phonecall.opportunity_id[1], priority: opportunity.priority}), 
+                                                    opportunity: phonecall.opportunity_id[1], priority: parseInt(opportunity.priority), empty_star:empty_star}), 
                                                 html: 'true', 
                                                 content :  QWeb.render("crm_wardialing_Tooltip",{
                                                     partner_name: partner_name,
@@ -161,15 +171,18 @@ openerp.crm_wardialing = function(instance) {
                                                     mobile: partner.mobile,
                                                     email: partner.email,
                                                     title_action: opportunity.title_action,
-                                                    planned_revenue: opportunity.planned_revenue,
-                                                    company_currency: opportunity.company_currency[0]
-
+                                                    planned_revenue: self.formatCurrency(opportunity.planned_revenue, opportunity.company_currency[0]),
+                                                    probability: opportunity.probability
                                                 }),
                                             });
                                             self.phonecalls[phonecall.id] = phonecall;
+
+                                            
+
                                     });
                             });
                     });
+
                     _.each(old_widgets, function(w) {
                         w.destroy();
                     });
@@ -199,15 +212,18 @@ openerp.crm_wardialing = function(instance) {
         to_lead: function() {
             var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
             var phonecall = this.phonecalls[id];
+            //Call of the function xmlid_to_res_model_res_id to get the id of the opportunity's form view and not the lead's form view
+            new instance.web.Model("ir.model.data").call("xmlid_to_res_model_res_id",["crm.crm_case_form_view_oppor"]).then(function(data){
+                openerp.client.action_manager.do_action({
+                    type: 'ir.actions.act_window',
+                    res_model: "crm.lead",
+                    res_id: phonecall.opportunity_id[0],
+                    views: [[data[1], 'form']],
+                    target: 'current',
+                    context: {},
+                });
+            })
             
-            openerp.client.action_manager.do_action({
-                type: 'ir.actions.act_window',
-                res_model: "crm.lead",
-                res_id: phonecall.opportunity_id[0],
-                views: [[false, 'form']],
-                target: 'current',
-                context: {},
-            });
         },
 
         //action to change the main view to go to the client's view
@@ -249,13 +265,23 @@ openerp.crm_wardialing = function(instance) {
 
         //action done when the button "call" is clicked
         call_button: function(){
-            console.log(this.phonecalls.first);
             var phonecall_model = new openerp.web.Model("crm.phonecall");
-            var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
-            console.log(phonecall_id);
-            phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
-                console.log("after the call")
-            });
+            
+            if(this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text() != ''){
+                var phonecall_id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
+                console.log(phonecall_id);
+                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
+                    console.log("after the call")
+                });  
+            }else{
+                var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
+                console.log(phonecall_id);
+                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
+                    console.log("after the call")
+                });
+            }
+            
+            
             
         },
 
@@ -337,13 +363,24 @@ openerp.crm_wardialing = function(instance) {
             var self = this;
             this._super.apply(this, arguments);
             if (this.view.dataset.model === 'crm.lead') {              
-                this.$el.find(".oe_dial_lead_to_call_center_button_icon").parent().click(function() {
+                this.$el.find(".oe_dial_link_icon").click(function(e) {
+                    e.stopPropagation();
+
+                    self.$el.find(".oe_dial_lead_to_call_center_button").replaceWith('<i class="oe_dial_lead_to_call_center_button text-muted fa fa-phone"></i>');
+
                     var lead_model = new openerp.web.Model("crm.lead");
                     lead_model.call("create_call_center_call", [self.id]);
-                    
                 });
             }
 
+            this.$el.find(".oe_kanban_draghandle").mouseenter(
+                function(){
+                    self.$el.find(".oe_dial_hidden_button").css("visibility","visible");
+            });
+            this.$el.find(".oe_kanban_draghandle").mouseleave(
+                function(){
+                    self.$el.find(".oe_dial_hidden_button").css("visibility","hidden");
+            });
         },
     });
     

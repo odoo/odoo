@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
-
-
-
+import ari
+import requests
+from requests import HTTPError
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
@@ -22,10 +22,34 @@ class crm_phonecall(models.Model):
 		print("CALL FUNCTION")
 		print(self)
 		print(self.partner_id.phone)
+		client = ari.connect('http://localhost:8088', 'asterisk', 'asterisk')
+		bridges = [b for b in client.bridges.list() if b.json['bridge_type'] == 'holding']
+		
+		incoming = client.channels.originate(endpoint="SIP/"+self.partner_id.phone, app="bridge-dial", appArgs="SIP/2002")
+		
+
+		def incoming_on_start(channel,event):
+			print("ANSWERED")
+		def on_start(incoming, event):
+			"""Callback for StasisStart events.
+
+			When an incoming channel starts, put it in the holding bridge and
+			originate a channel to connect to it. When that channel answers, create a
+			bridge and put both of them into it.
+
+			:param incoming:
+			:param event:
+			"""
+			print("ON_START")
+		print("BEFORE BINDING")
+		#Not workign don't know why
+		incoming.on_event('StasisStart', incoming_on_start)
+		client.on_channel_event('StasisStart', on_start)
+		print("AFTER BINDING")
+
+		
+		
 	
-	@api.multi
-	def get_information_call(self):
-		print("GET INFORMATION")
 
 class crm_lead(models.Model):
 	_inherit = "crm.lead"

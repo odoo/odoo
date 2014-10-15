@@ -30,6 +30,20 @@
             <field name="key">action</field>
             <field name="model">crm.lead</field>
         </record>
+
+        <!-- Add the button in the kaban view of the opportunities-->
+        <record model="ir.ui.view" id="lead_button_call_kanban_view">
+            <field name="name">crm.lead.tocall</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <div class="oe_kanban_content">
+                     <a href="#" title="Add to call center calls" class="oe_dial_link_icon">
+                        <i class="text-muted oe_dial_hidden_button oe_dial_lead_to_call_center_button fa fa-plus-square"></i>
+                    </a>
+                </div>
+            </field>
+        </record>
     </data>
 </openerp>
 
