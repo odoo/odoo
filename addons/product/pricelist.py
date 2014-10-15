@@ -168,7 +168,7 @@ class product_pricelist(osv.osv):
     }
 
     def price_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
-        return dict((key, price[0]) for key, price in self.price_rule_get_multi(cr, uid, ids, products_by_qty_by_partner, context=context).items())
+        return dict((key, dict((key, price[0]) for key, price in value.items())) for key, value in self.price_rule_get_multi(cr, uid, ids, products_by_qty_by_partner, context=context).items())
 
     def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
