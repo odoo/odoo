@@ -702,7 +702,6 @@ class crm_lead(format_address, osv.osv):
             'probability': lead.probability,
             'name': lead.name,
             'partner_id': customer and customer.id or False,
-            'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
