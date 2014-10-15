@@ -50,12 +50,9 @@ class Experiment(osv.Model):
     _inherit = ['mail.thread']
 
     def create(self, cr, uid, vals, context=None):
-        print vals
         exp={}
         exp['name'] = vals['name']
-        #exp['objectiveMetric'] = ["ga:adsenseAdsClicks","ga:adsenseAdsViewed","ga:adsenseRevenue","ga:bounces","ga:pageviews","ga:sessionDuration","ga:transactions","ga:transactionRevenue"]
         exp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [vals['objectives']],context)[0].google_ref
-        #exp['objectiveMetric'] = "ga:adsenseAdsClicks"
         exp['status'] = vals['state']
         exp['variations'] =[{'name':'master','url': 'http://0.0.0.0:8069/master'}]
         l =  vals.get('experiment_snapshot_ids')
@@ -77,7 +74,6 @@ class Experiment(osv.Model):
         obj_metric = vals.get('objectives')
         #some write operation doesn't need to synchronise with Google (frequency or sequence)
         if name or state or exp_snaps or obj_metric:
-            print 'WRITE EXP'
             for exp in self.browse(cr, uid, ids, context=context):
                 temp={}
                 if name:
@@ -122,8 +118,7 @@ class Experiment(osv.Model):
                     temp['variations'] = [{'name':'master','url': 'http://0.0.0.0:8069/master'}]
                     for exp_s in exp.experiment_snapshot_ids:
                         temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://0.0.0.0:8069/'+exp_s.snapshot_id.name})
-                #to check the constraints before to write on the google analytics account
-                print temp 
+                #to check the constraints before to write on the google analytics account 
                 x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
         else:
@@ -338,8 +333,6 @@ class google_management(osv.AbstractModel):
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE, datetime.now() + timedelta(seconds=all_token.get('expires_in')))
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE, all_token.get('access_token'))
         return all_token.get('access_token')
-
-
 
     # Should be called at configuration
     def get_management_scope(self):
