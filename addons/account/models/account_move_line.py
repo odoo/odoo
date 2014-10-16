@@ -237,9 +237,9 @@ class account_move_line(models.Model):
     def _get_reconcile(self):
         for line in self:
             if line.reconcile_id:
-                resline.reconcile_ref = str(line.reconcile_id.name)
+                line.reconcile_ref = str(line.reconcile_id.name)
             elif line.reconcile_partial_id:
-                resline.reconcile_ref = str(line.reconcile_partial_id.name)
+                line.reconcile_ref = str(line.reconcile_partial_id.name)
 
 #     @api.multi
 #     def _get_move_from_reconcile(self, cr, uid, ids, context=None):
@@ -267,7 +267,7 @@ class account_move_line(models.Model):
         ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed'), ('deprecated', '=', False)],
         default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
-        help="The move of this entry line.", index=2, required=True)
+        help="The move of this entry line.", index=True, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True)
     statement_id = fields.Many2one('account.bank.statement', string='Statement', 
@@ -285,7 +285,7 @@ class account_move_line(models.Model):
         "in its currency (maybe different of the company currency).")
     amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount',
         help="The residual amount on a receivable or payable of a journal entry expressed in the company currency.")
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._get_currency, 
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self._get_currency(), 
         help="The optional other currency if it is a multi-currency entry.")
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=lambda self: self._get_journal, required=True, index=True, store=True)
