@@ -131,11 +131,6 @@ class MigrationManager(object):
             lst.sort()
             return lst
 
-        def mergedict(a, b):
-            a = a.copy()
-            a.update(b)
-            return a
-
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data['version']))
 
@@ -155,19 +150,20 @@ class MigrationManager(object):
                         continue
                     mod = fp = fp2 = None
                     try:
-                        fp = tools.file_open(pyfile)
+                        fp, fname = tools.file_open(pyfile, pathinfo=True)
 
-                        # imp.load_source need a real file object, so we create
-                        # one from the file-like object we get from file_open
-                        fp2 = os.tmpfile()
-                        fp2.write(fp.read())
-                        fp2.seek(0)
+                        if not isinstance(fp, file):
+                            # imp.load_source need a real file object, so we create
+                            # one from the file-like object we get from file_open
+                            fp2 = os.tmpfile()
+                            fp2.write(fp.read())
+                            fp2.seek(0)
                         try:
-                            mod = imp.load_source(name, pyfile, fp2)
-                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
+                            mod = imp.load_source(name, fname, fp2 or fp)
+                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
                             migrate = mod.migrate
                         except ImportError:
-                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
+                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
                             raise
                         except AttributeError:
                             _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)

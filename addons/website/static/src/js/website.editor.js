@@ -308,7 +308,6 @@
 
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
-            this.$buttons.edit.show();
 
             var $edit_button = this.$buttons.edit
                     .prop('disabled', website.no_editor);
@@ -822,14 +821,7 @@
             return $(root).find('[data-oe-model]')
                 .not('[data-oe-type = "selection"]')
                 .not('link, script')
-                .not('.oe_snippet_editor')
-                .filter(function () {
-                    var $this = $(this);
-                    // keep view sections and fields which are *not* in
-                    // view sections for top-level editables
-                    return $this.data('oe-model') === 'ir.ui.view'
-                       || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
-                });
+                .not('.oe_snippet_editor');
         },
 
         _current_editor: function () {
