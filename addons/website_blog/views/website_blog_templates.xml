@@ -124,11 +124,10 @@
 </template>
 
 <template id="blog_social_share">
-    <div class="share_content" t-if="blog_post.website_published">
-        <a href="#" data-social="facebook" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}"><i class="fa fa-facebook-square fa-2x"></i></a>
-        <a href="#" data-social="twitter" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}"><i class="fa fa-twitter-square fa-2x"></i></a>
-        <a href="#" data-social="linkedin" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}" t-attf-data-description="#{blog_post.subtitle}"><i class="fa fa-linkedin-square fa-2x"></i></a>
-        <a href="#" data-social="googleplus" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}"><i class="fa fa-google-plus-square fa-2x"></i></a>
+    <div class="share_content" t-if="blog_post.website_published" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}" t-attf-data-description="#{blog_post.subtitle}">
+      <t t-foreach="['facebook', 'twitter', 'linkedin', 'google-plus']" t-as="social_network">
+        <a href="#" t-att-data-social="social_network"><i t-attf-class="fa fa-#{social_network}-square fa-2x"></i></a>
+      </t>
     </div>
 </template>
 

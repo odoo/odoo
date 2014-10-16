@@ -60,7 +60,7 @@ $(document).ready(function() {
         start: function () {
             var self = this;
             this.blogpost_id = parseInt(this.$target.find('[data-oe-model="blog.post"]').data('oe-id'));
-            var $table = this.$el.find('ul[name="size"] table');
+            var $table = this.$el.find('ul.size table');
             var get_index = function(event){
                 return [$(event.currentTarget).index()+1, $(event.currentTarget).parent().index()+1];
             };
@@ -73,7 +73,7 @@ $(document).ready(function() {
                 });
             };
             highlight_td([parseInt(this.$target.attr("colspan") || 1), parseInt(this.$target.attr("rowspan") || 1)], "selected");
-            this.$el.find('ul[name="size"] td')
+            this.$el.find('ul.size td')
             .mouseover(function(event){highlight_td(get_index(event), "select");})
             .click(function(event){
                 var index = get_index(event);
