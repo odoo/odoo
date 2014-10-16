@@ -1904,7 +1904,7 @@ class account_account_template(models.Model):
 
     @api.multi
     @api.depends('name', 'code')
-    def name_get(self, cr, uid, ids, context=None):
+    def name_get(self):
         res = []
         for record in self:
             name = record.name
