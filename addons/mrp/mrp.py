@@ -1019,8 +1019,11 @@ class mrp_production(osv.osv):
     
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
         source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
+        procs = proc_obj.search(cr, uid, [('production_id', '=', production.id)], context=context)
+        procurement_id = procs and procs[0] or False
         data = {
             'name': production.name,
             'date': production.date_planned,
@@ -1032,6 +1035,7 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
+            'procurement_id': procurement_id,
             'company_id': production.company_id.id,
             'production_id': production.id,
             'origin': production.name,
