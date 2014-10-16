@@ -4,6 +4,8 @@ from openerp import models, fields, api
 import ari
 import requests
 from requests import HTTPError
+import datetime
+from datetime import time
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
@@ -19,6 +21,7 @@ class crm_phonecall(models.Model):
 
 	@api.multi
 	def call_partner(self):
+
 		print("CALL FUNCTION")
 		print(self)
 		print(self.partner_id.phone)
@@ -46,9 +49,31 @@ class crm_phonecall(models.Model):
 		incoming.on_event('StasisStart', incoming_on_start)
 		client.on_channel_event('StasisStart', on_start)
 		print("AFTER BINDING")
+		return incoming.json
+		
+	@api.multi
+	def hangup_partner(self, channel):
+		client = ari.connect('http://localhost:8088', 'asterisk', 'asterisk')
+		current_channels = client.channels.list()
+		print(self.duration)
+		
+		if (len(current_channels) != 0):
+		    for chan in current_channels:
+		        if(chan.json.get('id') == channel.get('id')):
+					print(channel.get('creationtime'))
+					i = channel.get('creationtime').find('T')
+					date = channel.get('creationtime')[0:i]
+					date = date + ' ' + channel.get('creationtime')[i+1:i+9]
+					print(date)
+					
+					start2 = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+					#start2 = datetime.datetime.strptime(channel.get('creationtime')[i+1:i+9], '%H:%M:%S')
+					now2 = datetime.datetime.now()
+					print(start2)
+					print(now2)
+					print(now2 - start2)
 
-		
-		
+					chan.hangup()	
 	
 
 class crm_lead(models.Model):

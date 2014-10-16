@@ -75,6 +75,7 @@ openerp.crm_wardialing = function(instance) {
             this.phonecalls = {};
             this.widgets = {};
             this.formatCurrency;
+            this.phonecall_channel;
         },
         start: function() {
             var self = this;
@@ -96,6 +97,9 @@ openerp.crm_wardialing = function(instance) {
             
             this.$el.find(".oe_dial_callbutton").click(function() {
                 self.call_button();
+            });
+            this.$el.find(".oe_dial_hangupbutton").click(function(){
+                self.hangup_button();
             });
             this.$el.find(".oe_dial_changelog").click(function() {
                 self.change_log();
@@ -266,23 +270,45 @@ openerp.crm_wardialing = function(instance) {
         //action done when the button "call" is clicked
         call_button: function(){
             var phonecall_model = new openerp.web.Model("crm.phonecall");
-            
+            var self = this;
+
             if(this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text() != ''){
                 var phonecall_id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
                 console.log(phonecall_id);
-                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
+                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(channel){
                     console.log("after the call")
+                    self.phonecall_channel = channel;
                 });  
             }else{
                 var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
                 console.log(phonecall_id);
-                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
+                phonecall_model.call("call_partner", [this.phonecalls[phonecall_id].id]).then(function(channel){
                     console.log("after the call")
-                });
+                    self.phonecall_channel = channel;
+                });  
             }
             
             
             
+        },
+
+        //action done when the button "Hang Up" is clicked
+        hangup_button: function(){
+            var phonecall_model = new openerp.web.Model("crm.phonecall");
+            console.log(this.phonecall_channel);
+            if(this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text() != ''){
+                var phonecall_id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
+                console.log(phonecall_id);
+                phonecall_model.call("hangup_partner", [this.phonecalls[phonecall_id].id, this.phonecall_channel]).then(function(phonecall){
+                    console.log("after hangup function")
+                });  
+            }else{
+                var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
+                console.log(phonecall_id);
+                phonecall_model.call("hangup_partner", [this.phonecalls[phonecall_id].id, this.phonecall_channel]).then(function(phonecall){
+                    console.log("after hangup function")
+                });
+            }
         },
 
         //action done when the button "Call Log" is clicked
