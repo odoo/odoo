@@ -1306,7 +1306,7 @@ class Export(http.Controller):
                 continue
 
             id = prefix + (prefix and '/'or '') + field_name
-            name = parent_name + (parent_name and '/' or '') + field['string']
+            name = parent_name + (parent_name and '/' or '') + openerp.tools.ustr(field['string'])
             record = {'id': id, 'string': name,
                       'value': id, 'children': False,
                       'field_type': field.get('type'),

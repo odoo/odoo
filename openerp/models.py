@@ -1408,7 +1408,7 @@ class BaseModel(object):
         :returns: a form view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('form', string=self._description)
+        view = etree.Element('form', string=tools.ustr(self._description))
         group = etree.SubElement(view, 'group', col="4")
         for fname, field in self._fields.iteritems():
             if field.automatic or field.type in ('one2many', 'many2many'):
@@ -1428,7 +1428,7 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('search', string=self._description)
+        view = etree.Element('search', string=tools.ustr(self._description))
         etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
@@ -1441,7 +1441,7 @@ class BaseModel(object):
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('tree', string=self._description)
+        view = etree.Element('tree', string=tools.ustr(self._description))
         etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
@@ -1468,7 +1468,7 @@ class BaseModel(object):
                     return True
             return False
 
-        view = etree.Element('calendar', string=self._description)
+        view = etree.Element('calendar', string=tools.ustr(self._description))
         etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
 
         if self._date_name not in self._columns:
@@ -3061,7 +3061,7 @@ class BaseModel(object):
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. '
                     'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                    (self._description, operation))
+                    (tools.ustr(self._description), operation))
 
         return fields
 
@@ -3365,7 +3365,7 @@ class BaseModel(object):
             res = cr.fetchone()
             if res:
                 # mention the first one only to keep the error message readable
-                raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
+                raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (tools.ustr(self._description), res[0]))
 
     def _check_record_rules_result_count(self, cr, uid, ids, result_ids, operation, context=None):
         """Verify the returned rows after applying record rules matches
@@ -3387,7 +3387,7 @@ class BaseModel(object):
                 _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                    (self._description, operation))
+                                    (tools.ustr(self._description), operation))
             else:
                 # If we get here, the missing_ids are not in the database
                 if operation in ('read','unlink'):
@@ -3428,7 +3428,7 @@ class BaseModel(object):
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
                 raise except_orm(_('Access Denied'),
-                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
+                                 _('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (tools.ustr(self._description),))
         else:
             where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
             if where_clause:
@@ -3771,7 +3771,7 @@ class BaseModel(object):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
                            'where id IN %s', upd1 + [sub_ids])
                 if cr.rowcount != len(sub_ids):
-                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
+                    raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % tools.ustr(self._description))
 
             if totranslate:
                 # TODO: optimize
@@ -5869,7 +5869,7 @@ def convert_pgerror_23502(model, fields, info, e):
     message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
-        message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
+        message = _(u"Missing required value for the field '%s' (%s)") % (tools.ustr(field['string']), field_name)
     return {
         'message': message,
         'field': field_name,
@@ -5885,7 +5885,7 @@ def convert_pgerror_23505(model, fields, info, e):
     field = fields.get(field_name)
     if field:
         message = _(u"%s This might be '%s' in the current model, or a field "
-                    u"of the same name in an o2m.") % (message, field['string'])
+                    u"of the same name in an o2m.") % (message, tools.ustr(field['string']))
     return {
         'message': message,
         'field': field_name,
