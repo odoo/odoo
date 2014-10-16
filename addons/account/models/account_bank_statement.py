@@ -451,7 +451,7 @@ class account_bank_statement_line(models.Model):
             if search_reconciliation_proposition:
                 reconciliation_proposition = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
                 for mv_line in reconciliation_proposition:
-                    excluded_ids.append(mv_line['id'])
+                    excluded_ids.append(mv_line.id)
                 reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
             else:
                 reconciliation_data['reconciliation_proposition'] = []
