@@ -451,7 +451,7 @@ class account_bank_statement_line(models.Model):
             if search_reconciliation_proposition:
                 reconciliation_proposition = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
                 for mv_line in reconciliation_proposition:
-                    excluded_ids.append(mv_line.id)
+                    excluded_ids.append(mv_line['id'])
                 reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
             else:
                 reconciliation_data['reconciliation_proposition'] = []
@@ -462,44 +462,44 @@ class account_bank_statement_line(models.Model):
         return ret
 
     @api.one
-    def get_statement_line_for_reconciliation():
+    def get_statement_line_for_reconciliation(self):
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
-        statement_currency = st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
+        statement_currency = self.journal_id.currency or self.journal_id.company_id.currency_id
         rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_asl', context=self._context)
 
-        if st_line.amount_currency and st_line.currency_id:
-            amount = st_line.amount_currency
-            amount_currency = st_line.amount
+        if self.amount_currency and self.currency_id:
+            amount = self.amount_currency
+            amount_currency = self.amount
             amount_currency_str = amount_currency > 0 and amount_currency or -amount_currency
             amount_currency_str = rml_parser.formatLang(amount_currency_str, currency_obj=statement_currency)
         else:
-            amount = st_line.amount
+            amount = self.amount
             amount_currency_str = ""
         amount_str = amount > 0 and amount or -amount
-        amount_str = rml_parser.formatLang(amount_str, currency_obj=st_line.currency_id or statement_currency)
+        amount_str = rml_parser.formatLang(amount_str, currency_obj=self.currency_id or statement_currency)
 
         data = {
-            'id': st_line.id,
-            'ref': st_line.ref,
-            'note': st_line.note or "",
-            'name': st_line.name,
-            'date': st_line.date,
+            'id': self.id,
+            'ref': self.ref,
+            'note': self.note or "",
+            'name': self.name,
+            'date': self.date,
             'amount': amount,
             'amount_str': amount_str, # Amount in the statement line currency
-            'currency_id': st_line.currency_id.id or statement_currency.id,
-            'partner_id': st_line.partner_id.id,
-            'statement_id': st_line.statement_id.id,
-            'account_code': st_line.journal_id.default_debit_account_id.code,
-            'account_name': st_line.journal_id.default_debit_account_id.name,
-            'partner_name': st_line.partner_id.name,
+            'currency_id': self.currency_id.id or statement_currency.id,
+            'partner_id': self.partner_id.id,
+            'statement_id': self.statement_id.id,
+            'account_code': self.journal_id.default_debit_account_id.code,
+            'account_name': self.journal_id.default_debit_account_id.name,
+            'partner_name': self.partner_id.name,
             'amount_currency_str': amount_currency_str, # Amount in the statement currency
-            'has_no_partner': not st_line.partner_id.id,
+            'has_no_partner': not self.partner_id.id,
         }
-        if st_line.partner_id.id:
+        if self.partner_id.id:
             if amount > 0:
-                data['open_balance_account_id'] = st_line.partner_id.property_account_receivable.id
+                data['open_balance_account_id'] = self.partner_id.property_account_receivable.id
             else:
-                data['open_balance_account_id'] = st_line.partner_id.property_account_payable.id
+                data['open_balance_account_id'] = self.partner_id.property_account_payable.id
 
         return data
 
