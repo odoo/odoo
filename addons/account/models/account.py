@@ -816,7 +816,7 @@ class account_period(models.Model):
         else:
             domain = ['|', ('code', operator, name), ('name', operator, name)]
         recs = self.search(expression.AND([domain, args]), limit=limit)
-        return recs.name_get(cr, user, ids, context=context)
+        return recs.name_get()
 
     @api.multi
     def write(self, vals):
