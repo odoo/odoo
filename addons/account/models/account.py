@@ -1585,7 +1585,7 @@ class account_tax(models.Model):
             if journal.type in ('sale', 'purchase'):
                 args += [('type_tax_use', 'in', [journal.type, 'all'])]
 
-        return super(account_tax, self).search(args, offset, limit, order, count)
+        return super(account_tax, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     @api.depends('name', 'description')
