@@ -25,7 +25,6 @@ from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
-from openerp.osv import osv
 
 
 class account_bank_statement(models.Model):
@@ -293,8 +292,7 @@ class account_bank_statement(models.Model):
     @api.one
     def balance_check(self, journal_type='bank'):
         if not ((abs((self.balance_end or 0.0) - self.balance_end_real) < 0.0001) or (abs((self.balance_end or 0.0) - self.balance_end_real) < 0.0001)):
-            raise osv.except_osv(_('Error!'),
-                    _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
+            raise Warning(_('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
         return True
 
     @api.multi
@@ -315,10 +313,10 @@ class account_bank_statement(models.Model):
             st.balance_check(journal_type=j_type)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
-                raise osv.except_osv(_('Configuration Error!'), _('Please verify that an account is defined in the journal.'))
+                raise Warning(_('Please verify that an account is defined in the journal.'))
             for line in st.move_line_ids:
                 if line.state != 'valid':
-                    raise osv.except_osv(_('Error!'), _('The account entries lines are not in valid state.'))
+                    raise Warning(_('The account entries lines are not in valid state.'))
             moves = []
             for st_line in st.line_ids:
                 if not st_line.amount:
@@ -333,7 +331,7 @@ class account_bank_statement(models.Model):
                     }
                     st_line.process_reconciliation([vals])
                 elif not st_line.journal_entry_id.id:
-                    raise osv.except_osv(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
+                    raise Warning(_('All the account entries lines must be processed in order to close the statement.'))
                 moves.append(st_line.journal_entry_id)
             if moves:
                 moves.post()
@@ -378,10 +376,7 @@ class account_bank_statement(models.Model):
     def unlink(self):
         for item in self:
             if item.state != 'draft':
-                raise osv.except_osv(
-                    _('Invalid Action!'), 
-                    _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
-                )
+                raise Warning(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
         return super(account_bank_statement, self).unlink()
 
     @api.multi
@@ -416,10 +411,7 @@ class account_bank_statement_line(models.Model):
     def unlink(self):
         for item in self:
             if item.journal_entry_id:
-                raise osv.except_osv(
-                    _('Invalid Action!'), 
-                    _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
-                )
+                raise Warning(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
         return super(account_bank_statement_line, self).unlink()
 
     @api.multi
@@ -614,11 +606,11 @@ class account_bank_statement_line(models.Model):
         if currency_diff < 0:
             account_id = self.company_id.expense_currency_exchange_account_id.id
             if not account_id:
-                raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise Warning(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
             account_id = self.company_id.income_currency_exchange_account_id.id
             if not account_id:
-                raise osv.except_osv(_('Insufficient Configuration!'), _("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise Warning(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         return {
             'move_id': move_id,
             'name': _('change') + ': ' + (self.name or '/'),
@@ -652,7 +644,7 @@ class account_bank_statement_line(models.Model):
 
         # Checks
         if st_line.journal_entry_id.id:
-            raise osv.except_osv(_('Error!'), _('The bank statement line was already reconciled.'))
+            raise Warning(_('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
             for field in ['debit', 'credit', 'amount_currency']:
                 if field not in mv_line_dict:
@@ -660,7 +652,7 @@ class account_bank_statement_line(models.Model):
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context)
                 if mv_line.reconcile_id:
-                    raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
+                    raise Warning(_('A selected move line was already reconciled.'))
 
         # Create the move
         move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
