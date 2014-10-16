@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Odoo extension creation tool, allow you to create a extension directory which can be imported directly in chrome
+# Copyright (C) 2014 - Today Mohammed Shekha (<msh@openerp.com>).
+
+echo "step 1: Creating extension directory"
+mkdir extension
+
+echo "step 2: Copying data to extension directory"
+cp -r static extension
+cp views/index.html extension
+cp views/manifest.json extension
+
+echo "setp 3: You can import this extension folder to chrome extensions"

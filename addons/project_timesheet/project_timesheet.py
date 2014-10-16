@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 import datetime
+import re
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -28,6 +29,79 @@ from openerp.tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
+    def sync_data(self, cr, uid, datas, context=None):
+        if not context:
+            context = {}
+        """
+        This method synchronized the data given by Project Timesheet UI,
+        the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
+        """
+        self.virtual_id_regex = r"^virtual_id_.*$"
+        print "\n\ndatas are ::: ", datas
+        """
+        self.missing_data = {'projects': [], 'tasks': [], 'task_works': []}
+        self.fail_data = {'projects': [], 'tasks': [], 'task_works': []}
+        for project in datas:
+            self.sync_project(cr, uid, project, context=context)
+        return [self.missing_data, self.fail_data]
+
+    def sync_project(self, cr, uid, project, context=None):
+        print "\n\nProject is ::: ", project
+        prog = re.compile(self.virtual_id_regex)
+        if prog.match(str(project.get('id'))):
+            project.pop('id')
+            self.create(cr, uid, project, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
+        else:
+            #Check whether project is no deleted, check  for Missing Project, do not go ahead if project is deleted
+            search_res = self.search(cr, uid, [('id', '=', project['id'])], context=context)
+            if not search_res:
+                missing_projects = self.missing_data.get('projects')
+                missing_projects.append(project['id'])
+                return
+            for task in project.get('tasks'):
+                self.sync_task(cr, uid, project['id'], task, context=context)
+
+    def sync_task(self, cr, uid, project_id, task, context=None):
+        print "\n\nTask is ::: ", task
+        task_obj = self.pool.get('project.task')
+        task_record = task[2]
+        task_record and task_record.update({'project_id': project_id})
+        if task[0] == 0:
+            task_obj.create(cr, uid, task_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
+        else:
+            #To Write: Check whether task is not deleted, check  for Missing Project, do not go ahead if project is deleted
+            search_res = task_obj.search(cr, uid, [('id', '=', task[1])], context=context)
+            if not search_res:
+                missing_tasks = self.missing_data.get('tasks')
+                missing_tasks.append(task[1])
+                return
+            for task_work in task_record.get('work_ids'):
+                self.sync_task_work(cr, uid, task[1], task_work, context=context)
+
+    def sync_task_work(self, cr, uid, task_id, task_work, context=None):
+        print "\n\nTask Work is ::: ", task_work
+        task_work_obj = self.pool.get('project.task.work')
+        task_work_record = task_work[2]
+        task_work_record and task_work_record.update({'task_id': task_id})
+        if task_work[0] == 0:
+            task_work_obj.create(cr, uid, task_work_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
+        else:
+            #To Write: Check whether task work is not deleted, check  for Missing Project, do not go ahead if project is deleted
+            search_res = task_work_obj.search(cr, uid, [('id', '=', task_work[1])], context=context)
+            if not search_res:
+                missing_tasks_work = self.missing_data.get('task_works')
+                missing_tasks_work.append(task_work[1])
+                return
+            #We can simply call write of project.task, using task_id and send work_ids as it is
+            #But the reason is we are doing checking for missing record each record is because what if some other request thread deletes task work while this code is still in execution
+            elif task_work[0] == 1:
+                task_work_obj.write(cr, uid, task_work[1], task_work_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
+            elif task_work[0] == 2:
+                task_work_obj.unlink(cr, uid, task_work[1], context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
+            elif task_work[0] == 4:
+                #To Implement for link record
+                pass
+        """
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
