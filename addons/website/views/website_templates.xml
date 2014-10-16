@@ -139,7 +139,7 @@
                     <t t-raw="0"/>
                 </main>
                 <footer>
-                    <div id="footer_container">
+                    <div id="footer">
                     </div>
                 </footer>
             </div>
@@ -242,7 +242,7 @@
 </template>
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
-    <xpath expr="//div[@id='footer_container']" position="replace">
+    <xpath expr="//div[@id='footer']" position="replace">
         <div class="oe_structure" id="footer">
             <section class="mt16 mb16">
                 <div class="container">
@@ -274,7 +274,7 @@
 
 <template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="container hidden-print">
+        <div id="footer" class="container hidden-print">
             <div class="row">
                 <div class="col-md-3">
                     <h4>Our products &amp; Services</h4>
