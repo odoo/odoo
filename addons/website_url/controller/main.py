@@ -19,10 +19,7 @@ class Website_Url(http.Controller):
             if field in post:
                 tracking_fields.update({field:post[field]})
 
-        try:
-            alias = request.registry['website.alias'].create_shorten_url(cr, uid, post['url'], tracking_fields, context=context)
-        except:
-            return {'error':'url_not_found'}
+        alias = request.registry['website.alias'].create_shorten_url(cr, uid, post['url'], tracking_fields, context=context)
 
         return alias.to_json()
 
@@ -54,27 +51,32 @@ class Website_Url(http.Controller):
     def statistics_shorten_url(self, code, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
-        alias_obj = request.registry['website.alias']
-        alias_id = alias_obj.search(cr, uid, [('code', '=', code)])
-        alias = alias_obj.browse(cr, uid, alias_id, context=context)
+        code_id = request.registry['website.alias.code'].search(cr, uid, [('code', '=', code)])
+        code = request.registry['website.alias.code'].browse(cr, uid, code_id, context=context)
+        alias = code[0].alias_id
 
-        return request.website.render("website_url.graphs", alias.to_json()[0])
+        if alias:
+            return request.website.render("website_url.graphs", alias.to_json()[0])
+        else:
+            return werkzeug.utils.redirect('', 301)
 
     @http.route(['/r/<string:code>/chart'], type="json", auth="user")
     def chart_data(self, code):
         cr, uid, context = request.cr, request.uid, request.context
 
-        alias_obj = request.registry['website.alias']
-        alias_id = alias_obj.search(cr, uid, [('code', '=', code)], context=context)
+        code_obj = request.registry['website.alias.code']
+        code_id = code_obj.search(cr, uid, [('code', '=', code)])
+        code = code_obj.browse(cr, uid, code_id, context=context)
+        alias_id = code[0].alias_id.id
 
         # Stats on clicks and clicks by countries
-        total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id[0], context=context)
-        clicks_by_day = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id[0], context=context)
+        total_clicks = request.registry['website.alias.click'].get_total_clicks(cr, uid, alias_id, context=context)
+        clicks_by_day = request.registry['website.alias.click'].get_clicks_by_day(cr, uid, alias_id, context=context)
 
-        clicks_by_country = request.registry['website.alias.click'].get_clicks_by_country(cr, uid, alias_id[0], context=context)
+        clicks_by_country = request.registry['website.alias.click'].get_clicks_by_country(cr, uid, alias_id, context=context)
 
-        last_month_clicks_by_country = request.registry['website.alias.click'].get_last_month_clicks_by_country(cr, uid, alias_id[0], context=context)
-        last_week_clicks_by_country = request.registry['website.alias.click'].get_last_week_clicks_by_country(cr, uid, alias_id[0], context=context)
+        last_month_clicks_by_country = request.registry['website.alias.click'].get_last_month_clicks_by_country(cr, uid, alias_id, context=context)
+        last_week_clicks_by_country = request.registry['website.alias.click'].get_last_week_clicks_by_country(cr, uid, alias_id, context=context)
 
         return {'total_clicks':total_clicks, 
                 'clicks_by_day':clicks_by_day, 
@@ -93,6 +95,19 @@ class Website_Url(http.Controller):
             return werkzeug.utils.redirect(redirect_url, 301)
         else:
             return werkzeug.utils.redirect('', 301)
+
+    @http.route(['/r/add_code'], type='json', auth='user')
+    def add_code(self, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        init_code = post['init_code']
+        new_code = post['new_code']
+
+        try:
+            request.registry['website.alias.code'].add_code(cr, uid, init_code, new_code, context=context)
+            return {'new_code':new_code}
+        except BaseException:
+            return {'error':'The code already exists'}
 
     # Routes dedicated to the form selects (possibility to create records on the fly
     @http.route(['/r/campaigns'], type='json', auth='user')

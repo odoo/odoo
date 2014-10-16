@@ -60,7 +60,10 @@
                                     <p><strong>Tracked Link</strong></p>
                                 </div>
                                 <div class="col-sm-8">
-                                    <p><t t-esc="short_url"/></p>
+                                    <p>
+                                        <span id="short-url"><t t-esc="short_url_host"/></span><span id="short-url-code"><t t-esc="code"/></span>
+                                        <a class="edit-code"><span class="fa fa-pencil gray"></span></a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -101,16 +104,16 @@
                     </div>
 
                     <div class="row page-header page-header-near bottom-align-cols">
-                        <div class="col-sm-8">
+                        <div class="col-sm-7">
                             <h1 class="mt0">Statistics</h1>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
+                            <span id="filters">Filter by :</span>
                             <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
                                 <li class="active"><a href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
                                 <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
                                 <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
                             </ul>
-                            <span id="filters">Filter by :</span>
                         </div>
                     </div>
                     

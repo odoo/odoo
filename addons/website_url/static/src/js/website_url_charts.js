@@ -186,6 +186,38 @@
                     $('#last_week_clicks_chart').prepend('There is no data to show');
                     $('#last_week_countries_charts').prepend('There is no data to show');
                 }
-            });   
+            });
+
+        // Edit the short URL code
+        $('.edit-code').on('click', function(e) {
+            e.preventDefault();
+
+            var init_code = $('#short-url-code').html();
+
+            $('#short-url-code').html("<form style='display:inline;' id='edit-code-form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
+            $('.edit-code').hide();
+
+            $('#edit-code-form').submit(function(e) {
+                e.preventDefault();
+
+                var init_code = $('#edit-code-form #init_code')
+                var new_code = $('#edit-code-form #new_code').val();
+
+                openerp.jsonRpc('/r/add_code', 'call', {'init_code':code, 'new_code':new_code})
+                    .then(function(result) {
+                        if(result['error']) {
+                            if($('#code-error').length == 0) {
+                                $('#short-url-code').append("<p id='code-error' style='color:red;font-weight:bold;'>This code is already taken</p>");
+                            }
+                        }
+                        else {
+                            $('#code-error').remove();
+                            $('#short-url-code').html(result['new_code']);
+                            $('#short-url-code form').remove();
+                            $('.edit-code').show();
+                        }
+                    });
+            });
+        });
     });
 })();

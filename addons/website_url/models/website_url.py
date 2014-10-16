@@ -18,12 +18,12 @@ def VALIDATE_URL(url):
 
 class website_alias(models.Model):
     _name = "website.alias"
-    _rec_name = "code"
+    _rec_name = "short_url"
 
     _inherit = ['crm.tracking.mixin']
 
     url = fields.Char(string='Full URL', required=True)
-    code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
+    # code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
     count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
     short_url = fields.Char(string="Short URL", compute='_short_url')
     alias_click_ids = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
@@ -31,24 +31,12 @@ class website_alias(models.Model):
     title = fields.Char(string="Title of the alias", store=True)
     favicon = fields.Char(string="Favicon", store=True)
     alias_code_ids = fields.One2many('website.alias.code', 'alias_id', string='Codes')
+    code = fields.Char(string="Short URL code", compute="_code")
 
     @api.one
     @api.depends('alias_click_ids')
     def _count_url(self):
         self.count =  len(self.alias_click_ids)
- 
-    @api.one
-    @api.depends('url')
-    def _get_random_code_string(self):
-        def random_string(id):
-            size = 3
-            while True:
-                x = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
-                if not x: 
-                    size += 1 
-                else:
-                    return x
-        self.code = random_string(self.id)
 
     @api.one
     @api.depends('code')
@@ -56,13 +44,21 @@ class website_alias(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         self.short_url = urljoin(base_url, '/r/%(code)s' % {'code': self.code,})
 
+    @api.model
+    def short_url_host(self):
+        return self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+
+    @api.one
+    def _code(self):
+        record = self.env['website.alias.code'].search([('alias_id', '=', self.id)], limit=1, order='id DESC')
+        self.code = record[0].code
+
     @api.one
     def to_json(self):
-
         # We use a custom method to convert the record to a dictionnary (instead of .read)
         # because we insert the names of the UTMs (like source_id.name)
         return {'title':self.title, 'code':self.code, 'count':self.count, 'url':self.url, 'host':urlparse(self.url).netloc, 'write_date':self.write_date, 
-                'short_url':self.short_url, 'stats_url':self.short_url + '+', 'icon_src':'data:image/png;base64,' + self.favicon,
+                'short_url':self.short_url, 'stats_url':self.short_url + '+', 'icon_src':'data:image/png;base64,' + self.favicon, 'short_url_host':self.short_url_host(),
                     'campaign_id':{'name': (self.campaign_id.name if self.campaign_id.name else '')},
                     'medium_id':{'name':self.medium_id.name if self.medium_id.name else ''},
                     'source_id':{'name':self.source_id.name if self.source_id.name else ''}}
@@ -124,7 +120,12 @@ class website_alias(models.Model):
             # Try to get the favicon of the page
             icon_base64 = self._get_favicon_from_url(url)
 
-        return self.create(dict({'url':url, 'title':title, 'favicon':icon_base64}.items() + tracking_fields.items()))
+        alias = self.create(dict({'url':url, 'title':title, 'favicon':icon_base64}.items() + tracking_fields.items()))
+        code = self.env['website.alias.code'].get_random_code_string()
+
+        alias_code = self.env['website.alias.code'].create({'code':code, 'alias_id':alias.id})
+
+        return alias
 
     @api.model
     def _get_title_from_url(self, url):
@@ -150,16 +151,17 @@ class website_alias(models.Model):
     @api.model
     def get_url_from_code(self, code, ip, country_code, stat_id=False, context=None):
 
-        rec = self.sudo().search([('code', '=', code)])
+        code_rec = self.env['website.alias.code'].sudo().search([('code', '=', code)])
 
-        if rec:
-            again = rec.alias_click_ids.sudo().search_count([('alias_id', '=', rec.id), ('ip', '=', ip)])
+        if code_rec:
+            alias = code_rec[0].alias_id
+            again = self.env['website.alias.click'].sudo().search_count([('alias_id', '=', alias.id), ('ip', '=', ip)])
 
             if not again:
                 country_record = self.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).read(['id'])
 
                 vals = {
-                    'alias_id':rec.id,
+                    'alias_id':alias.id,
                     'create_date':datetime.date.today(),
                     'ip':ip,
                     'country_id': country_record[0]['id'] if country_record else False,
@@ -168,11 +170,11 @@ class website_alias(models.Model):
                 self.env['website.alias.click'].sudo().create(vals)
             
             # Generate long URL
-            parsed = urlparse(rec.url)
+            parsed = urlparse(alias.url)
             utms = ''
 
             for key, field in self.env['crm.tracking.mixin'].tracking_fields():
-                attr = getattr(rec, field).name
+                attr = getattr(alias, field).name
                 if attr:
                     utms += key + '=' + attr + '&'
 
@@ -189,6 +191,31 @@ class website_alias_code(models.Model):
 
     code = fields.Char(string='Short URL Code', store=True)
     alias_id = fields.Many2one('website.alias', 'Alias', required=True)
+
+    @api.model
+    def get_random_code_string(self):
+        size = 3
+        while True:
+            x = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
+            if not x: 
+                size += 1 
+            else:
+                return x
+
+    @api.model
+    def add_code(self, init_code, new_code):
+
+        if init_code == new_code:
+            return
+
+        # Check if the code doesn't already exist
+        code_exist = self.search([('code', '=', new_code)])
+
+        if code_exist:
+            raise BaseException('The code already exists in the database')
+        else:
+            alias_id = self.search([('code', '=', init_code)])[0].alias_id.id
+            self.create({'code':new_code, 'alias_id':alias_id})
 
 
 class website_alias_click(models.Model):
@@ -254,3 +281,6 @@ class website_alias_click(models.Model):
         """, (alias_id, ))
 
         return self.env.cr.dictfetchall()
+
+class CodeExists(Exception):
+    pass
