@@ -210,6 +210,22 @@
 
             $('#short-url-code').html("<form style='display:inline;' id='edit-code-form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
             $('.edit-code').hide();
+            $('.copy-to-clipboard').hide();
+            $('.cancel-edit').show();
+
+            $('.cancel-edit').on('click', function(e) {
+                e.preventDefault();
+
+                $('.edit-code').show();
+                $('.copy-to-clipboard').show();
+                $('.cancel-edit').hide();                
+
+                var old_code = $('#edit-code-form #init_code').val();
+                $('#short-url-code').html(old_code);
+
+                $('#code-error').remove();
+                $('#short-url-code form').remove();
+            })
 
             $('#edit-code-form').submit(function(e) {
                 e.preventDefault();
@@ -226,9 +242,20 @@
                         }
                         else {
                             $('#code-error').remove();
-                            $('#short-url-code').html(result['new_code']);
                             $('#short-url-code form').remove();
+
+                            // Show new code
+                            var new_code = result['new_code'];
+                            var host = $('#short-url-host').html();
+                            $('#short-url-code').html(new_code);
+
+                            // Update button copy to clipboard
+                            $('.copy-to-clipboard').attr('data-clipboard-text', host + new_code)
+                            
+                            // Show action again
                             $('.edit-code').show();
+                            $('.copy-to-clipboard').show();
+                            $('.cancel-edit').hide();
                         }
                     });
             });

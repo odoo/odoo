@@ -62,7 +62,8 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <p>
-                                        <t t-esc="short_url_host"/><span id="short-url-code"><t t-esc="code"/></span>
+                                        <span id="short-url-host"><t t-esc="short_url_host"/></span><span id="short-url-code"><t t-esc="code"/></span>
+                                        <a class="cancel-edit" href="#">cancel</a>
                                         <a class="edit-code"><span class="fa fa-pencil gray"></span></a>
                                         <a class="btn btn-sm btn-primary copy-to-clipboard" t-att-data-clipboard-text="short_url">copy</a>
                                     </p>
