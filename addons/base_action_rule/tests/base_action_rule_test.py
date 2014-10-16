@@ -67,8 +67,8 @@ class base_action_rule_test(common.TransactionCase):
         self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'draft')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'draft')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         self.delete_rules(cr, uid)
 
     def test_01_check_to_state_draft_post(self):
@@ -80,8 +80,8 @@ class base_action_rule_test(common.TransactionCase):
         self.create_rule(cr, uid, 'on_create')
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'draft')
-        self.assertEquals(new_lead.user_id.id, self.demo)
+        self.assertEqual(new_lead.state, 'draft')
+        self.assertEqual(new_lead.user_id.id, self.demo)
         self.delete_rules(cr, uid)
 
     def test_02_check_from_draft_to_done_with_steps(self):
@@ -98,28 +98,28 @@ class base_action_rule_test(common.TransactionCase):
         self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'draft')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'draft')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         """ change the state of new_lead to open and check that responsible doen't change"""
         new_lead.write({'state': 'open'})
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'open')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'open')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         """ change the state of new_lead to pending and check that responsible doen't change"""
         new_lead.write({'state': 'pending'})
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'pending')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'pending')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         """ change the state of new_lead to cancel and check that responsible doen't change"""
         new_lead.write({'state': 'cancel'})
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'cancel')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'cancel')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         """ change the state of new_lead to done and check that responsible doen't change """
         new_lead.write({'state': 'done'})
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'done')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'done')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         self.delete_rules(cr, uid)
 
     def test_02_check_from_draft_to_done_without_steps(self):
@@ -136,11 +136,11 @@ class base_action_rule_test(common.TransactionCase):
         self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'draft')
-        self.assertEquals(new_lead.user_id.id, self.admin)
+        self.assertEqual(new_lead.state, 'draft')
+        self.assertEqual(new_lead.user_id.id, self.admin)
         """ change the state of new_lead to done and check that responsible change to Demo_user"""
         new_lead.write({'state': 'done'})
         new_lead = self.model.browse(cr, uid, new_lead_id)
-        self.assertEquals(new_lead.state, 'done')
-        self.assertEquals(new_lead.user_id.id, self.demo)
+        self.assertEqual(new_lead.state, 'done')
+        self.assertEqual(new_lead.user_id.id, self.demo)
         self.delete_rules(cr, uid)
