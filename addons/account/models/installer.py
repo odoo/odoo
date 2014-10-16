@@ -136,32 +136,32 @@ class account_installer(models.TransientModel):
     @api.multi
     def execute_simple(self):
         fy_obj = self.env['account.fiscalyear']
-        for res in self.read(self.ids):
+        for res in self:
             if 'date_start' in res and 'date_stop' in res:
-                f_ids = fy_obj.search([('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])])
+                f_ids = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id[0])])
                 if not f_ids:
-                    name = code = res['date_start'][:4]
-                    if int(name) != int(res['date_stop'][:4]):
-                        name = res['date_start'][:4] + '-' + res['date_stop'][:4]
-                        code = res['date_start'][2:4] + '-' + res['date_stop'][2:4]
+                    name = code = res.date_start[:4]
+                    if int(name) != int(res.date_stop[:4]):
+                        name = res.date_start[:4] + '-' + res.date_stop[:4]
+                        code = resdate_start[2:4] + '-' + res.date_stop[2:4]
                     vals = {
                         'name': name,
                         'code': code,
-                        'date_start': res['date_start'],
-                        'date_stop': res['date_stop'],
-                        'company_id': res['company_id'][0]
+                        'date_start': res.date_start,
+                        'date_stop': res.date_stop,
+                        'company_id': res.company_id[0]
                     }
                     fiscal_id = fy_obj.create(vals)
-                    if res['period'] == 'month':
+                    if res.period == 'month':
                         fy_obj.create_period([fiscal_id])
-                    elif res['period'] == '3months':
+                    elif res.period == '3months':
                         fy_obj.create_period3([fiscal_id])
 
     @api.multi
     def modules_to_install(self):
         modules = super(account_installer, self).modules_to_install()
-        _logger.debug('Installing chart of accounts %s', self.chart)
-        return (modules | set([self.chart])) - set(['has_default_company', 'configurable'])
+        _logger.debug('Installing chart of accounts %s', self.charts)
+        return (modules | set([self.charts])) - set(['has_default_company', 'configurable'])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
