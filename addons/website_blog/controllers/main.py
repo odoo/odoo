@@ -372,13 +372,6 @@ class WebsiteBlog(http.Controller):
 
     @http.route('/blogpost/change_sequence', type='json', auth="public")
     def change_sequence(self, blogpost_id, sequence):
-        blogpost_obj = request.registry.get('blog.post')
-        if sequence == "top":
-            blogpost_obj.set_sequence_top(request.cr, request.uid, [blogpost_id], context=request.context)
-        elif sequence == "bottom":
-            blogpost_obj.set_sequence_bottom(request.cr, request.uid, [blogpost_id], context=request.context)
-        elif sequence == "up":
-            blogpost_obj.set_sequence_up(request.cr, request.uid, [blogpost_id], context=request.context)
-        elif sequence == "down":
-            blogpost_obj.set_sequence_down(request.cr, request.uid, [blogpost_id], context=request.context)
-        return
+        if sequence in ['top', 'bottom', 'up', 'down']:
+            return getattr(request.registry.get('blog.post'), 'set_sequence_'+sequence)(request.cr, request.uid, [blogpost_id], context=request.context)
+        return False
