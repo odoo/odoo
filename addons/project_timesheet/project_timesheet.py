@@ -21,6 +21,7 @@
 import time
 import datetime
 import re
+import copy
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -29,79 +30,6 @@ from openerp.tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def sync_data(self, cr, uid, datas, context=None):
-        if not context:
-            context = {}
-        """
-        This method synchronized the data given by Project Timesheet UI,
-        the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
-        """
-        self.virtual_id_regex = r"^virtual_id_.*$"
-        print "\n\ndatas are ::: ", datas
-        """
-        self.missing_data = {'projects': [], 'tasks': [], 'task_works': []}
-        self.fail_data = {'projects': [], 'tasks': [], 'task_works': []}
-        for project in datas:
-            self.sync_project(cr, uid, project, context=context)
-        return [self.missing_data, self.fail_data]
-
-    def sync_project(self, cr, uid, project, context=None):
-        print "\n\nProject is ::: ", project
-        prog = re.compile(self.virtual_id_regex)
-        if prog.match(str(project.get('id'))):
-            project.pop('id')
-            self.create(cr, uid, project, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
-        else:
-            #Check whether project is no deleted, check  for Missing Project, do not go ahead if project is deleted
-            search_res = self.search(cr, uid, [('id', '=', project['id'])], context=context)
-            if not search_res:
-                missing_projects = self.missing_data.get('projects')
-                missing_projects.append(project['id'])
-                return
-            for task in project.get('tasks'):
-                self.sync_task(cr, uid, project['id'], task, context=context)
-
-    def sync_task(self, cr, uid, project_id, task, context=None):
-        print "\n\nTask is ::: ", task
-        task_obj = self.pool.get('project.task')
-        task_record = task[2]
-        task_record and task_record.update({'project_id': project_id})
-        if task[0] == 0:
-            task_obj.create(cr, uid, task_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
-        else:
-            #To Write: Check whether task is not deleted, check  for Missing Project, do not go ahead if project is deleted
-            search_res = task_obj.search(cr, uid, [('id', '=', task[1])], context=context)
-            if not search_res:
-                missing_tasks = self.missing_data.get('tasks')
-                missing_tasks.append(task[1])
-                return
-            for task_work in task_record.get('work_ids'):
-                self.sync_task_work(cr, uid, task[1], task_work, context=context)
-
-    def sync_task_work(self, cr, uid, task_id, task_work, context=None):
-        print "\n\nTask Work is ::: ", task_work
-        task_work_obj = self.pool.get('project.task.work')
-        task_work_record = task_work[2]
-        task_work_record and task_work_record.update({'task_id': task_id})
-        if task_work[0] == 0:
-            task_work_obj.create(cr, uid, task_work_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
-        else:
-            #To Write: Check whether task work is not deleted, check  for Missing Project, do not go ahead if project is deleted
-            search_res = task_work_obj.search(cr, uid, [('id', '=', task_work[1])], context=context)
-            if not search_res:
-                missing_tasks_work = self.missing_data.get('task_works')
-                missing_tasks_work.append(task_work[1])
-                return
-            #We can simply call write of project.task, using task_id and send work_ids as it is
-            #But the reason is we are doing checking for missing record each record is because what if some other request thread deletes task work while this code is still in execution
-            elif task_work[0] == 1:
-                task_work_obj.write(cr, uid, task_work[1], task_work_record, context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
-            elif task_work[0] == 2:
-                task_work_obj.unlink(cr, uid, task_work[1], context=context) #Put it into try, except block, handle fail of record, do not remove fail record from localstorage
-            elif task_work[0] == 4:
-                #To Implement for link record
-                pass
-        """
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
@@ -395,5 +323,147 @@ class account_analytic_line(osv.osv):
            raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
 
+class hr_analytic_timesheet(osv.Model):
+    _inherit = 'hr.analytic.timesheet'
+    _description = 'hr analytic timesheet'
+    _columns = {
+        'task_id' : fields.many2one('project.task', 'Task'),
+    }
+
+    def get_user_related_details(self, cr, uid, user_id):
+        res = {}
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
+        if not emp_id:
+            user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define employee for user "%s". You must create one.')% (user_name,))
+        emp = emp_obj.browse(cr, uid, emp_id[0])
+        if not emp.product_id:
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
+
+        if not emp.journal_id:
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        acc_id = emp.product_id.property_account_expense.id
+        if not acc_id:
+            acc_id = emp.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
+                raise osv.except_osv(_('Bad Configuration!'),
+                        _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        res['product_id'] = emp.product_id.id
+        res['journal_id'] = emp.journal_id.id
+        res['general_account_id'] = acc_id
+        res['product_uom_id'] = emp.product_id.uom_id.id
+        return res
+
+    def sync_data(self, cr, uid, datas, context=None):
+        """
+        This method synchronized the data given by Project Timesheet UI,
+        the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
+        """
+        print "\n\ndatas are inside hr_analytic_timesheet ::: ", datas
+        if not context:
+            context = {}
+        user_related_details = {}
+        try:
+            user_related_details = self.get_user_related_details(cr, uid, uid)
+        except Exception, e:
+            raise e
+
+        virtual_id_regex = r"^virtual_id_.*$"
+        pattern = re.compile(virtual_id_regex)
+        project_obj = self.pool.get('project.project')
+        task_obj = self.pool.get('project.task')
+        uom_obj = self.pool.get('product.uom')
+        missing_project_id = []
+        missing_task_id = []
+        fail_records = []
+
+        def replace_virtual_id(field, virtual_id, real_id):
+            for record in datas:
+                if record.get(field) and record[field][0] == virtual_id:
+                    record[field][0] = real_id
+
+        for record in datas:
+            project_id = False
+            task_id = False
+            #TODO: We can use Savepoint, cr.commit, cr.rollback, use try,except block, if exception occurs due to no right or due to other reason cr.rollback and pu that record in fail record list
+            current_record = copy.deepcopy(record)
+            if pattern.match(str(record['project_id'][0])):
+                project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
+                replace_virtual_id('project_id', record['project_id'][0], project_id)
+            else:
+                project_id = record['project_id'][0]
+            project_record = project_obj.browse(cr, uid, project_id, context=context)
+            if project_id in missing_project_id or not project_record:
+                missing_project_id.append(project_id)
+                continue
+            if record['task_id']:
+                if pattern.match(str(record['task_id'][0])):
+                    project_id = record['project_id'][0]
+                    task_id = task_obj.create(cr, uid, {'name': record['task_id'][1]}, context=context)
+                    replace_virtual_id('task_id', record['task_id'][0], task_id)
+                else:
+                    task_id = record['task_id'][0]
+                record['task_id'] = task_id
+                if task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
+                    missing_task_id.append(task_id)
+                    continue
+            
+            #project_read = project_obj.read(cr, uid, project_id, ['analytic_account_id'], context=context)
+            account_id = project_record.analytic_account_id.account_id.id
+            vals_line['product_id'] = result['product_id']
+            #TO Remove: Once we load hr.analytic.timesheet in load_data
+            default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+            if result['product_uom_id'] != default_uom:
+                record['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+            if account_id:
+                record['account_id'] = account_id
+                res = self.on_change_account_id(cr, uid, False, account_id)
+                if res.get('value'):
+                    record.update(res['value'])
+                record['general_account_id'] = result['general_account_id']
+                record['journal_id'] = result['journal_id']
+                record['amount'] = 0.0
+                record['product_uom_id'] = result['product_uom_id']
+            else:
+                fail_records.append(current_record)
+                continue
+
+            record.pop('project_id')
+            if record['command'] == 0:
+                context = dict(context, recompute=True)
+                timeline_id = self.create(cr, uid, record, context=context) #Handle fail, if fail add into failed record
+                # Compute based on pricetype
+                amount_unit = self.on_change_unit_amount(cr, uid, timeline_id,
+                    record['product_id'], record['unit_amount'], False, False, record['journal_id'], context=context)
+                if amount_unit and 'amount' in amount_unit.get('value',{}):
+                    updv = { 'amount': amount_unit['value']['amount'] }
+                    self.write(cr, uid, [timeline_id], updv, context=context)
+            elif record['command'] == 1:
+                id = reocrd.id
+                record.pop('id')
+                # Compute based on pricetype
+                amount_unit = self.on_change_unit_amount(cr, uid, line_id.id,
+                    prod_id=prod_id, company_id=False,
+                    unit_amount=record['unit_amount'], unit=False, journal_id=record['journal_id'], context=context)
+
+                if amount_unit and 'amount' in amount_unit.get('value',{}):
+                    record['amount'] = amount_unit['value']['amount']
+                self.write(cr, uid, id, record, context=context) #Handle fail and MissingError, if fail add into failed record
+            elif record['command'] == 2:
+                self.delete(cr, uid, record.id, context=context) #Handle fail and MissingError, if fail add into failed record
+            elif record['command'] == 4:
+                #TO Implement, logic of Link
+                pass
+
+        #Sync compelte
+        #Re-read data and return it to client so that it updates its localstorage
+        #Data will be last 30 days records + failed record
+        return {'error': {'message': e.message}, 'datas': datas}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

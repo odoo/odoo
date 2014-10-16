@@ -262,7 +262,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             for (var i = 0; i < activity_models.length; i++) {
                 records.push(activity_models[i].export_as_JSON());
             }
-            self.defs.push(new project_timesheet.Model(project_timesheet.session, "project.project").call("sync_data", [records]).then(function(result) {
+            self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records]).then(function(result) {
                 console.log("After Sync data ::: ", result);
                 self.sync_complete(result);
             }).always(function() {
