@@ -309,7 +309,7 @@ def exp_list(document=False):
     if not openerp.tools.config['list_db'] and not document:
         raise openerp.exceptions.AccessDenied()
     chosen_template = openerp.tools.config['db_template']
-    templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
+    templates_list = tuple(set(['postgres', chosen_template]))
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
@@ -322,9 +322,9 @@ def exp_list(document=False):
                 res = cr.fetchone()
                 db_user = res and str(res[0])
             if db_user:
-                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
+                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
             else:
-                cr.execute("select datname from pg_database where datname not in %s order by datname", (templates_list,))
+                cr.execute("select datname from pg_database where not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
             res = [openerp.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
             res = []
