@@ -17,9 +17,8 @@ class TestQifFile(TransactionCase):
         qif_file_path = get_module_resource('account_bank_statement_import_qif', 'test_qif_file', 'test_qif.qif')
         qif_file = open(qif_file_path, 'rb').read().encode('base64')
         bank_statement_id = self.statement_import_model.create(cr, uid, dict(
-                            file_type='qif',
-                            data_file=qif_file,
-                            ))
+            data_file=qif_file,
+        ))
         self.statement_import_model.parse_file(cr, uid, [bank_statement_id])
         line_id = self.bank_statement_line_model.search(cr, uid, [('name', '=', 'YOUR LOCAL SUPERMARKET')])[0]
         statement_id = self.bank_statement_line_model.browse(cr, uid, line_id).statement_id.id
