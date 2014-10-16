@@ -109,6 +109,7 @@
 
             openerp.jsonRpc('/r/recent_links', 'call', {'filter':filter.code})
                 .then(function(result) {
+
                     _.each(result.reverse(), function(link) {
                         self.add_link(link);
                     });

@@ -4,6 +4,7 @@
         <template id="assets_website_url_charts">
             <script type="text/javascript" src="/website_url/static/src/js/website_url_charts.js"/>
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"/>
+            <script type="text/javascript" src="/website_url/static/src/js/ZeroClipboard.min.js"/>
             <link rel="stylesheet" type="text/css" href="/website_url/static/src/css/website_url.css" />
         </template>
 
@@ -61,8 +62,9 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <p>
-                                        <span id="short-url"><t t-esc="short_url_host"/></span><span id="short-url-code"><t t-esc="code"/></span>
+                                        <t t-esc="short_url_host"/><span id="short-url-code"><t t-esc="code"/></span>
                                         <a class="edit-code"><span class="fa fa-pencil gray"></span></a>
+                                        <a class="btn btn-sm btn-primary copy-to-clipboard" t-att-data-clipboard-text="short_url">copy</a>
                                     </p>
                                 </div>
                             </div>

@@ -188,6 +188,20 @@
                 }
             });
 
+        // Copy to clipboard link
+        ZeroClipboard.config({swfPath: location.origin + "/website_url/static/src/js/ZeroClipboard.swf" });
+        new ZeroClipboard($('.copy-to-clipboard'));
+
+        $('.copy-to-clipboard').on('click', function(e) {
+            e.preventDefault();
+
+            $(".copy-to-clipboard").text('copied').removeClass("btn-primary").addClass("btn-success");
+
+            setTimeout(function() {
+                $(".copy-to-clipboard").text("copy").removeClass("btn-success").addClass("btn-primary");
+            }, '5000');
+        });
+
         // Edit the short URL code
         $('.edit-code').on('click', function(e) {
             e.preventDefault();
