@@ -220,15 +220,15 @@ class account_config_settings(models.TransientModel):
 
     @api.model
     def create(self, values):
-        id = super(account_config_settings, self).create(values)
+        rec = super(account_config_settings, self).create(values)
         # Hack: to avoid some nasty bug, related fields are not written upon record creation.
         # Hence we write on those fields here.
         vals = {}
-        for fname, field in self._columns.iteritems():
-            if isinstance(field, fields.related) and fname in values:
+        for fname, field in self._fields.iteritems():
+            if getattr(field, 'related') and fname in values:
                 vals[fname] = values[fname]
-        self.write([id], vals)
-        return id
+        rec.write(vals)
+        return rec
 
     @api.multi
     def onchange_company_id(self, company_id):
