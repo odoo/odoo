@@ -70,11 +70,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
             self.sort_selection = data['form'].get('sort_selection', 'date')
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        elif new_ids:
-            #in case of direct access from account.journal.period object, we need to set the journal_ids and periods_ids
-            self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
-            res = self.cr.fetchall()
-            self.period_ids, self.journal_ids = zip(*res)
+        #account_journal_period have been removed
+#         elif new_ids:
+#             #in case of direct access from account.journal.period object, we need to set the journal_ids and periods_ids
+#             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+#             res = self.cr.fetchall()
+#             self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def set_last_move_id(self, move_id):
@@ -156,7 +157,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         else:
             journal_id = [journal_id]
         obj_mline = self.pool.get('account.move.line')
-        self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
+        #self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
         self.pool.get('account.journal.period').invalidate_cache(self.cr, self.uid, ['state'], context=self.context)
 
         move_state = ['draft','posted']

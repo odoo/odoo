@@ -80,7 +80,7 @@ class account_installer(models.TransientModel):
     period = fields.Selection([('month', 'Monthly'), ('3months', '3 Monthly')], 
         string='Periods', required=True, default='month')
     company_id = fields.Many2one('res.company', string='Company', required=True, 
-        default=lambda self: self.env.user.company_id and self.env.user.company_id.id or False)
+        default=lambda self: self.env.user.company_id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
         readonly=True, default=lambda self: self._default_has_default_company())
 
@@ -137,8 +137,8 @@ class account_installer(models.TransientModel):
     def execute_simple(self):
         fy_obj = self.env['account.fiscalyear']
         for res in self:
-            if 'date_start' in res and 'date_stop' in res:
-                f_ids = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id[0])])
+            if res.date_start and res.date_stop:
+                f_ids = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id.id)])
                 if not f_ids:
                     name = code = res.date_start[:4]
                     if int(name) != int(res.date_stop[:4]):
@@ -149,7 +149,7 @@ class account_installer(models.TransientModel):
                         'code': code,
                         'date_start': res.date_start,
                         'date_stop': res.date_stop,
-                        'company_id': res.company_id[0]
+                        'company_id': res.company_id.id
                     }
                     fiscal_id = fy_obj.create(vals)
                     if res.period == 'month':

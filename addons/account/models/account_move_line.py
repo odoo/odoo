@@ -958,19 +958,20 @@ class account_move_line(models.Model):
 
     @api.model
     def _update_journal_check(self, journal_id, period_id):
-        self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
-        result = self._cr.fetchall()
-        journal = self.env['account.journal'].browse(journal_id)
-        period = self.env['account.period'].browse(period_id)
-        for (state,) in result:
-            if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
-        if not result:
-            self.env['account.journal.period'].create({
-                'name': (journal.code or journal.name)+':'+(period.name or ''),
-                'journal_id': journal.id,
-                'period_id': period.id
-            })
+        #account_journal_period have been removed
+#         self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
+#         result = self._cr.fetchall()
+#         journal = self.env['account.journal'].browse(journal_id)
+#         period = self.env['account.period'].browse(period_id)
+#         for (state,) in result:
+#             if state == 'done':
+#                 raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
+#         if not result:
+#             self.env['account.journal.period'].create({
+#                 'name': (journal.code or journal.name)+':'+(period.name or ''),
+#                 'journal_id': journal.id,
+#                 'period_id': period.id
+#             })
         return True
 
     @api.multi

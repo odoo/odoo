@@ -63,10 +63,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.query_get_clause = 'AND '
             self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        if new_ids:
-            self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
-            res = self.cr.fetchall()
-            self.period_ids, self.journal_ids = zip(*res)
+        #account_journal_period have been removed
+#         if new_ids:
+#             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+#             res = self.cr.fetchall()
+#             self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, period_id, journal_id):

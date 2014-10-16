@@ -802,7 +802,7 @@ class account_period(models.Model):
         for period in self:
             if period.fiscalyear_id.state == 'done':
                 raise Warning(_('You can not re-open a period which belongs to closed fiscal year'))
-        self._cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
+        #self._cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
         self._cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
         self.invalidate_cache()
         return True

@@ -48,11 +48,11 @@ class account_fiscalyear_close_state(osv.osv_memory):
         for data in  self.read(cr, uid, ids, context=context):
             fy_id = data['fy_id'][0]
 
-            cr.execute('UPDATE account_journal_period ' \
-                        'SET state = %s ' \
-                        'WHERE period_id IN (SELECT id FROM account_period \
-                        WHERE fiscalyear_id = %s)',
-                    ('done', fy_id))
+#             cr.execute('UPDATE account_journal_period ' \
+#                         'SET state = %s ' \
+#                         'WHERE period_id IN (SELECT id FROM account_period \
+#                         WHERE fiscalyear_id = %s)',
+#                     ('done', fy_id))
             cr.execute('UPDATE account_period SET state = %s ' \
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
             cr.execute('UPDATE account_fiscalyear ' \

@@ -51,7 +51,7 @@ class account_period_close(osv.osv_memory):
                     if account_move_ids:
                         raise osv.except_osv(_('Invalid Action!'), _('In order to close a period, you must first post related journal entries.'))
 
-                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+#                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
                     self.invalidate_cache(cr, uid, context=context)
 
