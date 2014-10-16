@@ -25,7 +25,7 @@ class bank(models.Model):
     _inherit = "res.partner.bank"
 
     journal_id = fields.Many2one('account.journal', string='Account Journal', help="This journal will be created automatically for this bank account when you save the record")
-    currency_id = fields.Many2one('res.currency', related='journal_id', string='Currency', readonly=True, help="Currency of the related account journal.")
+    currency_id = fields.Many2one('res.currency', related='journal_id.currency', string='Currency', readonly=True, help="Currency of the related account journal.")
 
     @api.model
     @api.returns('self')
