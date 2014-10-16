@@ -2425,8 +2425,8 @@
                     </notebook>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <label for="balance_start" class="oe_subtotal_footer_separator oe_open_balance" string="Opening Balance" style="padding-right: 23px !important; padding-top: 6px !important;"/>
-                            <field name="balance_start" attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}" nolabel="1" widget="monetary" class="oe_subtotal_footer_separator oe_open_balance" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/>
+                            <h4><label for="balance_start" class="oe_subtotal_footer_separator oe_open_balance" string="Opening Balance" style="padding-right: 23px !important; padding-top: 6px !important;"/></h4>
+                            <h4><field name="balance_start" attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}" nolabel="1" widget="monetary" class="oe_subtotal_footer_separator oe_open_balance" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/></h4>
                             <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_mini_subtotal_footer_separator" style="padding-right: 20px !important;"/>
                             <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                             <label for="balance_end" string="= Theoretical Closing Balance" class="oe_force_bold oe_mini_subtotal_footer_separator" style="padding-right: 20px !important;" help="Sum of opening balance and transactions."/>
