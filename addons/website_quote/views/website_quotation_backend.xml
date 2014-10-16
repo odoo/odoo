@@ -42,7 +42,7 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>
+                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position, pricelist_id)"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>

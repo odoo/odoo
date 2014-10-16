@@ -169,7 +169,7 @@ class sale_order(osv.osv):
             'url': '/quote/%s' % (quote.id)
         }
 
-    def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
+    def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, pricelist_id=False, context=None):
         if not template_id:
             return True
 
@@ -182,7 +182,7 @@ class sale_order(osv.osv):
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
             res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
-                False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
+                pricelist_id, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
                 line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
                 False, fiscal_position, True, context)
             data = res.get('value', {})
@@ -190,7 +190,7 @@ class sale_order(osv.osv):
                 data['tax_id'] = [(6, 0, data['tax_id'])]
             data.update({
                 'name': line.name,
-                'price_unit': line.price_unit,
+                'price_unit': data.get('price_unit') or line.price_unit,
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
