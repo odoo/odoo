@@ -145,7 +145,10 @@ class stock_picking(osv.osv):
         for backorder_id, picking_vals in res.iteritems():
             # remove carrier ref from backorder
             if backorder_id != picking_vals.get('delivered_picking'):
-                self.write(cr, uid, backorder_id, {'carrier_tracking_ref': ''}, context=context)
+                self.write(cr, uid, backorder_id,
+                           {'carrier_tracking_ref': False,
+                            'number_of_packages': 0,
+                            'volume': 0.0}, context=context)
         return res
 
 stock_picking()
