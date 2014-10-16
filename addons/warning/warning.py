@@ -77,8 +77,10 @@ class sale_order(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 sale_order()
 
 
@@ -106,8 +108,10 @@ class purchase_order(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 purchase_order()
 
@@ -144,8 +148,10 @@ class account_invoice(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 account_invoice()
 
@@ -173,8 +179,10 @@ class stock_picking(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 stock_picking()
 
@@ -204,8 +212,10 @@ class stock_picking_in(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 class stock_picking_out(osv.osv):
     _inherit = 'stock.picking.out'
@@ -231,8 +241,10 @@ class stock_picking_out(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -281,8 +293,10 @@ class sale_order_line(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 sale_order_line()
 
@@ -313,8 +327,10 @@ class purchase_order_line(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+        if warning:
+            result['warning'] = warning
 
-        return {'value': result.get('value',{}), 'warning':warning}
+        return result
 
 purchase_order_line()
 
