@@ -54,11 +54,11 @@ class account_config_settings(models.TransientModel):
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
     code_digits = fields.Integer(string='# of Digits', help="No. of digits to use for account code")
-    tax_calculation_rounding_method = fields.Selection(related='company_id.tax_calculation_rounding_method',
+    tax_calculation_rounding_method = fields.Selection(
         [
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], string='Tax calculation rounding method',
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method',
         help="""If you select 'Round per line' : for each tax, the tax amount will first be 
              computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, 
              leading to the total amount for that tax. If you select 'Round globally': for each tax, 
@@ -158,7 +158,7 @@ class account_config_settings(models.TransientModel):
         related='company_id.income_currency_exchange_account_id',
         string="Gain Exchange Rate Account", 
         domain="[('type', '=', 'other'), ('deprecated', '=', False)]")
-    expense_currency_exchange_account_id = fields.many2one('account.account',
+    expense_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.expense_currency_exchange_account_id',
         string="Loss Exchange Rate Account",
         domain="[('type', '=', 'other'), ('deprecated', '=', False)]")
