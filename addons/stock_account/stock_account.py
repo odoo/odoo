@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import frozendict
 from openerp import SUPERUSER_ID, api
 import logging
 _logger = logging.getLogger(__name__)
@@ -293,6 +294,18 @@ class stock_move(osv.osv):
                     # Get the standard price
                     amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                
+                # Since the user is overridden below, but used
+                # to get the user's company, set it in the context.
+                user_company = self.pool.get('res.users').browse(
+                    cr, uid, uid, context=context).company_id.id
+                if context is None:
+                    context = {}
+                else:
+                    context = dict(context)
+                context.update({'force_company': user_company})
+                context = frozendict(context)
+
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
 
