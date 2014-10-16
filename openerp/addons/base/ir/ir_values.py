@@ -335,7 +335,7 @@ class ir_values(osv.osv):
                 (row['id'], row['name'], pickle.loads(row['value'].encode('utf-8'))))
         return defaults.values()
 
-    # use ormcache: this is called a lot by BaseModel.add_default_value()!
+    # use ormcache: this is called a lot by BaseModel.default_get()!
     @tools.ormcache(skiparg=2)
     def get_defaults_dict(self, cr, uid, model, condition=False):
         """ Returns a dictionary mapping field names with their corresponding

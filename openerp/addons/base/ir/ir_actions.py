@@ -31,6 +31,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp import workflow
+import openerp.api
 from openerp.osv import fields, osv
 from openerp.osv.orm import browse_record
 import openerp.report.interface
@@ -62,6 +63,10 @@ class actions(osv.osv):
         """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
         todo_obj = self.pool.get('ir.actions.todo')
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         todo_ids = todo_obj.search(cr, uid, [('action_id', 'in', ids)], context=context)
         todo_obj.unlink(cr, uid, todo_ids, context=context)
         return super(actions, self).unlink(cr, uid, ids, context=context)
@@ -856,29 +861,22 @@ class ir_actions_server(osv.osv):
          - `relational`: find the related model and object, using the relational
            field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
         """
-        obj_pool = self.pool[action.model_id.model]
-        if action.use_relational_model == 'base':
-            target_id = context.get('active_id')
-            target_pool = obj_pool
-        else:
-            value = getattr(obj_pool.browse(cr, uid, context.get('active_id'), context=context), action.wkf_field_id.name)
-            if action.wkf_field_id.ttype == 'many2one':
-                target_id = value.id
-            else:
-                target_id = value
-            target_pool = self.pool[action.wkf_model_id.model]
+        # weird signature and calling -> no self.env, use action param's
+        record = action.env[action.model_id.model].browse(context['active_id'])
+        if action.use_relational_model == 'relational':
+            record = getattr(record, action.wkf_field_id.name)
+            if not isinstance(record, openerp.models.BaseModel):
+                record = action.env[action.wkf_model_id.model].browse(record)
 
-        trigger_name = action.wkf_transition_id.signal
-
-        workflow.trg_validate(uid, target_pool._name, target_id, trigger_name, cr)
+        record.signal_workflow(action.wkf_transition_id.signal)
 
     def run_action_multi(self, cr, uid, action, eval_context=None, context=None):
-        res = []
+        res = False
         for act in action.child_ids:
-            result = self.run(cr, uid, [act.id], context)
+            result = self.run(cr, uid, [act.id], context=context)
             if result:
-                res.append(result)
-        return res and res[0] or False
+                res = result
+        return res
 
     def run_action_object_write(self, cr, uid, action, eval_context=None, context=None):
         """ Write server action.

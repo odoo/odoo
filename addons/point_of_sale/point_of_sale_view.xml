@@ -546,6 +546,24 @@
                         <field name="expense_pdt"/>
                     </group>
                 </group>
+            </field>
+        </record>
+        <record id="product_template_form_view_inherit_ean" model="ir.ui.view">
+            <field name="name">product.template.only.form.inherit.ean</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <field name="ean13" position="after">
+                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN"
+                            attrs="{'invisible': [('product_variant_count', '>', 1)]}" class="oe_link oe_edit_only"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_normal_form_view_inherit_ean" model="ir.ui.view">
+            <field name="name">product.form.inherit.ean</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
                 <field name="ean13" position="after">
                     <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>

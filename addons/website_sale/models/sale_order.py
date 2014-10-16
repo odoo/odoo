@@ -49,6 +49,7 @@ class sale_order(osv.Model):
             pricelist=so.pricelist_id.id,
             product=product_id,
             partner_id=so.partner_id.id,
+            fiscal_position=so.fiscal_position.id,
             qty=qty,
             context=context
         )['value']

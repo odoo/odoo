@@ -15,3 +15,5 @@ odoo developer documentation
     guides
     reference
     modules
+
+.. todolist::

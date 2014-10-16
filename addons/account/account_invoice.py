@@ -24,6 +24,7 @@ from lxml import etree
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -705,6 +706,7 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
         else:
             tax_key = []
+            precision = self.env['decimal.precision'].precision_get('Account')
             for tax in self.tax_line:
                 if tax.manual:
                     continue
@@ -713,7 +715,7 @@ class account_invoice(models.Model):
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
                     raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:

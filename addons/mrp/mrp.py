@@ -278,7 +278,7 @@ class mrp_bom(osv.osv):
 
         for bom_line_id in bom.bom_line_ids:
             if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
+                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
                     continue
             # all bom_line_id variant values must be in the product
             if bom_line_id.attribute_value_ids:

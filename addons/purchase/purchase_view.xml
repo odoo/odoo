@@ -229,7 +229,7 @@
                         <page string="Products">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>

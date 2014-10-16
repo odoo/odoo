@@ -38,6 +38,10 @@ Running the server
     (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
     :option:`-c`)
 
+.. option:: --test-enable
+
+    runs tests after installing modules
+
 .. _reference/cmdline/scaffold:
 
 Scaffolding

@@ -427,8 +427,8 @@ class website_sale(http.Controller):
 
         return values
 
-    mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["street2", "state_id", "vat"]
+    mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id", "zip"]
+    optional_billing_fields = ["street", "state_id", "vat", "vat_subjected"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
 
@@ -450,14 +450,17 @@ class website_sale(http.Controller):
                 for field_name in all_fields if data.get(prefix + field_name))
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
-                for field_name in all_fields if field_name != "street2" and getattr(data, field_name))
+                for field_name in all_fields if getattr(data, field_name))
             if data.parent_id:
-                query[prefix + 'street2'] = data.parent_id.name
+                query[prefix + 'street'] = data.parent_id.name
 
         if query.get(prefix + 'state_id'):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
         if query.get(prefix + 'country_id'):
             query[prefix + 'country_id'] = int(query[prefix + 'country_id'])
+
+        if query.get(prefix + 'vat'):
+            query[prefix + 'vat_subjected'] = True
 
         if not remove_prefix:
             return query
@@ -533,7 +536,13 @@ class website_sale(http.Controller):
             'partner_invoice_id': partner_id,
         }
         order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
-        order_info.update(order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id, checkout.get('shipping_id'), None, context=context)['value'])
+        address_change = order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id,
+                                                        checkout.get('shipping_id'), None, context=context)['value']
+        order_info.update(address_change)
+        if address_change.get('fiscal_position'):
+            fiscal_update = order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [], address_change['fiscal_position'],
+                                                               [(4, l.id) for l in order.order_line], context=None)['value']
+            order_info.update(fiscal_update)
 
         order_info.pop('user_id')
         order_info.update(partner_shipping_id=checkout.get('shipping_id') or partner_id)
@@ -597,6 +606,7 @@ class website_sale(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
+        sale_order_obj = request.registry.get('sale.order')
 
         order = request.website.sale_get_order(context=context)
 
@@ -614,26 +624,28 @@ class website_sale(http.Controller):
         values = {
             'order': request.registry['sale.order'].browse(cr, SUPERUSER_ID, order.id, context=context)
         }
-        values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
+        values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
+        values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
         # fetch all registered payment means
         # if tx:
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
-        acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
-        values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
-        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
-        for acquirer in values['acquirers']:
-            acquirer.button = payment_obj.render(
-                cr, SUPERUSER_ID, acquirer.id,
-                order.name,
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                partner_id=shipping_partner_id,
-                tx_values={
-                    'return_url': '/shop/payment/validate',
-                },
-                context=render_ctx)
+        if not values['errors']:
+            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
+            values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
+            render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
+            for acquirer in values['acquirers']:
+                acquirer.button = payment_obj.render(
+                    cr, SUPERUSER_ID, acquirer.id,
+                    order.name,
+                    order.amount_total,
+                    order.pricelist_id.currency_id.id,
+                    partner_id=shipping_partner_id,
+                    tx_values={
+                        'return_url': '/shop/payment/validate',
+                    },
+                    context=render_ctx)
 
         return request.website.render("website_sale.payment", values)
 

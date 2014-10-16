@@ -78,8 +78,6 @@
                                     </group>
                                     <group>
                                         <field name="active"/>
-                                        <field name="ean13" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
-                                        <field name="default_code" attrs="{'invisible': [('is_product_variant', '=', False), ('product_variant_count', '!=', 1)]}"/>
                                     </group>
                                 </group>
                                 <group colspan="4">
@@ -239,6 +237,10 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="name">Product Template</attribute>
                 </xpath>
+                <field name="active" position="after">
+                    <field name="ean13" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                </field>
                 <xpath expr="//page[@string='Sales']" position="after">
                     <page name="variants" string="Variants">
                         <div class="oe_right">
@@ -341,6 +343,10 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
+                <field name="active" position="after">
+                    <field name="ean13"/>
+                    <field name="default_code"/>
+                </field>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                 </field>

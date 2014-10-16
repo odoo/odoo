@@ -203,7 +203,7 @@ class gamification_goal(osv.Model):
 
     _columns = {
         'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
-        'user_id': fields.many2one('res.users', string='User', required=True, auto_join=True),
+        'user_id': fields.many2one('res.users', string='User', required=True, auto_join=True, ondelete="cascade"),
         'line_id': fields.many2one('gamification.challenge.line', string='Challenge Line', ondelete="cascade"),
         'challenge_id': fields.related('line_id', 'challenge_id',
             string="Challenge",

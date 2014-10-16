@@ -154,6 +154,11 @@ class event_event(models.Model):
         else:
             self.date_end_located = False
 
+    @api.one
+    @api.depends('address_id')
+    def _compute_country(self):
+        self.country_id = self.address_id.country_id
+
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
         ('confirm', 'Confirmed'), ('done', 'Done')],
@@ -180,9 +185,8 @@ class event_event(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Location', default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]})
-    country_id = fields.Many2one(
-        'res.country', string='Country', related='address_id.country_id',
-        store=True, readonly=False, states={'done': [('readonly', True)]})
+    country_id = fields.Many2one('res.country', string='Country',
+        store=True, compute='_compute_country')
     description = fields.Html(
         string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})

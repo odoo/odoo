@@ -702,7 +702,6 @@ class crm_lead(format_address, osv.osv):
             'probability': lead.probability,
             'name': lead.name,
             'partner_id': customer and customer.id or False,
-            'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
@@ -958,7 +957,7 @@ class crm_lead(format_address, osv.osv):
         lead = self.browse(cr, uid, id, context=context)
         local_context = dict(context)
         local_context.setdefault('default_type', lead.type)
-        local_context.setdefault('default_section_id', lead.section_id)
+        local_context.setdefault('default_section_id', lead.section_id.id)
         if lead.type == 'opportunity':
             default['date_open'] = fields.datetime.now()
         else:

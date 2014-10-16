@@ -65,7 +65,7 @@ class ir_http(orm.AbstractModel):
                     import GeoIP
                     # updated database can be downloaded on MaxMind website
                     # http://dev.maxmind.com/geoip/legacy/install/city/
-                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    geofile = config.get('geoip_database')
                     if os.path.exists(geofile):
                         self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
                     else:

@@ -1063,7 +1063,7 @@ class task(osv.osv):
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('start_date'):
+        if vals.get('user_id') and not vals.get('date_start'):
             vals['date_start'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this

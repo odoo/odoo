@@ -1231,6 +1231,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             var order = this.pos.get_order();
 
+            if(order.get('orderLines').models.length === 0){
+                this.pos_widget.screen_selector.show_popup('error',{
+                    'message': _t('Empty Order'),
+                    'comment': _t('There must be at least one product in your order before it can be validated'),
+                });
+                return;
+            }
+
             if (!order.isPaid() || this.invoicing) {
                 return;
             }
