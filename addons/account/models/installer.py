@@ -116,7 +116,7 @@ class account_installer(models.TransientModel):
                 res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in self.env['res.company'].browse(unconfigured_cmp)]
+                    cmp_select = [(line.id, line.name) for line in unconfigured_cmp]
                     res['fields'][field]['selection'] = cmp_select
         return res
 
