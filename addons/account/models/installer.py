@@ -79,28 +79,23 @@ class account_installer(models.TransientModel):
     date_stop = fields.Date(string='End Date', required=True, default=lambda *a: time.strftime('%Y-12-31'))
     period = fields.Selection([('month', 'Monthly'), ('3months', '3 Monthly')], 
         string='Periods', required=True, default='month')
-    company_id = fields.Many2one('res.company', string='Company',
-        required=True, default=lambda self: self._default_company)
+    company_id = fields.Many2one('res.company', string='Company', required=True, 
+        default=lambda self: self.env.user.company_id and self.env.user.company_id.id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
-        readonly=True, default=lambda self: self._default_has_default_company)
+        readonly=True, default=lambda self: self._default_has_default_company())
 
-
-    @api.model
-    def _default_company(self):
-        return self.user.company_id and self.user.company_id.id or False
 
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
 
-
     @api.model
     def get_unconfigured_cmp(self):
         """ get the list of companies that have not been configured yet
         but don't care about the demo chart of accounts """
         company_ids = self.env['res.company'].search([])
-        self._cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        self._cr.execute("SELECT company_id FROM account_account WHERE deprecated = 't' AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in self._cr.fetchall()]
         return list(set(company_ids)-set(configured_cmp))
 

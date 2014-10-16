@@ -35,9 +35,9 @@ class account_config_settings(models.TransientModel):
 
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self._default_company)
+        default=lambda self: self.env.user.company_id.id)
     has_default_company = fields.Boolean(string='Has default company', readonly=True,
-        default=lambda self: self_default_has_default_company)
+        default=lambda self: self._default_has_default_company())
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
         string='This company has its own chart of accounts',
         help='Check this box if this company is a legal entity.')
@@ -176,9 +176,6 @@ class account_config_settings(models.TransientModel):
                                  'expense_currency_exchange_account_id': False})
         return res
 
-    @api.model
-    def _default_company(self):
-        return self.user.company_id.id
 
     @api.model
     def _default_has_default_company(self):
