@@ -2026,26 +2026,25 @@ class account_tax_code_template(models.Model):
             "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
         )
 
-    def generate_tax_code(self, cr, uid, tax_code_root_id, company_id, context=None):
+    @api.one
+    def generate_tax_code(self, company_id):
         '''
         This function generates the tax codes from the templates of tax code that are children of the given one passed
         in argument. Then it returns a dictionary with the mappping between the templates and the real objects.
 
-        :param tax_code_root_id: id of the root of all the tax code templates to process
         :param company_id: id of the company the wizard is running for
         :returns: dictionary with the mappping between the templates and the real objects.
         :rtype: dict
         '''
-        obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_tax_code = self.pool.get('account.tax.code')
+        obj_tax_code = self.env['account.tax.code']
         tax_code_template_ref = {}
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+        company = self.env['res.company'].browse(company_id)
 
-        #find all the children of the tax_code_root_id
-        children_tax_code_template = tax_code_root_id and obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id') or []
-        for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
+        #find all the children
+        children_tax_code_template = self.search([('parent_id', 'child_of', self.ids)], order='id') or []
+        for tax_code_template in children_tax_code_template:
             vals = {
-                'name': (tax_code_root_id == tax_code_template.id) and company.name or tax_code_template.name,
+                'name': (self.id == tax_code_template.id) and company.name or tax_code_template.name,
                 'code': tax_code_template.code,
                 'info': tax_code_template.info,
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
@@ -2054,22 +2053,18 @@ class account_tax_code_template(models.Model):
                 'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
-            rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('code', '=', vals['code']),('company_id', '=', vals['company_id'])], context=context)
+            rec_list = obj_tax_code.search([('name', '=', vals['name']),('code', '=', vals['code']), ('company_id', '=', vals['company_id'])])
             if not rec_list:
                 #if not yet, create it
-                new_tax_code = obj_tax_code.create(cr, uid, vals)
+                new_tax_code = obj_tax_code.create(vals)
                 #recording the new tax code to do the mapping
-                tax_code_template_ref[tax_code_template.id] = new_tax_code
+                tax_code_template_ref[tax_code_template.id] = new_tax_code.id
         return tax_code_template_ref
 
+    @api.multi
+    @api.depends('name', 'code')
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
-        return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
-                for x in reads]
+        return [(record.id, (record.code and record.code + ' - ' or '') + record.name) for record in self]
 
     _constraints = [
         (osv.osv._check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
@@ -2151,26 +2146,24 @@ class account_tax_template(models.Model):
     price_include = fields.Boolean(string='Tax Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
+    @api.multi
+    @api.depends('name', 'description')
+    def name_get(self):
         res = []
-        for record in self.read(cr, uid, ids, ['description','name'], context=context):
-            name = record['description'] and record['description'] or record['name']
-            res.append((record['id'],name ))
+        for record in self:
+            name = record.description and record.description or record.name
+            res.append((record.id, name))
         return res
 
-    def _default_company(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+    @api.model
+    def _default_company(self):
+        return self.env.user.comapny_id.id
 
-    def _generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
+    @api.multi
+    def _generate_tax(self, tax_code_template_ref, company_id):
         """
         This method generate taxes from templates.
 
-        :param tax_templates: list of browse record of the tax templates to process
         :param tax_code_template_ref: Taxcode templates reference.
         :param company_id: id of the company the wizard is running for
         :returns:
@@ -2179,14 +2172,12 @@ class account_tax_template(models.Model):
             'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
-        if context is None:
-            context = {}
         res = {}
         todo_dict = {}
         tax_template_to_tax = {}
-        for tax in tax_templates:
+        for tax in self:
             vals_tax = {
-                'name':tax.name,
+                'name': tax.name,
                 'sequence': tax.sequence,
                 'amount': tax.amount,
                 'type': tax.type,
@@ -2211,10 +2202,10 @@ class account_tax_template(models.Model):
                 'type_tax_use': tax.type_tax_use,
                 'price_include': tax.price_include
             }
-            new_tax = self.pool.get('account.tax').create(cr, uid, vals_tax)
-            tax_template_to_tax[tax.id] = new_tax
+            new_tax = self.env['account.tax'].create(vals_tax)
+            tax_template_to_tax[tax.id] = new_tax.id
             #as the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax] = {
+            todo_dict[new_tax.id] = {
                 'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
                 'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
             }
@@ -2234,7 +2225,8 @@ class account_fiscal_position_template(models.Model):
     tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
     note = fields.Text(string='Notes')
 
-    def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
+    @api.model
+    def generate_fiscal_position(self, chart_temp_id, tax_template_ref, acc_template_ref, company_id):
         """
         This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
 
@@ -2244,25 +2236,23 @@ class account_fiscal_position_template(models.Model):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
-        if context is None:
-            context = {}
-        obj_tax_fp = self.pool.get('account.fiscal.position.tax')
-        obj_ac_fp = self.pool.get('account.fiscal.position.account')
-        obj_fiscal_position = self.pool.get('account.fiscal.position')
-        fp_ids = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
-        for position in self.browse(cr, uid, fp_ids, context=context):
-            new_fp = obj_fiscal_position.create(cr, uid, {'company_id': company_id, 'name': position.name, 'note': position.note})
+        obj_tax_fp = self.env['account.fiscal.position.tax']
+        obj_ac_fp = self.env['account.fiscal.position.account']
+        obj_fiscal_position = self.env['account.fiscal.position']
+        positions = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
+        for position in positions:
+            new_fp = obj_fiscal_position.create({'company_id': company_id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
                 obj_tax_fp.create(cr, uid, {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp
+                    'position_id': new_fp.id
                 })
             for acc in position.account_ids:
-                obj_ac_fp.create(cr, uid, {
+                obj_ac_fp.create({
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp
+                    'position_id': new_fp.id
                 })
         return True
 
@@ -2333,7 +2323,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
             result.append(chart_template.id)
         return result
 
-    def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
+    @api.model
+    def onchange_tax_rate(self, rate=False):
         return {'value': {'purchase_tax_rate': rate or False}}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
@@ -2407,38 +2398,40 @@ class wizard_multi_charts_accounts(models.TransientModel):
         })
         return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        context = dict(self._context or {})
+        res = super(wizard_multi_charts_accounts, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
-        acc_template_obj = self.pool.get('account.chart.template')
-        company_obj = self.pool.get('res.company')
+        CompanyObj = self.env['res.company']
 
-        company_ids = company_obj.search(cr, uid, [], context=context)
+        companies = CompanyObj.search([])
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
         cr.execute("SELECT company_id FROM account_account WHERE deprecated = 'f' AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
-        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
+        unconfigured_cmp = list(set(companies.ids) - set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
+                res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in company_obj.browse(cr, uid, unconfigured_cmp)]
+                    cmp_select = [(line.id, line.name) for line in CompanyObj.browse(unconfigured_cmp)]
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    def check_created_journals(self, cr, uid, vals_journal, company_id, context=None):
+    @api.model
+    def check_created_journals(self, vals_journal, company_id):
         """
         This method used for checking journals already created or not. If not then create new journal.
         """
-        obj_journal = self.pool.get('account.journal')
-        rec_list = obj_journal.search(cr, uid, [('name','=', vals_journal['name']),('company_id', '=', company_id)], context=context)
+        JournalObj = self.env['account.journal']
+        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company_id)])
         if not rec_list:
-            obj_journal.create(cr, uid, vals_journal, context=context)
+            JournalObj.create(vals_journal)
         return True
 
-    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+    @api.model
+    def generate_journals(self, chart_template_id, acc_template_ref, company_id):
         """
         This method is used for creating journals.
 
@@ -2447,25 +2440,26 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
-        journal_data = self._prepare_all_journals(cr, uid, chart_template_id, acc_template_ref, company_id, context=context)
+        journal_data = self._prepare_all_journals(chart_template_id, acc_template_ref, company_id)
         for vals_journal in journal_data:
-            self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
+            self.check_created_journals(vals_journal, company_id)
         return True
 
-    def _prepare_all_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+    @api.model
+    def _prepare_all_journals(self, chart_template_id, acc_template_ref, company_id):
         def _get_analytic_journal(journal_type):
             # Get the analytic journal
             data = False
             try:
                 if journal_type in ('sale', 'sale_refund'):
-                    data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
+                    data = self.env.ref('account.analytic_journal_sale')
                 elif journal_type in ('purchase', 'purchase_refund'):
-                    data = obj_data.get_object_reference(cr, uid, 'account', 'exp')
+                    data = self.env.ref('account.exp')
                 elif journal_type == 'general':
                     pass
             except ValueError:
                 pass
-            return data and data[1] or False
+            return data or False
 
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
@@ -2498,9 +2492,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             'situation': _('OPEJ'),
         }
 
-        obj_data = self.pool.get('ir.model.data')
-        analytic_journal_obj = self.pool.get('account.analytic.journal')
-        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+        template = self.env['account.chart.template'].browse(chart_template_id)
 
         journal_data = []
         for journal_type in ['sale', 'purchase', 'sale_refund', 'purchase_refund', 'general', 'situation']:
@@ -2517,7 +2509,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
             journal_data.append(vals)
         return journal_data
 
-    def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+    @api.model
+    def generate_properties(self, chart_template_id, acc_template_ref, company_id):
         """
         This method used for creating properties.
 
@@ -2526,38 +2519,38 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
-        property_obj = self.pool.get('ir.property')
-        field_obj = self.pool.get('ir.model.fields')
+        PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable','res.partner','account.account'),
-            ('property_account_payable','res.partner','account.account'),
-            ('property_account_expense_categ','product.category','account.account'),
-            ('property_account_income_categ','product.category','account.account'),
-            ('property_account_expense','product.template','account.account'),
-            ('property_account_income','product.template','account.account'),
+            ('property_account_receivable', 'res.partner','account.account'),
+            ('property_account_payable', 'res.partner','account.account'),
+            ('property_account_expense_categ', 'product.category','account.account'),
+            ('property_account_income_categ', 'product.category','account.account'),
+            ('property_account_expense', 'product.template','account.account'),
+            ('property_account_income', 'product.template','account.account'),
         ]
-        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+        template = self.env['account.chart.template'].browse(chart_template_id)
         for record in todo_list:
             account = getattr(template, record[0])
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
-                field = field_obj.search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
+                fields = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])])
                 vals = {
                     'name': record[0],
                     'company_id': company_id,
-                    'fields_id': field[0],
+                    'fields_id': fields.ids[0],
                     'value': value,
                 }
-                property_ids = property_obj.search(cr, uid, [('name','=', record[0]),('company_id', '=', company_id)], context=context)
+                property_ids = PropertyObj.search([('name','=', record[0]), ('company_id', '=', company_id)])
                 if property_ids:
                     #the property exist: modify it
-                    property_obj.write(cr, uid, property_ids, vals, context=context)
+                    property_ids.write(vals)
                 else:
                     #create the property
-                    property_obj.create(cr, uid, vals, context=context)
+                    PropertyObj.create(vals)
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
+    @api.model
+    def _install_template(self, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None, tax_code_ref=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
 
@@ -2581,19 +2574,20 @@ class wizard_multi_charts_accounts(models.TransientModel):
             taxes_ref = {}
         if tax_code_ref is None:
             tax_code_ref = {}
-        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
+        template = self.env['account.chart.template'].browse(template_id)
         if template.parent_id:
-            tmp1, tmp2, tmp3 = self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
+            tmp1, tmp2, tmp3 = self._install_template(template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
             tax_code_ref.update(tmp3)
-        tmp1, tmp2, tmp3 = self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
+        tmp1, tmp2, tmp3 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         tax_code_ref.update(tmp3)
         return acc_ref, taxes_ref, tax_code_ref
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
+    @api.model
+    def _load_template(self, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None, tax_code_ref=None):
         '''
         This function generates all the objects from the templates
 
@@ -2617,114 +2611,112 @@ class wizard_multi_charts_accounts(models.TransientModel):
             taxes_ref = {}
         if tax_code_ref is None:
             tax_code_ref = {}
-        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
-        obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_acc_tax = self.pool.get('account.tax')
-        obj_tax_temp = self.pool.get('account.tax.template')
-        obj_acc_template = self.pool.get('account.account.template')
-        obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
+        template = self.env['account.chart.template'].browse(template_id)
+        AccountTaxObj = self.env['account.tax']
 
         # create all the tax code.
-        tax_code_ref.update(obj_tax_code_template.generate_tax_code(cr, uid, template.tax_code_root_id.id, company_id, context=context))
+        tax_code_ref.update(self.env['account.tax.code.template'].generate_tax_code(template.tax_code_root_id.id, company_id))
 
         # Generate taxes from templates.
         tax_templates = [x for x in template.tax_template_ids]
-        generated_tax_res = obj_tax_temp._generate_tax(cr, uid, tax_templates, tax_code_ref, company_id, context=context)
+        generated_tax_res = self.env['account.tax.template']._generate_tax(tax_templates, tax_code_ref, company_id)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
-        account_template_ref = obj_acc_template.generate_account(cr, uid, template_id, taxes_ref, account_ref, code_digits, company_id, context=context)
+        account_template_ref = self.env['account.account.template'].generate_account(template_id, taxes_ref, account_ref, code_digits, company_id)
         account_ref.update(account_template_ref)
 
         # writing account values on tax after creation of accounts
-        for key,value in generated_tax_res['account_dict'].items():
+        for key, value in generated_tax_res['account_dict'].items():
             if value['account_collected_id'] or value['account_paid_id']:
-                obj_acc_tax.write(cr, uid, [key], {
+                AccountTaxObj.write([key], {
                     'account_collected_id': account_ref.get(value['account_collected_id'], False),
                     'account_paid_id': account_ref.get(value['account_paid_id'], False),
                 })
 
         # Create Journals
-        self.generate_journals(cr, uid, template_id, account_ref, company_id, context=context)
+        self.generate_journals(template_id, account_ref, company_id)
 
         # generate properties function
-        self.generate_properties(cr, uid, template_id, account_ref, company_id, context=context)
+        self.generate_properties(template_id, account_ref, company_id)
 
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        obj_fiscal_position_template.generate_fiscal_position(cr, uid, template_id, taxes_ref, account_ref, company_id, context=context)
+        self.env['account.fiscal.position.template'].generate_fiscal_position(template_id, taxes_ref, account_ref, company_id)
 
         return account_ref, taxes_ref, tax_code_ref
 
-    def _create_tax_templates_from_rates(self, cr, uid, obj_wizard, company_id, context=None):
+    @api.one
+    def _create_tax_templates_from_rates(self, company_id):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
         it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
         to the provided sale/purchase rates. Then it saves the new tax templates as default taxes to use for this chart
         template.
 
-        :param obj_wizard: browse record of wizard to generate COA from templates
         :param company_id: id of the company for wich the wizard is running
         :return: True
         '''
-        obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_tax_temp = self.pool.get('account.tax.template')
-        chart_template = obj_wizard.chart_template_id
+        obj_tax_temp = self.env['account.tax.template']
+        chart_template = self.chart_template_id
         vals = {}
-        all_parents = self._get_chart_parent_ids(cr, uid, chart_template, context=context)
+        all_parents = self._get_chart_parent_ids(chart_template)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
-            value = obj_wizard.sale_tax_rate
-            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
-            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
-            value = obj_wizard.purchase_tax_rate
-            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
-            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            value = self.sale_tax_rate
+            ref_taxs = obj_tax_temp.search([('type_tax_use', 'in', ('sale', 'all')), ('chart_template_id', 'in', all_parents)],
+                order="sequence, id desc", limit=1)
+            ref_taxs.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            value = self.purchase_tax_rate
+            ref_taxs = obj_tax_temp.search([('type_tax_use', 'in', ('purchase', 'all')), ('chart_template_id', 'in', all_parents)],
+                order="sequence, id desc", limit=1)
+            ref_taxs.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
-    def execute(self, cr, uid, ids, context=None):
+    @api.multi
+    def execute(self):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if self._uid != SUPERUSER_ID and not self.env['res.users'].has_group('base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
-        obj_data = self.pool.get('ir.model.data')
-        ir_values_obj = self.pool.get('ir.values')
-        obj_wizard = self.browse(cr, uid, ids[0])
-        company_id = obj_wizard.company_id.id
+        obj_data = self.env['ir.model.data']
+        ir_values_obj = self.env['ir.values']
+        company_id = self.company_id.id
 
-        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
+        self.company_id.write({'currency_id': self.currency_id.id})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
-        if company_id==1:
-            for ref in (('product','list_price'),('product','standard_price'),('product','list0'),('purchase','list0')):
+        if company_id == 1:
+            for ref in (('product', 'list_price'), ('product', 'standard_price'), ('product', 'list0'), ('purchase', 'list0')):
                 try:
-                    tmp2 = obj_data.get_object_reference(cr, uid, *ref)
+                    tmp2 = obj_data.get_object_reference(*ref)
                     if tmp2: 
-                        self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
-                            'currency_id': obj_wizard.currency_id.id
+                        self.pool[tmp2[0]].write(tmp2[1], {
+                            'currency_id': self.currency_id.id
                         })
                 except ValueError:
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
+        self._create_tax_templates_from_rates(company_id)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
+        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=s.code_digits, obj_wizard=self)
 
         # write values of default taxes for product as super user
-        if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
-        if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
+        if self.sale_tax and taxes_ref:
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
+        if self.purchase_tax and taxes_ref:
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
+        self._create_bank_journals_from_o2m(company_id, acc_template_ref)
         return {}
 
-    def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
+    @api.model
+    def _prepare_bank_journal(self, line, current_num, default_account_id, company_id):
         '''
         This function prepares the value to use for the creation of a bank journal created through the wizard of
         generating COA from templates.
@@ -2736,9 +2728,6 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :return: mapping of field names and values
         :rtype: dict
         '''
-        obj_data = self.pool.get('ir.model.data')
-        obj_journal = self.pool.get('account.journal')
-        
 
         # we need to loop again to find next number for journal code
         # because we can't rely on the value current_num as,
@@ -2747,8 +2736,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         for num in xrange(current_num, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
-            if not ids:
+            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)])
+            if not Journals:
                 break
         else:
             raise osv.except_osv(_('Error!'), _('Cannot generate an unused journal code.'))
@@ -2768,7 +2757,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         
         return vals
 
-    def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):
+    @api.model
+    def _prepare_bank_account(self, line, new_code, acc_template_ref, ref_acc_bank, company_id):
         '''
         This function prepares the value to use for the creation of the default debit and credit accounts of a
         bank journal created through the wizard of generating COA from templates.
@@ -2783,13 +2773,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :return: mapping of field names and values
         :rtype: dict
         '''
-        obj_data = self.pool.get('ir.model.data')
 
         # Get the id of the user types fr-or cash and bank
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
-        cash_type = tmp and tmp[1] or False
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
-        bank_type = tmp and tmp[1] or False
+        cash_type = self.env.ref('account.data_account_type_cash') or False
+        bank_type = self.env.ref('account.data_account_type_bank') or False
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'],
@@ -2800,7 +2787,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 'company_id': company_id,
         }
 
-    def _create_bank_journals_from_o2m(self, cr, uid, obj_wizard, company_id, acc_template_ref, context=None):
+    @api.one
+    def _create_bank_journals_from_o2m(self, company_id, acc_template_ref):
         '''
         This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
         wizard.
@@ -2811,21 +2799,20 @@ class wizard_multi_charts_accounts(models.TransientModel):
             of the accounts that have been generated from them.
         :return: True
         '''
-        obj_acc = self.pool.get('account.account')
-        obj_journal = self.pool.get('account.journal')
-        code_digits = obj_wizard.code_digits
+        AccountObj = self.env['account.account']
+        code_digits = self.code_digits
 
         # Build a list with all the data to process
         journal_data = []
-        if obj_wizard.bank_accounts_id:
-            for acc in obj_wizard.bank_accounts_id:
+        if self.bank_accounts_id:
+            for acc in self.bank_accounts_id:
                 vals = {
                     'acc_name': acc.acc_name,
                     'account_type': acc.account_type,
                     'currency_id': acc.currency_id.id,
                 }
                 journal_data.append(vals)
-        ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
+        ref_acc_bank = self.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
 
@@ -2834,18 +2821,18 @@ class wizard_multi_charts_accounts(models.TransientModel):
             # Seek the next available number for the account code
             while True:
                 new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
-                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
-                if not ids:
+                Accounts = AccountObj.search([('code', '=', new_code), ('company_id', '=', company_id)])
+                if not Accounts:
                     break
                 else:
                     current_num += 1
             # Create the default debit/credit accounts for this bank journal
-            vals = self._prepare_bank_account(cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=context)
-            default_account_id  = obj_acc.create(cr, uid, vals, context=context)
+            vals = self._prepare_bank_account(line, new_code, acc_template_ref, ref_acc_bank, company_id)
+            default_account  = AccountObj.create(vals)
 
             #create the bank journal
-            vals_journal = self._prepare_bank_journal(cr, uid, line, current_num, default_account_id, company_id, context=context)
-            obj_journal.create(cr, uid, vals_journal)
+            vals_journal = self._prepare_bank_journal(line, current_num, default_account.id, company_id)
+            self.env['account.journal'].create(vals_journal)
             current_num += 1
         return True
 
