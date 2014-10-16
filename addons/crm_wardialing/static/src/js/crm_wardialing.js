@@ -208,7 +208,7 @@ openerp.crm_wardialing = function(instance) {
                 openerp.client.action_manager.do_action({
                     type: 'ir.actions.act_window',
                     res_model: "crm.lead",
-                    res_id: phonecall.opportunity_id[0],
+                    res_id: phonecall.opportunity_id,
                     views: [[data[1], 'form']],
                     target: 'current',
                     context: {},
@@ -225,7 +225,7 @@ openerp.crm_wardialing = function(instance) {
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
                 res_model: "res.partner",
-                res_id: phonecall.partner_id[0],
+                res_id: phonecall.partner_id,
                 views: [[false, 'form']],
                 target: 'current',
                 context: {},
@@ -295,6 +295,8 @@ openerp.crm_wardialing = function(instance) {
         //action done when the button "Call Log" is clicked
         change_log: function(){
             var id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
+            console.log(this.phonecalls[id])
+            
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
                 key2: 'client_action_multi',
@@ -323,8 +325,8 @@ openerp.crm_wardialing = function(instance) {
                             'default_composition_mode': 'comment',
                             'default_email_to': widget.get('email'),
                             'default_model': 'crm.lead',
-                            'default_res_id': this.phonecalls[id].opportunity_id[0],
-                            'default_partner_ids': [this.phonecalls[id].partner_id[0]],
+                            'default_res_id': this.phonecalls[id].opportunity_id,
+                            'default_partner_ids': [this.phonecalls[id].partner_id],
                         },
                 views: [[false, 'form']],
             });
@@ -371,16 +373,17 @@ openerp.crm_wardialing = function(instance) {
                     var lead_model = new openerp.web.Model("crm.lead");
                     lead_model.call("create_call_center_call", [self.id]);
                 });
-            }
-
-            this.$el.find(".oe_kanban_draghandle").mouseenter(
+                this.$el.find(".oe_kanban_draghandle").mouseenter(
                 function(){
                     self.$el.find(".oe_dial_hidden_button").css("visibility","visible");
-            });
-            this.$el.find(".oe_kanban_draghandle").mouseleave(
-                function(){
-                    self.$el.find(".oe_dial_hidden_button").css("visibility","hidden");
-            });
+                });
+                this.$el.find(".oe_kanban_draghandle").mouseleave(
+                    function(){
+                        self.$el.find(".oe_dial_hidden_button").css("visibility","hidden");
+                });
+            }
+
+            
         },
     });
     

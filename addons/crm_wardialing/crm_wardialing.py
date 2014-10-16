@@ -85,6 +85,7 @@ class crm_phonecall(models.Model):
 		print(self.opportunity_id.name)
 		return {"id": self.id,
 				"description": self.description,
+				"partner_id": self.partner_id.id,
 				"partner_name": self.partner_id.name,
 				"partner_image_small": self.partner_id.image_small,
 				"partner_email": self.partner_id.email,
@@ -129,7 +130,7 @@ class crm_phonecall_log_wizard(models.TransientModel):
 	
 	@api.multi
 	def _default_phonecall(self):
-		return self._context.get('phonecall').get('opportunity_id')[1]
+		return self._context.get('phonecall').get('opportunity_name')
 
 	description = fields.Text('Description', default = _default_description)
 	opportunity_name = fields.Char(default = _default_phonecall, readonly=True)
