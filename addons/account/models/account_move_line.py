@@ -544,7 +544,7 @@ class account_move_line(models.Model):
             if not partner:
                 return []
             args.append(('partner_id', '=', partner[0]))
-        return super(account_move_line, self).search(args, offset, limit, order, count)
+        return super(account_move_line, self).search(args, offset, limit, order, count=count)
 
     @api.multi
     def prepare_move_lines_for_reconciliation_widget(target_currency=False, target_date=False):
