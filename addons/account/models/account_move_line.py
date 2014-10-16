@@ -265,7 +265,7 @@ class account_move_line(models.Model):
     credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed'), ('deprecated', '=', False)],
-        default=lambda self: self.env._context.get('account_id', False))
+        default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
         help="The move of this entry line.", index=2, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
