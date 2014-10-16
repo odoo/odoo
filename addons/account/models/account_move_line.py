@@ -547,7 +547,7 @@ class account_move_line(models.Model):
         return super(account_move_line, self).search(args, offset, limit, order, count=count)
 
     @api.multi
-    def prepare_move_lines_for_reconciliation_widget(target_currency=False, target_date=False):
+    def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
