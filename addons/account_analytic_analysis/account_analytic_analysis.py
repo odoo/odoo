@@ -217,8 +217,10 @@ class account_analytic_account(osv.osv):
                             FROM account_analytic_line \
                             JOIN account_analytic_journal \
                                 ON account_analytic_line.journal_id = account_analytic_journal.id \
+                            JOIN hr_timesheet_invoice_factor ON account_analytic_line.to_invoice = hr_timesheet_invoice_factor.id \
                             WHERE account_analytic_line.account_id IN %s \
                                 AND account_analytic_journal.type='general' \
+                                AND hr_timesheet_invoice_factor.factor <> 100.00 \
                             GROUP BY account_analytic_line.account_id",(parent_ids,))
                     ff =  cr.fetchall()
                     for account_id, hq in ff:
