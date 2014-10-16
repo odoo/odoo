@@ -592,7 +592,11 @@ def get_pg_type(f, type_override=None):
     if field_type in FIELDS_TO_PGTYPES:
         pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
-        if f.digits:
+        # checking explicitly for None allows to have different values such as
+        # 0 or False for specific fields where a numeric is required without
+        # setting a precision (e.g. rounding precision ratios). This should
+        # however not be the default as numeric is less efficiant than float8
+        if f.digits is not None:
             pg_type = ('numeric', 'NUMERIC')
         else:
             pg_type = ('float8', 'DOUBLE PRECISION')
