@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="all_versions">
+        <t t-foreach="snapshots" t-as="item">
+            <li class="snapshot" t-att-data-snapshot_id="item.id">
+                <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
+                <t t-if="item.bold == 0 ">
+                    <a href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
+                </t>
+                <t t-if="item.bold == 1 ">
+                    <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id"> <b><t t-esc="item.name"></t></b> </a>
+                </t>
+            </li>
+        </t>
+    </t>
+
+    <t t-extend="website.editorbar">
+        <t t-jquery=".navbar-header form button" t-operation="after">
+            <span id="master_edit">
+                <a href="#" id="master_edit_button" data-action="save_as_draft" class="btn btn-link btn-xs">Save as Draft</a>
+            </span>
+            
+        </t>
+    </t>
+
+    <t t-name="experiment_menu">
+        <li class="experiment"><a href="#" data-action="manage_experiment">Manage Experiments</a></li>
+        <li class="experiment"><a href="#" data-action="statistics">Statistics</a></li>
+    </t>
+
+    <t t-name="website_version.GoogleAccess">
+        <div id="CheckGoogleAccess" class="odoo_google_token" >
+                <button class="GoogleAccess"> Authorize google </button>
+        </div>
+    </t>
+
+    <t t-name="website_version.create_experiment">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Create an experiment</h4>
+              </div>
+                <div class="modal-body">
+                    <t t-if="snapshots.length != 0 and config == 1">                
+                        <div class="form-group row">
+                            <label for="formFieldEditor-label" class="col-md-3 control-label">Experiment Name</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-field-label name"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
+                            <select class="selectpicker col-md-3">
+                                <t t-foreach="goals" t-as="item">
+                                    <option t-att-value="item.id"><t t-esc="item.name"></t></option>
+                                </t>
+                            </select>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Original</label>
+                            <div class="col-md-9 col-sm-8 ">
+                                <input type="checkbox" class="form-field-required" checked="checked" disabled="disabled"/>
+                            </div>
+                        </div>
+                        
+                        <t t-foreach="snapshots" t-as="item">       
+                            <div class="form-group row">
+                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
+                                <div class="col-md-9 col-sm-8 ">
+                                    <input type="checkbox" class="form-field-required version" t-att-data-version_id="item.id" />
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-if="snapshots.length == 0 and config == 1">
+                        <div>
+                            <p>You must have at least one version for this page to create a new experiment.</p>
+                        </div>
+                    </t>
+
+                    <t t-if= "config == 0">
+                        <div>
+                            <p>You must configure your account.</p>
+                        </div>
+                    </t>
+
+                </div>
+              <div class="modal-footer">
+                <t t-if="snapshots.length != 0 and config == 1"> 
+                    <button type="button" class="btn btn-primary create">Create</button>
+                </t>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </t>      
+</templates>
