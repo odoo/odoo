@@ -803,8 +803,8 @@ class account_period(models.Model):
         for period in self:
             if period.fiscalyear_id.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
-        cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
-        cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
+        self._cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
+        self._cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
         self.invalidate_cache()
         return True
 
@@ -982,7 +982,7 @@ class account_move(models.Model):
             if not move.journal_id.update_posted:
                 raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if ids:
-            cr.execute('UPDATE account_move '\
+            self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(self.ids),))
             self.invalidate_cache()
@@ -1098,8 +1098,8 @@ class account_move(models.Model):
 
         # find the first line of this move with the current mode
         # or create it if it doesn't exist
-        cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode))
-        res = cr.fetchone()
+        self._cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode))
+        res = self._cr.fetchone()
         if res:
             line_id = res[0]
         else:
@@ -1119,29 +1119,29 @@ class account_move(models.Model):
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
-        cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode2))
-        res = cr.fetchone()
+        self._cr.execute('select id from account_move_line where move_id=%s and centralisation=%s limit 1', (move.id, mode2))
+        res = self._cr.fetchone()
         if res:
             line_id2 = res[0]
         else:
             line_id2 = 0
 
-        cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
-        result = cr.fetchone()[0] or 0.0
-        cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id.id))
+        self._cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
+        result = self._cr.fetchone()[0] or 0.0
+        self._cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id.id))
         account_move_line_obj.with_context(context).invalidate_cache([mode2], [line_id.id])
 
         #adjust also the amount in currency if needed
-        cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
-        for row in cr.dictfetchall():
+        self._cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
+        for row in self._cr.dictfetchall():
             currency_id = currency_obj.with_context(context).browse(row['currency_id'])
             if not currency_obj.is_zero(currency_id, row['amount_currency']):
                 amount_currency = row['amount_currency'] * -1
                 account_id = amount_currency > 0 and move.journal_id.default_debit_account_id.id or move.journal_id.default_credit_account_id.id
-                cr.execute('select id from account_move_line where move_id=%s and centralisation=\'currency\' and currency_id = %slimit 1', (move.id, row['currency_id']))
-                res = cr.fetchone()
+                self._cr.execute('select id from account_move_line where move_id=%s and centralisation=\'currency\' and currency_id = %slimit 1', (move.id, row['currency_id']))
+                res = self._cr.fetchone()
                 if res:
-                    cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
+                    self._cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
                     account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
