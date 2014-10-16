@@ -26,10 +26,9 @@ from operator import itemgetter
 import time
 
 import openerp
-from openerp import SUPERUSER_ID, api
+from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import fields, osv, expression
-from openerp.tools.translate import _
+from openerp.osv import osv, expression
 from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
@@ -323,12 +322,12 @@ class account_account(models.Model):
         journal_obj = self.pool.get('account.journal')
         jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
         if not jids:
-            raise osv.except_osv(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance."))
+            raise Warning(_("You need an Opening journal with centralisation checked to set the initial balance."))
 
         period_obj = self.pool.get('account.period')
         pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
         if not pids:
-            raise osv.except_osv(_('Error!'),_("There is no opening/closing period defined, please create one to set the initial balance."))
+            raise Warning(_("There is no opening/closing period defined, please create one to set the initial balance."))
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
@@ -345,7 +344,7 @@ class account_account(models.Model):
             }, context=context)
         else:
             if diff<0.0:
-                raise osv.except_osv(_('Error!'),_("Unable to adapt the initial balance (negative value)."))
+                raise Warning(_("Unable to adapt the initial balance (negative value)."))
             nameinv = (name=='credit' and 'debit') or 'credit'
             move_id = move_obj.create(cr, uid, {
                 'name': _('Opening Balance'),
@@ -462,14 +461,14 @@ class account_account(models.Model):
     def _check_moves(self, method):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)]):
             if method == 'write':
-                raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
+                raise Warning(_('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
-                raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
+                raise Warning(_('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)])
         if partner_prop_acc:
-            raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
+            raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
 
     @api.multi
@@ -481,7 +480,7 @@ class account_account(models.Model):
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(['company_id'])]:
                     if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
+                        raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
         if 'deprecated' in vals and not vals['deprecated']:
             self._check_moves('write')
         return super(account_account, self).write(vals)
@@ -577,7 +576,7 @@ class account_journal(models.Model):
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)])
                 if move_lines:
-                    raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
+                    raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
 
     @api.model
@@ -802,7 +801,7 @@ class account_period(models.Model):
         mode = 'draft'
         for period in self:
             if period.fiscalyear_id.state == 'done':
-                raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
+                raise Warning(_('You can not re-open a period which belongs to closed fiscal year'))
         self._cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
         self._cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
         self.invalidate_cache()
@@ -823,7 +822,7 @@ class account_period(models.Model):
         if 'company_id' in vals:
             move_lines = self.env['account.move.line'].search([('period_id', 'in', self.ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning!'), _('This journal already contains items for this period, therefore you cannot modify its company field.'))
+                raise Warning(_('This journal already contains items for this period, therefore you cannot modify its company field.'))
         return super(account_period, self).write(vals)
 
     @api.model
@@ -837,9 +836,9 @@ class account_period(models.Model):
         period_date_stop = period_to.date_stop
         company2_id = period_to.company_id.id
         if company1_id != company2_id:
-            raise osv.except_osv(_('Error!'), _('You should choose the periods that belong to the same company.'))
+            raise Warning(_('You should choose the periods that belong to the same company.'))
         if period_date_start > period_date_stop:
-            raise osv.except_osv(_('Error!'), _('Start period should precede then end period.'))
+            raise Warning(_('Start period should precede then end period.'))
 
         # /!\ We do not include a criterion on the company_id field below, to allow producing consolidated reports
         # on multiple companies. It will only work when start/end periods are selected and no fiscal year is chosen.
@@ -946,7 +945,7 @@ class account_move(models.Model):
         valid_moves = self.validate()
 
         if not valid_moves:
-            raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
+            raise Warning(_('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
         SequenceObj = self.env['ir.sequence']
         for move in self.browse(valid_moves):
             if move.name =='/':
@@ -960,7 +959,7 @@ class account_move(models.Model):
                         ctx = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
                         new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
                     else:
-                        raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
+                        raise Warning(_('Please define a sequence on the journal.'))
 
                 if new_name:
                     move.write({'name':new_name})
@@ -980,7 +979,7 @@ class account_move(models.Model):
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
-                raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                raise Warning(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if ids:
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
@@ -1047,9 +1046,7 @@ class account_move(models.Model):
         toremove = []
         for move in self:
             if move['state'] != 'draft':
-                raise osv.except_osv(_('User Error!'),
-                        _('You cannot delete a posted journal entry "%s".') % \
-                                move['name'])
+                raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
               # About to remove 'invoice' field from 'account.move.line' object
 #             for line in move.line_id:
 #                 if line.invoice:
@@ -1085,15 +1082,13 @@ class account_move(models.Model):
             account_id = move.journal_id.default_debit_account_id.id
             mode2 = 'debit'
             if not account_id:
-                raise osv.except_osv(_('User Error!'),
-                        _('There is no default debit account defined \n' \
+                raise Warning(_('There is no default debit account defined \n' \
                                 'on journal "%s".') % move.journal_id.name)
         else:
             account_id = move.journal_id.default_credit_account_id.id
             mode2 = 'credit'
             if not account_id:
-                raise osv.except_osv(_('User Error!'),
-                        _('There is no default credit account defined \n' \
+                raise Warning(_('There is no default credit account defined \n' \
                                 'on journal "%s".') % move.journal_id.name)
 
         # find the first line of this move with the current mode
@@ -1188,11 +1183,11 @@ class account_move(models.Model):
                 if not company_id:
                     company_id = line.account_id.company_id.id
                 if not company_id == line.account_id.company_id.id:
-                    raise osv.except_osv(_('Error!'), _("Cannot create moves for different companies."))
+                    raise Warning(_("Cannot create moves for different companies."))
 
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise osv.except_osv(_('Error!'), _("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
+                        raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
 
             if abs(amount) < 10 ** -4:
                 # If the move is balanced
@@ -1277,7 +1272,7 @@ class account_move_reconcile(models.Model):
     def unlink(self):
         for move_rec in self:
             if move_rec.opening_reconciliation:
-                raise osv.except_osv(_('Error!'), _('You cannot unreconcile journal items if they has been generated by the \
+                raise Warning(_('You cannot unreconcile journal items if they has been generated by the \
                                                         opening/closing fiscal year process.'))
         return super(account_move_reconcile, self).unlink()
     
@@ -1970,7 +1965,7 @@ class account_add_tmpl_wizard(models.TransientModel):
         ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
         accounts = None
         if not ptids or not ptids[0]['code']:
-            raise osv.except_osv(_('Error!'), _('There is no parent code for the template account.'))
+            raise Warning(_('There is no parent code for the template account.'))
             accounts = self.env['account.account'].search([('code', '=', ptids[0]['code'])])
         return accounts.ids and accounts.ids[0] or False
 
@@ -2737,7 +2732,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             if not Journals:
                 break
         else:
-            raise osv.except_osv(_('Error!'), _('Cannot generate an unused journal code.'))
+            raise Warning(_('Cannot generate an unused journal code.'))
 
         vals = {
                 'name': line['acc_name'],
@@ -2811,7 +2806,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 journal_data.append(vals)
         ref_acc_bank = self.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
-            raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
+            raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
 
         current_num = 1
         for line in journal_data:
