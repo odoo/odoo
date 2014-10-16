@@ -113,7 +113,7 @@ class account_installer(models.TransientModel):
         unconfigured_cmp = self.get_unconfigured_cmp()
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
+                res['fields'][field]['domain'] = [('id', 'in', [cmp.id for cmp in unconfigured_cmp])]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in unconfigured_cmp]
