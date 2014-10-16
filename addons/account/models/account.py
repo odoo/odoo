@@ -1298,33 +1298,30 @@ class account_move_reconcile(models.Model):
                 if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
                     raise Warning(_('You can only reconcile journal items with the same partner.'))
 
-    def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
+    @api.multi
+    def reconcile_partial_check(self, type='auto'):
         total = 0.0
-        for rec in self.browse(cr, uid, ids, context=context):
+        for rec in self:
             for line in rec.line_partial_ids:
                 if line.account_id.currency_id:
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
-            self.pool.get('account.move.line').write(cr, uid,
-                map(lambda x: x.id, rec.line_partial_ids),
-                {'reconcile_id': rec.id },
-                context=context
-            )
+            rec.line_partial_ids.write({'reconcile_id': rec.id })
         return True
 
+    @api.multi
+    @api.depends('name', 'line_partial_ids')
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
         result = []
-        for r in self.browse(cr, uid, ids, context=context):
-            total = reduce(lambda y,t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
+        for r in self:
+            total = reduce(lambda y, t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
             if total:
                 name = '%s (%.2f)' % (r.name, total)
-                result.append((r.id,name))
+                result.append((r.id, name))
             else:
-                result.append((r.id,r.name))
+                result.append((r.id, r.name))
         return result
 
 
