@@ -1166,7 +1166,9 @@ class mail_thread(osv.AbstractModel):
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         if self._mail_flat_thread and not parent_id and thread_id:
-            message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
+            message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model), ('type', '=', 'email')], context=context, order="id ASC", limit=1)
+            if not message_ids:
+                message_ids = message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
