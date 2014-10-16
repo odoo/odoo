@@ -33,8 +33,8 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
-from openerp.osv import fields, osv
 from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 _logger = logging.getLogger(__name__)
 
 class account_installer(models.TransientModel):
@@ -103,7 +103,7 @@ class account_installer(models.TransientModel):
     def check_unconfigured_cmp(self):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp():
-            raise osv.except_osv(_('No Unconfigured Company!'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
+            raise Warning(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
