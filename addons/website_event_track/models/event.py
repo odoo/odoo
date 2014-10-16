@@ -3,6 +3,7 @@
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+from openerp.models import NewId
 
 
 class event_track_tag(models.Model):
@@ -29,7 +30,10 @@ class event_track(models.Model):
 
     @api.one
     def _compute_website_url(self):
-        self.website_url = "/event/%s/track/%s" % (slug(self.event_id), slug(self))
+        if isinstance(self.id, NewId):
+            self.website_url = ''
+        else:
+            self.website_url = "/event/%s/track/%s" % (slug(self.event_id), slug(self))
 
     name = fields.Char('Title', required=True, translate=True)
 
