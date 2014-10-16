@@ -2063,7 +2063,7 @@ class account_tax_code_template(models.Model):
 
     @api.multi
     @api.depends('name', 'code')
-    def name_get(self, cr, uid, ids, context=None):
+    def name_get(self):
         return [(record.id, (record.code and record.code + ' - ' or '') + record.name) for record in self]
 
     _constraints = [
