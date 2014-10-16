@@ -192,8 +192,16 @@ class Experiment(osv.Model):
                         check_b.add(y)
         return True
 
+    def _check_website(self, cr, uid, ids, context=None):
+        for exp in self.browse(cr,uid,ids,context=context):
+            for exp_snap in exp.experiment_snapshot_ids:
+                if not exp_snap.snapshot_id.website_id.id == exp.website_id.id:
+                    return False
+        return True
+
     _constraints = [
         (_check_view, 'This experiment contains a view which is already used in another running experience', ['state']),
+        (_check_website, 'This experiment must have versions which are in the same website', ['website_id', 'experiment_snapshot_ids']),
     ]
 
     _order = 'sequence'
@@ -317,6 +325,8 @@ class google_management(osv.AbstractModel):
         icp = self.pool['ir.config_parameter']
         validity = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE)
         token = icp.get_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE)
+        if not (validity and token):
+            raise Warning("You must configure your account.")
         if datetime.strptime(validity.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) < (datetime.now() + timedelta(minutes=3)):
             token = self.do_refresh_token(cr, uid, context=context)
         return token
