@@ -1001,7 +1001,7 @@ class account_move_line(models.Model):
             if move.date and not vals.get('date'):
                 vals['date'] = move.date
         if ('account_id' in vals) and AccountObj.browse(vals['account_id']).deprecated:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use deprecated account.'))
+            raise Warning(_('You cannot use deprecated account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
         if 'period_id' in vals and vals['period_id']:
