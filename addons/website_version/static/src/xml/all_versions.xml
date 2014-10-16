@@ -43,7 +43,7 @@
                 <h4 class="modal-title">Create an experiment</h4>
               </div>
                 <div class="modal-body">
-                    <t t-if="snapshots.length != 0 ">                
+                    <t t-if="snapshots.length != 0 and config == 1">                
                         <div class="form-group row">
                             <label for="formFieldEditor-label" class="col-md-3 control-label">Experiment Name</label>
                             <div class="col-md-8">
@@ -76,15 +76,21 @@
                             </div>
                         </t>
                     </t>
-                    <t t-if="snapshots.length == 0 ">
+                    <t t-if="snapshots.length == 0 and config == 1">
                         <div>
                             <p>You must have at least one version for this page to create a new experiment.</p>
                         </div>
                     </t>
 
+                    <t t-if= "config == 0">
+                        <div>
+                            <p>You must configure your account.</p>
+                        </div>
+                    </t>
+
                 </div>
               <div class="modal-footer">
-                <t t-if="snapshots.length != 0 "> 
+                <t t-if="snapshots.length != 0 and config == 1"> 
                     <button type="button" class="btn btn-primary create">Create</button>
                 </t>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

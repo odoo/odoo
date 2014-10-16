@@ -197,15 +197,24 @@ class TableExporter(http.Controller):
     def get_all_snapshots_all_goals(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         view = request.registry['ir.ui.view']
-        v = view.browse(cr,uid,[int(view_id)],context=context)
         snap = request.registry['website_version.snapshot']
         goal = request.registry['website_version.goals']
+        website = request.registry['website']
+        icp = request.registry['ir.config_parameter']
+        v = view.browse(cr,uid,[int(view_id)],context=context)
         website_id = request.website.id
         snap_ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
         r1 = snap.read(cr, uid, snap_ids,['id','name'],context=context)
         goal_ids = goal.search(cr, uid, [],context=context)
         r2 = goal.read(cr, uid, goal_ids,['id','name'],context=context)
-        return {'tab_snap':r1, 'tab_goal':r2}
+        ga_key = request.website.google_analytics_key
+        ga_view_id = request.website.google_analytics_view_id
+        rtoken = icp.get_param(cr, 1, 'google_%s_token' % 'management')
+        if ga_key and ga_view_id and rtoken:
+            r3 = 1
+        else:
+            r3 = 0
+        return {'tab_snap':r1, 'tab_goal':r2, 'check_conf': r3}
 
     @http.route(['/website_version/create_experiment'], type = 'json', auth = "public", website = True)
     def create_experiment(self, name, snapshot_ids, objectives):
