@@ -164,6 +164,7 @@ openerp.crm_wardialing = function(instance) {
                             partner_name: partner_name,
                             phone: phonecall.partner_phone,
                             mobile: phonecall.partner_mobile,
+                            description: phonecall.description,
                             email: phonecall.partner_email,
                             title_action: phonecall.opportunity_title_action,
                             planned_revenue: self.formatCurrency(phonecall.opportunity_planned_revenue, phonecall.opportunity_company_currency),
