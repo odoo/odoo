@@ -803,10 +803,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.$el.find(".o_new_account").toggleClass("o_active");
                 self.$el.find(".o_existing_account").toggleClass("o_active");
             });
+            this.$el.find(".pt_btn_synchronize_existing_account").on("click", this.on_sync);
             this.$el.find(".pt_btn_synchronize").on("click", this.on_authenticate_and_sync);
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
+        },
+        renderElement: function() {
+            this.replaceElement(QWeb.render(this.template, {widget: this, project_timesheet: project_timesheet}));
         },
         on_authenticate_and_sync: function() {
             var self = this;
@@ -846,11 +850,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $.when(def).done(function() {
                 console.log("You can go ahead to sync data and retrieve data");
                 //Get Model data and sync with Server and then Retrieve data and store in localstorage
-                self.project_timesheet_model.save_to_server().then(function() {
-                    //Change Screen to Initial Screen, with new data loaded
-                    console.log("Inside save to server completed ::: ");
-                    self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
-                });
+                self.on_sync();
+            });
+        },
+        on_sync: function() {
+            var self = this;
+            this.project_timesheet_model.save_to_server().then(function() {
+                //Change Screen to Initial Screen, with new data loaded
+                console.log("Inside save to server completed ::: ");
+                self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
         },
         set_required: function() {
