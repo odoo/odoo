@@ -170,9 +170,9 @@ class res_partner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        ctx = context.copy()
+        ctx = dict(self._context or {})
         ctx['all_fiscalyear'] = True
-        query = self.env['account.move.line'].with_contet(ctx)._query_get()
+        query = self.env['account.move.line'].with_context(ctx)._query_get()
         self._cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
@@ -238,7 +238,7 @@ class res_partner(models.Model):
     @api.multi
     def _journal_item_count(self):
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)]),
+            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
     @api.model
