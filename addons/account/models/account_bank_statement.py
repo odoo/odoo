@@ -493,7 +493,7 @@ class account_bank_statement_line(models.Model):
 
         return data
 
-    @api.one
+    @api.multi
     def get_reconciliation_proposition(self, excluded_ids=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line. """
         if excluded_ids is None:
@@ -547,7 +547,7 @@ class account_bank_statement_line(models.Model):
             additional_domain = []
         return self.get_move_lines_for_reconciliation(excluded_ids, str, offset, limit, count, additional_domain)
 
-    @api.one
+    @api.multi
     def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
 
