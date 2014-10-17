@@ -310,51 +310,51 @@ class account_account(models.Model):
         for account in self:
             account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
 
-    def _set_credit_debit(self, cr, uid, account_id, name, value, arg, context=None):
-        if context.get('config_invisible', True):
+    @api.one
+    def _set_credit_debit(self, name, value):
+        if self._context.get('config_invisible', True):
             return True
-
-        account = self.browse(cr, uid, account_id, context=context)
-        diff = value - getattr(account,name)
-        if not diff:
-            return True
-
-        journal_obj = self.pool.get('account.journal')
-        jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
+ 
+        jids = self.env['account.journal'].search([('type','=','situation'),('centralisation','=',1),('company_id','=',self.company_id.id)], context=context)
         if not jids:
             raise Warning(_("You need an Opening journal with centralisation checked to set the initial balance."))
-
-        period_obj = self.pool.get('account.period')
-        pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
+ 
+        pids = self.env['account.period'].search([('special','=',True),('company_id','=',self.company_id.id)])
         if not pids:
             raise Warning(_("There is no opening/closing period defined, please create one to set the initial balance."))
-
-        move_obj = self.pool.get('account.move.line')
-        move_id = move_obj.search(cr, uid, [
+ 
+        move_obj = self.env['account.move.line']
+        move = move_obj.search([
             ('journal_id','=',jids[0]),
             ('period_id','=',pids[0]),
-            ('account_id','=', account_id),
+            ('account_id','=', self.id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
-        ], context=context)
-        if move_id:
-            move = move_obj.browse(cr, uid, move_id[0], context=context)
-            move_obj.write(cr, uid, move_id[0], {
-                name: diff+getattr(move,name)
-            }, context=context)
+        ])
+        if move:
+            move.write({name: value})
         else:
-            if diff<0.0:
+            if value < 0.0:
                 raise Warning(_("Unable to adapt the initial balance (negative value)."))
-            nameinv = (name=='credit' and 'debit') or 'credit'
-            move_id = move_obj.create(cr, uid, {
+            nameinv = (name == 'credit' and 'debit') or 'credit'
+            move_id = move_obj.create({
                 'name': _('Opening Balance'),
-                'account_id': account_id,
+                'account_id': self.id,
                 'journal_id': jids[0],
                 'period_id': pids[0],
-                name: diff,
+                name: value,
                 nameinv: 0.0
-            }, context=context)
+            })
         return True
+
+    @api.one
+    def _set_credit(self):
+        self._set_credit_debit('credit', self.credit)
+
+    @api.one
+    def _set_debit(self):
+        self._set_credit_debit('debit', self.debit)
+
 
     name = fields.Char(string='Name', required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
@@ -370,8 +370,8 @@ class account_account(models.Model):
     financial_report_ids = fields.Many2many('account.financial.report', 'account_account_financial_report', 'account_id', 'report_line_id', string='Financial Reports')
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Balance')
-    credit = fields.Float(compute='_compute', inverse='_set_credit_debit', digits=dp.get_precision('Account'), string='Credit')
-    debit = fields.Float(compute='_compute', inverse='_set_credit_debit', digits=dp.get_precision('Account'), string='Debit')
+    credit = fields.Float(compute='_compute', inverse='_set_credit', digits=dp.get_precision('Account'), string='Credit')
+    debit = fields.Float(compute='_compute', inverse='_set_debit', digits=dp.get_precision('Account'), string='Debit')
     foreign_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Foreign Balance',
         help="Total amount (in Secondary currency) for transactions held in secondary currency for this account.")
     adjusted_balance = fields.Float(compute='_compute', digits=dp.get_precision('Account'), string='Adjusted Balance',
@@ -2356,9 +2356,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         if 'currency_id' in fields:
             company_id = res.get('company_id') or False
             if company_id:
-                company_obj = self.env['res.company']
-                country_id = company_obj.browse(company_id).country_id.id
-                currency_id = company_obj.on_change_country(company_id, country_id)['value']['currency_id']
+                company = self.env['res.company'].browse(company_id)
+                currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
                 res.update({'currency_id': currency_id})
 
         chart_templates = account_chart_template.search([('visible', '=', True)])
