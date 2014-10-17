@@ -41,7 +41,7 @@ class NewWebsite(osv.Model):
         else:
             EXP = json.loads(request.httprequest.cookies.get('EXP'))
         for exp in exps:
-            if not str(exp.id) in EXP:
+            if not str(exp.google_id) in EXP:
                 result=[]
                 pond_sum=0
                 for exp_snap in exp.experiment_snapshot_ids:
@@ -51,14 +51,13 @@ class NewWebsite(osv.Model):
                     #by default master has a frequency of 50
                     pond_sum = pond_sum + 50
                     #by default on master
-                    EXP[str(exp.id)] = str(0)
+                    #We set the google_id as key in the cookie to avoid problem when reinitializating the db
+                    EXP[str(exp.google_id)] = str(0)
                 x = random.getrandbits(128)%pond_sum
                 for res in result:
                     if x<res[0]:
-                        EXP[str(exp.id)] = str(res[1])
+                        EXP[str(exp.google_id)] = str(res[1])
                         break
-            #else:
-                #Check if all versions in running experiments are still there. If not, redirect to master.
         request.context['EXP'] = EXP
      
 
