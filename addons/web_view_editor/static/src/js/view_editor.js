@@ -1,7 +1,7 @@
 openerp.web_view_editor = function(instance) {
 var _t = instance.web._t;
 var QWeb = instance.web.qweb;
-instance.web.ViewManagerAction.include({
+instance.web.ViewManager.include({
     on_debug_changed:function(evt){
         var val = $(evt.target).data('action'),
             current_view = this.active_view.controller;

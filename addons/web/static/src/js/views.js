@@ -393,7 +393,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         return this.ir_actions_common({
             widget: function () { 
-                return new instance.web.ViewManagerAction(self, action); 
+                return new instance.web.ViewManager(self, null, null, null, action); 
             },
             action: action,
             klass: 'oe_act_window',
@@ -494,7 +494,33 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @param {Array} [views] List of [view_id, view_type]
      * @param {Object} [flags] various boolean describing UI state
      */
-    init: function(parent, dataset, views, flags) {
+    init: function(parent, dataset, views, flags, action) {
+        if (action) {
+            var flags = action.flags || {};
+            if (!('auto_search' in flags)) {
+                flags.auto_search = action.auto_search !== false;
+            }
+            if (action.res_model === 'board.board' && action.view_mode === 'form') {
+                action.target = 'inline';
+                // Special case for Dashboards
+                _.extend(flags, {
+                    views_switcher : false,
+                    display_title : false,
+                    search_view : false,
+                    pager : false,
+                    sidebar : false,
+                    action_buttons : false
+                });
+            }
+            this.action = action;
+            this.action_manager = parent;
+            var dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+            if (action.res_id) {
+                dataset.ids.push(action.res_id);
+                dataset.index = 0;
+            }
+            views = action.views;
+        }
         var self = this;
         this._super(parent);
 
@@ -915,37 +941,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
         });
     },
-});
-
-instance.web.ViewManagerAction = instance.web.ViewManager.extend({
-    template:"ViewManagerAction",
-
-    init: function (parent, action) {
-        var flags = action.flags || {};
-        if (!('auto_search' in flags)) {
-            flags.auto_search = action.auto_search !== false;
-        }
-        if (action.res_model === 'board.board' && action.view_mode === 'form') {
-            action.target = 'inline';
-            // Special case for Dashboards
-            _.extend(flags, {
-                views_switcher : false,
-                display_title : false,
-                search_view : false,
-                pager : false,
-                sidebar : false,
-                action_buttons : false
-            });
-        }
-        this.action = action;
-        this.action_manager = parent;
-        var dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-        if (action.res_id) {
-            dataset.ids.push(action.res_id);
-            dataset.index = 0;
-        }
-        this._super(parent, dataset, action.views, flags);
-    }
 });
 
 instance.web.Sidebar = instance.web.Widget.extend({

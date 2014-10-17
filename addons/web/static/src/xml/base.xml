@@ -473,6 +473,7 @@
     <div class="oe-view-manager-header container-fluid">
         <div class="row">
             <div class="col-md-6 oe-header-title">
+                <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
                 <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
                 </ol>
             </div>
@@ -513,11 +514,6 @@
         </div>
     </div>
 </div>
-<t t-name="ViewManagerAction" t-extend="ViewManager">
-    <t t-jquery="ol.oe-view-title" t-operation="before">
-        <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
-    </t>
-</t>
 <t t-name="ViewManagerDebug">
     <button type="button" class="btn btn-default dropdown-toggle fa fa-bug oe-view-manager-debug" data-toggle="dropdown"> <span class="caret"/>
     </button>
