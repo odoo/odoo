@@ -1,44 +1,24 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+from openerp import models, fields, tools
 
-from openerp import tools
-from openerp.osv import fields,osv
 
-class report_lunch_order(osv.osv):
+class report_lunch_order(models.Model):
     _name = "report.lunch.order.line"
     _description = "Lunch Orders Statistics"
     _auto = False
     _rec_name = 'date'
-    _columns = {
-        'date': fields.date('Date Order', readonly=True, select=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'user_id': fields.many2one('res.users', 'User Name'),
-        'price_total':fields.float('Total Price', readonly=True),
-        'note' : fields.text('Note', readonly=True),
-    }
     _order = 'date desc'
+
+    date = fields.Date('Date Order', readonly=True, select=True)
+    year = fields.Char('Year', size=4, readonly=True)
+    month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+        ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
+        ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True)
+    day = fields.Char('Day', size=128, readonly=True)
+    user_id = fields.Many2one('res.users', 'User Name')
+    price_total = fields.Float('Total Price', readonly=True)
+    note = fields.Text('Note', readonly=True)
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_lunch_order_line')
         cr.execute("""
