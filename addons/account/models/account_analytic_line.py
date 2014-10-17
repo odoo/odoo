@@ -41,35 +41,33 @@ class account_analytic_line(models.Model):
 #         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
 #     }
 
-    def _check_company(self, cr, uid, ids, context=None):
-        lines = self.browse(cr, uid, ids, context=context)
-        for l in lines:
-            if l.move_id and not l.account_id.company_id.id == l.move_id.account_id.company_id.id:
+    @api.multi
+    def _check_company(self):
+        for line in self:
+            if line.move_id and not line.account_id.company_id.id == line.move_id.account_id.company_id.id:
                 return False
         return True
 
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
-    def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
-            unit=False, journal_id=False, context=None):
-        if context==None:
-            context={}
+    @api.multi
+    def on_change_unit_amount(self, prod_id, quantity, company_id, unit=False, journal_id=False):
+        analytic_journal_obj = self.env['account.analytic.journal']
+        product_price_type_obj = self.env['product.price.type']
+
         if not journal_id:
-            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type','=','purchase')])
+            j_ids = analytic_journal_obj.search([('type','=','purchase')])
             journal_id = j_ids and j_ids[0] or False
         if not journal_id or not prod_id:
             return {}
-        product_obj = self.pool.get('product.product')
-        analytic_journal_obj =self.pool.get('account.analytic.journal')
-        product_price_type_obj = self.pool.get('product.price.type')
-        product_uom_obj = self.pool.get('product.uom')
-        j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
-        prod = product_obj.browse(cr, uid, prod_id, context=context)
+
+        j_id = analytic_journal_obj.browse(journal_id)
+        prod = self.env['product.product'].browse(prod_id)
         result = 0.0
         if prod_id:
             unit_obj = False
             if unit:
-                unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
+                unit_obj = self.env['product.uom'].browse(unit)
             if not unit_obj or prod.uom_id.category_id.id != unit_obj.category_id.id:
                 unit = prod.uom_id.id
             if j_id.type == 'purchase':
@@ -96,24 +94,21 @@ class account_analytic_line(models.Model):
 
         flag = False
         # Compute based on pricetype
-        product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
-        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
-        if journal_id:
-            journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
-            if journal.type == 'sale':
-                product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context=context)
-                if product_price_type_ids:
-                    pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
+        pricetype = product_price_type_obj.search([('field','=','standard_price')])
+        if j_id.type == 'sale':
+            product_price_type_ids = product_price_type_obj.search([('field','=','list_price')])
+            if product_price_type_ids:
+                pricetype = product_price_type_ids
         # Take the company currency as the reference one
         if pricetype.field == 'list_price':
             flag = True
-        ctx = context.copy()
+        ctx = self._context.copy()
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
-        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        amount_unit = prod.with_context(ctx).price_get(pricetype.field)[prod.id]
+        prec = self.env['decimal.precision'].precision_get('Account')
         amount = amount_unit * quantity or 0.0
         result = round(amount, prec)
         if not flag:

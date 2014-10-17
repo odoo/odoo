@@ -160,25 +160,23 @@ class account_bank_statement(models.Model):
         if self.company_id.id != self.period_id.company_id.id:
             raise Warning(_('The journal and period chosen have to belong to the same company.'))
 
-    def onchange_date(self, cr, uid, ids, date, company_id, context=None):
+    @api.multi
+    def onchange_date(self, date, company_id):
         """
             Find the correct period to use for the given date and company_id, return it and set it in the context
         """
         res = {}
-        period_pool = self.pool.get('account.period')
 
-        if context is None:
-            context = {}
-        ctx = context.copy()
+        ctx = self._context.copy()
         ctx.update({'company_id': company_id})
-        pids = period_pool.find(cr, uid, dt=date, context=ctx)
+        pids = self.env['account.period'].with_context(ctx).find(dt=date)
         if pids:
             res.update({'period_id': pids[0]})
-            context = dict(context, period_id=pids[0])
+            context = dict(self._context, period_id=pids[0])
 
         return {
-            'value':res,
-            'context':context,
+            'value': res,
+            'context': context,
         }
 
     @api.multi
@@ -626,21 +624,20 @@ class account_bank_statement_line(models.Model):
             'account_id': account_id
             }
 
-    def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
+    @api.one
+    def process_reconciliation(self, mv_line_dicts):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
 
             :param int id: id of the bank statement line
             :param list of dicts mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it
         """
-        if context is None:
-            context = {}
-        st_line = self.browse(cr, uid, id, context=context)
+        st_line = self
         company_currency = st_line.journal_id.company_id.currency_id
         statement_currency = st_line.journal_id.currency or company_currency
-        bs_obj = self.pool.get('account.bank.statement')
-        am_obj = self.pool.get('account.move')
-        aml_obj = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
+        bs_obj = self.env['account.bank.statement']
+        am_obj = self.env['account.move']
+        aml_obj = self.env['account.move.line']
+        currency_obj = self.env['res.currency']
 
         # Checks
         if st_line.journal_entry_id.id:
@@ -650,27 +647,27 @@ class account_bank_statement_line(models.Model):
                 if field not in mv_line_dict:
                     mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
-                mv_line = aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context)
+                mv_line = aml_obj.browse(mv_line_dict.get('counterpart_move_line_id'))
                 if mv_line.reconcile_id:
                     raise Warning(_('A selected move line was already reconciled.'))
 
         # Create the move
         move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
-        move_vals = bs_obj._prepare_move(cr, uid, st_line, move_name, context=context)
-        move_id = am_obj.create(cr, uid, move_vals, context=context)
+        move_vals = bs_obj._prepare_move(st_line, move_name)
+        move_id = am_obj.create(move_vals)
 
         # Create the move line for the statement line
         if st_line.statement_id.currency.id != company_currency.id:
             if st_line.currency_id == company_currency:
                 amount = st_line.amount_currency
             else:
-                ctx = context.copy()
+                ctx = self._context.copy()
                 ctx['date'] = st_line.date
-                amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
+                amount = currency_obj.with_context(ctx).compute(st_line.statement_id.currency.id, company_currency.id, st_line.amount)
         else:
             amount = st_line.amount
-        bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
-        aml_obj.create(cr, uid, bank_st_move_vals, context=context)
+        bank_st_move_vals = bs_obj._prepare_bank_move_line(st_line, move_id, amount, company_currency.id)
+        aml_obj.create(bank_st_move_vals)
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
@@ -685,7 +682,7 @@ class account_bank_statement_line(models.Model):
             mv_line_dict['company_id'] = st_line.company_id.id
             mv_line_dict['statement_id'] = st_line.statement_id.id
             if mv_line_dict.get('counterpart_move_line_id'):
-                mv_line = aml_obj.browse(cr, uid, mv_line_dict['counterpart_move_line_id'], context=context)
+                mv_line = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
                 mv_line_dict['account_id'] = mv_line.account_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = context.copy()
@@ -693,27 +690,27 @@ class account_bank_statement_line(models.Model):
                 mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
                 mv_line_dict['currency_id'] = st_line_currency.id
                 if st_line.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
-                    debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
-                    credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
+                    debit_at_current_rate = currency_obj.round(company_currency, mv_line_dict['debit'] / st_line_currency_rate)
+                    credit_at_current_rate = currency_obj.round(company_currency, mv_line_dict['credit'] / st_line_currency_rate)
                 elif st_line.currency_id and st_line_currency_rate:
-                    debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)
-                    credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
+                    debit_at_current_rate = currency_obj.with_context(ctx).compute(statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate)
+                    credit_at_current_rate = currency_obj.with_context(ctx).compute(statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate)
                 else:
-                    debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                    credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                    debit_at_current_rate = currency_obj.with_context(ctx).compute(st_line_currency.id, company_currency.id, mv_line_dict['debit'])
+                    credit_at_current_rate = currency_obj.with_context(ctx).compute(st_line_currency.id, company_currency.id, mv_line_dict['credit'])
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
-                    debit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'], context=ctx)
-                    credit_at_old_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'], context=ctx)
+                    debit_at_old_rate = currency_obj.with_context(ctx).compute(st_line_currency.id, company_currency.id, mv_line_dict['debit'])
+                    credit_at_old_rate = currency_obj.with_context(ctx).compute(st_line_currency.id, company_currency.id, mv_line_dict['credit'])
                     mv_line_dict['credit'] = credit_at_old_rate
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:
                         currency_diff = debit_at_current_rate - debit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, -currency_diff, move_id, context=context))
+                        to_create.append(self.get_currency_rate_line(st_line, -currency_diff, move_id))
                     if credit_at_old_rate - credit_at_current_rate:
                         currency_diff = credit_at_current_rate - credit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(cr, uid, st_line, currency_diff, move_id, context=context))
+                        to_create.append(self.get_currency_rate_line(st_line, currency_diff, move_id))
                 else:
                     mv_line_dict['debit'] = debit_at_current_rate
                     mv_line_dict['credit'] = credit_at_current_rate
@@ -729,14 +726,14 @@ class account_bank_statement_line(models.Model):
             if mv_line_dict.get('counterpart_move_line_id'):
                 counterpart_move_line_id = mv_line_dict['counterpart_move_line_id']
                 del mv_line_dict['counterpart_move_line_id']
-            new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
+            new_aml_id = aml_obj.create(mv_line_dict)
             if counterpart_move_line_id != None:
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.reconcile_partial(cr, uid, pair, context=context)
+            aml_obj.reconcile_partial(pair)
         # Mark the statement line as reconciled
-        self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
+        self.write({'journal_entry_id': move_id})
 
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
     # return [('journal_entry_id', '=', False)]
