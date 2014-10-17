@@ -2346,46 +2346,46 @@ class wizard_multi_charts_accounts(models.TransientModel):
                res['value'].update({'code_digits': data.code_digits})
         return res
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context)
-        tax_templ_obj = self.pool.get('account.tax.template')
-        account_chart_template = self.pool['account.chart.template']
+    @api.model
+    def default_get(self, fields):
+        context = dict(self._context or {})
+        res = super(wizard_multi_charts_accounts, self).default_get(fields)
+        tax_templ_obj = self.env['account.tax.template']
+        account_chart_template = self.env['account.chart.template']
 
         if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
+            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
-            res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
+            res.update({'company_id': self.env.user.company_id.id})
         if 'currency_id' in fields:
             company_id = res.get('company_id') or False
             if company_id:
-                company_obj = self.pool.get('res.company')
-                country_id = company_obj.browse(cr, uid, company_id, context=context).country_id.id
-                currency_id = company_obj.on_change_country(cr, uid, company_id, country_id, context=context)['value']['currency_id']
+                company_obj = self.env['res.company']
+                country_id = company_obj.browse(company_id).country_id.id
+                currency_id = company_obj.on_change_country(company_id, country_id)['value']['currency_id']
                 res.update({'currency_id': currency_id})
 
-        ids = account_chart_template.search(cr, uid, [('visible', '=', True)], context=context)
-        if ids:
+        chart_templates = account_chart_template.search([('visible', '=', True)])
+        if chart_templates:
             #in order to set default chart which was last created set max of ids.
-            chart_id = max(ids)
+            chart_id = max(chart_templates.ids)
             if context.get("default_charts"):
-                model_data = self.pool.get('ir.model.data').search_read(cr, uid, [('model','=','account.chart.template'),('module','=',context.get("default_charts"))], ['res_id'], context=context)
+                model_data = self.env['ir.model.data'].search_read([('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], ['res_id'])
                 if model_data:
                     chart_id = model_data[0]['res_id']
-            chart = account_chart_template.browse(cr, uid, chart_id, context=context)
-            chart_hierarchy_ids = self._get_chart_parent_ids(cr, uid, chart, context=context) 
+            chart = account_chart_template.browse(chart_id)
+            chart_hierarchy_ids = self._get_chart_parent_ids(chart) 
             if 'chart_template_id' in fields:
-                res.update({'only_one_chart_template': len(ids) == 1,
+                res.update({'only_one_chart_template': len(chart_templates) == 1,
                             'chart_template_id': chart_id})
             if 'sale_tax' in fields:
-                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id", "in", chart_hierarchy_ids),
-                                                              ('type_tax_use', 'in', ('sale','all'))],
-                                                    order="sequence")
-                res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
+                sale_tax_ids = tax_templ_obj.search([("chart_template_id", "in", chart_hierarchy_ids),
+                                                              ('type_tax_use', 'in', ('sale', 'all'))], order="sequence")
+                res.update({'sale_tax': sale_tax_ids.ids and sale_tax_ids.ids[0] or False})
             if 'purchase_tax' in fields:
-                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id", "in", chart_hierarchy_ids),
-                                                                  ('type_tax_use', 'in', ('purchase','all'))],
-                                                        order="sequence")
-                res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
+                purchase_tax_ids = tax_templ_obj.search([("chart_template_id", "in", chart_hierarchy_ids),
+                                                                  ('type_tax_use', 'in', ('purchase', 'all'))], order="sequence")
+                res.update({'purchase_tax': purchase_tax_ids.ids and purchase_tax_ids.ids[0] or False})
         res.update({
             'purchase_tax_rate': 15.0,
             'sale_tax_rate': 15.0,
