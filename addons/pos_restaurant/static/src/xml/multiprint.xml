@@ -18,7 +18,7 @@
             value-thousands-separator=''
             value-autoint='on' 
         >
-            <div><t t-esc="changes.name" /></div>
+            <div size='normal' ><t t-esc="changes.name" /></div>
             <t t-if="changes.floor || changes.table">
                 <br />
                 <div><span><t t-esc="changes.floor" /></span> / <span bold='on'><t t-esc="changes.table"/></span></div>
@@ -35,8 +35,15 @@
                     <t t-foreach="changes.cancelled" t-as="change">
                         <line>
                             <left><t t-esc="change.name" /></left>
-                            <right><value><t t-esc="change.quantity" /></value></right>
+                            <right><value><t t-esc="change.qty" /></value></right>
                         </line>
+                        <t t-if="change.note">
+                            <line font='b' bold='off' indent='1' line-ratio='1'>
+                                <left>
+                                    <span>---</span> <span><t t-esc="change.note" /></span>
+                                </left>
+                            </line>
+                        </t>
                     </t>
                     <br />
                     <br />
@@ -49,8 +56,15 @@
                 <t t-foreach="changes.new" t-as="change">
                     <line>
                         <left><t t-esc="change.name" /></left>
-                        <right><value><t t-esc="change.quantity" /></value></right>
+                        <right><value><t t-esc="change.qty" /></value></right>
                     </line>
+                    <t t-if="change.note">
+                        <line font='b' bold='off' indent='1' line-ratio='1'>
+                            <left>
+                                <span>---</span> <span><t t-esc="change.note" /></span>
+                            </left>
+                        </line>
+                    </t>
                 </t>
                 <br />
                 <br />
