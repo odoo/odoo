@@ -78,6 +78,7 @@ Main Features
         'views/report_detailsofsales.xml',
         'views/report_payment.xml',
         'views/report_sessionsummary.xml',
+        'views/report_userlabel.xml',
         'views/point_of_sale.xml',
     ],
     'demo': [
