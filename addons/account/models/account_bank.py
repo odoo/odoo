@@ -28,10 +28,10 @@ class bank(models.Model):
     currency_id = fields.Many2one('res.currency', related='journal_id.currency', string='Currency', readonly=True, help="Currency of the related account journal.")
 
     @api.model
-    @api.returns('self')
     def create(self, data):
         result = super(bank, self).create(data)
-        return result.post_write()
+        result.post_write()
+        return result
 
     @api.multi
     def write(self, data):
