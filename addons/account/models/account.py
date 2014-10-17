@@ -1244,7 +1244,7 @@ class account_move(models.Model):
                     }, check=False)
         # Create analytic lines for the valid moves
         for record in valid_moves:
-            obj_move_line.with_context(context).create_analytic_lines([line.id for line in record.line_id])
+            record.line_id.with_context(context).create_analytic_lines()
 
         valid_moves = [move.id for move in valid_moves]
         return len(valid_moves) > 0 and valid_moves or False
