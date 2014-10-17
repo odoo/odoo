@@ -196,7 +196,7 @@ class stock_location(osv.osv):
         """
         wh_obj = self.pool.get("stock.warehouse")
         whs = wh_obj.search(cr, uid, [('view_location_id.parent_left', '<=', location.parent_left), 
-                                ('view_location_id.parent_right', '>=', location.parent_left)], context=context)
+                                ('view_location_id.parent_right', '>=', location.parent_right)], context=context)
         return whs and whs[0] or False
 
 #----------------------------------------------------------
