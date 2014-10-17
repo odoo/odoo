@@ -642,12 +642,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_show_more: function(evt) {
         var self = this;
-        var ids = self.view.dataset.ids.splice(0);
         return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
-            self.view.dataset.ids = ids.concat(self.dataset.ids);
             self.do_add_records(records);
             self.compute_cards_auto_height();
             self.view.postprocess_m2m_tags();
