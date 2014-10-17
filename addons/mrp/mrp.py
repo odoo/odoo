@@ -918,8 +918,8 @@ class mrp_production(osv.osv):
                 new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty_uom),
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                if produce_product.product_id.id == production.product_id.id and new_moves:
-                    main_production_move = new_moves[0]
+                if produce_product.product_id.id == production.product_id.id:
+                    main_production_move = produce_product.id
 
         if production_mode in ['consume', 'consume_produce']:
             if wiz:
