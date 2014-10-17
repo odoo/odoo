@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
-from datetime import datetime
-
+import calendar
+from datetime import datetime,date
+from dateutil import relativedelta
+import json
+import time
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
@@ -189,6 +192,13 @@ class project_issue(osv.Model):
             res[issue.id] = {'progress' : progress}
         return res
 
+    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.project_id.parent_id.type == 'contract':
+                res[issue.id] = True
+        return res
+
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -269,6 +279,7 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
@@ -472,13 +483,25 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
+    def _get_project_issue_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool['project.issue']
+        month_begin = date.today().replace(day=1)
+        date_begin = (month_begin - relativedelta.relativedelta(months=self._period_number - 1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        res = {}
+        for id in ids:
+            created_domain = [('project_id', '=', id), ('date_closed', '>=', date_begin ), ('date_closed', '<=', date_end )]
+            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, [ 'date_closed'], 'date_closed_count', 'date_closed', context=context))
+        return res
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id',
-                                     domain=[('stage_id.fold', '=', False)])
+                                     domain=[('date_closed', '!=', False)]),
+        'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
+                                             string='Project Issue By Month')
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -513,6 +536,13 @@ class account_analytic_account(osv.Model):
             context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
+        has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
+        if has_issues:
+            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 
 class project_project(osv.Model):

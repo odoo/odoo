@@ -577,9 +577,10 @@
   height: 16px;
 }
 .openerp .oe_form_field_radio.oe_vertical label {
-  margin-left: 4px;
+  display: inline-block;
+  margin-left: 20px;
 }
-.openerp .oe_form_field_radio.oe_form_required .oe_radio_input {
+.openerp .oe_form_field_radio .oe_radio_input {
   border: 2px solid transparent;
   display: inline-block;
   height: 12px;
@@ -587,6 +588,7 @@
   vertical-align: top;
   border-radius: 10px;
   margin: 1px 0;
+  position: absolute;
 }
 .openerp .oe_form_field_radio.oe_form_required.oe_form_invalid .oe_radio_input {
   border-color: red;
@@ -2167,9 +2169,6 @@
 .openerp .oe_form .oe_form_field_boolean {
   width: auto;
 }
-.openerp .oe_form .oe_datepicker_container {
-  display: none;
-}
 .openerp .oe_form .oe_datepicker_root {
   display: inline-block;
 }
@@ -2541,7 +2540,7 @@
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_view_manager_view_list, .openerp .oe_form_field_many2many > .oe_view_manager .oe_view_manager_view_list {
   min-height: 132px;
 }
-.openerp .oe_form_field_one2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_one2many_list_row_add {
+.openerp .oe_form_field_one2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_one2many .oe_form_field_many2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_many2many_list_row_add {
   font-weight: bold;
 }
 .openerp .oe_form_field_one2many .oe_list_content > thead, .openerp .oe_form_field_many2many .oe_list_content > thead {

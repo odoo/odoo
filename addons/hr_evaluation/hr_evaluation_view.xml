@@ -72,9 +72,9 @@
         </record>
 
         <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="25"/>
-        <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4"/>
-        <menuitem parent="hr.menu_hr_configuration" id="menu_open_view_hr_evaluation_plan_tree"
-            action="open_view_hr_evaluation_plan_tree" sequence="15"/>
+        <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_hr_manager"/>
+        <menuitem parent="hr.menu_hr_configuration_employees" id="menu_open_view_hr_evaluation_plan_tree"
+            action="open_view_hr_evaluation_plan_tree" sequence="5" groups="base.group_hr_manager"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
             <field name="name">hr_evaluation.plan.phase.form</field>
@@ -207,12 +207,14 @@
             <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal">
+                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Appraisal"
+                        fonts="bold: message_unread == True">
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
                     <field name="rating"/>
                     <field name="state"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -223,10 +225,12 @@
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="plan_id"/>
                     <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Appraisal that are in Plan In Progress state"/>
                     <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Appraisal that are in waiting appreciation state"/>
-                    <field name="employee_id" />
-                    <field name="plan_id"/>
+                    <separator/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand='0' string='Group by...'>
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
@@ -308,7 +312,7 @@
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
-                <tree string="Interview Appraisal">
+                <tree string="Interview Appraisal" fonts="bold: message_unread == True">
                     <field name="deadline" string="Deadline Date"/>
                     <field name="survey_id" domain="[('res_model','=','hr_evaluation')]"/>
                     <field name="user_id" string="Interviewer"/>
@@ -318,6 +322,7 @@
                     <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print"  attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
                     <field name="state"/>
+                    <field name="message_unread" invisible="1"/>
                     <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
                     <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
                 </tree>
@@ -329,10 +334,12 @@
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
-                    <field name="deadline"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <field name="user_to_review_id"/>
                     <field name="user_id" string="Interviewer"/>
+                    <field name="deadline"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                    <separator/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>

@@ -550,6 +550,34 @@ class WebClient(http.Controller):
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
 
+    @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
+    def load_locale(self, lang):
+        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        addons_path = http.addons_manifest['web']['addons_path']
+        #load datejs locale
+        datejs_locale = ""
+        try:
+            with open(os.path.join(addons_path, 'web', 'static', 'lib', 'datejs', 'globalization', lang.replace('_', '-') + '.js'), 'r') as f:
+                datejs_locale = f.read()
+        except IOError:
+            pass
+
+        #load momentjs locale
+        momentjs_locale_file = False
+        momentjs_locale = ""
+        for code in magic_file_finding:
+            try:
+                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
+                    momentjs_locale = f.read()
+                #we found a locale matching so we can exit
+                break
+            except IOError:
+                continue
+
+        #return the content of the locale
+        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
+        return request.make_response(datejs_locale + "\n"+ momentjs_locale, headers)
+
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
@@ -720,14 +748,17 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, **kwargs):
         try:
+            format = kwargs.get('format')
+            ext = "zip" if format == 'zip' else "dump"
             db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
+                request.session.proxy("db").dump(backup_pwd, backup_db, format))
+            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
                 'db': backup_db,
                 'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
+                    "%Y-%m-%d_%H-%M-%SZ"),
+                'ext': ext
             }
             return request.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
@@ -1545,7 +1576,6 @@ class Reports(http.Controller):
     @serialize_exception
     def index(self, action, token):
         action = simplejson.loads(action)
-
         report_srv = request.session.proxy("report")
         context = dict(request.context)
         context.update(action["context"])
@@ -1588,12 +1618,14 @@ class Reports(http.Controller):
             else:
                 file_name = action['report_name']
         file_name = '%s.%s' % (file_name, report_struct['format'])
-
+        headers=[
+             ('Content-Disposition', content_disposition(file_name)),
+             ('Content-Type', report_mimetype),
+             ('Content-Length', len(report))]
+        if action.get('pdf_viewer'):
+            del headers[0]
         return request.make_response(report,
-             headers=[
-                 ('Content-Disposition', content_disposition(file_name)),
-                 ('Content-Type', report_mimetype),
-                 ('Content-Length', len(report))],
+             headers=headers,
              cookies={'fileToken': token})
 
 class Apps(http.Controller):

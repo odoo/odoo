@@ -25,12 +25,9 @@
                     </header>
                     <separator string="Invoicing Process"/>
                     <group>
-                        <label for="id" string="Invoicing Settings"/>
+                        <label for="id" string="Default Invoicing Settings"/>
                         <div>
-                            <div>
-                                <label for="default_invoice_method"/>
-                                <field name="default_invoice_method" class="oe_inline"/>
-                            </div>
+                            <field name="default_invoice_method" widget="radio" class="oe_inline"/>
                         </div>
                     </group>
                     <separator string="Purchase Order"/>
@@ -44,6 +41,11 @@
                             <div>
                                 <field name="module_warning" class="oe_inline"/>
                                 <label for="module_warning"/>
+                                <span class="oe_grey">
+                                    <p attrs="{'invisible': [('module_warning','=',False)]}">
+                                        The Sales Management module will also be installed.
+                                    </p>
+                                </span>
                             </div>
                         </div>
                     </group>
@@ -103,7 +105,7 @@
         </record>
 
         <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
-            sequence="3" action="action_purchase_configuration"/>
+            sequence="4" action="action_purchase_configuration"/>
 
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>

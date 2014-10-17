@@ -24,6 +24,19 @@
 .ui-dialog .ui-icon-closethick{
     float: right;
 }
+div.modal.in {
+    position: absolute;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 10px 20px black;
+    border-radius: 3px;
+    max-width: 600px;
+    max-height: 400px;
+    margin-top: -200px;
+    margin-left: -300px;
+    top: 50%;
+    left: 50%;
+}
 /* --- Generic Restyling and Resets --- */
 
 html {
@@ -493,10 +506,11 @@ td {
     margin-right: 4px;
 }
 
-.pos .control-button.highlight{
-    background: #6EC89B;
-    border: solid 1px #6EC89B;
-    color: white;
+.pos .control-button.highlight,
+.pos .button.highlight {
+    background: #6EC89B !important;
+    border: solid 1px #6EC89B !important;
+    color: white !important;
 }
 .pos .control-button:active {
     background: #7F82AC;
@@ -512,20 +526,20 @@ td {
     color: inherit;
 }
 
-/*  ********* The paypad contains the payment buttons ********* */
+/*  ********* The actionpad (payment, set customer) ********* */
 
-.pos .paypad {
-    padding: 8px 4px 8px 8px;
+.pos .actionpad{
+    padding: 8px 3px 8px 19px;
     display: inline-block;
     text-align: center;
     vertical-align: top;
-    width: 205px;
+    width: 183px;
     max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
 }
-.pos .paypad button {
-    height: 39px;
+.pos .actionpad .button {
+    height: 50px;
     display: block;
     width: 100%;
     margin: 0px -6px 4px -2px;
@@ -534,13 +548,20 @@ td {
     color: #555555;
     font-size: 14px;
 }
-.pos .paypad button:active, 
-.pos .numpad button:active, 
-.pos .numpad .selected-mode, 
-.pos .popup  button:active{
-    border: none;
+.pos .actionpad .button.pay {
+    height: 158px;
+}
+.pos .actionpad .button.pay .fa {
+    display: block;
+    font-size: 32px;
+    line-height: 54px;
+    padding-top: 6px;
+    background: rgb(86, 86, 86);
     color: white;
-    background: #7f82ac;
+    width: 60px;
+    margin: auto;
+    border-radius: 30px;
+    margin-bottom: 10px;
 }
 
 /*  ********* The Numpad ********* */
@@ -553,7 +574,7 @@ td {
 .pos .numpad button {
     height: 50px;
     width: 50px;
-    margin: 0px 0px 4px 0px;
+    margin: 0px 3px 4px 0px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
@@ -932,12 +953,18 @@ td {
     overflow-y: auto;
     border-right: dashed 1px rgb(215,215,215);
 }
+.screen .left-content.pc40{
+    right: 66%;
+}
 .screen .right-content{
     position: absolute;
     right:0px; top: 64px; bottom: 0px;
     left:50%;
     overflow-x: hidden;
     overflow-y: auto;
+}
+.screen .right-content.pc60{
+    left:34%
 }
 .screen .centered-content{
     position: absolute;
@@ -985,101 +1012,125 @@ td {
     position:relative;
 }
 
+
 /* b) The payment screen */
 
-
-.pos .pos-payment-container {
+.pos .payment-numpad {
     display: inline-block;
-    font-size: 16px;
-    text-align: left;
-    width: 360px;
-}
-.pos .payment-due-total {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 8px;
     text-align: center;
-    font-weight: bold;
-    font-size: 48px;
-    margin: 27px;
-    text-shadow: 0px 2px rgb(202, 202, 202);
+    float: left;
+}
+.pos .payment-numpad .numpad button {
+    width: 66px;
+    height: 66px;
+}
+
+.pos .paymentlines-container {
+    padding: 16px;
+    padding-top: 0;
+    border-bottom: dashed 1px gainsboro;
+    min-height: 154px;
+}
+
+.pos .paymentlines {
+    width: 100%;
+}
+.pos .paymentlines .controls {
+    width: 40px;
+}
+.pos .paymentlines .label > * {
+    font-size: 16px;
+    padding: 8px;
+}
+.pos .paymentlines tbody{
+    background: white;
+    border-radius: 3px;
 }
 .pos .paymentline{
-    position: relative;
-    padding: 8px;
-    border-box: 3px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    border-radius: 3px;
+    font-size: 22px;
 }
-.pos .paymentline-name{
-    margin-bottom: 8px;
+.pos .paymentline.selected {
+    font-size: 22px;
+    background: #6EC89B;
+    color: white;
 }
-.pos .paymentline-input{
-    font-size: 20px;
-    font-family: Lato;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    outline: none;
-    border: none;
-    padding: 6px 8px;
+.pos .paymentline.selected .edit {
     background: white;
-    color: #484848;
-    text-align: right;
+    color: #6EC89B;
+    outline: 3px blue;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+    position: relative;
     border-radius: 3px;
-    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
 }
 
-.pos .paymentline-input:focus{
-    color: rgb(130, 124, 255);
-    box-shadow: 0px 2px rgba(219, 219, 219, 0.3) inset;
-    -webkit-animation: all 250ms linear;
+.pos .paymentline > *{
+    padding: 8px 12px;
 }
-
-.paymentline-delete {
-    width: 32px;
-    height: 32px;
-    padding: 5px;
-    text-align: center;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    position: absolute;
-    bottom: 10px;
-    left: 8px;
+.pos .paymentline .col-due,
+.pos .paymentline .col-tendered,
+.pos .paymentline .col-change {
+    min-width: 90px;
+}
+.pos .paymentline .col-change.highlight {
+    background: rgb(184, 152, 204);
+}
+.pos .paymentline .col-name {
+    font-size: 16px;
+}
+.pos .paymentline .delete-button{
     cursor: pointer;
+    text-align: center;
+}
+.pos .payment-buttons {
+    display: inline-block;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 16px;
+    float: right;
 }
 
-.pos .pos-payment-container .left-block{
-    display: inline-block;
-    width:49%;
-    margin:0;
-    padding:0;
-    text-align:left;
-}
-.pos .pos-payment-container .infoline{
-    margin-top:5px;
-    margin-bottom:5px;
+.payment-screen   .payment-buttons .button {
+    background: rgb(221, 221, 221);
+    line-height: 48px;
+    margin-bottom: 4px;
+    border-radius: 3px;
+    font-size: 16px;
     padding: 0px 8px;
-    opacity: 0.5;
+    border: solid 1px rgb(202, 202, 202);
+    cursor: pointer;
+    text-align: center;
 }
-.pos .pos-payment-container .infoline.bigger{
-    opacity: 1;
-    font-size: 20px;
+.payment-screen  .paymentlines-empty .total {
+    text-align: center;
+    padding: 24px 0px 18px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
 }
-.pos .pos-payment-container .right-block{
-    display: inline-block;
-    width:49%;
-    margin:0;
-    padding:0;
-    text-align:right;
-}
-.pos .paymentline.selected{
-    background: rgb(220,220,220);
+.payment-screen  .paymentlines-empty .message {
+    text-align: center;
 }
 
 /* c) The receipt screen */
 
+.pos .receipt-screen .centered-content .button {
+    line-height: 40px;
+    padding: 3px 13px;
+    font-size: 20px;
+    text-align: center;
+    background: rgb(230, 230, 230);
+    margin: 16px;
+    margin-bottom: 0px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
 .pos .pos-receipt-container {
     font-size: 0.75em;
+    text-align: center;
 }
 
 .pos .pos-sale-ticket {
@@ -1114,10 +1165,16 @@ td {
 }
 
 @media print {
+    body {
+        margin: 0;
+    }
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
-    .pos .keyboard_frame {
+    .pos .keyboard_frame, 
+    .pos .receipt-screen header,
+    .pos .receipt-screen .top-content,
+    .pos .receipt-screen .centered-content .button {
         display: none !important;
     }
     .pos,
@@ -1138,10 +1195,15 @@ td {
         left: 0px !important;
         background-color: white;
     }
-    .pos .receipt-screen header {
-        display: none !important;
-    }
     .pos .receipt-screen {
+        text-align: left;
+    }
+    .pos .receipt-screen .centered-content{
+        position: static;
+        border: none;
+        margin: none;
+    }
+    .pos .pos-receipt-container {
         text-align: left;
     }
     .pos-actionbar {
@@ -1544,10 +1606,12 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
-.splitbill-screen .paymentmethods {
+.splitbill-screen .paymentmethods,
+.payment-screen   .paymentmethods {
     margin: 16px;
 }
-.splitbill-screen .paymentmethod {
+.splitbill-screen .paymentmethod,
+.payment-screen   .paymentmethod {
     background: rgb(221, 221, 221);
     line-height: 40px;
     margin-bottom: 4px;
@@ -1557,6 +1621,14 @@ td {
     cursor: pointer;
     text-align: center;
 }
+.splitbill-screen .paymentmethod.active,
+.payment-screen   .paymentmethod.active {
+    background: #6EC89B;
+    color: white;
+    border-color: #6EC89B;
+}
+
+
 
 /*  ********* The ActionBarWidget  ********* */
 
@@ -1738,7 +1810,17 @@ td {
 .pos .popup .comment{
     font-weight: normal;
     font-size: 18px;
-    margin: 0px 16px;
+    margin: 0px 16px 16px 16px;
+}
+.pos .popup .comment.traceback {
+    height: 264px;
+    overflow: auto;
+    font-size: 14px;
+    text-align: left;
+    font-family: 'Inconsolata';
+    -webkit-user-select: text;
+       -moz-user-select: text;
+            user-select: text;
 }
 .pos .popup .comment.traceback {
     height: 264px;

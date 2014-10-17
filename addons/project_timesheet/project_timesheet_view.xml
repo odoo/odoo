@@ -8,13 +8,13 @@
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                 <field name="use_tasks" position="after">
-                    <field name="use_timesheets"/>
+                    <field name="invoice_on_timesheets"/>
                     <field name="hours_quantity"/>
                     <field name="currency_id"/>
                     <field name="partner_id"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_timesheets.raw_value" style="margin-right: 10px"
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
+                    <a t-if="record.invoice_on_timesheets.raw_value" style="margin-right: 10px"
                         name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
                 </xpath>
             </field>
@@ -25,12 +25,21 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <xpath expr='//div[@name="options_active"]' position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
-                    <field name="use_timesheets" class="oe_inline"/>
-                    <label for="use_timesheets"/>
+                    <field name="invoice_on_timesheets" class="oe_inline"/>
+                    <label for="invoice_on_timesheets"/>
+                </xpath>
+                <xpath expr='//group[@name="group_alias"]' position='before'>
+                    <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
+                        To invoice or setup invoicing and renewal options, go to the related contract:
+                        <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
+                    </p>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position="inside">
-                    <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"
+                    <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
                         icon="fa-calendar" string="Timesheets"/>
                 </xpath>
             </field>
@@ -49,7 +58,7 @@
         <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                  <field name="account_id" position="replace">
                      <field name="account_id" string="Analytic account/project"/>
@@ -59,7 +68,7 @@
         <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.form.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
                    <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
@@ -69,7 +78,7 @@
        <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
                     <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>

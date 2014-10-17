@@ -47,7 +47,7 @@
         <menuitem
             action="purchase_pricelist_version_action" id="menu_purchase_pricelist_version_action"
             parent="menu_purchase_config_pricelist" sequence="2" groups="product.group_purchase_pricelist"/>
-        
+
         <menuitem
             action="product.product_price_type_action" id="menu_product_pricelist_action2_purchase_type"
             parent="menu_purchase_config_pricelist" sequence="60" />
@@ -65,19 +65,11 @@
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_product_in_config_purchase" sequence="5" />
+             parent="purchase.menu_product_in_config_purchase" sequence="10" />
 
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_product_in_config_purchase" sequence="10"/>
-
-        <menuitem
-            id="menu_purchase_partner_cat" name="Address Book"
-            parent="menu_purchase_config_purchase"/>
-
-        <menuitem
-            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Tags"
-            parent="purchase.menu_purchase_partner_cat" groups="base.group_no_one"/>
+              parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
     <!--Supplier menu-->
     <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
@@ -154,10 +146,10 @@
           parent="base.menu_purchase_root" sequence="8"/>
 
       <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
-           parent="menu_procurement_management_product" sequence="10"/>
+           parent="menu_procurement_management_product" sequence="2"/>
 
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
-          parent="menu_procurement_management_product"/>
+          parent="menu_procurement_management_product" sequence="1"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -241,7 +233,7 @@
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
+                                    <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
                                     <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,parent.state,context)"/>
                                     <field name="price_unit"/>

@@ -11,19 +11,21 @@
         <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
-            parent="stock.menu_stock_product" sequence="0" groups="base.group_no_one"/>
+            parent="stock.menu_stock_product" sequence="2" groups="base.group_no_one"/>
         <menuitem action="product.product_template_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="base.group_no_one"/>
+        <menuitem id="menu_schedulers_config" name="Schedulers Management" parent="stock.menu_stock_configuration" sequence="2" groups="base.group_no_one"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
-            parent="stock.menu_stock_configuration" sequence="45" groups="base.group_no_one"/>
+            parent="stock.menu_stock_configuration" sequence="3" groups="base.group_no_one"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="0"/>
+            parent="stock.menu_product_in_config_stock" sequence="2"/>
         <menuitem
             action="product.product_normal_action" id="menu_product_variant_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="2"/>
+            parent="stock.menu_stock_product" sequence="3"/>
         <menuitem
             action="product.product_template_action" id="menu_product_template_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="1"/>
@@ -35,10 +37,10 @@
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
         <menuitem
             action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-            parent="menu_stock_configuration" sequence="30" groups="product.group_uom"/>
+            parent="menu_product_in_config_stock" sequence="5" groups="product.group_uom"/>
         <menuitem
             action="product.product_uom_form_action" id="menu_stock_uom_form_action"
-            parent="menu_stock_configuration" sequence="35" groups="product.group_uom"/>
+            parent="menu_product_in_config_stock" sequence="4" groups="product.group_uom"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
@@ -274,7 +276,7 @@
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
             parent="menu_traceability" groups="stock.group_production_lot"
-            sequence="1"/>
+            sequence="2"/>
 
         #
         # Lot composition (history)
@@ -509,7 +511,7 @@
             </field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
-            parent="menu_stock_configuration" sequence="5"/>
+            parent="menu_warehouse_config" sequence="2"/>
 
 
         <record id="act_product_stock_move_open" model="ir.actions.act_window">
@@ -597,7 +599,7 @@
             </field>
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" groups="stock.group_locations"
-            parent="menu_stock_configuration" sequence="1"/>
+            parent="menu_warehouse_config" sequence="1"/>
 
         <!--
             Stock picking
@@ -1173,7 +1175,7 @@
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1" groups="stock.group_locations"/>
 
         <!--
             Receipt Picking (By Stock Move)
@@ -1265,9 +1267,11 @@
             <field name="arch" type="xml">
                 <form string="Incoterms">
                     <sheet>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="active"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -1280,8 +1284,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_stock_configuration" sequence="40"/>
-
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="4"/>
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
             <field name="name">stock.picking.type.filter</field>
@@ -1720,15 +1723,15 @@
 
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4" groups="stock.group_stock_manager"/>
-        <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one"/>
-        <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
+        <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one" sequence="2"/>
+        <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="1" groups="stock.group_stock_manager"/>
         <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
-        <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
-        <menuitem id="stock.next_id_61" name="Warehouse" sequence="15" parent="base.menu_reporting" groups="group_stock_manager"/>
+        <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_schedulers_config" sequence="1"/>
+        <menuitem id="stock.next_id_61" name="Warehouse" sequence="40" parent="base.menu_reporting" groups="group_stock_manager"/>
         <menuitem id="menu_quants" name="Quants" parent="menu_traceability" sequence="20" action="quantsact" groups="base.group_no_one"/>
-        <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
-        <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
+        <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_schedulers_config" action="procrules" groups="base.group_no_one" sequence="2"/>
+        <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="3"/>
 
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">
@@ -1842,7 +1845,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="stock.group_tracking_lot"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="stock.group_tracking_lot" sequence="4"/>
         
         
         <!--Routes-->
@@ -1918,7 +1921,7 @@
         </record>
         
         <menuitem action="action_routes_form" id="menu_stock_routes"
-            parent="stock.menu_stock_configuration" sequence="11" />
+            parent="stock.menu_schedulers_config" sequence="3" />
 
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups</field>

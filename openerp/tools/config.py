@@ -62,7 +62,7 @@ DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
-    if os.path.exists(home):
+    if os.path.isdir(home):
         func = appdirs.user_data_dir
     else:
         if sys.platform in ['win32', 'darwin']:
@@ -261,8 +261,7 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        if os.name == 'posix':
-            group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
+        group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
@@ -416,7 +415,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'smtp_ssl', 'load_language',
+            'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
@@ -425,7 +424,7 @@ class configmanager(object):
         ]
 
         posix_keys = [
-            'auto_reload', 'workers',
+            'workers',
             'limit_memory_hard', 'limit_memory_soft',
             'limit_time_cpu', 'limit_time_real', 'limit_request',
         ]

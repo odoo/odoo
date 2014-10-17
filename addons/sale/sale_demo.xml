@@ -66,7 +66,7 @@
         <record id="sale_order_line_4" model="sale.order.line">
             <field name="order_id" ref="sale_order_2"/>
             <field name="name">Service on demand</field>
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
             <field name="product_uos_qty">24</field>
             <field name="product_uom" ref="product.product_uom_hour"/>
@@ -125,7 +125,7 @@
         <record id="sale_order_line_8" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
             <field name="name">Service on demand</field>
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">16</field>
             <field name="product_uos_qty">16</field>
             <field name="product_uom" ref="product.product_uom_hour"/>
@@ -365,7 +365,7 @@ Thanks!</field>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="state">draft</field>
-            <field name="type">in_invoice</field>
+            <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
         </record>

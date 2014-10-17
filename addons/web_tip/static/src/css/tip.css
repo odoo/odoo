@@ -1,0 +1,56 @@
+.oe_tip_overlay {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    opacity: 0.6;
+    z-index: 1001;
+    background-color: #000;
+    background: -moz-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -webkit-gradient(radial,center center,0px,center center,100%,color-stop(0%,rgba(0,0,0,0.4)),color-stop(100%,rgba(0,0,0,0.9)));
+    background: -webkit-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -o-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: -ms-radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    background: radial-gradient(center,ellipse cover,rgba(0,0,0,0.4) 0,rgba(0,0,0,0.9) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66000000',endColorstr='#e6000000',GradientType=1);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    -webkit-transition: all 0.3s ease-out;
+       -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+         -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+}
+
+.oe_tip_helper {
+    position: absolute;
+    z-index: 1008;
+    background-color: #FFF;
+    background-color: rgba(255,255,255,.9);
+    border: 1px solid #777;
+    border: 1px solid rgba(0,0,0,.5);
+    border-radius: 4px;
+    box-shadow: 0 2px 15px rgba(0,0,0,.4);
+    -webkit-transition: all 0.3s ease-out;
+       -moz-transition: all 0.3s ease-out;
+        -ms-transition: all 0.3s ease-out;
+         -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+}
+
+.oe_tip_close {
+    padding: 5px 5px 10px 10px !important;
+    margin-top: -15px;
+    margin-right: -15px;
+}
+
+.oe_tip_fix_parent {
+    z-index: auto !important;
+    opacity: 1.0 !important;
+}
+
+.oe_tip_show_element {
+    z-index: 1011 !important;
+    position: relative;
+}

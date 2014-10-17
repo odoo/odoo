@@ -44,6 +44,8 @@ class MassMailingContact(osv.Model):
             ondelete='cascade', required=True,
         ),
         'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive mails anymore from this list'),
+        'unsubscription_date': fields.datetime('Unsubscription Date'),
+        'message_bounce': fields.integer('Bounce', help='Counter of the number of bounced emails for this contact.'),
     }
 
     def _get_latest_list(self, cr, uid, context={}):
@@ -53,6 +55,21 @@ class MassMailingContact(osv.Model):
     _defaults = {
         'list_id': _get_latest_list
     }
+
+    def on_change_opt_out(self, cr, uid, id, opt_out, context=None):
+        return {'value': {
+            'unsubscription_date': opt_out and fields.datetime.now() or False,
+        }}
+
+    def create(self, cr, uid, vals, context=None):
+        if 'opt_out' in vals:
+            vals['unsubscription_date'] = vals['opt_out'] and fields.datetime.now() or False
+        return super(MassMailingContact, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'opt_out' in vals:
+            vals['unsubscription_date'] = vals['opt_out'] and fields.datetime.now() or False
+        return super(MassMailingContact, self).write(cr, uid, ids, vals, context=context)
 
     def get_name_email(self, name, context):
         name, email = self.pool['res.partner']._parse_partner_name(name, context=context)
@@ -77,6 +94,14 @@ class MassMailingContact(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {'partner_ids': [], 'email_to': record.email, 'email_cc': False}
         return res
+
+    def message_receive_bounce(self, cr, uid, ids, mail_id=None, context=None):
+        """Called by ``message_process`` when a bounce email (such as Undelivered
+        Mail Returned to Sender) is received for an existing thread. As contacts
+        do not inherit form mail.thread, we have to define this method to be able
+        to track bounces (see mail.thread for more details). """
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 
 
 class MassMailingList(osv.Model):
@@ -357,6 +382,7 @@ class MassMailing(osv.Model):
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
         ),
+        'keep_archives': fields.boolean('Keep Archives'),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',

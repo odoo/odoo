@@ -132,5 +132,79 @@ response = request.render("website.template_partner_comment", values)
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
         </record>
+
+        <record id="website2" model="website">
+            <field name="name">0.0.0.0</field>
+            <field name="social_twitter">https://twitter.com/odooapps</field>
+            <field name="social_facebook">https://www.facebook.com/Odoo</field>
+            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
+            <field name="social_linkedin">http://www.linkedin.com/company/odoo</field>
+            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
+            <field name="default_lang_id" ref="base.lang_en"/>
+        </record>
+
+        <record id="website2_homepage" model="ir.ui.view">
+            <field name="name">Homepage</field>
+            <field name="type">qweb</field>
+            <field name="key">website.homepage</field>
+            <field name="website_id" ref="website2"/>
+            <field name="arch" type="xml">
+                <t name="Homepage" priority="29" t-name="website.homepage">
+                  <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                      <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
+                        <ol class="carousel-indicators hidden">
+                          <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
+                        </ol>
+                        <div class="carousel-inner">
+                          <div class="item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/website/static/src/img/banner/mountains.jpg);">
+                            <div class="container">
+                              <div class="row content">
+                                <div class="carousel-content col-md-6 col-sm-12">
+                                  <h2>Homepage 0.0.0.0</h2>
+                                  <h3>Click to customize this text</h3>
+                                  <p>
+                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
+                                  </p>
+                                </div>
+                                <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                          <i class="fa fa-chevron-left"/>
+                        </div>
+                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                          <i class="fa fa-chevron-right"/>
+                        </div>
+                      </div>
+                    </div>
+                  </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="website2_main_menu" model="website.menu">
+            <field name="name">Top Menu</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
+        <record id="website2_menu_homepage" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/page/homepage</field>
+            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
+        <record id="website2_menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/page/website.contactus</field>
+            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
     </data>
 </openerp>

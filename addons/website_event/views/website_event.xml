@@ -5,6 +5,7 @@
 <template id="event_script" inherit_id="website.assets_frontend" name="Country Events Snippet Script">
     <xpath expr="/t" position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
     </xpath>
 </template>
 
@@ -236,7 +237,7 @@
 
 <template id="template_location">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -245,7 +246,7 @@
 
 <template id="template_intro">
     <t t-call="website_event.layout">
-        <section class="container" data-snippet-id="title">
+        <section class="container">
             <h1 class="text-center">Event Introduction</h1>
         </section>
         <div class="oe_structure oe_empty"/>
@@ -289,6 +290,9 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
+            <t t-call="website_event.registration_template"/>
+            <div class="clearfix"/>
+            <hr/>
             <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
             <ul class="media-list" id="comment">
@@ -367,6 +371,145 @@
     </t>
 </template>
 
+<!-- Registration Templates -->
+<template id="registration_template">
+    <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <table itemprop="offers" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket Type</th>
+                    <th style="min-width: 100px">End of Subscription</th>
+                    <th style="min-width: 100px">Price</th>
+                    <th></th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Event Subscription</td>
+                    <td>
+                        <t t-if="event.date_begin">
+                            <span t-field="event.date_begin"/>
+                        </t>
+                        <t t-if="not event.date_begin">
+                            <span>Unlimited</span>
+                        </t>
+                    </td>
+                    <td>Free</td>
+                    <td></td>
+                    <td>
+                        <select t-if="event.seats_available" name="nb_register-0" class="form-control">
+                            <t t-foreach="range(0, event.seats_available > 9 and 10 or event.seats_available+1)" t-as="nb">
+                                <option t-esc="nb"/>
+                            </t>
+                        </select>
+                        <span t-if="not event.seats_available">Sold Out</span>
+                    </td>
+                 </tr>
+            </tbody>
+        </table>
+        <t t-if="event.seats_available">
+            <button type="submit" t-if="event.seats_available" class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
+        </t>
+    </form>
+</template>
+
+<template id="registration_attendee_details" name="Registration Attendee Details">
+    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="myModalLabel"><strong>Attendees</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <t t-set="counter" t-value="0"/>
+                            <t t-foreach="tickets" t-as="ticket">
+                                <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter">
+                                    <t t-set="counter" t-value="counter + 1"/>
+                                    <div>
+                                        <h4><strong>Ticket #<t t-raw="counter"/>: <t t-esc="ticket['name']"/> (
+                                        <t t-if="ticket['price'] > 0"><t t-esc="ticket['price']"/><t t-esc="website.pricelist_id.currency_id.symbol"/></t>
+                                        <t t-if="ticket['price'] == 0">Free</t>
+                                        )</strong></h4><hr/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Name</strong></div>
+                                        <div class="col-md-4"><strong>Phone</strong></div>
+                                        <div class="col-md-4"><strong>Email</strong></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><input class='form-control input-sm' type='text' t-attf-name="#{counter}-name"/></div>
+                                        <div class="col-md-4"><input class='form-control input-sm' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                        <div class="col-md-4"><input class='form-control input-sm' type='email' t-attf-name="#{counter}-email"/></div>
+                                        <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                    </div><hr/>
+                                </t>
+                                <t t-set="counter" t-value="counter + ticket['quantity']"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            <button type="submit" class="btn btn-primary">Continue</button> or 
+                            <a class="js_goto_event"> Cancel Registration</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="registration_complete" name="Registration Completed">
+    <t t-call="website.layout">
+        <div class="container">
+            <h3>We are glad to confirm your subscription to our event</h3>
+            <div class="row">
+                <div class="col-md-3 mt16">
+                    <h4>Event Details</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
+                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            }'/>
+                </div>
+                <div class="col-md-3 mt16">
+                    <h4>Your subscription</h4>
+                </div>
+                <div class="col-md-9 mt16">
+                    <table class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Name</th>
+                                <th>E-mail</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="attendees" t-as="attendee">
+                                <tr>
+                                    <td><t t-esc="attendee.id"/></td>
+                                    <td><i class="fa fa-user"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
+                                    <td><i class="fa fa-envelope"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
+                                    <td><i class="fa fa-phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
     <xpath expr="//div[@id='snippet_content']" position="inside">
         <div>
@@ -389,15 +532,16 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='country_events'
+        <div data-js='country_events'
             data-selector=".oe_country_events"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
-            data-selector-children=".content"
+            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+            data-drop-in=".content"
            >
         </div>
     </xpath>
 </template>
 
+<!-- Misc templates -->
 <template id="country_events_list" name="Country">
     <t t-ignore="true">
         <t t-if="events">

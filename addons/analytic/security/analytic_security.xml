@@ -15,6 +15,13 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
+    
+    <record id="analytic_journal_comp_rule" model="ir.rule">
+        <field name="name">Analytic journal multi-company</field>
+        <field name="model_id" ref="model_account_analytic_journal"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
 
 </data>
 <data noupdate="0">

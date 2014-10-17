@@ -1,135 +1,6 @@
 (function () {
     'use strict';
 
-/*  Building block / Snippet Editor
- 
-    The building blocks appear in the edit bar website. These prebuilt html block
-    allowing the designer to easily generate content on a page (drag and drop).
-    Options allow snippets to add customizations part html code according to their
-    selector (jQuery) and javascript object.
-    
-    How to create content?
-
-    Designers can add their own html block in the "snippets" (/website/views/snippets.xml).
-    The block must be added in one of four menus (structure, content, feature or effect).
-    Structure:
-        <div>
-            <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="...image src..."/>
-                <span class="oe_snippet_thumbnail_title">...Block Name...</span>
-            </div>
-            <div class="oe_snippet_body">
-                ...
-                <!-- 
-                    The block with class 'oe_snippet_body' is inserted in the page.
-                    This class is removed when the block is dropped.
-                    The block can be made of any html tag and content. -->
-            </div>
-        </div>
-
-    How to create options?
-
-    Designers can add their own html block in the "snippet_options" (/website/views/snippets.xml).
-    Structure:
-
-        <div data-snippet-option-id='...'           <!-- Required: javascript object id (but javascript
-                                                        for this option object is not required) -->
-            data-selector="..."                     <!-- Required: jQuery selector.
-                                                        Apply options on all The part of html who 
-                                                        match with this jQuery selector.
-                                                        E.g.: If the selector is div, all div will be selected
-                                                        and can be highlighted and assigned an editor.  -->
-            data-selector-siblings="..."            <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move beside
-                                                        the selected html block -->
-            data-selector-children="..."            <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move inside
-                                                        the selected html block -->
-            data-selector-vertical-children='...'>  <!-- Optional: jQuery selector.
-                                                        The html part can be insert or move inside
-                                                        the selected html block. The drop zone is
-                                                        displayed vertically -->
-                ...
-                <li><a href="#">...</a></li>        <!-- Optional: html li list.
-                                                        List of menu items displayed in customize
-                                                        menu. If the li tag have 'data-class', the
-                                                        class is automaticcally added or removed to
-                                                        the html content when the user select this item. -->
-                ...
-                <li class="dropdown-submenu"                <!-- Optional: html li list exemple. !-->
-                    data-required="true">                   <!-- Optional: if only one item can be selected
-                                                                and can't be unselect. !-->
-                    <a tabindex="-1" href="#">...</a>       <!-- bootstrap dropdown button !-->
-                    <ul class="dropdown-menu">
-                        <li data-value="text_only"><a>...</a></li>      <!-- by default data-value is apply
-                                                                            like a class to html block !-->
-                    </ul>
-                </li>
-        </div>
-
-        How to create a javascript object for an options?
-
-        openerp.website.snippet.options["...option-id..."] = website.snippet.Option.extend({
-            // start is called when the user click into a block or when the user drop a block 
-            // into the page (just after the init method).
-            // start is usually used to bind event.
-            //
-            // this.$target: block html inserted inside the page
-            // this.$el: html li list of this options
-            // this.$overlay: html editor overlay who content resize bar, customize menu...
-            start: function () {},
-
-
-            // onFocus is called when the user click inside the block inserted in page
-            // and when the user drop on block into the page
-            onFocus : function () {},
-
-
-            // onBlur is called when the user click outside the block inserted in page, if
-            // the block is focused
-            onBlur : function () {},
-
-
-            // on_clone is called when the snippet is duplicate
-            // @variables: $clone is allready inserted is the page
-            on_clone: function ($clone) {},
-
-
-            // on_remove is called when the snippet is removed (dom is removing after this tigger)
-            on_remove: function () {},
-
-
-            // drop_and_build_snippet is called just after that a thumbnail is drag and dropped
-            // into a drop zone. The content is already inserted in the page.
-            drop_and_build_snippet: function () {},
-
-            // select is called when a user select an item in the li list of options
-            // By default, if the li item have a data-value attribute, the data-vlue it's apply
-            // like a class to the html block (this.$target)
-            // @variables: next_previous = {$next, $prev}
-            //      $next = next item selected or false
-            //      $prev = previous item selected or false
-            select: function (event, next_previous) {}
-
-            // preview is called when a user is on mouse over or mouse out of an item
-            // variables: next_previous = {$next, $prev}
-            //      $next = next item selected or false
-            //      $prev = previous item selected or false
-            preview: function (event, next_previous) {}
-
-            // clean_for_save
-            // clean_for_save is called just before to save the vue
-            // Sometime it's important to remove or add some datas (contentEditable, added 
-            // classes to a running animation...)
-            clean_for_save: function () {}
-        });
-
-
-    // 'snippet-dropped' is triggered on '#oe_snippets' whith $target as attribute when a snippet is dropped
-    // 'snippet-activated' is triggered on '#oe_snippets' (and on snippet) when a snippet is activated
-
-*/
-
     var dummy = function () {};
 
     var website = openerp.website;
@@ -177,8 +48,25 @@
         }
     });
 
+    $.extend($.expr[':'],{
+        checkData: function(node,i,m){
+            var dataName = m[3];
+            while (node) {
+                if (node.dataset && node.dataset[dataName]) {
+                    return true;
+                } else {
+                    node = node.parentNode;
+                }
+            }
+            return false;
+        },
+        hasData: function(node,i,m){
+            return !!_.toArray(node.dataset).length;
+        },
+    });
+
     if (!website.snippet) website.snippet = {};
-    website.snippet.templateOptions = {};
+    website.snippet.templateOptions = [];
     website.snippet.globalSelector = "";
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -198,25 +86,6 @@
                 subtree: true,
             });
         },
-        dom_filter: function (dom, sibling) {
-            if (typeof dom === "string") {
-                var include = "[data-oe-model]";
-                var sdom = dom.split(',');
-                dom = "";
-                _.each(sdom, function (val) {
-                    val = val.replace(/^\s+|\s+$/g, '');
-                    dom += include + " " + val + ", ";
-                    if (!sibling) {
-                        val = val.split(" ");
-                        dom += val.shift() + include + val.join(" ") + ", ";
-                    }
-                });
-                dom = dom.replace(/,\s*$/g, '');
-                return $(dom);
-            } else {
-                return (!sibling && $(dom).is("[data-oe-model]")) || $(dom).parents("[data-oe-model]").length ? $(dom) : $("");
-            }
-        },
         start: function() {
             var self = this;
 
@@ -224,18 +93,16 @@
                 .prependTo(this.parent.$("#website-top-edit ul"))
                 .find("button");
 
-            this.$button.click(function () {
-                self.make_active(false);
-                self.$el.toggleClass("hidden");
-            });
-            $("#wrapwrap").click(function () {
+            this.$button.click(_.bind(this.show_blocks, this));
+
+            this.$snippet = $("#oe_snippets");
+            this.$wrapwrap = $("#wrapwrap");
+            this.$wrapwrap.click(function () {
                 self.$el.addClass("hidden");
             });
 
             this.fetch_snippet_templates();
-
             this.bind_snippet_click_editor();
-
             this.$el.addClass("hidden");
 
             $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
@@ -245,10 +112,68 @@
             this.getParent().on('change:height', this, function (editor) {
                 self.$el.css('top', editor.get('height'));
             });
-            self.$el.css('top', this.parent.get('height'));
+            this.$el.css('top', this.parent.get('height'));
+        },
+        show_blocks: function () {
+            var self = this;
+            this.make_active(false);
+            this.$el.toggleClass("hidden");
+            if (this.$el.hasClass("hidden")) {
+                return;
+            }
+
+            //this.enable_snippets( this.$snippet.find(".tab-pane.active") );
+            var categories = this.$snippet.find(".tab-pane.active")
+                .add(this.$snippet.find(".tab-pane:not(.active)"))
+                .get().reverse();
+            function enable() {
+                self.enable_snippets( $(categories.pop()) );
+                if (categories.length) {
+                    setTimeout(enable,10);
+                }
+            }
+            setTimeout(enable,0);
+        },
+        enable_snippets: function ($category) {
+            var self = this;
+            $category.find(".oe_snippet_body").each(function () {
+                var $snippet = $(this);
+
+                if (!$snippet.data('selectors')) {
+                    var selectors = [];
+                    for (var k in website.snippet.templateOptions) {
+                        var option = website.snippet.templateOptions[k];
+                        if ($snippet.is(option.base_selector)) {
+
+                            var dropzone = [];
+                            if (option['drop-near']) dropzone.push(option['drop-near']);
+                            if (option['drop-in']) dropzone.push(option['drop-in']);
+                            if (option['drop-in-vertical']) dropzone.push(option['drop-in-vertical']);
+                            selectors = selectors.concat(dropzone);
+                        }
+                    }
+                    $snippet.data('selectors', selectors.length ? selectors.join(":first, ") + ":first" : "");
+                }
+
+                if ($snippet.data('selectors').length && self.$wrapwrap.find($snippet.data('selectors')).size()) {
+                    $snippet.closest(".oe_snippet").removeClass("disable");
+                } else {
+                    $snippet.closest(".oe_snippet").addClass("disable");
+                }
+            });
+            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]')
+                .toggle(!!$category.find(".oe_snippet:not(.disable)").size());
         },
         _get_snippet_url: function () {
             return '/website/snippets';
+        },
+        _add_check_selector : function (selector, no_check) {
+            var data = selector.split(",");
+            var selectors = [];
+            for (var k in data) {
+                selectors.push(data[k].replace(/^\s+|\s+$/g, '') + (no_check ? "" : ":checkData(oeModel)"));
+            }
+            return selectors.join(", ");
         },
         fetch_snippet_templates: function () {
             var self = this;
@@ -258,34 +183,42 @@
                     var $html = $(html);
 
                     var selector = [];
-                    var $styles = $html.find("[data-snippet-option-id]");
+                    var $styles = $html.find("[data-js], [data-selector]");
                     $styles.each(function () {
                         var $style = $(this);
-                        var style_id = $style.data('snippet-option-id');
-                        website.snippet.templateOptions[style_id] = {
-                            'snippet-option-id' : style_id,
-                            'selector': $style.data('selector'),
+                        var no_check = $style.data('no-check');
+                        var option_id = $style.data('js');
+                        var option = {
+                            'option' : option_id,
+                            'base_selector': $style.data('selector'),
+                            'selector': self._add_check_selector($style.data('selector'), no_check),
                             '$el': $style,
-                            'selector-siblings': $style.data('selector-siblings'),
-                            'selector-children': $style.data('selector-children'),
-                            'selector-vertical-children': $style.data('selector-vertical-children'),
+                            'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
+                            'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
                             'data': $style.data()
                         };
-                        selector.push($style.data('selector'));
+                        website.snippet.templateOptions.push(option);
+                        selector.push(option.selector);
                     });
                     $styles.addClass("hidden");
                     website.snippet.globalSelector = selector.join(",");
 
-                    self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
+                    self.$snippets = $html.find(".tab-content > div > div")
+                        .addClass("oe_snippet")
+                        .each(function () {
+                            if (!$('.oe_snippet_thumbnail', this).size()) {
+                                var $div = $(
+                                    '<div class="oe_snippet_thumbnail">'+
+                                        '<div class="oe_snippet_thumbnail_img"/>'+
+                                        '<span class="oe_snippet_thumbnail_title"></span>'+
+                                    '</div>');
+                                $div.find('span').text($(this).attr("name"));
+                                $(this).prepend($div);
+                            }
+                            $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                        });
+
                     self.$el.append($html);
-
-
-                    var snippets = 0;
-                    self.$snippets.each(function () {
-                        if (self.snippet_have_dropzone($(this)))
-                            snippets++;
-                    });
-                    if (!snippets) self.$button.css("display", "none");
 
                     self.make_snippet_draggable(self.$snippets);
                 });
@@ -310,17 +243,10 @@
         hide: function () {
             this.$el.addClass("hidden");
         },
-
-        snippet_have_dropzone: function ($snippet) {
-            return (($snippet.data('selector-siblings') && this.dom_filter($snippet.data('selector-siblings')).size() > 0) ||
-                    ($snippet.data('selector-children') && this.dom_filter($snippet.data('selector-children')).size() > 0) ||
-                    ($snippet.data('selector-vertical-children') && this.dom_filter($snippet.data('selector-vertical-children')).size() > 0));
-        },
-
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag;
-            $("#wrapwrap").on('click', function (event) {
+            self.$wrapwrap.on('click', function (event) {
                 var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
                 if (snipped_event_flag || !srcElement) {
                     return;
@@ -338,9 +264,6 @@
                     $target = $target.parents(website.snippet.globalSelector).first();
                 }
 
-                if (!self.dom_filter($target).length) {
-                    $target = false;
-                }
                 if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
                     return;
                 }
@@ -350,14 +273,14 @@
         snippet_blur: function ($snippet) {
             if ($snippet) {
                 if ($snippet.data("snippet-editor")) {
-                    $snippet.data("snippet-editor").onBlur();
+                    $snippet.data("snippet-editor").on_blur();
                 }
             }
         },
         snippet_focus: function ($snippet) {
             if ($snippet) {
                 if ($snippet.data("snippet-editor")) {
-                    $snippet.data("snippet-editor").onFocus();
+                    $snippet.data("snippet-editor").on_focus();
                 }
             }
         },
@@ -365,15 +288,15 @@
             var self = this;
             var options = website.snippet.options;
             var template = website.snippet.templateOptions;
-            for (var k in options) {
-                if (template[k] && options[k].prototype.clean_for_save !== dummy) {
-                    var $snippet = this.dom_filter(template[k].selector);
-                    $snippet.each(function () {
-                        new options[k](self, null, $(this), k).clean_for_save();
+            for (var k in template) {
+                var Option = options[template[k]['option']];
+                if (Option && Option.prototype.clean_for_save !== dummy) {
+                    self.$wrapwrap.find(template[k].selector).each(function () {
+                        new Option(self, null, $(this), k).clean_for_save();
                     });
                 }
             }
-            $("*[contentEditable], *[attributeEditable]")
+            self.$wrapwrap.find("*[contentEditable], *[attributeEditable]")
                 .removeAttr('contentEditable')
                 .removeAttr('attributeEditable');
         },
@@ -393,7 +316,7 @@
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snippet);
             }
-            $("#oe_snippets").trigger('snippet-activated', $snippet);
+            this.$snippet.trigger('snippet-activated', $snippet);
             if ($snippet) {
                 $snippet.trigger('snippet-activated', $snippet);
             }
@@ -407,19 +330,10 @@
             this.cover_target($snippet.data('overlay'), $snippet);
         },
 
-        path_eval: function(path){
-            var obj = window;
-            path = path.split('.');
-            do{
-                obj = obj[path.shift()];
-            }while(path.length && obj);
-            return obj;
-        },
-
         // activate drag and drop for the snippets in the snippet toolbar
         make_snippet_draggable: function($snippets){
             var self = this;
-            var $tumb = $snippets.find(".oe_snippet_thumbnail:first");
+            var $tumb = $snippets.find(".oe_snippet_thumbnail_img:first");
             var left = $tumb.outerWidth()/2;
             var top = $tumb.outerHeight()/2;
             var $toInsert, dropped, $snippet, action, snipped_id;
@@ -438,43 +352,40 @@
                 start: function(){
                     self.hide();
                     dropped = false;
-                    // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
+                    // snippet_selectors => to get drop-near, drop-in
                     $snippet = $(this);
-                    $toInsert = $snippet.find('.oe_snippet_body').clone();
-
+                    var $base_body = $snippet.find('.oe_snippet_body');
                     var selector = [];
                     var selector_siblings = [];
                     var selector_children = [];
-                    var selector_vertical_children = [];
-                    for (var k in website.snippet.templateOptions) {
-                        if ($toInsert.is(website.snippet.templateOptions[k].selector)) {
-                            selector.push(website.snippet.templateOptions[k].selector);
-                            if (website.snippet.templateOptions[k]['selector-siblings'])
-                                selector_siblings.push(website.snippet.templateOptions[k]['selector-siblings']);
-                            if (website.snippet.templateOptions[k]['selector-children'])
-                                selector_children.push(website.snippet.templateOptions[k]['selector-children']);
-                            if (website.snippet.templateOptions[k]['selector-vertical-children'])
-                                selector_vertical_children.push(website.snippet.templateOptions[k]['selector-vertical-children']);
+                    var vertical = false;
+                    var temp = website.snippet.templateOptions;
+                    for (var k in temp) {
+                        if ($base_body.is(temp[k].base_selector)) {
+                            selector.push(temp[k].base_selector);
+                            if (temp[k]['drop-near'])
+                                selector_siblings.push(temp[k]['drop-near']);
+                            if (temp[k]['drop-in'])
+                                selector_children.push(temp[k]['drop-in']);
                         }
                     }
 
+                    $toInsert = $base_body.clone();
                     action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
 
                     if( action === 'insert'){
-                        if (!selector_siblings.length && !selector_children.length && !selector_vertical_children.length) {
-                            console.debug($snippet.data("snippet-id") + " have oe_snippet_body class and have not for insert action"+
-                                "data-selector-siblings, data-selector-children or data-selector-vertical-children tag for mutate action");
+                        if (!selector_siblings.length && !selector_children.length) {
+                            console.debug($snippet.find(".oe_snippet_thumbnail_title").text() + " have not insert action: data-drop-near or data-drop-in");
                             return;
                         }
                         self.activate_insertion_zones({
                             siblings: selector_siblings.join(","),
                             children: selector_children.join(","),
-                            vertical_children: selector_vertical_children.join(","),
                         });
 
                     } else if( action === 'mutate' ){
                         if (!$snippet.data('selector')) {
-                            console.debug($snippet.data("snippet-id") + " have not oe_snippet_body class and have not data-selector tag");
+                            console.debug($snippet.data("option") + " have not oe_snippet_body class and have not data-selector tag");
                             return;
                         }
                         var $targets = self.activate_overlay_zones(selector_children.join(","));
@@ -505,38 +416,24 @@
                 stop: function(ev, ui){
                     $toInsert.removeClass('oe_snippet_body');
                     
-                    if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
-                        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
+                    if (action === 'insert' && ! dropped && self.$wrapwrap.find('.oe_drop_zone') && ui.position.top > 3) {
+                        var el = self.$wrapwrap.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
                             el.after($toInsert);
                             dropped = true;
                         }
                     }
 
-                    $('.oe_drop_zone').droppable('destroy').remove();
+                    self.$wrapwrap.find('.oe_drop_zone').droppable('destroy').remove();
                     
                     if (dropped) {
                         var $target = false;
                         $target = $toInsert;
 
                         setTimeout(function () {
-                            $("#oe_snippets").trigger('snippet-dropped', $target);
+                            self.$snippet.trigger('snippet-dropped', $target);
 
                             website.snippet.start_animation(true, $target);
-                            // drop_and_build_snippet
-                            self.create_overlay($target);
-                            if ($target.data("snippet-editor")) {
-                                $target.data("snippet-editor").drop_and_build_snippet();
-                            }
-                            for (var k in website.snippet.templateOptions) {
-                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
-                                    var $snippet = $(this);
-                                    self.create_overlay($snippet);
-                                    if ($snippet.data("snippet-editor")) {
-                                        $snippet.data("snippet-editor").drop_and_build_snippet();
-                                    }
-                                });
-                            }
 
                             // reset snippet for rte
                             $target.removeData("snippet-editor");
@@ -552,7 +449,22 @@
                                     $snippet.removeData("overlay");
                                 }
                             });
+                            // end
+
+                            // drop_and_build_snippet
                             self.create_overlay($target);
+                            if ($target.data("snippet-editor")) {
+                                $target.data("snippet-editor").drop_and_build_snippet();
+                            }
+                            for (var k in website.snippet.templateOptions) {
+                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
+                                    var $snippet = $(this);
+                                    self.create_overlay($snippet);
+                                    if ($snippet.data("snippet-editor")) {
+                                        $snippet.data("snippet-editor").drop_and_build_snippet();
+                                    }
+                                });
+                            }
                             // end
 
                             self.make_active($target);
@@ -567,7 +479,7 @@
         // return the original snippet in the editor bar from a snippet id (string)
         get_snippet_from_id: function(id){
             return $('.oe_snippet').filter(function(){
-                    return $(this).data('snippet-id') === id;
+                    return $(this).data('option') === id;
                 }).first();
         },
 
@@ -580,57 +492,48 @@
             var self = this;
             var child_selector = selector.children;
             var sibling_selector = selector.siblings;
-            var vertical_child_selector   =  selector.vertical_children;
 
-            var zone_template = "<div class='oe_drop_zone oe_insert'></div>";
+            var zone_template = $("<div class='oe_drop_zone oe_insert'></div>");
 
             if(child_selector){
-                self.dom_filter(child_selector).each(function (){
+                self.$wrapwrap.find(child_selector).each(function (){
                     var $zone = $(this);
-                    $zone.find('> *:not(.oe_drop_zone):visible').after(zone_template);
-                    $zone.prepend(zone_template);
-                });
-            }
-
-            if(vertical_child_selector){
-                self.dom_filter(vertical_child_selector).each(function (){
-                    var $zone = $(this);
-                    var $template = $(zone_template).addClass("oe_vertical");
-                    var nb = 0;
-                    var $lastinsert = false;
-                    var left = 0;
-                    var temp_left = 0;
-                    $zone.find('> *:not(.oe_drop_zone):visible').each(function () {
-                        var $col = $(this);
-                        $template.css('height', ($col.outerHeight() + parseInt($col.css("margin-top")) + parseInt($col.css("margin-bottom")))+'px');
-                        $lastinsert = $template.clone();
-                        $(this).after($lastinsert);
-
-                        temp_left = $col.position().left;
-                        if (left === temp_left) {
-                            $col.prev(".oe_drop_zone.oe_vertical").remove();
-                            $col.before($template.clone().css("clear", "left"));
-                        }
-                        else if (!nb) {
-                            $col.before($template.clone());
-                        }
-                        left = temp_left;
-                        nb ++;
-                    });
-                    if (!nb) {
-                        $zone.prepend($template.css('height', $zone.outerHeight()+'px'));
+                    var vertical;
+                    var float = window.getComputedStyle(this).float;
+                    if (float === "left" || float === "right") {
+                        vertical = $zone.parent().outerHeight()+'px';
                     }
+                    var $drop = zone_template.clone();
+                    if (vertical) {
+                        $drop.addClass("oe_vertical").css('height', vertical);
+                    }
+                    $zone.find('> *:not(.oe_drop_zone):visible').after($drop);
+                    $zone.prepend($drop.clone());
                 });
             }
 
             if(sibling_selector){
-                self.dom_filter(sibling_selector, true).each(function (){
+                self.$wrapwrap.find(sibling_selector, true).each(function (){
                     var $zone = $(this);
+                    var $drop, vertical;
+                    var float = window.getComputedStyle(this).float;
+                    if (float === "left" || float === "right") {
+                        vertical = $zone.parent().outerHeight()+'px';
+                    }
+
                     if($zone.prev('.oe_drop_zone:visible').length === 0){
-                        $zone.before(zone_template);
+                        $drop = zone_template.clone();
+                        if (vertical) {
+                            $drop.addClass("oe_vertical").css('height', vertical);
+                        }
+                        $zone.before($drop);
                     }
                     if($zone.next('.oe_drop_zone:visible').length === 0){
-                        $zone.after(zone_template);
+                        $drop = zone_template.clone();
+                        if (vertical) {
+                            $drop.addClass("oe_vertical").css('height', vertical);
+                        }
+                        $zone.after($drop);
                     }
                 });
             }
@@ -642,17 +545,22 @@
                 // count += $zones.length;
                 // $zones.remove();
 
-                $zones = $('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
+                $zones = self.$wrapwrap.find('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
                 count += $zones.length;
                 $zones.remove();
             } while (count > 0);
 
-            // Cleaning up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = $('.oe_drop_zone:not(.oe_vertical)');
+            // Cleaning consecutive zone and up zones placed between floating or inline elements. We do not like these kind of zones.
+            var $zones = self.$wrapwrap.find('.oe_drop_zone:not(.oe_vertical)');
             $zones.each(function (){
                 var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
+                // remove consecutive zone
+                if (!zone.hasClass('.oe_vertical') && (prev.is('.oe_drop_zone:not(.oe_vertical)') || next.is('.oe_drop_zone:not(.oe_vertical)'))) {
+                    zone.remove();
+                    return;
+                }
                 var float_prev = prev.css('float')   || 'none';
                 var float_next = next.css('float')   || 'none';
                 var disp_prev  = prev.css('display') ||  null;
@@ -672,13 +580,8 @@
         // generate drop zones covering the elements selected by the selector
         // we generate overlay drop zones only to get an idea of where the snippet are, the drop
         activate_overlay_zones: function(selector){
-            var $targets = this.dom_filter(selector);
+            var $targets = typeof selector === "string" ? this.$wrapwrap.find(selector) : selector;
             var self = this;
-
-            if (typeof selector !== 'string' && !$targets.length) {
-                console.debug( "A good node must have a [data-oe-model] attribute or must have at least one parent with [data-oe-model] attribute.");
-                console.debug( "Wrong node(s): ", selector);
-            }
 
             function is_visible($el){
                 return     $el.css('display')    != 'none'
@@ -720,9 +623,14 @@
                     $target.on("DOMNodeInserted DOMNodeRemoved DOMSubtreeModified", function () {
                         self.cover_target($zone, $target);
                     });
-                    $('body').on("resize", function () {
-                        self.cover_target($zone, $target);
-                    });
+                    var resize = function () {
+                        if ($zone.parent().length) {
+                            self.cover_target($zone, $target);
+                        } else {
+                            $('body').off("resize", resize);
+                        }
+                    };
+                    $('body').on("resize", resize);
                 }
                 self.cover_target($target.data('overlay'), $target);
             });
@@ -734,97 +642,86 @@
     website.snippet.options = {};
     website.snippet.Option = openerp.Class.extend({
         // initialisation (don't overwrite)
-        init: function (BuildingBlock, editor, $target, snippet_id) {
+        init: function (BuildingBlock, editor, $target, option_id) {
             this.BuildingBlock = BuildingBlock;
             this.editor = editor;
             this.$target = $target;
+            var option = website.snippet.templateOptions[option_id];
             var styles = this.$target.data("snippet-option-ids") || {};
-            styles[snippet_id] = this;
+            styles[option_id] = this;
             this.$target.data("snippet-option-ids", styles);
             this.$overlay = this.$target.data('overlay') || $('<div>');
-            this['snippet-option-id'] = snippet_id;
-            var $option = website.snippet.templateOptions[snippet_id].$el;
-            this.$el = $option.find(">li").clone();
-            this.data = $option.data();
-
-            this.required = this.$el.data("required");
+            this.option= option_id;
+            this.$el = option.$el.find(">li").clone();
+            this.data = option.$el.data();
 
             this.set_active();
-            this.$el.find('li[data-value] a').on('mouseenter mouseleave click', _.bind(this._mouse, this));
-            this.$el.not(':not([data-value])').find("a").on('mouseenter mouseleave click', _.bind(this._mouse, this));
-            this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
+            this.$target.on('snippet-option-reset', _.bind(this.set_active, this));
+            this._bind_li_menu();
 
             this.start();
         },
+
+        _bind_li_menu: function () {
+            this.$el.filter("li:hasData").find('a:first')
+                .off('mouseenter click')
+                .on('mouseenter click', _.bind(this._mouse, this));
+
+            this.$el
+                .off('mouseenter click', "li:hasData a")
+                .on('mouseenter click', "li:hasData a", _.bind(this._mouse, this));
+
+            this.$el.closest("ul").add(this.$el)
+                .off('mouseleave')
+                .on('mouseleave', _.bind(this.reset, this));
+
+            this.$el
+                .off('mouseleave', "ul")
+                .on('mouseleave', "ul", _.bind(this.reset, this));
+
+            this.reset_methods = [];
+            this.reset_time = null;
+        },
+
+        /**
+         * this method handles mouse:over and mouse:leave on the snippet editor menu
+         */
+         _time_mouseleave: null,
         _mouse: function (event) {
-            var self = this;
+            var $next = $(event.currentTarget).parent();
 
-            if (event.type === 'mouseleave') {
-                if (!this.over) return;
-                this.over = false;
-            } else if (event.type === 'click') {
-                this.over = false;
-            }else {
-                this.over = true;
-            }
-
-            var $prev, $next;
-            if (event.type === 'mouseleave') {
-                $prev = $(event.currentTarget).parent();
-                $next = this.$el.find("li[data-value].active");
-            } else {
-                $prev = this.$el.find("li[data-value].active");
-                $next = $(event.currentTarget).parent();
-            }
-            if (!$prev.length) {
-                $prev = false;
-            }
-            if ($prev && $prev[0] === $next[0]) {
-                $next = false;
-                if (this.required) {
-                    return;
-                }
-            }
-
-            var np = {'$next': $next, '$prev': $prev};
-
+            // triggers preview or apply methods if a menu item has been clicked
+            this.select(event.type === "click" ? "click" : "over", $next);
             if (event.type === 'click') {
-                setTimeout(function () {
-                    self.set_active();
-                    self.$target.trigger("snippet-style-change", [self, np]);
-                },0);
-                this.select({'$next': $next, '$prev': $prev});
+                this.set_active();
+                this.$target.trigger("snippet-option-change", [this]);
             } else {
-                setTimeout(function () {
-                    self.$target.trigger("snippet-style-preview", [self, np]);
-                },0);
-                this.preview(np);
+                this.$target.trigger("snippet-option-preview", [this]);
             }
         },
-        /* set_active
+        /* 
         *  select and set item active or not (add highlight item and his parents)
         *  called before start
         */
         set_active: function () {
-            var self = this;
-            this.$el.find('li').removeClass("active");
-            var $active = this.$el.find('li[data-value]')
-                .filter(function () {
-                    var $li = $(this);
-                    return  ($li.data('value') && self.$target.hasClass($li.data('value')));
-                })
-                .first()
+            var classes = _.uniq((this.$target.attr("class") || '').split(/\s+/));
+            this.$el.find('[data-toggle_class], [data-select_class]')
+                .add(this.$el)
+                .filter('[data-toggle_class], [data-select_class]')
+                .removeClass("active")
+                .filter('[data-toggle_class="' + classes.join('"], [data-toggle_class="') + '"] ,'+
+                    '[data-select_class="' + classes.join('"], [data-select_class="') + '"]')
                 .addClass("active");
-            this.$el.find('li:has(li[data-value].active)').addClass("active");
         },
 
         start: function () {
         },
 
-        onFocus : function () {
+        on_focus : function () {
+            this._bind_li_menu();
         },
 
-        onBlur : function () {
+        on_blur : function () {
         },
 
         on_clone: function ($clone) {
@@ -836,110 +733,220 @@
         drop_and_build_snippet: function () {
         },
 
-        select: function (np) {
+        reset: function (event) {
             var self = this;
-            // add or remove html class
-            if (np.$prev && this.required) {
-                this.$target.removeClass(np.$prev.data('value' || ""));
+            var lis = self.$el.add(self.$el.find('li')).filter('.active').get();
+            lis.reverse();
+            _.each(lis, function (li) {
+                var $li = $(li);
+                for (var k in self.reset_methods) {
+                    var method = self.reset_methods[k];
+                    if ($li.is('[data-'+method+']') || $li.closest('[data-'+method+']').size()) {
+                        delete self.reset_methods[k];
+                    }
+                }
+                self.select("reset", $li);
+            });
+
+            for (var k in self.reset_methods) {
+                var method = self.reset_methods[k];
+                if (method) {
+                    self[method]("reset", null);
+                }
             }
-            if (np.$next) {
-                this.$target.addClass(np.$next.data('value') || "");
-            }
+            self.reset_methods = [];
+            self.$target.trigger("snippet-option-reset", [this]);
         },
 
-        preview: function (np) {
-            var self = this;
+        // call data-method args as method
+        select: function (type, $li) {
+            var self = this,
+                $methods = [],
+                el = $li[0],
+                $el;
+            clearTimeout(this.reset_time);
 
-            // add or remove html class
-            if (np.$prev) {
-                this.$target.removeClass(np.$prev.data('value') || "");
+            function filter (k) { return k !== 'oeId' && k !== 'oeModel' && k !== 'oeField' && k !== 'oeXpath' && k !== 'oeSourceId';}
+            function hasData(el) {
+                for (var k in el.dataset) {
+                    if (filter (k)) {
+                        return true;
+                    }
+                }
+                return false;
             }
-            if (np.$next) {
-                this.$target.addClass(np.$next.data('value') || "");
+            function method(el) {
+                var data = {};
+                for (var k in el.dataset) {
+                    if (filter (k)) {
+                        data[k] = el.dataset[k];
+                    }
+                }
+                return data;
             }
+
+            while (el && this.$el.is(el) || _.some(this.$el.map(function () {return $.contains(this, el);}).get()) ) {
+                if (hasData(el)) {
+                    $methods.push(el);
+                }
+                el = el.parentNode;
+            }
+
+            $methods.reverse();
+
+            _.each($methods, function (el) {
+                var $el = $(el);
+                var methods = method(el);
+
+                for (var k in methods) {
+                    if (self[k]) {
+                        if (type !== "reset" && self.reset_methods.indexOf(k) === -1) {
+                            self.reset_methods.push(k);
+                        }
+                        self[k](type, methods[k], $el);
+                    } else {
+                        console.error("'"+self.option+"' snippet have not method '"+k+"'");
+                    }
+                }
+            });
+        },
+
+        // default method for snippet
+        toggle_class: function (type, value, $li) {
+            var $lis = this.$el.find('[data-toggle_class]').add(this.$el).filter('[data-toggle_class]');
+
+            function map ($lis) {
+                return $lis.map(function () {return $(this).data("toggle_class");}).get().join(" ");
+            }
+            var classes = map($lis);
+            var active_classes = map($lis.filter('.active, :has(.active)'));
+
+            this.$target.removeClass(classes);
+            this.$target.addClass(active_classes);
+
+            if (type !== 'reset') {
+                this.$target.toggleClass(value);
+            }
+        },
+        select_class: function (type, value, $li) {
+            var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
+
+            var classes = $lis.map(function () {return $(this).data('select_class');}).get();
+
+            this.$target.removeClass(classes.join(" "));
+            if(value) this.$target.addClass(value);
+        },
+        eval: function (type, value, $li) {
+            var fn = new Function("node", "type", "value", "$li", value);
+            fn.call(this, this, type, value, $li);
         },
 
         clean_for_save: dummy
     });
-
     website.snippet.options.background = website.snippet.Option.extend({
-        _get_bg: function () {
-            return this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-        },
-        _set_bg: function (src) {
-            this.$target.css("background-image", src && src !== "" ? 'url(' + src + ')' : "");
-        },
         start: function () {
             this._super();
-            var src = this._get_bg();
-            this.$el.find("li[data-value].active.oe_custom_bg").data("src", src);
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            if (this.$target.hasClass('oe_custom_bg')) {
+                this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
+            }
         },
-        select: function(np) {
-            var self = this;
-            this._super(np);
-            if (np.$next) {
-                if (np.$next.hasClass("oe_custom_bg")) {
-                    var $image = $('<img class="hidden"/>');
-                    $image.attr("src", np.$prev ? np.$prev.data("src") : '');
-                    $image.appendTo(self.$target);
-
-                    self.element = new CKEDITOR.dom.element($image[0]);
-                    var editor = new website.editor.MediaDialog(self, self.element);
-                    editor.appendTo(document.body);
-                    editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
-
-                    $image.on('saved', self, function (o) {
-                        var src = $image.attr("src");
-                        self._set_bg(src);
-                        np.$next.data("src", src);
-                        self.$target.trigger("snippet-style-change", [self, np]);
-                        $image.remove();
-                    });
-                    editor.on('cancel', self, function () {
-                        if (!np.$prev || np.$prev.data("src") === "") {
-                            self.$target.removeClass(np.$next.data("value"));
-                            self.$target.trigger("snippet-style-change", [self, np]);
-                        }
-                        $image.remove();
-                    });
-                } else {
-                    this._set_bg(np.$next.data("src"));
-                }
+        background: function(type, value, $li) {
+            if (value && value.length) {
+                this.$target.css("background-image", 'url(' + value + ')');
+                this.$target.addClass("oe_img_bg");
             } else {
-                this._set_bg(false);
-                this.$target.removeClass(np.$prev.data("value"));
+                this.$target.css("background-image", "");
+                this.$target.removeClass("oe_img_bg").removeClass("oe_custom_bg");
             }
         },
-        preview: function (np) {
-            this._super(np);
-            if (np.$next) {
-                this._set_bg(np.$next.data("src"));
-            }
+        choose_image: function(type, value, $li) {
+            if(type !== "click") return;
+
+            var self = this;
+            var $image = $('<img class="hidden"/>');
+            $image.attr("src", value);
+            $image.appendTo(self.$target);
+
+            self.element = new CKEDITOR.dom.element($image[0]);
+            var editor = new website.editor.MediaDialog(self, self.element);
+            editor.appendTo(document.body);
+            editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+
+            $image.on('saved', self, function (o) {
+                var value = $image.attr("src");
+                self.$target.css("background-image", 'url(' + value + ')');
+                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
+                self.$target.trigger("snippet-option-change", [self]);
+                $image.remove();
+                self.$target.addClass('oe_custom_bg oe_img_bg');
+                self.set_active();
+            });
+            editor.on('cancel', self, function () {
+                self.$target.trigger("snippet-option-change", [self]);
+                $image.remove();
+            });
         },
         set_active: function () {
             var self = this;
-            var bg = self.$target.css("background-image");
-            this.$el.find('li').removeClass("active");
-            this.$el.find('li').removeClass("btn-primary");
-            var $active = this.$el.find('li[data-value]')
-                .filter(function () {
-                    var $li = $(this);
-                    return  ($li.data('src') && bg.indexOf($li.data('src')) >= 0) ||
-                            (!$li.data('src') && self.$target.hasClass($li.data('value')));
-                })
-                .first();
-            if (!$active.length) {
-                $active = this.$target.css("background-image") !== 'none' ?
-                    this.$el.find('li[data-value].oe_custom_bg') :
-                    this.$el.find('li[data-value=""]');
-            }
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            this._super();
 
-            //don't set active on an OpenDialog link, else it not possible to click on it again after.
-            // TODO in Saas-4 - Once bootstrap is in less
-            //      - add a class active-style to get the same display but without the active behaviour used by bootstrap in JS.
-            var classStr = _.string.contains($active[0].className, "oe_custom_bg") ? "btn-primary" : "active";
-            $active.addClass(classStr);
-            this.$el.find('li:has(li[data-value].active)').addClass(classStr);
+            this.$el.find('li[data-background]:not([data-background=""])')
+                .removeClass("active")
+                .each(function () {
+                    var background = $(this).data("background") || $(this).attr("data-background");
+                    if ((src.length && background.length && src.indexOf(background) !== -1) || (!src.length && !background.length)) {
+                        $(this).addClass("active");
+                    }
+                });
+
+            if (!this.$el.find('li[data-background].active').size()) {
+                this.$el.find('li[data-background=""]:not([data-choose_image])').addClass("active");
+            } else {
+                this.$el.find('li[data-background=""]:not([data-choose_image])').removeClass("active");
+            }
+        }
+    });
+
+    website.snippet.options.colorpicker = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+            var res = this._super();
+
+            this.$el.find('li').append( openerp.qweb.render('website.colorpicker') );
+
+            var classes = [];
+            this.$el.find("table.colorpicker td > *").map(function () {
+                var $color = $(this);
+                var color = $color.attr("class");
+                if (self.$target.hasClass(color)) {
+                    self.color = color;
+                    $color.parent().addClass("selected");
+                }
+                classes.push(color);
+            });
+            this.classes = classes.join(" ");
+
+            this.bind_events();
+            return res;
+        },
+        bind_events: function () {
+            var self = this;
+            var $td = this.$el.find("table.colorpicker td");
+            var $colors = $td.children();
+            $colors
+                .mouseenter(function () {
+                    self.$target.removeClass(self.classes).addClass($(this).attr("class"));
+                })
+                .mouseleave(function () {
+                    self.$target.removeClass(self.classes)
+                        .addClass($td.filter(".selected").children().attr("class"));
+                })
+                .click(function () {
+                    $td.removeClass("selected");
+                    $(this).parent().addClass("selected");
+                });
         }
     });
 
@@ -976,10 +983,10 @@
         },
         clean_for_save: function () {
             this._super();
-            this.$target.find(".item").removeClass("next prev left right active");
-            this.$target.find(".item:first").addClass("active");
-            this.$indicators.find('li').removeClass('active');
-            this.$indicators.find('li:first').addClass('active');
+            this.$target.find(".item").removeClass("next prev left right active")
+                .first().addClass("active");
+            this.$indicators.find('li').removeClass('active')
+                .first().addClass("active");
         },
         start : function () {
             var self = this;
@@ -988,14 +995,12 @@
             this.id = this.$target.attr("id");
             this.$inner = this.$target.find('.carousel-inner');
             this.$indicators = this.$target.find('.carousel-indicators');
-
-            this.$el.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
-            this.$el.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
-
             this.$target.carousel('pause');
             this.rebind_event();
         },
-        on_add_slide: function () {
+        add_slide: function (type, value) {
+            if(type !== "click") return;
+
             var self = this;
             var cycle = this.$inner.find('.item').length;
             var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
@@ -1025,7 +1030,9 @@
             },0);
             return $clone;
         },
-        on_remove_slide: function () {
+        remove_slide: function (type, value) {
+            if(type !== "click") return;
+
             if (this.remove_process) {
                 return;
             }
@@ -1054,6 +1061,13 @@
                 this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
             }
         },
+        interval : function(type, value) {
+            this.$target.attr("data-interval", value);
+        },
+        set_active: function () {
+            this.$el.find('li[data-interval]').removeClass("active")
+                .filter('li[data-interval='+this.$target.attr("data-interval")+']').addClass("active");
+        },
     });
     website.snippet.options.carousel = website.snippet.options.slider.extend({
         getSize: function () {
@@ -1063,12 +1077,11 @@
         },
         clean_for_save: function () {
             this._super();
-            this.$target.css("background-image", "");
-            this.$target.removeClass(this._class);
+            this.$target.removeClass('oe_img_bg ' + this._class).css("background-image", "");
         },
         load_style_options : function () {
             this._super();
-            $(".snippet-style-size li[data-value='']").remove();
+            $(".snippet-option-size li[data-value='']").remove();
         },
         start : function () {
             var self = this;
@@ -1079,46 +1092,30 @@
                 if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
                 return self._class || "";
             };
-            this.$target.on('snippet-style-change snippet-style-preview', function (event, style, np) {
-                var $active = self.$target.find(".item.active");
-                if (style['snippet-option-id'] === "size") return;
-                if (style['snippet-option-id'] === "background") {
-                    $active.css("background-image", self.$target.css("background-image"));
+            this.$target.on('slid.bs.carousel', function () {
+                if(self.editor && self.editor.styles.background) {
+                    self.editor.styles.background.$target = self.$target.find(".item.active");
+                    self.editor.styles.background.set_active();
                 }
-                if (np.$prev) {
-                    $active.removeClass(np.$prev.data("value"));
-                }
-                if (np.$next) {
-                    $active.addClass(np.$next.data("value"));
-                    add_class(np.$next.data("value"));
-                }
-            });
-            this.$target.on('slid', function () { // slide.bs.carousel
-                var $active = self.$target.find(".item.active");
-                self.$target
-                    .css("background-image", $active.css("background-image"))
-                    .removeClass(add_class($active.attr("class")))
-                    .addClass($active.attr("class"))
-                    .trigger("snippet-style-reset");
-
                 self.$target.carousel("pause");
             });
-            this.$target.trigger('slid');
+            this.$target.trigger('slid.bs.carousel');
         },
-        on_add_slide: function () {
-            var $clone = this._super();
+        add_slide: function (type, data) {
+            if(type !== "click") return;
 
+            var $clone = this._super(type, data);
             // choose an other background
             var bg = this.$target.data("snippet-option-ids").background;
             if (!bg) return $clone;
 
-            var $styles = bg.$el.find("li[data-value]:not(.oe_custom_bg)");
-            var styles_index = $styles.index($styles.filter(".active")[0]);
-            $styles.removeClass("active");
-            var $select = $($styles[styles_index >= $styles.length-1 ? 0 : styles_index+1]);
+            var $styles = bg.$el.find("li[data-background]");
+            var $select = $styles.filter(".active").removeClass("active").next("li[data-background]");
+            if (!$select.length) {
+                $select = $styles.first();
+            }
             $select.addClass("active");
-            $clone.css("background-image", $select.data("src") ? "url('"+ $select.data("src") +"')" : "");
-            $clone.addClass($select.data("value") || "");
+            $clone.css("background-image", $select.data("background") ? "url('"+ $select.data("background") +"')" : "");
 
             return $clone;
         },
@@ -1133,7 +1130,6 @@
             this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
         },
     });
-
     website.snippet.options.marginAndResize = website.snippet.Option.extend({
         start: function () {
             var self = this;
@@ -1261,7 +1257,7 @@
             return this.grid;
         },
 
-        onFocus : function () {
+        on_focus : function () {
             this._super();
             this.change_cursor();
         },
@@ -1361,7 +1357,7 @@
         hide_remove_button: function() {
             this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
         },
-        onFocus : function () {
+        on_focus : function () {
             this._super();
             this.hide_remove_button();
         },
@@ -1372,20 +1368,8 @@
             return false;
         },
         on_remove: function () {
-            if (!this.$target.siblings().length) {
-                var $parent = this.$target.parents(".row:first");
-                if($parent.find("[class*='col-md']").length > 1) {
-                    return false;
-                } else {
-                    if (!$parent.data("snippet-editor")) {
-                        this.BuildingBlock.create_overlay($parent);
-                    }
-                    $parent.data("snippet-editor").on_remove();
-                }
-            }
             this._super();
             this.hide_remove_button();
-            return false;
         },
         on_resize: function (compass, beginClass, current) {
             if (compass === 'w') {
@@ -1412,7 +1396,7 @@
         },
     });
 
-    website.snippet.options["resize"] = website.snippet.options.marginAndResize.extend({
+    website.snippet.options.resize = website.snippet.options.marginAndResize.extend({
         getSize: function () {
             this.grid = this._super();
             this.grid.size = 8;
@@ -1436,7 +1420,7 @@
                 this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
             }
             this.scroll();
-            this.$target.on('snippet-style-change snippet-style-preview', function () {
+            this.$target.on('snippet-option-change snippet-option-preview', function () {
                 self.$target.data("snippet-view").set_values();
             });
             this.$target.attr('contentEditable', 'false');
@@ -1445,21 +1429,14 @@
 
             this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
         },
-        scroll: function () {
-            var self = this;
-            var $ul = this.$el.find('ul[name="parallax-scroll"]');
-            var $li = $ul.find("li");
-            var speed = this.$target.data('scroll-background-ratio') || 0.6 ;
-            $ul.find('[data-value="' + speed + '"]').addClass('active');
-            $li.on('click', function (event) {
-                $li.removeClass("active");
-                $(this).addClass("active");
-                var speed =  $(this).data('value');
-                self.$target.attr('data-scroll-background-ratio', speed);
-                self.$target.data("snippet-view").set_values();
-                return false;
-            });
+        scroll: function (type, value) {
+            this.$target.attr('data-scroll-background-ratio', value);
             this.$target.data("snippet-view").set_values();
+        },
+        set_active: function () {
+            var value = this.$target.attr('data-scroll-background-ratio') || 0;
+            this.$el.find('[data-scroll]').removeClass("active")
+                .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
         },
         clean_for_save: function () {
             this._super();
@@ -1473,23 +1450,21 @@
         start: function () {
             var self = this;
             this._super();
-
-            this.$el.find(".clear-style").click(function (event) {
-                self.$target.removeClass("fa-spin").attr("style", "");
-                self.resetTransfo();
-            });
-
-            this.$el.find(".style").click(function (event) {
-                var settings = self.$target.data("transfo").settings;
-                self.$target.transfo({ hide: (settings.hide = !settings.hide) });
-            });
-
             this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-
             this.$overlay.find('[data-toggle="dropdown"]')
                 .on("mousedown", function () {
                     self.$target.transfo("hide");
                 });
+        },
+        style: function (type, value) {
+            if (type !== 'click') return;
+            var settings = this.$target.data("transfo").settings;
+            this.$target.transfo({ hide: (settings.hide = !settings.hide) });
+        },
+        clear_style: function (type, value) {
+            if (type !== 'click') return;
+            this.$target.removeClass("fa-spin").attr("style", "");
+            this.resetTransfo();
         },
         resetTransfo: function () {
             var self = this;
@@ -1512,10 +1487,10 @@
                 })
                 .mouseover();
         },
-        onFocus : function () {
+        on_focus : function () {
             this.resetTransfo();
         },
-        onBlur : function () {
+        on_blur : function () {
             this.$target.transfo("hide");
         },
     });
@@ -1528,21 +1503,19 @@
             website.snippet.start_animation(true, this.$target);
 
             $(document.body).on("media-saved", self, function (event, prev , item) {
-                self.editor.onBlur();
+                self.editor.on_blur();
                 self.BuildingBlock.make_active(false);
                 if (self.$target.parent().data("oe-field") !== "image") {
                     self.BuildingBlock.make_active($(item));
                 }
             });
-
-            this.$el.find(".edition").click(function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                self.element = new CKEDITOR.dom.element(self.$target[0]);
-                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
-            });
         },
-        onFocus : function () {
+        edition: function (type, value) {
+            if(type !== "click") return;
+            this.element = new CKEDITOR.dom.element(this.$target[0]);
+            new website.editor.MediaDialog(this, this.element).appendTo(document.body);
+        },
+        on_focus : function () {
             var self = this;
             if (this.$target.parent().data("oe-field") === "image") {
                 this.$overlay.addClass("hidden");
@@ -1556,38 +1529,15 @@
         },
     });
 
-
     website.snippet.Editor = openerp.Class.extend({
         init: function (BuildingBlock, dom) {
             this.BuildingBlock = BuildingBlock;
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
-            this.snippet_id = this.$target.data("snippet-id");
-            this._readXMLData();
             this.load_style_options();
             this.get_parent_block();
             this.start();
         },
-
-        /*
-        *  _readXMLData
-        *  Read data XML and set value into:
-        *  this.$el :
-        *       all xml data
-        *  this.$overlay :
-        *       Dom hover the $target who content options
-        */
-        _readXMLData: function() {
-            var self = this;
-            if(this && this.BuildingBlock && this.BuildingBlock.$snippets) {
-                this.$el = this.BuildingBlock.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
-            }
-            var $options = this.$overlay.find(".oe_overlay_options");
-            if ($options.find(".oe_options ul li").length) {
-                $options.find(".oe_options").removeClass("hidden");
-            }
-        },
-
 
         // activate drag and drop for the snippets in the snippet toolbar
         _drag_and_drop: function(){
@@ -1644,7 +1594,6 @@
             self.BuildingBlock.activate_insertion_zones({
                 siblings: self.selector_siblings,
                 children: self.selector_children,
-                vertical_children: self.selector_vertical_children,
             });
 
             $("body").addClass('move-important');
@@ -1673,19 +1622,17 @@
             this.styles = {};
             this.selector_siblings = [];
             this.selector_children = [];
-            this.selector_vertical_children = [];
-            _.each(website.snippet.templateOptions, function (val) {
+            _.each(website.snippet.templateOptions, function (val, option_id) {
                 if (!self.$target.is(val.selector)) {
                     return;
                 }
-                if (val['selector-siblings']) self.selector_siblings.push(val['selector-siblings']);
-                if (val['selector-children']) self.selector_children.push(val['selector-children']);
-                if (val['selector-vertical-children']) self.selector_vertical_children.push(val['selector-vertical-children']);
+                if (val['drop-near']) self.selector_siblings.push(val['drop-near']);
+                if (val['drop-in']) self.selector_children.push(val['drop-in']);
 
-                var style = val['snippet-option-id'];
-                var Editor = website.snippet.options[style] || website.snippet.Option;
-                var editor = self.styles[style] = new Editor(self.BuildingBlock, self, self.$target, style);
-                $ul.append(editor.$el.addClass("snippet-style-" + style));
+                var option = val['option'];
+                var Editor = website.snippet.options[option] || website.snippet.Option;
+                var editor = self.styles[option] = new Editor(self.BuildingBlock, self, self.$target, option_id);
+                $ul.append(editor.$el.addClass("snippet-option-" + option));
             });
             this.selector_siblings = this.selector_siblings.join(",");
             if (this.selector_siblings === "")
@@ -1693,12 +1640,9 @@
             this.selector_children = this.selector_children.join(",");
             if (this.selector_children === "")
                 this.selector_children = false;
-            this.selector_vertical_children = this.selector_vertical_children.join(",");
-            if (this.selector_vertical_children === "")
-                this.selector_vertical_children = false;
 
-            if (!this.selector_siblings && !this.selector_children && !this.selector_vertical_children) {
-                this.$overlay.find(".oe_snippet_move").addClass('hidden');
+            if (!this.selector_siblings && !this.selector_children) {
+                this.$overlay.find(".oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove").addClass('hidden');
             }
 
 
@@ -1746,13 +1690,35 @@
         },
 
         on_remove: function () {
-            this.onBlur();
+            this.on_blur();
             var index = _.indexOf(this.BuildingBlock.snippets, this.$target.get(0));
             for (var i in this.styles){
                 this.styles[i].on_remove();
             }
             delete this.BuildingBlock.snippets[index];
+
+            // remove node and his empty
+            var parent,
+                node = this.$target.parent()[0];
+
             this.$target.remove();
+            function check(node) {
+                if ($(node).outerHeight() > 8) {
+                    return false;
+                }
+                for (var k=0; k<node.children.length; k++) {
+                    if (node.children[k].tagName || node.children[k].textContent.match(/[^\s]/)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            while (check(node)) {
+                parent = node.parentNode;
+                parent.removeChild(node);
+                node = parent;
+            }
+
             this.$overlay.remove();
             return false;
         },
@@ -1768,22 +1734,22 @@
             }
         },
 
-        /* onFocus
+        /* on_focus
         *  This method is called when the user click inside the snippet in the dom
         */
-        onFocus : function () {
+        on_focus : function () {
             this.$overlay.addClass('oe_active');
             for (var i in this.styles){
-                this.styles[i].onFocus();
+                this.styles[i].on_focus();
             }
         },
 
-        /* onFocus
+        /* on_focus
         *  This method is called when the user click outside the snippet in the dom, after a focus
         */
-        onBlur : function () {
+        on_blur : function () {
             for (var i in this.styles){
-                this.styles[i].onBlur();
+                this.styles[i].on_blur();
             }
             this.$overlay.removeClass('oe_active');
         },

@@ -692,9 +692,17 @@ form: module.record_id""" % (xml_id,)
         rec_model = rec.get("model").encode('ascii')
         model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
-        rec_context = rec.get("context", None)
+        rec_context = rec.get("context", {})
         if rec_context:
             rec_context = unsafe_eval(rec_context)
+
+        if self.xml_filename and rec_id:
+            rec_context['install_mode_data'] = dict(
+                xml_file=self.xml_filename,
+                xml_id=rec_id,
+                model=rec_model,
+            )
+
         self._test_xml_id(rec_id)
         # in update mode, the record won't be updated if the data node explicitely
         # opt-out using @noupdate="1". A second check will be performed in
@@ -796,6 +804,7 @@ form: module.record_id""" % (xml_id,)
 
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
+        record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
@@ -855,7 +864,7 @@ form: module.record_id""" % (xml_id,)
                         raise ParseError, (misc.ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
         return True
 
-    def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
+    def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
 
         self.mode = mode
         self.module = module
@@ -867,6 +876,7 @@ form: module.record_id""" % (xml_id,)
             report = assertion_report.assertion_report()
         self.assertion_report = report
         self.noupdate = noupdate
+        self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
             'delete': self._tag_delete,
@@ -981,7 +991,11 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
 
     if idref is None:
         idref={}
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
+    if isinstance(xmlfile, file):
+        xml_filename = xmlfile.name
+    else:
+        xml_filename = xmlfile
+    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot(), mode=mode)
     return True
 

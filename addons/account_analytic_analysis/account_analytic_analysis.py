@@ -516,7 +516,6 @@ class account_analytic_account(osv.osv):
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
             digits_compute=dp.get_precision('Account')),
         'fix_price_invoices' : fields.boolean('Fixed Price'),
-        'invoice_on_timesheets' : fields.boolean("On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
@@ -640,18 +639,6 @@ class account_analytic_account(osv.osv):
             self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
 
         return True
-
-    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
-        if not invoice_on_timesheets:
-            return {'value': {'to_invoice': False}}
-        result = {'value': {'use_timesheets': True}}
-        try:
-            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
-            result['value']['to_invoice'] = to_invoice[1]
-        except ValueError:
-            pass
-        return result
-
 
     def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
         domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]

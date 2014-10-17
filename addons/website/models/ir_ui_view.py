@@ -3,7 +3,7 @@ import copy
 
 from lxml import etree, html
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, tools
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
@@ -16,12 +16,18 @@ class view(osv.osv):
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
         'customize_show': fields.boolean("Show As Optional Inherit"),
+        'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
     }
+
+    _sql_constraints = [
+        ('key_website_id_uniq', 'unique(key, website_id)',
+            'Key must be unique per website.'),
+    ]
+
     _defaults = {
         'page': False,
         'customize_show': False,
     }
-
 
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
@@ -36,7 +42,7 @@ class view(osv.osv):
 
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
+    def _views_get(self, cr, uid, view_id, options=True, bundles=False, context=None, root=True):
         """ For a given view ``view_id``, should return:
 
         * the view itself
@@ -56,13 +62,16 @@ class view(osv.osv):
         result = [view]
 
         node = etree.fromstring(view.arch)
-        for child in node.xpath("//t[@t-call]"):
+        xpath = "//t[@t-call]"
+        if bundles:
+            xpath += "| //t[@t-call-assets]"
+        for child in node.xpath(xpath):
             try:
-                called_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
+                called_view = self._view_obj(cr, uid, child.get('t-call', child.get('t-call-assets')), context=context)
             except ValueError:
                 continue
             if called_view not in result:
-                result += self._views_get(cr, uid, called_view, options=options, context=context)
+                result += self._views_get(cr, uid, called_view, options=options, bundles=bundles, context=context)
 
         extensions = view.inherit_children_ids
         if not options:
@@ -129,6 +138,15 @@ class view(osv.osv):
             root.append(copy.deepcopy(child))
 
         return arch
+
+    @tools.ormcache_context(accepted_keys=('website_id',))
+    def get_view_id(self, cr, uid, xml_id, context=None):
+        if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
+            domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
+            [xml_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context)
+        else:
+            xml_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
+        return xml_id
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):

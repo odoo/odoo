@@ -49,7 +49,6 @@
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
-        <td class="oe_dialog_icon"><img t-att-src='_s + "/web/static/src/img/warning.png"'/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -228,6 +227,15 @@
                     <tr>
                         <td><label for="backup_pwd">Master Password:</label></td>
                         <td><input type="password" name="backup_pwd" class="required" /></td>
+                    </tr>
+                    <tr>
+                        <td><label>Format:</label></td>
+                        <td>
+                            <input type="radio" name="format" checked="checked" value="zip" />
+                            <label for="format" title="Archive containing a dump of your database and your whole filestore">Zip</label>
+                            <input type="radio" name="format" value="binary" />
+                            <label for="format" title="Binary dump of your database (PostgreSQL dump)">Binary</label>
+                        </td>
                     </tr>
                 </table>
             </form>
@@ -1116,14 +1124,15 @@
 <t t-name="web.datepicker">
     <span>
         <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-        <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
-        <input type="text"
-            t-att-name="widget.name"
-            t-att-placeholder="placeholder"
-            class="oe_datepicker_master"
-        /><img class="oe_input_icon oe_datepicker_trigger" draggable="false"
-               t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
-               title="Select date" width="16" height="16" border="0"/>
+        <div class="oe_datepicker_main input-group">
+            <input type="text"
+                t-att-name="widget.name"
+                t-att-placeholder="placeholder"
+                class="oe_datepicker_master"
+            /><span><img class="oe_input_icon oe_datepicker_trigger datepickerbutton" draggable="false"
+                   t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
+                   title="Select date" width="16" height="16" border="0"/></span>
+        </div>
     </span>
 </t>
 <t t-name="FieldDate">
@@ -1430,6 +1439,7 @@
     </div>
 </t>
 <t t-name="WidgetButton">
+    <span t-if="widget.pre_text"> <t t-esc="widget.pre_text"/> </span>
     <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
@@ -1440,6 +1450,7 @@
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
+    <span t-if="widget.post_text"> <t t-esc="widget.post_text"/> </span>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
     <t t-jquery="div.oe_tooltip_string" t-operation="replace">
@@ -1833,6 +1844,8 @@
             <button class="oe_button" id="add_field">Add</button>
             <button class="oe_button" id="remove_field">Remove</button>
             <button class="oe_button" id="remove_all_field">Remove All</button>
+            <button class="oe_button" id="move_up">Move Up</button>
+            <button class="oe_button" id="move_down">Move Down</button>
         </td>
         <td class="oe_export_fields_selector_right">
             <select name="fields_list" id="fields_list"
@@ -2025,6 +2038,13 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/>
+</t>
+<button t-name="toggle_button" type="button"
+    t-att-title="widget.string"
+    style="box-shadow: none; white-space:nowrap;">
+    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+    t-att-alt="widget.string"/>
+</button>
 
 </templates>

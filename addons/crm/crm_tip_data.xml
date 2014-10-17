@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="crm_tip_1">
+            <field name="title">Import from LinkedIn</field>
+            <field name="description">Import your contacts directly from LinkedIn. It is much easier than creating them manually</field>
+            <field name="action_id" ref="base.action_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="mode">kanban</field>
+            <!-- TODO Add relevant selectors when linkedin button is implemented -->
+            <field name="trigger_selector"></field>
+            <field name="highlight_selector"></field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="crm_tip_2">
+            <field name="title"></field>
+            <field name="description">By clicking here, you can keep a track of your sales potential concerning this customer. You be able to plan meeting and calls related to the opportunities.</field>
+            <field name="action_id" ref="base.action_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view:visible,div.oe_right.oe_button_box > button</field>
+            <field name="highlight_selector">div.oe_right.oe_button_box:visible > button:nth-child(1)</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="crm_tip_3">
+            <field name="title"></field>
+            <field name="description">This where you navigate through your process. Click here to go back to where you came from.</field>
+            <field name="model">crm.lead</field>
+            <field name="type">opportunity</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_buttons_view:visible,.oe_breadcrumb_title > a.oe_breadcrumb_item</field>
+            <field name="highlight_selector">.oe_breadcrumb_title > a.oe_breadcrumb_item:last</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="crm_tip_4">
+            <field name="title"></field>
+            <field name="description"><![CDATA[You can change the stage of your opportunities by simply <b>drag and droping</b> the pad in another column.]]></field>
+            <field name="model">crm.lead</field>
+            <field name="mode">kanban</field>
+            <field name="trigger_selector">div.oe_kanban_record:visible</field>
+            <field name="highlight_selector">div.oe_kanban_record:visible:first</field>
+            <field name="end_selector">.oe_kanban_record</field>
+            <field name="end_event">mouseup</field>
+            <field name="placement">auto top</field>
+        </record>
+
+    </data>
+</openerp>

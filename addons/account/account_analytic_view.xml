@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_analytic_line_form_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='account_id']" position="after">
+                        <field name="journal_id"/>
+                    </xpath>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="ref"/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="partner_id"/>
+                    </xpath>
+                    <xpath expr="//field[@name='amount']" position="after">
+                        <label for="amount_currency" groups="base.group_multi_currency"/>
+                        <div groups="base.group_multi_currency">
+                            <field name="amount_currency" class="oe_inline"/>
+                            <field name="currency_id" class="oe_inline"/>
+                        </div>
+                        <field invisible="1" name="general_account_id"/>
+                    </xpath>
+                    <xpath expr="//label[@for='unit_amount']" position="before">
+                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                    </xpath>
+                    <xpath expr="//field[@name='unit_amount']" position="after">
+                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                    </xpath>
+                    <xpath expr="//group[@name='product_info']" position="after">
+                        <group string="General Accounting">
+                            <field name="general_account_id"/>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_tree_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="ref" invisible="context.get('to_invoice', False)"/>
+                    </xpath>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="partner_id"/>
+                        <field name="journal_id" invisible="context.get('to_invoice', False)"/>
+                    </xpath>
+                    <xpath expr="//field[@name='amount']" position="after">
+                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
+                    </xpath>
+                    <xpath expr="//field[@name='unit_amount']" position="after">
+                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
+                    </xpath>
+                    <xpath expr="//field[@name='account_id']" position="after">
+                        <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_filter_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.select.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="product_id"/>
+                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" help="Analytic Journal Items related to a sale journal."/>
+                        <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" help="Analytic Journal Items related to a purchase journal."/>
+                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]"/>
+                    </xpath>
+                    <xpath expr="//field[@name='account_id']" position="after">
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    </xpath>
+                    <xpath expr="//filter[@name='user_id']" position="after">
+                        <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
+                        <filter string="Journal" context="{'group_by':'journal_id'}" name="group_journal"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+        <menuitem groups="analytic.group_analytic_accounting"
+            action="analytic.action_account_analytic_journal_open_form"
+            id="account_analytic_journal_entries"
+            parent="menu_finance_entries"/>
+            
+        <record id="view_account_journal_1" model="ir.ui.view">
+            <field name="name">account.journal.form.1</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="analytic_journal_id" groups="analytic.group_analytic_accounting"/>
+                </field>
+            </field>
+        </record>
+        
+        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
+            name="Analytic" parent="account.menu_finance_generic_reporting"
+            sequence="4"/>
+        <menuitem groups="analytic.group_analytic_accounting"
+            action="analytic.action_account_analytic_journal"
+            id="account_analytic_journal_print" parent="account.next_id_40"/>
+        <menuitem
+            name="Chart of Analytic Accounts"
+            parent="account.menu_finance_charts"
+            action="analytic.action_account_analytic_chart"
+            id="menu_action_analytic_account_tree2"
+            icon="STOCK_INDENT"
+            groups="analytic.group_analytic_accounting"/>
+        <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
+            parent="menu_analytic_accounting"
+            groups="analytic.group_analytic_accounting" sequence="0"/>
+            
+        <menuitem groups="analytic.group_analytic_accounting" action="analytic.action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
+    </data>
+</openerp>

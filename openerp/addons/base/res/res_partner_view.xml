@@ -10,7 +10,7 @@
 
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Contacts" sequence="4" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -47,7 +47,7 @@
         -->
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Titles</field>
+            <field name="name">Company Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -147,8 +147,8 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
                                 <field class="oe_inline"
                                     name="type"/>
                             </div>
@@ -266,13 +266,14 @@
                                             <field name="email"/>
                                             <field name="phone"/>
                                             <field name="mobile"/>
+                                            <field name="title"/>
                                         </group>
                                         <div>
                                             <field name="use_parent_address"/><label for="use_parent_address"/>
                                         </div>
                                         <group>
-                                            <label for="type"/>
-                                            <div name="div_type">
+                                            <label for="type" groups="base.group_no_one"/>
+                                            <div name="contact_div_type" groups="base.group_no_one">
                                                 <field class="oe_inline" name="type"/>
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
@@ -297,24 +298,29 @@
                             <field name="comment" placeholder="Put an internal note..."/>
                         </page>
                         <page name='sales_purchases' string="Sales &amp; Purchases">
-                            <group>
-                                <group>
-                                    <field name="user_id" 
-                                        context="{'default_groups_ref': ['base.group_partner_manager']}"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                </group>
-                                <group>
-                                    <field name="customer"/>
-                                    <field name="supplier"/>
-                                </group>
+                            <group name="container_row_1">
                                 <group>
                                     <field name="ref"/>
                                     <field name="lang"/>
-                                    <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="active"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="active"/>                                    
                                 </group>
+                            </group>
+                            <group name="container_row_2">
+                                <group string="Sale" name="sale">
+                                    <field name="customer"/>
+                                    <field name="user_id" 
+                                        context="{'default_groups_ref': ['base.group_partner_manager']}"/>
+                                </group>
+                                <group string="Purchase" name="purchase">
+                                    <field name="supplier"/>
+                                </group>
+                            </group>
+                            <group name="container_row_3">
+                                <group name="container_left"/>
+                                <group name="container_right"/>
                             </group>
                         </page>
                     </notebook>
@@ -587,7 +593,7 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>

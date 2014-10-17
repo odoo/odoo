@@ -212,6 +212,10 @@ table.editorbar-panel td.selected {
 .oe_translatable_todo {
   background: #ffffb6;
 }
+.oe_translatable_todo:hover {
+  background: inherit;
+  cursor: text;
+}
 
 /* ---- MENU ---- {{{ */
 div.oe_menu_buttons {
@@ -570,4 +574,90 @@ ul.oe_menu_editor .disclose {
   z-index: -1000;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
+}
+
+.oe_include_bundles {
+  font-weight: normal;
+  padding: 0 8px;
+}
+
+/* ---- CUSTOMIZE THEME ---- {{{ */
+#theme_error {
+  background: #ffffcc;
+}
+
+#theme_customize_modal {
+  overflow: visible;
+  z-index: 1020;
+  background: transparent;
+  display: block;
+}
+#theme_customize_modal .modal-dialog {
+  top: 75px;
+  width: auto;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: capitalize;
+  letter-spacing: normal;
+}
+#theme_customize_modal .modal-h5 {
+  color: white;
+  font-family: "Lato-Regular";
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: normal;
+  font-size: 14px;
+  color: white;
+  padding: 4px 0 4px 4px;
+  background-color: #bdc3c7;
+}
+#theme_customize_modal table {
+  width: 100%;
+  margin-bottom: 8px;
+}
+#theme_customize_modal label {
+  display: block;
+  text-align: center;
+}
+#theme_customize_modal label > div, #theme_customize_modal label > img {
+  border: 1px solid white;
+  line-height: 30px;
+  font-size: 0.9em;
+  margin: 2px 4px;
+}
+#theme_customize_modal label.checked > div, #theme_customize_modal label.checked > img {
+  box-shadow: 2px 2px 3px #888888;
+  border: 1px solid #666666;
+}
+#theme_customize_modal label img {
+  width: 60px;
+  height: 35px;
+  margin: 2px;
+  border: 1px solid rgba(136, 136, 136, 0.5);
+}
+#theme_customize_modal label input {
+  display: none;
+}
+#theme_customize_modal .loading_backdrop {
+  display: none;
+}
+#theme_customize_modal.loading .loading_backdrop {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.3;
+  position: absolute;
+  z-index: 1;
+}
+
+/* ---- force the browse to re-compute the stylesheets ---- */
+body.theme_customize_css_loading {
+  magin-top: 1px;
+}
+body.theme_customize_css_loading #wrapwrap {
+  magin-top: -1px;
 }

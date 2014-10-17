@@ -63,6 +63,15 @@
                             </div>
                         </div>
                     </group>
+                    <group>
+                        <label for="id" string="Communication"/>
+                        <div>
+                            <div>
+                                <field name="generate_project_alias" class="oe_inline"/>
+                                <label for="generate_project_alias" />
+                            </div>
+                        </div>
+                    </group>
                     <separator string="Helpdesk &amp; Support"/>
                     <group>
                         <label for="id" string="Support"/>
@@ -90,7 +99,7 @@
         </record>
 
         <menuitem id="base.menu_project_config" name="Project" parent="base.menu_config"
-            sequence="10" action="action_config_settings"/>
+            sequence="2" action="action_config_settings"/>
 
     </data>
 </openerp>

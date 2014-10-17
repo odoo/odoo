@@ -9,6 +9,16 @@
     </xpath>
 </template>
 
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Blog Front-end assets">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
+
+        <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
+        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
+    </xpath>
+</template>
+
 <!-- Layout add nav and footer -->
 <template id="header_footer_custom" inherit_id="website.footer_default" name="Footer News Blog Link">
     <xpath expr="//div[@id='info']/ul" position="inside">
@@ -36,7 +46,7 @@
                     <t t-set="classname">pull-right</t>
                 </t>
             </section>
-            <section data-snippet-id="title" class="container">
+            <section class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h1>Latest Posts</h1>
@@ -338,15 +348,6 @@
 </template>
 
 <!-- Page -->
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_blog assets" >
-    <xpath expr="/t" position="inside">
-        <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
-        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.inline.discussion.js"></script>
-        <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"/>
-        <script type="text/javascript" src="/website_blog/static/lib/contentshare.js"/>
-    </xpath>
-</template>
-
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
         <div id="wrap" class="js_blog website_blog">

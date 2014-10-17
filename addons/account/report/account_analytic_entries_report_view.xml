@@ -13,8 +13,8 @@
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Partner" context="{'group_by':'partner_id'}"/>
-                    <filter string="Account" name="Account" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
-                    <filter string="General Account" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Analytic Account" name="Account" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" context="{'group_by':'journal_id'}"/>
                     <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>

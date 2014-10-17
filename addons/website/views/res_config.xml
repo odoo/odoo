@@ -13,7 +13,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <div>
-                        <field name="website_id" invisible="True" on_change="on_change_website_id(website_id)"/>
+                        <field name="website_id" on_change="on_change_website_id(website_id)"/>
                         <group string="Domain">
                             <label for="google_analytics_key"/>
                             <div name="google_analytics_key">
@@ -84,6 +84,14 @@
                             <button type="action"
                                 name="%(website.action_website_menu)d"
                                 string="Configure website menus" class="oe_link"/>
+                        </group>
+                        <group string="Advanced">
+                            <label for="compress_html"/>
+                            <div name="compress_html">
+                                <div class="oe_inline">
+                                    <field name="compress_html"/> Compress rendered html for a better google pagespeed result
+                                </div>
+                            </div>
                         </group>
                     </div>
                 </form>

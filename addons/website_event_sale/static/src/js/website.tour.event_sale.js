@@ -9,28 +9,44 @@
         steps: [
             {
                 title:     "select event",
-                element:   'a[href*="/event"]:contains("Conference on Business Applications"):first',
+                element:   'a[href*="/event"]:contains("Conference on Business Apps"):first',
             },
             {
-                waitNot:   'a[href*="/event"]:contains("Conference on Business Applications")',
-                title:     "select 2 Standard tickets",
+                waitNot:   'a[href*="/event"]:contains("Conference on Business Apps")',
+                title:     "select 1 Standard ticket",
                 element:   'select:eq(0)',
+                sampleText: '1',
+            },
+            {
+                title:     "select 2 VIP tickets",
+                waitFor:   'select:eq(0) option:contains(1):selected',
+                element:   'select:eq(1)',
                 sampleText: '2',
             },
             {
-                title:     "select 3 VIP tickets",
-                waitFor:   'select:eq(0) option:contains(2):selected',
-                element:   'select:eq(1)',
-                sampleText: '3',
-            },
-            {
                 title:     "Order Now",
-                waitFor:   'select:eq(1) option:contains(3):selected',
+                waitFor:   'select:eq(1) option:contains(2):selected',
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
+                title:     "Add the details of attendees",
+                waitFor:   'form[id="attendee_registration"] .btn:contains("Continue")',
+                autoComplete: function (tour) {
+                    $("input[name='1-name']").val("Att1");
+                    $("input[name='1-phone']").val("111 111");
+                    $("input[name='1-email']").val("att1@example.com");
+                    $("input[name='1-name']").val("Att2");
+                    $("input[name='1-phone']").val("222 222");
+                    $("input[name='1-email']").val("att2@example.com");
+                },
+            },
+            {
+                title:     "click in modal on 'Continue' button",
+                element:   '.modal button:contains("Continue")',
+            },
+            {
                 title:     "Check the cart",
-                element:   '#top_menu .my_cart_quantity:contains(5)'
+                element:   '#top_menu .my_cart_quantity:contains(3)'
             },
             {
                 title:     "Check if the cart have 2 order lines and add one VIP ticket",
@@ -39,7 +55,7 @@
             },
             {
                 title:     "Process Checkout",
-                waitFor:   '#top_menu .my_cart_quantity:contains(6)',
+                waitFor:   '#top_menu .my_cart_quantity:contains(4)',
                 element:   '.btn-primary:contains("Process Checkout")'
             },
             {

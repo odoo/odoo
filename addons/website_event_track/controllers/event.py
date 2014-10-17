@@ -39,7 +39,7 @@ class website_event(http.Controller):
         return request.website.render("website_event_track.track_view", values)
 
     def _prepare_calendar(self, event, event_track_ids):
-        local_tz = pytz.timezone(event.timezone_of_event or 'UTC')
+        local_tz = pytz.timezone(event.date_tz or 'UTC')
         locations = {}                  # { location: [track, start_date, end_date, rowspan]}
         dates = []                      # [ (date, {}) ]
         for track in event_track_ids:
@@ -151,7 +151,7 @@ class website_event(http.Controller):
                 tags.append(tag.id)
 
         e = openerp.tools.escape
-        track_description = '''<section data-snippet-id="text-block">
+        track_description = '''<section>
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-center">

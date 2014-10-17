@@ -25,6 +25,9 @@
 I am Jacques from Le Club SARL.
 I am interested to attend a training organized in your company.
 Could you please send me the details ?</field>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
         <record id="crm_case_1" model="crm.lead">
             <field name="create_date" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
@@ -54,6 +57,9 @@ Could you please send me the details ?</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_christmas_special"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
         <record id="crm_case_2" model="crm.lead">
             <field name="create_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -81,6 +87,9 @@ Could you please send me the details ?</field>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_google_adwords"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
         <record id="crm_case_2" model="crm.lead">
             <field name="create_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -100,6 +109,9 @@ Could you please send me the details ?</field>
             <field name="section_id" ref="sales_team.crm_case_section_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead6"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_banner"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
         <record id="crm_case_2" model="crm.lead">
             <field name="create_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -131,6 +143,9 @@ Purchase Manager
 Stonage IT,
 Franklinville
 Contact: +1 813 494 5005</field>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_6" model="crm.lead">
@@ -148,6 +163,9 @@ Contact: +1 813 494 5005</field>
             <field name="section_id" ref="sales_team.crm_case_section_2"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_7" model="crm.lead">
@@ -164,6 +182,9 @@ Contact: +1 813 494 5005</field>
             <field name="section_id" ref="sales_team.crm_case_section_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
 
         <record id="crm_case_8" model="crm.lead">
@@ -181,6 +202,9 @@ Contact: +1 813 494 5005</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_google_adwords"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_9" model="crm.lead">
@@ -198,6 +222,9 @@ Contact: +1 813 494 5005</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
 
         <record id="crm_case_10" model="crm.lead">
@@ -219,6 +246,9 @@ I would like to know more about specification and cost of laptops of your compan
 
 Thanks,
 Andrew</field>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
 
         <record id="crm_case_11" model="crm.lead">
@@ -235,6 +265,9 @@ Andrew</field>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_direct"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
 
         <record id="crm_case_12" model="crm.lead">
@@ -251,6 +284,9 @@ Andrew</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <!-- Call Function to Cancel the leads (set as Dead) -->
@@ -287,6 +323,9 @@ Andrew</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_14" model="crm.lead">
@@ -310,6 +349,9 @@ Andrew</field>
             <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_15" model="crm.lead">
@@ -331,6 +373,8 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
         <record id="crm_case_15" model="crm.lead">
             <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
@@ -357,6 +401,8 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
 
         <record id="crm_case_17" model="crm.lead">
@@ -380,6 +426,9 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
         <record id="crm_case_17" model="crm.lead">
             <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
@@ -406,6 +455,8 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
         <record id="crm_case_18" model="crm.lead">
             <field name="message_follower_ids" eval="[(4, ref('base.partner_demo'))]"/>
@@ -432,6 +483,8 @@ Andrew</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
 
         <record id="crm_case_20" model="crm.lead">
@@ -447,6 +500,8 @@ Andrew</field>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="source_id" ref="crm_source_mailing"/>
         </record>
 
         <record id="crm_case_21" model="crm.lead">
@@ -460,6 +515,9 @@ Andrew</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="crm_medium_phone"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_22" model="crm.lead">
@@ -475,6 +533,9 @@ Andrew</field>
             <field name="section_id" ref="sales_team.crm_case_section_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="crm_medium_email"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_23" model="crm.lead">
@@ -489,6 +550,9 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_fall_drive"/>
+            <field name="medium_id" ref="crm_medium_direct"/>
+            <field name="source_id" ref="crm_source_newsletter"/>
         </record>
 
         <record id="crm_case_24" model="crm.lead">
@@ -506,6 +570,9 @@ Andrew</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_25" model="crm.lead">
@@ -527,6 +594,8 @@ Andrew</field>
             <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
+            <field name="campaign_id" ref="crm_campaign_email_campaign_services"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_26" model="crm.lead">
@@ -550,6 +619,9 @@ Andrew</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->
+            <field name="campaign_id" ref="crm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="crm_medium_website"/>
+            <field name="source_id" ref="crm_source_search_engine"/>
         </record>
 
         <record id="crm_case_27" model="crm.lead">

@@ -5,17 +5,19 @@
     Partners Extension
   -->
 
-    <record id="view_partner_property_form" model="ir.ui.view">
+    <record id="view_partner_stock_form" model="ir.ui.view">
         <field name="name">res.partner.stock.property.form.inherit</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="product.view_partner_property_form"/>
         <field name="arch" type="xml">
-            <group name="pricelists" position="after">
-                <group groups="stock.group_locations">
-                    <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
-                    <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+            <xpath expr="//group[@name='container_row_communication']" position="after">
+                <group name="container_row_stock">
+                    <group groups="stock.group_locations" string="Warehouse" name="warehouse">
+                        <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
+                        <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
+                    </group>
                 </group>
-            </group>
+            </xpath>
         </field>
     </record>
 

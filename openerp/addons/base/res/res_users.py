@@ -163,7 +163,7 @@ class res_users(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'login_date': fields.date('Latest connection', select=1, copy=False),
+        'login_date': fields.datetime('Latest connection', select=1, copy=False),
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user', auto_join=True),

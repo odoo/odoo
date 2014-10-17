@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">analytic.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Account" version="7.0">
+                    <sheet string="Analytic Account">
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
+
+                        <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                            <div name="project"/>
+                        </div>
+
+                        <group name="main">
+                            <group>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)"/>
+                                <field name="manager_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_manager']}"/>
+                                <field name="currency_id" attrs="{'invisible': ['|',('type', '&lt;&gt;', 'view'), ('company_id', '&lt;&gt;', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="type" invisible="context.get('default_type', False)"/>
+                                <field name="template_id" on_change="on_change_template(template_id, date_start)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
+                                <field name="code"/>
+                                <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract'])]}"/>
+                                <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
+                                <group string="Renewal" name="contract">
+                                    <p colspan="2" class="oe_grey oe_edit_only">
+                                        Once the end date of the contract is
+                                        passed or the maximum number of service
+                                        units (e.g. support contract) is
+                                        reached, the account manager is notified 
+                                        by email to renew the contract with the
+                                        customer.
+                                    </p>
+                                    <field name="date_start"/>
+                                    <label for="date" string="End Date"/>
+                                    <div name="duration">
+                                        <field name="date" class="oe_inline"/>
+                                    </div>
+                                </group>
+                                <separator string="Terms and Conditions" name="description"/>
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+                
+        <record id="view_account_analytic_account_list" model="ir.ui.view">
+            <field name="name">account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
+                    <field name="complete_name"/>
+                    <field name="partner_id"/>
+                    <field name="code"/>
+                    <field name="date_start"/>
+                    <field name="date"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="manager_id"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="template_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Account">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
+                    <field name="date"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="manager_id"/>
+                    <field name="parent_id"/>
+                    <field name="user_id"/>
+                    <filter string="Open" domain="[('state','=','open')]" help="Current Accounts"/>
+                    <filter string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
+                        <filter string="Parent Account" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_tree" model="ir.ui.view">
+            <field name="name">account.analytic.account.tree</field>
+            <field name="model">account.analytic.account</field>
+            <field name="field_parent">child_complete_ids</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
+                    <field name="name" invisible="1"/>
+                    <field name="complete_name"/>
+                    <field name="code"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="state" invisible="1"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="date" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="template_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_account_analytic_account_form" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="context">{}</field> <!-- repair invalid context by setting empty one -->
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
+        </record>
+
+        <record id="act_account_renew_view" model="ir.actions.act_window">
+            <field name="name">Accounts to Renew</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date','&lt;',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
+            <field name="name">Chart of Analytic Accounts</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="help" type="html">
+              <p>
+                Click to add a new analytic account.
+              </p><p>
+                The normal chart of accounts has a structure defined by the
+                legal requirement of the country. The analytic chart of
+                accounts structure should reflect your own business needs in
+                term of costs/revenues reporting.
+              </p><p>
+                They are usually structured by contracts, projects, products or
+                departements. Most of the Odoo operations (invoices,
+                timesheets, expenses, etc) generate analytic entries on the
+                related account.
+              </p>
+            </field>
+        </record>
+
+
+        <record id="view_account_analytic_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Entry" version="7.0">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                        </group>
+                        <group string="Product Information" name="product_info">
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Entries">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity"/>
+                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_filter" model="ir.ui.view">
+            <field name="name">account.analytic.line.select</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Analytic Lines">
+                    <field name="name" string="Description"/>
+                    <field name="date"/>
+                    <filter string="My Entries" domain="[('user_id','=',uid)]"/>
+                    <field name="account_id" filter_domain="[('account_id','child_of',self)]"/>
+                    <field name="user_id"/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Analytic Account" context="{'group_by':'account_id'}" name="account_id"/>
+                        <filter string="User" context="{'group_by':'user_id'}" name="user_id"/>
+                        <filter string="Tasks Month" context="{'group_by':'date'}" name="group_date" help="Invoice Tasks by Month"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_account_analytic_line_form" model="ir.actions.act_window">
+            <field name="name">Analytic Entries</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="view_id" ref="view_account_analytic_line_tree"/>
+        </record>
+
+        <!-- Entries by Line -->
+
+        <record id="action_account_tree1" model="ir.actions.act_window">
+            <field name="name">Analytic Items</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('account_id','child_of',[active_id])]</field>
+            <field name="context">{'account_id':active_id}</field>
+            <field name="search_view_id" ref="view_account_analytic_line_filter"/>
+        </record>
+        <record id="ir_open_account_analytic_account" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'account.analytic.account'" name="model"/>
+            <field name="name">Open Account Tree</field>
+            <field eval="'ir.actions.act_window,%d'%action_account_tree1" name="value"/>
+        </record>
+
+        <record id="account_analytic_line_extended_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.extended_form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <form string="Project line" version="7.0">
+                    <group>
+                       <group>
+                          <field name="name"/>
+                          <field name="account_id"/>
+                       </group>
+                       <group>
+                          <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                          <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                        </group>
+                        <group string="Product Information">
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_account_analytic_account_line_extended_form" model="ir.actions.act_window">
+            <field name="name">account.analytic.line.extended</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_analytic_line_form"/>
+        </record>
+
+        #
+        # Analytic Journal
+        #
+
+        <record id="view_account_analytic_journal_tree" model="ir.ui.view">
+           <field name="name">account.analytic.journal.tree</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Journal">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_analytic_journal_search" model="ir.ui.view">
+            <field name="name">account.analytic.journal.search</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Journals">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
+                   <field name="type"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_journal_form" model="ir.ui.view">
+            <field name="name">account.analytic.journal.form</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Journal" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="type"/>
+                        <field name="active"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_account_analytic_journal_form" model="ir.actions.act_window">
+            <field name="name">Analytic Journals</field>
+            <field name="res_model">account.analytic.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_analytic_journal_search" />
+        </record>
+
+        #
+        # Open journal entries
+        #
+
+        <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
+            <field name="name">Analytic Journal Items</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+     </data>
+</openerp>

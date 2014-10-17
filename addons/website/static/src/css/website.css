@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -81,13 +81,11 @@
 
 /* Extra Styles */
 img.shadow {
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
 }
@@ -104,7 +102,7 @@ header a.navbar-brand img {
 }
 
 #wrapwrap p:empty:after {
-  content: "\2060";
+  content: "⁠";
 }
 
 /* ----- Snippets Styles ----- */
@@ -123,10 +121,8 @@ header a.navbar-brand img {
 #oe_main_menu_navbar {
   min-height: 34px;
   z-index: 1001;
-  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
+  -webkit-border-radius: 0px;
   border-radius: 0px;
   margin-bottom: 0px;
 }
@@ -162,8 +158,8 @@ header a.navbar-brand img {
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 html, body, #wrapwrap {
-  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
 }
@@ -236,10 +232,6 @@ footer {
 /* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
 .nav-hierarchy {
   padding-left: 16px;
-}
-
-#themes-list .well {
-  padding: 0 0 20px 0;
 }
 
 /* -- Hack for removing double scrollbar from mobile preview -- */
@@ -417,6 +409,114 @@ ul.nav-stacked > li > a {
   margin-right: 32px;
 }
 
+/* gallery */
+.o_gallery.o_grid.o_spc-none div.row, .o_gallery.o_masonry.o_spc-none div.row {
+  margin: 0;
+}
+.o_gallery.o_grid.o_spc-none div.row > *, .o_gallery.o_masonry.o_spc-none div.row > * {
+  padding: 0;
+}
+.o_gallery.o_grid.o_spc-small div.row, .o_gallery.o_masonry.o_spc-small div.row {
+  margin: 5px 0;
+}
+.o_gallery.o_grid.o_spc-small div.row > *, .o_gallery.o_masonry.o_spc-small div.row > * {
+  padding: 0 5px;
+}
+.o_gallery.o_grid.o_spc-medium div.row, .o_gallery.o_masonry.o_spc-medium div.row {
+  margin: 10px 0;
+}
+.o_gallery.o_grid.o_spc-medium div.row > *, .o_gallery.o_masonry.o_spc-medium div.row > * {
+  padding: 0 10px;
+}
+.o_gallery.o_grid.o_spc-big div.row, .o_gallery.o_masonry.o_spc-big div.row {
+  margin: 15px 0;
+}
+.o_gallery.o_grid.o_spc-big div.row > *, .o_gallery.o_masonry.o_spc-big div.row > * {
+  padding: 0 15px;
+}
+.o_gallery.o_grid .img, .o_gallery.o_masonry .img {
+  width: 100%;
+}
+.o_gallery.o_grid.size-auto .row {
+  height: auto;
+}
+.o_gallery.o_grid.size-small .row {
+  height: 100px;
+}
+.o_gallery.o_grid.size-medium .row {
+  height: 250px;
+}
+.o_gallery.o_grid.size-big .row {
+  height: 400px;
+}
+.o_gallery.o_grid.size-small .img, .o_gallery.o_grid.size-medium .img, .o_gallery.o_grid.size-big .img {
+  height: 100%;
+}
+.o_gallery.o_nomode.o_spc-none .img {
+  padding: 0;
+}
+.o_gallery.o_nomode.o_spc-small .img {
+  padding: 5px;
+}
+.o_gallery.o_nomode.o_spc-medium .img {
+  padding: 10px;
+}
+.o_gallery.o_nomode.o_spc-big .img {
+  padding: 15px;
+}
+.o_gallery.o_slideshow .carousel ul.carousel-indicators li {
+  border: 1px solid #aaa;
+}
+.o_gallery .carousel-inner .item img {
+  max-width: none;
+}
+
+.o_gallery.o_slideshow > .container {
+  height: 100%;
+}
+
+.o_gallery.o_slideshow .carousel, .modal-body.o_slideshow .carousel {
+  height: 100%;
+}
+.o_gallery.o_slideshow .carousel img, .modal-body.o_slideshow .carousel img {
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.o_gallery.o_slideshow .carousel ul.carousel-indicators, .modal-body.o_slideshow .carousel ul.carousel-indicators {
+  display: block;
+  height: auto;
+  padding: 0;
+  border-width: 0;
+  position: absolute;
+  bottom: 0;
+}
+.o_gallery.o_slideshow .carousel ul.carousel-indicators li, .modal-body.o_slideshow .carousel ul.carousel-indicators li {
+  list-style-image: none;
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  margin: 0 0px 5px 5px;
+  padding: 0;
+  border: 1px solid #aaa;
+  text-indent: initial;
+  background-size: cover;
+  opacity: 0.5;
+  background-color: #000;
+}
+.o_gallery.o_slideshow .carousel ul.carousel-indicators li.active, .modal-body.o_slideshow .carousel ul.carousel-indicators li.active {
+  opacity: 1;
+}
+.o_gallery.o_slideshow .carousel .carousel-control.left, .o_gallery.o_slideshow .carousel .carousel-control.right, .modal-body.o_slideshow .carousel .carousel-control.left, .modal-body.o_slideshow .carousel .carousel-control.right {
+  background-image: none;
+  background-color: transparent;
+}
+
 /* Parallax Theme */
 div.carousel .carousel-indicators li {
   border: 1px solid grey;
@@ -450,7 +550,7 @@ div.carousel div.carousel-content {
   padding: 32px 0;
 }
 
-/* Background */
+/* Background (kept for 8.0 compatibility) */
 .oe_dark {
   background: #eff8f8;
   background: rgba(200, 200, 200, 0.14);
@@ -462,11 +562,11 @@ div.carousel div.carousel-content {
 }
 
 .oe_green {
-  background-color: #169c78;
+  background-color: #169C78;
   color: white;
 }
 .oe_green .text-muted {
-  color: #dddddd;
+  color: #ddd;
 }
 
 .oe_blue_light {
@@ -474,7 +574,7 @@ div.carousel div.carousel-content {
   color: white;
 }
 .oe_blue_light .text-muted {
-  color: #dddddd;
+  color: #ddd;
 }
 
 .oe_blue {
@@ -487,7 +587,7 @@ div.carousel div.carousel-content {
   color: white;
 }
 .oe_orange .text-muted {
-  color: #dddddd;
+  color: #ddd;
 }
 
 .oe_purple {
@@ -495,15 +595,15 @@ div.carousel div.carousel-content {
   color: white;
 }
 .oe_purple .text-muted {
-  color: #dddddd;
+  color: #ddd;
 }
 
 .oe_red {
-  background-color: #9c1b31;
+  background-color: #9C1b31;
   color: white;
 }
 .oe_red .text-muted {
-  color: #dddddd;
+  color: #ddd;
 }
 
 /* Misc */
@@ -556,10 +656,8 @@ span[data-oe-type="monetary"] {
 }
 
 .oe_template_fallback {
-  -webkit-column-count: 3;
   -moz-column-count: 3;
-  -ms-column-count: 3;
-  -o-column-count: 3;
+  -webkit-column-count: 3;
   column-count: 3;
 }
 

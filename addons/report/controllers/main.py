@@ -119,8 +119,8 @@ class ReportController(Controller):
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
-
-                response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
+                if 'pdf_viewer' not in requestcontent:
+                    response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
                 response.set_cookie('fileToken', token)
                 return response
             elif type =='controller':

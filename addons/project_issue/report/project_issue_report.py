@@ -52,7 +52,6 @@ class project_issue_report(osv.osv):
         'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
         'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
-        'reviewer_id': fields.many2one('res.users', 'Reviewer', readonly=True),
     }
 
     def init(self, cr):
@@ -80,8 +79,7 @@ class project_issue_report(osv.osv):
                     c.task_id,
                     c.day_open as delay_open,
                     c.day_close as delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email,
-                    t.reviewer_id
+                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
                     project_issue c

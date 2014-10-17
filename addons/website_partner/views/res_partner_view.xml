@@ -6,13 +6,15 @@
         <record id="view_partners_form_website" model="ir.ui.view">
             <field name="name">view.res.partner.form.website</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="mail.view_emails_partner_info_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="active" position="after">
-                        <field name="website_published"/>
-                    </field>
+                    <xpath expr="//group[@name='mailing']" position="after">
+                        <group name="website" string="Website">
+                            <field name="website_private"/>
+                        </group>
+                    </xpath>
                 </data>
             </field>
         </record>

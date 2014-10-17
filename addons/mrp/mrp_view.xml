@@ -27,10 +27,11 @@
             <field name="model">mrp.property.group</field>
             <field name="arch" type="xml">
                 <form string="Properties categories">
-                    <label for="name"/>
-                    <field name="name"/>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -62,6 +63,20 @@
             parent="base.menu_mrp_root"
             groups="group_mrp_manager"
             sequence="50"/>
+        <menuitem
+            id="menu_mrp_configuration_manufacturing"
+            name="Manufacturing"
+            parent="menu_mrp_configuration"
+            groups="group_mrp_manager"
+            sequence="1"/>
+        <menuitem
+            id="menu_mrp_configuration_products"
+            name="Products"
+            parent="menu_mrp_configuration"
+            groups="group_mrp_manager"
+            sequence="2"/>
+
+
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -84,8 +99,8 @@
                         <field name="group_id"/>
                         <field name="composition"/>
                     </group>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -136,11 +151,11 @@
             action="mrp_property_action"
             id="menu_mrp_property_action"
             groups="product.group_mrp_properties"
-            parent="menu_mrp_configuration"
+            parent="menu_mrp_configuration_products"
             sequence="30"/>
         <menuitem
             action="mrp_property_group_action"
-            parent="menu_mrp_configuration"
+            parent="menu_mrp_configuration_products"
             groups="base.group_no_one,product.group_mrp_properties"
             id="menu_mrp_property_group_action"
             sequence="35"/>
@@ -198,8 +213,8 @@
                                     <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
-                            <label for="note"/>
-                            <field name="note"/>
+                            <separator string="Description"/>
+                            <field name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -362,7 +377,7 @@
                         <group>
                             <field name="name" groups="product.group_mrp_properties"/>
                             <field name="code" string="Reference"/>
-                            <field name="type"/>
+                            <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
@@ -376,11 +391,11 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type"/>
+                                    <field name="type" groups="mrp.group_route_line_type"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                                    <field name="product_rounding"/>
-                                    <field name="product_efficiency"/>
+                                    <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
+                                    <field name="product_efficiency" groups="mrp.group_rounding_efficiency"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
                                     <field name="attribute_value_ids" widget="many2many_tags"/>
@@ -472,7 +487,7 @@
             </field>
         </record>
 
-       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.component.tree</field>
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
@@ -512,24 +527,6 @@
                         <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
-            </field>
-        </record>
-
-        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
-            <field name="name">Bill of Material Components</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom.line</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" eval="False"/> <!-- Force empty -->
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a component to a bill of material.
-              </p><p>
-                Bills of materials components are components and by-products
-                used to create master bills of materials.  Use this menu to
-                search in which BoM a specific component is used.
-              </p>
             </field>
         </record>
 
@@ -575,16 +572,11 @@
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
-            sequence="10"/>
+            sequence="99"/>
        <menuitem name="Products" 
             id="menu_mrp_product_form" 
             action="product_template_action"
             parent="menu_mrp_bom"/>
-        <menuitem
-            action="mrp_bom_form_action2"
-            id="menu_mrp_bom_form_action2"
-            parent="menu_mrp_configuration"
-            sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
@@ -1008,8 +1000,8 @@
             </field>
         </record>
 
-        <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
-        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_configuration" sequence="25"/>
+        <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration" sequence="3"/>
+        <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" groups="mrp.group_mrp_routings" parent="mrp.menu_mrp_configuration_manufacturing" sequence="25"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1" groups="base.group_no_one"/>
 

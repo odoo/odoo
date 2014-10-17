@@ -5,17 +5,13 @@
             <field name="name">res.partner.product.property.form.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <page string="Sales &amp; Purchases" position="inside">
-                    <group>
-                        <group name="pricelists" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
-                            <field name="property_product_pricelist" groups="product.group_sale_pricelist"/>
-                        </group>
-                        <div name="parent_pricelists" groups="product.group_sale_pricelist" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
-                            <p>Pricelists are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
-                        </div>
-                    </group>
-                </page>
+            <field name="arch" type="xml"> 
+                <group name="sale">
+                    <field name="property_product_pricelist" groups="product.group_sale_pricelist" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}"/>
+                    <div name="parent_pricelists" groups="product.group_sale_pricelist" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                        <p>Pricelists are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+                    </div>
+                </group>
             </field>
         </record>
 

@@ -151,65 +151,6 @@
                           t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
                           <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-
-                            <div class="css_options" t-ignore="true" groups="base.group_website_publisher">
-                              <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
-                                <button class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></button>
-                                <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
-                                  <li class='dropdown-submenu'>
-                                    <a tabindex="-1" href="#">Size</a>
-                                    <ul class="dropdown-menu" name="size">
-                                      <li><a href="#">
-                                        <table>
-                                          <tr>
-                                            <td class="selected"></td>
-                                            <td t-att-class="product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 1 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 2 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                          <tr>
-                                            <td t-att-class="product.website_size_y > 3 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 1 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 2 and 'selected'"></td>
-                                            <td t-att-class="product.website_size_y > 3 and product.website_size_x > 3 and 'selected'"></td>
-                                          </tr>
-                                        </table>
-                                      </a></li>
-                                    </ul>
-                                  </li>
-                                  <li class='dropdown-submenu'>
-                                    <a tabindex="-1" href="#">Styles</a>
-                                    <ul class="dropdown-menu" name="style">
-                                      <t t-foreach="styles" t-as="style">
-                                        <li t-att-class="style_in_product(style, product) and 'active' or ''"><a href="#" t-att-data-id="style.id" t-att-data-class="style.html_class"><t t-esc="style.name"/></a></li>
-                                      </t>
-                                    </ul>
-                                  </li>
-                                  <li class='dropdown-submenu'>
-                                      <a tabindex="-1" href="#">Promote</a>
-                                      <ul class="dropdown-menu" name="sequence">
-                                          <li><a href="#" class="js_go_to_top">Push to top</a></li>
-                                          <li><a href="#" class="js_go_up">Push up</a>
-                                          </li>
-                                          <li><a href="#" class="js_go_down">Push down</a></li>
-                                          <li><a href="#" class="js_go_to_bottom">Push to bottom</a></li>
-                                      </ul>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
                             <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] > 2"/>
                             <t t-call="website_sale.products_item"/>
                           </div>
@@ -1147,6 +1088,54 @@
                   <h2>Thank you for your order.</h2>
                   <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                   </div>
+                  <h3 class="mt32"><strong>Order Details:</strong></h3>
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th>Products</th>
+                              <th>Quantity</th>
+                              <th class="text-right" width="100">Unit Price</th>
+                              <th class="text-right" width="100">Subtotal</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr t-foreach="order.order_line" t-as="line">
+                              <td>
+                                  <div>
+                                      <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                          <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                      </a>
+                                  </div>
+                                  <div class="text-muted" t-field="line.name"/>
+                              </td>
+                              <td>
+                                  <div id="quote_qty">
+                                      <span t-field="line.product_uom_qty"/>
+                                      <span t-field="line.product_uom"/>
+                                  </div>
+                              </td>
+                              <td>
+                                  <strong class="text-right">
+                                      <div t-field="line.price_unit"
+                                          t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                  </strong>
+                              </td>
+                              <td>
+                                  <div class="text-right"
+                                      t-field="line.price_subtotal"
+                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td></td><td></td>
+                              <td class="text-right"><strong>Total:</strong></td>
+                              <td class="text-right">
+                                  <strong t-field="order.amount_total"
+                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
                   <div class="clearfix"/>
                   <div class="oe_structure"/>
               </div>

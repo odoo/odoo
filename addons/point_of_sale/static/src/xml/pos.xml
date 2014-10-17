@@ -36,19 +36,12 @@
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix pads'>
                                     <div class="control-buttons oe_hidden"></div>
-                                    <div class="placeholder-PaypadWidget"></div>
+                                    <div class="placeholder-ActionpadWidget"></div>
                                     <div class="placeholder-NumpadWidget"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-LeftActionBar'></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -57,14 +50,6 @@
                         <div class='subwindow'>
                             <div class='subwindow-container'>
                                 <div class='subwindow-container-fix screens'>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class='placeholder-RightActionBar'></div>
                                 </div>
                             </div>
                         </div>
@@ -144,8 +129,14 @@
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
 
-    <t t-name="PaypadWidget">
-        <div class="paypad touch-scrollable">
+    <t t-name="ActionpadWidget">
+        <div class='actionpad'>
+            <button class='button set-customer'>
+                <i class='fa fa-user' /> Set Customer
+            </button>
+            <button class="button pay">
+                <i class='fa fa-chevron-right' /> Payment
+            </button>
         </div>
     </t>
 
@@ -463,41 +454,179 @@
         </div>
     </t>
 
-        
-
-    <t t-name="PaymentScreenWidget">
-        <div class="payment-screen screen touch-scrollable">
-            <div class="pos-payment-container">
-                <div class='payment-due-total'></div>
-                <div class='payment-lines'></div>
-                <div class='payment-info'>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Paid:
-                        </span>
-                        <span class="right-block payment-paid-total"></span>
-                    </div>
-                    <div class="infoline">
-                        <span class='left-block'>
-                            Remaining:
-                        </span>
-                        <span class="right-block payment-remaining"></span>
-                    </div>
-                    <div class="infoline bigger" >
-                        <span class='left-block'>
-                            Change:
-                        </span>
-                        <span class="right-block payment-change"></span>
-                    </div>
+    <t t-name="PaymentScreen-Paymentlines">
+        <t t-if="!paymentlines.length">
+            <div class='paymentlines-empty'>
+                <div class='total'>
+                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                </div>
+                <div class='message'>
+                    Please select a payment method. 
                 </div>
             </div>
+        </t>
+
+        <t t-if="paymentlines.length">
+            <table class='paymentlines'>
+                <colgroup>
+                    <col class='due' />
+                    <col class='tendered' />
+                    <col class='change' />
+                    <col class='method' />
+                    <col class='controls' />
+                </colgroup>
+                <thead>
+                    <tr class='label'>
+                        <th>Due</th>
+                        <th>Tendered</th>
+                        <th>Change</th>
+                        <th>Method</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach='paymentlines' t-as='line'>
+                        <t t-if='line.selected'>
+                            <tr class='paymentline selected'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-tendered edit'> 
+                                    <t t-esc='widget.inputbuffer' />
+                                    <!-- <t t-esc='line.get_amount()' /> -->
+                                </td>
+                                <t t-if='order.getChange(line)'>
+                                    <td class='col-change highlight' > 
+                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                    </td>
+                                </t>
+                                <t t-if='!order.getChange(line)'>
+                                    <td class='col-change' ></td>
+                                </t>
+                                    
+                                <td class='col-name' > <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                        <t t-if='!line.selected'>
+                            <tr class='paymentline' t-att-data-cid='line.cid'>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
+                                <td class='col-change'> 
+                                    <t t-if='order.getChange(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                     </t>
+                                </td>
+                                <td class='col-name'> <t t-esc='line.name' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+
+    </t>
+
+    <t t-name="PaymentScreen-Numpad">
+        <div class="numpad">
+            <button class="input-button number-char" data-action='1'>1</button>
+            <button class="input-button number-char" data-action='2'>2</button>
+            <button class="input-button number-char" data-action='3'>3</button>
+            <button class="mode-button" data-action='+10'>+10</button>
+            <br />
+            <button class="input-button number-char" data-action='4'>4</button>
+            <button class="input-button number-char" data-action='5'>5</button>
+            <button class="input-button number-char" data-action='6'>6</button>
+            <button class="mode-button" data-action='+20'>+20</button>
+            <br />
+            <button class="input-button number-char" data-action='7'>7</button>
+            <button class="input-button number-char" data-action='8'>8</button>
+            <button class="input-button number-char" data-action='9'>9</button>
+            <button class="mode-button" data-action='+50'>+50</button>
+            <br />
+            <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+            <button class="input-button number-char" data-action='0'>0</button>
+            <button class="input-button number-char" data-action='.'>.</button>
+            <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+            </button>
+            <br />
         </div>
     </t>
 
+    <t t-name="PaymentScreen-Paymentmethods">
+        <div class='paymentmethods'>
+            <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
+                <div class="paymentmethod" t-att-data-id="cashregister.journal_id[0]">
+                    <t t-esc="cashregister.journal_id[1]" />
+                </div>
+            </t>
+        </div>
+    </t>
+        
+    <t t-name="PaymentScreenWidget">
+        <div class='payment-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Payment</h1>
+                    <span class='button next'>
+                        Validate
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class='left-content pc40 touch-scrollable scrollable-y'>
+
+                    <div class='paymentmethods-container'>
+                    </div>
+
+                </div>
+                <div class='right-content pc60 touch-scrollable scrollable-y'>
+
+                    <section class='paymentlines-container'>
+                    </section>
+
+                    <section class='payment-numpad'>
+                    </section>
+
+                    <div class='payment-buttons'>
+                        <t t-if='widget.pos.config.iface_invoicing'>
+                            <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
+                                <i class='fa fa-file-text-o' /> Invoice
+                            </div>
+                        </t>
+                        <t t-if='widget.pos.config.iface_cashdrawer'>
+                            <div class='button js_invoice'>
+                                <i class='fa fa-archive' /> Open Cashbox
+                            </div>
+                        </t>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </t>
+
     <t t-name="ReceiptScreenWidget">
-        <div class="receipt-screen screen touch-scrollable" >
-            <div class="pos-step-container">
-                <div class="pos-receipt-container">
+        <div class='receipt-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <h1>Receipt</h1>
+                    <span class='button next'>
+                        Next Order
+                        <i class='fa fa-angle-double-right'></i>
+                    </span>
+                </div>
+                <div class="centered-content">
+                    <div class="button print">
+                        <i class='fa fa-print'></i> Print
+                    </div>
+                    <div class="pos-receipt-container">
+                    </div>
                 </div>
             </div>
         </div>
@@ -652,11 +781,84 @@
         </receipt>
     </t>
 
+    <t t-name="FullscreenPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-fullscreen">
+                <p class="message">Fullscreen Setup</p>
+
+                <t t-if='widget.ismobile()'>
+                    <p class="comment">
+                        The best way to make the point of sale fullscreen on mobile
+                        devices is to add the point of sale to your home screen. On 
+                        iPhone and iPad this is done by tapping <img src='/point_of_sale/static/src/img/ios-share-icon.png' />
+                        and then <i>Add to Homescreen</i>
+                    </p>
+                    <p class='comment'>
+                        This also works on Android with the Chrome Beta Browser, using the <i>Add to Homescreen</i> option 
+                        in the browser's menu.
+                    </p>
+                    <p class='comment'> 
+                        If you want to work in fullscreen just this time tap the <i>Go Fullscreen</i> button.
+                    </p>
+                </t>
+
+                <t t-if='!widget.ismobile()'>
+                    <p class="comment">
+                        The best way to make the point of sale fullscreen on desktop
+                        and laptops is to launch your browser in kiosk mode. Please
+                        refer to your browser's documentation for the specific 
+                        instructions.
+                    </p>
+                    <p class="comment">
+                        If you want to work in fullscreen just this time, click the <i> Go Fullscreen</i> button.
+                    </p>
+                </t>
+
+                <div class="footer">
+                    <div class="button fullscreen">
+                        Go Fullscreen
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorInvoiceTransferPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-invoice">
+                <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
+                    in offline mode. Please check your internet connection and try again.</p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
                 <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
                 <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorTracebackPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-error">
+                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
+                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
                 <div class="footer">
                     <div class="button">
                         Ok
@@ -892,12 +1094,6 @@
         </tr>
     </t>
 
-    <t t-name="PaypadButtonWidget">
-        <button class="paypad-button" t-att-cash-register-id="widget.cashregister.id">
-            <t t-esc="widget.cashregister.journal.name"/>
-        </button>
-    </t>
-
     <t t-name="OrderButtonWidget">
         <span class="order-button select-order">
             <t t-if='widget.selected'>
@@ -1016,30 +1212,6 @@
                 </div>
             </t>
         </div>
-    </t>
-
-    <t t-name="ActionBarWidget">
-        <div class="pos-actionbar">
-            <ul class="pos-actionbar-button-list">
-            </ul>
-        </div>
-    </t>
-
-    <t t-name="ActionButtonWidget">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='label'>
-                <t t-esc="widget.label" />
-            </div>
-        </li>
-    </t>
-
-    <t t-name="ActionButtonWidgetWithIcon">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
-            <div class='icon'>
-                <img t-att-src="widget.icon" />
-                <div class='iconlabel'><t t-esc="widget.label" /></div>
-            </div>
-        </li>
     </t>
 
     <!-- Onscreen Keyboard : 

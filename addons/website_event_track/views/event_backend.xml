@@ -2,223 +2,14 @@
 <openerp>
     <data>
 
-        <record id="act_event_list_tracks" model="ir.actions.act_window">
-            <field name="res_model">event.track</field>
-            <field name="name">Event Tracks</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                  Click to add a track.
-              </p><p>
-                  Tracks define the agenda of your event. These can be
-                  a talk, a round table, a meeting, etc.
-              </p>
-            </field>
-        </record>
-
-
-        <!-- EVENTS/CONFIGURATION/EVENT locations -->
-        <record model="ir.ui.view" id="view_event_location_form">
-            <field name="name">Event Locations</field>
-            <field name="model">event.track.location</field>
-            <field name="arch" type="xml">
-                <form string="Event Location">
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_event_location_tree">
-            <field name="name">Event Location</field>
-            <field name="model">event.track.location</field>
-            <field name="arch" type="xml">
-                <tree string="Event Location">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_event_track_location">
-            <field name="name">Event Locations</field>
-            <field name="res_model">event.track.location</field>
-        </record>
-        <menuitem name="Event Locations" id="menu_event_track_location"
-            action="action_event_track_location" parent="event.event_configuration"
-            groups="base.group_no_one"/>
-
-        <!-- EVENTS/CONFIGURATION/EVENT Stages -->
-        <record model="ir.ui.view" id="view_event_track_stage_form">
-            <field name="name">Event Stages</field>
-            <field name="model">event.track.stage</field>
-            <field name="arch" type="xml">
-                <form string="Event Stage">
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_event_track_stage_tree">
-            <field name="name">Event Stage</field>
-            <field name="model">event.track.stage</field>
-            <field name="arch" type="xml">
-                <tree string="Event Stage">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_event_track_stage">
-            <field name="name">Event Stages</field>
-            <field name="res_model">event.track.stage</field>
-        </record>
-        <menuitem name="Event Stages" id="menu_event_track_stage"
-            action="action_event_track_stage" parent="event.event_configuration"
-            groups="base.group_no_one"/>
-
-        <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
-        <record model="ir.ui.view" id="view_event_sponsor_type_form">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <form string="Event Sponsor Types">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_event_sponsor_type_tree">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <tree string="Event Sponsor Type">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_event_sponsor_type">
-            <field name="name">Sponsor Types</field>
-            <field name="res_model">event.sponsor.type</field>
-        </record>
-        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.event_configuration" groups="base.group_no_one"/>
-
-        <!-- EVENTS/CONFIGURATION/EVENT Tags -->
-        <record model="ir.ui.view" id="view_event_track_tag_form">
-            <field name="name">Track Tags</field>
-            <field name="model">event.track.tag</field>
-            <field name="arch" type="xml">
-                <form string="Event Track Tag">
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_event_track_tag_tree">
-            <field name="name">Tracks Tag</field>
-            <field name="model">event.track.tag</field>
-            <field name="arch" type="xml">
-                <tree string="Event Track Tag">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_event_track_tag">
-            <field name="name">Track Tags</field>
-            <field name="res_model">event.track.tag</field>
-        </record>
-        <menuitem id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
-
-
-        <!-- EVENTS/CONFIGURATION/EVENT Tags -->
-        <record model="ir.ui.view" id="view_event_tag_form">
-            <field name="name">Event Tags</field>
-            <field name="model">event.tag</field>
-            <field name="arch" type="xml">
-                <form string="Event Tag">
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_event_tag_tree">
-            <field name="name">Event Tag</field>
-            <field name="model">event.tag</field>
-            <field name="arch" type="xml">
-                <tree string="Event Tag">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="action_event_tag">
-            <field name="name">Event Tags</field>
-            <field name="res_model">event.tag</field>
-        </record>
-        <menuitem name="Event Tags" id="menu_event_tag" action="action_event_tag" parent="event.event_configuration" groups="base.group_no_one"/>
-
-        <!-- Events Organisation/CONFIGURATION/EVENTS -->
-
-        <record model="ir.ui.view" id="view_event_form">
-            <field name="name">Event Tracks</field>
-            <field name="inherit_id" ref="event.view_event_form"/>
-            <field name="model">event.event</field>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                    <button name="%(website_event_track.act_event_list_tracks)d" 
-                        type="action" 
-                        class="oe_stat_button oe_inline" 
-                        icon="fa-inbox">
-                        <field name="count_tracks" widget="statinfo"/>
-                    </button>
-                </xpath>
-                <xpath expr="//field[@name='organizer_id']" position="after">
-                    <field name="timezone_of_event" />
-                </xpath>
-                <xpath expr="//div[@class='oe_title']" position="inside">
-                    <label for="tag_ids" class="oe_edit_only"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
-                    <div name="event_checkboxes">
-                        <field name="show_menu"/>
-                        <label for="show_menu"/>
-                        <field name="show_tracks"/>
-                        <label for="show_tracks"/>
-                        <field name="show_track_proposal"/>
-                        <label for="show_track_proposal"/>
-                    </div>
-                </xpath>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Tracks">
-                        <group col="2" class="oe_title">
-                            <field name="allowed_track_tag_ids" widget="many2many_tags"/>
-                        </group>
-                        <field name="track_ids" context="{'default_event_id': active_id}"/>
-                    </page>
-                    <page string="Sponsorships">
-                        <field name="sponsor_ids" context="{'default_event_id': active_id}">
-                            <tree editable="bottom">
-                                <field name="partner_id"/>
-                                <field name="url"/>
-                                <field name="sponsor_type_id"/>
-                            </tree>
-                            <form string="Sponsoring">
-                                <field name="partner_id"/>
-                                <field name="url"/>
-                                <field name="sponsor_type_id"/>
-                            </form>
-                        </field>
-                    </page>
-                </xpath>
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                </xpath>
-            </field>
-        </record>
-
         <!-- Event Tracks -->
-
         <record model="ir.ui.view" id="view_event_track_kanban">
             <field name="name">event.track.kanban</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_group_by="state">
                     <templates>
                         <field name="color"/>
-                        <field name="priority"/>
                         <field name="speaker_ids"/>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -234,24 +25,19 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <field name="tag_ids"/>
-                                    <div t-if="duration"><field name="duration" widget="float_time"/> hours</div>
-                                    <span class="oe_right">
-                                        <t t-set="priority" t-value="record.priority.raw_value || 0"/>
-                                        <a type="object" name="set_priority" args="['2']" t-if="priority == 3" title="Normal Priority">
-                                           <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                        </a>
-                                        <a type="object" name="set_priority" args="['3']" t-if="priority lte 2" title="Normal Priority">
-                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                        </a>
-                                        <a type="object" name="set_priority" args="['1']" title="High Priority">
-                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                        </a>
-                                        <a type="object" name="set_priority" args="['0']" title="Highest Priority">
-                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority == 0 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                        </a>
-                                    </span>
-                                    <div t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" class="oe_kanban_avatar oe_left" width="24px" height="24px"/>
+                                    <div>
+                                        <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-member_id="speaker" width="30px" height="30px"/>
+                                        </t>
+                                        <t t-if="record.speaker_ids.raw_value.length > 11 ">
+                                            <a name="open_track_speakers_list" type="object"><t t-esc="record.speaker_ids.raw_value.length - 11"> More</t></a>
+                                        </t>
                                     </div>
                                     <div class="oe_clear"/>
                                 </div>
@@ -261,6 +47,7 @@
                 </kanban>
             </field>
         </record>
+
         <record id="view_event_track_calendar" model="ir.ui.view">
             <field name="name">event.track.calendar</field>
             <field name="model">event.track</field>
@@ -272,18 +59,19 @@
                 </calendar>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_event_track_search">
-            <field name="name">Event Tracks</field>
+            <field name="name">event.track.search</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
                 <search string="Event Tracks">
                     <field name="name"/>
                     <field name="event_id"/>
-                    <field name="stage_id"/>
+                    <field name="state"/>
                     <field name="speaker_ids"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Date" context="{'group_by':'date'}"/>
                         <filter string="Event" context="{'group_by':'event_id'}"/>
                     </group>
@@ -297,7 +85,7 @@
             <field name="arch" type="xml">
                 <form string="Event Track">
                     <header>
-                        <field name="stage_id" widget="statusbar"/>
+                        <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Track">
                         <div class="oe_right oe_button_box">
@@ -340,7 +128,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_event_track_tree">
-            <field name="name">Event Tracks</field>
+            <field name="name">event.track.tree</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
                 <tree string="Event Track">
@@ -351,7 +139,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_event_track_graph">
-            <field name="name">Tracks Graph</field>
+            <field name="name">event.track.graph</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
                 <graph string="Tracks" type="bar" orientation="horizontal">
@@ -364,9 +152,179 @@
         <record model="ir.actions.act_window" id="action_event_track">
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+Click to add a track.
+</p><p>
+    Tracks define the agenda of your event. These can bea talk, a round table, a meeting, etc.
+</p></field>
         </record>
+
+        <record model="ir.actions.act_window" id="action_event_track_from_event">
+            <field name="res_model">event.track</field>
+            <field name="name">Event Tracks</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'state'}</field>
+            <field name="help" type="html">
+<p class="oe_view_nocontent_create">
+Click to add a track.
+</p><p>
+Tracks define the agenda of your event. These can be a talk, a round table, a meeting, etc.
+</p></field>
+        </record>
+
         <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_configuration" groups="base.group_no_one"/>
+
+        <!-- EVENTS/CONFIGURATION/EVENT locations -->
+        <record model="ir.ui.view" id="view_event_location_form">
+            <field name="name">Event Locations</field>
+            <field name="model">event.track.location</field>
+            <field name="arch" type="xml">
+                <form string="Event Location">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_location_tree">
+            <field name="name">Event Location</field>
+            <field name="model">event.track.location</field>
+            <field name="arch" type="xml">
+                <tree string="Event Location">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_track_location">
+            <field name="name">Event Locations</field>
+            <field name="res_model">event.track.location</field>
+        </record>
+        <menuitem name="Event Locations" id="menu_event_track_location"
+            action="action_event_track_location" parent="event.event_configuration"
+            groups="base.group_no_one"/>
+
+        <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
+        <record model="ir.ui.view" id="view_event_sponsor_type_form">
+            <field name="name">Sponsor Types</field>
+            <field name="model">event.sponsor.type</field>
+            <field name="arch" type="xml">
+                <form string="Event Sponsor Types">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_sponsor_type_tree">
+            <field name="name">Sponsor Types</field>
+            <field name="model">event.sponsor.type</field>
+            <field name="arch" type="xml">
+                <tree string="Event Sponsor Type">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_sponsor_type">
+            <field name="name">Sponsor Types</field>
+            <field name="res_model">event.sponsor.type</field>
+        </record>
+        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.event_configuration" groups="base.group_no_one"/>
+
+        <!-- EVENT.SPONSOR VIEWS -->
+        <record model="ir.ui.view" id="view_event_sponsor_tree">
+            <field name="name">event.sponsor.tree</field>
+            <field name="model">event.sponsor</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="partner_id"/>
+                    <field name="url"/>
+                    <field name="sponsor_type_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_sponsor_search">
+            <field name="name">event.sponsor.search</field>
+            <field name="model">event.sponsor</field>
+            <field name="arch" type="xml">
+                <search string="Event Sponsors">
+                    <field name="partner_id"/>
+                    <field name="event_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_event_sponsor_from_event">
+            <field name="name">Event Tracks</field>
+            <field name="res_model">event.sponsor</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        </record>
+
+        <!-- EVENTS/CONFIGURATION/EVENT Tags -->
+        <record model="ir.ui.view" id="view_event_track_tag_form">
+            <field name="name">Track Tags</field>
+            <field name="model">event.track.tag</field>
+            <field name="arch" type="xml">
+                <form string="Event Track Tag">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_track_tag_tree">
+            <field name="name">Tracks Tag</field>
+            <field name="model">event.track.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Event Track Tag">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_track_tag">
+            <field name="name">Track Tags</field>
+            <field name="res_model">event.track.tag</field>
+        </record>
+        <menuitem id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
+
+        <!-- Events Organisation/CONFIGURATION/EVENTS -->
+        <record model="ir.ui.view" id="view_event_form">
+            <field name="name">Event Tracks</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                    <button name="%(action_event_track_from_event)d" 
+                            type="action" 
+                            class="oe_stat_button oe_inline" 
+                            icon="fa-inbox">
+                        <field name="count_tracks" widget="statinfo"/>
+                    </button>
+                    <button name="%(action_event_sponsor_from_event)d"
+                            type="action"
+                            class="oe_stat_button oe_inline"
+                            icon="fa-users">
+                        <field name="count_sponsor" widget="statinfo" class="oe_inline" string="Sponsorships"/>
+                    </button>
+                </xpath>
+                <xpath expr="//div[@class='oe_title']" position="inside">
+                    <div name="event_checkboxes">
+                        <field name="show_menu"/>
+                        <label for="show_menu"/>
+                        <field name="show_tracks"/>
+                        <label for="show_tracks"/>
+                        <field name="show_track_proposal"/>
+                        <label for="show_track_proposal"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

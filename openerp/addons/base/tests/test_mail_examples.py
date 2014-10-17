@@ -64,23 +64,23 @@ OERP_WEBSITE_HTML_1 = """
 <div>
     <div class="container">
         <div class="row">
-            <div class="col-md-12 text-center mt16 mb16" data-snippet-id="colmd">
+            <div class="col-md-12 text-center mt16 mb16">
                 <h2>OpenERP HR Features</h2>
                 <h3 class="text-muted">Manage your company most important asset: People</h3>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg">
                 <h4 class="mt16">Streamline Recruitments</h4>
                 <p>Post job offers and keep track of each application received. Follow applicants in your recruitment process with the smart kanban view.</p>
                 <p>Save time by automating some communications with email templates. Resumes are indexed automatically, allowing you to easily find for specific profiles.</p>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg">
                 <h4 class="mt16">Enterprise Social Network</h4>
                 <p>Break down information silos. Share knowledge and best practices amongst all employees. Follow specific people or documents and join groups of interests to share expertise and documents.</p>
                 <p>Interact with your collegues in real time with live chat.</p>
             </div>
-            <div class="col-md-4" data-snippet-id="colmd">
+            <div class="col-md-4">
                 <img class="img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg">
                 <h4 class="mt16">Leaves Management</h4>
                 <p>Keep track of the vacation days accrued by each employee. Employees enter their requests (paid holidays, sick leave, etc), for managers to approve and validate. It's all done in just a few clicks. The agenda of each employee is updated accordingly.</p>
@@ -101,16 +101,16 @@ OERP_WEBSITE_HTML_1_OUT = [
 
 OERP_WEBSITE_HTML_2 = """
 <div class="mt16 cke_widget_editable cke_widget_element oe_editable oe_dirty" data-oe-model="blog.post" data-oe-id="6" data-oe-field="content" data-oe-type="html" data-oe-translate="0" data-oe-expression="blog_post.content" data-cke-widget-data="{}" data-cke-widget-keep-attr="0" data-widget="oeref" contenteditable="true" data-cke-widget-editable="text">
-    <section class="mt16 mb16" data-snippet-id="text-block">
+    <section class="mt16 mb16">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center mt16 mb32" data-snippet-id="colmd">
+                <div class="col-md-12 text-center mt16 mb32">
                     <h2>
                         OpenERP Project Management
                     </h2>
                     <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
                 </div>
-                <div class="col-md-12 mb16 mt16" data-snippet-id="colmd">
+                <div class="col-md-12 mb16 mt16">
                     <p>
                         OpenERP's <b>collaborative and realtime</b> project
                         management helps your team get work done. Keep
@@ -128,13 +128,13 @@ OERP_WEBSITE_HTML_2 = """
             </div>
         </div>
     </section>
-    <section class="" data-snippet-id="image-text">
+    <section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt16 mb16" data-snippet-id="colmd">
+                <div class="col-md-6 mt16 mb16">
                     <img class="img-responsive shadow" src="/website/static/src/img/image_text.jpg">
                 </div>
-                <div class="col-md-6 mt32" data-snippet-id="colmd">
+                <div class="col-md-6 mt32">
                     <h3>Manage Your Shops</h3>
                     <p>
                         OpenERP's Point of Sale introduces a super clean
@@ -150,10 +150,10 @@ OERP_WEBSITE_HTML_2 = """
             </div>
         </div>
     </section>
-    <section class="" data-snippet-id="text-image">
+    <section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt32" data-snippet-id="colmd">
+                <div class="col-md-6 mt32">
                     <h3>Enterprise Social Network</h3>
                     <p>
                         Make every employee feel more connected and engaged
@@ -167,29 +167,29 @@ OERP_WEBSITE_HTML_2 = """
                         and business applications.
                     </p>
                 </div>
-                <div class="col-md-6 mt16 mb16" data-snippet-id="colmd">
+                <div class="col-md-6 mt16 mb16">
                     <img class="img-responsive shadow" src="/website/static/src/img/text_image.png">
                 </div>
             </div>
         </div>
-    </section><section class="" data-snippet-id="portfolio">
+    </section><section class="">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 text-center mt16 mb32" data-snippet-id="colmd">
+                <div class="col-md-12 text-center mt16 mb32">
                     <h2>Our Porfolio</h2>
                     <h4 class="text-muted">More than 500 successful projects</h4>
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/deers.jpg">
                 </div>
-                <div class="col-md-4" data-snippet-id="colmd">
+                <div class="col-md-4">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/landscape.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/china.jpg">
                     <img class="img-thumbnail img-responsive" src="/website/static/src/img/desert.jpg">

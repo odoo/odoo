@@ -141,9 +141,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem
-            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance" name="Attendance"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_hr_attendance"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_hr_configuration_timesheets_attendances" groups="base.group_hr_attendance" sequence="1"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>

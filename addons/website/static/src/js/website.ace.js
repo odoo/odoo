@@ -70,6 +70,7 @@
         template: 'website.ace_view_editor',
         events: {
             'change #ace-view-list': 'displaySelectedView',
+            'click .js_include_bundles': 'loadTemplates',
             'click button[data-action=save]': 'saveViews',
             'click button[data-action=format]': 'formatXml',
             'click button[data-action=close]': 'close',
@@ -83,26 +84,7 @@
             var self = this;
             self.aceEditor = ace.edit(self.$('#ace-view-editor')[0]);
             self.aceEditor.setTheme("ace/theme/monokai");
-            var viewId = $(document.documentElement).data('view-xmlid');
-            openerp.jsonRpc('/website/customize_template_get', 'call', {
-                'xml_id': viewId,
-                'full': true,
-            }).then(function (views) {
-                self.loadViews.call(self, views);
-                self.open.call(self);
-                var curentHash = window.location.hash;
-                var indexOfView = curentHash.indexOf("?view=");
-                if (indexOfView >= 0) {
-                    var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
-                    self.$('#ace-view-list').val(viewId).change();
-                } else {
-                    if (views.length >= 2) {
-                        var mainTemplate = views[1];
-                        self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
-                    }
-                    window.location.hash = hash;
-                }
-            });
+            self.loadTemplates();
 
             var $editor = self.$('.ace_editor');
             function resizeEditor (target) {
@@ -150,8 +132,34 @@
             resizeEditor(readEditorWidth());
             resizeEditorHeight(this.getParent().$el.outerHeight()+2);
         },
+        loadTemplates: function () {
+            var self = this;
+            var args = {
+                xml_id: $(document.documentElement).data('view-xmlid'),
+                full: true,
+                bundles: this.$('.js_include_bundles')[0].checked
+            };
+            return openerp
+                .jsonRpc('/website/customize_template_get', 'call', args)
+                .then(function (views) {
+                    self.loadViews.call(self, views);
+                    self.open.call(self);
+                    var curentHash = window.location.hash;
+                    var indexOfView = curentHash.indexOf("?view=");
+                    if (indexOfView >= 0) {
+                        var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
+                        self.$('#ace-view-list').val(viewId).change();
+                    } else {
+                        if (views.length >= 2) {
+                            var mainTemplate = views[1];
+                            self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
+                        }
+                        window.location.hash = hash;
+                    }
+                });
+        },
         loadViews: function (views) {
-            var $viewList = this.$('#ace-view-list');
+            var $viewList = this.$('#ace-view-list').empty();
             _(this.buildViewGraph(views)).each(function (view) {
                 if (!view.id) { return; }
 

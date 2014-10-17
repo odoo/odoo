@@ -46,7 +46,8 @@
             <field name="context">{'search_default_followup_level':1}</field>
             <field name="search_view_id" ref="view_account_followup_stat_search"/>
         </record>
-        <menuitem id="menu_finance_followup" parent="account.menu_finance" name="Payment Follow-up" groups="account.group_account_invoice"/>
+        <menuitem id="menu_finance_followup" parent="account.menu_finance" name="Payment Follow-ups" groups="account.group_account_invoice"
+          sequence="5"/>
         <menuitem action="action_followup_stat" id="menu_action_followup_stat_follow" parent="account.menu_finance_reporting" groups="account.group_account_invoice" name="Follow-Ups Analysis" sequence="10"/>
 
     </data>

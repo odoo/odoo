@@ -167,6 +167,9 @@ table.editorbar-panel
     padding: 0 10px
 .oe_translatable_todo
     background: rgb(255, 255, 182)
+    &:hover
+        background: inherit
+        cursor: text
 
 // }}}
 
@@ -489,6 +492,80 @@ $infobar_height: 20px
     &.oe_ace_closed
         z-index: -1000
         +opacity(0)
+
+.oe_include_bundles
+    font-weight: normal
+    padding: 0 8px
+
+// }}}
+
+/* ---- CUSTOMIZE THEME ---- {{{ */
+#theme_error
+    background: #ffc
+#theme_customize_modal
+    overflow: visible
+    z-index: 1020
+    background: transparent
+    display: block
+    .modal-dialog
+        top: 75px
+        width: auto
+        margin: 0
+        position: absolute
+        right: 10px
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: capitalize
+        letter-spacing: normal
+    .modal-h5
+        color: #ffffff
+        font-family: 'Lato-Regular'
+        font-weight: normal
+        text-transform: uppercase
+        letter-spacing: normal
+        font-size: 14px
+        color: white
+        padding: 4px 0 4px 4px
+        background-color: #bdc3c7
+    table
+        width: 100%
+        margin-bottom: 8px
+    label
+        display: block
+        text-align: center
+        > div, > img
+            border: 1px solid #fff
+            line-height: 30px
+            font-size: 0.9em
+            margin: 2px 4px
+        &.checked
+            > div, > img
+                box-shadow: 2px 2px 3px #888
+                border: 1px solid #666
+        img
+            width: 60px
+            height: 35px
+            margin: 2px
+            border: 1px solid rgba(136, 136, 136, 0.5)
+        input
+            display: none
+    .loading_backdrop
+        display: none
+    &.loading
+        .loading_backdrop
+            display: block
+            width: 100%
+            height: 100%
+            background: #000
+            opacity: 0.3
+            position: absolute
+            z-index: 1
+
+/* ---- force the browse to re-compute the stylesheets ---- */
+body.theme_customize_css_loading
+    magin-top: 1px
+    #wrapwrap
+        magin-top: -1px
 
 // }}}
 

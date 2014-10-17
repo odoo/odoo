@@ -86,7 +86,7 @@
               </p>
             </field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration" sequence="5" />
+        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration" sequence="1" />
         <menuitem id="menu_action_account_fiscalyear" action="action_account_fiscalyear" parent="next_id_23"/>
 
         <!-- Period -->
@@ -100,24 +100,22 @@
                         <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
                     </header>
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="fiscalyear_id" widget="selection"/>
-                                <label for="date_start" string="Duration"/>
-                                <div>
-                                    <field name="date_start" class="oe_inline" nolabel="1"/> -
-                                    <field name="date_stop" nolabel="1" class="oe_inline"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="code"/>
-                                <field name="special"/>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="fiscalyear_id" widget="selection"/>
+                            <label for="date_start" string="Duration"/>
+                            <div>
+                                <field name="date_start" class="oe_inline" nolabel="1"/> -
+                                <field name="date_stop" nolabel="1" class="oe_inline"/>
+                            </div>
                         </group>
-                    </sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="special"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -260,8 +258,8 @@
               </p>
             </field>
         </record>
-        <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="15"/>
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
+        <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="2"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" sequence="1"/>
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
@@ -686,7 +684,7 @@
         </record>
         
         <!-- because of the needaction badge, groups needs to be specified -->
-        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
+        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconcile" parent="account.periodical_processing_bank_statements" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
 
         <record id="view_account_statement_operation_template_form" model="ir.ui.view">
             <field name="name">account.statement.operation.template.form</field>
@@ -742,7 +740,7 @@
             </field>
         </record>
         <record id="action_account_statement_operation_template" model="ir.actions.act_window">
-            <field name="name">Statement Operation Templates</field>
+            <field name="name">Statement Operations</field>
             <field name="res_model">account.statement.operation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -756,7 +754,20 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="menu_configuration_misc" name="Statement Operation Templates" sequence="22"/>
+
+        <menuitem
+            id="account_template_folder"
+            name="Templates"
+            parent="account_account_menu"
+            groups="account.group_account_manager"
+            sequence="3"/>
+        <menuitem
+            id="account_report_folder"
+            name="Reports"
+            parent="account_account_menu"
+            groups="account.group_account_manager"
+            sequence="4"/>
+        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="account_template_folder" name="Statement Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">
@@ -816,7 +827,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
+        <menuitem action="action_account_type_form" sequence="2" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
 
         <!-- Entries -->
         <record id="view_account_move_tree" model="ir.ui.view">
@@ -926,8 +937,8 @@
               </p>
             </field>
         </record>
-        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="20"/>
-        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12" groups="base.group_no_one"/>
+        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="4"/>
+        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="2" groups="base.group_no_one"/>
 
         <act_window
             id="action_tax_code_line_open"
@@ -1062,7 +1073,7 @@
             <field name="view_id" ref="view_tax_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27"/>
+        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27" sequence="1"/>
 
         <record id="action_tax_code_tree" model="ir.actions.act_window">
             <field name="name">Chart of Taxes</field>
@@ -1655,7 +1666,7 @@
         </record>
         <menuitem
             action="action_model_form" name="Models" id="menu_action_model_form" sequence="5"
-            parent="account.menu_finance_recurrent_entries"/>
+            parent="account.menu_configuration_recurrent_entries"/>
 
         <!-- Payment Terms -->
         <record id="view_payment_term_line_tree" model="ir.ui.view">
@@ -1677,7 +1688,7 @@
                 <form string="Payment Term">
                     <group>
                         <group string="Amount Computation">
-                            <field name="value"/>
+                            <field name="value" widget="radio" nolabel="1" colspan="4"/>
                             <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
                             <div attrs="{'invisible':[('value','=','balance')]}">
                                 <field name="value_amount" class="oe_inline"/>
@@ -1724,8 +1735,10 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
+        <menuitem id="account_followup_main_menu" parent="menu_finance_configuration" name="Follow-ups" sequence="6"/>
+
         <menuitem action="action_payment_term_form"
-            id="menu_action_payment_term_form" parent="menu_configuration_misc"/>
+            id="menu_action_payment_term_form" parent="account_followup_main_menu" sequence="0"/>
 
         <!-- Account Subscriptions -->
         <record id="view_subscription_line_form" model="ir.ui.view">
@@ -1831,7 +1844,7 @@
         <menuitem
             name="Define Recurring Entries" action="action_subscription_form"
             id="menu_action_subscription_form" sequence="1"
-            parent="account.menu_finance_recurrent_entries"/>
+            parent="account.menu_configuration_recurrent_entries"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>
@@ -1866,21 +1879,12 @@
         </record>
 
         <!-- Account Templates -->
-        <menuitem
-            id="account_template_folder"
-            name="Templates"
-            parent="account_account_menu"
-            groups="account.group_account_manager"/>
+
         <menuitem
             id="account_template_taxes"
-            name="Taxes"
-            parent="account_template_folder"
-            sequence="2"/>
-        <menuitem
-            id="account_template_accounts"
-            name="Accounts"
-            parent="account_template_folder"
-            sequence="1"/>
+            name="Templates"
+            parent="next_id_27"
+            sequence="4"/>
 
         <record id="view_account_template_form" model="ir.ui.view">
             <field name="name">account.account.template.form</field>
@@ -1944,7 +1948,8 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_template_search"/>
         </record>
-        <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_accounts"/>
+        <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_folder" 
+        sequence="2"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -2042,7 +2047,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts" sequence="1"/>
+        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_folder" sequence="1"/>
 
         <!-- Account Tax Templates -->
         <record id="view_account_tax_template_form" model="ir.ui.view">
@@ -2175,7 +2180,7 @@
             </field>
         </record>
         <record id="action_account_tax_code_template_form" model="ir.actions.act_window">
-            <field name="name">Tax Code Templates</field>
+            <field name="name">Tax Code</field>
             <field name="res_model">account.tax.code.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -2297,7 +2302,7 @@
         </record>
 
         <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
-            <field name="name">Fiscal Position Templates</field>
+            <field name="name">Fiscal Position</field>
             <field name="res_model">account.fiscal.position.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -2510,7 +2515,7 @@
 
         <menuitem id="menu_account_supplier" name="Suppliers"
             parent="menu_finance_payables"
-            action="base.action_partner_supplier_form" sequence="100"/>
+            action="base.action_partner_supplier_form" sequence="7"/>
 
         <!-- Account Reports -->
         <record id="view_account_financial_report_form" model="ir.ui.view">
@@ -2575,7 +2580,7 @@
             <field name="search_view_id" ref="view_account_financial_report_search"/>
             <field name="view_id" ref="view_account_financial_report_tree"/>
         </record>
-        <menuitem id="menu_account_financial_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_financial_report_tree"/>
+        <menuitem id="menu_account_financial_reports_tree" name="Account Reports Types" parent="menu_account_reports" action="action_account_financial_report_tree"/>
 
         <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
             <field name="name">account.report.hierarchy</field>

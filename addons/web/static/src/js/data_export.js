@@ -27,6 +27,8 @@ instance.web.DataExport = instance.web.Dialog.extend({
             this.$('#fields_list').empty();
         },
         'click #export_new_list': 'on_show_save_list',
+        'click #move_up':'on_click_move_up',
+        'click #move_down':'on_click_move_down',
     },
     init: function(parent, dataset) {
         var self = this;
@@ -78,6 +80,20 @@ instance.web.DataExport = instance.web.Dialog.extend({
             got_domain,
             this.rpc('/web/export/formats', {}).done(this.do_setup_export_formats),
             this.show_exports_list());
+    },
+    on_click_move_up: function () {
+        var prev_row = this.$el.find('#fields_list option:selected').first().prev();
+        if(prev_row.length){
+            var selected_rows = self.$('#fields_list option:selected').detach();
+            prev_row.before(selected_rows);
+        }
+    },
+    on_click_move_down: function () {
+        var next_row = this.$el.find('#fields_list option:selected').last().next();
+        if(next_row.length){
+            var selected_rows = self.$('#fields_list option:selected').detach();
+            next_row.after(selected_rows);
+        }
     },
     do_setup_export_formats: function (formats) {
         var $fmts = this.$el.find('#export_format');

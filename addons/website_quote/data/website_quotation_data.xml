@@ -1,5 +1,15 @@
 <openerp>
     <data>
+        <!-- After installation of the module, open the quotations menu -->
+        <record id="open_quotation_menu" model="ir.actions.client">
+        	<field name="name">Open Quotations</field>
+        	<field name="tag">reload</field>
+        	<field name="params" eval="{'menu_id': ref('sale.menu_sale_quotations')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+        	<field name="action_id" ref="open_quotation_menu"/>
+        	<field name="state">open</field>
+        </record>
 
         <!--
             Update Email template to send right quote url
@@ -82,6 +92,75 @@
             ]]></field>
         </record>
 
+        <record id="website_quote_template_default" model="sale.quote.template">
+            <field name="name">Default Template</field>
+            <field name="number_of_days">30</field>
+            <field name="website_description" type="xml">
+                <section data-snippet-id="title">
+                    <center><h1 class="page-header">Our offer</h1></center>
+                </section>
+                <section data-snippet-id="text-block">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                <h3 class="text-muted">Our offer is based on 3 commitments, which drive our business and our partners:</h3>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet-id="quality">
+                    <div class="row mt32">
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Quality</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                       Quality in many ways, our reputation was built on the first value.
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Service</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                       We are always reachable to help you, do not hesitate to contact us at any time.
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Price</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                     Our prices are the lowest in the region, if you find cheaper elsewhere, we will refund the difference 
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet-id="text-block">
+                    <center><h2>Your products/services</h2></center>
+                    <p>
+                        <h3 class="text-muted">
+                            The description of products/services from your quotation will be displayed below
+                        </h3>
+                    </p>
+                    <p>
+                           <b> To write a quotation description, edit your product, go the sales tab and add a text in "Description for quotations"</b>
+                    </p>
+                </section>
+            </field>
+        </record>
     </data>
 
     <!-- Mail template is done in a NOUPDATE block

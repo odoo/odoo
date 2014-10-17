@@ -5,7 +5,8 @@
     <menuitem name="Recruitment"
         id="menu_hr_recruitment_recruitment"
         parent="hr.menu_hr_configuration"
-        sequence="40"/>
+        groups="base.group_hr_manager"
+        sequence="2"/>
 
     <act_window
         id="act_hr_applicant_to_meeting"
@@ -525,7 +526,6 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <sheet>
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
@@ -539,7 +539,6 @@
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
-                </sheet>
             </form>
         </field>
     </record>
@@ -585,12 +584,10 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree">
-                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>
@@ -625,11 +622,9 @@
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
-                <sheet>
                 <group>
                     <field name="name"/>
                 </group>
-                </sheet>
             </form>
         </field>
     </record>

@@ -37,8 +37,10 @@ from lxml import etree
 import openerp
 from openerp import tools, api
 from openerp.http import request
+from openerp.modules.module import get_resource_path, get_resource_from_path
 from openerp.osv import fields, osv, orm
-from openerp.tools import graph, SKIPPED_ELEMENT_TYPES, SKIPPED_ELEMENTS
+from openerp.tools import config, graph, SKIPPED_ELEMENT_TYPES, SKIPPED_ELEMENTS
+from openerp.tools.convert import _fix_multiple_roots
 from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
@@ -105,6 +107,31 @@ def _hasclass(context, *cls):
 
     return node_classes.issuperset(cls)
 
+def get_view_arch_from_file(filename, xmlid):
+    doc = etree.parse(filename)
+    node = None
+    for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
+        if n.tag in ('template', 'record'):
+            node = n
+            break
+    if node is not None:
+        if node.tag == 'record':
+            field = node.find('field[@name="arch"]')
+            _fix_multiple_roots(field)
+            inner = ''.join([etree.tostring(child) for child in field.iterchildren()])
+            return field.text + inner
+        elif node.tag == 'template':
+            # The following dom operations has been copied from convert.py's _tag_template()
+            if not node.get('inherit_id'):
+                node.set('t-name', xmlid)
+                node.tag = 't'
+            else:
+                node.tag = 'data'
+            node.attrib.pop('id', None)
+            return etree.tostring(node)
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'" % (filename, xmlid))
+    return None
+
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
@@ -123,9 +150,37 @@ class view(osv.osv):
         data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
         return map(itemgetter('res_id'), data_ids)
 
+    def _arch_get(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for view in self.browse(cr, uid, ids, context=context):
+            arch_fs = None
+            if config['dev_mode'] and view.arch_fs and view.xml_id:
+                # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
+                fullpath = get_resource_path(*view.arch_fs.split('/'))
+                arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+            result[view.id] = arch_fs or view.arch_db
+        return result
+
+    def _arch_set(self, cr, uid, ids, field_name, field_value, args, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
+        if field_value:
+            for view in self.browse(cr, uid, ids, context=context):
+                data = dict(arch_db=field_value)
+                key = 'install_mode_data'
+                if context and key in context:
+                    imd = context[key]
+                    if self._model._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
+                        # we store the relative path to the resource instead of the absolute path
+                        data['arch_fs'] = '/'.join(get_resource_from_path(imd['xml_file'])[0:2])
+                self.write(cr, uid, ids, data, context=context)
+
+        return True
+
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', select=True),
+        'key': fields.char(string='Key'),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.selection([
             ('tree','Tree'),
@@ -137,7 +192,9 @@ class view(osv.osv):
             ('kanban', 'Kanban'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
-        'arch': fields.text('View Architecture', required=True),
+        'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
+        'arch_db': fields.text('Arch Blob'),
+        'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
@@ -268,6 +325,11 @@ class view(osv.osv):
             ids = [ids]
         if context is None:
             context = {}
+
+        # If view is modified we remove the arch_fs information thus activating the arch_db
+        # version. An `init` of the view will restore the arch_fs for the --dev mode
+        if 'arch' in vals and 'install_mode_data' not in context:
+            vals['arch_fs'] = False
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -839,15 +901,11 @@ class view(osv.osv):
     #------------------------------------------------------
     # QWeb template views
     #------------------------------------------------------
-    @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
-    def read_template(self, cr, uid, xml_id, context=None):
-        if isinstance(xml_id, (int, long)):
-            view_id = xml_id
-        else:
-            if '.' not in xml_id:
-                raise ValueError('Invalid template id: %r' % (xml_id,))
-            view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
-
+    _read_template_cache = dict(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
+    if config['dev_mode']:
+        _read_template_cache['size'] = 0
+    @tools.ormcache_context(**_read_template_cache)
+    def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
@@ -860,8 +918,21 @@ class view(osv.osv):
         arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
         return arch
 
+    def read_template(self, cr, uid, xml_id, context=None):
+        if isinstance(xml_id, (int, long)):
+            view_id = xml_id
+        else:
+            if '.' not in xml_id:
+                raise ValueError('Invalid template id: %r' % (xml_id,))
+            view_id = self.get_view_id(cr, uid, xml_id, context=context)
+        return self._read_template(cr, uid, view_id, context=context)
+
+    @tools.ormcache(skiparg=3)
+    def get_view_id(self, cr, uid, xml_id, context=None):
+        return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
+
     def clear_cache(self):
-        self.read_template.clear_cache(self)
+        self._read_template.clear_cache(self)
 
     def _contains_branded(self, node):
         return node.tag == 't'\

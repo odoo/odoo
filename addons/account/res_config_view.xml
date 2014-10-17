@@ -115,8 +115,7 @@
                                 <field name="decimal_precision" class="oe_inline"/>
                             </div>
                             <div>
-                                <label for="tax_calculation_rounding_method"/>
-                                <field name="tax_calculation_rounding_method" class="oe_inline"/>
+                                <field name="tax_calculation_rounding_method" widget="radio" class="oe_inline" />
                             </div>
                         </div>
                         <label for="id" string="Features"/>
@@ -252,6 +251,17 @@
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Bank Statements"/>
+                        <div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline"/>
+                                <label for="module_account_bank_statement_import_qif"/>
                             </div>
                         </div>
                     </group>

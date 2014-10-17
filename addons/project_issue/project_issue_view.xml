@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Issues" parent="base.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -39,7 +38,8 @@
               </p>
             </field>
         </record>
-        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
+
+        <menuitem  action="project_issue_version_action" id="menu_project_confi" name="Issues Versions" parent="base.menu_definitions" sequence="2"/>
 
 
         <record model="ir.ui.view" id="project_issue_form_view">
@@ -52,13 +52,15 @@
                         options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
-                    <div class="oe_right">
-                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
-                    </div>
                     <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
+                    <div class="row">
+                        <h1 class="col-xs-11">
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <div class="col-xs-1 text-right">
+                            <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                        </div>
+                    </div>
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                     <group>
@@ -70,8 +72,8 @@
                             <label for="project_id"/>
                             <div>
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
-                                <button name="case_escalate" string="⇒ Escalate" type="object" class="oe_link"
-                                        groups="base.group_user"/>
+                                <field name="can_escalate" invisible="1"/>
+                                <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible':[('can_escalate','=',False)]}" groups="base.group_user"/>
                             </div>
                         </group>
                         <group>
@@ -282,7 +284,7 @@
             </field>
             <field name="help" type="html">
                 <p>
-                    The Odoo issues tacker allows you to efficiantly manage things
+                    The Odoo issues tacker allows you to efficiently manage things
                     like internal requests, software development bugs, customer
                     complaints, project troubles, material breakdowns, etc.
                 </p>
@@ -295,13 +297,16 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+                <xpath expr='//div[@name="options_active"]' position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
                     <field name="use_issues" class="oe_inline"
                             on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
                     <label for="use_issues"/>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"
+                    <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', False)]}"
                         name="%(act_project_project_2_project_issue_all)d" icon="fa-bug">
                         <field string="Issues" name="issue_count" widget="statinfo"/>
                     </button>
@@ -327,11 +332,20 @@
                     <field name="use_issues"/>
                     <field name="issue_ids" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
+                    <a t-if="record.use_issues.raw_value" style="margin-right: -30px" class="pull-right"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
                         <t t-raw="record.issue_ids.raw_value.length"/> Issues
+                        <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
+                            Closed Issues
+                        </field>
                     </a>
+                </xpath>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/div" position="replace">
+                     <div t-if="!(record.use_tasks.raw_value and record.task_count.raw_value gt 0) and !(record.use_issues.raw_value and record.issue_ids.raw_value.length gt 0)" style="margin-top: 6px;margin-left:20px;">
+                         <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
+                         <span>No activity yet, click to enter in the project.</span>
+                     </div>
                 </xpath>
             </field>
         </record>
@@ -356,7 +370,7 @@
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
                 <p>
-                    The Odoo issues tacker allows you to efficiantly manage things
+                    The Odoo issues tacker allows you to efficiently manage things
                     like internal requests, software development bugs, customer
                     complaints, project troubles, material breakdowns, etc.
                 </p>

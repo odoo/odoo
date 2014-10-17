@@ -1,9 +1,23 @@
 /* ------------ TOPBAR MAIL BUTTON --------------- */
-.oe_systray #oe_topbar_compose_full_email_icon {
+
+/* FIXME this css is not very pretty because it uses a 
+ * 'button' element wich comes with a lot of inappropriate 
+ * styling. Entypo is also a headache to center properly
+ * */
+.openerp .oe_topbar_item.oe_topbar_compose_full_email{ 
+    padding: 0px;
+    width: 32px;
+    height: 32px;
+}
+.openerp .oe_topbar_item.oe_topbar_compose_full_email button{
+    position: relative;
+    top: -3px;  /* centering entypo ... urgh */
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
     color: white;
     margin-right: 15px;
 }
-
 /* ------------ MAIL WIDGET --------------- */
 .openerp .oe_mail, .openerp .oe_mail *{
     -webkit-box-sizing: border-box;
@@ -96,7 +110,6 @@
 .openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_body .oe_mail_cleaned {
     display: none;
 }
-
 /* a) Indented Messages */
 
 .openerp .oe_mail .oe_msg_indented{
@@ -137,6 +150,7 @@
     padding-left: 3px;
     padding-right: 5px;
     margin-right: 5px;
+    padding-top: 2px;
 }
 
 /* c) Message action icons */

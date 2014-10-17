@@ -23,41 +23,55 @@ class Forum(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Forum Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
         'description': fields.html('Description'),
+        'introduction_message': fields.html('Introduction Message'),
+        'relevancy_option_first': fields.float('First Relevancy Parameter'),
+        'relevancy_option_second': fields.float('Second Relevancy Parameter'),
+        'default_order': fields.selection([
+            ('create_date desc','Newest'),
+            ('write_date desc','Last Updated'),
+            ('vote_count desc','Most Voted'),
+            ('relevancy desc','Relevancy'),
+            ('child_count desc','Answered'),
+            ], 'Default Order', required=True),
+        'default_allow': fields.selection([('post_link','Link'),('ask_question','Question'),('post_discussion','Discussion')], 'Default Post', required=True),
+        'allow_link': fields.boolean('Links', help="When clicking on the post, it redirects to an external link"),
+        'allow_question': fields.boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones."),
+        'allow_discussion': fields.boolean('Discussions'),
         # karma generation
-        'karma_gen_question_new': fields.integer('Karma earned for new questions'),
-        'karma_gen_question_upvote': fields.integer('Karma earned for upvoting a question'),
-        'karma_gen_question_downvote': fields.integer('Karma earned for downvoting a question'),
-        'karma_gen_answer_upvote': fields.integer('Karma earned for upvoting an answer'),
-        'karma_gen_answer_downvote': fields.integer('Karma earned for downvoting an answer'),
-        'karma_gen_answer_accept': fields.integer('Karma earned for accepting an anwer'),
-        'karma_gen_answer_accepted': fields.integer('Karma earned for having an answer accepted'),
-        'karma_gen_answer_flagged': fields.integer('Karma earned for having an answer flagged'),
+        'karma_gen_question_new': fields.integer('Post a Questions'),
+        'karma_gen_question_upvote': fields.integer('Upvote a Question'),
+        'karma_gen_question_downvote': fields.integer('Downvote a Question'),
+        'karma_gen_answer_upvote': fields.integer('Upvote an Answer'),
+        'karma_gen_answer_downvote': fields.integer('Downvote an answer'),
+        'karma_gen_answer_accept': fields.integer('Accept an Answer'),
+        'karma_gen_answer_accepted': fields.integer('Have Your Answer Accepted'),
+        'karma_gen_answer_flagged': fields.integer('Have Your Answer Flagged'),
         # karma-based actions
-        'karma_ask': fields.integer('Karma to ask a new question'),
-        'karma_answer': fields.integer('Karma to answer a question'),
-        'karma_edit_own': fields.integer('Karma to edit its own posts'),
-        'karma_edit_all': fields.integer('Karma to edit all posts'),
-        'karma_close_own': fields.integer('Karma to close its own posts'),
-        'karma_close_all': fields.integer('Karma to close all posts'),
-        'karma_unlink_own': fields.integer('Karma to delete its own posts'),
-        'karma_unlink_all': fields.integer('Karma to delete all posts'),
-        'karma_upvote': fields.integer('Karma to upvote'),
-        'karma_downvote': fields.integer('Karma to downvote'),
-        'karma_answer_accept_own': fields.integer('Karma to accept an answer on its own questions'),
-        'karma_answer_accept_all': fields.integer('Karma to accept an answers to all questions'),
-        'karma_editor_link_files': fields.integer('Karma for linking files (Editor)'),
-        'karma_editor_clickable_link': fields.integer('Karma for clickable links (Editor)'),
-        'karma_comment_own': fields.integer('Karma to comment its own posts'),
-        'karma_comment_all': fields.integer('Karma to comment all posts'),
-        'karma_comment_convert_own': fields.integer('Karma to convert its own answers to comments and vice versa'),
-        'karma_comment_convert_all': fields.integer('Karma to convert all answers to answers and vice versa'),
-        'karma_comment_unlink_own': fields.integer('Karma to unlink its own comments'),
-        'karma_comment_unlink_all': fields.integer('Karma to unlinnk all comments'),
-        'karma_retag': fields.integer('Karma to change question tags'),
-        'karma_flag': fields.integer('Karma to flag a post as offensive'),
+        'karma_ask': fields.integer('Ask a new question'),
+        'karma_answer': fields.integer('Answer a question'),
+        'karma_edit_own': fields.integer('Edit its own posts'),
+        'karma_edit_all': fields.integer('Edit all posts'),
+        'karma_close_own': fields.integer('Close its own posts'),
+        'karma_close_all': fields.integer('Close all posts'),
+        'karma_unlink_own': fields.integer('Delete its own posts'),
+        'karma_unlink_all': fields.integer('Delete all posts'),
+        'karma_upvote': fields.integer('Upvote'),
+        'karma_downvote': fields.integer('Downvote'),
+        'karma_answer_accept_own': fields.integer('Accept an answer on its own questions'),
+        'karma_answer_accept_all': fields.integer('Accept an answers to all questions'),
+        'karma_editor_link_files': fields.integer('Linking files (Editor)'),
+        'karma_editor_clickable_link': fields.integer('Add clickable links (Editor)'),
+        'karma_comment_own': fields.integer('Comment its own posts'),
+        'karma_comment_all': fields.integer('Comment all posts'),
+        'karma_comment_convert_own': fields.integer('Convert its own answers to comments and vice versa'),
+        'karma_comment_convert_all': fields.integer('Convert all answers to answers and vice versa'),
+        'karma_comment_unlink_own': fields.integer('Unlink its own comments'),
+        'karma_comment_unlink_all': fields.integer('Unlink all comments'),
+        'karma_retag': fields.integer('Change question tags'),
+        'karma_flag': fields.integer('Flag a post as offensive'),
     }
 
     def _get_default_faq(self, cr, uid, context=None):
@@ -67,8 +81,20 @@ class Forum(osv.Model):
         return False
 
     _defaults = {
+        'default_order': 'write_date desc',
+        'allow_question': True,
+        'default_allow': 'ask_question',
+        'allow_link': False,
+        'allow_discussion': False,
         'description': 'This community is for professionals and enthusiasts of our products and services.',
         'faq': _get_default_faq,
+        'introduction_message': """<h1 class="mt0">Welcome!</h1>
+                  <p> This community is for professionals and enthusiasts of our products and services.
+                      Share and discuss the best content and new marketing ideas,
+                      build your professional profile and become a better marketer together.
+                  </p>""",
+        'relevancy_option_first': 0.8,
+        'relevancy_option_second': 1.8,
         'karma_gen_question_new': 2,
         'karma_gen_question_upvote': 5,
         'karma_gen_question_downvote': -2,
@@ -113,6 +139,14 @@ class Post(osv.Model):
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
+
+    def _get_post_relevancy(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, 0)
+        for post in self.browse(cr, uid, ids, context=context):
+            days = (datetime.today() - datetime.strptime(post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            relavency = abs(post.vote_count - 1) ** post.forum_id.relevancy_option_first / ( days + 2) ** post.forum_id.relevancy_option_second
+            res[post.id] = relavency if (post.vote_count - 1) >= 0 else -relavency
+        return res
 
     def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -216,10 +250,18 @@ class Post(osv.Model):
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content'),
+        'content_link': fields.char('URL', help="URL of Link Articles"),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
+        'type': fields.selection([('question', 'Question'), ('link', 'Article'), ('discussion', 'Discussion')], 'Type'),
+        'relevancy': fields.function(
+            _get_post_relevancy, string="Relevancy", type='float',
+            store={
+                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
+                'forum.post.vote': (_get_post_from_vote, [], 10),
+            }),
         'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
@@ -304,6 +346,7 @@ class Post(osv.Model):
         'state': 'active',
         'views': 0,
         'active': True,
+        'type': 'question',
         'vote_ids': list(),
         'favourite_ids': list(),
         'child_ids': list(),
@@ -315,6 +358,9 @@ class Post(osv.Model):
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
         post = self.browse(cr, SUPERUSER_ID, post_id, context=context)  # SUPERUSER_ID to avoid read access rights issues when creating
+        # deleted or closed questions
+        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active == False):
+            osv.except_osv(_('Error !'), _('Posting answer on [Deleted] or [Closed] question is prohibited'))
         # karma-based access
         if post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')

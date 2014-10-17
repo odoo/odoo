@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
-
         <record id="view_payment_mode_search" model="ir.ui.view">
             <field name="name">payment.mode.search</field>
             <field name="model">payment.mode</field>
@@ -53,8 +51,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
-
-        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc" groups="base.group_no_one"/>
 
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
@@ -201,7 +197,7 @@
             </field>
         </record>
 
-        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
+        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="account.menu_finance_payables" sequence="5"/>
 
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>

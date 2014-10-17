@@ -208,7 +208,7 @@ class crm_lead(format_address, osv.osv):
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Subject', required=True, select=1),
+        'name': fields.char('Opportunity', required=True, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -286,7 +286,7 @@ class crm_lead(format_address, osv.osv):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }

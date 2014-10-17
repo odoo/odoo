@@ -294,14 +294,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             label: 'fonts',
             loaded: function(self){
                 var fonts_loaded = new $.Deferred();
-
                 // Waiting for fonts to be loaded to prevent receipt printing
                 // from printing empty receipt while loading Inconsolata
                 // ( The font used for the receipt ) 
                 waitForWebfonts(['Lato','Inconsolata'], function(){
                     fonts_loaded.resolve();
                 });
-
                 // The JS used to detect font loading is not 100% robust, so
                 // do not wait more than 5sec
                 setTimeout(function(){
@@ -531,7 +529,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // wrapper around the _save_to_server that updates the synch status widget
         _flush_orders: function(orders, options) {
             var self = this;
-
             this.set('synch',{ state: 'connecting', pending: orders.length});
 
             return self._save_to_server(orders, options).done(function (server_ids) {
@@ -583,6 +580,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return server_ids;
             }).fail(function (error, event){
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
+                    //if warning do not need to dispaly traceback!!
+                    if(error.data.exception_type == 'warning'){
+                        delete error.data.debug;
+                    }
                     self.pos_widget.screen_selector.show_popup('error-traceback',{
                         message: error.data.message,
                         comment: error.data.debug
@@ -925,6 +926,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.screen_data = {};  // see ScreenSelector
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             this.temporary = attributes.temporary || false;
+            this.to_invoice = false;
             return this;
         },
         is_empty: function(){
@@ -1069,11 +1071,47 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return sum + paymentLine.get_amount();
             }), 0);
         },
-        getChange: function() {
-            return this.getPaidTotal() - this.getTotalTaxIncluded();
+        getChange: function(paymentline) {
+            if (!paymentline) {
+                var change = this.getPaidTotal() - this.getTotalTaxIncluded();
+            } else {
+                var change = -this.getTotalTaxIncluded(); 
+                var lines  = this.get('paymentLines').models;
+                for (var i = 0; i < lines.length; i++) {
+                    change += lines[i].get_amount();
+                    if (lines[i] === paymentline) {
+                        break;
+                    }
+                }
+            }
+            return round_pr(Math.max(0,change), this.pos.currency.rounding);
         },
-        getDueLeft: function() {
-            return this.getTotalTaxIncluded() - this.getPaidTotal();
+        getDueLeft: function(paymentline) {
+            if (!paymentline) {
+                var due = this.getTotalTaxIncluded() - this.getPaidTotal();
+            } else {
+                var due = this.getTotalTaxIncluded();
+                var lines = this.get('paymentLines').models;
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i] === paymentline) {
+                        break;
+                    } else {
+                        due -= lines[i].get_amount();
+                    }
+                }
+            }
+            return round_pr(Math.max(0,due), this.pos.currency.rounding);
+        },
+        isPaid: function(){
+            return this.getDueLeft() === 0;
+        },
+        isPaidWithCash: function(){
+            return !!this.get('paymentLines').find( function(pl){
+                return pl.cashregister.journal.type === 'cash';
+            });
+        },
+        finalize: function(){
+            this.destroy();
         },
         // sets the type of receipt 'receipt'(default) or 'invoice'
         set_receipt_type: function(type){
@@ -1103,6 +1141,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 for(key in arguments[0]){
                     this.screen_data[key] = arguments[0][key];
                 }
+            }
+        },
+        set_to_invoice: function(to_invoice) {
+            this.to_invoice = to_invoice;
+        },
+        is_to_invoice: function(){
+            return this.to_invoice;
+        },
+        // remove all the paymentlines with zero money in it
+        clean_empty_paymentlines: function() {
+            var lines = this.get('paymentLines').models;
+            var empty = [];
+            for ( var i = 0; i < lines.length; i++) {
+                if (!lines[i].get_amount()) {
+                    empty.push(lines[i]);
+                }
+            }
+            for ( var i = 0; i < empty.length; i++) {
+                this.removePaymentline(empty[i]);
             }
         },
         //see set_screen_data

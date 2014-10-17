@@ -94,7 +94,7 @@ class sale_order(osv.osv):
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
                 'procurement.order': (_get_orders_procurements, ['state'], 10)
             }),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
     _defaults = {

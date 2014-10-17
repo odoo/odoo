@@ -311,9 +311,8 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             self.module_list = all_modules;
 
             var loaded = self.load_translations();
-            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
-
-            var file_list = [ datejs_locale ];
+            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+            var file_list = [ locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
@@ -555,7 +554,7 @@ $.fn.getAttributes = function() {
     if (this.length) {
         for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
             attr = attrs.item(i);
-            o[attr.nodeName] = attr.nodeValue;
+            o[attr.nodeName] = attr.value;
         }
     }
     return o;

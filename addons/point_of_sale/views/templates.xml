@@ -33,10 +33,17 @@
         <t t-call-assets="web.assets_common" t-css="false" />
         <t t-call-assets="web.assets_backend" t-css="false" />
 
-        <script type="text/javascript" id="loading-script">
+        <script type="text/javascript" id="loading-script" t-raw="init">
             $(function() {
-            var s = new openerp.init(<t t-raw='modules' />);
-                <t t-raw='init' />
+                var s = new openerp.init();
+                var wc = new s.web.WebClient();
+
+                wc.show_application = function() {
+                    wc.action_manager.do_action("pos.ui");
+                };
+
+                wc.setElement($(document.body));
+                wc.start();
             });
         </script>
 
