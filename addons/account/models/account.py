@@ -2315,8 +2315,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             result.append(chart_template.id)
         return result
 
-    @api.model
-    def onchange_tax_rate(self, rate=False):
+    def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
@@ -2637,74 +2636,73 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         return account_ref, taxes_ref, tax_code_ref
 
-    @api.one
-    def _create_tax_templates_from_rates(self, company_id):
+    def _create_tax_templates_from_rates(self, cr, uid, obj_wizard, company_id, context=None):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
         it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
         to the provided sale/purchase rates. Then it saves the new tax templates as default taxes to use for this chart
         template.
 
+        :param obj_wizard: browse record of wizard to generate COA from templates
         :param company_id: id of the company for wich the wizard is running
         :return: True
         '''
-        obj_tax_temp = self.env['account.tax.template']
-        chart_template = self.chart_template_id
+        obj_tax_code_template = self.pool.get('account.tax.code.template')
+        obj_tax_temp = self.pool.get('account.tax.template')
+        chart_template = obj_wizard.chart_template_id
         vals = {}
-        all_parents = self._get_chart_parent_ids(chart_template)
+        all_parents = self._get_chart_parent_ids(cr, uid, chart_template, context=context)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
-            value = self.sale_tax_rate
-            ref_taxs = obj_tax_temp.search([('type_tax_use', 'in', ('sale', 'all')), ('chart_template_id', 'in', all_parents)],
-                order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
-            value = self.purchase_tax_rate
-            ref_taxs = obj_tax_temp.search([('type_tax_use', 'in', ('purchase', 'all')), ('chart_template_id', 'in', all_parents)],
-                order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+            value = obj_wizard.sale_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            value = obj_wizard.purchase_tax_rate
+            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
+            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
-    @api.multi
-    def execute(self):
+    def execute(self, cr, uid, ids, context=None):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if self._uid != SUPERUSER_ID and not self.env['res.users'].has_group('base.group_erp_manager'):
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
-        obj_data = self.env['ir.model.data']
-        ir_values_obj = self.env['ir.values']
-        company_id = self.company_id.id
+        obj_data = self.pool.get('ir.model.data')
+        ir_values_obj = self.pool.get('ir.values')
+        obj_wizard = self.browse(cr, uid, ids[0])
+        company_id = obj_wizard.company_id.id
 
-        self.company_id.write({'currency_id': self.currency_id.id})
+        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
-        if company_id == 1:
-            for ref in (('product', 'list_price'), ('product', 'standard_price'), ('product', 'list0'), ('purchase', 'list0')):
+        if company_id==1:
+            for ref in (('product','list_price'),('product','standard_price'),('product','list0'),('purchase','list0')):
                 try:
-                    tmp2 = obj_data.get_object_reference(*ref)
+                    tmp2 = obj_data.get_object_reference(cr, uid, *ref)
                     if tmp2: 
-                        self.pool[tmp2[0]].write(tmp2[1], {
-                            'currency_id': self.currency_id.id
+                        self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
+                            'currency_id': obj_wizard.currency_id.id
                         })
                 except ValueError:
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(company_id)
+        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=s.code_digits, obj_wizard=self)
+        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
 
         # write values of default taxes for product as super user
-        if self.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
-        if self.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
+        if obj_wizard.sale_tax and taxes_ref:
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
+        if obj_wizard.purchase_tax and taxes_ref:
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(company_id, acc_template_ref)
+        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
         return {}
 
     @api.model
