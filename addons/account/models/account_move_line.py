@@ -114,6 +114,7 @@ class account_move_line(models.Model):
            of the company currency), but if you pass 'residual_in_company_currency' = True in the
            context then the returned amount will be in company currency.
         """
+        context = dict(self._context or {})
         CurrencyObj = self.env['res.currency']
         for move_line in self:
             move_line.amount_residual = 0.0
