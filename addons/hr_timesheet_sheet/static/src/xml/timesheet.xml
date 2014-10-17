@@ -36,18 +36,6 @@
                             </tr>
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                         </thead>
-                        <thead t-if="widget.accounts.length == 0" class="oe_timesheet_background_white">
-                            <tr>
-                                <td colspan="9">
-                                    <div class="oe_view_nocontent">
-                                        <p class="oe_view_nocontent_create">
-                                            Click to add projects, contracts or analytic accounts.
-                                        </p>
-                                        <p>You will be able to register your working hours and activities.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </thead>
                         <tr t-foreach="widget.accounts" t-as="account">
                             <td class="oe_timesheet_weekly_account">
                                 <a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)">
@@ -82,9 +70,7 @@
                                 <td>
                                     <div class="oe_timesheet_weekly_adding_tot">
                                         <div class="oe_timesheet_weekly_adding">
-                                            <a class="btn btn-primary btn-sm oe_timesheet_button_add oe_timesheet_white">
-                                                <span class="fa fa-plus" /> Add Line
-                                            </a>
+                                            <a class="btn btn-primary btn-sm oe_timesheet_button_add oe_timesheet_white">Add Line</a>
                                         </div>
                                         <p class="text-primary oe_timesheet_weekly_daytotal">Total</p>
                                     </div>
@@ -98,6 +84,12 @@
                             </tr>
                         </thead>
                     </table>
+                </div>
+                <div class="oe_view_nocontent" t-if="widget.accounts.length == 0">
+                    <p class="oe_view_nocontent_create">
+                        Click to select a project/contract and record your timesheet
+                    </p>
+                    <p>You will be able to register your working hours and activities.</p>
                 </div>
             </div>
         </div>
@@ -188,13 +180,6 @@
                                     <thead t-if="!widget.get('effective_readonly')" class="oe_timesheet_background_white">
                                         <tr>
                                             <td colspan="6" t-if="_.isEmpty(days.account_group) and widget.is_any_accounts()">
-                                                <div class="oe_view_nocontent">
-                                                    <p class="oe_view_nocontent_create">
-                                                        Click to add projects, contracts or analytic accounts.
-                                                    </p>
-                                                    <p>You will be able to register your working hours and activities.</p>
-                                                </div>
-                                                <h2 class="text-center">OR</h2><br />
                                                 <span class="oe_copy_accounts text-primary" colspan="5">
                                                     <a><h3 class="text-primary text-center">Copy and paste recent activities.</h3></a>
                                                 </span>
@@ -213,9 +198,7 @@
                                     <tr class="oe_timesheet_daily_footer">
                                         <td t-if="widget.get('effective_readonly')" class="col-xs-8 col-md-8"/>
                                         <td t-if="!widget.get('effective_readonly')" class="col-xs-8 col-md-8 oe_timesheet_daily_adding">
-                                            <a class="btn btn-primary btn-sm oe_timesheet_white">
-                                                <span class="fa fa-plus" /> Add Line
-                                            </a>
+                                            <a class="btn btn-primary btn-sm oe_timesheet_white">Add Line</a>
                                         </td>
                                         <td t-if="!(_.isEmpty(days.account_group))" class="col-xs-2 col-md-2">
                                             <h4>Total : 
@@ -226,6 +209,12 @@
                                     </tr>
                                 </table>
                             </div>
+                        </div>
+                        <div class="oe_view_nocontent" t-if="!widget.get('effective_readonly') and _.isEmpty(days.account_group) and widget.is_any_accounts()">
+                            <p class="oe_view_nocontent_create">
+                                Click to select a project/contract and record your timesheet
+                            </p>
+                            <p>You will be able to register your working hours and activities.</p>
                         </div>
                     </div>
                 </div>
