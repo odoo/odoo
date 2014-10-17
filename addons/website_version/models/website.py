@@ -57,6 +57,8 @@ class NewWebsite(osv.Model):
                     if x<res[0]:
                         EXP[str(exp.id)] = str(res[1])
                         break
+            #else:
+                #Check if all versions in running experiments are still there. If not, redirect to master.
         request.context['EXP'] = EXP
      
 
