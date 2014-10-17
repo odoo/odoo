@@ -1136,7 +1136,7 @@ class account_move(models.Model):
                     account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-                    line_id = account_move_line_obj.with_context(context).create(cr, uid, {
+                    line_id = account_move_line_obj.with_context(context).create({
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
                         'partner_id': False,
@@ -1304,7 +1304,7 @@ class account_move_reconcile(models.Model):
 
     @api.multi
     @api.depends('name', 'line_partial_ids')
-    def name_get(self, cr, uid, ids, context=None):
+    def name_get(self):
         result = []
         for r in self:
             total = reduce(lambda y, t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
