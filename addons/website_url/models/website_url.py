@@ -94,17 +94,18 @@ class website_alias(models.Model):
             return {'Error':"This filter doesn't exist."}
 
     @api.model
-    def create_shorten_url(self, url, tracking_fields):
+    def create_shorten_url(self, url, tracking_fields={}):
         url = VALIDATE_URL(url)
 
         # Check if there is already an alias with the same URL and UTMs
         search_domain = [('url', '=', url)]
 
-        for key, field in self.env['crm.tracking.mixin'].tracking_fields():
-            if field in tracking_fields:
-                search_domain.append((field, '=', int(tracking_fields[field])))
-            else:
-                search_domain.append((field, '=', None))
+        if tracking_fields:
+            for key, field in self.env['crm.tracking.mixin'].tracking_fields():
+                if field in tracking_fields:
+                    search_domain.append((field, '=', int(tracking_fields[field])))
+                else:
+                    search_domain.append((field, '=', None))
 
         result = self.search(search_domain, limit=1)
 
@@ -196,11 +197,12 @@ class website_alias_code(models.Model):
     def get_random_code_string(self):
         size = 3
         while True:
-            x = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
-            if not x: 
+            code_proposition = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
+
+            if self.search([('code', '=', code_proposition)]): 
                 size += 1 
             else:
-                return x
+                return code_proposition
 
     @api.model
     def add_code(self, init_code, new_code):
@@ -281,6 +283,3 @@ class website_alias_click(models.Model):
         """, (alias_id, ))
 
         return self.env.cr.dictfetchall()
-
-class CodeExists(Exception):
-    pass

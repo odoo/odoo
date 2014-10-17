@@ -237,7 +237,7 @@
                     .then(function(result) {
                         if(result['error']) {
                             if($('#code-error').length == 0) {
-                                $('#short-url-code').append("<p id='code-error' style='color:red;font-weight:bold;'>This code is already taken</p>");
+                                $('.cancel-edit').after("<p id='code-error' style='color:red;font-weight:bold;'>This code is already taken</p>");
                             }
                         }
                         else {
