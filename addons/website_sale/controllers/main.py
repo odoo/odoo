@@ -515,6 +515,7 @@ class website_sale(http.Controller):
         if partner_id and request.website.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
+            if billing_info.get('vat'): billing_info['is_company'] = True
             # create partner
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
