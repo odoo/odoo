@@ -1197,9 +1197,9 @@ class account_move(models.Model):
                     continue
                 # Update the move lines (set them as valid)
 
-                draft_lines.with_context(context).write({
-                    'state': 'valid'
-                }, check=False)
+                # To get rid of Error : 'list' object has no attribute 'with_context'" while evaluating.
+                for line in draft_lines:
+                    line.with_context(context).write({'state': 'valid'}, check=False)
 
                 account = {}
                 account2 = {}

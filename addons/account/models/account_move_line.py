@@ -276,7 +276,7 @@ class account_move_line(models.Model):
         readonly=True, ondelete='set null', index=True, copy=False)
     reconcile_partial_id = fields.Many2one('account.move.reconcile', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False)
-    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
+    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile')
                 #TODO: 'account.move.reconcile = (_get_move_from_reconcile, None, 50)})
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
