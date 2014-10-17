@@ -868,7 +868,7 @@ class account_move(models.Model):
     @api.model
     def _get_period(self):
         period_ids = self.env['account.period'].find()
-        return period_ids[0]
+        return period_ids.ids and period_ids.ids[0] or False
 
     @api.multi
     @api.depends('line_id')
@@ -1014,7 +1014,7 @@ class account_move(models.Model):
                         l[2]['period_id'] = vals['period_id']
                 context['period_id'] = vals['period_id']
             else:
-                default_period = self.with_context(context)._get_period().id
+                default_period = self.with_context(context)._get_period()
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['period_id'] = default_period
@@ -1022,7 +1022,7 @@ class account_move(models.Model):
 
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(context)._get_period().id
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(context)._get_period()
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             self.with_context(c)
