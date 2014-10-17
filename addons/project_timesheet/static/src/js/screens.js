@@ -880,9 +880,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     project_timesheet.StatisticScreen = project_timesheet.ScreenWidget.extend({
         template: "StatisticScreen",
+        events: {
+            "click .pt_prev_week,.pt_next_week": "on_navigation",
+        },
         init: function(project_timesheet_widget, options) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
+            this.week_index = 0;
         },
         start: function() {
             var self = this;
@@ -896,6 +900,140 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_reporting_duration").on("click", function() {
                 
             });
+            this.bar_chart = this.prepare_graph();
+            this.graph_data = this.prepare_data(); //This should be in show method, do not prepare data in start
+            if (this.graph_data.length && this.graph_data[this.week_index].length) {
+                this.draw_chart(this.bar_chart, this.graph_data[this.week_index]);
+            }
+        },
+        prepare_graph: function() {
+            var self = this;
+            var bar_chart =  new dhtmlXChart({
+                view: "stackedBar",
+                container: "pt_chart",
+                value: "#hours#",
+                label: "#hours#"+"h",
+                color: "#a24689",
+                width: 25,
+                //gradient:"falling",
+                tooltip: {
+                    template:"#hours#"+"h", 
+                },
+                xAxis: {
+                    title: "Days",
+                    template: "#day#",
+                    lines: false
+                },
+                yAxis: {
+                    title: "Hours",
+                    start: 0,
+                    // step:5,
+                    // end:24
+                },
+                legend: {
+                    values: [{text:"Compeleted Activities",color:"#a24689"},{text:"Undefined activities",color:"#ffcc00"}],
+                    valign: "top",
+                    align: "center",
+                    width: 110,
+                    layout: "x",
+                    marker: {
+                        type: "round",
+                        width: 15,
+                        height: 15
+                    }
+                },
+                border: 0,
+            });
+
+            bar_chart.addSeries({
+                value:"#unallocated#",
+                color:"#ffcc00",
+                label:"#unallocated#",
+                tooltip:{
+                    template:"#unallocated#"
+                }
+            });
+            return bar_chart;
+        },
+        prepare_data: function() {
+            var date_groups;
+            var activities = _.clone(this.project_timesheet_db.load("activities"));
+            var date_activities = {};
+            _.map(activities, function(activity) {
+                delete activity.id;
+                delete activity.name;
+            });
+            date_groups = _.groupBy(activities, function(activity) {
+                return moment(activity.date).format("YYYY-MM-DD");
+            });
+            _.map(date_groups, function(groups, key) {
+                _.each(groups, function(group) {
+                    if (date_activities[key]) {
+                        if (date_activities[key]['task_id']) {
+                            date_activities[key]['hours'] += parseFloat((group.hours).toFixed(2));
+                        } else {
+                            date_activities[key]['unallocated'] += parseFloat((group.hours).toFixed(2));
+                        }
+                    } else {
+                        group['unallocated'] = 0;
+                        group['hours'] = parseFloat((group.hours).toFixed(2));
+                        group['day'] = moment(group.date).format("ddd MM");
+                        date_activities[key] = group;
+                    }
+                });
+            });
+            var week_groups = _.groupBy(_.toArray(date_activities), function(activity) {
+                return moment(activity.date).week();
+            });
+            var week_wise_activities = _.map(week_groups, function(group, key) {
+                return group;
+            });
+            return week_wise_activities;
+        },
+        draw_chart: function(chart, graph_data) {
+            var week_total = 0;
+            var table_data = {};
+            _.each(graph_data, function(record) {week_total += record.hours;});
+            formatted_value = this.format_duration(week_total);
+            this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], formatted_value[1]));
+            var project_groups = _.groupBy(graph_data, function(record) {
+                return record.project_id[0];
+            });
+            _.each(project_groups, function(groups, key) {
+                _.each(groups, function(group) {
+                    if (table_data[key]) {
+                        table_data[key]['hours'] += group.hours;
+                    } else {
+                        table_data[key] = {
+                            project_name: group.project_id[1],
+                            hours: group.hours
+                        };
+                    }
+                });
+            });
+            this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
+            chart.parse(graph_data,"json");
+        },
+        format_duration: function(duration) {
+            var add_activity_screen = this.project_timesheet_widget.add_activity_screen;
+            return add_activity_screen.format_duration(duration);
+        },
+        on_navigation: function(e) {
+            this.bar_chart.clearAll();
+            this.bar_chart.clearCanvas();
+            this.$(".dhx_chart_legend").remove(); //Hack: forcefully remove legend also when graph is navigate is we are going to redraw whole graph again
+            if ($(e.target).data("direction") == "next") {
+                this.week_index += 1;
+                if (this.week_index > this.graph_data.length-1) {
+                    this.week_index = 0;
+                }
+            } else {
+                this.week_index -= 1;
+                if (this.week_index < 0) {
+                    this.week_index = this.graph_data.length-1;
+                }
+            }
+            this.draw_chart(this.bar_chart, this.graph_data[this.week_index]);
         },
         get_pending_lines: function() {
             return this.project_timesheet_model.get_pending_records();

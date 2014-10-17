@@ -47,11 +47,38 @@ html, body {
     cursor: pointer;
     border-radius: 6px !important;
 }
-.odoo_project_timesheet .pt_activity_col, .odoo_project_timesheet .pt_stat_body {
+.odoo_project_timesheet .pt_activity_col {
     height: 75%;
 }
+.odoo_project_timesheet .pt_stat_body {
+    height: 85%;
+}
 .odoo_project_timesheet .pt_stat_header {
-    height: 15%;
+    height: 5%;
+}
+.odoo_project_timesheet .pt_stat_header div {
+    font-size: 24px !important;
+}
+.odoo_project_timesheet .pt_stat_header div span:last-child,
+.odoo_project_timesheet .pt_stat_header div span:first-child {
+    color: #999999;
+}
+.odoo_project_timesheet .pt_stat_header div span:last-child:hover,
+.odoo_project_timesheet .pt_stat_header div span:first-child:hover {
+    color: #a24689;
+}
+.odoo_project_timesheet .pt_stat_table div > table td {
+    border: solid 1px #D2D2FF;
+}
+.odoo_project_timesheet .pt_stat_table .hours {
+    text-align: center;
+}
+.odoo_project_timesheet .pt_stat_week_title {
+    font-family: 'Arial Bold', 'Arial';
+    font-weight: bold;
+}
+.odoo_project_timesheet .pt_stat_table {
+    padding-top: 10px;
 }
 .odoo_project_timesheet .pt_reporting_duration a {
     text-decoration: none;
