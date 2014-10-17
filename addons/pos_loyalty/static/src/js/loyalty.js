@@ -7,10 +7,7 @@ openerp.pos_loyalty = function(instance){
     var models = module.PosModel.prototype.models;
     for (var i = 0; i < models.length; i++) {
         var model = models[i];
-        if (model.model === 'product.product') {
-            model.fields.push('loyalty_points');
-            model.fields.push('loyalty_override');
-        } else if (model.model === 'res.partner') {
+        if (model.model === 'res.partner') {
             model.fields.push('loyalty_points');
         } else if (model.model === 'pos.config') {
             // load loyalty after pos.config
@@ -23,7 +20,7 @@ openerp.pos_loyalty = function(instance){
             },{
                 model: 'loyalty.rule',
                 condition: function(self){ return !!self.loyalty; },
-                fields: ['name','type','product_id','category_id','override','pp_product','pp_currency'],
+                fields: ['name','type','product_id','category_id','cumulative','pp_product','pp_currency'],
                 domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
                 loaded: function(self,rules){ 
 
@@ -34,7 +31,7 @@ openerp.pos_loyalty = function(instance){
                         var rule = rules[i];
                         if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
                             self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
-                        } else if (rule.override) {
+                        } else if (rule.cumulative) {
                             self.loyalty.rules_by_product_id[rule.product_id[0]].unshift(rule);
                         } else {
                             self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
@@ -83,7 +80,7 @@ openerp.pos_loyalty = function(instance){
                     var rule = rules[j];
                     total_points += round_pr(line.get_quantity() * rule.pp_product, rounding);
                     total_points += round_pr(line.get_price_with_tax() * rule.pp_currency, rounding);
-                    if (rule.override) {
+                    if (!rule.cumulative) {
                         overriden = true;
                         break;
                     }

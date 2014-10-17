@@ -52,7 +52,7 @@ class loyalty_rule(osv.osv):
         'name':                 fields.char('Name', size=32, select=1, required=True, help="An internal identification for this loyalty program rule"),
         'loyalty_program_id':   fields.many2one('loyalty.program', 'Loyalty Program', help='The Loyalty Program this exception belongs to'),
         'product_id':           fields.many2one('product.product','Target Product', help='The product affected by the rule'),
-        'override':             fields.boolean('Override Base Rules',      help='A product targetted by this rule will be ignored by other loyalty rules, including the default one'),
+        'cumulative':             fields.boolean('Cumulative',      help='The points won from this rule will be won in addition to other rules'),
         'pp_product':           fields.float('Points per product',  help='How many points the product will earn per product ordered'),
         'pp_currency':          fields.float('Points per currency', help='How many points the product will earn per value sold'),
     }
