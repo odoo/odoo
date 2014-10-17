@@ -202,6 +202,17 @@ ul.oe_menu_editor
     +user-select(auto)
     cursor: text !important
 
+.filepicker
+    color: transparent !important
+.filepicker::-webkit-file-upload-button
+    display: none
+.filepicker::before
+    content: 'Upload a file from your computer'
+    color: #fff
+    display: inline-block
+    -webkit-user-select: none
+    cursor: pointer
+
 .modal-dialog.select-media
     width: 80%
 

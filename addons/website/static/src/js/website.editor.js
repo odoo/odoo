@@ -1378,13 +1378,6 @@
             'change .url-source': function (e) {
                 this.changed($(e.target));
             },
-            'click button.filepicker': function () {
-                this.$('input[type=file]').click();
-            },
-            'click .js_disable_optimization': function () {
-                this.$('input[name="disable_optimization"]').val('1');
-                this.$('button.filepicker').click();
-            },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
             'change input.url': "change_input",
@@ -1485,11 +1478,11 @@
         file_selection: function () {
             this.$el.addClass('nosave');
             this.$('form').removeClass('has-error').find('.help-block').empty();
-            this.$('button.filepicker').removeClass('btn-danger btn-success');
+            this.$('input.filepicker').removeClass('btn-danger btn-success');
             this.$('form').submit();
         },
         file_selected: function(url, error) {
-            var $button = this.$('button.filepicker');
+            var $button = this.$('input.filepicker');
             if (!error) {
                 $button.addClass('btn-success');
             } else {
