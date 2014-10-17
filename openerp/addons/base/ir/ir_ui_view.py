@@ -1072,8 +1072,8 @@ class view(osv.osv):
             return '[]'
         qcontext['get_modules_order'] = get_modules_order
 
-        def loader(name):
-            return self.read_template(cr, uid, name, context=context)
+        def loader(name, context2=None):
+            return self.read_template(cr, uid, name, context=dict(context2 or context))
 
         return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
 

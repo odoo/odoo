@@ -156,7 +156,7 @@ class QWeb(orm.AbstractModel):
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
         try:
-            document = qwebcontext.loader(name)
+            document = qwebcontext.loader(name, context2=qwebcontext.context)
         except ValueError:
             raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
 
@@ -401,7 +401,7 @@ class QWeb(orm.AbstractModel):
         add_context = template_attributes.get('context')
         if add_context:
             add_context = self.eval_object(add_context, qwebcontext)
-            qwebcontext.context = dict(qwebcontext.context.items() + add_context.items())
+            d.context = dict(qwebcontext.context.items() + add_context.items())
         template = self.eval_format(template_attributes["call"], d)
         try:
             template = int(template)
