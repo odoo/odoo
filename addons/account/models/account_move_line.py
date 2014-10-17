@@ -152,7 +152,7 @@ class account_move_line(models.Model):
                     line_total_in_company_currency += (payment_line.debit - payment_line.credit)
 
             result = move_line_total
-            move_line.amount_residual_currency =  sign * (move_line.currency_id and CurrencyObj.round(move_line.currency_id, result) or result)
+            move_line.amount_residual_currency =  sign * (move_line.currency_id and move_line.currency_id.round(result) or result)
             move_line.amount_residual = sign * line_total_in_company_currency
 
     @api.model
