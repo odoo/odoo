@@ -790,7 +790,7 @@ class account_period(models.Model):
             action = self.env.ref('account.action_account_period')
             msg = _('No accounting period is covering this date: %s.') % dt
             raise openerp.exceptions.RedirectWarning(msg, action, _('Configure Periods Now'))
-        return result
+        return result.ids
 
     @api.multi
     def action_draft(self):
@@ -868,7 +868,7 @@ class account_move(models.Model):
     @api.model
     def _get_period(self):
         period_ids = self.env['account.period'].find()
-        return period_ids.ids and period_ids.ids[0] or False
+        return period_ids and period_ids[0] or False
 
     @api.multi
     @api.depends('line_id')

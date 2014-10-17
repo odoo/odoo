@@ -1146,9 +1146,10 @@ class account_move_line(models.Model):
             del vals['account_tax_id']
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
-            tmp = MoveObj.with_context(context).validate([vals['move_id']])
+            move = MoveObj.browse(vals['move_id'])
+            tmp = move.with_context(context).validate()
             if journal.entry_posted and tmp:
-                MoveObj.with_context(context).button_validate([vals['move_id']])
+                move.with_context(context).button_validate()
         return result
 
 
