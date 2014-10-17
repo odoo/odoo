@@ -557,7 +557,7 @@ class account_move_line(models.Model):
         if not self.ids:
             return []
         CurrencyObj = self.env['res.currency']
-        company_currency = self.user.company_id.currency_id
+        company_currency = self.env.user.company_id.currency_id
         rml_parser = report_sxw.rml_parse('reconciliation_widget_aml')
         reconcile_partial_ids = []  # for a partial reconciliation, take only one line
         ret = []
