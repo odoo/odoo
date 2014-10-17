@@ -580,7 +580,6 @@ class account_journal(models.Model):
         return super(account_journal, self).write(vals)
 
     @api.model
-    @api.returns('ir.sequence')
     def create_sequence(self, vals):
         """ Create new no_gap entry sequence for every new Joural
         """
@@ -600,7 +599,6 @@ class account_journal(models.Model):
         return self.env['ir.sequence'].create(seq)
 
     @api.model
-    @api.returns('self', lambda value: value.id)
     def create(self, vals):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             # if we have the right to create a journal, we should be able to
@@ -766,7 +764,6 @@ class account_period(models.Model):
                     raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
 
     @api.model
-    @api.returns('self')
     def next(self, period, step):
         periods = self.search([('date_start','>',period.date_start)])
         if len(periods)>=step:
@@ -774,7 +771,6 @@ class account_period(models.Model):
         return False
 
     @api.model
-    @api.returns('self')
     def find(self, dt=None):
         if not dt:
             dt = fields.Date.context_today(self)
