@@ -1157,7 +1157,7 @@ class account_move(models.Model):
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
     @api.multi
-    def validate(self, cr, uid, ids, context=None):
+    def validate(self):
         context = dict(self._context or {})
         if '__last_update' in context:
             del context['__last_update']
