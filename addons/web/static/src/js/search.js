@@ -1591,7 +1591,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         this.$save_name = this.$('.oe-save-name');
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
-
+        this.$inputs.eq(0).val(this.searchview.getParent().title);
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
         $shared_filter.click(function () {$default_filter.prop('checked', false)});
@@ -1749,8 +1749,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
                 })
                 .appendTo($filter);
         }
-        this.$filters[key].unbind('click').click(function (event) {
-            event.stopPropagation();
+        this.$filters[key].unbind('click').click(function () {
             self.toggle_filter(filter);
         });
     },

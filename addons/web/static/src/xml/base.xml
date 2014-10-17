@@ -472,15 +472,15 @@
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-header container-fluid">
         <div class="row">
-            <div class="col-md-6 oe-header-title">
+            <div class="col-lg-6 oe-header-title">
                 <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
                 <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
                 </ol>
             </div>
-            <div class="oe-view-manager-search-view col-md-6" />
+            <div class="oe-view-manager-search-view col-lg-6" />
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 <div class="oe-view-manager-buttons">
                     <t t-foreach="widget.views" t-as="view">
                         <div t-attf-class="oe-#{view}-buttons"/>
@@ -488,7 +488,7 @@
                 </div>
                 <div class="oe-view-manager-sidebar"></div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 <div class="oe-search-options btn-group"/>
                 <div class="oe-right-toolbar">
                     <div class="oe-view-manager-pager"></div>
@@ -1478,10 +1478,6 @@
                 <td style="width:100%">
                     <div class="oe-search-options btn-group"/>
                     <div class="oe_popup_search"></div>
-                </td>
-            </tr>
-            <tr style="width:100%">
-                <td style="width:100%">
                     <div class="oe_popup_list_pager"></div>
                 </td>
             </tr>
@@ -1547,9 +1543,9 @@
 </t>
 
 <div t-name="SearchView" class="oe_searchview form-control input-sm">
-    <div class="oe_searchview_unfold_drawer fa fa-lg fa-fw fa-chevron-right" title="Advanced Search..."/>
-    <div class="oe_searchview_facets"/>
     <div class="oe_searchview_search fa fa-lg fa-search" title="Search Again"/>
+    <div class="oe_searchview_facets"/>
+    <div class="oe_searchview_unfold_drawer fa fa-lg fa-fw fa-chevron-right" title="Advanced Search..."/>
 </div>
 
 <div t-name="SearchView.InputView"

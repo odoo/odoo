@@ -116,7 +116,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
         if (!vms) {
             this.view_managers = [];
-            this.inner_widget = null;            
+            this.inner_widget = null;
         }
     },
     do_push_state: function(state) {
@@ -661,7 +661,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (self.searchview) {
                 var is_hidden = self.active_view.controller.searchable === false;
                 self.searchview.toggle_visibility(!is_hidden);
-                self.$header_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
+                self.$header_col.toggleClass('col-lg-6', !is_hidden).toggleClass('col-lg-12', is_hidden);
                 self.$search_col.toggle(!is_hidden);
             }
             self.display_breadcrumbs();
