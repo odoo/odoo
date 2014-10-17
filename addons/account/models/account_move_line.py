@@ -241,6 +241,9 @@ class account_move_line(models.Model):
                 line.reconcile_ref = str(line.reconcile_id.name)
             elif line.reconcile_partial_id:
                 line.reconcile_ref = str(line.reconcile_partial_id.name)
+            # To get rid of Error: Field account.move.line.reconcile_ref is accessed before being computed.
+            else:
+                line.reconcile_ref = False
 
 #     @api.multi
 #     def _get_move_from_reconcile(self, cr, uid, ids, context=None):
@@ -277,7 +280,7 @@ class account_move_line(models.Model):
         readonly=True, ondelete='set null', index=True, copy=False)
     reconcile_partial_id = fields.Many2one('account.move.reconcile', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False)
-    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile')
+    reconcile_ref = fields.Char(compute='_get_reconcile', string='Reconcile Ref', oldname='reconcile', store=True)
                 #TODO: 'account.move.reconcile = (_get_move_from_reconcile, None, 50)})
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
