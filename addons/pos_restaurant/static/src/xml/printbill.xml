@@ -124,9 +124,13 @@
             </t>
 
             <!-- Footer -->
-            <t t-if='receipt.footer'>
+            <t t-if='receipt.footer_xml'>
+                <t t-raw='receipt.footer_xml' />
+            </t>
+
+            <t t-if='!receipt.footer_xml and receipt.footer'>
                 <br/>
-                <pre><t t-esc='receipt.footer' /></pre>
+                <t t-esc='receipt.footer' />
                 <br/>
                 <br/>
             </t>
