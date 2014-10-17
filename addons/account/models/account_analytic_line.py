@@ -57,7 +57,7 @@ class account_analytic_line(models.Model):
 
         if not journal_id:
             j_ids = analytic_journal_obj.search([('type','=','purchase')])
-            journal_id = j_ids and j_ids[0] or False
+            journal_id = j_ids.ids and j_ids.ids[0] or False
         if not journal_id or not prod_id:
             return {}
 
