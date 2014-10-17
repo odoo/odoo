@@ -35,7 +35,7 @@ class account_config_settings(models.TransientModel):
 
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id.id)
+        default=lambda self: self.env.user.company_id)
     has_default_company = fields.Boolean(string='Has default company', readonly=True,
         default=lambda self: self._default_has_default_company())
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
