@@ -56,6 +56,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         template: "FieldMany2One",
         init: function(parent, options) {
             this.model = options.model;
+            this.search_name = options.search_name;
             this.classname = options.classname;
             this.label = options.label;
             this.id_for_input = options.id_for_input;
@@ -146,10 +147,12 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var self = this;
             var def = $.Deferred();
             var data;
+            console.log("this.model is ::: ", this.model, this.model instanceof project_timesheet.project_model);
             if(this.model) {
                 data = this.model.name_search(term);
             }
             var search_data = data;
+            console.log("search_data is :: ", search_data);
             //if (!term) {
             //    var search_data = data;
             //} else {
@@ -157,7 +160,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             //}
             var values = _.map(search_data, function(x) {
                 var label = _.str.escapeHTML(x[1].split("\n")[0]);
-                if (self.model == "tasks") {
+                if (self.search_name == "task") {
                     var task_name = x[1].split("\n")[0];
                     var priority = parseInt(x[1].split("\n")[1]) || 0; //TODO: For now, we will move this logic for task m2o special logic uisng include
                     if(priority) {

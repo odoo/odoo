@@ -38,6 +38,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.id = options.id || null;
             this.name = options.name || null;
             this.project_id = options.project_id || null;
+            this.priority = options.priority || 0;
         },
     });
 
@@ -61,7 +62,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             if (tasks_collection.get(data.task_id[0])) {
                 var task_model = tasks_collection.get(data.task_id[0]);
             } else {
-                var task = new project_timesheet.task_model({project_timesheet_db: this.project_timesheet_db}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0]});
+                var task = new project_timesheet.task_model({project_timesheet_db: this.project_timesheet_db}, {id: data['task_id'][0], name: data['task_id'][1], project_id: data['project_id'][0], priority: data['priority']});
                 this.get('tasks').add(task);
             }
         },
@@ -73,7 +74,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var search_result = [];
             var task_models = tasks.models;
             for (var i = 0; i < task_models.length; i++) {
-                search_result.push([task_models[i].id, task_models[i].name]);
+                search_result.push([task_models[i].id, task_models[i].name+"\n"+task_models[i].priority]);
             }
             if (term) {
                 search_result = _.compact(_(search_result).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
@@ -227,6 +228,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                         var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id;});
                         _.each(activities, function(activity) {
                             activity['project_id'] = task['project_id'];
+                            activity['priority'] = task['priority'];
                         });
                     });
                     self.project_timesheet_db.add_activities(work_activities);

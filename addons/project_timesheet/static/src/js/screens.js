@@ -500,7 +500,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, classname: "pt_input_task", label: "Select a task", id_for_input: "task_id"});
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_name: 'task', classname: "pt_input_task", label: "Select a task", id_for_input: "task_id"});
             this.task_m2o.on("change:value", this, function() {
                 var task = [this.task_m2o.get('value'), this.task_m2o.$input.val()];
                 this.project_timesheet_db.set_current_timer_activity({task_id: task});
@@ -693,7 +693,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, this.set_project_model);
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_name: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
         },
         hide: function() {
