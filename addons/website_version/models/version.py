@@ -87,7 +87,7 @@ class ViewVersion(osv.Model):
         arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
         return arch
 
-    @tools.ormcache(size=0)
+    #@tools.ormcache(size=0)
     def read_template(self, cr, uid, xml_id, context=None):
         if isinstance(xml_id, (int, long)):
             view_id = xml_id
