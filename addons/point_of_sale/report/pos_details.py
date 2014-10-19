@@ -39,7 +39,6 @@ class pos_details(report_sxw.rml_parse):
         user_obj = self.pool.get('res.users')
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
         user_ids = form['user_ids'] or []
-        config_ids = form['config_ids'] or []
         domain = [
             ('date_order', '>=', form['date_start'] + ' 00:00:00'),
             ('date_order', '<=', form['date_end'] + ' 23:59:59'),
@@ -48,8 +47,6 @@ class pos_details(report_sxw.rml_parse):
         ]
         if len(user_ids):
             domain.append(('user_id', 'in', user_ids))
-        if len(config_ids):
-            domain.append(('session_id.config_id', 'in', config_ids))
         if extra_args:
             domain.append(extra_args)
         return domain
