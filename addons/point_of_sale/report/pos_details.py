@@ -55,7 +55,7 @@ class pos_details(report_sxw.rml_parse):
         pos_obj = self.pool.get('pos.order')
         data = []
         domain = self._get_domain(form)
-        pos_ids = pos_obj.search(self.cr, domain)
+        pos_ids = pos_obj.search(self.cr, self.uid, domain)
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 result = {
