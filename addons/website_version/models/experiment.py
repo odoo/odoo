@@ -176,7 +176,8 @@ class Experiment(osv.Model):
     }
 
     def _check_view(self, cr, uid, ids, context=None):
-        exp_ids = self.search(cr,uid,[],context=context)
+        #No overlap for running experiments
+        exp_ids = self.search(cr,uid,[('state','=','running')],context=context)
         exps = self.browse(cr,uid,exp_ids,context=context)
         check_a = set()
         check_b = set()
@@ -184,10 +185,11 @@ class Experiment(osv.Model):
             for exp_snap in exp.experiment_snapshot_ids:
                 for view in exp_snap.snapshot_id.view_ids:
                     x = (view.key,view.website_id.id)
+                    #the versions in the same experiment can have common keys
                     y = (view.key,view.website_id.id,exp_snap.experiment_id.id)
-                    if x in check_a and not y in check_b and exp.state == 'running':
+                    if x in check_a and not y in check_b:
                         return False
-                    elif exp.state == 'running':
+                    else:
                         check_a.add(x)
                         check_b.add(y)
         return True
