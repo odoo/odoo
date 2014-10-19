@@ -35,18 +35,30 @@ class pos_details(report_sxw.rml_parse):
         else:
             return  ''
 
-    def _get_all_users(self):
+    def _get_domain(self, form, extra_args=None):
         user_obj = self.pool.get('res.users')
-        return user_obj.search(self.cr, self.uid, [])
+        company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
+        user_ids = form['user_ids'] or []
+        config_ids = form['config_ids'] or []
+        domain = [
+            ('date_order', '>=', form['date_start'] + ' 00:00:00'),
+            ('date_order', '<=', form['date_end'] + ' 23:59:59'),
+            ('state', 'in', ['done', 'paid', 'invoiced']),
+            ('company_id','=',company_id),
+        ]
+        if len(user_ids):
+            domain.append(('user_id', 'in', user_ids))
+        if len(config_ids):
+            domain.append(('session_id.config_id', 'in', config_ids))
+        if extra_args:
+            domain.append(extra_args)
+        return domain
 
     def _pos_sales_details(self, form):
         pos_obj = self.pool.get('pos.order')
-        user_obj = self.pool.get('res.users')
         data = []
-        result = {}
-        user_ids = form['user_ids'] or self._get_all_users()
-        company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('state','in',['done','paid','invoiced']),('company_id','=',company_id)])
+        domain = self._get_domain(form)
+        pos_ids = pos_obj.search(self.cr, domain)
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 result = {
@@ -78,10 +90,8 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_sum_invoice_2(self, form):
         pos_obj = self.pool.get('pos.order')
-        user_obj = self.pool.get('res.users')
-        user_ids = form['user_ids'] or self._get_all_users()
-        company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('company_id','=',company_id),('invoice_id','<>',False)])
+        domain = self._get_domain(form,extra_args=('invoice_id','<>',False))
+        pos_ids = pos_obj.search(self.cr, self.uid, domain)
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_invoiced += (pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))
@@ -96,10 +106,8 @@ class pos_details(report_sxw.rml_parse):
     def _get_sum_discount(self, form):
         #code for the sum of discount value
         pos_obj = self.pool.get('pos.order')
-        user_obj = self.pool.get('res.users')
-        user_ids = form['user_ids'] or self._get_all_users()
-        company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('company_id','=',company_id)])
+        domain = self._get_domain(form)
+        pos_ids = pos_obj.search(self.cr, self.uid, domain)
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_discount += ((pol.price_unit * pol.qty) * (pol.discount / 100))
@@ -108,9 +116,8 @@ class pos_details(report_sxw.rml_parse):
     def _get_payments(self, form):
         statement_line_obj = self.pool.get("account.bank.statement.line")
         pos_order_obj = self.pool.get("pos.order")
-        user_ids = form['user_ids'] or self._get_all_users()
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
-        data={}
+        domain = self._get_domain(form,extra_args=('state','in',['paid','invoiced','done']))
+        pos_ids = pos_order_obj.search(self.cr, self.uid, domain)
         if pos_ids:
             st_line_ids = statement_line_obj.search(self.cr, self.uid, [('pos_statement_id', 'in', pos_ids)])
             if st_line_ids:
@@ -155,9 +162,9 @@ class pos_details(report_sxw.rml_parse):
     def _get_tax_amount(self, form):
         taxes = {}
         account_tax_obj = self.pool.get('account.tax')
-        user_ids = form['user_ids'] or self._get_all_users()
+        domain = self._get_domain(form,extra_args=('state','in',['paid','invoiced','done']))
         pos_order_obj = self.pool.get('pos.order')
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
+        pos_ids = pos_order_obj.search(self.cr, self.uid, domain)
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
             for line in order.lines:
                 line_taxes = account_tax_obj.compute_all(self.cr, self.uid, line.product_id.taxes_id, line.price_unit, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
