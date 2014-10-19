@@ -226,6 +226,20 @@ class TableExporter(http.Controller):
         exp_obj = request.registry['website_version.experiment']
         exp_obj.create(cr, uid, vals, context=None)
 
+    @http.route(['/website_version/launch_experiment'], type = 'json', auth = "public", website = True)
+    def launch_experiment(self, name, snapshot_ids, objectives):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        tab = []
+        for x in snapshot_ids:
+            tab.append([0, False, {'frequency': '50', 'snapshot_id': int(x)}])
+        vals = {'name':name, 'google_id': False, 'state': 'running', 'website_id':context.get('website_id'), 'experiment_snapshot_ids':tab, 'objectives': int(objectives)}
+        exp_obj = request.registry['website_version.experiment']
+        try:
+            exp_obj.create(cr, uid, vals, context=None)
+            return True
+        except:
+            return False
+
 
 
 

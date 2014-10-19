@@ -128,7 +128,7 @@
             openerp.jsonRpc( '/website_version/all_snapshots_all_goals', 'call', { 'view_id': view_id }).then(function (result) {
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                self.wizard.on('click','.create', function(){
+                self.wizard.on('click','.draft', function(){
                     var name = $('.name').val();
                     var tab = self.wizard.find('.version');
                     var result = [];
@@ -155,6 +155,42 @@
                         openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
                             alert("Your experiment " + name + " is created. Now you can manage this experiment by clicking on Manage Experiments.");
                             location.reload();
+                        });
+                    } 
+                });
+            
+                self.wizard.on('click','.launch', function(){
+                    var name = $('.name').val();
+                    var tab = self.wizard.find('.version');
+                    var result = [];
+                    var i;
+                    for (i = 0; i < tab.length; i++) {
+                        if ($(tab[i]).is(':checked')) {
+                            result.push($(tab[i]).attr('data-version_id'))
+                        }
+                    }
+                    var objectives = self.wizard.find('.selectpicker').val();
+                    var check = true;
+                    if (name ==''){
+                        alert("You must give a name to your experiment.");
+                        check = false;
+                    }
+                    if (result.length == 0 && check){
+                        alert("You must choose at least one version in your experiment.");
+                        check = false;
+                    }
+                    console.log(name);
+                    console.log(result);
+                    console.log(objectives);
+                    if(check){
+                        openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
+                            if (result){
+                                alert("Your experiment " + name + " is launched. Now you can check its statistics by clicking on Statistics.");
+                                location.reload();
+                            }
+                            else{
+                                alert("Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create this experiment.");
+                            }
                         });
                     } 
                 });
