@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import unicodedata
 
 from openerp import tools
 import openerp.modules
@@ -79,9 +80,13 @@ class ir_translation_import_cursor(object):
         """
         params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
 
-        # ugly hack for QWeb views - pending refactoring of translations in master
-        if params['imd_model'] == 'website' and params['type'] == 'view':
-            params['imd_model'] = "ir.ui.view"
+        if params['type'] == 'view':
+            # ugly hack for QWeb views - pending refactoring of translations in master
+            if params['imd_model'] == 'website':
+                params['imd_model'] = "ir.ui.view"
+            # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
+            elif params['res_id'] is None:
+                params['res_id'] = 0
 
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
@@ -347,7 +352,8 @@ class ir_translation(osv.osv):
         trad = res and res[0] or u''
         if source and not trad:
             return tools.ustr(source)
-        return trad
+        # Remove control characters
+        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
 
     def create(self, cr, uid, vals, context=None):
         if context is None:

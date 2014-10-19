@@ -554,7 +554,7 @@ $.fn.getAttributes = function() {
     if (this.length) {
         for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
             attr = attrs.item(i);
-            o[attr.nodeName] = attr.nodeValue;
+            o[attr.nodeName] = attr.value;
         }
     }
     return o;

@@ -42,15 +42,15 @@ instance.web.form.FieldManagerMixin = {
     Gives new values for the fields contained in the view. The new values could not be setted
     right after the call to this method. Setting new values can trigger on_changes.
 
-    @param (dict) values A dictonnary with key = field name and value = new value.
-    @return (Deferred) Is resolved after all the values are setted.
+    @param {Object} values A dictonary with key = field name and value = new value.
+    @return {$.Deferred} Is resolved after all the values are setted.
     */
     set_values: function(values) {},
     /**
     Computes an OpenERP domain.
 
-    @param (list) expression An OpenERP domain.
-    @return (boolean) The computed value of the domain.
+    @param {Array} expression An OpenERP domain.
+    @return {boolean} The computed value of the domain.
     */
     compute_domain: function(expression) {},
     /**
@@ -58,7 +58,7 @@ instance.web.form.FieldManagerMixin = {
     the field are only supposed to use this context to evualuate their own, they should not
     extend it.
 
-    @return (CompoundContext) An OpenERP context.
+    @return {CompoundContext} An OpenERP context.
     */
     build_eval_context: function() {},
 };
@@ -120,6 +120,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
         this.save_list = [];
+        this.render_value_defs = [];
         this.reload_mutex = new $.Mutex();
         this.__clicked_inside = false;
         this.__blur_timeout = null;
@@ -675,6 +676,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else if (mode === "create") {
             mode = "edit";
         }
+        this.render_value_defs = [];
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
@@ -726,12 +728,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
     },
     on_button_cancel: function(event) {
+        var self = this;
         if (this.can_be_discarded()) {
             if (this.get('actual_mode') === 'create') {
                 this.trigger('history_back');
             } else {
                 this.to_view_mode();
-                this.trigger('load_record', this.datarecord);
+                $.when.apply(null, this.render_value_defs).then(function(){
+                    self.trigger('load_record', self.datarecord);
+                });
             }
         }
         this.trigger('on_button_cancel');
@@ -2241,7 +2246,10 @@ instance.web.form.ReinitializeWidgetMixin =  {
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
     reinitialize: function() {
         instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
-        this.render_value();
+        var res = this.render_value();
+        if (this.view && this.view.render_value_defs){
+            this.view.render_value_defs.push(res);
+        }
     },
 });
 
@@ -2864,7 +2872,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 'auto');
+            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3419,9 +3427,14 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
-            self.getParent()._quick_create(self.$("input").val());
-            self.destroy();
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
+            if (self.$("input").val() != ''){
+                self.getParent()._quick_create(self.$("input").val());
+                self.destroy();
+            } else{
+                e.preventDefault();
+                self.$("input").focus();
+            }
         });
         this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
             self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
@@ -4705,9 +4718,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             self.render_tag(data);
         }
         if (! values || values.length > 0) {
-            this._display_orderer.add(self.get_render_data(values)).done(handle_names);
-        }
-        else{
+            return this._display_orderer.add(self.get_render_data(values)).done(handle_names);
+        } else {
             handle_names([]);
         }
     },

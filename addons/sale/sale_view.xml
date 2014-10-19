@@ -11,6 +11,13 @@
             id="base.menu_base_partner"
             groups="base.group_sale_salesman,base.group_sale_manager"/>
 
+        <menuitem
+            id= "base.menu_sales_config"
+            parent= "base.menu_base_config"
+            sequence= "1"
+            name= "Sales"
+            groups= "base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
+
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
@@ -103,7 +110,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" on_change="onchange_delivery_id(company_id, partner_id, partner_shipping_id, fiscal_position)" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'partner_id':partner_invoice_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                            <field name="project_id" context="{'partner_id':partner_invoice_id, 'manager_id': user_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -251,6 +258,7 @@
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     <field name="project_id"/>
+                    <field name="product_id"/>
                     <filter string="My" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
@@ -275,10 +283,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="context">{
-                    'search_default_my_sale_orders_filter': 1
-                }
-            </field>
+            <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -322,20 +327,19 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_my_sale_orders_filter': 1}</field>
+            <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a quotation, the first step of a new sale.
               </p><p>
-                Odoo will help you handle efficiently the complete sale flow:
+                Odoo will help you handling efficiently the complete sale flow:
                 from the quotation to the sales order, the
                 delivery, the invoicing and the payment collection.
               </p><p>
-                The social feature helps you organize discussions on each sales
-                order, and allow your customers to keep track of the evolution
-                of the sales order.
+                The social feature helps you organizing discussions on each sales
+                order, and allows your customers to keep track of the sales orders' evolution.
               </p>
             </field>
         </record>
@@ -626,13 +630,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a quotation, the first step of a new sale.
               </p><p>
-                Odoo will help you handle efficiently the complete sale flow:
+                Odoo will help you handling efficiently the complete sale flow:
                 from the quotation to the sales order, the
                 delivery, the invoicing and the payment collection.
               </p><p>
-                The social feature helps you organize discussions on each sales
-                order, and allow your customers to keep track of the evolution
-                of the sales order.
+                The social feature helps you organizing discussions on each sales
+                order, and allows your customers to keep track of the sales orders' evolution.
               </p>
             </field>
         </record>

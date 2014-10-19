@@ -119,7 +119,7 @@ class hr_job(osv.Model):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
+        'state': fields.selection([('recruit', 'Recruitment in Progress'), ('open', 'Recruitment Closed')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
                                   help="Set whether the recruitment process is open or closed for this job position."),
@@ -449,7 +449,7 @@ class hr_department(osv.osv):
         if manager_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
             if employee.user_id:
-                self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
+                self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
         return super(hr_department, self).write(cr, uid, ids, vals, context=context)
 
 

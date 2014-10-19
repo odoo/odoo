@@ -171,21 +171,22 @@ def _set_pg_password_in_environment(func):
                 del os.environ['PGPASSWORD']
     return wrapper
 
-def exp_dump(db_name):
+def exp_dump(db_name, format):
     with tempfile.TemporaryFile() as t:
-        dump_db(db_name, t)
+        dump_db(db_name, t, format)
         t.seek(0)
         return t.read().encode('base64')
 
 @_set_pg_password_in_environment
-def dump_db(db, stream):
+def dump_db(db, stream, format):
     """Dump database `db` into file-like object `stream`"""
     with openerp.tools.osutil.tempdir() as dump_dir:
         registry = openerp.modules.registry.RegistryManager.get(db)
-        with registry.cursor() as cr:
-            filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
-            if os.path.exists(filestore):
-                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+        if format == 'zip':
+            with registry.cursor() as cr:
+                filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
+                if os.path.exists(filestore):
+                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
 
         dump_file = os.path.join(dump_dir, 'dump.sql')
         cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]

@@ -6,7 +6,7 @@ from openerp.osv import orm
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
 
-    def get_utm_domain_cookies(slef):
+    def get_utm_domain_cookies(self):
         return request.httprequest.host
 
     def _dispatch(self):

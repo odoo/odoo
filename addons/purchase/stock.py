@@ -54,6 +54,8 @@ class stock_move(osv.osv):
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
+        if move.purchase_line_id:
+            invoice_line_vals['purchase_line_id'] = move.purchase_line_id.id
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
         if move.purchase_line_id:
             purchase_line = move.purchase_line_id
@@ -137,6 +139,25 @@ class stock_picking(osv.osv):
                }),
     }
 
+    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
+        purchase_obj = self.pool.get("purchase.order")
+        purchase_line_obj = self.pool.get('purchase.order.line')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
+        if picking.move_lines and picking.move_lines[0].purchase_line_id:
+            purchase_id = picking.move_lines[0].purchase_line_id.order_id.id
+            purchase_line_ids = purchase_line_obj.search(cr, uid, [('order_id', '=', purchase_id), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
+            if purchase_line_ids:
+                inv_lines = []
+                for po_line in purchase_line_obj.browse(cr, uid, purchase_line_ids, context=context):
+                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, po_line, context=context)
+                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
+                    inv_line_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
+                    inv_lines.append(inv_line_id)
+                    po_line.write({'invoice_lines': [(4, inv_line_id)]})
+                invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
+        return invoice_id
+
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
@@ -153,7 +174,7 @@ class stock_warehouse(osv.osv):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
-            buy_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_buy')[1]
+            buy_route_id = data_obj.get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
         except:
             buy_route_id = route_obj.search(cr, uid, [('name', 'like', _('Buy'))], context=context)
             buy_route_id = buy_route_id and buy_route_id[0] or False

@@ -24,6 +24,7 @@ from lxml import etree
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -165,7 +166,7 @@ class account_invoice(models.Model):
             elif data_line.reconcile_partial_id:
                 lines = data_line.reconcile_partial_id.line_partial_ids
             else:
-                lines = self.env['account_move_line']
+                lines = self.env['account.move.line']
             partial_lines += data_line
             self.move_lines = lines - partial_lines
 
@@ -449,7 +450,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -705,6 +706,7 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
         else:
             tax_key = []
+            precision = self.env['decimal.precision'].precision_get('Account')
             for tax in self.tax_line:
                 if tax.manual:
                     continue
@@ -713,7 +715,7 @@ class account_invoice(models.Model):
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
                     raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
@@ -812,7 +814,7 @@ class account_invoice(models.Model):
                     if line.value == 'fixed':
                         total_fixed += line.value_amount
                     if line.value == 'procent':
-                        total_percent += line.value_amount
+                        total_percent += (line.value_amount/100.0)
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
                     raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))

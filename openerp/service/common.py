@@ -4,6 +4,7 @@ import logging
 
 import openerp.release
 import openerp.tools
+from openerp.tools.translate import _
 
 import security
 

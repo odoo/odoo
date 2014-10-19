@@ -244,8 +244,9 @@ class sale_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', change_default=True),
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
-
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product'),
     }
+
     _defaults = {
         'date_order': fields.datetime.now,
         'order_policy': 'manual',

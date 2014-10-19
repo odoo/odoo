@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="action_im_chat_shortcode" model="ir.actions.act_window">
+            <field name="name">Chat Shortcode</field>
+            <field name="res_model">im_chat.shortcode</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new chat shortcode.
+              </p><p>
+                A shortcode is a keyboard shortcut. For instance, you type #gm and it will be transformed into "Good Morning".
+              </p>
+            </field>
+        </record>
+
+        <record id="im_chat_shortcode_tree_view" model="ir.ui.view">
+            <field name="name">im_chat.shortcode.tree</field>
+            <field name="model">im_chat.shortcode</field>
+            <field name="arch" type="xml">
+                <tree string="Shortcodes">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_chat_shortcode_form_view" model="ir.ui.view">
+            <field name="name">im_chat.shortcode.form</field>
+            <field name="model">im_chat.shortcode</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" version="7.0">
+                    <sheet>
+                       <group colspan="2" col="2">
+                            <field name="source"/>
+                            <field name="substitution"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

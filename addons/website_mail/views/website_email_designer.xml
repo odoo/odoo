@@ -30,7 +30,7 @@
                     </div>
                     <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
                         <div class="email_preview_border">
-                            <div t-field="template.body_html" class="email_preview js_content"/>
+                            <div t-esc="html_sanitize(template.body_html)" class="email_preview js_content"/>
                         </div>
                         <h4 t-field="template.name"/>
                         <button class="btn btn-primary js_template_set">Select</button>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
-                <a class="mt16 btn btn-primary pull-right" 
+                <a class="mt16 btn btn-primary pull-right" id="save_and_continue"
                   t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Save and Continue
                 </a>

@@ -28,11 +28,10 @@ from openerp.tools.translate import _
 
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Bad'),
-    ('1', 'Below Average'),
-    ('2', 'Average'),
-    ('3', 'Good'),
-    ('4', 'Excellent')
+    ('0', 'Normal'),
+    ('1', 'Good'),
+    ('2', 'Very Good'),
+    ('3', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -156,7 +155,7 @@ class hr_applicant(osv.Model):
         return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        res = dict.fromkeys(ids, dict())
+        res = dict((res_id, {}) for res_id in ids)
         for issue in self.browse(cr, uid, ids, context=context):
             values = {
                 'day_open': 0.0,
@@ -423,6 +422,13 @@ class hr_applicant(osv.Model):
                 cr, uid, [applicant.job_id.id],
                 body=_('New application from %s') % name,
                 subtype="hr_recruitment.mt_job_applicant_new", context=context)
+            self.message_post(
+                cr, uid, [applicant.id],
+                body = _("%s's Application \n From: %s \n\n %s \n") % (name, vals.get('email_from') or "", vals.get('description',"") or ""),
+                attachments = context.get('attachments'),
+                content_subtype = 'plaintext',
+                subtype = "hr_recruitment.mt_applicant_hired",
+                context = context)
         return obj_id
 
     def write(self, cr, uid, ids, vals, context=None):

@@ -191,6 +191,8 @@ def depends(*args):
     """
     if args and callable(args[0]):
         args = args[0]
+    elif any('id' in arg.split('.') for arg in args):
+        raise NotImplementedError("Compute method cannot depend on field 'id'.")
     return lambda method: decorate(method, '_depends', args)
 
 
@@ -691,6 +693,13 @@ class Environment(object):
             finally:
                 release_local(cls._local)
 
+    @classmethod
+    def reset(cls):
+        """ Clear the set of environments.
+            This may be useful when recreating a registry inside a transaction.
+        """
+        cls._local.environments = Environments()
+
     def __new__(cls, cr, uid, context):
         assert context is not None
         args = (cr, uid, context)
@@ -828,11 +837,10 @@ class Environment(object):
 
     def remove_todo(self, field, records):
         """ Mark `field` as recomputed on `records`. """
-        recs_list = self.all.todo.get(field, [])
-        if records in recs_list:
-            recs_list.remove(records)
-            if not recs_list:
-                del self.all.todo[field]
+        recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
+        recs_list = filter(None, recs_list)
+        if recs_list:
+            self.all.todo[field] = recs_list
 
     def has_todo(self):
         """ Return whether some fields must be recomputed. """

@@ -135,7 +135,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
-            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' ],
+            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
             domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
@@ -159,11 +159,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.users = users; },
         },{
             model:  'res.partner',
-            fields: ['name','street','city','country_id','phone','zip','mobile','email','ean13','write_date'],
+            fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','ean13','write_date'],
             domain: null,
             loaded: function(self,partners){
                 self.partners = partners;
                 self.db.add_partners(partners);
+            },
+        },{
+            model:  'res.country',
+            fields: ['name'],
+            loaded: function(self,countries){
+                self.countries = countries;
+                self.company.country = null;
+                for (var i = 0; i < countries.length; i++) {
+                    if (countries[i].id === self.company.country_id[0]){
+                        self.company.country = countries[i];
+                    }
+                }
             },
         },{
             model:  'account.tax',
@@ -1048,7 +1060,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             for(var id in details){
                 if(details.hasOwnProperty(id)){
-                    fulldetails.push({amount: details[id], tax: taxes_by_id[id]});
+                    fulldetails.push({amount: details[id], tax: taxes_by_id[id], name: taxes_by_id[id].name});
                 }
             }
 

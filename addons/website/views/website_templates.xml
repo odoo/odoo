@@ -83,8 +83,8 @@
                 </t>
             </t>
 
-            <t t-call-assets="web.assets_common"/>
-            <t t-call-assets="website.assets_frontend"/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="website.assets_frontend" t-js="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
             <t t-if="website and website.google_analytics_key">
@@ -127,8 +127,6 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a href="/web" role="menuitem">My Account</a></li>
-                                            <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
@@ -145,6 +143,9 @@
                     </div>
                 </footer>
             </div>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="website.assets_frontend" t-css="false"/>
         </body>
     </html>
 </template>
@@ -172,8 +173,11 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
-        <t t-call-assets="website.assets_editor"/>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-js]' position="after">
+        <t t-call-assets="website.assets_editor" t-js="false"/>
+    </xpath>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css]' position="after">
+        <t t-call-assets="website.assets_editor" t-css="false"/>
     </xpath>
 </template>
 

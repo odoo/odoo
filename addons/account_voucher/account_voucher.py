@@ -187,18 +187,20 @@ class account_voucher(osv.osv):
         debit = credit = 0.0
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
-            debit += l['amount']
+            if isinstance(l, dict):
+                debit += l['amount']
         for l in line_cr_ids:
-            credit += l['amount']
+            if isinstance(l, dict):
+                credit += l['amount']
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
             return {'value':{'writeoff_amount': 0.0}}
-        line_osv = self.pool.get("account.voucher.line")
-        line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
-        line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
+        # resolve lists of commands into lists of dicts
+        line_dr_ids = self.resolve_2many_commands(cr, uid, 'line_dr_ids', line_dr_ids, ['amount'], context)
+        line_cr_ids = self.resolve_2many_commands(cr, uid, 'line_cr_ids', line_cr_ids, ['amount'], context)
         #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
         #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
@@ -424,7 +426,6 @@ class account_voucher(osv.osv):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
-        line_pool = self.pool.get('account.voucher.line')
         if not line_ids:
             line_ids = []
         res = {
@@ -433,7 +434,8 @@ class account_voucher(osv.osv):
         }
         voucher_total = 0.0
 
-        line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
+        # resolve the list of commands into a list of dicts
+        line_ids = self.resolve_2many_commands(cr, uid, 'line_ids', line_ids, ['amount'], context)
 
         total_tax = 0.0
         for line in line_ids:
@@ -565,6 +567,8 @@ class account_voucher(osv.osv):
             o2m_to_loop = 'line_dr_ids'
         if o2m_to_loop and 'value' in vals and o2m_to_loop in vals['value']:
             for voucher_line in vals['value'][o2m_to_loop]:
+                if not isinstance(voucher_line, dict):
+                    continue
                 if voucher_line['currency_id'] != currency_id:
                     # we take as default value for the payment_rate_currency_id, the currency of the first invoice that
                     # is not in the voucher currency
@@ -677,13 +681,16 @@ class account_voucher(osv.osv):
 
         #set default values
         default = {
-            'value': {'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
+            'value': {'line_dr_ids': [], 'line_cr_ids': [], 'pre_line': False},
         }
 
-        #drop existing lines
-        line_ids = ids and line_pool.search(cr, uid, [('voucher_id', '=', ids[0])]) or False
-        if line_ids:
-            line_pool.unlink(cr, uid, line_ids)
+        # drop existing lines
+        line_ids = ids and line_pool.search(cr, uid, [('voucher_id', '=', ids[0])])
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            if line.type == 'cr':
+                default['value']['line_cr_ids'].append((2, line.id))
+            else:
+                default['value']['line_dr_ids'].append((2, line.id))
 
         if not partner_id or not journal_id:
             return default
@@ -871,7 +878,7 @@ class account_voucher(osv.osv):
             currency_id = journal.currency.id
         else:
             currency_id = journal.company_id.currency_id.id
-        vals['value'].update({'currency_id': currency_id})
+        vals['value'].update({'currency_id': currency_id, 'payment_rate_currency_id': currency_id})
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
@@ -1538,25 +1545,5 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-
-def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
-    results = []
-    for operation in operations:
-        result = None
-        if not isinstance(operation, (list, tuple)):
-            result = target_osv.read(cr, uid, operation, fields, context=context)
-        elif operation[0] == 0:
-            # may be necessary to check if all the fields are here and get the default values?
-            result = operation[2]
-        elif operation[0] == 1:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
-            if not result: result = {}
-            result.update(operation[2])
-        elif operation[0] == 4:
-            result = target_osv.read(cr, uid, operation[1], fields, context=context)
-        if result != None:
-            results.append(result)
-    return results
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

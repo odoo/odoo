@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-27 08:06+0000\n"
-"Last-Translator: Yenthe - Bapps.be <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-01 05:56+0000\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:35+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-10-02 06:42+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:77
@@ -32,6 +32,12 @@ msgid ""
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Wanneer een loonafschrift is aangemaakt is de status 'Concept'.            "
+"\n"
+"* Wanneer een loonafschrift ter goedkeuring is ingedient, is de status "
+"'Wachtend'.             \n"
+"* Wanneer een loonafschrift is goedgekeurd, is de status 'Gereed'.\n"
+"* Wanneer een loonafschrift is geannuleerd, is de status 'Afgewezen'."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -47,6 +53,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier voor het toevoegen van bijdrage register.\n"
+"              </p><p>\n"
+"                Een bijdrage register is een derde partij welke is opgenomen "
+"in het salarisbetaling\n"
+"                van de werknemer. Het kunnen sociale premies, de staat of "
+"iedereen die bedragen\n"
+"                toewijst of ontvangt op het loonafschrift.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -63,6 +79,11 @@ msgstr "Financiële informatie"
 #: field:hr.salary.rule,active:0
 msgid "Active"
 msgstr "Actief"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Voeg interne notitie toe..."
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -148,7 +169,7 @@ msgstr "Berekeningen"
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
-msgstr "Annuleer"
+msgstr "Annuleren"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -274,7 +295,7 @@ msgstr "Contributie registratie"
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr ""
+msgstr "Bijdrage register loonafschriftregels"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
@@ -363,6 +384,11 @@ msgid ""
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
 msgstr ""
+"Definieert de regels die moeten worden toegepast op dit loonafschrift, op "
+"basis van het gekozen contract. Als u het contract veld  leeg laat, is dit "
+"veld veld niet meer verplicht en zijn dus de regels van toepassing zijn dan "
+"alle regels ingesteld op de structuur van alle contracten van de werknemer "
+"geldig in de gekozen periode"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
@@ -559,6 +585,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Indien aangevinkt, geeft dit aan dat alle loonafschriften, gegenereerd vanaf "
+"hier, credits zijn."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -573,7 +601,7 @@ msgstr ""
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Geeft aan dat dit loonafschrift een credit heeft van een andere"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -612,6 +640,9 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"Wordt gebruikt voor berekeningen. Voor bijvoorbeeld een regel voor de "
+"verkopers dat ze 1% commissie krijgen over het basis salaris. Dit kan worden "
+"gedefinieerd als result = inputs.SALEURO.amount * contract.wage*0.01"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_uid:0
@@ -723,7 +754,7 @@ msgstr "Aantal uren"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 msgid "Other Inputs"
-msgstr ""
+msgstr "Overige ingaves"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,parent_id:0
@@ -770,17 +801,17 @@ msgstr "Salarisstrook-regels"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr ""
+msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr ""
+msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
+msgstr "Loonafschriftregels per bijdrage registers"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
@@ -832,7 +863,7 @@ msgstr "Salarisstrook Input"
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr ""
+msgstr "Loonafschrift ingaves"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -852,12 +883,12 @@ msgstr "Salarisstrook-regels"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr ""
+msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "Loonafschrift naam"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
@@ -1042,7 +1073,7 @@ msgstr "Salarisregel categorieën"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "Salarisregel categorie hirarchie"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
@@ -1211,6 +1242,9 @@ msgid ""
 "but you can also use categories code fields in lowercase as a variable names "
 "(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
+"Dit wordt gebruikt om de waardes van de %fields te berekenen. Normaliter is "
+"dit standaard, maar u kunt ook categorie veldcodes in kleine letters "
+"gebruiken als variabele naam (hra, ma, lta, etc.) en de variabele basic"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees

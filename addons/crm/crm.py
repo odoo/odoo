@@ -23,11 +23,10 @@ from openerp.osv import osv, fields
 from openerp.http import request
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Very Low'),
+    ('0', 'Normal'),
     ('1', 'Low'),
-    ('2', 'Normal'),
-    ('3', 'High'),
-    ('4', 'Very High'),
+    ('2', 'High'),
+    ('3', 'Very High'),
 ]
 
 

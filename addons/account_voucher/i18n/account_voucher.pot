@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-23 16:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgid "Are you sure you want to unreconcile this record?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:310
+#: code:addons/account_voucher/account_voucher.py:269
 #, python-format
 msgid "At the operation date, the exchange rate was\n"
 "%s = %s"
@@ -204,7 +204,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:970
+#: code:addons/account_voucher/account_voucher.py:929
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -212,11 +212,6 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,audit:0
 msgid "Check this box if you are unsure of that journal entry and if you want to note it as 'to be reviewed' by an accounting expert."
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.model,name:account_voucher.model_res_company
-msgid "Companies"
 msgstr ""
 
 #. module: account_voucher
@@ -233,7 +228,7 @@ msgid "Computed as the difference between the amount stated in the voucher and t
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1068
+#: code:addons/account_voucher/account_voucher.py:1027
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -384,8 +379,8 @@ msgid "Effective date for accounting entries"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:552
-#: code:addons/account_voucher/account_voucher.py:1074
+#: code:addons/account_voucher/account_voucher.py:511
+#: code:addons/account_voucher/account_voucher.py:1033
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -421,14 +416,8 @@ msgid "Full Reconcile"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.config.settings,income_currency_exchange_account_id:0
-#: field:res.company,income_currency_exchange_account_id:0
-msgid "Gain Exchange Rate Account"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1109
-#: code:addons/account_voucher/account_voucher.py:1115
+#: code:addons/account_voucher/account_voucher.py:1068
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Go to the configuration panel"
 msgstr ""
@@ -441,11 +430,6 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr ""
-
-#. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-msgid "Group by month of Invoice Date"
 msgstr ""
 
 #. module: account_voucher
@@ -480,7 +464,7 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:970
+#: code:addons/account_voucher/account_voucher.py:929
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -488,11 +472,6 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
 msgid "Invoice"
-msgstr ""
-
-#. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
-msgid "Invoice Date"
 msgstr ""
 
 #. module: account_voucher
@@ -562,12 +541,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.config.settings,expense_currency_exchange_account_id:0
-#: field:res.company,expense_currency_exchange_account_id:0
-msgid "Loss Exchange Rate Account"
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,name:0
 msgid "Memo"
 msgstr ""
@@ -588,7 +561,7 @@ msgid "Multi Currency Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1254
+#: code:addons/account_voucher/account_voucher.py:1213
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -751,19 +724,19 @@ msgid "Period"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1069
+#: code:addons/account_voucher/account_voucher.py:1028
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1075
+#: code:addons/account_voucher/account_voucher.py:1034
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:552
+#: code:addons/account_voucher/account_voucher.py:511
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -896,7 +869,6 @@ msgid "Sales Receipts Analysis"
 msgstr ""
 
 #. module: account_voucher
-#: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
 msgstr ""
@@ -951,7 +923,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
-#: code:addons/account_voucher/account_voucher.py:223
+#: code:addons/account_voucher/account_voucher.py:182
 #, python-format
 msgid "Supplier"
 msgstr ""
@@ -990,7 +962,7 @@ msgid "The Voucher has been totally paid."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1213
+#: code:addons/account_voucher/account_voucher.py:1172
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
@@ -1098,7 +1070,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: field:account.voucher.line,voucher_id:0
-#: code:addons/account_voucher/account_voucher.py:193
+#: code:addons/account_voucher/account_voucher.py:152
 #: model:res.request.link,name:account_voucher.req_link_voucher
 #, python-format
 msgid "Voucher"
@@ -1158,7 +1130,7 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:411
+#: code:addons/account_voucher/account_voucher.py:370
 #, python-format
 msgid "Write-Off"
 msgstr ""
@@ -1169,33 +1141,33 @@ msgid "Write-Off Analytic Account"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1213
+#: code:addons/account_voucher/account_voucher.py:1172
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1254
+#: code:addons/account_voucher/account_voucher.py:1213
 #, python-format
 msgid "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1114
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "You should configure the 'Gain Exchange Rate Account' to manage automatically the booking of accounting entries related to differences between exchange rates."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1108
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "You should configure the 'Loss Exchange Rate Account' to manage automatically the booking of accounting entries related to differences between exchange rates."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1125
-#: code:addons/account_voucher/account_voucher.py:1139
-#: code:addons/account_voucher/account_voucher.py:1290
+#: code:addons/account_voucher/account_voucher.py:1084
+#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "change"
 msgstr ""

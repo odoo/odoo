@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp import http
@@ -123,7 +124,7 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
-    if not db and http.db_filter([request.session.db]):
+    if not db and request.session.db and http.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
@@ -747,14 +748,17 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token):
+    def backup(self, backup_db, backup_pwd, token, **kwargs):
         try:
+            format = kwargs.get('format')
+            ext = "zip" if format == 'zip' else "dump"
             db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db))
-            filename = "%(db)s_%(timestamp)s.dump" % {
+                request.session.proxy("db").dump(backup_pwd, backup_db, format))
+            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
                 'db': backup_db,
                 'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ")
+                    "%Y-%m-%d_%H-%M-%SZ"),
+                'ext': ext
             }
             return request.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
@@ -1208,7 +1212,8 @@ class Binary(http.Controller):
         '/logo.png',
     ], type='http', auth="none")
     def company_logo(self, dbname=None, **kw):
-        # TODO add etag, refactor to use /image code for etag
+        imgname = 'logo.png'
+        placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1220,13 +1225,13 @@ class Binary(http.Controller):
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
-            image_data = self.placeholder('logo.png')
+            response = http.send_file(placeholder(imgname))
         else:
             try:
                 # create an empty registry
                 registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web
+                    cr.execute("""SELECT c.logo_web, c.write_date
                                     FROM res_users u
                                LEFT JOIN res_company c
                                       ON c.id = u.company_id
@@ -1234,17 +1239,14 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = str(row[0]).decode('base64')
+                        image_data = StringIO(str(row[0]).decode('base64'))
+                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
                     else:
-                        image_data = self.placeholder('nologo.png')
+                        response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                image_data = self.placeholder('logo.png')
+                response = http.send_file(placeholder(imgname))
 
-        headers = [
-            ('Content-Type', 'image/png'),
-            ('Content-Length', len(image_data)),
-        ]
-        return request.make_response(image_data, headers)
+        return response
 
 class Action(http.Controller):
 

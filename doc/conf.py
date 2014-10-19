@@ -44,7 +44,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'odoo developer documentation'
+project = u'odoo'
 copyright = u'2014, OpenERP s.a.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -52,9 +52,9 @@ copyright = u'2014, OpenERP s.a.'
 # built documents.
 #
 # The short X.Y version.
-version = '8.0'
+version = 'master'
 # The full version, including alpha/beta/rc tags.
-release = '8.0b1'
+release = 'master'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -167,7 +167,9 @@ html_sidebars = {
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/2/', None),
-    'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
+    'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
+    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
+    'django': ('https://django.readthedocs.org/en/latest/', None),
 }
 
 github_user = 'odoo'

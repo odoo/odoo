@@ -784,7 +784,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.html('Description'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
+        'priority': fields.selection([('0','Normal'), ('1','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
@@ -1063,7 +1063,7 @@ class task(osv.osv):
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('start_date'):
+        if vals.get('user_id') and not vals.get('date_start'):
             vals['date_start'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this

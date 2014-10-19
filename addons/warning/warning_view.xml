@@ -59,6 +59,15 @@
                 </notebook>
             </field>
         </record>
-
+        <record id="stock_picking_form_view_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group/field[@name='partner_id']" position="replace">
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" />
+                    </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

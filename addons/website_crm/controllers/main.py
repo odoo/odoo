@@ -8,6 +8,7 @@ from openerp import http, SUPERUSER_ID
 from openerp.http import request
 from openerp.tools.translate import _
 
+
 class contactus(http.Controller):
 
     def generate_google_map_url(self, street, city, city_zip, country_name):
@@ -29,7 +30,7 @@ class contactus(http.Controller):
         """ Allow to be overrided """
         return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
 
-    def preRenderThanks(self, request, values, kwargs):
+    def preRenderThanks(self, values, kwargs):
         """ Allow to be overrided """
         company = request.website.company_id
         return {
@@ -37,6 +38,10 @@ class contactus(http.Controller):
             '_values': values,
             '_kwargs': kwargs,
         }
+
+    def get_contactus_response(self, values, kwargs):
+        values = self.preRenderThanks(values, kwargs)
+        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
@@ -91,9 +96,6 @@ class contactus(http.Controller):
             post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
             values['description'] += dict_to_str(_("Environ Fields: "), post_description)
 
-
-
-
         lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
         values.update(lead_id=lead_id)
         if lead_id:
@@ -108,5 +110,4 @@ class contactus(http.Controller):
                 }
                 request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
 
-        values = self.preRenderThanks(request, values, kwargs)
-        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+        return self.get_contactus_response(values, kwargs)

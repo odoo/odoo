@@ -22,7 +22,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3 class="modal-title"><t t-esc="title"/></h3>
                     </div>
-                    <div class="modal-body"><t t-raw="__content__"/></div>
+                    <div class="modal-body"><t t-raw="0"/></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary save">Save</button>
                         <button type="button" class="btn hidden wait" disabled="disabled"/>
@@ -204,7 +204,17 @@
                 <div class="well">
                     <div class="form-group pull-left">
                         <input type="file" name="upload" accept="image/*" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                        <input type="hidden" name="disable_optimization" value=""/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Alternate Upload</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="js_disable_optimization">Upload image without optimization</a></li>
+                            </ul>
+                        </div>
                         <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
                     </div>
                     <div>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-23 16:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -103,6 +103,7 @@ msgid "Assigned"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,user_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,user_id:0
@@ -176,6 +177,7 @@ msgid "Communication channel."
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,company_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,company_id:0
@@ -193,17 +195,22 @@ msgid "Configure"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,partner_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
+#: view:project.issue.report:project_issue.view_project_issue_report_filter
+msgid "Create Day"
 msgstr ""
 
 #. module: project_issue
@@ -225,11 +232,6 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,create_date:0
 msgid "Creation Date"
-msgstr ""
-
-#. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Creation Month"
 msgstr ""
 
 #. module: project_issue
@@ -292,6 +294,11 @@ msgstr ""
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_delay
+msgid "Delay"
 msgstr ""
 
 #. module: project_issue
@@ -503,7 +510,6 @@ msgstr ""
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
@@ -542,12 +548,8 @@ msgstr ""
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
-msgid "My Issues"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
-msgid "My Task"
+msgid "My Issues"
 msgstr ""
 
 #. module: project_issue
@@ -602,6 +604,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:project_issue.project_feature_tree_view
 #: view:project.issue:project_issue.project_issue_tree_view
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,priority:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,priority:0
@@ -639,6 +642,11 @@ msgid "Project Issue"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.project_issue_graph_view
+msgid "Project Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Project:"
 msgstr ""
@@ -649,12 +657,11 @@ msgid "Ready for next stage"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:project_issue.view_project_issue_filter
-msgid "Responsible"
+#: field:project.issue.report,reviewer_id:0
+msgid "Reviewer"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr ""
@@ -714,6 +721,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: project_issue
+#: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,task_id:0
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,task_id:0
@@ -758,7 +766,6 @@ msgstr ""
 
 #. module: project_issue
 #: field:project.issue,version_id:0
-#: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr ""

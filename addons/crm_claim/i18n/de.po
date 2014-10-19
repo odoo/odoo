@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-28 09:57+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-24 18:54+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-30 08:37+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:59+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_claim
 #: field:res.partner,claim_count:0
@@ -26,12 +26,12 @@ msgstr "# Reklamationen"
 #. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
-msgstr "E-Mails"
+msgstr "# E-Mails"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
-msgid "# of Cases"
-msgstr "Anzahl Vorgänge"
+msgid "# of Claims"
+msgstr "# Reklamationen"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
@@ -75,7 +75,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung einer Reklamations-Kategorie.\n"
+"                Klicken Sie zur Erstellung einer Reklamationskategorie.\n"
 "              </p><p>\n"
 "                 Durch Kategorien haben Sie die Möglichkeit Ihre "
 "Reklamationen zu strukturieren.\n"
@@ -121,7 +121,6 @@ msgstr "Problemlösung ..."
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "Aktionstyp"
@@ -167,10 +166,9 @@ msgstr "Reklamations-Kategorien"
 
 #. module: crm_claim
 #: field:crm.claim,date:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,claim_date:0
 msgid "Claim Date"
-msgstr "Reklamationsdatum"
+msgstr "Datum Reklamation"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -184,6 +182,7 @@ msgstr "Beschreibung Reklamation"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
+#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Claim Month"
 msgstr "Reklamationsmonat"
 
@@ -205,8 +204,9 @@ msgstr "Reklamations-Stufen"
 
 #. module: crm_claim
 #: field:crm.claim,name:0
+#: field:crm.claim.report,subject:0
 msgid "Claim Subject"
-msgstr "Reklamation Begründung"
+msgstr "Reklamationsgrund"
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
@@ -481,11 +481,6 @@ msgid "My Sales Team(s)"
 msgstr "Eigene Teams"
 
 #. module: crm_claim
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
-msgid "My company"
-msgstr "Mein Unternehmen"
-
-#. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 msgid "New"
 msgstr "Neu"
@@ -555,7 +550,6 @@ msgstr "Aktion zur Prävention"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "Priorität"
@@ -698,7 +692,6 @@ msgstr "Problemzuständigkeit"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_tree_view
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
-#: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Type"
 msgstr "Typ"
 
@@ -740,9 +733,20 @@ msgstr "E-Mails des Beobachters"
 #. module: crm_claim
 #: field:crm.claim,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Webseite Nachrichten"
 
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Webseite Kommunikationshistorie"
+
+#. module: crm_claim
+#: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload
+msgid "Workload"
+msgstr "Arbeitsanfall"
+
+#~ msgid "My company"
+#~ msgstr "Mein Unternehmen"
+
+#~ msgid "# of Cases"
+#~ msgstr "# Fälle"

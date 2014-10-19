@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_registration_badge">
+            <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row" style="border-bottom:1px dashed black;">
+                        <div class="col-xs-6 text-center" style="padding-right:7mm; border-right:1px dashed black; height: 147mm; padding-top: 7mm">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span t-if="o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
+                                        <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
+                                    </span>
+                                    <h4 t-field="o.event_id.name"/>
+                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="o.event_id.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.date_end" t-field-options='{"hide_seconds":"True"}'> </span> )</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <small><h3 t-if="o.partner_id.is_company == True" t-field="o.partner_id.name"/><h5 t-field="o.name"/></small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 mt32 text-center" style="background: lightgrey;">
+                                    <h3>FREE TICKET</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Inner right -->
+                        <div class="col-xs-6 text-center" style="padding-left:7mm; height: 149mm; padding-top: 2mm;">
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+        </template>
+    </data>
+</openerp>

@@ -5,6 +5,8 @@ import werkzeug.urls
 import werkzeug.wrappers
 import re
 import simplejson
+import lxml
+from urllib2 import urlopen
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -40,6 +42,7 @@ class WebsiteForum(http.Controller):
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
                   'searches': kwargs.get('searches', dict()),
+                  'no_introduction_message': request.httprequest.cookies.get('no_introduction_message', False),
                   }
         if forum:
             values['forum'] = forum
@@ -76,7 +79,7 @@ class WebsiteForum(http.Controller):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True)
-    def questions(self, forum, tag=None, page=1, filters='all', sorting='date', search='', **post):
+    def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Post = request.registry['forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
@@ -90,18 +93,11 @@ class WebsiteForum(http.Controller):
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
             domain += [('message_follower_ids', '=', user.partner_id.id)]
-        else:
-            filters = 'all'
 
-        if sorting == 'answered':
-            order = 'child_count desc'
-        elif sorting == 'vote':
-            order = 'vote_count desc'
-        elif sorting == 'date':
-            order = 'write_date desc'
-        else:
-            sorting = 'creation'
-            order = 'create_date desc'
+        if post_type:
+            domain += [('type', '=', post_type)]
+        if not sorting:
+            sorting = forum.default_order
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
@@ -109,18 +105,18 @@ class WebsiteForum(http.Controller):
         else:
             url = "/forum/%s" % slug(forum)
 
-        url_args = {}
+        url_args = {
+            'sorting': sorting
+        }
         if search:
             url_args['search'] = search
         if filters:
             url_args['filters'] = filters
-        if sorting:
-            url_args['sorting'] = sorting
         pager = request.website.pager(url=url, total=question_count, page=page,
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
 
-        obj_ids = Post.search(cr, uid, domain, limit=self._post_per_page, offset=pager['offset'], order=order, context=context)
+        obj_ids = Post.search(cr, uid, domain, limit=self._post_per_page, offset=pager['offset'], order=sorting, context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
 
         values = self._prepare_forum_values(forum=forum, searches=post)
@@ -133,6 +129,7 @@ class WebsiteForum(http.Controller):
             'filters': filters,
             'sorting': sorting,
             'search': search,
+            'post_type': post_type,
         })
         return request.website.render("website_forum.forum_index", values)
 
@@ -163,35 +160,10 @@ class WebsiteForum(http.Controller):
     # Questions
     # --------------------------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="public", website=True)
-    def question_ask(self, forum, **post):
-        if not request.session.uid:
-            return login_redirect()
-        values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
-        return request.website.render("website_forum.ask_question", values)
-
-    @http.route('/forum/<model("forum.forum"):forum>/question/new', type='http', auth="user", methods=['POST'], website=True)
-    def question_create(self, forum, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Tag = request.registry['forum.tag']
-        question_tag_ids = []
-        if post.get('question_tags').strip('[]'):
-            tags = post.get('question_tags').strip('[]').replace('"', '').split(",")
-            for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-                if tag_ids:
-                    question_tag_ids.append((4, tag_ids[0]))
-                else:
-                    question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
-
-        new_question_id = request.registry['forum.post'].create(
-            request.cr, request.uid, {
-                'forum_id': forum.id,
-                'name': post.get('question_name'),
-                'content': post.get('content'),
-                'tag_ids': question_tag_ids,
-            }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
+    @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
+    def get_url_title(self, **kwargs):
+        arch = lxml.html.parse(urlopen(kwargs.get('url')))
+        return arch.find(".//title").text
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
@@ -241,7 +213,7 @@ class WebsiteForum(http.Controller):
             'forum': forum,
             'reasons': reasons,
         })
-        return request.website.render("website_forum.close_question", values)
+        return request.website.render("website_forum.close_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer', type='http', auth="user", website=True)
     def question_edit_answer(self, forum, question, **kwargs):
@@ -274,21 +246,46 @@ class WebsiteForum(http.Controller):
     # Post
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/new', type='http', auth="public", methods=['POST'], website=True)
-    def post_new(self, forum, post, **kwargs):
+    @http.route(['/forum/<model("forum.forum"):forum>/<post_type>'], type='http', auth="public", website=True)
+    def forum_post(self, forum, post_type, **post):
         if not request.session.uid:
             return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), uid))
-        request.registry['forum.post'].create(
-            request.cr, request.uid, {
+        values = self._prepare_forum_values(forum=forum, searches={},  header={'ask_hide': True})
+        return request.website.render("website_forum.%s" % post_type, values)
+
+    @http.route(['/forum/<model("forum.forum"):forum>/<post_type>/new',
+                 '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply']
+                , type='http', auth="public", methods=['POST'], website=True)
+    def post_create(self, forum, post_parent='', post_type='', **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        if not request.session.uid:
+            return login_redirect()
+
+        post_tag_ids = []
+        Tag = request.registry['forum.tag']
+        if post.get('post_tags', False) and post.get('post_tags').strip('[]'):
+            tags = post.get('post_tags').strip('[]').replace('"', '').split(",")
+            for tag in tags:
+                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                if tag_ids:
+                    post_tag_ids.append((4, tag_ids[0]))
+                else:
+                    post_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+
+        new_question_id = request.registry['forum.post'].create(cr, uid, {
                 'forum_id': forum.id,
-                'parent_id': post.id,
-                'content': kwargs.get('content'),
-            }, context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
+                'name': post.get('post_name', ''),
+                'content': post.get('content', False),
+                'content_link': post.get('content_link', False),
+                'parent_id': post_parent and post_parent.id or False,
+                'tag_ids': post_tag_ids,
+                'type': post_parent and post_parent.type or post_type,
+            }, context=context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), post_parent and slug(post_parent) or new_question_id))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
@@ -344,20 +341,20 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
-        question_tags = []
-        if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
+        post_tags = []
+        if kwargs.get('post_tag') and kwargs.get('post_tag').strip('[]'):
             Tag = request.registry['forum.tag']
-            tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
+            tags = kwargs.get('post_tag').strip('[]').replace('"', '').split(",")
             for tag in tags:
                 tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
                 if tag_ids:
-                    question_tags += tag_ids
+                    post_tags += tag_ids
                 else:
                     new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
-                    question_tags.append(new_tag)
+                    post_tags.append(new_tag)
         vals = {
-            'tag_ids': [(6, 0, question_tags)],
-            'name': kwargs.get('question_name'),
+            'tag_ids': [(6, 0, post_tags)],
+            'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
         }
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)

@@ -40,6 +40,7 @@ This is the base module to manage the accounting chart for Luxembourg.
     'data': [
         # basic accounting data
         'account_financial_report.xml',
+        'account_financial_report_abr.xml',
         'account.account.type-2011.csv',
         'account.account.template-2011.csv',
         'account.tax.code.template-2011.csv',
