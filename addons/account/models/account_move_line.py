@@ -318,7 +318,7 @@ class account_move_line(models.Model):
     account_tax_id =fields.Many2one('account.tax', string='Tax', copy=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id',
-        string='Company', store=True, readonly=True, 
+        string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
     invoice = fields.Many2one('account.invoice', string='Invoice')
 
@@ -1046,7 +1046,7 @@ class account_move_line(models.Model):
                     if vals.get('ref', ''):
                         v.update({'ref': vals['ref']})
                     move_id = MoveObj.with_context(context).create(v)
-                    vals['move_id'] = move_id
+                    vals['move_id'] = move_id.id
                 else:
                     raise osv.except_osv(_('No Piece Number!'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
