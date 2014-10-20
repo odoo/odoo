@@ -447,7 +447,7 @@ class mail_message(osv.Model):
 
         # 1. get the expandable for new threads
         if thread_level == 0:
-            exp_domain = domain + [('id', '<', min(message_unload_ids + message_ids))]
+            exp_domain = domain + [('id', 'not in', message_unload_ids + message_ids)]
         else:
             exp_domain = domain + ['!', ('id', 'child_of', message_unload_ids + parent_tree.keys())]
         more_count = self.search_count(cr, uid, exp_domain, context=context)
@@ -539,6 +539,8 @@ class mail_message(osv.Model):
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
+        else:
+            ids = self.search(cr, uid, [('id', 'in', ids)] + domain, context=context, limit=limit)
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
