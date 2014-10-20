@@ -21,7 +21,7 @@
 {%- endblock -%}
 
 {%- block content -%}
-  <div class="document-super">
+  <div class="document-super {% if meta is defined %}{{ meta.classes }}{% endif %}">
     {{ super() }}
   </div>
 {%- endblock -%}

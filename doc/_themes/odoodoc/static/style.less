@@ -17,7 +17,11 @@
 // indent level for various items list e.g. dl, fields lists, ...
 @item-indent: 30px;
 
+* {
+  box-sizing: border-box;
+}
 body {
+  overflow: auto;
   position: relative;
 }
 
@@ -461,21 +465,13 @@ div.section > h2 {
  *
  * Generated via Pygments
  */
-
-.highlight {
-  padding: 9px 14px;
-  margin-bottom: 14px;
-  background-color: #f7f7f9 !important;
-  border: 1px solid #e1e1e8;
-  border-radius: 4px;
-}
 .highlight pre {
-  color: #333;
-  padding: 0 45px 0 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border: 0;
+  padding: 4px;
+
+  font-size: 75%;
+  // code block lines should not wrap
+  word-break: normal;
+  word-wrap: normal;
 }
 
 /*
@@ -485,6 +481,9 @@ div.section > h2 {
 .zero-clipboard {
   position: relative;
   display: none;
+  @media (min-width: @screen-sm-min) {
+    display: block;
+  }
 }
 .btn-clipboard {
   position: absolute;
@@ -504,12 +503,6 @@ div.section > h2 {
   color: #fff;
   background-color: @brand-primary;
   border-color: @brand-primary;
-}
-
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
-  }
 }
 
 // rST styles
@@ -546,13 +539,67 @@ td.field-body {
     padding: 0;
 }
 
-// code block lines should not wrap
-pre {
-  word-break: normal;
-  word-wrap: normal;
-}
-
 // lighten js namespace/class name
 .descclassname {
   opacity: 0.5;
+}
+
+// STRIPE-STYLE PAGES
+.stripe {
+  .section {
+    margin-bottom: 2em;
+  }
+
+  // === columning only on medium+ ===
+  @media (min-width: @screen-md-min) {
+    // column 1
+    .section > *,
+    .section > .force-left {
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    // column 2
+    .section > .force-right,
+    .section > [class*=highlight] {
+      float: none;
+      clear: none;
+      margin-left: 51%;
+    }
+    // fullwidth elements
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6 {
+      background-color: fadeout(@body-bg, 30%);
+    }
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6, .section > .section {
+      position: relative;
+      width: auto;
+      float: none;
+      clear: both;
+    }
+
+    .bodywrapper {
+      position: relative;
+      // middle separator
+      &:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        width: 0;
+        border-left: 1px solid @gray-light;
+      }
+    }
+  }
+  // === show/hide code snippets ===
+  .switchable > .highlight,
+  [class*=only-] {
+    display: none;
+  }
+  // must be final rule of page
+  .only-python, .highlight-python > .highlight {
+    display: block;
+  }
 }
