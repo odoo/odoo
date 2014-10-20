@@ -22,13 +22,13 @@ class website_alias(models.Model):
 
     _inherit = ['crm.tracking.mixin']
 
-    url = fields.Char(string='Full URL', required=True)
+    url = fields.Char(string='Target URL', required=True)
     # code = fields.Char(string='Short URL Code', store=True, compute='_get_random_code_string')
     count = fields.Integer(string='Number of Clicks', compute='_count_url', store=True)
-    short_url = fields.Char(string="Short URL", compute='_short_url')
+    short_url = fields.Char(string="Tracked URL", compute='_short_url')
     alias_click_ids = fields.One2many('website.alias.click', 'alias_id', string='Clicks')
     is_archived = fields.Boolean(string='Archived', default=False)
-    title = fields.Char(string="Title of the alias", store=True)
+    title = fields.Char(string="Page Title", store=True)
     favicon = fields.Char(string="Favicon", store=True)
     alias_code_ids = fields.One2many('website.alias.code', 'alias_id', string='Codes')
     code = fields.Char(string="Short URL code", compute="_code")
@@ -79,7 +79,7 @@ class website_alias(models.Model):
             'name' : _("Visit Webpage"),
             'type' : 'ir.actions.act_url',
             'url' : self.url,
-            'target' : 'self',
+            'target' : 'new',
         }
 
     @api.model

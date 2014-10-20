@@ -1,8 +1,8 @@
 {
-    'name': 'URL Shortener',
+    'name': 'Link Tracker',
     'category': 'Hidden',
     'description': """
-To shorten URL and To show url click statistics.
+Create short and trackable URLs.
 =====================================================
 
         """,
