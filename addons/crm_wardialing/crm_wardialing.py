@@ -5,6 +5,7 @@ import ari
 import requests
 from requests import HTTPError
 import time
+
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
@@ -27,7 +28,7 @@ class crm_phonecall(models.Model):
 		print(self.partner_id.phone)
 		client = ari.connect('http://localhost:8088', 'asterisk', 'asterisk')
 
-		incoming = client.channels.originate(endpoint="SIP/"+self.partner_id.phone, app="bridge-dial", appArgs="SIP/2002")
+		incoming = client.channels.originate(endpoint="SIP/"+self.opportunity_id.partner_id.phone, app="bridge-dial", appArgs="SIP/2002")
 		self.start_time = int(time.time())
 		
 		def incoming_on_start(channel,event):
@@ -63,42 +64,26 @@ class crm_phonecall(models.Model):
 					duration = float(stop_time - self.start_time)
 					self.duration = float(duration/60.0)				
 					chan.hangup()	
-	
-	@api.multi
-	def get_information(self):
-		return {"partner_name": self.partner_id.name,
-				"partner_image_small": self.partner_id.image_small,
-				"partner_email": self.partner_id.email,
-				"partner_title": self.partner_id.title.name,
-				"partner_phone": self.partner_id.phone,
-				"partner_mobile": self.partner_id.mobile,
-				"opportunity_name": self.opportunity_id.name,
-				"opportunity_priority": self.opportunity_id.priority,
-				"opportunity_planned_revenue": self.opportunity_id.planned_revenue,
-				"opportunity_title_action": self.opportunity_id.title_action,
-				"opportunity_company_currency": self.opportunity_id.company_currency.id,
-				"opportunity_probability": self.opportunity_id.probability}
 
 	@api.one
 	def get_info(self):
-		print("INFO ONE")
-		print(self.opportunity_id.name)
 		return {"id": self.id,
 				"description": self.description,
-				"partner_id": self.partner_id.id,
-				"partner_name": self.partner_id.name,
-				"partner_image_small": self.partner_id.image_small,
-				"partner_email": self.partner_id.email,
-				"partner_title": self.partner_id.title.name,
-				"partner_phone": self.partner_id.phone,
-				"partner_mobile": self.partner_id.mobile,
+				"partner_id": self.opportunity_id.partner_id.id,
+				"partner_name": self.opportunity_id.partner_id.name,
+				"partner_image_small": self.opportunity_id.partner_id.image_small,
+				"partner_email": self.opportunity_id.partner_id.email,
+				"partner_title": self.opportunity_id.partner_id.title.name,
+				"partner_phone": self.opportunity_id.partner_id.phone,
+				"partner_mobile": self.opportunity_id.partner_id.mobile,
 				"opportunity_name": self.opportunity_id.name,
 				"opportunity_id": self.opportunity_id.id,
 				"opportunity_priority": self.opportunity_id.priority,
 				"opportunity_planned_revenue": self.opportunity_id.planned_revenue,
 				"opportunity_title_action": self.opportunity_id.title_action,
 				"opportunity_company_currency": self.opportunity_id.company_currency.id,
-				"opportunity_probability": self.opportunity_id.probability}
+				"opportunity_probability": self.opportunity_id.probability,
+				"max_priority": self.opportunity_id._all_columns.get('priority').column.selection[-1][0]}
 
 	@api.model
 	def get_list(self, current_search):
@@ -106,6 +91,16 @@ class crm_phonecall(models.Model):
 
 class crm_lead(models.Model):
 	_inherit = "crm.lead"
+
+	in_call_center_queue = fields.Boolean("Is in the Call Center Queue", compute='compute_is_call_center')
+
+	@api.one
+	def compute_is_call_center(self):
+		phonecall = self.env['crm.phonecall'].search([('opportunity_id','=',self.id)])
+		if phonecall:
+			self.in_call_center_queue = True
+		else:
+			self.in_call_center_queue = False	
 
 	@api.one
 	def create_call_center_call(self):
@@ -117,6 +112,13 @@ class crm_lead(models.Model):
 		phonecall.opportunity_id = self.id
 		phonecall.partner_id = self.partner_id
 		phonecall.state = 'pending'
+
+	@api.one
+	def delete_call_center_call(self):
+		phonecall = self.env['crm.phonecall'].search([('opportunity_id','=',self.id)])
+		phonecall.unlink()
+		
+
 
 class crm_phonecall_log_wizard(models.TransientModel):
 	_name = 'crm.phonecall.log.wizard';
@@ -134,10 +136,13 @@ class crm_phonecall_log_wizard(models.TransientModel):
 
 	description = fields.Text('Description', default = _default_description)
 	opportunity_name = fields.Char(default = _default_phonecall, readonly=True)
+
 	@api.multi
 	def save(self):
 		phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall').get('id'))
 		phonecall.description = self.description
-		print(phonecall.description)
-		return {}
+		return {
+			'type': 'ir.actions.client',
+			'tag': 'reload_panel',
+		}
 

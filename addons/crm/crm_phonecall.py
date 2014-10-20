@@ -39,7 +39,7 @@ class crm_phonecall(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
+        'partner_id': fields.many2one('res.partner', 'Contact',ondelete='cascade', track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection(
@@ -65,7 +65,7 @@ class crm_phonecall(osv.osv):
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity',ondelete='cascade', track_visibility='onchange'),
     }
 
     def _get_default_state(self, cr, uid, context=None):

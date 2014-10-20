@@ -7,7 +7,7 @@
 
         <!-- server action used to create the call from the menu "more" in the lead's list view -->
         <record id="action_create_call_center_call" model="ir.actions.server">
-            <field name="name">Create call center call</field>
+            <field name="name">Add to Call Center Queue</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
@@ -24,7 +24,7 @@
         <!-- insertion of the action "Add to Call Center" in the "more" menu in the lead's list view -->
         <record model="ir.values" id="ir_create_call_center_call">
             <field name="model_id" ref="crm.model_crm_lead" />
-            <field name="name">Add to Call Center</field>
+            <field name="name">Add to Call Center Queue</field>
             <field name="key2">client_action_multi</field>
             <field eval="'ir.actions.server,%d'%action_create_call_center_call" name="value"/>
             <field name="key">action</field>
@@ -38,9 +38,12 @@
             <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="arch" type="xml">
                 <div class="oe_kanban_content">
-                     <a href="#" title="Add to call center calls" class="oe_dial_link_icon">
+                     <a href="#" title="Add to Call Center Queue" class="oe_dial_link_icon">
                         <i class="text-muted oe_dial_hidden_button oe_dial_lead_to_call_center_button fa fa-plus-square"></i>
                     </a>
+                    <span style="visibility:hidden;" class="call_center" >
+                        <field name="in_call_center_queue"/>
+                    </span>
                 </div>
             </field>
         </record>
