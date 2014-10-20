@@ -219,6 +219,8 @@ class account_config_settings(osv.osv_memory):
                 'date_start': date_start,
                 'date_stop': date_stop,
                 'period': period,
+                'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False,
+                'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False,
             }
             # update journals and sequences
             for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
