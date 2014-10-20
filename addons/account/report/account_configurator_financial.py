@@ -63,6 +63,17 @@ class AccountReportsConfiguratorFinancial(models.TransientModel):
         return result
 
     def _specific_format(self, form_data):
+        # Configuring filter option "Same period, another year"
+        form_data['filter_cmp_extended'] = form_data['filter_cmp']
+        if form_data['filter_cmp'] == 'same_period':
+            form_data['filter_cmp'] = form_data['filter']
+            if form_data['filter'] == 'filter_period':
+                form_data['period_from_cmp'] = form_data['period_from']
+                form_data['period_to_cmp'] = form_data['period_to']
+            elif form_data['filter'] == 'filter_date':
+                form_data['date_from_cmp'] = form_data['date_from']
+                form_data['date_to_cmp'] = form_data['date_to']
+
         comparison_context = self._build_comparison_context(form_data)
         form_data['comparison_context'] = comparison_context
         report_name = self.env['account.financial.report'].browse(form_data['account_report_id'])[0]['name']

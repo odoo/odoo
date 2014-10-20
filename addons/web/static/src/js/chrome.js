@@ -628,6 +628,16 @@ instance.web.logout = function() {
 };
 instance.web.client_actions.add("logout", "instance.web.logout");
 
+instance.web.internal_url = instance.web.Widget.extend({
+    template: 'InternalUrl',
+
+    init: function(parent, action) {
+        this._super(parent, action);
+        this.url = action.url;
+    },
+});
+
+instance.web.client_actions.add("internal_url", "instance.web.internal_url");
 
 /**
  * Redirect to url by replacing window.location

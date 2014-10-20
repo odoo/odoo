@@ -566,11 +566,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         });
     },
-    ir_actions_act_url: function (action) {
+    ir_actions_act_url: function (action, options) {
         if (action.target === 'self') {
             instance.web.redirect(action.url);
         } else {
-            window.open(action.url, '_blank');
+            // window.open(action.url, '_blank');
+            action.tag = "internal_url";
+            delete action.target;
+            return this.ir_actions_client(action, options)
         }
         return $.when();
     },

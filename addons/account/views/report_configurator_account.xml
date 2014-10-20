@@ -3,14 +3,14 @@
 <data>
 <template id="report_account_configurator" inherit_id="account.report_configurator" primary="True">
     <xpath expr="//select[@name='target_move']" position="after">
-        <label for="filter">Display Accounts :</label>
-            <select name="filter" class="form-control">
-                <option t-if="data['form']['filter'] == 'all'" selected="selected" value="all">Display all accounts</option>
-                <option t-if="data['form']['filter'] != 'all'" value="all">Display all accounts</option>
-                <option t-if="data['form']['filter'] == 'movement'" selected="selected" value="movement">Display accounts with movement</option>
-                <option t-if="data['form']['filter'] != 'movement'" value="movement">Display accounts with movement</option>
-                <option t-if="data['form']['filter'] == 'not_zero'" selected="selected" value="not_zero">Display accounts where balance is not equal to zero</option>
-                <option t-if="data['form']['filter'] != 'not_zero'" value="not_zero">Display accounts where balance is not equal to zero</option>
+        <label for="display_account">Display Accounts :</label>
+            <select name="display_account" class="form-control">
+                <option t-if="data['form']['display_account'] == 'all'" selected="selected" value="all">Display all accounts</option>
+                <option t-if="data['form']['display_account'] != 'all'" value="all">Display all accounts</option>
+                <option t-if="data['form']['display_account'] == 'movement'" selected="selected" value="movement">Display accounts with movement</option>
+                <option t-if="data['form']['display_account'] != 'movement'" value="movement">Display accounts with movement</option>
+                <option t-if="data['form']['display_account'] == 'not_zero'" selected="selected" value="not_zero">Display accounts where balance is not equal to zero</option>
+                <option t-if="data['form']['display_account'] != 'not_zero'" value="not_zero">Display accounts where balance is not equal to zero</option>
             </select>
     </xpath>
 </template>

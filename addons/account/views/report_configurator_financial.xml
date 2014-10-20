@@ -25,10 +25,10 @@
             <label for="account_report_id">Account Reports</label>
             <select name="account_report_id" class="form-control">
                 <t t-foreach="data['form']['content']['account_reports']" t-as="a"> 
-                    <option t-if="a['id'] == data['form']['account_report_id']" selected="selected" t-att-value="a['id']">
+                    <option t-if="a['id'] == data['form']['account_report_id'][0]" selected="selected" t-att-value="a['id']">
                         <t t-esc="a['name']"></t>
                     </option>
-                    <option t-if="a['id'] != data['form']['account_report_id']" t-att-value="a['id']">
+                    <option t-if="a['id'] != data['form']['account_report_id'][0]" t-att-value="a['id']">
                         <t t-esc="a['name']"></t>
                     </option>
                 </t>   
@@ -61,20 +61,22 @@
             <div class="col-xs-3">
                 <label for="filter_cmp">Filter by :</label>
                     <select name="filter_cmp" class="form-control">
-                        <option t-if="data['form']['filter_cmp'] == 'filter_no'" selected="selected" value="filter_no">No Filter</option>
-                        <option t-if="data['form']['filter_cmp'] != 'filter_no'" value="filter_no">No Filter</option>
-                        <option t-if="data['form']['filter_cmp'] == 'filter_date'" selected="selected" value="filter_date">Date</option>
-                        <option t-if="data['form']['filter_cmp'] != 'filter_date'" value="filter_date">Date</option>
-                        <option t-if="data['form']['filter_cmp'] == 'filter_period'" selected="selected" value="filter_period">Period</option>
-                        <option t-if="data['form']['filter_cmp'] != 'filter_period'" value="filter_period">Period</option>
+                        <option t-if="data['form']['filter_cmp_extended'] == 'filter_no'" selected="selected" value="filter_no">No Filter</option>
+                        <option t-if="data['form']['filter_cmp_extended'] != 'filter_no'" value="filter_no">No Filter</option>
+                        <option t-if="data['form']['filter_cmp_extended'] == 'filter_date'" selected="selected" value="filter_date">Date</option>
+                        <option t-if="data['form']['filter_cmp_extended'] != 'filter_date'" value="filter_date">Date</option>
+                        <option t-if="data['form']['filter_cmp_extended'] == 'filter_period'" selected="selected" value="filter_period">Period</option>
+                        <option t-if="data['form']['filter_cmp_extended'] != 'filter_period'" value="filter_period">Period</option>
+                        <option t-if="data['form']['filter_cmp_extended'] == 'same_period'" selected="selected" value="same_period">Another year, same period</option>
+                        <option t-if="data['form']['filter_cmp_extended'] != 'same_period'" value="same_period">Another year, same period</option>
                     </select>
-                    <t t-if="data['form']['filter_cmp'] == 'filter_date'">
+                    <t t-if="data['form']['filter_cmp_extended'] == 'filter_date'">
                         <label for="date_from_cmp">Start Date :</label>
                         <input type="date" class="form-control" name="date_from_cmp" t-att-value="data['form']['date_from_cmp']"></input>
                         <label for="date_to_cmp">End Date :</label>
                         <input type="date" class="form-control" name="date_to_cmp" t-att-value="data['form']['date_to_cmp']"></input>
                     </t>
-                    <t t-if="data['form']['filter_cmp'] == 'filter_period'">
+                    <t t-if="data['form']['filter_cmp_extended'] == 'filter_period'">
                         <label for="period_from_cmp">Start Period :</label>
                         <select name="period_from_cmp" class="form-control">
                             <t t-foreach="data['form']['content']['periods']" t-as="p">

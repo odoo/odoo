@@ -3,10 +3,16 @@
 <data>
 <template id="report_financial">
     <t t-call="report.html_container">
-        <span class="oe_account_footnote">
+        <span class="oe_account_reportWidgets">
         <t t-call-assets="web.assets_common" t-css="false" />
+        <t t-call-assets="web.assets_backend" t-css="false" />
         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-        <script type="text/javascript" src="/account/static/src/js/account_footnote.js"></script>
+        <script type="text/javascript" src="/account/static/src/js/account_reportWidgets.js"></script>
+        <script type="text/javascript" src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+        <script type="text/javascript" src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web_graph/static/src/js/graph_view.js"></script>
+        <script type="text/javascript" src="/web_graph/static/src/js/pivot_table.js"></script>
+        <script type="text/javascript" src="/web_graph/static/src/js/graph_widget.js"></script>
         <t t-call="account.report_financial_configurator"></t>
         <t t-foreach="docs" t-as="o">
             <t t-call="report.internal_layout">

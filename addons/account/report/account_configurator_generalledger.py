@@ -32,8 +32,8 @@ class AccountReportsConfiguratorGeneralLedger(models.TransientModel):
     sortby = fields.Char(default='sort_date')
 
     def _specific_format(self, form_data):
-        if form_data['landscape'] is False:
-            form_data.pop('landscape')
-        else:
-            self.env.context['landscape'] = form_data['landscape']
+        # if form_data['landscape'] is False:
+        #     form_data.pop('landscape')
+        # else:
+        #     self.env.context['landscape'] = form_data['landscape']
         return form_data

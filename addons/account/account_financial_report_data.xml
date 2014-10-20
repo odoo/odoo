@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data> <!--noupdate="1">-->
+
+        <!-- Trial Balance -->
+
+        <record id="account_financial_report_trial_balance0" model="account.financial.report">
+            <field name="name">Trial Balance</field>
+            <field name="type">sum</field>
+        </record>
+
         <!-- 
             Financial Reports
         -->
         <record id="account_financial_report_profitandloss0" model="account.financial.report">
             <field name="name">Profit and Loss</field>
+            <field name="parent_id" ref="account_financial_report_trial_balance0"/>
             <field name="sign" eval="-1" />
             <field name="type">sum</field>
         </record>
@@ -26,6 +35,7 @@
 
         <record id="account_financial_report_balancesheet0" model="account.financial.report">
             <field name="name">Balance Sheet</field>
+            <field name="parent_id" ref="account_financial_report_trial_balance0"/>
             <field name="type">sum</field>
         </record>
         <record id="account_financial_report_assets0" model="account.financial.report">
@@ -53,6 +63,7 @@
             <field name="type">account_report</field>
             <field name="account_report_id" ref="account_financial_report_profitandloss0"/>
         </record>
+
     </data>
 </openerp>
 

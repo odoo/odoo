@@ -1,11 +1,15 @@
 (function () {
     'use strict';
 
+    openerp.qweb.add_template('/web_graph/static/src/xml/web_graph.xml');
+
     $(document).ready(function() {
         openerp.footnote = {};
         var _t = openerp._t;
 
-        openerp.footnote = openerp.Widget.extend({
+
+
+        openerp.reportWidgets = openerp.Widget.extend({
             events: {
                 'click .annotable': 'addFootNote',
                 'click .foldable': 'fold',
@@ -15,6 +19,24 @@
             },
             start: function() {
                 this.footNoteSeqNum = 1;
+                var chartAccountId = this.$("select[name='chart_account_id']").val();
+                var widget_config = {
+                    //stacked : (arch.attrs.stacked === 'True'),
+                    mode: 'bar',
+                    measures: ['balance'],
+                    row_groupby: ['user_type'],
+                    //col_groupby: [],
+                    //graph_view: this,
+                    visible_ui: false,
+                    title: 'Assets and Liabilities'
+                };
+                this.graphWidget = new openerp.web_graph.Graph(
+                    this,
+                    new openerp.web.Model("account.account"),
+                    [],
+                    widget_config
+                    );
+                this.graphWidget.insertBefore(this.$("div.page"));
                 return this._super();
             },
             addFootNote: function(e) {
@@ -35,6 +57,8 @@
                 var $nextEls = $(e.target).parent().parent().nextAll();
                 for (el in $nextEls) {
                     $el = $($nextEls[el]).find("td span.level");
+                    if ($el.html() == undefined)
+                        break;
                     if ($el.html().length > level){
                         $el.parent().parent().hide();
                     }
@@ -52,6 +76,8 @@
                 var $nextEls = $(e.target).parent().parent().nextAll();
                 for (el in $nextEls) {
                     $el = $($nextEls[el]).find("td span.level");
+                    if ($el.html() == undefined)
+                        break;
                     if ($el.html().length > level){
                         $el.parent().parent().show();
                     }
@@ -70,13 +96,13 @@
             saveFootNote: function(e) {
                 e.preventDefault();
                 var num = $(e.target).parent().find("label").text();
-                var note = $(e.target).parent().find("textarea").text();
+                var note = $(e.target).parent().find("textarea").val();
                 $(e.target).parent().replaceWith('<div class="row mt32 mb32">' + num + '. ' + note + '</div>')
             }
         });
-        var footnote = new openerp.footnote();
-        footnote.setElement($('.oe_account_footnote'));
-        footnote.start();
+        var reportWidgets = new openerp.reportWidgets();
+        reportWidgets.setElement($('.oe_account_reportWidgets'));
+        reportWidgets.start();
     });
 
 })();

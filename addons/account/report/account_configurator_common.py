@@ -106,6 +106,12 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
                 if field in res:
                     form_data[field] = res[field]
 
+        form_data['filter_extended'] = form_data['filter']
+        if form_data['filter_extended'] == 'ytd':
+            form_data['filter'] = 'filter_date'
+            form_data['date_from'] = self.env['account.fiscalyear'].browse(form_data['fiscalyear_id']).date_start
+            form_data['date_to'] = time.strftime('%Y-%m-%d')
+
         if isinstance(form_data['journal_ids'][0], tuple):
             form_data['journal_ids'] = form_data['journal_ids'][0][2]
         if 'journal_ids' in kwargs and kwargs['journal_ids']:
