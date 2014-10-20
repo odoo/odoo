@@ -162,8 +162,8 @@ class account_cash_statement(models.Model):
                 domain = [('journal_id', '=', journal.id),
                           ('state', '=', 'confirm')]
                 last_bank_statement_ids = self.search(domain, limit=1, order='create_date desc')
-                if last_bank_statement_ids:
-                    last_bank_statement = self.browse(last_bank_statement_ids[0])
+                last_bank_statement = last_bank_statement_ids and last_bank_statement_ids[0] or False
+                if last_bank_statement:
 
                     last_pieces = dict(
                         (line.pieces, line.number_closing) for line in last_bank_statement.details_ids
@@ -178,7 +178,6 @@ class account_cash_statement(models.Model):
         return details_ids
 
     @api.model
-    @api.returns('self')
     def create(self, vals):
         journal_id = vals.get('journal_id')
         if journal_id and not vals.get('opening_details_ids'):

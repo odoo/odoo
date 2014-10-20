@@ -341,8 +341,7 @@ class account_bank_statement(models.Model):
     def button_cancel(self):
         bnk_st_lines = []
         for st in self:
-            bnk_st_lines += [line.id for line in st.line_ids]
-        bnk_st_lines.cancel()
+            st.line_ids.cancel()
         return self.write({'state': 'draft'})
 
     @api.model
@@ -666,7 +665,7 @@ class account_bank_statement_line(models.Model):
                 amount = currency_obj.with_context(ctx).compute(st_line.statement_id.currency.id, company_currency.id, st_line.amount)
         else:
             amount = st_line.amount
-        bank_st_move_vals = bs_obj._prepare_bank_move_line(st_line, move_id, amount, company_currency.id)
+        bank_st_move_vals = bs_obj._prepare_bank_move_line(st_line, move_id.id, amount, company_currency.id)
         aml_obj.create(bank_st_move_vals)
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
@@ -676,7 +675,7 @@ class account_bank_statement_line(models.Model):
             if mv_line_dict.get('is_tax_line'):
                 continue
             mv_line_dict['ref'] = move_name
-            mv_line_dict['move_id'] = move_id
+            mv_line_dict['move_id'] = move_id.id
             mv_line_dict['period_id'] = st_line.statement_id.period_id.id
             mv_line_dict['journal_id'] = st_line.journal_id.id
             mv_line_dict['company_id'] = st_line.company_id.id
@@ -707,10 +706,10 @@ class account_bank_statement_line(models.Model):
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:
                         currency_diff = debit_at_current_rate - debit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(st_line, -currency_diff, move_id))
+                        to_create.append(self.get_currency_rate_line(st_line, -currency_diff, move_id.id))
                     if credit_at_old_rate - credit_at_current_rate:
                         currency_diff = credit_at_current_rate - credit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(st_line, currency_diff, move_id))
+                        to_create.append(self.get_currency_rate_line(st_line, currency_diff, move_id.id))
                 else:
                     mv_line_dict['debit'] = debit_at_current_rate
                     mv_line_dict['credit'] = credit_at_current_rate
@@ -733,7 +732,7 @@ class account_bank_statement_line(models.Model):
         for pair in move_line_pairs_to_reconcile:
             aml_obj.reconcile_partial(pair)
         # Mark the statement line as reconciled
-        self.write({'journal_entry_id': move_id})
+        self.write({'journal_entry_id': move_id.id})
 
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
     # return [('journal_entry_id', '=', False)]
