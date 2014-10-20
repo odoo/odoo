@@ -270,12 +270,12 @@ openerp.crm_wardialing = function(instance) {
             if(this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text() != ''){
                 var phonecall_id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
                 phonecall_model.call("hangup_partner", [this.phonecalls[phonecall_id].id, this.phonecall_channel]).then(function(phonecall){
-                    console.log("after hangup function")
+                    openerp.web.bus.trigger('reload_panel');
                 });  
             }else{
                 var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
                 phonecall_model.call("hangup_partner", [this.phonecalls[phonecall_id].id, this.phonecall_channel]).then(function(phonecall){
-                    console.log("after hangup function")
+                    openerp.web.bus.trigger('reload_panel');
                 });
             }
         },
