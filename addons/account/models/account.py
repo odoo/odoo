@@ -1331,7 +1331,7 @@ class account_tax_code(models.Model):
     This code is used for some tax declarations.
     """
     @api.multi
-    def _sum(self, where ='', where_params=()):
+    def _sum(self, name, where ='', where_params=()):
         parent_ids = tuple(self.search([('parent_id', 'child_of', self.ids)]).ids)
         if self._context.get('based_on', 'invoices') == 'payments':
             self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
@@ -1361,11 +1361,16 @@ class account_tax_code(models.Model):
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res2[record.id] = round(_rec_get(record), self.env['decimal.precision'].precision_get(cr, uid, 'Account'))
-        return res2
+            amount = round(_rec_get(record), self.env['decimal.precision'].precision_get('Account'))
+            if name == 'sum':
+                record.sum = amount
+            elif name == 'sum_period':
+                record.sum_period = amount
 
     @api.multi
     def _sum_year(self):
+        if not self.ids:
+            return True
         move_state = ('posted', )
         FiscalyearObj = self.env['account.fiscalyear']
         if self._context.get('state', 'all') == 'all':
@@ -1383,10 +1388,12 @@ class account_tax_code(models.Model):
             if pids:
                 where = ' AND line.period_id IN %s AND move.state IN %s '
                 where_params = (tuple(pids), move_state)
-        return self._sum(where=where, where_params=where_params)
+        self._sum(name='sum', where=where, where_params=where_params)
 
     @api.multi
     def _sum_period(self):
+        if not self.ids:
+            return True
         move_state = ('posted', )
         if self._context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
@@ -1397,7 +1404,7 @@ class account_tax_code(models.Model):
             if not period_id:
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
-        return self._sum(where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
+        self._sum(name='sum_period', where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
@@ -1433,7 +1440,7 @@ class account_tax_code(models.Model):
     @api.multi
     @api.depends('name', 'code')
     def name_get(self):
-        reads = self.read(['name','code'], context=context, load='_classic_write')
+        reads = self.read(['name','code'], load='_classic_write')
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
