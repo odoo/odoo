@@ -79,7 +79,6 @@ class account_bank_statement(models.Model):
     @api.model
     def _compute_default_statement_name(self, journal_id):
         context = dict(self._context or {})
-        period = self._get_period()
         period = self.env['account.period'].browse(self._get_period())
         context['fiscalyear_id'] = period.fiscalyear_id.id
         journal = self.env['account.journal'].browse(journal_id)
