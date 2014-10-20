@@ -879,7 +879,8 @@ class account_move(models.Model):
                 total += line.debit
             move.amount = total
 
-    def _search_amount(self, cr, uid, obj, name, args, context):
+    @api.model
+    def _search_amount(self, name, args):
         ids = set()
         for cond in args:
             amount = cond[2]
@@ -892,8 +893,8 @@ class account_move(models.Model):
                 if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
                     continue
 
-            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]),(amount,))
-            res_ids = set(id[0] for id in cr.fetchall())
+            self._cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]),(amount,))
+            res_ids = set(id[0] for id in self._cr.fetchall())
             ids = ids and (ids & res_ids) or res_ids
         if ids:
             return [('id', 'in', tuple(ids))]
@@ -1329,10 +1330,11 @@ class account_tax_code(models.Model):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context, where ='', where_params=()):
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
-        if context.get('based_on', 'invoices') == 'payments':
-            cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+    @api.multi
+    def _sum(self, where ='', where_params=()):
+        parent_ids = tuple(self.search([('parent_id', 'child_of', ids)]))
+        if self._context.get('based_on', 'invoices') == 'payments':
+            self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
@@ -1344,62 +1346,58 @@ class account_tax_code(models.Model):
                             GROUP BY line.tax_code_id',
                                 (parent_ids,) + where_params)
         else:
-            cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+            self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                     account_move AS move \
                     WHERE line.tax_code_id IN %s '+where+' \
                     AND move.id = line.move_id \
                     GROUP BY line.tax_code_id',
                        (parent_ids,) + where_params)
-        res=dict(cr.fetchall())
-        obj_precision = self.pool.get('decimal.precision')
+        res=dict(self._cr.fetchall())
         res2 = {}
-        for record in self.browse(cr, uid, ids, context=context):
+        for record in self:
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
+            res2[record.id] = round(_rec_get(record), self.env['decimal.precision'].precision_get(cr, uid, 'Account'))
         return res2
 
-    def _sum_year(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
+    @api.multi
+    def _sum_year(self):
         move_state = ('posted', )
-        if context.get('state', 'all') == 'all':
+        FiscalyearObj = self.env['account.fiscalyear']
+        if self._context.get('state', 'all') == 'all':
             move_state = ('draft', 'posted', )
-        if context.get('fiscalyear_id', False):
-            fiscalyear_id = [context['fiscalyear_id']]
+        if self._context.get('fiscalyear_id', False):
+            fiscalyear_id = [self._context['fiscalyear_id']]
         else:
-            fiscalyear_id = self.pool.get('account.fiscalyear').finds(cr, uid, exception=False)
+            fiscalyear_id = FiscalyearObj.finds(exception=False)
         where = ''
         where_params = ()
         if fiscalyear_id:
             pids = []
             for fy in fiscalyear_id:
-                pids += map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fy).period_ids)
+                pids += map(lambda x: str(x.id), FiscalyearObj.browse(fy).period_ids)
             if pids:
                 where = ' AND line.period_id IN %s AND move.state IN %s '
                 where_params = (tuple(pids), move_state)
-        return self._sum(cr, uid, ids, name, args, context,
-                where=where, where_params=where_params)
+        return self._sum(where=where, where_params=where_params)
 
-    def _sum_period(self, cr, uid, ids, name, args, context):
-        if context is None:
-            context = {}
+    @api.multi
+    def _sum_period(self):
         move_state = ('posted', )
-        if context.get('state', False) == 'all':
+        if self._context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
-        if context.get('period_id', False):
-            period_id = context['period_id']
+        if self._context.get('period_id', False):
+            period_id = self._context['period_id']
         else:
-            period_id = self.pool.get('account.period').find(cr, uid, context=context)
+            period_id = self.env['account.period'].find()
             if not period_id:
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
-        return self._sum(cr, uid, ids, name, args, context,
-                where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
+        return self._sum(where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
@@ -1901,7 +1899,8 @@ class account_account_template(models.Model):
             res.append((record.id, name))
         return res
 
-    def generate_account(self, cr, uid, chart_template_id, tax_template_ref, acc_template_ref, code_digits, company_id, context=None):
+    @api.model
+    def generate_account(self, chart_template_id, tax_template_ref, acc_template_ref, code_digits, company_id):
         """
         This method for generating accounts from templates.
 
@@ -1913,9 +1912,8 @@ class account_account_template(models.Model):
         :returns: return acc_template_ref for reference purpose.
         :rtype: dict
         """
-        obj_acc = self.pool.get('account.account')
-        company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context).name
-        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+        company_name = self.env['res.company'].browse(company_id).name
+        template = self.env['account.chart.template'].browse(chart_template_id)
         tax_ids = []
         for tax in template.tax_ids:
             tax_ids.append(tax_template_ref[tax.id])
@@ -1938,7 +1936,7 @@ class account_account_template(models.Model):
             'tax_ids': [(6, 0, tax_ids)],
             'company_id': company_id,
         }
-        new_account = obj_acc.create(cr, uid, vals, context=context)
+        new_account = self.env['account.account'].create(vals)
         acc_template_ref[template.id] = new_account
 
         return acc_template_ref
@@ -2224,20 +2222,17 @@ class account_fiscal_position_template(models.Model):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
-        obj_tax_fp = self.env['account.fiscal.position.tax']
-        obj_ac_fp = self.env['account.fiscal.position.account']
-        obj_fiscal_position = self.env['account.fiscal.position']
-        positions = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
+        positions = self.search([('chart_template_id', '=', chart_temp_id)])
         for position in positions:
-            new_fp = obj_fiscal_position.create({'company_id': company_id, 'name': position.name, 'note': position.note})
+            new_fp = self.env['account.fiscal.position'].create({'company_id': company_id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
-                obj_tax_fp.create(cr, uid, {
+                self.env['account.fiscal.position.tax'].create({
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
                     'position_id': new_fp.id
                 })
             for acc in position.account_ids:
-                obj_ac_fp.create({
+                self.env['account.fiscal.position.account'].create({
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
                     'position_id': new_fp.id
@@ -2634,73 +2629,65 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         return account_ref, taxes_ref, tax_code_ref
 
-    def _create_tax_templates_from_rates(self, cr, uid, obj_wizard, company_id, context=None):
+    @api.one
+    def _create_tax_templates_from_rates(self, company_id):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
         it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
         to the provided sale/purchase rates. Then it saves the new tax templates as default taxes to use for this chart
         template.
 
-        :param obj_wizard: browse record of wizard to generate COA from templates
         :param company_id: id of the company for wich the wizard is running
         :return: True
         '''
-        obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_tax_temp = self.pool.get('account.tax.template')
-        chart_template = obj_wizard.chart_template_id
-        vals = {}
-        all_parents = self._get_chart_parent_ids(cr, uid, chart_template, context=context)
+        obj_tax_temp = self.env['account.tax.template']
+        all_parents = self._get_chart_parent_ids(self.chart_template_id)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
-        if not chart_template.complete_tax_set:
-            value = obj_wizard.sale_tax_rate
-            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
-            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
-            value = obj_wizard.purchase_tax_rate
-            ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
-            obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
+        if not self.chart_template_id.complete_tax_set:
+            value = self.sale_tax_rate
+            ref_tax_ids = obj_tax_temp.search([('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_tax_ids.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
+            value = self.purchase_tax_rate
+            ref_tax_ids = obj_tax_temp.search([('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_tax_ids.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
-    def execute(self, cr, uid, ids, context=None):
+    @api.multi
+    def execute(self):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if self._uid != SUPERUSER_ID and not self.env.user.has_group('base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
-        obj_data = self.pool.get('ir.model.data')
-        ir_values_obj = self.pool.get('ir.values')
-        obj_wizard = self.browse(cr, uid, ids[0])
-        company_id = obj_wizard.company_id.id
+        ir_values_obj = self.env['ir.values']
+        company_id = self.company_id.id
 
-        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
+        self.company_id.write({'currency_id': self.currency_id.id})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
-            for ref in (('product','list_price'),('product','standard_price'),('product','list0'),('purchase','list0')):
+            for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
                 try:
-                    tmp2 = obj_data.get_object_reference(cr, uid, *ref)
-                    if tmp2: 
-                        self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
-                            'currency_id': obj_wizard.currency_id.id
-                        })
+                    tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
                 except ValueError:
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
+        self._create_tax_templates_from_rates(company_id)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
+        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=self.code_digits, obj_wizard=self)
 
         # write values of default taxes for product as super user
-        if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
-        if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
+        if self.sale_tax and taxes_ref:
+            ir_values_obj.sudo().set_default('product.product', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
+        if self.purchase_tax and taxes_ref:
+            ir_values_obj.sudo().set_default('product.product', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
+        self._create_bank_journals_from_o2m(company_id, acc_template_ref)
         return {}
 
     @api.model
