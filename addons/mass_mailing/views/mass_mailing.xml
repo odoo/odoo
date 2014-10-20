@@ -191,9 +191,14 @@
             <field name="name">mail.mass_mailing.list.search</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-               <search string="Mailing Lists">
-                   <field name="name"/>
-               </search>
+                <search string="Mailing Lists">
+                    <field name="name"/>
+                    <field name="create_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Creation Month" name="group_create_date"
+                            context="{'group_by': 'create_date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -204,6 +209,7 @@
             <field name="arch" type="xml">
                 <tree string="Mailing Lists">
                     <field name="name"/>
+                    <field name="create_date"/>
                     <field name="contact_nbr"/>
                 </tree>
             </field>

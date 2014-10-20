@@ -119,6 +119,7 @@ class MassMailingList(osv.Model):
 
     _columns = {
         'name': fields.char('Mailing List', required=True),
+        'create_date': fields.datetime('Creation Date'),
         'contact_nbr': fields.function(
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
