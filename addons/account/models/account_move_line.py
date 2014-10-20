@@ -666,27 +666,28 @@ class account_move_line(models.Model):
                         raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
                     if not line2.reconcile_id:
                         if line2.id not in merges:
-                            merges.append(line2.id)
+                            merges.append(line2)
                         if line2.account_id.currency_id:
                             total += line2.amount_currency
                         else:
                             total += (line2.debit or 0.0) - (line2.credit or 0.0)
                 merges_rec.append(line.reconcile_partial_id.id)
             else:
-                unmerge.append(line.id)
+                unmerge.append(line)
                 if line.account_id.currency_id:
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
         if currency_id.is_zero(total):
-            res = self.reconcile(merges+unmerge, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
+            for line in merges+unmerge:
+                res = line.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.
         reconcile_context = dict(self._context, novalidate=True)
         r_id = move_rec_obj.with_context(reconcile_context).create({
             'type': type,
-            'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
+            'line_partial_ids': map(lambda x: (4,x,False), [line.id for line in merges+unmerge])
         })
         move_rec_obj.with_context(reconcile_context).reconcile_partial_check([r_id] + merges_rec)
         return r_id
@@ -794,7 +795,7 @@ class account_move_line(models.Model):
                 })
             ]
 
-            writeoff_move_id = move_obj.create({
+            writeoff_move_id = self.env['account.move'].create({
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
                 'date':date,
