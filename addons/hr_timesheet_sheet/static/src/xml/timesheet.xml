@@ -85,7 +85,7 @@
                         </thead>
                     </table>
                 </div>
-                <div class="oe_view_nocontent" t-if="widget.accounts.length == 0">
+                <div class="oe_view_nocontent" t-if="!widget.get('effective_readonly') and widget.accounts.length == 0">
                     <p class="oe_view_nocontent_create">
                         Click to select a project/contract and record your timesheet
                     </p>
@@ -210,7 +210,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="oe_view_nocontent" t-if="!widget.get('effective_readonly') and _.isEmpty(days.account_group) and widget.is_any_accounts()">
+                        <div class="oe_view_nocontent" t-if="!widget.get('effective_readonly') and _.isEmpty(days.account_group)">
                             <p class="oe_view_nocontent_create">
                                 Click to select a project/contract and record your timesheet
                             </p>
