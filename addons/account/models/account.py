@@ -1912,32 +1912,34 @@ class account_account_template(models.Model):
         :returns: return acc_template_ref for reference purpose.
         :rtype: dict
         """
+
         company_name = self.env['res.company'].browse(company_id).name
         template = self.env['account.chart.template'].browse(chart_template_id)
-        tax_ids = []
-        for tax in template.tax_ids:
-            tax_ids.append(tax_template_ref[tax.id])
+        acc_template = self.search([('nocreate','!=',True), '|', ('chart_template_id','=', chart_template_id), ('chart_template_id','=', False)], order='id')
+        for account_template in acc_template:
+            tax_ids = []
+            for tax in account_template.tax_ids:
+                tax_ids.append(tax_template_ref[tax.id])
 
-        code_main = template.code and len(template.code) or 0
-        code_acc = template.code or ''
-        if code_main > 0 and code_main <= code_digits and template.type != 'view':
-            code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-
-        vals={
-            'name': company_name or template.name,
-            'currency_id': template.currency_id and template.currency_id.id or False,
-            'code': code_acc,
-            'type': template.type,
-            'user_type': template.user_type and template.user_type.id or False,
-            'reconcile': template.reconcile,
-            'shortcut': template.shortcut,
-            'note': template.note,
-            'financial_report_ids': template.financial_report_ids and [(6, 0, [x.id for x in template.financial_report_ids])] or False,
-            'tax_ids': [(6, 0, tax_ids)],
-            'company_id': company_id,
-        }
-        new_account = self.env['account.account'].create(vals)
-        acc_template_ref[template.id] = new_account
+            code_main = account_template.code and len(account_template.code) or 0
+            code_acc = account_template.code or ''
+            if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
+                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            vals={
+                'name': company_name or account_template.name,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': code_acc,
+                'type': account_template.type,
+                'user_type': account_template.user_type and account_template.user_type.id or False,
+                'reconcile': account_template.reconcile,
+                'shortcut': account_template.shortcut,
+                'note': account_template.note,
+                'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
+                'tax_ids': [(6,0,tax_ids)],
+                'company_id': company_id,
+            }
+            new_account = self.env['account.account'].create(vals)
+            acc_template_ref[account_template.id] = new_account.id
 
         return acc_template_ref
 
@@ -2443,7 +2445,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                     pass
             except ValueError:
                 pass
-            return data or False
+            return data and data.id or False
 
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
@@ -2602,8 +2604,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         tax_code_ref.update(self.env['account.tax.code.template'].generate_tax_code(template.tax_code_root_id.id, company_id))
 
         # Generate taxes from templates.
-        tax_templates = [x for x in template.tax_template_ids]
-        generated_tax_res = self.env['account.tax.template']._generate_tax(tax_templates, tax_code_ref, company_id)
+        generated_tax_res = template.tax_template_ids._generate_tax(tax_code_ref, company_id)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
@@ -2613,7 +2614,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # writing account values on tax after creation of accounts
         for key, value in generated_tax_res['account_dict'].items():
             if value['account_collected_id'] or value['account_paid_id']:
-                AccountTaxObj.write([key], {
+                AccountTaxObj.browse(key).write({
                     'account_collected_id': account_ref.get(value['account_collected_id'], False),
                     'account_paid_id': account_ref.get(value['account_paid_id'], False),
                 })
@@ -2757,8 +2758,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 'currency_id': line['currency_id'],
                 'code': new_code,
                 'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
                 'company_id': company_id,
         }
 
@@ -2768,7 +2768,6 @@ class wizard_multi_charts_accounts(models.TransientModel):
         This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
         wizard.
 
-        :param obj_wizard: the current wizard that generates the COA from the templates.
         :param company_id: the id of the company for which the wizard is running.
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
