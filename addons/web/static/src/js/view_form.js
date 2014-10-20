@@ -2573,11 +2573,14 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-	var domain = instance.web.pyeval.eval('domain', this.get('value'));
         this.pop = new instance.web.form.SelectCreatePopup(this);
+        if (this.get('value')) {
+            var cur_domain = instance.web.pyeval.eval('domain', this.get('value'));
+        }
+        console.log(cur_domain)
         this.pop.select_element(
             model, {
-		initial_ids: this.get('effective_readonly') ? domain[0][2] : undefined,
+                initial_ids: this.get('effective_readonly') ? (cur_domain ? cur_domain[0][2] : undefined): undefined,
                 title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
                 readonly: this.get('effective_readonly'),
                 disable_multiple_selection: this.get('effective_readonly'),
