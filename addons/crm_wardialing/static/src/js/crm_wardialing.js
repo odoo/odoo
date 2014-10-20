@@ -170,8 +170,6 @@ openerp.crm_wardialing = function(instance) {
                 });
             });
             
-            return;
-            
         },
 
         //function that will display the panel
@@ -398,6 +396,9 @@ openerp.crm_wardialing = function(instance) {
     
     openerp.crm_wardialing.reload_panel = function () {
         openerp.web.bus.trigger('reload_panel');
+        //Return an action to close the wizard after the reload of the panel
+        return { type: 'ir.actions.act_window_close' };
+
     }
 
     instance.web.client_actions.add("reload_panel", "openerp.crm_wardialing.reload_panel");
