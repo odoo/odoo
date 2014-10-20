@@ -56,17 +56,23 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         template: "FieldMany2One",
         init: function(parent, options) {
             this.model = options.model;
-            this.search_name = options.search_name;
+            this.search_model = options.search_model;
             this.classname = options.classname;
             this.label = options.label;
             this.id_for_input = options.id_for_input;
             this.project_timesheet_db = project_timesheet.project_timesheet_model.project_timesheet_db;
             this._super.apply(this, arguments);
-            this.set({value: false});
+            this.set({value: false, display_string: false, effective_readonly: false});
         },
         start: function() {
             this._super.apply(this, arguments);
             this.prepare_autocomplete();
+            this.on("change:effective_readonly", this, this.reinitialize);
+        },
+        reinitialize: function() {
+            //this.destroy_content();
+            this.renderElement();
+            //this.initialize_content();
         },
         prepare_autocomplete: function() {
             var self = this;
@@ -147,12 +153,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var self = this;
             var def = $.Deferred();
             var data;
-            console.log("this.model is ::: ", this.model, this.model instanceof project_timesheet.project_model);
             if(this.model) {
                 data = this.model.name_search(term);
             }
             var search_data = data;
-            console.log("search_data is :: ", search_data);
             //if (!term) {
             //    var search_data = data;
             //} else {
@@ -160,7 +164,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             //}
             var values = _.map(search_data, function(x) {
                 var label = _.str.escapeHTML(x[1].split("\n")[0]);
-                if (self.search_name == "task") {
+                if (self.search_model == "task") {
                     var task_name = x[1].split("\n")[0];
                     var priority = parseInt(x[1].split("\n")[1]) || 0; //TODO: For now, we will move this logic for task m2o special logic uisng include
                     if(priority) {
@@ -193,16 +197,25 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             return def.resolve(values);
         },
         _quick_create: function(e, term) {
-            //TO Implement, create virtual id and add into this.model_input as a data, instead of setting data we can set it in this object also
             var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
-            this.$input.data("id", virtual_id);
-            this.set({value: virtual_id});
+            this.$input.data("id", virtual_id); //TO Remove: we use this.get('value') to check
+            this.set({display_string: name, value: virtual_id});
             this.$input.val(term);
         },
         add_id: function(id, name) {
-            this.$input.data("id", id);
+            this.$input.data("id", id); //TO Remove: we use this.get('value') to check
             this.$input.val(name);
-            this.set({value: id});
+            this.set({display_string: name, value: id});
+        },
+        display_string: function(field_val) {
+            if (this.get("effective_readonly")) {
+                console.log("this.$el.find(+this.id_for_input)",field_val, this,  this.$el.find("#"+this.id_for_input), this.id_for_input);
+                this.$el.find("#"+this.id_for_input).text(field_val[1]);
+                this.$el.find("#"+this.id_for_input).data("id", field_val[0]); //TO Remove: we use this.get('value') to check
+            } else {
+                this.$el.find("#"+this.id_for_input).val(field_val[1]);
+                this.$el.find("#"+this.id_for_input).data("id", field_val[0]); //TO Remove: we use this.get('value') to check
+            }
         },
     });
 

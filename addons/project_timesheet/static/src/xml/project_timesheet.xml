@@ -118,15 +118,22 @@
     <t t-name="FieldMany2One">
         <t>
             <div class="pt_m2o">
-                <div>
-                    <t t-esc="widget.label"></t>
-                </div>
-                <textarea rows="1"
-                    t-att-id="widget.id_for_input"
-                    t-attf-class="form-control #{widget.classname}"
-                    t-att-placeholder="widget.placeholder"></textarea>
-            </div>
-        </t>
+                <t t-if="!widget.get('effective_readonly')">
+                    <div>
+                        <t t-esc="widget.label"></t>
+                    </div>
+                    <textarea rows="1"
+                        t-att-id="widget.id_for_input"
+                        t-attf-class="form-control #{widget.classname}"
+                        t-att-placeholder="widget.placeholder"></textarea>
+                </t>
+                <t t-if="widget.get('effective_readonly')">
+                    <span t-att-id="widget.id_for_input"
+                          t-attf-class="form-control #{widget.classname}"
+                          t-att-placeholder="widget.placeholder"></span>
+                </t>
+             </div>
+         </t>
     </t>
 
     <t t-name="SyncScreen">
@@ -212,6 +219,8 @@
                 <div t-if="project_timesheet.session">
                     <h4>You are already login with <t t-esc="project_timesheet.session.origin" ></t>, You can directly synchronize your data</h4>
                     <button class="btn btn-default pt_btn pt_btn_synchronize_existing_account">Synchronize Now</button>
+                    or
+                    <a class="btn pt_link pt_btn_cancel">Cancel</a>
                 </div>
               </div>
             </div>

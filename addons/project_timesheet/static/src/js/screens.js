@@ -495,14 +495,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
         initialize_timer: function() {
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Select a project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, function() {
-                var project = [this.project_m2o.get('value'), this.project_m2o.$input.val()];
+                var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({project_id: project});
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_name: 'task', classname: "pt_input_task", label: "Select a task", id_for_input: "task_id"});
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Select a task", id_for_input: "task_id"});
             this.task_m2o.on("change:value", this, function() {
-                var task = [this.task_m2o.get('value'), this.task_m2o.$input.val()];
+                var task = [this.task_m2o.get('value'), this.task_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({task_id: task});
             });
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
@@ -523,8 +523,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.initialize_timer();
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
             } else {
-                //Read database current timer entry and add into activities list of db, remove current timer activity
-                //Also destroy m2o and reset timer
                 if (!this.is_valid_data()) {
                     alert("Please fill up the required fields ");
                     return;
@@ -535,6 +533,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date);
                 activity['hours'] = hours;
                 activity['command'] = 0; //By default command = 0, activity which is to_create
+                this.project_timesheet_model.add_activity(activity);
                 this.project_timesheet_model.add_project(activity);
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
                 this.reset_timer();
@@ -603,6 +602,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             
         },
         get_from_data: function() {
+            var self = this;
             var project_activity_data = {};
             $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             //TODO: Simplify this
@@ -610,10 +610,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 var $input = $(input);
                 switch(input.id) {
                     case "project_id":
-                        project_activity_data['project_id'] = [$input.data("id"), $input.val()];
+                        project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
                         break;
                     case "task_id":
-                        project_activity_data['task_id'] = [$input.data("id"), $input.val()];
+                        project_activity_data['task_id'] = [self.task_m2o.get("value"), self.task_m2o.get("display_string")];
                         break;
                     case "hours":
                         project_activity_data['hours'] = (project_activity_data['hours'] || 0) + parseInt($input.val());
@@ -629,9 +629,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return project_activity_data;
         },
         on_activity_add: function() {
-            //TO Implement, get project_input value, if id is virtual prefix then also call project create else project write
-            //Simply generate value such that project model can accept it, we will then call add project, now project will have logic
-            //which finds project model based project_id from project's collection and for that model call add_task....
             if (!this.is_valid_data()) {
                 return;
             }
@@ -693,7 +690,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             this.project_m2o.on("change:value", this, this.set_project_model);
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_name: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
+            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
         },
         hide: function() {
@@ -760,16 +757,17 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity").toggleClass("o_hidden");
             self.$el.find(".pt_btn_add_activity").toggleClass("o_hidden");
+            this.task_m2o.set({"effective_readonly": true});
+            this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":
-                        self.project_m2o.set({value: field_val[0]});
-                        self.$el.find("#project_id").val(field_val[1]);
-                        self.$el.find("#project_id").data("id", field_val[0]);
+                        self.project_m2o.set({value: field_val[0], display_string: field_val[1]});
+                        self.project_m2o.display_string(field_val);
                         break;
                     case "task_id":
-                        self.$el.find("#task_id").val(field_val[1]);
-                        self.$el.find("#task_id").data("id", field_val[0]);
+                        self.task_m2o.set({value: field_val[0], display_string: field_val[1]});
+                        self.task_m2o.display_string(field_val);
                         break;
                     case "hours":
                         var formatted = self.format_duration(field_val);
@@ -856,8 +854,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
         on_sync: function() {
             var self = this;
             this.project_timesheet_model.save_to_server().then(function() {
-                //Change Screen to Initial Screen, with new data loaded
                 console.log("Inside save to server completed ::: ");
+                //TODO: Show dialog sync related detail
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
         },
