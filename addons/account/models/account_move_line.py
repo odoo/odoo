@@ -694,7 +694,6 @@ class account_move_line(models.Model):
     @api.multi
     def reconcile(self, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         partner_obj = self.env['res.partner']
-        currency_obj = self.env['res.currency']
         unrec_lines = filter(lambda x: not x['reconcile_id'], self)
         credit = debit = 0.0
         currency = 0.0
@@ -740,8 +739,8 @@ class account_move_line(models.Model):
         if r[0][1] != None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
-        if (not currency_obj.is_zero(account.company_id.currency_id, writeoff)) or \
-           (account.currency_id and (not currency_obj.is_zero(account.currency_id, currency))):
+        if (not account.company_id.currency_id.is_zero(writeoff)) or \
+           (account.currency_id and (not account.currency_id.is_zero(currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
             if writeoff > 0:
@@ -768,7 +767,7 @@ class account_move_line(models.Model):
                     if line.currency_id and line.currency_id.id == context.get('currency_id',False):
                         amount_currency_writeoff += line.amount_currency
                     else:
-                        tmp_amount = currency_obj.with_context({'date': line.date}).compute(line.account_id.company_id.currency_id.id, context.get('currency_id',False), abs(line.debit-line.credit))
+                        tmp_amount = line.account_id.company_id.currency_id.with_context({'date': line.date}).compute(context.get('currency_id',False), abs(line.debit-line.credit))
                         amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
 
             writeoff_lines = [
