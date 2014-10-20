@@ -954,7 +954,7 @@ class account_move_line(models.Model):
             for line in self:
                 if line.move_id.id not in done:
                     done.append(line.move_id.id)
-                    self.env['account.move'].validate([line.move_id.id])
+                    line.move_id.validate()
                     if todo_date:
                         line.move_id.write({'date': todo_date})
         return result
