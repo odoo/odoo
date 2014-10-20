@@ -892,20 +892,21 @@ class account_invoice(models.Model):
                 'company_id': inv.company_id.id,
             }
             ctx['company_id'] = inv.company_id.id
-            period = inv.period_id
+            period = inv.period_id.id
             if not period:
-                period = period.with_context(ctx).find(date_invoice)[:1]
+                periods = self.env['account.period'].with_context(ctx).find(date_invoice)[:1]
+                period = periods and periods[0] or False
             if period:
-                move_vals['period_id'] = period.id
+                move_vals['period_id'] = period
                 for i in line:
-                    i[2]['period_id'] = period.id
+                    i[2]['period_id'] = period
 
             ctx['invoice'] = inv
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
-                'period_id': period.id,
+                'period_id': period,
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
