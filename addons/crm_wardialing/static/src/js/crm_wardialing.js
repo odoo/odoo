@@ -293,9 +293,6 @@ openerp.crm_wardialing = function(instance) {
                 target: 'new',
                 context: {'phonecall_id': id, 'phonecall' : this.phonecalls[id]},
                 views: [[false, 'form']],
-            }).then(function(){
-                console.log(self);
-                self.search_phonecalls_status();
             });
         },
 
@@ -319,10 +316,6 @@ openerp.crm_wardialing = function(instance) {
                             'default_partner_ids': [this.phonecalls[id].partner_id],
                         },
                 views: [[false, 'form']],
-            }).then(function(){
-                var dial = new openerp.crm_wardialing.DialingPanel(self);
-                console.log(dial);
-                dial.search_phonecalls_status();
             });
         },
 
@@ -375,12 +368,17 @@ openerp.crm_wardialing = function(instance) {
                     if(classes.indexOf("oe_dial_hidden_button") > -1){
                         self.$el.find(".oe_dial_lead_to_call_center_button")
                             .replaceWith('<i class="oe_dial_lead_to_call_center_button text-muted fa fa-phone"></i>');
-                        new openerp.web.Model("crm.lead").call("create_call_center_call", [self.id]);
+                        new openerp.web.Model("crm.lead").call("create_call_center_call", [self.id]).then(function(){
+                            openerp.web.bus.trigger('reload_panel');
+                        });
                     }else{
-                        new openerp.web.Model("crm.lead").call("delete_call_center_call", [self.id]);
                         self.$el.find(".oe_dial_lead_to_call_center_button")
                             .replaceWith('<i class="text-muted oe_dial_hidden_button oe_dial_lead_to_call_center_button fa fa-plus-square"></i>');
+                        new openerp.web.Model("crm.lead").call("delete_call_center_call", [self.id]).then(function(){
+                            openerp.web.bus.trigger('reload_panel');
+                        });
                     }
+                    
                 });
                 this.$el.find(".oe_kanban_draghandle").mouseenter(
                 function(){
