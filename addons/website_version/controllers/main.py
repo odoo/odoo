@@ -27,10 +27,8 @@ class TableExporter(http.Controller):
         iuv = request.registry['ir.ui.view']
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
-        if not snapshot_id:
-            new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
-        else:
-            new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
+        new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
+        if snapshot_id:
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
         request.session['snapshot_id'] = new_snapshot_id
         request.context['snapshot_id'] = new_snapshot_id
@@ -67,11 +65,7 @@ class TableExporter(http.Controller):
     def check_snapshot(self, snapshot_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         Exp = request.registry['website_version.experiment']
-        result = Exp.search(cr, uid, [('state','=','running'),('experiment_snapshot_ids.snapshot_id', '=', int(snapshot_id))],context=context)
-        if result:
-            return True
-        else:
-            return False
+        return bool(Exp.search(cr, uid, [('state','=','running'),('experiment_snapshot_ids.snapshot_id', '=', int(snapshot_id))],context=context))
     
     @http.route(['/website_version/all_snapshots'], type = 'json', auth = "public", website = True)
     def get_all_snapshots(self, view_id):
@@ -90,28 +84,13 @@ class TableExporter(http.Controller):
                 x['bold'] = 0 
         return result
 
-    @http.route(['/website_version/is_master'], type = 'json', auth = "public", website = True)
-    def is_master(self, view_id):
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        obj = request.registry['ir.ui.view']
-        view = obj.browse(cr,uid,[int(view_id)],context=context)
-        if view.snapshot_id:
-            result = False
-        else:
-            result = True
-        return result
-
     @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
     def has_experiments(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         v = request.registry['ir.ui.view'].browse(cr, uid, [int(view_id)],context)[0]
         website_id = context.get('website_id')
-        result = request.registry["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id),'|',('experiment_id.state','=','draft'),('experiment_id.state','=','running')], context=context)
-        if result:
-            return True
-        else:
-            return False
-
+        return bool(request.registry["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id),'|',('experiment_id.state','=','draft'),('experiment_id.state','=','running')], context=context))
+        
     @http.route(['/website_version/publish'], type = 'json', auth = "public", website = True)
     def publish(self, view_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
@@ -160,15 +139,8 @@ class TableExporter(http.Controller):
                 exp_snap_ids = request.registry['website_version.experiment_snapshot'].search(cr, uid, [('experiment_id','=',exp_ids[0]),('snapshot_id','=',view.snapshot_id.id)],context=context)
                 if exp_snap_ids:
                     y = request.registry['website_version.experiment_snapshot'].browse(cr, uid, [exp_snap_ids[0]],context)[0]
-                    result['VarId'] = y.google_index
-        print result  
+                    result['VarId'] = y.google_index  
         return result
-
-    @http.route(['/set_context'], type = 'json', auth = "public", website = True)
-    def set_context(self):
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        snapshot_id = context.get('snapshot_id')
-        return snapshot_id
 
     @http.route(['/website_version/google_access'], type='json', auth="user")
     def google_authorize(self, **kw):

@@ -38,20 +38,7 @@
             
             });
             return this._super();
-        },
-
-        // edit: function () {
-        //     var self = this;
-        //     var view_id = $('html').attr('data-view-xmlid');
-        //     openerp.jsonRpc( '/website_version/is_master', 'call', { 'view_id': view_id })
-        //         .then(function (result) {
-        //             if(result){
-        //                 self.$('#master_edit').show();
-        //             }
-        //         });
-
-        //     return this._super();
-        // },
+        }
 
     });
 

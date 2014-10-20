@@ -1,7 +1,7 @@
 {
     'name': 'Website Versioning',
     'category': 'Website',
-    'summary': 'Keep all the versions of your website',
+    'summary': 'Allow to save all the versions of your website and allow to perform AB testing.',
     'version': '1.0',
     'description': """
 OpenERP Website CMS
