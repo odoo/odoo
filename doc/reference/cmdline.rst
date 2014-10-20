@@ -15,20 +15,33 @@ Running the server
 
     database used when installing or updating modules.
 
+.. option:: --db-filter=<dbname>
+
+    hides databases that do not match dbname. dbname is a regular expression,
+    where:
+
+    - `%h` is replaced by the whole hostname the request is made on.
+
+    - `%d` is replaced by the subdomain the request is made on, with the
+      exception of `www` (so domain `odoo.com` and `www.odoo.com` both match
+      the database `odoo`)
+
 .. option:: -i <modules>, --init=<modules>
 
-    comma-separated list of modules to install before running the server.
+    comma-separated list of modules to install before running the server
+    (requires :option:`-d`).
 
 .. option:: -u <modules>, --update=<modules>
 
-    comma-separated list of modules to update before running the server.
+    comma-separated list of modules to update before running the server
+    (requires :option:`-d`).
 
-.. option:: --addons-path <directories>
+.. option:: --addons-path=<directories>
 
     comma-separated list of directories in which modules are stored. These
     directories are scanned for modules (nb: when and why?)
 
-.. option:: -c <config>, --config <config>
+.. option:: -c <config>, --config=<config>
 
     provide an alternate configuration file
 
