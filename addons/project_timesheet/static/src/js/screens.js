@@ -497,6 +497,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_m2o.on("change:value", this, function() {
                 var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
                 this.project_timesheet_db.set_current_timer_activity({project_id: project});
+                this.task_m2o.set({display_string: false, value: false});
+                this.task_m2o.display_string(false);
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
@@ -529,7 +531,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
                 if (this.intervalTimer) { clearInterval(this.intervalTimer);}
                 var activity = this.project_timesheet_db.load("timer_activity");
-                activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+                //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+                activity['id'] = this.project_timesheet_db.get_unique_id();
                 var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date);
                 activity['hours'] = hours;
                 activity['command'] = 0; //By default command = 0, activity which is to_create
@@ -601,43 +604,29 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             
         },
-        get_from_data: function() {
+        get_form_data: function() {
             var self = this;
             var project_activity_data = {};
-            $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
-            //TODO: Simplify this
-            _.each($form_data, function(input) {
-                var $input = $(input);
-                switch(input.id) {
-                    case "project_id":
-                        project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
-                        break;
-                    case "task_id":
-                        project_activity_data['task_id'] = [self.task_m2o.get("value"), self.task_m2o.get("display_string")];
-                        break;
-                    case "hours":
-                        project_activity_data['hours'] = (project_activity_data['hours'] || 0) + parseInt($input.val());
-                        break;
-                    case "minutes":
-                        project_activity_data['hours'] = (project_activity_data['hours'] || 0) + (((parseInt($input.val()) * 100) / 60))/100;
-                        break;
-                    case "name":
-                        project_activity_data['name'] = $input.val();
-                        break;
-                }
-            });
+            //$form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
+            project_activity_data['hours'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100));
+            project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
+            project_activity_data['task_id'] = [self.task_m2o.get("value"), self.task_m2o.get("display_string")];
+            project_activity_data['name'] = this.$("#name").val();
             return project_activity_data;
         },
         on_activity_add: function() {
             if (!this.is_valid_data()) {
                 return;
             }
-            var project_activity_data = this.get_from_data();
+            var project_activity_data = this.get_form_data();
             var momObj = new moment();
             var date = project_timesheet.datetime_to_str(momObj._d);
             project_activity_data['date'] = date; //Current date in accepted format
-            project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            //project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            project_activity_data['id'] = this.project_timesheet_db.get_unique_id();
+            console.log("project_activity_data['id'] is :: ", project_activity_data['id']);
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
+            console.log("project_activity_data is inside on_activity_add ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -646,7 +635,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if (!this.is_valid_data()) {
                 return;
             }
-            var project_activity_data = this.get_from_data();
+            var project_activity_data = this.get_form_data();
+            console.log("project_activity_data is inside edit ::: ", project_activity_data);
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             project_activity_data['command'] = 1;
             this.project_timesheet_model.add_activity(project_activity_data);
@@ -655,14 +645,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_activity_remove: function() {
             //This method will set activity command to 2, so while synchronize we will set that activty as a to_delete
-            var project_activity_data = this.get_from_data();
+            var project_activity_data = this.get_form_data();
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             var activities_collection = this.project_timesheet_model.get("activities");
             if(activities_collection.get(project_activity_data.id)) {
                 var activity_model = activities_collection.get(project_activity_data.id);
                 if (this.current_id.toString().match(this.project_timesheet_db.virtual_id_regex)) {
-                    task_activity_collection.remove(activity_model);
-                    this.project_timesheet_db.remove_activity(task_activity);
+                    activities_collection.remove(activity_model);
+                    this.project_timesheet_db.remove_activity(project_activity_data);
                 } else {
                     task_activity.command = 2;
                     project_activity_data.command = 2;
@@ -688,7 +678,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super();
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
-            this.project_m2o.on("change:value", this, this.set_project_model);
+            this.project_m2o.on("change:value", this, function() {
+                this.task_m2o.set({display_string: false, value: false});
+                this.task_m2o.display_string(false);
+                this.set_project_model();
+            });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
             this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
@@ -709,7 +703,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity_id = $(event.currentTarget).data("activity_id");
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var activity_clone = _.clone(activity);
-            activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            //activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
+            activity_clone.id = this.project_timesheet_db.get_unique_id();
             this.project_timesheet_model.add_project(activity_clone);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
 
@@ -762,11 +757,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":
-                        self.project_m2o.set({value: field_val[0], display_string: field_val[1]});
+                        self.project_m2o.set({display_string: field_val[1], value: field_val[0]});
                         self.project_m2o.display_string(field_val);
                         break;
                     case "task_id":
-                        self.task_m2o.set({value: field_val[0], display_string: field_val[1]});
+                        self.task_m2o.set({display_string: field_val[1], value: field_val[0]});
                         self.task_m2o.display_string(field_val);
                         break;
                     case "hours":

@@ -68,6 +68,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this._super.apply(this, arguments);
             this.prepare_autocomplete();
             this.on("change:effective_readonly", this, this.reinitialize);
+            this.$el.find("textarea").change(_.bind(this.input_changed, this));
         },
         reinitialize: function() {
             //this.destroy_content();
@@ -197,9 +198,10 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             return def.resolve(values);
         },
         _quick_create: function(e, term) {
-            var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+            //var virtual_id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
+            var virtual_id = this.project_timesheet_db.get_unique_id();
             this.$input.data("id", virtual_id); //TO Remove: we use this.get('value') to check
-            this.set({display_string: name, value: virtual_id});
+            this.set({display_string: term, value: virtual_id});
             this.$input.val(term);
         },
         add_id: function(id, name) {
@@ -208,6 +210,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.set({display_string: name, value: id});
         },
         display_string: function(field_val) {
+            console.log("Inside display_string ::: ", field_val);
             if (this.get("effective_readonly")) {
                 console.log("this.$el.find(+this.id_for_input)",field_val, this,  this.$el.find("#"+this.id_for_input), this.id_for_input);
                 this.$el.find("#"+this.id_for_input).text(field_val[1]);
@@ -215,6 +218,13 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             } else {
                 this.$el.find("#"+this.id_for_input).val(field_val[1]);
                 this.$el.find("#"+this.id_for_input).data("id", field_val[0]); //TO Remove: we use this.get('value') to check
+            }
+        },
+        input_changed: function() {
+            if (this.get('display_string') !== this.$input.val()) {
+                if (this.$input.val() === "") {
+                    this.set({display_string: this.$input.val(), value: false});
+                }
             }
         },
     });

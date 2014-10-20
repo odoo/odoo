@@ -153,7 +153,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get("activities");
             if(activity_collection.get(data.id)) {
                 var activity_model = activity_collection.get(data.id);
-                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'][0], project_id: data['project_id'], date: data['date'], hours: data['hours'], command: (data['command'] || 0)});
+                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], hours: data['hours'], command: (data['command'] || 0)});
             } else {
                 var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], hours: data['hours'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'] });
                 this.get('activities').add(activity);
@@ -204,7 +204,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 self.add_activity(record);
                 self.add_project(record);
             });
-            console.log("Activities collection is :: ", this.get("activities"));
+            this.project_timesheet_db.initialize_unique_id();
         },
         load_server_data: function() {
             var self = this;

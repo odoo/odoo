@@ -6,6 +6,7 @@ function odoo_project_timesheet_db(project_timesheet) {
         init: function(options) {
             this.virtual_id_prefix = "virtual_id_";
             this.virtual_id_regex = /^virtual_id_.*$/;
+            this.unique_id_counter = 0;
         },
         load: function(name, def) {
             //To load data from localstorage
@@ -104,6 +105,22 @@ function odoo_project_timesheet_db(project_timesheet) {
         },
         flush_data: function() {
             this.save('activities',[]);
+        },
+        initialize_unique_id: function() {
+            //To initialize unique_id_counter with max virtual_id value(from hr_analytic.timesheet line, project_id and task_id), so that get_unique_id return value from that initial value
+            var self = this;
+            var activities = this.load("activities");
+            var virtual_activity_id_list = _.filter(_.pluck(activities, 'id'), function(id) { return id.toString().match(self.virtual_id_regex);});
+            var virtual_project_id_list = _.map(_.filter(_.pluck(activities, "project_id"), function(id) {return id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
+            var virtual_task_id_list = _.map(_.filter(_.pluck(activities, "task_id"), function(id) {return id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
+            var virtual_ids = _.flatten([virtual_activity_id_list, virtual_project_id_list, virtual_task_id_list]);
+            var max_virtual_id = _.max(virtual_ids, function(virtual_id) {return parseInt(virtual_id.substr(11));});
+            this.unique_id_counter = parseInt(max_virtual_id.substr(11));
+            console.log("this.unique_id_counter is ::: ", this.unique_id_counter);
+        },
+        get_unique_id: function() {
+            var id = ++this.unique_id_counter;
+            return this.virtual_id_prefix + id;
         },
     });
 }
