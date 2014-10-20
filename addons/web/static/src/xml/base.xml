@@ -472,15 +472,15 @@
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-header container-fluid">
         <div class="row">
-            <div class="col-lg-6 oe-header-title">
+            <div class="col-md-6 oe-header-title">
                 <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
                 <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
                 </ol>
             </div>
-            <div class="oe-view-manager-search-view col-lg-6" />
+            <div class="oe-view-manager-search-view col-md-6" />
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <div class="oe-view-manager-buttons">
                     <t t-foreach="widget.views" t-as="view">
                         <div t-attf-class="oe-#{view}-buttons"/>
@@ -488,7 +488,7 @@
                 </div>
                 <div class="oe-view-manager-sidebar"></div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-md-6">
                 <div class="oe-search-options btn-group"/>
                 <div class="oe-right-toolbar">
                     <div class="oe-view-manager-pager"></div>
@@ -915,13 +915,13 @@
     </label>
 </t>
 
-<div t-name="PivotView" class="test"/>
+<div t-name="PivotView" class="oe_pivot"/>
 
 <t t-name="PivotView.buttons">
     <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-expand oe-pivot"></button>
-        <button class="btn btn-default fa fa-arrows-alt oe-pivot"></button>
-        <button class="btn btn-default fa fa-download oe-pivot"></button>
+        <button class="btn btn-default fa fa-expand oe-pivot-flip"></button>
+        <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all"></button>
+        <button class="btn btn-default fa fa-download oe-pivot-download"></button>
     </div>
     <div class="btn-group btn-group-sm"> 
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -934,6 +934,16 @@
         </ul>
     </div>
 </t>
+
+<div t-name="PivotView.nodata" class="oe_view_nocontent" >
+    <div class="oe_empty_custom_dashboard">
+        <p><b>No data to display.</b></p>
+        <p>
+                No data available for this pivot table.  Try to add some records, or make sure
+                that there is at least one measure and no active filter in the search bar.
+        </p>
+    </div>
+</div>
 
 
 <t t-name="Widget">
