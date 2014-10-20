@@ -60,6 +60,12 @@ openerp.crm_wardialing = function(instance) {
         template: "crm_wardialing.DialingPanel",
         events: {
             "keyup .oe_dial_searchbox": "input_change",
+            "click .oe_dial_callbutton": "call_button",
+            "click .oe_dial_hangupbutton": "hangup_button",
+            "click .oe_dial_changelog": "change_log",
+            "click .oe_dial_email": "send_email",
+            "click .oe_dial_to_client": "to_client",
+            "click .oe_dial_to_lead": "to_lead",
 
         },
         init: function(parent) {
@@ -88,26 +94,6 @@ openerp.crm_wardialing = function(instance) {
             $(window).scroll(_.bind(this.calc_box, this));
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
-            
-            
-            this.$el.find(".oe_dial_callbutton").click(function() {
-                self.call_button();
-            });
-            this.$el.find(".oe_dial_hangupbutton").click(function(){
-                self.hangup_button();
-            });
-            this.$el.find(".oe_dial_changelog").click(function() {
-                self.change_log();
-            });
-            this.$el.find(".oe_dial_email").click(function() {
-                self.send_email();
-            });
-            this.$el.find(".oe_dial_to_client").click(function() {
-                self.to_client();
-            });
-            this.$el.find(".oe_dial_to_lead").click(function() {
-                self.to_lead();
-            });
 
             openerp.web.bus.on('reload_panel', this, this.search_phonecalls_status);
             return;
@@ -242,8 +228,6 @@ openerp.crm_wardialing = function(instance) {
         //action to select a call and display the specific actions
         select_call: function(phonecall_widget){
             var classes = phonecall_widget.$()[0].className.split(" ");
-            
-            
             self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
             if(classes.indexOf("oe_dial_selected_phonecall") == -1){
                 phonecall_widget.$()[0].className += " oe_dial_selected_phonecall";
@@ -257,8 +241,7 @@ openerp.crm_wardialing = function(instance) {
                 }
             }else{
                 this.$el.find(".oe_dial_phonecalls").animate({'height' : '270px'}); 
-            }
-            
+            }    
         },
 
         //action done when the button "call" is clicked
@@ -416,6 +399,7 @@ openerp.crm_wardialing = function(instance) {
     openerp.crm_wardialing.reload_panel = function () {
         openerp.web.bus.trigger('reload_panel');
     }
+
     instance.web.client_actions.add("reload_panel", "openerp.crm_wardialing.reload_panel");
 
 

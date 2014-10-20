@@ -62,7 +62,9 @@ class crm_phonecall(models.Model):
 		        if(chan.json.get('id') == channel.get('id')):
 					stop_time = int(time.time())
 					duration = float(stop_time - self.start_time)
-					self.duration = float(duration/60.0)				
+					self.duration = float(duration/60.0)	
+					self.state = "done"
+					self.to_call = False			
 					chan.hangup()	
 
 	@api.one
