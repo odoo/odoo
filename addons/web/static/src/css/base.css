@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "EntypoRegular";
   src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
@@ -18,6 +19,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 .openerp {
   padding: 0;
   margin: 0;
@@ -1273,7 +1275,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightgray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1305,7 +1307,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightgray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -3296,6 +3298,10 @@ div.ui-widget-overlay {
 }
 .openerp_ie .oe_dropdown_arrow {
   line-height: 1.7em;
+}
+.openerp_ie .oe_dropdown_arrow:after {
+  content: "" !important;
+  text-shadow: none;
 }
 .openerp_ie .oe_form_buttons button, .openerp_ie .oe_view_manager_buttons button {
   line-height: 1.7em;
