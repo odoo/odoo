@@ -425,29 +425,38 @@
                     </div>
                     <div class="modal-body">
                         <div class="container">
+                            <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
                             <t t-foreach="tickets" t-as="ticket">
+                                <div>
+                                    <h4>
+                                        <strong>
+                                            Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
+                                            <t t-if="ticket['price'] > 0">
+                                                <t t-esc="ticket['price']"/>
+                                                <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                            </t>
+                                            <t t-if="ticket['price'] == 0">Free</t>)
+                                        </strong>
+                                    </h4><hr/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Name</strong></div>
+                                    <div class="col-md-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
+                                    <div class="col-md-5"><strong>Email</strong> <span class="text-muted">(Optional)</span></div>
+                                </div>
                                 <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter">
                                     <t t-set="counter" t-value="counter + 1"/>
-                                    <div>
-                                        <h4><strong>Ticket #<t t-raw="counter"/>: <t t-esc="ticket['name']"/> (
-                                        <t t-if="ticket['price'] > 0"><t t-esc="ticket['price']"/><t t-esc="website.pricelist_id.currency_id.symbol"/></t>
-                                        <t t-if="ticket['price'] == 0">Free</t>
-                                        )</strong></h4><hr/>
-                                    </div>
                                     <div class="row">
-                                        <div class="col-md-4"><strong>Name</strong></div>
-                                        <div class="col-md-4"><strong>Phone</strong></div>
-                                        <div class="col-md-4"><strong>Email</strong></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4"><input class='form-control input-sm' type='text' t-attf-name="#{counter}-name"/></div>
-                                        <div class="col-md-4"><input class='form-control input-sm' type='tel' t-attf-name="#{counter}-phone"/></div>
-                                        <div class="col-md-4"><input class='form-control input-sm' type='email' t-attf-name="#{counter}-email"/></div>
+                                        <div class="col-md-4"><input class='form-control input-sm' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="'Attendee #%s' %counter"/></div>
+                                        <div class="col-md-3"><input class='form-control input-sm' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                        <div class="col-md-5"><input class='form-control input-sm' type='email' t-attf-name="#{counter}-email"/></div>
                                         <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
-                                    </div><hr/>
+                                        <hr style="width:50%"/>
+                                    </div>
                                 </t>
                                 <t t-set="counter" t-value="counter + ticket['quantity']"/>
+                                <t t-set="counter_type" t-value="counter_type + 1"/>
                             </t>
                         </div>
                     </div>
