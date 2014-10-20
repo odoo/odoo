@@ -61,11 +61,10 @@
                         </group>
 
                         <separator string="Rules" colspan="4"/>
-                        <p>Rules change how loyalty points are earned for specific products</p>
+                        <p>Rules change how loyalty points are earned for specific products or categories</p>
                         <field name="rule_ids" colspan="4" nolabel="1">
                             <tree string="Rules">
                                 <field name="name" />
-                                <field name="product_id" />
                                 <field name="pp_product" />
                                 <field name="pp_currency" />
                                 <field name="cumulative" />
@@ -96,7 +95,15 @@
                         <h1><field name="name" class="oe_inline"/></h1>
                     </div>
                     <group col="4">
-                        <field name="product_id" />
+                        <group col='2'>
+                            <field name="type" />
+                        </group>
+                        <group col='2'>
+                            <field name="product_id"  attrs="{ 'invisible':[('type','!=','product')],  'required':[('type','==','product')]}" />
+                            <field name="category_id" attrs="{ 'invisible':[('type','!=','category')], 'required':[('type','==','category')]}"/>
+                        </group>
+                    </group>
+                    <group col="6">
                         <field name="pp_product" />
                         <field name="pp_currency" />
                         <field name="cumulative" />
@@ -123,8 +130,8 @@
                         <field name="discount_product_id"   attrs="{ 'invisible':[('type','!=','discount')], 'required':[('type','==','discount')] }"/>
                     </group>
                     <group>
-                        <field name="minimum_points" />
                         <field name="point_cost" />
+                        <field name="minimum_points" />
                     </group>
                 </form>
             </field>

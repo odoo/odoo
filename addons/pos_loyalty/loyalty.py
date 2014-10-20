@@ -51,18 +51,24 @@ class loyalty_rule(osv.osv):
     _columns = {
         'name':                 fields.char('Name', size=32, select=1, required=True, help="An internal identification for this loyalty program rule"),
         'loyalty_program_id':   fields.many2one('loyalty.program', 'Loyalty Program', help='The Loyalty Program this exception belongs to'),
-        'product_id':           fields.many2one('product.product','Target Product', help='The product affected by the rule'),
-        'cumulative':             fields.boolean('Cumulative',      help='The points won from this rule will be won in addition to other rules'),
+        'type':                 fields.selection((('product','Product'),('category','Category')), 'Type', required=True, help='Does this rule affects products, or a category of products ?'),
+        'product_id':           fields.many2one('product.product','Target Product',  help='The product affected by the rule'),
+        'category_id':          fields.many2one('pos.category',   'Target Category', help='The category affected by the rule'),
+        'cumulative':           fields.boolean('Cumulative',        help='The points won from this rule will be won in addition to other rules'),
         'pp_product':           fields.float('Points per product',  help='How many points the product will earn per product ordered'),
         'pp_currency':          fields.float('Points per currency', help='How many points the product will earn per value sold'),
     }
+    _defaults = {
+        'type':'product',
+    }
+
 
 class loyalty_reward(osv.osv):
     _name = 'loyalty.reward'
     _columns = {
         'name':                 fields.char('Name', size=32, select=1, required=True, help='An internal identification for this loyalty reward'),
         'loyalty_program_id':   fields.many2one('loyalty.program', 'Loyalty Program', help='The Loyalty Program this reward belongs to'),
-        'minimum_points':       fields.float('Minimum Points', help='The minimum amount of points the customer must have to be eligible for this reward'),
+        'minimum_points':       fields.float('Minimum Points', help='The minimum amount of points the customer must have to qualify for this reward'),
         'type':                 fields.selection((('gift','Gift'),('discount','Discount')), 'Type', required=True, help='The type of the reward'),
         'gift_product_id':           fields.many2one('product.product','Gift Product', help='The product given as a reward'),
         'point_cost':           fields.float('Point Cost', help='The cost of the reward'),

@@ -9,9 +9,9 @@ openerp.pos_loyalty = function(instance){
         var model = models[i];
         if (model.model === 'res.partner') {
             model.fields.push('loyalty_points');
-        } else if (model.model === 'pos.config') {
-            // load loyalty after pos.config
-            models.splice(i+1,0,{
+        } else if (model.model === 'product.product') {
+            // load loyalty after products
+            models.push(i+1,0,{
                 model: 'loyalty.program',
                 condition: function(self){ return !!self.config.loyalty_id[0]; },
                 fields: ['name','pp_currency','pp_product','pp_order','rounding'],
@@ -26,15 +26,27 @@ openerp.pos_loyalty = function(instance){
 
                     self.loyalty.rules = rules; 
                     self.loyalty.rules_by_product_id = {};
+                    self.loyalty.rules_by_category_id = {};
 
                     for (var i = 0; i < rules.length; i++){
                         var rule = rules[i];
-                        if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
-                            self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
-                        } else if (rule.cumulative) {
-                            self.loyalty.rules_by_product_id[rule.product_id[0]].unshift(rule);
-                        } else {
-                            self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
+                        if (rule.type === 'product') {
+                            if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
+                                self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
+                            } else if (rule.cumulative) {
+                                self.loyalty.rules_by_product_id[rule.product_id[0]].unshift(rule);
+                            } else {
+                                self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
+                            }
+                        } else if (rule.type === 'category') {
+                            var category = self.db.get_category_by_id(rule.category_id[0]);
+                            if (!self.loyalty.rules_by_category_id[category.id]) {
+                                self.loyalty.rules_by_category_id[category.id] = [rule];
+                            } else if (rule.cumulative) {
+                                self.loyalty.rules_by_category_id[category.id].unshift(rule);
+                            } else {
+                                self.loyalty.rules_by_category_id[category.id].push(rule);
+                            }
                         }
                     }
                 },
@@ -80,9 +92,29 @@ openerp.pos_loyalty = function(instance){
                     var rule = rules[j];
                     total_points += round_pr(line.get_quantity() * rule.pp_product, rounding);
                     total_points += round_pr(line.get_price_with_tax() * rule.pp_currency, rounding);
-                    if (!rule.cumulative) {
+                    // if affected by a non cumulative rule, skip the others. (non cumulative rules are put
+                    // at the beginning of the list when they are loaded )
+                    if (!rule.cumulative) { 
                         overriden = true;
                         break;
+                    }
+                }
+
+                // Test the category rules
+                if ( product.pos_categ_id ) {
+                    var category = this.pos.db.get_category_by_id(product.pos_categ_id[0]);
+                    while (category && !overriden) {
+                        var rules = this.pos.loyalty.rules_by_category_id[category.id] || [];
+                        for (var j = 0; j < rules.length; j++) {
+                            var rule = rules[j];
+                            total_points += round_pr(line.get_quantity() * rule.pp_product, rounding);
+                            total_points += round_pr(line.get_price_with_tax() * rule.pp_currency, rounding);
+                            if (!rule.cumulative) {
+                                overriden = true;
+                                break;
+                            }
+                        }
+                        category = this.pos.db.get_category_by_id(this.pos.db.get_category_parent_id(category.id));
                     }
                 }
 
