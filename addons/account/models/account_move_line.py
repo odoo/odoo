@@ -818,7 +818,7 @@ class account_move_line(models.Model):
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in self.ids:
-            workflow.trg_trigger('account.move.line', id, self._cr)
+            workflow.trg_trigger(self._uid, 'account.move.line', id, self._cr)
 
         if self:
             partner_id = self.partner_id and self.partner_id.id or False
