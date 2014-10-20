@@ -18,7 +18,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.webclient = parent;
         this.dialog = null;
         this.dialog_widget = null;
-        this.view_managers = [];
+        this.widgets = [];
         this.on('history_back', this, this.proxy('history_back'));
     },
     dialog_stop: function (reason) {
@@ -28,33 +28,25 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog = null;
     },
     /**
-     * Add a new item to the breadcrumb
+     * Add a new widget to the action manager
      *
-     * If the title of an item is an array, the multiple title mode is in use.
-     * (eg: a widget with multiple views might need to display a title for each view)
-     * In multiple title mode, the show() callback can check the index it receives
-     * in order to detect which of its titles has been clicked on by the user.
-     *
-     * @param {Object} item breadcrumb item
-     * @param {Object} item.widget widget containing the view(s) to be added to the breadcrumb added
-     * @param {Function} [item.show] triggered whenever the widget should be shown back
-     * @param {Function} [item.hide] triggered whenever the widget should be shown hidden
-     * @param {Function} [item.destroy] triggered whenever the widget should be destroyed
-     * @param {String|Array} [item.title] title(s) of the view(s) to be displayed in the breadcrumb
-     * @param {Function} [item.get_title] should return the title(s) of the view(s) to be displayed in the breadcrumb
+     * widget: typically, widgets added are instance.web.ViewManager.  The action manager
+     *      uses this list of widget to handle the breadcrumbs.
+     * action: new action
+     * clear_breadcrumbs: boolean, if true, current widgets are destroyed
      */
-    push_view_manager: function(widget, action, clear_breadcrumbs) {
+    push_widget: function(widget, action, clear_breadcrumbs) {
         var self = this,
             old_widget = this.inner_widget;
 
         if (clear_breadcrumbs) {
-            var to_destroy = this.view_managers;
-            this.view_managers = [];
+            var to_destroy = this.widgets;
+            this.widgets = [];
         }
         if (widget instanceof instance.web.ViewManager) {
-            this.view_managers.push(widget);
+            this.widgets.push(widget);
         } else {
-            this.view_managers.push({
+            this.widgets.push({
                 view_stack: [{
                     controller: {get: function () {return action.display_name || action.name; }},
                 }],
@@ -67,12 +59,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             (action.target !== 'inline') && (!action.flags.headless) && widget.$header && widget.$header.show();
             old_widget && old_widget.$el.hide();
             if (clear_breadcrumbs) {
-                self.clear_view_managers(to_destroy)
+                self.clear_widgets(to_destroy)
             }
         });
     },
     get_breadcrumbs: function () {
-        return _.flatten(_.map(this.view_managers, function (vm) {
+        return _.flatten(_.map(this.widgets, function (vm) {
             return vm.view_stack.map(function (view, index) { 
                 return {
                     title: view.controller.get('title') || vm.title,
@@ -83,39 +75,39 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }), true);
     },
     history_back: function() {
-        var view_manager = _.last(this.view_managers),
-            nbr_views = view_manager.view_stack.length;
+        var widget = _.last(this.widgets),
+            nbr_views = widget.view_stack.length;
         if (nbr_views > 1) {
-            this.select_view_manager(view_manager, nbr_views - 2);
-        } else if (this.view_managers.length > 1) {
-            view_manager = this.view_managers[this.view_managers.length -2];
-            nbr_views = view_manager.view_stack.length;
-            this.select_view(view_managers, nbr_views - 2)
+            this.select_widget(widget, nbr_views - 2);
+        } else if (this.widgets.length > 1) {
+            widget = this.widgets[this.widgets.length -2];
+            nbr_views = widget.view_stack.length;
+            this.select_view(widgets, nbr_views - 2)
         }
     },
-    select_view_manager: function(view_manager, index) {
+    select_widget: function(widget, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
             return false;
         }
-        var vm_index = this.view_managers.indexOf(view_manager);
-        if (view_manager.select_view) {
-            view_manager.select_view(index).done(function () {
-                _.each(self.view_managers.splice(vm_index + 1), function (vm) {
+        var vm_index = this.widgets.indexOf(widget);
+        if (widget.select_view) {
+            widget.select_view(index).done(function () {
+                _.each(self.widgets.splice(vm_index + 1), function (vm) {
                     vm.destroy();
                 });
-                self.inner_widget = _.last(self.view_managers);
+                self.inner_widget = _.last(self.widgets);
                 self.inner_widget.display_breadcrumbs();
                 self.inner_widget.$el.show();
             });
         }
     },
-    clear_view_managers: function(vms) {
-        _.each(vms || this.view_managers, function (vm) {
+    clear_widgets: function(vms) {
+        _.each(vms || this.widgets, function (vm) {
             vm.destroy();
         });
         if (!vms) {
-            this.view_managers = [];
+            this.widgets = [];
             this.inner_widget = null;
         }
     },
@@ -320,7 +312,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     null_action: function() {
         this.dialog_stop();
-        this.clear_view_managers();
+        this.clear_widgets();
     },
     /**
      *
@@ -386,7 +378,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_view_manager(widget, executor.action, options.clear_breadcrumbs);
+        return this.push_widget(widget, executor.action, options.clear_breadcrumbs);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
@@ -674,7 +666,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var $breadcrumbs = _.map(_.initial(breadcrumbs), function (bc) {
             var $link = $('<a>').text(bc.title);
             $link.click(function () {
-                self.action_manager.select_view_manager(bc.view_manager, bc.index);
+                self.action_manager.select_widget(bc.view_manager, bc.index);
             });
             return $('<li>').append($link);
         });
