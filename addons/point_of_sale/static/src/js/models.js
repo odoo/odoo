@@ -276,18 +276,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                             c.height = height
                         var ctx = c.getContext('2d');
                             ctx.drawImage(self.company_logo,0,0, width, height);
-                        
+
                         self.company_logo_base64 = c.toDataURL();
                         logo_loaded.resolve();
                     };
                     self.company_logo.onerror = function(){
                         logo_loaded.reject();
                     };
+                    self.company_logo.crossOrigin = "anonymous";
                     self.company_logo.src = '/web/binary/company_logo'+'?_'+Math.random();
 
                     return logo_loaded;
                 });
-        
+
             return loaded;
         },
 
