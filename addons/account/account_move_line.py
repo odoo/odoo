@@ -964,6 +964,26 @@ class account_move_line(osv.osv):
             target_currency = account.currency_id or account.company_currency_id
             return self.prepare_move_lines_for_reconciliation_widget(cr, uid, res, target_currency=target_currency, context=context)
 
+    def _domain_move_lines_for_reconciliation(self, cr, uid, excluded_ids=None, str=False, additional_domain=None, context=None):
+        if excluded_ids is None:
+            excluded_ids = []
+        if additional_domain is None:
+            additional_domain = []
+
+        additional_domain += [('reconcile_id', '=', False), ('state', '=', 'valid')]
+        if excluded_ids:
+            additional_domain += [('id', 'not in', excluded_ids)]
+        if str:
+            additional_domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
+            # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
+            try:
+                amount = float(str)
+                # additional_domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+            except:
+                pass
+        
+        return additional_domain
+
     def get_move_lines_for_reconciliation(self, cr, uid, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Find the move lines that could be used in a reconciliation. If count is true, only returns the number of lines.
 
@@ -972,21 +992,7 @@ class account_move_line(osv.osv):
             :param boolean count: just return the number of records
             :param tuples list additional_domain: additional domain restrictions
         """
-        if additional_domain is None:
-            additional_domain = []
-
-        # Complete domain
-        domain = additional_domain + [('reconcile_id', '=', False),('state', '=', 'valid')]
-        if excluded_ids:
-            domain.append(('id', 'not in', excluded_ids))
-        if str:
-            domain += ['|', ('move_id.name', 'ilike', str), ('move_id.ref', 'ilike', str)]
-            # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
-            try:
-                amount = float(str)
-                # domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
-            except:
-                pass
+        domain = self._domain_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, context=context)
 
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []

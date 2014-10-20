@@ -663,24 +663,30 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, st_line_id, context=context)
         return self.get_move_lines_for_bank_reconciliation(cr, uid, st_line=st_line, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, context=context)
 
-    def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False, context=None):
-        """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
+    def _domain_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, additional_domain=None, overlook_partner=False, context=None):
+        if excluded_ids is None:
+            excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-        aml_pool = self.pool.get('account.move.line')
 
-        # Complete domain
         if st_line.partner_id.id or overlook_partner:
             additional_domain += ['|', ('account_id.type', '=', 'receivable'), ('account_id.type', '=', 'payable')]
             if not overlook_partner:
                 additional_domain += [('partner_id', '=', st_line.partner_id.id)]
         else:
-            additional_domain += [('account_id.reconcile', '=', True), ('account_id.type', '=', 'other')]
+            additional_domain += [('account_id.reconcile', '=', True)] # ('account_id.type', '=', 'other')
             if str:
                 additional_domain += [('partner_id.name', 'ilike', str)]
 
+        return additional_domain
+
+    def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False, context=None):
+        """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
+        aml_pool = self.pool.get('account.move.line')
+        domain = self._domain_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, overlook_partner=overlook_partner, context=context)
+
         # Fetch lines or lines number
-        res = aml_pool.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=additional_domain, context=context)
+        res = aml_pool.get_move_lines_for_reconciliation(cr, uid, excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=domain, context=context)
         if count:
             return res
         else:

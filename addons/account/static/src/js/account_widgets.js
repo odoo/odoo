@@ -248,8 +248,10 @@ openerp.account = function (instance) {
             line.q_label = line.name;
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line_details") ? this.template_prefix : "") + "reconciliation_move_line_details";
             line.q_popover = QWeb.render(template_name, {line: line});
+            if (line.has_no_partner)
+                line.q_label = line.partner_name + " : " + line.q_label
             if (line.ref && line.ref !== line.name)
-                line.q_label += " : " + line.ref;
+                line.q_label = line.q_label + " : " + line.ref;
         },
     });
     
@@ -1499,79 +1501,6 @@ openerp.account = function (instance) {
             self.finishedLoadingMoveLines = $.Deferred();
             self.set("mode", self.context.mode);
             return $.when(self.finishedLoadingMoveLines).then(function(){
-                // Make sure the display is OK
-                self.balanceChanged();
-                self.createdLinesChanged();
-                self.updateAccountingViewMatchedLines();
-            });
-        },
-
-        loadData: function() {
-            var self = this;
-            if (self.context.initial_data_provided)
-                return;
-
-            // Get ids of selected move lines (to exclude them from reconciliation proposition)
-            var excluded_move_lines_ids = [];
-            if (self.do_load_reconciliation_proposition) {
-                _.each(self.getParent().excluded_move_lines_ids, function(o){
-                    excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
-                });
-            }
-            // Load statement line
-            return self.model_bank_statement_line
-                .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids, self.do_load_reconciliation_proposition])
-                .then(function (data) {
-                    self.st_line = data[0].st_line;
-                    self.decorateStatementLine(self.st_line);
-                    self.partner_id = data[0].st_line.partner_id;
-                    if (self.getParent().excluded_move_lines_ids[self.partner_id] === undefined)
-                        self.getParent().excluded_move_lines_ids[self.partner_id] = [];
-                    var mv_lines = [];
-                    _.each(data[0].reconciliation_proposition, function(line) {
-                        self.decorateMoveLine(line, self.st_line.currency_id);
-                        mv_lines.push(line);
-                    }, self);
-                    self.set("mv_lines_selected", self.get("mv_lines_selected").concat(mv_lines));
-                });
-        },
-
-        render: function() {
-            var self = this;
-            var presets_array = [];
-            for (var id in self.presets)
-                if (self.presets.hasOwnProperty(id))
-                    presets_array.push(self.presets[id]);
-            self.$el.prepend(QWeb.render("bank_statement_reconciliation_line", {
-                line: self.st_line,
-                mode: self.context.mode,
-                presets: presets_array
-            }));
-            
-            // Stuff that require the template to be rendered
-            self.$(".match").slideUp(0);
-            self.$(".create").slideUp(0);
-            if (self.st_line.no_match) self.$el.addClass("no_match");
-            self.bindPopoverTo(self.$(".line_info_button"));
-            self.createFormWidgets();
-            // Special case hack : no identified partner
-            if (self.st_line.has_no_partner) {
-                self.$el.css("opacity", "0");
-                self.updateBalance();
-                self.$(".change_partner_container").show(0);
-                self.$(".match").slideUp(0);
-                self.$el.addClass("no_partner");
-                self.set("mode", self.context.mode);
-                self.balanceChanged();
-                self.updateAccountingViewMatchedLines();
-                self.animation_speed = self.getParent().animation_speed;
-                self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
-                self.$el.animate({opacity: 1}, self.aestetic_animation_speed);
-                return;
-            }
-            
-            // TODO : the .on handler's returned deferred is lost
-            return $.when(self.set("mode", self.context.mode)).then(function(){
                 // Make sure the display is OK
                 self.balanceChanged();
                 self.createdLinesChanged();

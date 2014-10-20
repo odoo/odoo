@@ -116,8 +116,7 @@
                 </td></tr>
             </t>
             <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
-                <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
-                <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+                <t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
             </td></tr>
         </table>
     </t>
@@ -199,7 +198,7 @@
             <button class="button_ok"></button>
             <span t-if="! line.has_no_partner" class="partner_name">
                 <t t-esc="line.partner_name"/>
-                <span class="remove_partner"><span class="glyphicon glyphicon-remove"></span></span>
+                <span class="change_partner glyphicon glyphicon-pencil"></span>
             </span>
             <div class="change_partner_container oe_form"></div>
         </t>
