@@ -1299,8 +1299,8 @@ class account_move_reconcile(models.Model):
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
-        if not total:
-            rec.line_partial_ids.write({'reconcile_id': rec.id })
+            if not total:
+                rec.line_partial_ids.write({'reconcile_id': rec.id })
         return True
 
     @api.multi
@@ -1332,7 +1332,7 @@ class account_tax_code(models.Model):
     """
     @api.multi
     def _sum(self, where ='', where_params=()):
-        parent_ids = tuple(self.search([('parent_id', 'child_of', ids)]))
+        parent_ids = tuple(self.search([('parent_id', 'child_of', self.ids)]).ids)
         if self._context.get('based_on', 'invoices') == 'payments':
             self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \

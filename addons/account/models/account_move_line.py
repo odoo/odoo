@@ -93,7 +93,7 @@ class account_move_line(models.Model):
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
-            raise osv.except_osv(_('Warning!'),_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+            raise Warning(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
 
 
         if context.get('journal_ids', False):
@@ -182,7 +182,7 @@ class account_move_line(models.Model):
         for obj_line in self:
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
-                    raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                    raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_lines:
                     obj_line.analytic_lines.unlink()
                 vals_line = self._prepare_analytic_line(obj_line)
@@ -650,7 +650,7 @@ class account_move_line(models.Model):
         company_list = []
         for line in self:
             if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
+                raise Warning(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
 
         for line in self:
@@ -659,11 +659,11 @@ class account_move_line(models.Model):
             else:
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
+                raise Warning(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if line2.state != 'valid':
-                        raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
+                        raise Warning(_("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
                     if not line2.reconcile_id:
                         if line2.id not in merges:
                             merges.append(line2)
@@ -704,12 +704,11 @@ class account_move_line(models.Model):
         company_list = []
         for line in self:
             if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
+                raise Warning(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
         for line in unrec_lines:
             if line.state <> 'valid':
-                raise osv.except_osv(_('Error!'),
-                        _('Entry "%s" is not valid !') % line.name)
+                raise Warning(_('Entry "%s" is not valid !') % line.name)
             credit += line['credit']
             debit += line['debit']
             currency += line['amount_currency'] or 0.0
@@ -731,19 +730,19 @@ class account_move_line(models.Model):
         r = self._cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if len(r) != 1:
-            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
+            raise Warning(_('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
-            raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
+            raise Warning(_('Entry is already reconciled.'))
         account = self.env['account.account'].browse(account_id)
         if not account.reconcile:
-            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
+            raise Warning(_('The account is not defined to be reconciled !'))
         if r[0][1] != None:
-            raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
+            raise Warning(_('Some entries are already reconciled.'))
 
         if (not account.company_id.currency_id.is_zero(writeoff)) or \
            (account.currency_id and (not account.currency_id.is_zero(currency))):
             if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
+                raise Warning(_('You have to provide an account for the write off/exchange difference entry.'))
             if writeoff > 0:
                 debit = writeoff
                 credit = 0.0
@@ -872,8 +871,7 @@ class account_move_line(models.Model):
         res = self._cr.fetchone()
         if res:
             if res[1] != 'draft':
-                raise osv.except_osv(_('User Error!'),
-                       _('The account move (%s) for centralisation ' \
+                raise Warning(_('The account move (%s) for centralisation ' \
                                 'has been confirmed.') % res[2])
         return res
 
@@ -894,8 +892,7 @@ class account_move_line(models.Model):
         all_moves = list(set(all_moves) - set(self.ids))
         if unlink_ids:
             if opening_reconciliation:
-                raise osv.except_osv(_('Warning!'),
-                    _('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
+                raise Warning(_('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(unlink_ids)
             if len(all_moves) >= 2:
@@ -921,9 +918,9 @@ class account_move_line(models.Model):
     @api.multi
     def write(self, vals, check=True, update_check=True):
         if vals.get('account_tax_id', False):
-            raise osv.except_osv(_('Unable to change tax!'), _('You cannot change the tax, you should remove and recreate lines.'))
+            raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['active'])['active']:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
+            raise Warning(_('You cannot use an inactive account.'))
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check()
@@ -984,9 +981,9 @@ class account_move_line(models.Model):
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
-                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+                raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
-                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+                raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             t = (line.journal_id.id, line.period_id.id)
             if t not in done:
                 self._update_journal_check(line.journal_id.id, line.period_id.id)
@@ -1019,7 +1016,7 @@ class account_move_line(models.Model):
         if 'period_id' in context and not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.env['account.period'].name_search(name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
-                raise osv.except_osv(_('Error!'), _('No period found or more than one period found for the given date.'))
+                raise Warning(_('No period found or more than one period found for the given date.'))
             context['period_id'] = period_candidate_ids[0][0]
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
@@ -1048,7 +1045,7 @@ class account_move_line(models.Model):
                     move_id = MoveObj.with_context(context).create(v)
                     vals['move_id'] = move_id.id
                 else:
-                    raise osv.except_osv(_('No Piece Number!'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise Warning(_('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = AccountObj.browse(vals['account_id'])
@@ -1073,7 +1070,7 @@ class account_move_line(models.Model):
                 vals['amount_currency'] = self.env['res.currency'].with_context(ctx).compute(account.company_id.currency_id.id,
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0))
         if not ok:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+            raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
         result = super(account_move_line, self).create(vals)
         # CREATE Taxes
