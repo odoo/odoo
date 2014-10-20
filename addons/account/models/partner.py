@@ -182,15 +182,15 @@ class res_partner(models.Model):
                       AND """ + query + """
                       GROUP BY l.partner_id, a.type
                       """,
-                   (tuple(ids),))
+                   (tuple(self.ids),))
         maps = {'receivable':'credit', 'payable':'debit' }
-        for partner in self.ids:
+        for partner in self:
             partner.debit = 0
             partner.credit = 0
         for pid, type, val in self._cr.fetchall():
             if val is None: val=0
             value = (type=='receivable') and val or -val
-            self.write([pid], value)
+            self.browse(pid).write(value)
 
     @api.multi
     def _asset_difference_search(self, type, args):

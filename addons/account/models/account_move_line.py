@@ -35,6 +35,7 @@ class account_move_line(models.Model):
     _description = "Journal Items"
     _order = "date desc, id desc"
 
+    @api.model
     def _query_get(self, obj='l'):
         fiscalyear_obj = self.env['account.fiscalyear']
         fiscalperiod_obj = self.env['account.period']
@@ -48,9 +49,9 @@ class account_move_line(models.Model):
         if not context.get('fiscalyear', False):
             if context.get('all_fiscalyear', False):
                 #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
-                fiscalyear_ids = fiscalyear_obj.search([])
+                fiscalyear_ids = fiscalyear_obj.search([]).ids
             else:
-                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')])
+                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')]).ids
         else:
             #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
             fiscalyear_ids = [context['fiscalyear']]
@@ -72,18 +73,17 @@ class account_move_line(models.Model):
         if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
             if initial_bal:
                 period_company_id = fiscalperiod_obj.browse(context['period_from']).company_id.id
-                first_period = fiscalperiod_obj.search([('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
-                context['periods'] = fiscalperiod_obj.build_ctx_periods(first_period, context['period_from'])
+                first_period = fiscalperiod_obj.search([('company_id', '=', period_company_id)], order='date_start', limit=1)
+                context['periods'] = fiscalperiod_obj.build_ctx_periods(first_period.id, context['period_from'])
             else:
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(context['period_from'], context['period_to'])
         if context.get('periods', False):
             if initial_bal:
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
-                period_ids = fiscalperiod_obj.search([('id', 'in', context['periods'])], order='date_start', limit=1)
-                if period_ids and period_ids[0]:
-                    first_period = fiscalperiod_obj.browse(period_ids[0])
+                periods = fiscalperiod_obj.search([('id', 'in', context['periods'])], order='date_start', limit=1)
+                if periods:
                     ids = ','.join([str(x) for x in context['periods']])
-                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, first_period.date_start, ids, where_move_state, where_move_lines_by_date)
+                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, periods.date_start, ids, where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
