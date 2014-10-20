@@ -1238,8 +1238,8 @@ class account_move(models.Model):
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
                 not_draft_lines = list(set(lines) - set(draft_lines))
-                if not_draft_lines:
-                    not_draft_lines.with_context(context).write({
+                for line in not_draft_lines:
+                    line.with_context(context).write({
                         'state': 'draft'
                     }, check=False)
         # Create analytic lines for the valid moves
