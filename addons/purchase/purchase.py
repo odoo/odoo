@@ -1131,7 +1131,7 @@ class purchase_order_line(osv.osv):
             res['value'].update({'product_qty': qty})
 
         price = price_unit
-        if price_unit is False or price_unit is None:
+        if price_unit in [False,None,0.0]:
             # - determine price_unit and taxes_id
             if pricelist_id:
                 date_order_str = datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT)
