@@ -88,7 +88,6 @@ class NumberedCanvas(canvas.Canvas):
         self._saved_page_states = []
 
     def showPage(self):
-        self._saved_page_states.append(dict(self.__dict__))
         self._startPage()
 
     def save(self):
@@ -123,6 +122,8 @@ class PageCount(platypus.Flowable):
 
 class PageReset(platypus.Flowable):
     def draw(self):
+        """Flag to close current story page numbering and prepare for the next
+        should be executed after the rendering of the full story"""
         self.canv._doPageReset = True
 
 class _rml_styles(object,):
@@ -930,6 +931,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.handle_frameBegin()
 
     def afterPage(self):
+        if isinstance(self.canv, NumberedCanvas):
+            # save current page states before eventual reset
+            self.canv._saved_page_states.append(dict(self.canv.__dict__))
         if self.canv._doPageReset:
             # Following a <pageReset/> tag:
             # - we reset page number to 0
@@ -1003,10 +1007,10 @@ class _rml_template(object):
         story_cnt = 0
         for node_story in node_stories:
             if story_cnt > 0:
-                # Reset Page Number with new story tag
-                fis.append(PageReset())
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
+            # end of story numbering computation
+            fis.append(PageReset())
             story_cnt += 1
         try:
             if self.localcontext and self.localcontext.get('internal_header',False):
