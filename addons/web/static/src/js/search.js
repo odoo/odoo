@@ -431,6 +431,60 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         }
         return $.when(custom_filters_ready).then(this.proxy('set_default_filters'));
     },
+    // it should parse the arch field of the view, instantiate the corresponding 
+    // filters/fields, and put them in the correct variables:
+    // * this.search_fields is a list of all the fields,
+    // * this.filters: groups of filters
+    // * this.group_by: group_bys
+    prepare_search_inputs: function () {
+        var self = this,
+            arch = this.fields_view_get.arch;
+
+        var filters = [].concat.apply([], _.map(arch.children, function (item) {
+            return item.tag !== 'group' ? eval_item(item) : item.children.map(eval_item);
+        }));
+        function eval_item (item) {
+            var category = 'filters';
+            if (item.attrs.context) {
+                try {
+                    var context = instance.web.pyeval.eval('context', item.attrs.context);
+                    if (context.group_by) {
+                        category = 'group_by';
+                    }                    
+                } catch (e) {}
+            }
+            return {
+                item: item,
+                category: category,
+            }
+        }
+        var current_group = [],
+            current_category = 'filters',
+            categories = {filters: this.filters, group_by: this.groupbys};
+
+        _.each(filters.concat({category:'filters', item: 'separator'}), function (filter) {
+            if (filter.item.tag === 'filter' && filter.category === current_category) {
+                return current_group.push(new my.Filter(filter.item, self));
+            }
+            if (current_group.length) {
+                var group = new my.FilterGroup(current_group, self);
+                categories[current_category].push(group);
+                current_group = [];
+            }
+            if (filter.item.tag === 'field') {
+                var attrs = filter.item.attrs,
+                    field = self.fields_view_get.fields[attrs.name],
+                    Obj = my.fields.get_any([attrs.widget, field.type]);
+                if (Obj) {
+                    self.search_fields.push(new (Obj) (filter.item, field, self));
+                }
+            }
+            if (filter.item.tag === 'filter') {
+                current_group.push(new my.Filter(filter.item, self));
+            }
+            current_category = filter.category;
+        });
+    },
     set_default_filters: function () {
         var self = this,
             default_custom_filter = this.$buttons && this.favorite_menu.get_default_filter();
@@ -641,60 +695,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     renderChangedFacets: function (model, options) {
         this.renderFacets(undefined, model, options);
-    },
-    // it should parse the arch field of the view, instantiate the corresponding 
-    // filters/fields, and put them in the correct variables:
-    // * this.search_fields is a list of all the fields,
-    // * this.filters: groups of filters
-    // * this.group_by: group_bys
-    prepare_search_inputs: function () {
-        var self = this,
-            arch = this.fields_view_get.arch;
-
-        var filters = [].concat.apply([], _.map(arch.children, function (item) {
-            return item.tag !== 'group' ? eval_item(item) : item.children.map(eval_item);
-        }));
-        function eval_item (item) {
-            var category = 'filters';
-            if (item.attrs.context) {
-                try {
-                    var context = instance.web.pyeval.eval('context', item.attrs.context);
-                    if (context.group_by) {
-                        category = 'group_by';
-                    }                    
-                } catch (e) {}
-            }
-            return {
-                item: item,
-                category: category,
-            }
-        }
-        var current_group = [],
-            current_category = 'filters',
-            categories = {filters: this.filters, group_by: this.groupbys};
-
-        _.each(filters.concat({category:'filters', item: 'separator'}), function (filter) {
-            if (filter.item.tag === 'filter' && filter.category === current_category) {
-                return current_group.push(new my.Filter(filter.item, self));
-            }
-            if (current_group.length) {
-                var group = new my.FilterGroup(current_group, self);
-                categories[current_category].push(group);
-                current_group = [];
-            }
-            if (filter.item.tag === 'field') {
-                var attrs = filter.item.attrs,
-                    field = self.fields_view_get.fields[attrs.name],
-                    Obj = my.fields.get_any([attrs.widget, field.type]);
-                if (Obj) {
-                    self.search_fields.push(new (Obj) (filter.item, field, self));
-                }
-            }
-            if (filter.item.tag === 'filter') {
-                current_group.push(new my.Filter(filter.item, self));
-            }
-            current_category = filter.category;
-        });
     },
 });
 
