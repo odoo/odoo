@@ -26,7 +26,7 @@
                     default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
                 }).then(function (name) {
                     var context = website.get_context();
-                    openerp.jsonRpc( '/website_version/create_new_snapshot', 'call', { 'name': name }).then(function (result) {
+                    openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'copy': 0 }).then(function (result) {
                         $('html').data('snapshot_id', result);
                         self.save();
                         location.reload();
