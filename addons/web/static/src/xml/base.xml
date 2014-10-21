@@ -25,13 +25,6 @@
         </div>
     </div>
 </t>
-<t t-name="Tipsy.alert">
-    <a class="oe_tooltip_close oe_e">[</a>
-    <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert ui-state-error"></span>
-    <div class="oe_tooltip_message">
-        <t t-esc="message"/>
-    </div>
-</t>
 <t t-name="Dialog">
     <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -476,82 +469,76 @@
     </div>
 </t>
 
-<t t-name="ViewManager">
-    <div class="oe_view_manager">
-        <table class="oe_view_manager_header">
-            <col width="20%"/>
-            <col width="35%"/>
-            <col width="15%"/>
-            <col width="30%"/>
-            <tr class="oe_header_row oe_header_row_top">
-                <td colspan="2">
-                        <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
-                            <span class="oe_view_title_text oe_breadcrumb_title"/>
-                        </h2>
-                </td>
-                <td colspan="2">
-                        <div class="oe_view_manager_view_search"/>
-                </td>
-            </tr>
-            <tr class="oe_header_row">
-                <td>
-                        <div class="oe_view_manager_buttons"/>
-                </td>
-                <td colspan="2">
-                        <div class="oe_view_manager_sidebar"/>
-                </td>
-                <td>
-                    <ul class="oe_view_manager_switch oe_button_group oe_right">
-                        <t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">
-                          <li class="oe_e">
-                            <a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type"
-                               t-att-title="view.button_label"/>
-                          </li>
-                        </t>
-                    </ul>
-                    <div class="oe_view_manager_pager oe_right"/>
-                </td>
-            </tr>
-        </table>
-
-    <div class="oe_view_manager_wrapper">
-        <div>
-            <div class="oe_view_manager_body">
-                <div class="oe_searchview_drawer_container"/>
-                    <t t-foreach="widget.views_src" t-as="view">
-                        <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
+<div t-name="ViewManager" class="oe-view-manager">
+    <div class="oe-view-manager-header container-fluid">
+        <div class="row">
+            <div class="col-md-6 oe-header-title">
+                <div t-if="widget.session.debug" class="oe_debug_view btn-group btn-group-sm"/>
+                <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
+                </ol>
+            </div>
+            <div class="oe-view-manager-search-view col-md-6" />
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="oe-view-manager-buttons">
+                    <t t-foreach="widget.views" t-as="view">
+                        <div t-attf-class="oe-#{view}-buttons"/>
+                    </t>                    
+                </div>
+                <div class="oe-view-manager-sidebar"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="oe-search-options btn-group"/>
+                <div class="oe-right-toolbar">
+                    <div class="oe-view-manager-pager"></div>
+                    <t t-if="widget.multiple_views">
+                        <div class="oe-view-manager-switch btn-group btn-group-sm">
+                            <t t-foreach="widget.view_order" t-as="view">
+                                <button type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label" t-if="view.type!=='form'">
+                                </button>
+                            </t>
+                        </div>
                     </t>
                 </div>
             </div>
         </div>
     </div>
-</t>
-
-<t t-name="ViewManagerAction" t-extend="ViewManager">
-    <t t-jquery="h2.oe_view_title" t-operation="before">
-        <select t-if="widget.session.debug" class="oe_debug_view"/>
-    </t>
-</t>
+    <div class="oe-view-manager-content">
+        <div class="oe-view-manager-body">
+            <div class="oe-view-manager-views">
+                <t t-foreach="widget.views" t-as="view">
+                    <div t-attf-class="oe-view-manager-view-#{view}"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</div>
 <t t-name="ViewManagerDebug">
-    <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <t t-if="view_manager.active_view === 'form'">
-        <option value="get_metadata">View Metadata</option>
-        <option value="toggle_layout_outline">Toggle Form Layout Outline</option>
-        <option value="set_defaults">Set Defaults</option>
-    </t>
-    <option value="tests">JS Tests</option>
-    <option value="fields">View Fields</option>
-    <option value="fvg">Fields View Get</option>
-    <option value="manage_filters">Manage Filters</option>
-    <t t-if="view_manager.session.uid === 1">
-        <option value="translate">Technical translation</option>
-        <option value="manage_views">Manage Views</option>
-        <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
-        <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
-        <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
-        <option value="edit_workflow">Edit Workflow</option>
-        <option value="print_workflow">Print Workflow</option>
-    </t>
+    <button type="button" class="btn btn-default dropdown-toggle fa fa-bug oe-view-manager-debug" data-toggle="dropdown"> <span class="caret"/>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <t t-if="view_manager.active_view.type === 'form'">
+            <li><a data-action="get_metadata">View Metadata</a></li>
+            <li><a data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
+            <li><a data-action="set_defaults">Set Defaults</a></li>
+        </t>
+        <li><a data-action="tests">JS Tests</a></li>
+        <li><a data-action="fields">View Fields</a></li>
+        <li><a data-action="fvg">Fields View Get</a></li>
+        <li><a data-action="manage_filters">Manage Filters</a></li>
+        <t t-if="view_manager.session.uid === 1">
+            <li><a data-action="translate">Technical Translation</a></li>
+            <li><a data-action="manage_views">Manage Views</a></li>
+            <li><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
+            <li t-if="view_manager.searchview"><a data-action="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</a></li> 
+            <li t-if="view_manager.action"><a data-action="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</a></li> 
+            <li><a data-action="edit_workflow">Edit Workflow</a></li>
+            <li><a data-action="print_workflow">Print Workflow</a></li>
+            <li class="divider"/>
+            <li><a data-action="leave_debug">Leave Debug Mode</a></li>
+        </t>
+    </ul>
 </t>
 <t t-name="ViewManagerDebugViewLog">
     <div class="oe_debug_view_log">
@@ -583,83 +570,69 @@
         </table>
     </div>
 </t>
-<t t-name="ViewPager">
+<div t-name="ViewPager">
     <div class="oe_pager_value">
         <t t-raw="0"/>
     </div>
-    <ul class="oe_pager_group">
-        <!--
-        <button class="oe_button oe_button_pager" type="button" data-pager-action="first">
-            <img t-att-src='_s + "/web/static/src/img/pager_first.png"'/>
-        </button>
-        -->
-        <li>
-            <a class="oe_i" type="button" data-pager-action="previous">(</a>
-        </li>
-        <li>
-            <a class="oe_i" type="button" data-pager-action="next">)</a>
-        </li>
-        <!--
-        <button class="oe_button oe_button_pager" type="button" data-pager-action="last">
-            <img t-att-src='_s + "/web/static/src/img/pager_last.png"'/>
-        </button>
-        -->
-    </ul>
-</t>
-
-<t t-name="Sidebar">
-    <div class="oe_sidebar">
-        <t t-foreach="widget.sections" t-as="section">
-            <div class="oe_form_dropdown_section">
-                <button class="oe_dropdown_toggle oe_dropdown_arrow" t-if="section.name != 'buttons'">
-                    <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
-                    <t t-esc="section.label"/>
-                    <i class="fa fa-caret-down"/>
-                </button>
-                <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                    <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
-                        target="_blank" class="oe_sidebar_button oe_highlight">
-                        <t t-raw="item.label"/>
-                    </button>
-                </t>
-                <ul class="oe_dropdown_menu">
-                    <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                        <t t-if="section.name == 'files'">
-                            <t t-set="item.title">
-                                <b>Attachment : </b><br/>
-                                <t t-raw="item.name"/>
-                            </t>
-                            <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
-                                <t t-raw="item.title"/><br/>
-                                <b>Created by : </b><br/>
-                                <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
-                            </t>
-                            <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
-                                <t t-raw="item.title"/><br/>
-                                <b>Modified by : </b><br/>
-                                <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
-                            </t>
-                        </t>
-                        <a class="oe_sidebar_action_a" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
-                            <t t-raw="item.label"/>
-                        </a>
-                         <a t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
-                    </li>
-                    <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
-                        <t t-call="HiddenInputFile">
-                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                            <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
-                            <input type="hidden" name="id" t-att-value="widget.model_id"/>
-                            <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
-                            <span>Add...</span>
-                        </t>
-                    </li>
-                </ul>
-            </div>
-        </t>
+    <div class="btn-group btn-group-sm oe-pager-buttons">
+        <a class="fa fa-chevron-left btn btn-default oe-pager-button" type="button" data-pager-action="previous"></a>
+        <a class="fa fa-chevron-right btn btn-default oe-pager-button" type="button" data-pager-action="next"></a>
     </div>
-</t>
+</div>
+
+<div t-name="Sidebar" class="oe_sidebar btn-group">
+    <t t-foreach="widget.sections" t-as="section">
+        <div class="oe_form_dropdown_section btn-group btn-group-sm">
+            <button class="btn btn-default dropdown-toggle" 
+                    t-if="section.name != 'buttons'"
+                    data-toggle="dropdown">
+                <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
+                <t t-esc="section.label"/>
+                <span class="caret"></span>
+            </button>
+            <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
+                    target="_blank" class="oe_sidebar_button oe_highlight">
+                    <t t-raw="item.label"/>
+                </button>
+            </t>
+            <ul class="dropdown-menu" role="menu">
+                <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                    <t t-if="section.name == 'files'">
+                        <t t-set="item.title">
+                            <b>Attachment : </b><br/>
+                            <t t-raw="item.name"/>
+                        </t>
+                        <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
+                            <t t-raw="item.title"/><br/>
+                            <b>Created by : </b><br/>
+                            <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
+                        </t>
+                        <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
+                            <t t-raw="item.title"/><br/>
+                            <b>Modified by : </b><br/>
+                            <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
+                        </t>
+                    </t>
+                    <a class="oe_file_attachment" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
+                        <t t-raw="item.label"/>
+                    </a>
+                     <a t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
+                </li>
+                <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
+                    <t t-call="HiddenInputFile">
+                        <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                        <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                        <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
+                        <input type="hidden" name="id" t-att-value="widget.model_id"/>
+                        <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
+                        <span>Add...</span>
+                    </t>
+                </li>
+            </ul>
+        </div>
+    </t>
+</div>
 
 <t t-name="TreeView">
     <select t-if="toolbar" style="width: 30%">
@@ -745,19 +718,14 @@
 <t t-name="ListView.buttons">
     <div class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <button type="button" class="oe_button oe_list_add oe_highlight">
+        <button type="button" class="oe_list_add btn btn-primary btn-sm">
             <t t-esc="widget.options.addable"/>
         </button>
     </t>
     </div>
 </t>
-<t t-name="ListView.pager">
-    <div class="oe_list_pager" t-att-colspan="widget.columns_count">
-        <t t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_list_pager_state">
-            </span>
-        </t>
-    </div>
+<t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
+    <span class="oe_list_pager_state"></span>
 </t>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
@@ -825,29 +793,29 @@
         <div class="oe_form_container"/>
     </div>
 </t>
-<div t-name="FormView.buttons" class="oe_form_buttons">
+<div t-name="FormView.buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <span class="oe_form_buttons_view">
-            <!-- required for the bounce effect on button -->
-            <div t-if="widget.is_action_enabled('edit')" style="display: inline-block;">
-                <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
-            </div>
+        <div class="btn-group btn-group-sm oe_form_buttons_view">
+            <button t-if="widget.is_action_enabled('edit')" 
+                    type="button" 
+                    class="oe_form_button_edit btn btn-default" accesskey="E">
+                Edit
+            </button>
             <button t-if="widget.is_action_enabled('create')"
-                type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
-        </span>
+                    type="button" class="oe_form_button_create btn btn-default"
+                    accesskey="C">
+                Create
+            </button>
+        </div>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
+            <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
             <span class="oe_fade">or</span>
             <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
         </span>
     </t>
 </div>
-<t t-name="FormView.pager">
-    <div class="oe_form_pager">
-        <t t-if="widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_form_pager_state"></span>
-        </t>
-    </div>
+<t t-name="FormView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
+    <span class="oe_form_pager_state"></span>
 </t>
 <form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.dialog_options.args"/>
@@ -946,6 +914,37 @@
         <t t-esc="string"/>
     </label>
 </t>
+
+<div t-name="PivotView" class="oe_pivot"/>
+
+<t t-name="PivotView.buttons">
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-default fa fa-expand oe-pivot-flip"></button>
+        <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all"></button>
+        <button class="btn btn-default fa fa-download oe-pivot-download"></button>
+    </div>
+    <div class="btn-group btn-group-sm"> 
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Measures <span class="caret"/>
+        </button>
+        <ul class="oe-measure-list dropdown-menu">
+            <li t-foreach="measures" t-as="measure" t-att-data-field="measure">
+                <a><t t-esc="measures[measure].string"/></a>
+            </li>
+        </ul>
+    </div>
+</t>
+
+<div t-name="PivotView.nodata" class="oe_view_nocontent" >
+    <div class="oe_empty_custom_dashboard">
+        <p><b>No data to display.</b></p>
+        <p>
+                No data available for this pivot table.  Try to add some records, or make sure
+                that there is at least one measure and no active filter in the search bar.
+        </p>
+    </div>
+</div>
+
 
 <t t-name="Widget">
     Unhandled widget
@@ -1129,9 +1128,7 @@
                 t-att-name="widget.name"
                 t-att-placeholder="placeholder"
                 class="oe_datepicker_master"
-            /><span><img class="oe_input_icon oe_datepicker_trigger datepickerbutton" draggable="false"
-                   t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
-                   title="Select date" width="16" height="16" border="0"/></span>
+            /><span class="fa fa-calendar datepickerbutton"/>
         </div>
     </span>
 </t>
@@ -1489,11 +1486,8 @@
         <table style="width:100%">
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div class="oe_popup_search" style="width:100%"></div>
-                </td>
-            </tr>
-            <tr style="width:100%">
-                <td style="width:100%">
+                    <div class="oe-search-options btn-group"/>
+                    <div class="oe_popup_search"></div>
                     <div class="oe_popup_list_pager"></div>
                 </td>
             </tr>
@@ -1537,7 +1531,7 @@
 
 <t t-name="One2Many.viewmanager" t-extend="ViewManager">
     <t t-jquery=".oe-view-manager-header">
-        this.attr('t-if', 'views.length != 1');
+        this.attr('t-if', 'widget.view_order.length != 1');
     </t>
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
@@ -1558,17 +1552,10 @@
     </t>
 </t>
 
-<div t-name="SearchView" class="oe_searchview">
+<div t-name="SearchView" class="oe_searchview form-control input-sm">
+    <div class="oe_searchview_search fa fa-lg fa-search" title="Search Again"/>
     <div class="oe_searchview_facets"/>
-    <div class="oe_searchview_clear"/>
-    <div class="oe_searchview_unfold_drawer" title="Advanced Search..."/>
-    <button type="button" class="oe_searchview_search"
-            title="Search Again">Search</button>
-</div>
-
-<div t-name="SearchViewDrawer" class="oe_searchview_drawer" style="display:none;">
-    <div class="col-md-7"></div>
-    <div class="col-md-5"></div>
+    <div class="oe_searchview_unfold_drawer fa fa-lg fa-fw fa-chevron-right" title="Advanced Search..."/>
 </div>
 
 <div t-name="SearchView.InputView"
@@ -1577,86 +1564,28 @@
      tabindex="0"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
-     class="oe_tag oe_tag_dark oe_searchview_facet"
-     tabindex="0"
-    ><span class="oe_facet_remove">x</span
-    ><span class="oe_facet_category oe_i" t-if="widget.model.has('icon')">
-        <t t-esc="widget.model.get('icon')"/>
-    </span
-    ><span class="oe_facet_category" t-if="!widget.model.has('icon')">
+     class="oe_tag oe_searchview_facet"
+     tabindex="0">
+    <span class="oe_facet_remove">x</span>
+    <span t-if="widget.model.has('icon')"
+            t-att-class="'label label-default fa ' + widget.model.get('icon')">
+    </span>
+    <span class="label label-default" t-if="!widget.model.has('icon')">
         <t t-esc="widget.model.get('category')"/>
-    </span ><span class="oe_facet_values"
-/></div>
+    </span >
+    <span class="oe_facet_values"/>
+</div>
 <span t-name="SearchView.FacetView.Value" class="oe_facet_value">
     <t t-esc="widget.model.get('label')"/>
 </span>
-<t t-name="SearchView.managed-filters">
-    <option class="oe_search_filters_title" value="">Filters</option>
-    <optgroup label="-- Filters --">
-        <t t-foreach="filters" t-as="filter">
-            <option t-attf-value="get:#{filter_index}"
-                    t-att-disabled="filter.disabled and 'disabled'"
-                    t-att-title="filter.disabled and disabled_filter_message">
-                <t t-esc="filter.name"/>
-            </option>
-        </t>
-    </optgroup>
-    <optgroup label="-- Actions --">
-        <option value="advanced_filter">Add Advanced Filter</option>
-        <option value="save_filter">Save Filter</option>
-        <option value="manage_filters">Manage Filters</option>
-    </optgroup>
-</t>
-<t t-name="SearchView.managed-filters.add">
-    <div>
-        <p>Filter Name:</p>
-        <input type="text"/>
-        <p>(Any existing filter with the same name will be replaced)</p>
-    </div>
-</t>
-<t t-name="SearchView.render_lines">
-    <table class="oe_search_render_line" border="0" cellspacing="0" cellpadding="0"
-           t-foreach="lines" t-as="line">
-        <tr>
-            <td t-foreach="line" t-as="widget" class="oe_searchview_field">
-                <t t-raw="widget.render(defaults)"/>
-            </td>
-        </tr>
-    </table>
-</t>
-<button t-name="SearchView.filter" type="button"
-        t-att-id="element_id"
-        t-att-title="attrs.help"
-        t-att-class="classes.join(' ')"
-        t-att-style="style"
-        t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
-    <img t-att-src="_s + '/web/static/src/img/icons/' + (attrs.icon || 'gtk-home') + '.png'" width="16" height="16"/>
-    <br t-if="attrs.string"/>
-    <t t-esc="attrs.string"/>
-</button>
-<ul t-name="SearchView.filters">
+<t t-name="SearchView.filters">
     <li t-foreach="widget.filters" t-as="filter" t-if="!filter.visible || filter.visible()"
             t-att-title="filter.attrs.string ? filter.attrs.help : undefined"
             t-att-data-index="filter_index">
-        <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
+        <a>
+            <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
+        </a>
     </li>
-</ul>
-<t t-name="SearchView.filters.facet">
-    <div class="category oe_filter_category"><t t-esc="facet.get('category')"/></div>
-
-    <t t-set="val" t-value="facet.get('json')"/>
-
-    <div t-if="!(val instanceof Array)" class="search_facet_input_container">
-        <t t-esc="facet.get('value')"/>
-    </div>
-    <t t-if="val instanceof Array">
-        <div class="search_facet_input_container"
-                t-foreach="facet.get('json')" t-as="filter">
-            <t t-esc="filter.attrs.string || filter.attrs.name"/>
-        </div>
-    </t>
-
-    <div class="search_facet_remove VS-icon VS-icon-cancel"/>
 </t>
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
@@ -1714,82 +1643,82 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<t t-name="SearchView.util.expand">
-    <div t-att-class="'searchview_group ' + (expand == '0' ? 'folded' : 'expanded')">
-        <a t-if="label" class="searchview_group_string" href="#">
-            <t t-esc="label"/>
-        </a>
-        <div class="searchview_group_content">
-            <t t-raw="content"/>
-        </div>
-    </div>
+<div t-name="SearchView.FilterMenu" class="btn-group btn-group-sm">
+    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="fa fa-filter"/> Filters <span class="caret"/>
+    </button>
+    <ul class="dropdown-menu filters-menu" role="menu">
+        <li class="oe-add-filter closed-menu"><a>Add Custom Filter</a></li>
+        <li class="oe-add-filter-menu"><button class="btn btn-default oe-apply-filter">Apply</button><a class="oe-add-condition"><span class="fa fa-plus-circle"/> Add a condition</a></li>
+    </ul>
+</div>
+
+<div t-name="SearchView.GroupByMenu" class="btn-group btn-group-sm oe-groupby-menu">
+    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="fa fa-bars"/> Group By <span class="caret"/>
+    </button>
+    <ul class="dropdown-menu group-by-menu" role="menu">
+        <li class="divider"/>
+        <li class="add-custom-group closed-menu"><a>Add custom group</a></li>
+    </ul>
+</div>
+
+<t t-name="GroupByMenuSelector">
+    <li><select class="form-control oe-add-group oe-group-selector">
+        <t t-foreach="groupable_fields" t-as="field">
+            <option t-att-data-name="field"><t t-esc="groupable_fields[field].string"/></option>
+        </t>
+    </select></li>
+    <li><button class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
-
-</div>
-
-
-<div t-name="SearchView.Custom" class="oe_searchview_custom oe_searchview_section">
-    <dl class="dl-horizontal">
-        <dt><span class="oe_i">M</span> Favorites</dt>
-        <dd><ul class="oe_searchview_custom_list"/></dd>
-    </dl>
-</div>
-
- <div t-name="SearchView.SaveFilter" class="oe_searchview_savefilter">
-    <h4>Save current filter</h4>
-    <form class="oe_form">
-        <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
-        <p>
-            <input id="oe_searchview_custom_public" type="checkbox"/>
-            <label for="oe_searchview_custom_public">Share with all users</label>
-            <input id="oe_searchview_custom_default" type="checkbox"/>
-            <label for="oe_searchview_custom_default">Use by default</label>
-        </p>
-        <button>Save</button>
-    </form>
-</div>
-
-<div t-name="SearchView.advanced" class="oe_searchview_advanced">
-    <h4>Advanced Search</h4>
-    <form>
-        <ul>
-
-        </ul>
-        <button class="oe_add_condition button" type="button">Add a condition</button><br/>
-        <button class="oe_apply" type="submit">Apply</button>
-    </form>
+<div t-name="SearchView.FavoriteMenu" class="btn-group btn-group-sm">
+    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="fa fa-star"/> Favorites <span class="caret"/>
+    </button>
+    <ul class="dropdown-menu favorites-menu" role="menu">
+        <li class="divider"/>
+        <li class="oe-save-search closed-menu"><a>Save current search</a></li>
+        <li class="oe-save-name"><input type="text" class="form-control"></input></li>
+        <li class="oe-save-name">
+            <span><input type="checkbox"/>Use by default</span>
+        </li>
+        <li class="oe-save-name">
+            <span><input type="checkbox"/>Share with all users</span>
+        </li>
+        <li class="oe-save-name"><button class="btn btn-default">Save</button></li>
+    </ul>
 </div>
 <t t-name="SearchView.extended_search.proposition">
-    <li>
-        <span class="searchview_extended_prop_or">or</span>
-        <select class="searchview_extended_prop_field">
-            <t t-foreach="widget.attrs.fields" t-as="field">
-                <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
-                        t-att-value="field.name">
-                    <t t-esc="field.string"/>
-                </option>
-            </t>
-        </select>
-        <select class="searchview_extended_prop_op"/>
+    <li class="oe-filter-condition">
+        <span>
+            <select class="searchview_extended_prop_field form-control">
+                <t t-foreach="widget.attrs.fields" t-as="field">
+                    <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
+                            t-att-value="field.name">
+                        <t t-esc="field.string"/>
+                    </option>
+                </t>
+            </select>
+            <span class="searchview_extended_delete_prop fa fa-trash-o"/>
+        </span>
+        <select class="searchview_extended_prop_op form-control"/>
         <span class="searchview_extended_prop_value"/>
-        <a class="searchview_extended_delete_prop button">x</a>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input class="field_char"/>
+    <input class="field_char form-control"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.empty">
     <span/>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" class="field_integer" value = "0" step="1"/>
+    <input type="number" class="field_integer form-control" value = "0" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" class="field_float" value = "0.0" step="0.01"/>
+    <input type="number" class="field_float form-control" value = "0.0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select>
+    <select class="form-control">
         <t t-foreach="widget.field.selection" t-as="element">
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>

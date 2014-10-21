@@ -1,59 +1,25 @@
 <templates>
+
+    <t t-name="graph-view-buttons">
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-default fa fa-table oe-pivot-mode"></button>
+            <button class="btn btn-default fa fa-bar-chart-o oe-bar-mode"></button>
+            <button class="btn btn-default fa fa-line-chart oe-line-mode"></button>
+            <button class="btn btn-default fa fa-pie-chart oe-pie-mode"></button>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-default fa fa-expand oe-pivot"></button>
+            <button class="btn btn-default fa fa-arrows-alt oe-pivot"></button>
+            <button class="btn btn-default fa fa-download oe-pivot"></button>
+        </div>
+        <div class="btn-group btn-group-sm"> 
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Measures <span class="caret"/>
+            </button>
+            <ul class="oe-measure-list dropdown-menu"/>
+        </div>
+    </t>
     <div t-name="GraphWidget" class="graph_widget">
-    	<div class="graph_header">
-
-      <div class="btn-toolbar hidden-print" role="toolbar">
-
-        <div class="btn-group graph_mode_selection" data-toggle="buttons">
-            <label class="btn btn-default" data-mode="pivot" title="Table Mode">
-                <input type="radio" name="modes"/><span class="fa fa-table"></span>
-            </label>
-            <label class="btn btn-default" data-mode="bar" title="Bar Chart">
-                <input type="radio" name="modes"/><span class="fa fa-bar-chart-o"></span>
-            </label>
-            <label class="btn btn-default" data-mode="line" title="Line Chart">
-                <input type="radio" name="modes"/><span class="fa fa-check-square"></span>
-            </label>
-            <label class="btn btn-default" data-mode="pie" title="Pie Chart">
-                <input type="radio" name="modes"/><span class="fa fa-adjust"></span>
-            </label>
-        </div>
-
-        <div class="btn-group graph_heatmap" data-toggle="buttons" >
-            <label class="btn btn-default" data-mode="both" title="Heat Map">
-                <input type="radio" name="heatmap"/><span class="fa fa-th"></span>
-            </label>
-            <label class="btn btn-default" data-mode="row" title="Heat Map (rows)">
-                <input type="radio" name="heatmap"/><span class="fa fa-bars"></span>
-            </label>
-            <label class="btn btn-default" data-mode="col" title="Heat Map (columns)">
-                <input type="radio" name="heatmap"/><span class="fa fa-bars fa-rotate-90"></span>
-            </label>
-        </div>
-
-        <div class="btn-group graph_options_selection">
-            <label class="btn btn-default" data-choice="swap_axis" title="Swap Axis">
-                <span class="fa fa-expand"></span>
-            </label>
-            <label class="btn btn-default" data-choice="expand_all" title="Expand All">
-                <span class="fa fa-arrows-alt"></span>
-            </label>
-            <label class="btn btn-default" data-choice="update_values" title="Reload Data">
-                <span class="fa fa-refresh"></span>
-            </label>
-            <label class="btn btn-default" data-choice="export_data" title="Export Data" style="display:none">
-                <span class="fa fa-download"></span>
-            </label>
-        </div>
-        <div class="btn-group">
-            <label class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Measures <span class="caret"></span>
-            </label>
-                <ul class="dropdown-menu graph_measure_selection" role="menu">
-                </ul>
-        </div>
-    </div>
-	</div>
     	<div class="graph_main_content"></div>
     </div>
 

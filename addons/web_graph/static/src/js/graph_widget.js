@@ -20,12 +20,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.model = model;
         this.domain = domain;
         this.mode = options.mode || 'pivot';  // pivot, bar, pie, line
-        this.heatmap_mode = options.heatmap_mode || 'none';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
         this.title = options.title || 'Data';
+        this.$buttons = options.$buttons;
     },
 
     start: function() {
@@ -33,8 +33,28 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.table = $('<table>');
         this.$('.graph_main_content').append(this.table);
 
+        this.$buttons.find('.oe-pivot-mode').click(function () {
+            self.set_mode.bind(self)('pivot');
+        });
+        this.$measure_list = this.$buttons.find('.oe-measure-list');
+
+        this.$buttons.find('.oe-bar-mode').click(function () {
+            self.set_mode.bind(self)('bar');
+        });
+        this.$buttons.find('.oe-line-mode').click(function () {
+            self.set_mode.bind(self)('line');
+        });
+        this.$buttons.find('.oe-pie-mode').click(function () {
+            self.set_mode.bind(self)('pie');
+        });
+        this.$buttons.find('.fa-expand').click(this.swap_axis.bind(this));
+        this.$buttons.find('.fa-arrows-alt').click(function () {
+            self.pivot.expand_all().then(self.proxy('display_data'));
+        });
+        this.$buttons.find('.fa-download').click(this.export_xls.bind(this));
+
         var indexes = {'pivot': 0, 'bar': 1, 'line': 2, 'chart': 3};
-        this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('active');
+        this.$('.graph_mode_selection label').eq(indexes[this.mode]).addClass('selected');
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
@@ -42,7 +62,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
-
         // get search view
         var parent = this.getParent();
         while (!(parent instanceof openerp.web.ViewManager)) {
@@ -103,6 +122,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
+        // this method is disabled for now.  This requires extensive changes because the
+        // search view works quite differently:  But the graph view is going to be split 
+        // soon in pivot view and graph view.  The pivot view will then properly handle 
+        // groupbys.  
+        return [];  
         var self = this;
 
         var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {
@@ -142,12 +166,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     add_measures_to_options: function() {
-        this.$('.graph_measure_selection').append(
+        this.$measure_list.append(
         _.map(this.measure_list, function (measure) {
             return $('<li>').append($('<a>').attr('data-choice', measure.field)
                                      .attr('href', '#')
                                      .text(measure.string));
         }));
+        this.$measure_list.find('li').click(this.measure_selection.bind(this));
     },
 
     // ----------------------------------------------------------------------
@@ -212,15 +237,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.display_data();
     },
 
-    set_heatmap_mode: function (mode) { // none, row, col, all
-        this.heatmap_mode = mode;
-        if (mode === 'none') {
-            this.$('.graph_heatmap label').removeClass('disabled');
-            this.$('.graph_heatmap label').removeClass('active');
-        }
-        this.display_data();
-    },
-
     create_field_value: function (f) {
         var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
             groupby_field = _.findWhere(this.groupby_fields, {field:field}),
@@ -281,11 +297,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     put_measure_checkmarks: function () {
         var self = this,
-            measures_li = this.$('.graph_measure_selection a');
-        measures_li.removeClass('oe_selected');
+            measures_li = this.$measure_list.find('li');
+        measures_li.removeClass('selected');
         _.each(this.measure_list, function (measure, index) {
             if (_.findWhere(self.pivot.measures, measure)) {
-                measures_li.eq(index).addClass('oe_selected');
+                measures_li.eq(index).addClass('selected');
             }
         });
 
@@ -306,17 +322,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             case 'export_data':
                 this.export_xls();
                 break;
-        }
-    },
-
-    heatmap_mode_selection: function (event) {
-        event.preventDefault();
-        var mode = event.currentTarget.getAttribute('data-mode');
-        if (this.heatmap_mode === mode) {
-            event.stopPropagation();
-            this.set_heatmap_mode('none');
-        } else {
-            this.set_heatmap_mode(mode);
         }
     },
 
@@ -497,14 +502,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
             cell = {value:formatted_value};
 
-        if (this.heatmap_mode === 'none') { return cell; }
-        var total = (this.heatmap_mode === 'both') ? this.pivot.get_total()[index]
-                  : (this.heatmap_mode === 'row')  ? this.pivot.get_total(row)[index]
-                  : this.pivot.get_total(col)[index];
-        var color = Math.floor(90 + 165*(total - Math.abs(value))/total);
-        if (color < 255) {
-            cell.color = color;
-        }
         return cell;
     },
 
@@ -570,7 +567,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.$('.graph_main_content div').remove();
         this.table.empty();
-        this.table.toggleClass('heatmap', this.heatmap_mode !== 'none');
         this.$('.graph_options_selection label').last().toggleClass('disabled', this.pivot.no_data);
         this.width = this.$el.width();
         this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));

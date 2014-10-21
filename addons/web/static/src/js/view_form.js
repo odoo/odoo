@@ -85,8 +85,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {instance.web.Session} session the current openerp session
      * @param {instance.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
-     * @param {Object} options
-     *                  - resize_textareas : [true|false|max_height]
      *
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
@@ -257,7 +255,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            this.do_show({ reload: warm });
+            this.do_show();
         }
     },
     /**
@@ -425,7 +423,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 $el.removeAttr("disabled");
             });
         });
-        this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
         this.$pager.toggle(this.dataset.ids.length > 1);
@@ -3973,7 +3970,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.form_last_update = $.Deferred();
@@ -4143,14 +4139,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         /**
          * Returns the current active view if any.
          */
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            return {
-                type: this.viewmanager.active_view,
-                controller: this.viewmanager.views[this.viewmanager.active_view].controller
-            };
-        }
+        return (this.viewmanager && this.viewmanager.active_view);
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4242,12 +4231,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     save_any_view: function() {
         var view = this.get_active_view();
         if (view) {
-            if (this.viewmanager.active_view === "form") {
+            if (this.viewmanager.active_view.type === "form") {
                 if (view.controller.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
                 return $.when(view.controller.save());
-            } else if (this.viewmanager.active_view === "list") {
+            } else if (this.viewmanager.active_view.type === "list") {
                 return $.when(view.controller.ensure_saved());
             }
         }
@@ -4258,7 +4247,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (!view){
             return true;
         }
-        switch (this.viewmanager.active_view) {
+        switch (this.viewmanager.active_view.type) {
         case 'form':
             return _(view.controller.fields).chain()
                 .invoke('is_valid')
@@ -4275,10 +4264,9 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
     template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
-        this.registry = this.registry.extend({
+        this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
-            kanban: 'instance.web.form.One2ManyKanbanView',
         });
         this.__ignore_blur = false;
     },
@@ -4547,13 +4535,6 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
         }
     }
 });
-
-var lazy_build_o2m_kanban_view = function() {
-    if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
-        return;
-    instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-    });
-};
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
@@ -5147,8 +5128,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.domain = domain || [];
         this.context = context || {};
         this.options = options;
-        _.defaults(this.options, {
-        });
+        _.defaults(this.options, {});
     },
     init_dataset: function() {
         var self = this;
@@ -5293,22 +5273,20 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.display_popup();
     },
     start: function() {
-        var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            instance.web.pyeval.eval_domains_and_contexts({
+            var context = instance.web.pyeval.sync_eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
-            }).done(function (results) {
-                var search_defaults = {};
-                _.each(results.context, function (value_, key) {
-                    var match = /^search_default_(.*)$/.exec(key);
-                    if (match) {
-                        search_defaults[match[1]] = value_;
-                    }
-                });
-                self.setup_search_view(search_defaults);
+            }).context;
+            var search_defaults = {};
+            _.each(context, function (value_, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value_;
+                }
             });
+            this.setup_search_view(search_defaults);
         } else { // "form"
             this.new_object();
         }
@@ -5318,12 +5296,9 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
-        if (this.searchview_drawer) {
-            this.searchview_drawer.destroy();
-        }
+        var $buttons = this.$('.oe-search-options');
         this.searchview = new instance.web.SearchView(this,
-                this.dataset, false,  search_defaults);
-        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
+                this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5333,7 +5308,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.on("search_view_loaded", self, function() {
+        this.searchview.appendTo(this.$(".oe_popup_search")).done(function() {
+            self.searchview.toggle_visibility(true);
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
@@ -5368,8 +5344,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.new_object();
                 });
             });
-        });
-        this.searchview.appendTo(this.$(".oe_popup_search"));
+        });        
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;

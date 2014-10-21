@@ -8,6 +8,16 @@ if (!instance.board) {
 }
 
 instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
+    events: {
+        'click .oe_dashboard_link_reset': 'on_reset',
+        'click .oe_dashboard_link_change_layout': 'on_change_layout',
+        'click h2.oe_header span.oe_header_txt': function (ev) {
+            if(ev.target === ev.currentTarget)
+                self.on_header_string($(ev.target).parent());
+        },
+        'click .oe_dashboard_column .oe_fold': 'on_fold_action',
+        'click .oe_dashboard_column .oe_close': 'on_close_action',
+    },
     init: function(view, node) {
         this._super(view, node);
         this.form_template = 'DashBoard';
@@ -18,7 +28,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var self = this;
         this._super.apply(this, arguments);
 
-        this.$el.find('.oe_dashboard_column').sortable({
+        this.$('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
             handle: '.oe_header',
             scroll: false
@@ -27,16 +37,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var old_title = this.__parentedParent.get('title');
         this.__parentedParent.on('load_record', self, function(){
             self.__parentedParent.set({ 'title': old_title});
-        })
-        // Events
-        this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
-        this.$el.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
-        this.$el.find('h2.oe_header span.oe_header_txt').click(function(ev){
-            if(ev.target === ev.currentTarget)
-                self.on_header_string($(ev.target).parent());
         });
-        this.$el.delegate('.oe_dashboard_column .oe_fold', 'click', this.on_fold_action);
-        this.$el.delegate('.oe_dashboard_column .oe_close', 'click', this.on_close_action);
 
         // Init actions
         _.each(this.node.children, function(column, column_index) {
@@ -208,6 +209,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             views_switcher : false,
             action_buttons : false,
             pager: false,
+            headless: true,
             low_profile: true,
             display_title: false,
             list: {
@@ -244,7 +246,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             };
             var list = am.inner_widget.views.list;
             if (list) {
-                list.deferred.done(function() {
+                list.created.done(function() {
                     $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
                         new_form_action(id);
                     });
@@ -252,7 +254,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             }
             var kanban = am.inner_widget.views.kanban;
             if (kanban) {
-                kanban.deferred.done(function() {
+                kanban.created.done(function() {
                     kanban.controller.open_record = function(id, editable) {
                         new_form_action(id, editable);
                     };
@@ -326,113 +328,85 @@ instance.web.form.tags.add('vpaned', 'instance.web.form.DashBoardLegacy');
 instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
 
 
-instance.board.AddToDashboard = instance.web.search.Input.extend({
-    template: 'SearchView.addtodashboard',
-    _in_drawer: true,
-    init: function (parent) {
-        this._super(parent);
-        this.is_loaded = null;
-    },
-    start: function () {
+instance.web.search.FavoriteMenu.include({
+    prepare_dropdown_menu: function (filters) {
         var self = this;
-        this.$el
-            .on('click', 'h4', this.proxy('load_and_show_option'))
-            .on('submit', 'form', function (e) {
-                e.preventDefault();
-                self.add_dashboard();
-            });
-        return $.when();
-    },
-    load_data:function(){
-        var board = new instance.web.Model('board.board');
-        return board.call('list', [board.context()]);
-    },
-    _x:function() {
-        if (!instance.webclient) { return $.Deferred().reject(); }
-        var dashboard_menu = instance.webclient.menu.data.data.children;
-        return new instance.web.Model('ir.model.data')
-                .query(['res_id'])
-                .filter([['name','=','menu_reporting_dashboard']])
-                .first().then(function (result) {
-            var menu = _(dashboard_menu).chain()
-                .pluck('children')
-                .flatten(true)
-                .find(function (child) { return child.id === result.res_id; })
-                .value();
-            return menu ? menu.children : [];
+        this._super(filters);
+        this.$('.favorites-menu').append(QWeb.render('SearchView.addtodashboard'));
+        var $add_to_dashboard = this.$('.add-to-dashboard');
+        this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
+        this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
+        this.$add_dashboard_link = $add_to_dashboard.first().find('a');
+        var title = this.searchview.getParent().title;
+        this.$add_dashboard_input.val(title);
+        this.$add_dashboard_link.click(function () {
+            self.toggle_dashboard_menu();
         });
+        this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
     },
-    render_data: function(dashboard_choices){
-        var selection = instance.web.qweb.render(
-            "SearchView.addtodashboard.selection", {
-                selections: dashboard_choices});
-        this.$("input").before(selection)
+    toggle_dashboard_menu: function (is_open) {
+        this.$add_dashboard_link
+            .toggleClass('closed-menu', !is_open)
+            .toggleClass('open-menu', is_open);
+        this.$add_dashboard_btn.toggle(is_open);
+        this.$add_dashboard_input.toggle(is_open);
+        if (this.$add_dashboard_link.hasClass('open-menu')) {
+            this.$add_dashboard_input.focus();
+        }
     },
-    add_dashboard: function(){
-        var self = this;
-        if (! this.view.view_manager.action || ! this.$el.find("select").val()) {
+    close_menus: function () {
+        this.toggle_dashboard_menu(false);
+        this._super();
+    },
+    add_dashboard: function () {
+        var self = this,
+            view_manager = this.findAncestor(function (a) {
+                return a instanceof instance.web.ViewManager
+            });
+        if (!view_manager.action) {
             this.do_warn(_t("Can't find dashboard action"));
             return;
         }
-        var data = this.view.build_search_data();
-        var context = new instance.web.CompoundContext(this.view.dataset.get_context() || []);
-        var domain = new instance.web.CompoundDomain(this.view.dataset.get_domain() || []);
+        var searchview = view_manager.searchview,
+            data = searchview.build_search_data(),
+            context = new instance.web.CompoundContext(searchview.dataset.get_context() || []),
+            domain = new instance.web.CompoundDomain(searchview.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
 
         context.add({
             group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
         });
-
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
                 delete c[k];
             }
         }
-        // TODO: replace this 6.1 workaround by attribute on <action/>
+        this.toggle_dashboard_menu(false);
         c.dashboard_merge_domains_contexts = false;
-        var d = instance.web.pyeval.eval('domain', domain);
-
-        this.rpc('/board/add_to_dashboard', {
-            menu_id: this.$el.find("select").val(),
-            action_id: this.view.view_manager.action.id,
-            context_to_save: c,
-            domain: d,
-            view_mode: this.view.view_manager.active_view,
-            name: this.$el.find("input").val()
-        }).done(function(r) {
-            if (r === false) {
-                self.do_warn(_t("Could not add filter to dashboard"));
-            } else {
-                self.$el.toggleClass('oe_opened');
-                self.do_notify(_t("Filter added to dashboard"), '');
-            }
-        });
+        var d = instance.web.pyeval.eval('domain', domain),
+            board = new instance.web.Model('board.board'),
+            name = self.$add_dashboard_input.val();
+        
+        board.call('list', [board.context()])
+            .then(function (board_list) {
+                return self.rpc('/board/add_to_dashboard', {
+                    menu_id: board_list[0].id,                    
+                    action_id: view_manager.action.id,
+                    context_to_save: c,
+                    domain: d,
+                    view_mode: view_manager.active_view.type,
+                    name: name,
+                });
+            }).then(function (r) {
+                if (r) {
+                    self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
+                } else {
+                    self.do_warn(_t("Could not add filter to dashboard"));
+                }
+            });
     },
-    load_and_show_option: function(){
-        if (!this.is_loaded) {
-            this.is_loaded = this.load_data().done(this.proxy("render_data"));
-        }
-        this.is_loaded.done(this.proxy('show_option'));
-    },
-    show_option: function () {
-        this.$el.toggleClass('oe_opened');
-        if (! this.$el.hasClass('oe_opened'))
-            return;
-        this.$("input").val(this.view.fields_view.name || "" );
-    },
-});
-
-
-instance.web.SearchViewDrawer.include({
-    add_common_inputs: function() {
-        this._super();
-        var vm = this.getParent().getParent();
-        if (vm.inner_action && vm.inner_action.id && vm.inner_action.views) {
-            (new instance.board.AddToDashboard(this));
-        }
-    }
 });
 
 };

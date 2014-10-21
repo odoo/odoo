@@ -186,6 +186,7 @@ class view(osv.osv):
             ('tree','Tree'),
             ('form','Form'),
             ('graph', 'Graph'),
+            ('pivot', 'Pivot'),
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),

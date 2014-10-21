@@ -88,6 +88,8 @@ openerp.web_calendar = function(instance) {
             this.range_start = null;
             this.range_stop = null;
             this.selected_filters = [];
+
+            this.shown = $.Deferred();
         },
 
         set_default_options: function(options) {
@@ -229,6 +231,7 @@ openerp.web_calendar = function(instance) {
                 this.info_fields.push(fv.arch.children[fld].attrs.name);
             }
 
+            self.shown.done(this._do_show_init.bind(this));
             var edit_check = new instance.web.Model(this.dataset.model)
                 .call("check_access_rights", ["write", false])
                 .then(function (write_right) {
@@ -238,15 +241,18 @@ openerp.web_calendar = function(instance) {
                 .call("check_access_rights", ["create", false])
                 .then(function (create_right) {
                     self.create_right = create_right;
-                    self.init_calendar().then(function() {
-                        $(window).trigger('resize');
-                        self.trigger('calendar_view_loaded', fv);
-                        self.ready.resolve();
-                    });
+                    self.ready.resolve();
+                    self.trigger('calendar_view_loaded', fv);
                 });
             return $.when(edit_check, init);
         },
-
+        _do_show_init: function () {
+            var self = this;
+            this.init_calendar().then(function() {
+                $(window).trigger('resize');
+                self.trigger('calendar_view_loaded', self.fields_view);
+            });
+        },
         get_fc_init_options: function () {
             //Documentation here : http://arshaw.com/fullcalendar/docs/
             var self = this;
@@ -647,7 +653,13 @@ openerp.web_calendar = function(instance) {
             return data;
         },
 
-        do_search: function(domain, context, _group_by) {
+        do_search: function (domain, context, _group_by) {
+            var self = this;
+            this.shown.done(function () {
+                self._do_search(domain, context, _group_by);
+            });
+        },
+        _do_search: function(domain, context, _group_by) {
             var self = this;
            if (! self.all_filters) {            
                 self.all_filters = {}                
@@ -854,11 +866,12 @@ openerp.web_calendar = function(instance) {
             return false;
         },
 
-        do_show: function() {
+        do_show: function() {            
             if (this.$buttons) {
                 this.$buttons.show();
             }
             this.do_push_state({});
+            this.shown.resolve();
             return this._super();
         },
         do_hide: function () {

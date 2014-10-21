@@ -289,7 +289,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Pager
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self})).hide();
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
@@ -404,11 +404,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        if (total === 0)
-            this.$pager.hide();
-        else
-            this.$pager.css("display", "");
-        this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
+        this.$pager.find('.oe-pager-button').toggle(total > limit);
+        this.$pager.find('.oe_pager_value').toggle(total !== 0);
         var spager = '-';
         if (total) {
             var range_start = this.page * limit + 1;
@@ -1517,12 +1514,10 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                 }))
                             .end()
                             .find('button[data-pager-action=previous]')
-                                .css('visibility',
-                                     page === 0 ? 'hidden' : '')
+                                .toggleClass('disabled', page === 0)
                             .end()
                             .find('button[data-pager-action=next]')
-                                .css('visibility',
-                                     page === pages - 1 ? 'hidden' : '');
+                                .toggleClass('disabled', page === pages - 1);
                     }
                 }
 

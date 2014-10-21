@@ -94,7 +94,7 @@ openerp.share = function(session) {
         }
     });
 
-    session.web.ViewManagerAction.include({
+    session.web.ViewManager.include({
         start: function() {
             var self = this;
             this.check_if_action_is_defined();
