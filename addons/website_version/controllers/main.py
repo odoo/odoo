@@ -179,6 +179,37 @@ class TableExporter(http.Controller):
         exp_obj = request.registry['website_version.experiment']
         exp_obj.create(cr, uid, vals, context=None)
 
+    def check_view(self, snapshot_ids):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        snapshot_keys = set()
+        for s in request.registry['website_version.snapshot'].browse(cr, uid, snapshot_ids,context):
+            for v in s.view_ids:
+                snapshot_keys.add(v.key)
+        exp_mod = request.registry['website_version.experiment']
+        exp_ids = exp_mod.search(cr,uid,[('state','=','running')],context=context)
+        exps = exp_mod.browse(cr,uid,exp_ids,context=context)
+        for exp in exps:
+            for exp_snap in exp.experiment_snapshot_ids:
+                for view in exp_snap.snapshot_id.view_ids:
+                    if view.key in snapshot_keys:
+                        return False           
+        return True
+
+    @http.route(['/website_version/launch_experiment'], type = 'json', auth = "public", website = True)
+    def launch_experiment(self, name, snapshot_ids, objectives):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        tab = []
+        check = self.check_view(snapshot_ids)
+        if check:
+            for x in snapshot_ids:
+                tab.append([0, False, {'frequency': '50', 'snapshot_id': int(x)}])
+            vals = {'name':name, 'google_id': False, 'state': 'running', 'website_id':context.get('website_id'), 'experiment_snapshot_ids':tab, 'objectives': int(objectives)}
+            exp_obj = request.registry['website_version.experiment']
+            exp_obj.create(cr, uid, vals, context=None)
+            return True
+        else:
+            return False
+
 
 
 
