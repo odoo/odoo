@@ -23,7 +23,7 @@
                         <thead class="panel-heading">
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                             <tr>
-                                <td class="oe_timesheet_weekly_day"></td>
+                                <td class="oe_timesheet_weekly_day_blank"></td>
                                 <t t-set="day_count" t-value="0"/>
                                 <t t-foreach="widget.dates" t-as="date">
                                     <td t-attf-class="btn-default oe_timesheet_weekly_day" t-att-data-day-counter="day_count">
@@ -34,7 +34,7 @@
                                     </td>
                                     <t t-set="day_count" t-value="day_count + 1"/>
                                 </t>
-                                <td class="oe_timesheet_weekly_day btn-primary">Total</td>
+                                <td class="oe_timesheet_weekly_day_total btn-primary">Total</td>
                             </tr>
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                         </thead>

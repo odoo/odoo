@@ -9,21 +9,21 @@
       table
         border-collapse: separate
     .oe_timesheet_white
-      color: #FFFFFF
+      color: white
   .oe_timesheet_daily .oe_timesheet_white
-    color: #FFFFFF !important
+    color: white !important
   .oe_timesheet_weekly .oe_timesheet_weekly_account, .oe_timesheet_daily .oe_timesheet_daily_account
     font-weight: bold
-    color: #000000
+    color: black
   .oe_timesheet_weekly .oe_timesheet_background_white, .oe_timesheet_daily .oe_timesheet_background_white
-    background: #FFFFFF
+    background: white
   .oe_timesheet_weekly
     td input.oe_timesheet_box
       padding-right: 2px !important
       width: 40px
       text-align: right
       min-width: 0 !important
-    .oe_timesheet_weekly_day:not(:first-child):not(:last-child)
+    .oe_timesheet_weekly_day
       cursor: pointer
     .oe_timesheet_weekly_adding_tot
       display: table
@@ -35,22 +35,22 @@
       float: right
   .oe_timesheet_weekly_day
     border: 1px solid
-    border-color: #CCC
+    border-color: #cccccc
     border-left: 0px
     border-bottom: 1px solid
     border-style: solid solid solid none
     border-color: #cccccc #cccccc #cccccc
-    &:first-child
-      border: none 
-    &:nth-child(2)
-      border-left: 1px solid #cccccc
-      border-bottom-left-radius: 4px
-      border-top-left-radius: 4px
-    &:last-child
-      border-top-right-radius: 4px
-      border-bottom-right-radius: 4px
-      vertical-align: middle
-      opacity: 0.65
+  .oe_timesheet_weekly_day_blank
+    border: none
+  .oe_timesheet_weekly_day:nth-child(2)
+    border-left: 1px solid #cccccc
+    border-bottom-left-radius: 4px
+    border-top-left-radius: 4px
+  .oe_timesheet_weekly_day_total
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    vertical-align: middle
+    opacity: 0.65
   .oe_timesheet_add_row .oe_form_field_many2one
     display: inline-block
     width: 200px
@@ -69,9 +69,9 @@
       color: #428bca !important
     .oe_header
       width: 12.5%
-    .oe_header.oe_active_day
-      background-color: #428BCA
-      color: #FFFFFF !important
+      &.oe_active_day
+        background-color: #428bca
+        color: white !important
     .oe_hide
       display: none
     .oe_timesheet_box
@@ -84,7 +84,7 @@
         color: #428bca
         padding-right: 8px
     .oe_timer
-      float: right !important 
+      float: right !important
       .oe_timer_clock
         bottom: 0
         right: 0px
