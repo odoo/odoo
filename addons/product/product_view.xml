@@ -421,8 +421,14 @@
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <label for="factor"/>
                             <div>
-                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <field name="factor"
+                                    digits="[42,5]"
+                                    attrs="{'invisible':[('uom_type','!=','smaller')],
+                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv"
+                                    digits="[42,5]"
+                                    attrs="{'invisible':[('uom_type','!=','bigger')],
+                                            'readonly':[('uom_type','!=','bigger')]}"/>
                                 <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
                                     e.g: 1 * (reference unit) = ratio * (this unit)
                                 </p>
