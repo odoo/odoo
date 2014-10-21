@@ -275,7 +275,6 @@ openerp.hr_timesheet_sheet = function(instance) {
         do_switch_mode: function (event, options) {
             this.destroy_content();
             var $target = $(event.currentTarget);
-            console.log("$target is ::: ", $target);
             this.mode = (options && options.mode) ? options.mode : $target.data("mode");
             this.display_data(options);
         },
@@ -763,7 +762,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     do_switch_mode: function(e) {
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
-            this.parent.do_switch_mode(e, {mode: "day", count: index, week: this.dates[index].getWeek()});
+            this.parent.do_switch_mode(e, {mode: "day", count: parseInt(index), week: this.dates[index].getWeek()});
         else
             this.parent.do_switch_mode(e);
     },
