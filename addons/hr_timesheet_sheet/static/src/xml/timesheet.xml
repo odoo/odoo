@@ -24,13 +24,15 @@
                             <tr><td t-att-colspan="widget.dates.length+2" style="padding: 5px; border: none;"></td></tr>
                             <tr>
                                 <td class="oe_timesheet_weekly_day"></td>
+                                <t t-set="day_count" t-value="0"/>
                                 <t t-foreach="widget.dates" t-as="date">
-                                    <td t-attf-class="btn-default oe_timesheet_weekly_day">
+                                    <td t-attf-class="btn-default oe_timesheet_weekly_day" t-att-data-day-counter="day_count">
                                         <span class="text-primary">
                                             <t t-esc="moment(date).format('ddd')"/><br />
                                             <t t-esc="moment(date).format('MMM d')"/>
                                         </span>
                                     </td>
+                                    <t t-set="day_count" t-value="day_count + 1"/>
                                 </t>
                                 <td class="oe_timesheet_weekly_day btn-primary">Total</td>
                             </tr>

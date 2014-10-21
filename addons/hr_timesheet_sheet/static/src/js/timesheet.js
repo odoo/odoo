@@ -272,11 +272,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
         },
-        do_switch_mode: function (event) {
+        do_switch_mode: function (event, options) {
             this.destroy_content();
             var $target = $(event.target).is("span") ? $(event.target).parent() : $(event.target);
             this.mode = $target.data("mode");
-            this.display_data();
+            this.display_data(options);
         },
         get_box: function(account, day_count) {
             return this.$('.oe_timesheet_box[data-account="' + account + '"][data-day-count="' + day_count + '"]');
@@ -707,7 +707,7 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     template: "hr_timesheet_sheet.WeeklyTimesheet",
     events: {
         "click .oe_timesheet_weekly_account a": "go_to",
-        "click .oe_timesheet_switch": "do_switch_mode",
+        "click .oe_timesheet_switch, .oe_timesheet_weekly_day": "do_switch_mode",
     },
     init: function (parent) {
         this.parent = parent;
@@ -760,7 +760,11 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
     do_switch_mode: function(e) {
-        this.parent.do_switch_mode(e);
+        var index = $(e.currentTarget).attr("data-day-counter");
+        if(index)
+            this.parent.do_switch_mode(e, {"count": index, "week": this.dates[index].getWeek()});
+        else
+            this.parent.do_switch_mode(e);
     },
     sum_box: function(account, day_count, show_value_in_hour) {
         var line_total = 0;
