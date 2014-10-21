@@ -98,7 +98,7 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        context.update(inherit_branding=True)  # Tell QWeb to brand the generated html
+        context = dict(context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
         view_obj = self.pool['ir.ui.view']
 
