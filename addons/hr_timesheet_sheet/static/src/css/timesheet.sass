@@ -23,6 +23,8 @@
       width: 40px
       text-align: right
       min-width: 0 !important
+    .oe_timesheet_weekly_day:not(:first-child):not(:last-child)
+      cursor: pointer
     .oe_timesheet_weekly_adding_tot
       display: table
       width: 100%
@@ -52,16 +54,6 @@
   .oe_timesheet_add_row .oe_form_field_many2one
     display: inline-block
     width: 200px
-  .oe_timesheet_weekly .oe_view_nocontent .oe_view_nocontent_create:before, .oe_timesheet_daily .oe_view_nocontent .oe_view_nocontent_create:before
-    margin: -5px 0 0 -95px
-    -o-transform: scaleY(-1)
-    -ms-transform: scaleY(-1)
-    -moz-transform: scaleY(-1)
-    -webkit-transform: scaleY(-1)
-    transform: scaleY(-1)
-  .oe_timesheet_weekly .oe_view_nocontent, .oe_timesheet_daily .oe_view_nocontent
-    padding-left: 50px
-    margin-top: -20px
   .oe_timesheet_weekly .oe_hide
     display: none
   .oe_mt

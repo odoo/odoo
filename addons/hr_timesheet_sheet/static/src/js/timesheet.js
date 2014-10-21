@@ -760,11 +760,11 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
     do_switch_mode: function(e) {
+        if(!$(e.currentTarget).is("td"))
+            this.parent.do_switch_mode(e);
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
             this.parent.do_switch_mode(e, {"count": index, "week": this.dates[index].getWeek()});
-        else
-            this.parent.do_switch_mode(e);
     },
     sum_box: function(account, day_count, show_value_in_hour) {
         var line_total = 0;
