@@ -5,10 +5,12 @@ import ari
 import requests
 from requests import HTTPError
 import time
-
+from openerp.osv import osv, expression
+from openerp.tools.translate import _
 #----------------------------------------------------------
 # Models
 #----------------------------------------------------------
+
 
 class crm_phonecall(models.Model):
 	_inherit = "crm.phonecall"
@@ -17,7 +19,7 @@ class crm_phonecall(models.Model):
 
 	to_call = fields.Boolean("Call Center Call", default = False)
 	made_call = fields.Boolean("Made Call", default = False)
-	sequence = fields.Integer('Sequence', select=True, help="Gives the sequence order when displaying a list of Phonecalls.", default = 10)
+	sequence = fields.Integer('Sequence', select=True, help="Gives the sequence order when displaying a list of Phonecalls.")
 	start_time = fields.Integer("Start time")
 
 	@api.multi
@@ -25,37 +27,41 @@ class crm_phonecall(models.Model):
 
 		print("CALL FUNCTION")
 		print(self)
-		print(self.partner_id.phone)
-		client = ari.connect('http://localhost:8088', 'asterisk', 'asterisk')
+		try:
+			client = ari.connect(self.env['ir.values'].get_default('sale.config.settings', 'asterisk_url'), 
+				self.env['ir.values'].get_default('sale.config.settings', 'asterisk_login'), 
+				self.env['ir.values'].get_default('sale.config.settings', 'asterisk_password'))
+		except:
+			raise osv.except_osv(_('Error!'), _('The connection to the Asterisk server failed. Please check your configuration.'))
+		try:
+			incoming = client.channels.originate(endpoint="SIP/"+self.opportunity_id.partner_id.phone, app="bridge-dial", 
+				appArgs="SIP/"+self.env['ir.values'].get_default('sale.config.settings', 'asterisk_phone'))
+			self.start_time = int(time.time())
+			
+			def incoming_on_start(channel,event):
+				print("ANSWERED")
+			def on_start(incoming, event):
+				print("ON_START ODOO")
+				
+			print("BEFORE BINDING")
+			#Not workign don't know why
+			incoming.on_event('StasisStart', incoming_on_start)
+			client.on_channel_event('StasisStart', on_start)
+			print("AFTER BINDING")
+			return incoming.json
+		except:
+			raise osv.except_osv(_('Error!'), _('You try to call a wrong phone number or the phonecall has been deleted. Please refresh the panel and check the phone number.'))
+			
 
-		incoming = client.channels.originate(endpoint="SIP/"+self.opportunity_id.partner_id.phone, app="bridge-dial", appArgs="SIP/2002")
-		self.start_time = int(time.time())
-		
-		def incoming_on_start(channel,event):
-			print("ANSWERED")
-		def on_start(incoming, event):
-			"""Callback for StasisStart events.
-
-			When an incoming channel starts, put it in the holding bridge and
-			originate a channel to connect to it. When that channel answers, create a
-			bridge and put both of them into it.
-
-			:param incoming:
-			:param event:
-			"""
-			print("ON_START ODOO")
-		print("BEFORE BINDING")
-		#Not workign don't know why
-		incoming.on_event('StasisStart', incoming_on_start)
-		client.on_channel_event('StasisStart', on_start)
-		print("AFTER BINDING")
-		return incoming.json
-		
 	@api.multi
 	def hangup_partner(self, channel):
-		client = ari.connect('http://localhost:8088', 'asterisk', 'asterisk')
+		try:
+			client = ari.connect(self.env['ir.values'].get_default('sale.config.settings', 'asterisk_url'), 
+				self.env['ir.values'].get_default('sale.config.settings', 'asterisk_login'), 
+				self.env['ir.values'].get_default('sale.config.settings', 'asterisk_password'))
+		except:
+			raise osv.except_osv(_('Error!'), _('The connection to the Asterisk server failed. Please check your configuration.'))
 		current_channels = client.channels.list()
-		print(self.duration)
 		
 		if (len(current_channels) != 0):
 		    for chan in current_channels:
@@ -89,11 +95,10 @@ class crm_phonecall(models.Model):
 
 	@api.model
 	def get_list(self, current_search):
-		return {"phonecalls": self.search([('to_call','=',True)], order='sequence').get_info()}
+		return {"phonecalls": self.search([('to_call','=',True)], order='sequence, id').get_info()}
 
 class crm_lead(models.Model):
 	_inherit = "crm.lead"
-
 	in_call_center_queue = fields.Boolean("Is in the Call Center Queue", compute='compute_is_call_center')
 
 	@api.one
@@ -106,10 +111,9 @@ class crm_lead(models.Model):
 
 	@api.one
 	def create_call_center_call(self):
-		
 		phonecall = self.env['crm.phonecall'].create({
 				'name' : self.name
-				});
+		});
 		phonecall.to_call = True
 		phonecall.opportunity_id = self.id
 		phonecall.partner_id = self.partner_id
@@ -119,8 +123,6 @@ class crm_lead(models.Model):
 	def delete_call_center_call(self):
 		phonecall = self.env['crm.phonecall'].search([('opportunity_id','=',self.id)])
 		phonecall.unlink()
-		
-
 
 class crm_phonecall_log_wizard(models.TransientModel):
 	_name = 'crm.phonecall.log.wizard';
@@ -147,4 +149,3 @@ class crm_phonecall_log_wizard(models.TransientModel):
 			'type': 'ir.actions.client',
 			'tag': 'reload_panel',
 		}
-

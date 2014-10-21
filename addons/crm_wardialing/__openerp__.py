@@ -10,8 +10,8 @@
         Long description of module's purpose
     """,
 
-    'author': "Your Company",
-    'website': "http://www.yourcompany.com",
+    'author': "OpenERP SA",
+    'website': "http://www.odoo.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
@@ -28,6 +28,7 @@
         'views/crm_wardialing.xml',
         'views/phonecall.xml',
         'views/opportunities.xml',
+        'views/res_config_view.xml',
         'templates.xml',
     ],
     # only loaded in demonstration mode

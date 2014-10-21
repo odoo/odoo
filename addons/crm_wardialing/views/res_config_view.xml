@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_asterisk_config_settings" model="ir.ui.view">
+            <field name="name">asterisk settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="crm.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <data>
+                        <group name="pre_sale_services">
+                            <label for="id" string="Asterisk Configuration"/>
+                            <div>
+                                <div>
+                                    <label for="asterisk_url"/>
+                                    <field name="asterisk_url" class="oe_inline"/>
+                                </div>
+                                <div>
+                                    <label for="asterisk_login"/>
+                                    <field name="asterisk_login" class="oe_inline"/>
+                                </div>
+                                <div>
+                                    <label for="asterisk_password"/>
+                                    <field name="asterisk_password" class="oe_inline" password="True"/>
+                                </div>
+                                <div>
+                                    <label for="asterisk_phone"/>
+                                    <field name="asterisk_phone" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </group>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
