@@ -121,7 +121,7 @@
                             result.push($(tab[i]).attr('data-version_id'))
                         }
                     }
-                    var objectives = self.wizard.find('.selectpicker').val();
+                    var objectives = self.wizard.find('.box').val();
                     var check = true;
                     if (name ==''){
                         alert("You must give a name to your experiment.");
@@ -149,7 +149,7 @@
                             result.push(parseInt($(tab[i]).attr('data-version_id')));
                         }
                     }
-                    var objectives = self.wizard.find('.selectpicker').val();
+                    var objectives = self.wizard.find('.box').val();
                     var check = true;
                     if (name ==''){
                         alert("You must give a name to your experiment.");
