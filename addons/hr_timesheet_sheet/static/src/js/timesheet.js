@@ -274,8 +274,9 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         do_switch_mode: function (event, options) {
             this.destroy_content();
-            var $target = $(event.target).is("span") ? $(event.target).parent() : $(event.target);
-            this.mode = $target.data("mode");
+            var $target = $(event.currentTarget);
+            console.log("$target is ::: ", $target);
+            this.mode = (options && options.mode) ? options.mode : $target.data("mode");
             this.display_data(options);
         },
         get_box: function(account, day_count) {
@@ -349,8 +350,8 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                             $(this).val(self.sum_box(account, true));
                         } else {
                             account[0].unit_amount += num - self.sum_box(account);
-                            var product = (account[0].product_id instanceof Array) ? account[0].product_id[0] : account[0].product_id
-                            var journal = (account[0].journal_id instanceof Array) ? account[0].journal_id[0] : account[0].journal_id
+                            var product = (account[0].product_id instanceof Array) ? account[0].product_id[0] : account[0].product_id;
+                            var journal = (account[0].journal_id instanceof Array) ? account[0].journal_id[0] : account[0].journal_id;
                             self.parent.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account[0].unit_amount, false, false, journal]).then(function(res) {
                                 account[0].amount = res.value.amount || 0;
                                 self.sync_parent_data(account[0], day_count);
@@ -656,7 +657,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
     },
     toggle_active: function(day_count) {
-        this.$el.find(".oe_nav_button[data-day-counter|="+day_count+"]").addClass("oe_active_day").siblings().removeClass("oe_active_day")
+        this.$el.find(".oe_nav_button[data-day-counter|="+day_count+"]").addClass("oe_active_day").siblings().removeClass("oe_active_day");
     },
     navigateAll: function(e){
         var self = this;
@@ -715,9 +716,9 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         this.set('effective_readonly', this.parent.get("effective_readonly"));
         this.dates = parent.dates;
         this.accounts = parent.accounts;
-        this.account_names = parent.account_names
-        this.default_get = parent.default_get
-        this.account_defaults = parent.account_defaults
+        this.account_names = parent.account_names;
+        this.default_get = parent.default_get;
+        this.account_defaults = parent.account_defaults;
     },
     start: function() {
         this.display_data();
@@ -739,8 +740,8 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                             $(this).val(self.sum_box(account, day_count, true));
                         } else {
                             account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
-                            var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
-                            var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
+                            var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id;
+                            var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id;
                             self.parent.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
                                 account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
                                 self.display_totals();
@@ -760,11 +761,11 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
         self.$(".oe_timesheet_weekly_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.dates[0]), _.pluck(self.accounts, "account")));
     },
     do_switch_mode: function(e) {
-        if(!$(e.currentTarget).is("td"))
-            this.parent.do_switch_mode(e);
         var index = $(e.currentTarget).attr("data-day-counter");
         if(index)
-            this.parent.do_switch_mode(e, {"count": index, "week": this.dates[index].getWeek()});
+            this.parent.do_switch_mode(e, {mode: "day", count: index, week: this.dates[index].getWeek()});
+        else
+            this.parent.do_switch_mode(e);
     },
     sum_box: function(account, day_count, show_value_in_hour) {
         var line_total = 0;
