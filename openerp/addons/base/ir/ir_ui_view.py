@@ -541,7 +541,9 @@ class view(osv.osv):
                     if attr != 'position'
                 ])
                 tag = "<%s%s>" % (spec.tag, attrs)
-                self.raise_view_error(cr, uid, _("Element '%s' cannot be located in parent view") % tag, inherit_id, context=context)
+                view = self.browse(cr, uid, inherit_id, context)
+                _logger.warning("From view %s element '%s' cannot be located in parent view %s" % (inherit_id, tag, view.inherit_id.id))
+                # self.raise_view_error(cr, uid, _("Element '%s' cannot be located in parent view") % tag, inherit_id, context=context)
 
         return source
 
