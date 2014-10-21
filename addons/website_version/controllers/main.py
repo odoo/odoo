@@ -75,22 +75,6 @@ class TableExporter(http.Controller):
         v = request.registry['ir.ui.view'].browse(cr, uid, [int(view_id)],context)[0]
         website_id = context.get('website_id')
         return bool(request.registry["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id),'|',('experiment_id.state','=','draft'),('experiment_id.state','=','running')], context=context))
-        
-    @http.route(['/website_version/publish'], type = 'json', auth = "public", website = True)
-    def publish(self, view_id):
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        obj = request.registry['ir.ui.view']
-        view = obj.browse(cr, uid, [int(view_id)],context)[0]
-        key = view.key
-        if view.website_id and view.snapshot_id:
-            master_id = obj.search(cr, uid, [('key','=',key),('snapshot_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
-            if master_id:
-                assert view.id not in master_id
-                obj.unlink(cr, uid, master_id, context=context)
-            obj.copy(cr, uid, view.id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
-        request.session['snapshot_id'] = 0
-        request.session['master'] = 1
-        return view.snapshot_id.id
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
     def publish_version(self, snapshot_id):
@@ -107,7 +91,7 @@ class TableExporter(http.Controller):
             view.copy({'snapshot_id': None})
         request.session['snapshot_id'] = 0
         request.session['master'] = 1
-        return snapshot.id
+        return snapshot.name
 
     @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
     def get_analytics(self, view_id):

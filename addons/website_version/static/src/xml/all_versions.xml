@@ -43,38 +43,42 @@
                 <h4 class="modal-title">Create an experiment</h4>
               </div>
                 <div class="modal-body">
-                    <t t-if="snapshots.length != 0 and config == 1">                
-                        <div class="form-group row">
-                            <label for="formFieldEditor-label" class="col-md-3 control-label">Experiment Name</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control form-field-label name"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="formFieldEditor-required" class="col-md-3 control-label">Objective: </label>
-                            <select class="selectpicker col-md-3">
-                                <t t-foreach="goals" t-as="item">
-                                    <option t-att-value="item.id"><t t-esc="item.name"></t></option>
-                                </t>
-                            </select>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Original</label>
-                            <div class="col-md-9 col-sm-8 ">
-                                <input type="checkbox" class="form-field-required" checked="checked" disabled="disabled"/>
-                            </div>
-                        </div>
-                        
-                        <t t-foreach="snapshots" t-as="item">       
-                            <div class="form-group row">
-                                <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label"> <t t-esc="item.name"></t> </label>
-                                <div class="col-md-9 col-sm-8 ">
-                                    <input type="checkbox" class="form-field-required version" t-att-data-version_id="item.id" />
+                    <t t-if="snapshots.length != 0 and config == 1">  
+                        <form class="form-horizontal" role="form">              
+                            <div class="form-group form-group-lg">
+                                <label class="col-sm-3 control-label">Experiment Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label name"/>
                                 </div>
                             </div>
-                        </t>
+
+                            <div class="form-group form-group-lg">
+                                <label class="col-sm-3 control-label">Objective: </label>
+                                <div class="col-sm-8 ">
+                                    <select class="form-control col-sm-2">
+                                        <t t-foreach="goals" t-as="item">
+                                            <option t-att-value="item.id"><t t-esc="item.name"></t></option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group-lg">
+                                <label class="col-sm-3 control-label">Original</label>
+                                <div class="col-sm-8 ">
+                                    <input type="checkbox" class="form-field-required" checked="checked" disabled="disabled"/>
+                                </div>
+                            </div>
+                            
+                            <t t-foreach="snapshots" t-as="item">       
+                                <div class="form-group form-group-lg">
+                                    <label class="col-sm-3 control-label"> <t t-esc="item.name"></t> </label>
+                                    <div class="col-sm-8 ">
+                                        <input type="checkbox" class="form-field-required version" t-att-data-version_id="item.id" />
+                                    </div>
+                                </div>
+                            </t>
+                        </form>
                     </t>
                     <t t-if="snapshots.length == 0 and config == 1">
                         <div>
@@ -94,7 +98,7 @@
                     <button type="button" class="btn btn-primary draft">Draft</button>
                     <button type="button" class="btn btn-primary launch">Launch</button>
                 </t>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
