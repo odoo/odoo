@@ -438,6 +438,9 @@ class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
+    def from_html(self, cr, uid, model, column, element, context=None):
+        return None
+
 class QwebView(orm.AbstractModel):
     _name = 'website.qweb.field.qweb'
     _inherit = ['ir.qweb.field.qweb']

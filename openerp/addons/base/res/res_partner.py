@@ -233,6 +233,7 @@ class res_partner(osv.Model, format_address):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
+        'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
         'ref': fields.char('Internal Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
@@ -591,7 +592,7 @@ class res_partner(osv.Model, format_address):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if record.parent_id and not record.is_company:
-                name =  "%s, %s" % (record.parent_id.name, name)
+                name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
             if context.get('show_address'):
@@ -791,7 +792,7 @@ class res_partner(osv.Model, format_address):
             'state_name': address.state_id.name or '',
             'country_code': address.country_id.code or '',
             'country_name': address.country_id.name or '',
-            'company_name': address.parent_id.name or '',
+            'company_name': address.parent_name or '',
         }
         for field in self._address_fields(cr, uid, context=context):
             args[field] = getattr(address, field) or ''

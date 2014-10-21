@@ -10,8 +10,9 @@ from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 
+from werkzeug.exceptions import Forbidden
 
-class KarmaError(ValueError):
+class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
     pass
 
@@ -357,14 +358,14 @@ class Post(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        post = self.browse(cr, SUPERUSER_ID, post_id, context=context)  # SUPERUSER_ID to avoid read access rights issues when creating
+        post = self.browse(cr, uid, post_id, context=context)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active == False):
             osv.except_osv(_('Error !'), _('Posting answer on [Deleted] or [Closed] question is prohibited'))
         # karma-based access
-        if post.parent_id and not post.can_ask:
+        if not post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
-        elif not post.parent_id and not post.can_answer:
+        elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
         # messaging and chatter
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -554,6 +555,15 @@ class Post(osv.Model):
         res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
         return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
 
+    def _post_comment(self, cr, uid, post, body, context=None):
+        context = dict(context or {}, mail_create_nosubcribe=True)
+        if not post.can_comment:
+            raise KarmaError('Not enough karma to comment')
+        return self.message_post(cr, uid, post.id,
+                                 body=body,
+                                 type='comment',
+                                 subtype='mt_comment',
+                                 context=context)
 
 class PostReason(osv.Model):
     _name = "forum.post.reason"

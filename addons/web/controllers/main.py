@@ -1210,7 +1210,7 @@ class Binary(http.Controller):
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
-    ], type='http', auth="none")
+    ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo.png'
         placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')

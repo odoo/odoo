@@ -111,7 +111,7 @@
                     <t t-raw="0"/>
                 </div>
                 <div class="col-sm-3" id="right-column">
-                    <div t-if="not header.get('ask_hide')" class="btn-group btn-block mb16">
+                    <div t-if="not header.get('ask_hide')" t-attf-class="btn-group btn-block mb16 #{user.karma &gt;= forum.karma_ask and '' or 'karma_required'}" t-attf-data-karma="#{forum.karma_ask}">
                         <a type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
                             <t t-if="forum.default_allow == 'ask_question'">Ask a Question</t>
                             <t t-if="forum.default_allow == 'post_link'">Submit a Post</t>
@@ -432,7 +432,8 @@
             <br/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control load_tags"/>
             <br/>
-            <button class="btn btn-primary" id="btn_ask_your_question">Post Your Question</button>
+            <button t-attf-class="btn btn-primary #{(user.karma &lt;= forum.karma_ask) and 'karma_required' or ''}"
+                id="btn_ask_your_question" t-att-data-karma="forum.karma_ask">Post Your Question</button>
         </form>
     </t>
 </template>
@@ -525,7 +526,8 @@
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" role="form">
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"/>
-        <button class="btn btn-primary mt16" id="btn_ask_your_question">Post Your Reply</button>
+        <button t-attf-class="btn btn-primary mt16 #{not question.can_answer and 'karma_required' or ''}"
+                id="btn_ask_your_question" t-att-data-karma="question.karma_answer">Post Your Reply</button>
     </form>
 </template>
 
@@ -604,7 +606,7 @@
                         </div>
                         <ul class="list-inline" id="options">
                             <li t-if="question.type == 'question'">
-                                <a style="cursor: pointer" data-toggle="collapse"
+                                <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
                                     t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
                                     t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                     t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
@@ -718,7 +720,7 @@
                     <li t-if="question.type == 'question'">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" data-toggle="collapse"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or ''"
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
