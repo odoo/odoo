@@ -2577,7 +2577,6 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         if (this.get('value')) {
             var cur_domain = instance.web.pyeval.eval('domain', this.get('value'));
         }
-        console.log(cur_domain)
         this.pop.select_element(
             model, {
                 initial_ids: this.get('effective_readonly') ? (cur_domain ? cur_domain[0][2] : undefined): undefined,
