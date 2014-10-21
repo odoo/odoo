@@ -5,14 +5,17 @@ $(document).ready(function () {
         .click(function (event) {
             var $form = $(this).closest('form');
             var quantity = parseFloat($form.find('input[name="add_qty"]').val() || 1);
+            var product_id = parseInt($form.find('input[type="hidden"][name="product_id"], input[type="radio"][name="product_id"]:checked').first().val(),10);
             event.preventDefault();
             openerp.jsonRpc("/shop/modal", 'call', {
-                    'product_id': parseInt($form.find('input[name="product_id"]').val(),10),
+                    'product_id': product_id,
                     kwargs: {
                        context: openerp.website.get_context()
                     },
                 }).then(function (modal) {
                     var $modal = $(modal);
+
+                    $modal.find('img:first').attr("src", "/website/image/product.product/" + product_id + "/image");
 
                     $modal.appendTo($form)
                         .modal()
