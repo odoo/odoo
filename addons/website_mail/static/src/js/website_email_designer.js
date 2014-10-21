@@ -22,15 +22,4 @@
             ev.preventDefault();
         });
     });
-
-    website.EditorBar.include({
-        edit: function () {
-            this._super();
-            $('body').on('click','#save_and_continue',_.bind(this.save_and_continue));
-        },
-        save_and_continue: function() {
-            openerp.website.editor_bar.save();
-            window.location = $("#save_and_continue").attr("href");
-        }
-    });
 })();
