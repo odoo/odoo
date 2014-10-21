@@ -144,6 +144,7 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/google_access'], type='json', auth="user")
     def google_authorize(self, **kw):
+        #Check if client_id and client_secret are set
         gs_obj = request.registry['google.service']
         gm_obj = request.registry['google.management']
 
@@ -156,14 +157,12 @@ class TableExporter(http.Controller):
                 "url": '',
                 "action": action
             }
-
         url = gm_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'), context=kw.get('local_context'))
         return {
             "status": "need_auth",
             "url": url
         }
 
-        return {"status": "success"}
 
     @http.route(['/website_version/all_snapshots_all_goals'], type = 'json', auth = "public", website = True)
     def get_all_snapshots_all_goals(self, view_id):
@@ -179,10 +178,7 @@ class TableExporter(http.Controller):
         r1 = snap.read(cr, uid, snap_ids,['id','name'],context=context)
         goal_ids = goal.search(cr, uid, [],context=context)
         r2 = goal.read(cr, uid, goal_ids,['id','name'],context=context)
-        ga_key = request.website.google_analytics_key
-        ga_view_id = request.website.google_analytics_view_id
-        rtoken = icp.get_param(cr, 1, 'google_%s_token' % 'management')
-        if ga_key and ga_view_id and rtoken:
+        if request.website.google_analytics_key and request.website.google_analytics_view_id and icp.get_param(cr, 1, 'google_%s_token' % 'management'):
             r3 = 1
         else:
             r3 = 0
