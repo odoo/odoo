@@ -46,13 +46,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 context: self.graph_view.dataset.context
             }).then(function (f) {
             self.fields = f;
-            self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
+            self.fields.__count = {field:'__count', type: 'integer', string:_t('Count')};
             self.important_fields = self.get_search_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
             self.pivot_options.col_groupby = self.create_field_values(self.pivot_options.col_groupby || []);
-            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Quantity'}]);
+            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Count'}]);
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
             self.pivot.update_data().then(function () {
                 self.display_data();
