@@ -42,6 +42,10 @@ class AccountReportsConfiguratorFinancial(models.TransientModel):
     period_to_cmp = fields.Integer(default=False)
     date_from_cmp = fields.Date(default=False)
     date_to_cmp = fields.Date(default=False)
+    balance_filter = fields.Boolean(default=False)
+    balance_from = fields.Float(default=0.0)
+    balance_to = fields.Float(default=0.0)
+    balance_absolute = fields.Boolean(default=False)
 
     def _get_content_data(self, fiscalyear_id):
         content_data = super(AccountReportsConfiguratorFinancial, self)._get_content_data(fiscalyear_id)

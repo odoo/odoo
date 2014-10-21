@@ -100,7 +100,10 @@ class AccountReportsConfiguratorCommon(models.TransientModel):
                 try:
                     form_data[field] = int(form_data[field])
                 except ValueError:
-                    pass
+                    try:
+                        form_data[field] = float(form_data[field])
+                    except ValueError:
+                        pass
             else:
                 res = self.default_get([field])
                 if field in res:

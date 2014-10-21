@@ -51,6 +51,26 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         return super(report_account_common, self).set_context(objects, data, new_ids, report_type=report_type)
 
+    def is_to_be_flagged(self, cr, uid, currency_id, balance, data):
+        """Tells if the account should be flagged to be displayed
+            according to either the balance filter if it has been enabled
+            or if it hasn't based on whether the balance is equal to zero
+            according to the currency rounding rule.
+        """
+        if data['form']['balance_filter']:
+            if not data['form']['balance_absolute']:
+                if balance >= data['form']['balance_from'] and (balance <= data['form']['balance_to'] or data['form']['balance_to'] < data['form']['balance_from']):
+                    return True
+                else:
+                    return False
+            else:
+                if abs(balance) >= abs(data['form']['balance_from']) and (abs(balance) <= abs(data['form']['balance_to']) or data['form']['balance_to'] < data['form']['balance_from']):
+                    return True
+                else:
+                    return False
+        else:
+            return not self.pool.get('res.currency').is_zero(cr, uid, currency_id, balance)
+
     def get_lines(self, data):
         lines = []
         account_obj = self.pool.get('account.account')
@@ -97,11 +117,11 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     if data['form']['debit_credit']:
                         vals['debit'] = account.debit
                         vals['credit'] = account.credit
-                    if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
+                    if self.is_to_be_flagged(self.cr, self.uid, account.company_id.currency_id, vals['balance'], data):
                         flag = True
                     if data['form']['enable_filter']:
                         vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
-                        if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
+                        if self.is_to_be_flagged(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp'], data):
                             flag = True
                     if flag:
                         lines.append(vals)
