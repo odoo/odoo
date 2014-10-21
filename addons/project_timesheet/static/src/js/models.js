@@ -20,6 +20,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 command: this.command,
                 task_id: this.task_id,
                 project_id: this.project_id,
+                user_id: project_timesheet.session.uid,
             };
         },
     });

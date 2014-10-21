@@ -114,9 +114,10 @@ function odoo_project_timesheet_db(project_timesheet) {
             var virtual_project_id_list = _.map(_.filter(_.pluck(activities, "project_id"), function(id) {return id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
             var virtual_task_id_list = _.map(_.filter(_.pluck(activities, "task_id"), function(id) {return id[0].toString().match(self.virtual_id_regex);}), function(id) {return id[0];});
             var virtual_ids = _.flatten([virtual_activity_id_list, virtual_project_id_list, virtual_task_id_list]);
-            var max_virtual_id = _.max(virtual_ids, function(virtual_id) {return parseInt(virtual_id.substr(11));});
-            this.unique_id_counter = parseInt(max_virtual_id.substr(11));
-            console.log("this.unique_id_counter is ::: ", this.unique_id_counter);
+            if (virtual_ids.length) {
+                var max_virtual_id = _.max(virtual_ids, function(virtual_id) {return parseInt(virtual_id.substr(11));});
+                this.unique_id_counter = parseInt(max_virtual_id.substr(11));
+            }
         },
         get_unique_id: function() {
             var id = ++this.unique_id_counter;

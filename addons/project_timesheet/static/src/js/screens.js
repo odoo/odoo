@@ -706,6 +706,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //activity_clone.id = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             activity_clone.id = this.project_timesheet_db.get_unique_id();
             this.project_timesheet_model.add_project(activity_clone);
+            this.project_timesheet_model.add_activity(activity_clone);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
 
         },
