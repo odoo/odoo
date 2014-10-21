@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import osv, fields
 from openerp.exceptions import Warning
+from openerp.http import request
 
 
 class Snapshot(osv.Model):
@@ -23,13 +24,15 @@ class Snapshot(osv.Model):
             result = Exp.search(cr, uid, [('state','=','running'),('experiment_snapshot_ids.snapshot_id', '=', id)],context=context)
             if result:
                 raise Warning("You cannot delete a version which is in a running experiment.")
+            #To avoid problem when we delete versions in Backend
+            request.session['snapshot_id'] = 0
+            request.session['master'] = 1
         return super(Snapshot, self).unlink(cr, uid, ids, context=context)
 
     def action_publish(self,cr,uid,ids,context=None):
         if context is None:
             context = {}
         snapshot_id = context.get('active_id')
-        print snapshot_id
         if snapshot_id:
             snapshot = self.browse(cr, uid, [snapshot_id],context)[0]
             del_l = []

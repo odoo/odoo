@@ -67,7 +67,6 @@ class Experiment(osv.Model):
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        print vals
         name = vals.get('name')
         state = vals.get('state')
         exp_snaps = vals.get('experiment_snapshot_ids')
@@ -87,7 +86,7 @@ class Experiment(osv.Model):
                         raise Warning("You must define at least one variation in your experiment.")
                     if not current[1].get("objectiveMetric"):
                         raise Warning("You must define at least one goal for this experiment in your Google Analytics account before moving its state.")
-                    if current[1]["status"] == 'RUNNING' and (state == 'draft' or state == 'ready_to_run'):
+                    if current[1]["status"] == 'RUNNING' and state == 'draft' :
                         raise Warning("You cannot modify a running experiment.")
                     if state == 'ended' and not current[1]["status"] == 'RUNNING':
                         raise Warning("Your experiment must be running to be ended.")
@@ -99,7 +98,7 @@ class Experiment(osv.Model):
                     temp['status'] = exp.state
                 if obj_metric:
                     current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
-                    if current[1]["status"] == 'RUNNING' or current[1]["status"] == 'ENDED':
+                    if current[1]["status"] in ('RUNNING','ENDED'):
                         raise Warning("You cannot modify the objective of an ended or running experiment.")
                     temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
                 if exp_snaps:
@@ -163,7 +162,7 @@ class Experiment(osv.Model):
         'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
-        'objectives': fields.many2one('website_version.goals',string="Objective"),
+        'objectives': fields.many2one('website_version.goals',string="Objective", required=True),
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
