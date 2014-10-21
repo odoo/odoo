@@ -370,11 +370,16 @@ class MassMailing(osv.Model):
 
     def _get_clicks(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        cr.execute("""SELECT COUNT(*) AS clicks, ms.mass_mailing_id AS id FROM website_alias_click wc
-                JOIN mail_mail_statistics ms ON ms.id = wc.mail_stat_id
-                WHERE ms.mass_mailing_id IN %s GROUP BY ms.mass_mailing_id""", (tuple(ids), ))
+        cr.execute("""
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mail_stat_id)) AS nb_clicks, stats.mass_mailing_id AS id 
+            FROM mail_mail_statistics AS stats
+            LEFT OUTER JOIN website_alias_click AS clicks ON clicks.mail_stat_id = stats.id
+            WHERE stats.mass_mailing_id IN %s
+            GROUP BY stats.mass_mailing_id
+        """, (tuple(ids), ))
+
         for record in cr.dictfetchall():
-            res[record['id']] = record['clicks']
+            res[record['id']] = 100 * record['nb_clicks'] / record['nb_mails']
         return res
 
     # indirections for inheritance
@@ -665,12 +670,13 @@ class MassMailing(osv.Model):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
             if mass_mailing.body_html:
-                for long_url in self.find_urls(cr, uid, mass_mailing.body_html, context=context):
-                    utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
-                    #if utm_object.campaign_id and utm_object.source_id and utm_object.medium_id:
-                        #append =  '?' if long_url.find('?') == -1 else '&'
-                        #long_url_with_utm = "%s%sutm_campaign=%s&utm_source=%s&utm_medium=%s" % (long_url, append, utm_object.campaign_id.name, utm_object.source_id.name, utm_object.medium_id.name)
 
+                res[mass_mailing.id] = mass_mailing.body_html
+
+                for long_url in self.find_urls(cr, uid, mass_mailing.body_html, context=context):
+
+                    utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+                
                     trackings_fields = {}
 
                     if utm_object.campaign_id:
@@ -681,10 +687,11 @@ class MassMailing(osv.Model):
                         trackings_fields.update({'medium_id':utm_object.medium_id.id})
 
                     shorten_url = website_alias.create_shorten_url(cr, uid, long_url, trackings_fields, context=context).short_url
-                    #else:
-                    #    shorten_url = website_alias.create_shorten_url(cr, uid, long_url, {}, context=context).short_url
+                    
                     if shorten_url:
-                        res[mass_mailing.id] = mass_mailing.body_html.replace(long_url, shorten_url)
+                        res[mass_mailing.id] = res[mass_mailing.id].replace(long_url, shorten_url)
+
+        print res
         return res
 
 class MailMail(models.Model):

@@ -15,6 +15,7 @@ class MassMailController(http.Controller):
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
+
         return response
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='none')
@@ -75,7 +76,7 @@ class MassMailController(http.Controller):
         request.session['mass_mailing_email'] = email
         return True
 
-    @http.route(['/r/<string:code>/m/<int:stat_id>'] ,type='http', auth="none", website=True)
+    @http.route(['/r/<string:code>/m/<int:stat_id>'] ,type='http', auth="none")
     def full_url_redirect(self, code, stat_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         (ip, country_code) = (request.httprequest.remote_addr, request.session.geoip.get('country_code'))
