@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-sm-3" id="right-column">
                     <a t-if="not header.get('ask_hide')"
-                       t-attf-class="btn btn-primary btn-lg btn-block mb16 #{user.karma &gt;= forum.karma_ask and '' or 'karma_required'}"
+                       t-attf-class="btn btn-primary btn-lg btn-block mb16 #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                        t-attf-href="/forum/#{slug(forum)}/ask"
                        t-attf-data-karma="#{forum.karma_ask}">Ask a Question</a>
                     <div class="panel panel-default">
@@ -328,7 +328,7 @@
             <br/>
             <input type="text" name="question_tags" placeholder="Tags" class="form-control load_tags"/>
             <br/>
-            <button t-attf-class="btn btn-primary #{(user.karma &lt;= forum.karma_ask) and 'karma_required' or ''}"
+            <button t-attf-class="btn btn-primary #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                 id="btn_ask_your_question" t-att-data-karma="forum.karma_ask">Post Your Question</button>
         </form>
         <script type="text/javascript">
