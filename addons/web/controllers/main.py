@@ -1583,8 +1583,18 @@ class XMLExport(http.Controller):
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, context=context).get('datas',[])
         fields = map(fix_import_export_id_paths, field_names)
-        for record, _subinfo in request.session.model(model).extract_records(fields, import_data):
+        print ">>>>>>>>>>>",Model._all_columns,"<<<<<<<<<<<<<<<",type(model),"---------",type(Model)
+        index = 0
+        while True:
+            if index >= len(import_data): break
+            row = import_data[index]
+            record = dict((fields[0], value) for fields, value in itertools.izip(fields, row))
+            print record
             self._generate_xml_record(model, data_root, record)
+            index += 1
+        print "$$$$$$$$$$$$$$$$$$$",import_data,"$$$$$$$$$$$$$$$$$$",fields,"$$$$$$$$$$$$$$$$$$$$$$"
+#        for record, _subinfo in request.session.model(model).extract_records(fields, import_data):
+#           self._generate_xml_record(model, data_root, record)
         xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
         with open(file_name, 'w') as f:        
             f.write(xml)
@@ -1614,6 +1624,7 @@ class XMLExport(http.Controller):
                     self._generate_xml_record(field_details[field]['relation'], root, child_record, field_details[field]['relation_field'])
                 continue
             new_record_element = etree.SubElement(new_record, "field", name=field)
+            print field_details[field]['type']
             #new_record_element.set("name", field)
             # Note: For Special case where relational filed is integer instead of regular m2o. 
             # eg: res_id of ir.mode.data used as relational field of o2m at many palces.
