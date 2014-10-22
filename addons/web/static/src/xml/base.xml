@@ -469,6 +469,8 @@
     </div>
 </t>
 
+<div t-name="ActionManager" class="oe_application" />
+
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-header container-fluid">
         <div class="row">
@@ -505,13 +507,9 @@
         </div>
     </div>
     <div class="oe-view-manager-content">
-        <div class="oe-view-manager-body">
-            <div class="oe-view-manager-views">
-                <t t-foreach="widget.views" t-as="view">
-                    <div t-attf-class="oe-view-manager-view-#{view}"/>
-                </t>
-            </div>
-        </div>
+        <t t-foreach="widget.views" t-as="view">
+            <div t-attf-class="oe-view-manager-view-#{view}"/>
+        </t>
     </div>
 </div>
 <t t-name="ViewManagerDebug">
