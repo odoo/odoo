@@ -1261,7 +1261,7 @@ class Selection(Field):
             name = "%s,%s" % (self.model_name, self.name)
             translate = partial(
                 env['ir.translation']._get_source, name, 'selection', env.lang)
-            return [(value, translate(label)) for value, label in selection]
+            return [(value, translate(label) if label else label) for value, label in selection]
         else:
             return selection
 
