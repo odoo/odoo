@@ -11,6 +11,7 @@ var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
 instance.web.ActionManager = instance.web.Widget.extend({
+    template: "ActionManager",
     init: function(parent) {
         this._super(parent);
         this.inner_action = null;
