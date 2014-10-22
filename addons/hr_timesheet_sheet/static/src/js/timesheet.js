@@ -539,7 +539,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var self = this;
         var index = this.get('count');
         (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
-           domain: [['user_id','=',self.parent.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<', self.parent.field_manager.get_field_value("date_from")]],
+           domain: [['user_id','=',self.parent.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<=', self.parent.field_manager.get_field_value("date_from")]],
            fields: ['timesheet_ids'],
            order: "date_from DESC",
            limit: 1
@@ -592,7 +592,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var count = this.get('count');
         self.days[count].account_group = data;
         self.days[count].account_defaults = _.extend({}, this.parent.default_get, account_defaults);
-        console.log("Inside copy_data ::: ", self.days[count]);
         _.each(self.days[count].account_group, function(account) {
             var d = self.days[count].day.toString("yyyy-MM-dd");
             _.each(account,function(account) {
