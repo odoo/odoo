@@ -132,10 +132,10 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12,12),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
