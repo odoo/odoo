@@ -350,8 +350,8 @@ class configmanager(object):
             "the i18n-export option cannot be used without the database (-d) option")
 
         # Check if the config file exists (-c used, but not -s)
-        die(not opt.save and opt.config and not os.path.exists(opt.config),
-            "The config file '%s' selected with -c/--config doesn't exist, "\
+        die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
+            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
         # place/search the config file on Win32 near the server installation
