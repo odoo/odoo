@@ -198,8 +198,9 @@
 -
     !python {model: res.currency}: |
         from openerp.tools import float_compare, float_is_zero, float_round, float_repr
-        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr):
+        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr, rounding_method='HALF-UP'):
             result = float_repr(float_round(amount, precision_digits=precision_digits, rounding_method=rounding_method),
+                                precision_digits=precision_digits)
             assert result == expected, 'Rounding error: got %s, expected %s' % (result, expected)
         try_round(2.6745, '2.675')
         try_round(-2.6745, '-2.675')
