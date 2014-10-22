@@ -792,11 +792,9 @@ class Field(object):
 
     def _compute_value(self, records):
         """ Invoke the compute method on `records`. """
-        # mark the computed fields failed in cache, so that access before
-        # computation raises an exception
-        exc = Warning("Field %s is accessed before being computed." % self)
+        # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
-            records._cache[field] = FailedValue(exc)
+            records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
         self.compute(records)
         for field in self.computed_fields:
