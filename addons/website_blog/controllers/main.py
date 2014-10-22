@@ -11,7 +11,7 @@ from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
-
+from openerp.addons.website.controllers.main import table_compute
 
 class QueryURL(object):
     def __init__(self, path='', path_args=None, **args):
@@ -44,7 +44,8 @@ class QueryURL(object):
 
 
 class WebsiteBlog(http.Controller):
-    _blog_post_per_page = 20
+    _blog_post_per_page = 9
+    _blog_post_per_row = 3
     _post_comment_per_page = 10
 
     def nav_list(self):
@@ -80,6 +81,8 @@ class WebsiteBlog(http.Controller):
             'posts': posts,
             'pager': pager,
             'blog_url': blog_url,
+            'bins': table_compute(self._blog_post_per_page, self._blog_post_per_row).process(posts),
+            'rows': self._blog_post_per_row,
         })
 
     @http.route([
@@ -122,7 +125,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
         post_url = QueryURL('', ['blogpost'], tag_id=tag and tag.id or None, date_begin=date_begin, date_end=date_end)
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date desc", context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="website_sequence desc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
@@ -145,6 +148,8 @@ class WebsiteBlog(http.Controller):
             'tags': tags,
             'tag': tag,
             'blog_posts': blog_posts,
+            'bins': table_compute(self._blog_post_per_page, self._blog_post_per_row).process(blog_posts),
+            'rows': self._blog_post_per_row,
             'pager': pager,
             'nav_list': self.nav_list(),
             'blog_url': blog_url,
@@ -359,3 +364,14 @@ class WebsiteBlog(http.Controller):
     @http.route('/blog/get_user/', type='json', auth="public", website=True)
     def get_user(self, **post):
         return [False if request.session.uid else True]
+
+    @http.route('/blogpost/change_size', type='json', auth="public")
+    def change_size(self, blogpost_id, x, y):
+        blogpost = request.registry.get('blog.post').browse(request.cr, request.uid, blogpost_id, context=request.context)
+        return blogpost.write({'website_size_x': x, 'website_size_y': y})
+
+    @http.route('/blogpost/change_sequence', type='json', auth="public")
+    def change_sequence(self, blogpost_id, sequence):
+        if sequence in ['top', 'bottom', 'up', 'down']:
+            return getattr(request.registry.get('blog.post'), 'set_sequence_'+sequence)(request.cr, request.uid, [blogpost_id], context=request.context)
+        return False

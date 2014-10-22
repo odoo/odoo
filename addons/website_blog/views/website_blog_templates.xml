@@ -54,49 +54,113 @@
                 </div>
             </section>
             <section class="container">
-                <div class="row">
-                    <t t-set="count" t-value="0"/>
-                    <t t-foreach="posts" t-as="post">
-                      <div class="col-md-4">
-                        <h4>
-                            <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
-                            <span t-if="not post.website_published" class="text-warning">
-                                &amp;nbsp;
-                                <span class="fa fa-warning" title="Not published"/>
-                            </span>
-                        </h4>
-                        <div class="text-muted">
-                            <span class="fa fa-calendar"> <span t-field="post.create_date"/> &amp;nbsp;</span>
-                            <span class="fa fa-folder-open"> In
-                                <a t-attf-href="#{blog_url(blog=post.blog_id)}">
-                                <span t-field="post.blog_id"/>
-                                </a> &amp;nbsp;
-                            </span>
-                        </div>
-                        <div class="text-muted fa fa-tags">
-                            <span t-field="post.website_meta_keywords"/>
-                            <span t-if="editable and not post.website_meta_keywords" class="label label-danger">
-                                No keywords defined!
-                            </span>
-                        </div>
-                        <div class="text-muted" t-if="len(post.message_ids) &gt; 0">
-                            <span class="fa fa-comment-o">
-                                <a t-attf-href="#{blog_url('', ['blogpost'], blogpost=post)}#comments">
-                                    <t t-if="len(post.message_ids) &lt;= 1" ><t t-esc="len(post.message_ids)"/> comment</t>
-                                    <t t-if="len(post.message_ids) > 1"><t t-esc="len(post.message_ids)"/> comments</t>
-                                </a>
-                            </span>
-                        </div>
-                        <div class="text-muted mb16" t-field="post.website_meta_description"/>
-                      </div>
-                      <t t-set="count" t-value="count+1"/>
-                      <div class="clearfix" t-if="(count % 3) == 0"/>
-                    </t>
+                <div class="row" t-ignore="True">
+                    <table height="100%" width="100%">
+                        <tbody>
+                          <tr t-ignore="true">
+                            <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+                          </tr>
+                          <tr t-foreach="bins" t-as="tr_blogpost">
+                              <t t-foreach="tr_blogpost" t-as="td_blogpost">
+                              <t t-if="td_blogpost">
+                              <t t-set="blog_post" t-value="td_blogpost['item']"/>
+                              <td t-att-colspan="td_blogpost['x'] != 1 and td_blogpost['x']"
+                                  t-att-rowspan="td_blogpost['y'] != 1 and td_blogpost['y']"
+                                  t-attf-class="blog_post_landing oe_grid oe-height-#{td_blogpost['y']*2}">
+
+                                  <div class="views-row">
+                                      <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
+                                        <div class="img img-responsive blog-thumbnail cover" t-attf-style="background-image: url(#{blog_post.background_image})"></div>
+                                      </a>
+                                      <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }" t-field="blog_post.name" class="blog_post_name"></a>
+                                      <div name="blog_post_data" class="blog_post_data"></div>
+                                      <div name="blog_post_share_data" class="blog_post_share_data"></div>
+                                  </div>
+
+                              </td>
+                              </t>
+                              <td t-if="not td_blogpost" class="oe-height-2"/>
+                            </t>
+                          </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
             <div class="oe_structure"/>
         </div>
     </t>
+</template>
+
+<template id="blog_tags">
+    <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
+        <span class="fa fa-tags"/>
+        <t t-foreach="blog_post.tag_ids" t-as="tag">
+            <a t-attf-href="#{blog_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
+        </t>
+    </p>
+</template>
+
+<template id="blog_date">
+    <h6>
+      <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+            "widget": "contact",
+            "fields": ["name"]
+        }'/>
+        &#5760; 
+      <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
+    </h6>
+</template>
+
+<template id="blog_subtitle">
+    <div class="blog_preview_content" t-field="blog_post.subtitle"></div>
+</template>
+
+<template id="opengraph_tags">
+    <meta property="og:type" content="article"/>
+    <meta property="og:description" t-attf-content="#{description}"/>
+    <meta property="og:title" t-attf-content="#{title}"/>
+    <meta property="og:url" t-att-content="url_for(request.httprequest.base_url)"/>
+    <meta property="og:image" t-attf-content="#{image}"/>
+</template>
+
+<template id="blog_social_share">
+    <div class="share_content" t-if="blog_post.website_published" t-attf-data-url="#{blog_post._get_share_url()}" t-attf-data-content="#{blog_post.name}" t-attf-data-description="#{blog_post.subtitle}">
+      <t t-foreach="['facebook', 'twitter', 'linkedin', 'google-plus']" t-as="social_network">
+        <a href="#" t-att-data-social="social_network"><i t-attf-class="fa fa-#{social_network}-square fa-2x"></i></a>
+      </t>
+    </div>
+</template>
+
+<!-- Option: Blog Post List: show tags -->
+<template id="opt_latest_blogs_tags" name="Tags"
+        customize_show="True" inherit_id="website_blog.latest_blogs">
+    <xpath expr="//div[@name='blog_post_data']" position="inside">
+        <t t-call="website_blog.blog_tags"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Date -->
+<template id="opt_latest_blogs_date" name="Date"
+        customize_show="True" inherit_id="website_blog.latest_blogs">
+    <xpath expr="//div[@name='blog_post_data']" position="inside">
+        <t t-call="website_blog.blog_date"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Blog SubTitle -->
+<template id="opt_latest_blogs_blog_subtitle" name="Preview Content"
+        customize_show="True" inherit_id="website_blog.latest_blogs">
+    <xpath expr="//div[@name='blog_post_data']" position="after">
+        <t t-call="website_blog.blog_subtitle"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Share On Social Media -->
+<template id="opt_latest_blogs_share_social_media" name="Share on Social Media"
+        customize_show="True" inherit_id="website_blog.latest_blogs">
+    <xpath expr="//div[@name='blog_post_share_data']" position="inside">
+        <t t-call="website_blog.blog_social_share"/>
+    </xpath>
 </template>
 
 <!-- Blog Post List: Displaying a list of Blog Posts -->
@@ -119,7 +183,7 @@
         </div>
         <div class="container">
             <div class="row">
-              <div class="col-md-8 col-md-offset-2" t-ignore="True" id="main_column">
+              <div class="col-md-10 col-md-offset-1" t-ignore="True" id="main_column">
 
                 <div t-if="not blog_posts" class="container mb64">
                   <p class="css_editable_hidden">
@@ -129,42 +193,38 @@
                     Click on "Content" on the top menu to write your first blog post.
                   </p>
                 </div>
+                <table height="100%" width="100%">
+                    <tbody>
+                      <tr t-ignore="true">
+                        <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+                      </tr>
+                      <tr t-foreach="bins" t-as="tr_blogpost">
+                          <t t-foreach="tr_blogpost" t-as="td_blogpost">
+                          <t t-if="td_blogpost">
+                          <t t-set="blog_post" t-value="td_blogpost['item']"/>
+                          <td t-att-colspan="td_blogpost['x'] != 1 and td_blogpost['x']"
+                              t-att-rowspan="td_blogpost['y'] != 1 and td_blogpost['y']"
+                              t-attf-class="blog_post_landing oe_grid oe-height-#{td_blogpost['y']*2}">
 
-                <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
+                              <div class="views-row">
+                                  <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
+                                    <div class="img img-responsive blog-thumbnail cover" t-attf-style="background-image: url(#{blog_post.background_image})"></div>
+                                  </a>
+                                  <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }" t-field="blog_post.name" class="blog_post_name"></a>
+                                  <div name="blog_post_data" class="blog_post_data"></div>
+                                  <div name="blog_post_share_data" class="blog_post_share_data"></div>
+                              </div>
 
-                  <img class="img-circle pull-right mt16"
-                    t-att-src="website.image_url(blog_post.author_id, 'image_small')"
-                    style="width: 50px;"/>
-
-                  <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
-                      <h2 t-field="blog_post.name" class="mb4"/>
-                  </a>
-
-                  <div class="text-muted">
-                      <h4
-                        t-field="blog_post.subtitle"
-                        class="mb4 mt4"/>
-                    <div name='blog_post_data' class='mb0'>
-                         <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
-                                "widget": "contact",
-                                "fields": ["name"]
-                            }'/>
-                        &#5760; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
-                        <span t-if="len(blog_post.message_ids) &gt; 0">
-                            &#5760; <t t-esc="len(blog_post.message_ids)"/>
-                            <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
-                            <t t-if="len(blog_post.message_ids) > 1">comments</t>
-                        </span>
-
-                        <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
-                    </div>
-                  </div>
-
-                </div>
+                          </td>
+                          </t>
+                          <td t-if="not td_blogpost" class="oe-height-2"/>
+                        </t>
+                      </tr>
+                    </tbody>
+                </table>
               </div>
             </div>
         </div>
-
         <div class="oe_structure"/>
     </t>
 </template>
@@ -172,21 +232,48 @@
 <!-- Option: Blog Post List: show tags -->
 <template id="opt_blog_post_short_tags" name="Tags"
         customize_show="True" inherit_id="website_blog.blog_post_short">
-    <xpath expr="//*[@name='blog_post_data']" position="inside">
-        <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
-            <span class="fa fa-tags"/>
-            <t t-foreach="blog_post.tag_ids" t-as="tag">
-                <a t-attf-href="#{blog_url(tag=tag)}" t-esc="tag.name"/> &amp;nbsp;
-            </t>
-        </p>
+    <xpath expr="//div[@name='blog_post_data']" position="inside">
+        <t t-call="website_blog.blog_tags"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Date -->
+<template id="opt_blog_post_short_date" name="Date"
+        customize_show="True" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//div[@name='blog_post_data']" position="inside">
+        <t t-call="website_blog.blog_date"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Blog SubTitle -->
+<template id="opt_blog_post_short_blog_subtitle" name="Preview Content"
+        customize_show="True" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//div[@name='blog_post_data']" position="after">
+        <t t-call="website_blog.blog_subtitle"/>
+    </xpath>
+</template>
+
+<!-- Option: Blog Post List: show Share On Social Media -->
+<template id="opt_blog_post_short_share_social_media" name="Share on Social Media"
+        customize_show="True" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//div[@name='blog_post_share_data']" position="inside">
+        <t t-call="website_blog.blog_social_share"/>
     </xpath>
 </template>
 
 <!-- Blog Post Complete -->
 <template id="blog_post_complete" name="Blog Post">
-  <t t-call="website_blog.index">
 
-    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.background_image})" t-ignore="True">
+  <t t-call="website_blog.index">
+    <t t-set="head">
+      <t t-call="website_blog.opengraph_tags">
+        <t t-set="title" t-value="blog_post.name"/>
+        <t t-set="description" t-value="blog_post.subtitle"/>
+        <t t-set="background_image" t-value="blog_post.background_image and blog_post.background_image or 'logo'"/>
+        <t t-set="image" t-value="url_for(request.httprequest.host_url) in background_image and background_image or url_for(request.httprequest.host_url) + background_image"/>
+      </t>
+    </t>
+    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.background_image})" t-ignore="True" itemscope="itemscope" itemtype="http://schema.org/Article">
         <div class="container">
           <div class="container text-right mt16">
             <div class="btn-group css_non_editable_mode_hidden">
@@ -211,8 +298,8 @@
           </div>
         </div>
         <div class="blog_title">
-            <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id"/>
-            <h2 t-field="blog_post.subtitle"/>
+            <h1 t-field="blog_post.name" id="blog_post_name" t-att-data-blog-id="blog_post.id" itemprop="name"/>
+            <h2 t-field="blog_post.subtitle" itemprop="description"/>
             <p class="post-meta text-muted text-center" name="blog_post_data"/>
             <div>
                 <img class="img-circle" t-att-src="website.image_url(blog_post.author_id, 'image_small')" style="width: 30px; margin-right: 10px;"/>
@@ -361,10 +448,10 @@
 <template id="index_right" name="Right Column"
         inherit_id="website_blog.blog_post_short" active="False" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-sm-9</attribute>
     </xpath>
     <xpath expr="//div[@id='main_column']" position="after">
-        <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
+        <div class="col-lg-3 col-sm-4" id="blog_right_column"/>
     </xpath>
 </template>
 
