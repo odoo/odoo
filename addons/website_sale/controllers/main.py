@@ -736,21 +736,22 @@ class website_sale(http.Controller):
                 }
             else:
                 state = 'done'
-                message = ""
+                message = '<h2>%s</h2>' % _('Your order has been confirmed, thank you for your loyalty.')
                 validation = None
         else:
             tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
+            message = '<h2>%s</h2>' % _('Thank you for your order.')
             if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
+                message += '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
+                message += '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {

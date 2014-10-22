@@ -1056,8 +1056,9 @@
           <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
-                  <a style="width:100px;" class="btn btn-primary a-submit">
-                    <span>Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                  <a style="width:127px;" class="btn btn-primary a-submit">
+                    <span t-if="order.amount_total > 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                    <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
                   </a>
               </form>
             </div>
@@ -1085,7 +1086,6 @@
           <h1 class="mb32">Order <em t-field="order.name"/> Confirmed</h1>
           <div class="row">
               <div class="col-md-8 oe_cart">
-                  <h2>Thank you for your order.</h2>
                   <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                   </div>
                   <h3 class="mt32"><strong>Order Details:</strong></h3>
