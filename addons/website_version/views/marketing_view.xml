@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="action_experiment" model="ir.actions.act_window">
+            <field name="name">Experiments</field>
+            <field name="res_model">website_version.experiment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_experiment_kanban">
+            <field name="name">Experiment Kanban</field>
+            <field name="model">website_version.experiment</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" string="Experiments" class="oe_background_grey">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                    <field name="website_id"/>
+                    <field name="experiment_snapshot_ids"/>
+                    <field name="color"/>
+                    <field name="message_follower_ids"/>
+                    <templates>
+                        <field name="state"/>
+                        <t t-name="kanban-box">
+                          <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+                            <div class="oe_dropdown_kanban">
+
+                              <!-- dropdown menu -->
+                              <span class="oe_dropdown_toggle">
+                                <span class="oe_e">í</span>
+                                <ul class="oe_dropdown_menu">
+                                  <li><a type="delete">Delete</a></li>
+                                  <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                              </span>
+                            </div>
+                            <!-- kanban note -->
+                            <div class="oe_kanban_content">
+                              <!-- title -->
+                              <field name="name"/> on <field name="website_id"/>
+                            </div>
+                            <div class="oe_clear"></div>
+                            <div> <field name="version_number"/> versions </div>
+                            <div> Creation :<field name="create_date" /> </div>
+                            <div class="oe_right">
+                              <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
+                                <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
+                              </t>
+                            </div>
+                            <div class="oe_clear"></div>
+                          </div>
+                        </t> 
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_analytic" model="ir.actions.act_url">
+            <field name="name">Google analytics</field>
+            <field name="url">https://www.google.com/analytics/web/?authuser=0#report/siteopt-experiments/</field>
+            <field name="target">self</field>
+        </record>
+        
+        <record model="ir.ui.view" id="experiment_form_view">
+            <field name="name">experiment.form</field>
+            <field name="model">website_version.experiment</field> 
+            <field name="arch" type="xml">
+                <form string="Experiment Form">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,running,ended" clickable="True"/>
+                    </header>
+                    <sheet string="Exp">
+                        <!-- <div attrs="{'invisible' : [('experiment_snapshot_ids', '!=', False)]}" class="oe_view_nocontent">
+                            <p class="oe_view_nocontent_create">
+                              Click to start a session.
+                            </p><p>
+                              You may have to control your cash amount in your cash register, before
+                              being able to start selling through the touchscreen interface.
+                            </p>
+                        </div> -->
+                        <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
+                            type="action" class="oe_stat_button pull-right" />
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="website_id"/>
+                            <field name="google_id"/>
+                            <label for="objectives"/>
+                            <div>
+                                <field name="objectives" class="oe_inline" widget="selection"/>
+                                <button name="update_goals" string="(Sync)" type="object" context="{'website_id': website_id}" class="oe_link oe_edit_only"/>
+                            </div>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Versions in experiment" colspan="4" >
+                                <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
+                                    <tree string="PPP" editable="bottom"> 
+                                        <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                                        <field name="frequency" colspan="4"/>
+                                        <!-- <field name="google_index" colspan="4"/> -->
+                                    </tree>
+                                </field>
+                               
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="experiment_tree_view">
+            <field name="name">experiment.tree</field>
+            <field name="model">website_version.experiment</field> 
+            <field name="arch" type="xml">
+                <tree string="Experiment tree">
+                    <field name="name" />
+                    <field name="website_id"/>
+                    <field name="state"/>
+                    <field name="sequence" widget="handle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="experiment_search" model="ir.ui.view">
+            <field name="name">experiment.search</field>
+            <field name="model">website_version.experiment</field>
+            <field name="arch" type="xml">
+                <search string="Search Experiment">
+                    <field name="website_id"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Website" domain="[]" name="my_exps" context="{'group_by':'website_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- <record id="action_experiment_search" model="ir.actions.act_window">
+            <field name="name">Experiment search</field>
+            <field name="res_model">website_version.experiment</field>
+            <field name="view_mode">list</field>
+            <field name="context">{'search_default_my_exps':1}</field>
+        </record> -->
+
+        <record model="ir.ui.view" id="experiment_snapshot_form_view">
+            <field name="name">experiment_snapshot.form</field>
+            <field name="model">website_version.experiment_snapshot</field> 
+            <field name="arch" type="xml">
+                <form string="Experiment_page Form">
+                    <notebook colspan="4">
+                        <page string="Features" colspan="4" >
+                            <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                            <field name="frequency"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+            
+        <record id="action_snapshot" model="ir.actions.act_window">
+            <field name="name">Versions</field>
+            <field name="res_model">website_version.snapshot</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="snapshot_form_view">
+            <field name="name">snapshot.form</field>
+            <field name="model">website_version.snapshot</field> 
+            <field name="arch" type="xml">
+                <form string="Snapshot Form">
+                    <sheet string="Snap">
+                        <group>
+                            <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right" 
+                                context="{'active_id': active_id}"/>
+                        </group>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="website_id"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="view_ids" widget="handle" colspan="4"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="snapshot_tree_view">
+            <field name="name">snapshot.tree</field>
+            <field name="model">website_version.snapshot</field> 
+            <field name="arch" type="xml">
+                <tree string="Snapshot tree">
+                    <field name="name" />
+                    <field name="website_id" />
+                    <field name="create_date" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="snapshot_search" model="ir.ui.view">
+            <field name="name">snapshot.search</field>
+            <field name="model">website_version.snapshot</field>
+            <field name="arch" type="xml">
+                <search string="Search Snapshot">
+                    <field name="website_id"/>
+                    <group string="Group By">
+                        <filter string="Website" domain="[]" context="{'group_by':'website_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_website_view" model="ir.actions.act_window">
+            <field name="name">Website Domain</field>
+            <field name="res_model">website</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu" />
+        <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
+        <menuitem action="action_snapshot" id="menu_action_snapshot" parent="website_menu" groups="base.group_no_one"/>
+        <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
+
+    </data>
+</openerp>

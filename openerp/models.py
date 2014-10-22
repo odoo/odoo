@@ -1880,14 +1880,22 @@ class BaseModel(object):
         result = []
         known_values = {}
         def append_left(left_side):
-            grouped_value = left_side[groupby] and left_side[groupby][0]
+            #grouped_value = left_side[groupby] and left_side[groupby][0]
+            if isinstance(left_side[groupby], (list, tuple)):
+                grouped_value = left_side[groupby][0]
+            else:
+                grouped_value = left_side[groupby]
             if not grouped_value in known_values:
                 result.append(left_side)
                 known_values[grouped_value] = left_side
             else:
                 known_values[grouped_value].update({count_field: left_side[count_field]})
         def append_right(right_side):
-            grouped_value = right_side[0]
+            #grouped_value = right_side[0]
+            if isinstance(right_side, (list, tuple)):
+                grouped_value = right_side[0]
+            else:
+                grouped_value = right_side
             if not grouped_value in known_values:
                 line = dict(result_template)
                 line[groupby] = right_side
@@ -1897,11 +1905,11 @@ class BaseModel(object):
         while read_group_result or all_groups:
             left_side = read_group_result[0] if read_group_result else None
             right_side = all_groups[0] if all_groups else None
-            assert left_side is None or left_side[groupby] is False \
-                 or isinstance(left_side[groupby], (tuple,list)), \
-                'M2O-like pair expected, got %r' % left_side[groupby]
-            assert right_side is None or isinstance(right_side, (tuple,list)), \
-                'M2O-like pair expected, got %r' % right_side
+            # assert left_side is None or left_side[groupby] is False \
+            #      or isinstance(left_side[groupby], (tuple,list)), \
+            #     'M2O-like pair expected, got %r' % left_side[groupby]
+            # assert right_side is None or isinstance(right_side, (tuple,list)), \
+            #     'M2O-like pair expected, got %r' % right_side
             if left_side is None:
                 append_right(all_groups.pop(0))
             elif right_side is None:

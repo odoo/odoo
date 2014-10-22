@@ -274,7 +274,7 @@ class website(osv.osv):
                 lang['hreflang'] = lang['short']
         return langs
 
-    @openerp.tools.ormcache(skiparg=4)
+    #@openerp.tools.ormcache(skiparg=4)
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
         website_id = 1
         if request:

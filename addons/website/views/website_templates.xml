@@ -55,7 +55,7 @@
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
-          t-att-data-view-xmlid="xmlid if editable else None"
+          t-att-data-view-xmlid="xmlid"
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
@@ -83,19 +83,28 @@
                 </t>
             </t>
 
-            <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="website.assets_frontend" t-js="false"/>
+            <t t-call-assets="web.assets_common"/>
+            <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
             <t t-if="website and website.google_analytics_key">
-                <script>
+                <script id="tracking_code">
                     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
+                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), {'cookieDomain': 'none'});
                     ga('send','pageview');
+
+                    var view_id = $('html').attr('data-view-xmlid');
+                    openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
+                            var exp = result['ExpId'];
+                            var snap = result['VarId'];
+                            ga('set', 'expId', exp); 
+                            ga('set', 'expVar', snap);
+                            ga('send', 'pageview');
+                        });
                 </script>
             </t>
         </head>
@@ -127,6 +136,8 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
+                                            <li><a href="/web" role="menuitem">My Account</a></li>
+                                            <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
@@ -139,19 +150,16 @@
                     <t t-raw="0"/>
                 </main>
                 <footer>
-                    <div id="footer_container">
+                    <div id="footer">
                     </div>
                 </footer>
             </div>
-
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="website.assets_frontend" t-css="false"/>
         </body>
     </html>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
-    <xpath expr="//footer" position="inside">
+    <xpath expr="//div[contains(@id, 'footer')]" position="inside">
         <div class="container mt16 mb8">
             <div class="pull-right" t-ignore="true" t-if="not editable">
                 Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
@@ -173,11 +181,8 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-js]' position="after">
-        <t t-call-assets="website.assets_editor" t-js="false"/>
-    </xpath>
-    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css]' position="after">
-        <t t-call-assets="website.assets_editor" t-css="false"/>
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
+        <t t-call-assets="website.assets_editor"/>
     </xpath>
 </template>
 
@@ -242,7 +247,7 @@
 </template>
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
-    <xpath expr="//div[@id='footer_container']" position="replace">
+    <xpath expr="//div[@id='footer']" position="replace">
         <div class="oe_structure" id="footer">
             <section class="mt16 mb16">
                 <div class="container">
@@ -274,7 +279,7 @@
 
 <template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="container hidden-print">
+        <div id="footer" class="container hidden-print">
             <div class="row">
                 <div class="col-md-3">
                     <h4>Our products &amp; Services</h4>
