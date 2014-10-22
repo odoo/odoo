@@ -482,6 +482,7 @@ class Field(object):
     # properties used by _setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
+    _related_required = property(attrgetter('required'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
