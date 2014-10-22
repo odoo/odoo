@@ -454,7 +454,7 @@ class account_bank_statement_line(osv.osv):
             account_move_obj.unlink(cr, uid, move_ids, context)
 
     def reconciliation_widget_preprocess(self, cr, uid, statement_ids=None, context=None):
-        """ Get statement lines of the specified statements or all unreconciled statement lines and try to automatically reconcile them.
+        """ Get statement lines of the specified statements or all unreconciled statement lines and try to automatically reconcile them / find them a partner.
             Return ids of statement lines left to reconcile and other data for the reconciliation widget. """
         bs_obj = self.pool.get('account.bank.statement')
 
@@ -466,6 +466,7 @@ class account_bank_statement_line(osv.osv):
 
         # Try to automatically reconcile statement lines
         num_auto_reconciled = 0
+        st_lines_left = []
         for st_line in self.browse(cr, uid, st_lines):
             counterpart = self.get_unambiguous_reconciliation_proposition(cr, uid, st_line, context=context)
             if counterpart:
@@ -480,6 +481,16 @@ class account_bank_statement_line(osv.osv):
                     move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
                 self.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
                 num_auto_reconciled += 1
+            else:
+                st_lines_left.append(st_line)
+
+        # Try to set statement line's partner
+        for st_line in st_lines_left:
+            if st_line.name and not st_line.partner_id.id:
+                additional_domain = [('ref', '=', st_line.name)]
+                match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, limit=2, additional_domain=additional_domain, overlook_partner=True)
+                if match_ids and match_ids[0]['partner_id']:
+                    self.write(cr, uid, st_line.id, {'partner_id': match_ids[0]['partner_id']}, context=context)
 
         # Collect various informations for the reconciliation widget
         notifications = []
@@ -586,15 +597,10 @@ class account_bank_statement_line(osv.osv):
         # Look for structured communication match
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
-            additional_domain = [('ref', '=', st_line.name), (amount_field, '=', (sign * st_line.amount))]
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
+            domain = [('ref', '=', st_line.name), (amount_field, '=', (sign * st_line.amount))]
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
-                mv_line = match_ids[0]
-                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
-                if (mv_line['partner_id'] and not st_line.partner_id.id):
-                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
-                    mv_line['has_no_partner'] = False
-                return [mv_line]
+                return [match_ids[0]]
 
         # Look for a single move line with the same partner, the same amount
         if st_line.partner_id.id:
@@ -612,15 +618,10 @@ class account_bank_statement_line(osv.osv):
         # Look for structured communication match
         if st_line.name:
             overlook_partner = not st_line.partner_id.id # If the transaction has no partner, look for match in payable and receivable account anyway
-            additional_domain = [('ref', '=', st_line.name)]
-            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=additional_domain, overlook_partner=overlook_partner)
+            domain = [('ref', '=', st_line.name)]
+            match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids:
-                mv_line = match_ids[0]
-                # If the structured communication matches a move line that is associated with a partner, we can safely associate the statement line with the partner
-                if (mv_line['partner_id'] and not st_line.partner_id.id):
-                    self.write(cr, uid, st_line.id, {'partner_id': mv_line['partner_id']}, context=context)
-                    mv_line['has_no_partner'] = False
-                return [mv_line]
+                return [match_ids[0]]
 
         if not st_line.partner_id.id:
             return []
@@ -644,10 +645,15 @@ class account_bank_statement_line(osv.osv):
             return [match_ids[0]]
 
         # Look for a set of move line whose amount is <= to the line's amount
-        if sign == -1:
-            mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=[(amount_field, '<', 0), (amount_field, '>', (sign * st_line.amount))])
+        domain = []
+        if st_line.amount > 0:
+            domain += [('account_id.type', '=', 'receivable')]
         else:
-            mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=[(amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))])
+            domain += [('account_id.type', '=', 'payable')]
+        domain += [(amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))]
+        if amount_field == 'amount_currency' and st_line.amount < 0:
+            domain = [(amount_field, '<', 0), (amount_field, '>', (sign * st_line.amount))]
+        mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         ret = []
         total = 0
         for line in mv_lines:
@@ -669,8 +675,10 @@ class account_bank_statement_line(osv.osv):
         if additional_domain is None:
             additional_domain = []
 
+        # TOCHECK : journal domain OK ?
+        additional_domain += ['|', ('reconcile_id', '=', False), '&', ('statement_id', '=', False), ('journal_id.type', 'in', ['sale','sale_refund','purchase','purchase_refund'])]
         if st_line.partner_id.id or overlook_partner:
-            additional_domain += ['|', ('account_id.type', '=', 'receivable'), ('account_id.type', '=', 'payable')]
+            additional_domain += [('account_id.type', 'in', ['payable', 'receivable'])]
             if not overlook_partner:
                 additional_domain += [('partner_id', '=', st_line.partner_id.id)]
         else:
@@ -750,7 +758,7 @@ class account_bank_statement_line(osv.osv):
                     mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context)
-                if mv_line.reconcile_id:
+                if mv_line.reconcile_id.id and mv_line.statement_id.id:
                     raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
 
         # Create the move
@@ -770,6 +778,13 @@ class account_bank_statement_line(osv.osv):
             amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
+        
+        # For alredy reconciled move lines, just link them to the bank statement
+        for mv_line_dict in mv_line_dicts:
+            if mv_line_dict.get('is_reconciled') and mv_line_dict['is_reconciled'] == True:
+                aml_obj.write(cr, uid, mv_line_dict['counterpart_move_line_id'], {'statement_id': id}, context=context)
+        mv_line_dicts = [x for x in mv_line_dicts if not mv_line_dict.get('is_reconciled') or mv_line_dict['is_reconciled'] == False]
+
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False

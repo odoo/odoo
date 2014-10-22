@@ -681,6 +681,7 @@ openerp.account = function (instance) {
             var nothing_displayed = true;
         
             // Display move lines
+            var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy') });
             table.empty();
             var slice_start = self.get("pager_index") * self.max_move_lines_displayed;
@@ -692,13 +693,13 @@ openerp.account = function (instance) {
                     || (o.ref && o.ref.indexOf(self.filter) !== -1)
                     || (isFinite(floatFromFilter) && (o.debit === floatFromFilter || o.credit === floatFromFilter) )})
                 .slice(slice_start, slice_end)).each(function(line){
-                var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: false}));
+                var $line = $(QWeb.render(template_name, {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
                 table.append($line);
                 nothing_displayed = false;
             });
             _(self.get("mv_lines")).each(function(line){
-                var $line = $(QWeb.render("reconciliation_move_line", {line: line, selected: false}));
+                var $line = $(QWeb.render(template_name, {line: line, selected: false}));
                 self.bindPopoverTo($line.find(".line_info_button"));
                 table.append($line);
                 nothing_displayed = false;
@@ -969,9 +970,9 @@ openerp.account = function (instance) {
         }, instance.web.account.abstractReconciliation.prototype.events),
 
         init: function(parent, context) {
-            this._super(parent, context);
             this.children_widget = instance.web.account.bankStatementReconciliationLine;
             this.template_prefix = "bank_statement_";
+            this._super(parent, context);
 
             if (context.context.statement_id) this.statement_ids = [context.context.statement_id];
             if (context.context.statement_ids) this.statement_ids = context.context.statement_ids;
@@ -982,7 +983,7 @@ openerp.account = function (instance) {
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
-            this.already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
+            this.num_already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
             this.model_bank_statement = new instance.web.Model("account.bank.statement");
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
@@ -999,7 +1000,7 @@ openerp.account = function (instance) {
                 deferred_promises.push(self.model_bank_statement_line
                     .call("reconciliation_widget_preprocess", [self.statement_ids || undefined])
                     .then(function(data) {
-                        self.already_reconciled_lines = data.num_already_reconciled_lines;
+                        self.num_already_reconciled_lines = data.num_already_reconciled_lines;
                         self.notifications = self.notifications.concat(data.notifications);
                         self.lines = data.st_lines_ids;
                         if (self.single_statement && data.statement_name)
@@ -1019,25 +1020,34 @@ openerp.account = function (instance) {
                 // When queries are done, render template and reconciliation lines
                 return $.when.apply($, deferred_promises).then(function(){
         
-                    // If there is no statement line to reconcile, stop here
-                    if (self.lines.length === 0) {
+                    // If there is nothing to do, stop here
+                    // Warning : there is something to do if not all lines are reconciled and/or not all statements are closed
+                    // but it's easier to simply consider use cases : users should ne be able to try to recobncile closed statement(s)
+                    if (self.lines.length === 0 && !self.statement_ids) {
                         self.$el.prepend(QWeb.render("bank_statement_nothing_to_reconcile"));
-                        if (self.notifications) {
+                        if (self.notifications)
                             self.displayNotifications(self.notifications);
-                        }
                         return;
                     }
         
                     // Render and display
-                    self.$el.prepend(QWeb.render("reconciliation", {
+                    self.$el.prepend(QWeb.render("bank_statement_reconciliation", {
                         title: self.title,
                         single_statement: self.single_statement,
-                        total_lines: self.already_reconciled_lines+self.lines.length
+                        total_lines: self.num_already_reconciled_lines+self.lines.length
                     }));
                     self.updateProgressbar();
                     var reconciliations_to_show = self.lines.slice(0, self.max_reconciliations_displayed);
                     self.last_displayed_reconciliation_index = reconciliations_to_show.length;
                     self.$(".reconciliation_lines_container").css("opacity", 0);
+
+                    // If everything is reconciled, show end message
+                    if (self.lines.length === 0) {
+                        if (self.notifications)
+                            self.displayNotifications(self.notifications, 0);
+                        self.displayDoneMessage(true);
+                        return;
+                    }
         
                     // Display the reconciliations
                     return self.model_bank_statement_line
@@ -1063,11 +1073,12 @@ openerp.account = function (instance) {
             });
         },
 
-        displayNotifications: function(notifications) {
+        displayNotifications: function(notifications, speed) {
+            speed = speed === undefined ? this.aestetic_animation_speed : speed;
             var self = this;
             for (var i=0; i<notifications.length; i++) {
                 var notification = $("<div class='notification alert alert-"+ notifications[i].type +"' role='alert'>"+ notifications[i].message +"</div>").hide();
-                notification.appendTo(this.$(".notification_area")).slideDown(this.aestetic_animation_speed);
+                notification.appendTo(this.$(".notification_area")).slideDown(speed);
                 notification.css("cursor", "pointer").click(function() {
                     $(this).slideUp(self.animation_speed, function() {
                         $(this).remove();
@@ -1113,8 +1124,8 @@ openerp.account = function (instance) {
 
         updateProgressbar: function() {
             var self = this;
-            var done = self.already_reconciled_lines + self.reconciled_lines;
-            var total = self.already_reconciled_lines + self.lines.length;
+            var done = self.num_already_reconciled_lines + self.reconciled_lines;
+            var total = self.num_already_reconciled_lines + self.lines.length;
             var prog_bar = self.$(".progress .progress-bar");
             prog_bar.attr("aria-valuenow", done);
             prog_bar.css("width", (done/total*100)+"%");
@@ -1167,7 +1178,7 @@ openerp.account = function (instance) {
                             });
                     } else if (self.reconciled_lines === self.lines.length) {
                         // Congratulate the user if the work is done
-                        self.displayDoneMessage();
+                        self.displayDoneMessage(false);
                     } else {
                         // Some lines weren't persisted because they were't valid
                         self.$(".reconciliation_lines_container").fadeIn(self.aestetic_animation_speed);
@@ -1269,7 +1280,7 @@ openerp.account = function (instance) {
             }
             // Congratulate the user if the work is done
             if (self.reconciled_lines === self.lines.length) {
-                self.displayDoneMessage();
+                self.displayDoneMessage(false);
             }
         
             // Put the first line in match mode
@@ -1325,39 +1336,45 @@ openerp.account = function (instance) {
                 });
         },
     
-        displayDoneMessage: function() {
+        // Congratulate the user / propose next action(s)
+        displayDoneMessage: function(all_was_auto_reconciled) {
             var self = this;
             
-            var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
-            var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
-            var achievements = [];
-    
-            var time_taken;
-            if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
-            else time_taken = sec_taken%60 +" seconds";
-    
-            var title;
-            if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
-            else title = _t("Congrats, you're all done !") + " <i class='fa fa-thumbs-o-up congrats_icon'></i>";
-    
-            if (self.lines_reconciled_with_ctrl_enter === self.reconciled_lines)
-                achievements.push({
-                    title: _t("Efficiency at its finest"),
-                    desc: _t("Only use the ctrl-enter shortcut to validate reconciliations."),
-                    icon: "fa-keyboard-o"}
-                );
-    
-            if (sec_per_item < 5)
-                achievements.push({
-                    title: _t("Fast reconciler"),
-                    desc: _t("Take on average less than 5 seconds to reconcile a transaction."),
-                    icon: "fa-bolt"}
-                );
+            if (all_was_auto_reconciled) {
+                var title = "There you go, it's all done !";
+            } else {
+                var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
+                var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
+                var achievements = [];
+        
+                var time_taken;
+                if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
+                else time_taken = sec_taken%60 +" seconds";
+        
+                var title;
+                if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
+                else title = _t("Congrats, you're all done !") + " <i class='fa fa-thumbs-o-up congrats_icon'></i>";
+        
+                if (self.lines_reconciled_with_ctrl_enter === self.reconciled_lines)
+                    achievements.push({
+                        title: _t("Efficiency at its finest"),
+                        desc: _t("Only use the ctrl-enter shortcut to validate reconciliations."),
+                        icon: "fa-keyboard-o"}
+                    );
+        
+                if (sec_per_item < 5)
+                    achievements.push({
+                        title: _t("Fast reconciler"),
+                        desc: _t("Take on average less than 5 seconds to reconcile a transaction."),
+                        icon: "fa-bolt"}
+                    );
+            }
     
             // Render it
             self.$(".protip").hide();
             self.$(".oe_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
                 title: title,
+                all_was_auto_reconciled: all_was_auto_reconciled,
                 time_taken: time_taken,
                 sec_per_item: sec_per_item,
                 transactions_done: self.reconciled_lines,
@@ -1374,13 +1391,11 @@ openerp.account = function (instance) {
             self.$(".done_message").animate({opacity: 1}, self.aestetic_animation_speed*3, "easeOutCubic");
     
             // Make it interactive
-            self.$(".achievement").popover({'placement': 'top', 'container': self.el, 'trigger': 'hover'});
+            if (self.$(".achievement").length !== 0)
+                self.$(".achievement").popover({'placement': 'top', 'container': self.el, 'trigger': 'hover'});
 
-            if (self.$(".button_back_to_statement").length !== 0) {
-                self.$(".button_back_to_statement").click(function() {
-                    self.goBackToStatementsTreeView();
-                });
-            }
+            if (self.$(".button_back_to_statement").length !== 0)
+                self.$(".button_back_to_statement").click(function() { self.goBackToStatementsTreeView(); });
 
             if (self.$(".button_close_statement").length !== 0) {
                 self.$(".button_close_statement").hide();
@@ -1419,8 +1434,8 @@ openerp.account = function (instance) {
         }, instance.web.account.abstractReconciliationLine.prototype.events),
         
         init: function(parent, context) {
+            this.template_prefix = "bank_statement_";
             this._super(parent, context);
-            this.template_prefix = this.getParent().template_prefix;
     
             this.formatCurrency = this.getParent().formatCurrency;
             if (context.initial_data_provided) {
@@ -1610,7 +1625,7 @@ openerp.account = function (instance) {
             if (last_selected_line && last_selected_line.account_type != line.account_type) {
                 self.getParent().crash_manager.show_warning({data: {
                     exception_type: "Chair-To-Keyboard Interface",
-                    message: _.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type)
+                    message: _.str.sprintf(_t("You are selecting transactions from accounts of different type : %s and %s."), last_selected_line.account_type, line.account_type)
                 }});
                 return;
             }
@@ -1817,7 +1832,8 @@ openerp.account = function (instance) {
             if (lines_selected_num === 1 &&
                 self.st_line.amount * balance > 0 &&
                 self.st_line.amount * (mv_lines_selected[0].debit - mv_lines_selected[0].credit) < 0 &&
-                ! mv_lines_selected[0].partial_reconcile) {
+                ! mv_lines_selected[0].partial_reconcile &&
+                ! mv_lines_selected[0].is_reconciled) {
                 
                 mv_lines_selected[0].propose_partial_reconcile = true;
                 self.updateAccountingViewMatchedLines();
@@ -1867,6 +1883,7 @@ openerp.account = function (instance) {
                 debit: line.debit,
                 credit: line.credit,
                 counterpart_move_line_id: line.id,
+                is_reconciled: line.is_reconciled,
             };
         },
     
@@ -1921,9 +1938,10 @@ openerp.account = function (instance) {
         }, instance.web.account.abstractReconciliation.prototype.events),
 
         init: function(parent, context) {
-            this._super(parent, context);
             this.children_widget = instance.web.account.manualReconciliationLine;
             this.template_prefix = "manual_";
+            this._super(parent, context);
+
             this.model_aml = new instance.web.Model("account.move.line");
             this.model_partner = new instance.web.Model("res.partner");
             this.model_account = new instance.web.Model("account.account");
@@ -2156,19 +2174,20 @@ openerp.account = function (instance) {
         }, instance.web.account.abstractReconciliationLine.prototype.events),
     
         init: function(parent, context) {
+            this.template_prefix = "manual_";
             this._super(parent, context);
+
             this.working_on_a_given_item = this.getParent().working_on_a_given_item;
-            this.template_prefix = this.getParent().template_prefix;
             this.model_aml = this.getParent().model_aml;
             this.data = context.data;
             this.currency_id = context.data.currency_id;
             _.each(context.data.reconciliation_proposition, function(line) {
                 this.decorateMoveLine(line);
             }, this);
-            this.set("mv_lines_selected", context.data.reconciliation_proposition);
             this.presets = this.getParent().presets;
             // Make sure a partial reconciliation will appear only once by excluding siblings of a selected partially reconciled move line
             this.excluded_move_lines_ids = [];
+            this.set("mv_lines_selected", context.data.reconciliation_proposition);
         },
 
         render: function() {
@@ -2326,7 +2345,9 @@ openerp.account = function (instance) {
                 self.initializeCreateForm();
                 self.loadReconciliationProposition();
                 self.set("lines_created", []);
-                self.set("mode", "match");
+                // Pass in mode match except if the widget is going to disappear anyway, this prevents a visual glitch
+                if (self.get("mode") != "match" && self.get("mv_lines").length >= 1)
+                    self.set("mode", "match");
                 self.balanceChanged();
             });
         },

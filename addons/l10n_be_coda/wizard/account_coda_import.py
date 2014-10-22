@@ -217,7 +217,6 @@ class account_bank_statement_import(osv.TransientModel):
             statement_data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
-                'acc_number': statement['acc_number'],
                 'journal_id': journal_id.id,
                 'period_id': statement['period_id'],
                 'balance_start': statement['balance_start'],
@@ -274,7 +273,7 @@ class account_bank_statement_import(osv.TransientModel):
             statement_data.update({'journal_id': journal_id.id, 'line_ids': statement_line})
             ret_statements.append(statement_data)
         return {
-            'account_number': ret_statements[0] and ret_statements[0]['acc_number'] or False,
+            'account_number': statements[0] and statements[0]['acc_number'] or False,
             'bank_statement_vals': ret_statements,
         }
 def rmspaces(s):
