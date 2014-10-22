@@ -241,8 +241,8 @@ class res_partner(models.Model):
             partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
-    @api.model
-    def has_something_to_reconcile(self, partner_id):
+    @api.one
+    def has_something_to_reconcile(self):
         '''
         at least a debit, a credit and a line older than the last reconciliation date of the partner
         '''
@@ -256,7 +256,7 @@ class res_partner(models.Model):
             AND l.reconcile_id IS NULL
             AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
             AND l.state <> 'draft'
-            GROUP BY l.partner_id''', (partner_id,))
+            GROUP BY l.partner_id''', (self.id,))
         res = self._cr.dictfetchone()
         if res:
             return bool(res['debit'] and res['credit'])

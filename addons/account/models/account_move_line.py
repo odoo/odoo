@@ -702,6 +702,7 @@ class account_move_line(models.Model):
         partner_id = False
         context = self._context
         company_list = []
+        ids = self.ids
         for line in self:
             if company_list and not line.company_id.id in company_list:
                 raise Warning(_('To reconcile the entries company should be the same for all entries.'))
@@ -794,18 +795,20 @@ class account_move_line(models.Model):
                 })
             ]
 
+            
             writeoff_move_id = self.env['account.move'].create({
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
-                'date':date,
+                'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
+                'date': date,
                 'state': 'draft',
                 'line_id': writeoff_lines
             })
 
-            writeoff_line_ids = self.search([('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+            writeoff_line_ids = self.search([('move_id', '=', writeoff_move_id.id), ('account_id', '=', account_id)]).ids
             if account_id == writeoff_acc_id:
                 writeoff_line_ids = [writeoff_line_ids[1]]
-            self.ids += writeoff_line_ids
+            ids += writeoff_line_ids
 
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.
@@ -817,13 +820,11 @@ class account_move_line(models.Model):
         })
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
-        for id in self.ids:
+        for id in ids:
             workflow.trg_trigger(self._uid, 'account.move.line', id, self._cr)
 
-        if self:
-            partner_id = self.partner_id and self.partner_id.id or False
-            if partner_id and not partner_obj.has_something_to_reconcile(partner_id):
-                partner_obj.mark_as_reconciled([partner_id])
+        if self.partner_id and not self.partner_id.has_something_to_reconcile():
+            self.partner_id.mark_as_reconciled()
         return r_id
 
     @api.one
