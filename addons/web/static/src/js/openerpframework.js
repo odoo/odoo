@@ -861,7 +861,7 @@ openerp.uploadFile = function(controller_url, files) {
     $.each(files,function(i,file){
         data.append({'name': file.name, 'value': file});
     });
-    return genericAsyncPost(controller_url,data);
+    return openerp.post(controller_url,data);
 };
 
 var genericJsonRpc = function(fct_name, params, fct) {

@@ -12,9 +12,7 @@
 						<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
 						<span class="oe_snippet_thumbnail_title">Form Editor</span>
 					</div>
-					<section class="oe_snippet_body editForm">
-						<div class="container">
-							<form action="/contactus/crm.lead/" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+							<form action="/website_form/crm.lead/" method="post" class="oe_snippet_body editForm form-horizontal mt32" enctype="multipart/form-data">
 								<div class="form-group form-field form-init" data-form="input">
 									<label for="contact_name" class="col-md-3 col-sm-4 control-label">Your Name</label>
 									<div class="col-md-7 col-sm-8">
@@ -59,8 +57,6 @@
 									</div>
 								</div>
 							</form>
-						</div>
-					</section>
 				</div>
 			</xpath>
 	
@@ -196,7 +192,7 @@
 					<div>
 						<div class="oe_snippet_thumbnail">
 							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Search</span>
+							<span class="oe_snippet_thumbnail_title">Autocomplete</span>
 						</div>
 						<div class="form-group oe_snippet_body form-field form-field-search" data-form="search">
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
@@ -216,7 +212,7 @@
 					<div>
 						<div class="oe_snippet_thumbnail">
 							<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_parallax.png"/>
-							<span class="oe_snippet_thumbnail_title">Input File</span>
+							<span class="oe_snippet_thumbnail_title">Upload Field</span>
 						</div>
 						<div class="form-group oe_snippet_body form-field input-file" data-form="inputfile">
 							<label for="select" class="col-md-3 col-sm-4 control-label">Label</label>
@@ -241,7 +237,8 @@
 			<xpath expr="//div[@id='snippet_options']" position="inside">
 				<div 	data-js='editForm'
 						data-selector=".editForm"
-						data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+						data-drop-near=".oe_structure"
+						data-drop-in=".oe_structure, [data-oe-type=html]"
 				>
 					
 					<li data-execute=""><a href="#">Change Form Parameters</a></li>
