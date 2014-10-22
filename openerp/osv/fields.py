@@ -104,7 +104,7 @@ class _column(object):
         self.help = args.get('help', '')
         self.priority = priority
         self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else None # defaults to 'set null' in ORM
+        self.ondelete = ondelete.lower() if ondelete else 'set null'
         self.translate = translate
         self._domain = domain
         self._context = context
@@ -124,6 +124,21 @@ class _column(object):
         # self.deprecated
         if not self._classic_write or self.deprecated:
             self._prefetch = False
+
+    def new(self, **args):
+        """ return a column like `self` with the given parameters """
+        # memory optimization: reuse self whenever possible; you can reduce the
+        # average memory usage per registry by 10 megabytes!
+        return self if self.same_parameters(args) else type(self)(**args)
+
+    def same_parameters(self, args):
+        dummy = object()
+        return all(
+            # either both are falsy, or they are equal
+            (not val1 and not val) or (val1 == val)
+            for key, val in args.iteritems()
+            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
+        )
 
     def to_field(self):
         """ convert column `self` to a new-style field """
@@ -317,6 +332,10 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
+
+    def new(self, **args):
+        # float columns are database-dependent, so always recreate them
+        return type(self)(**args)
 
     def to_field_args(self):
         args = super(float, self).to_field_args()
@@ -1247,6 +1266,11 @@ class function(_column):
                 self._symbol_c = type_class._symbol_c
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
+
+    def new(self, **args):
+        # HACK: function fields are tricky to recreate, simply return a copy
+        import copy
+        return copy.copy(self)
 
     def to_field_args(self):
         args = super(function, self).to_field_args()
