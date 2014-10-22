@@ -420,7 +420,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var new_account_ids = _(new_days).chain()
         .map(function(el) {
             new_accs = _.map(el, function(entry) {
-                return entry.account_id === "false" ? false : (typeof(entry.account_id) === "object" ? Number(entry.account_id[0]) : Number(entry.account_id))
+                return entry.account_id === "false" ? false : (typeof(entry.account_id) === "object" ? Number(entry.account_id[0]) : Number(entry.account_id));
             });
             return new_accs;
         })
@@ -530,12 +530,45 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
         return ops;
     },
+    /*
     is_any_accounts: function() {
         return _.any(_.find(this.days, function(day) {return !_.isEmpty(day.account_group)}));
     },
+    */
     copy_accounts: function(e) {
         var self = this;
         var index = this.get('count');
+        (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
+           domain: [['user_id','=',self.parent.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<', self.parent.field_manager.get_field_value("date_from")]],
+           fields: ['timesheet_ids'],
+           order: "date_from DESC",
+           limit: 1
+       })).then(function(result) {
+           if (result.length && result[0].timesheet_ids) {
+               (new instance.web.Model('hr.analytic.timesheet').call('read', {
+                   ids: result[0].timesheet_ids,
+                   fields: ['name', 'amount', 'unit_amount', 'date', 'account_id', 'date_start', 'general_account_id', 'journal_id', 'user_id', 'product_id', 'product_uom_id', 'to_invoice']
+               })).then(function(result) {
+                   if (result.length) {
+                        for (var i=0; i<result.length; i++) {
+                            _.each(result[i], function(value, key) {
+                                if (value instanceof Array) {
+                                    result[i][key] = value[0];
+                                } else {
+                                    result[i][key] = value;
+                                }
+                            });
+                        }
+                        //Need to call onchange_account_id because it updated keys of default_get
+                        (new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], result[0].account_id,
+                            new instance.web.CompoundContext({'user_id': self.parent.get('user_id')})])).then(function(onchange_account) {
+                                self.copy_data(JSON.parse(JSON.stringify(_.groupBy(result, "account_id"))), onchange_account.value);
+                        });
+                   }
+               });
+           }
+       });
+       /*
         while (index >= 0) {
             if(_.isEmpty(self.days[index].account_group)) {
                 if(index == 0){
@@ -551,13 +584,17 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                 break;
             }
         }
+        */
     },
-    copy_data: function(data) {
+    copy_data: function(data, account_defaults) {
         var self = this;
+        
         var count = this.get('count');
         self.days[count].account_group = data;
+        self.days[count].account_defaults = _.extend({}, this.parent.default_get, account_defaults);
+        console.log("Inside copy_data ::: ", self.days[count]);
         _.each(self.days[count].account_group, function(account) {
-            var d = self.days[count].day.toString("yyyy-MM-dd")
+            var d = self.days[count].day.toString("yyyy-MM-dd");
             _.each(account,function(account) {
                 account.id = undefined;
                 account.date = d;

@@ -8,10 +8,12 @@
     </t>
     <t t-name="hr_timesheet_sheet.WeeklyTimesheet">
         <div class="hr_timesheet_container">
-            <div class="oe_timesheet_weekly">
+            <div class="oe_timesheet_weekly" t-if="widget.dates.length">
                 <div class="row oe_mt oe_mb">
                     <div class="col-xs-8 col-md-9">
-                        <h1> <t t-esc="widget.dates[0].toString('MMM yyyy') == widget.dates[widget.dates.length-1].toString('MMM yyyy') and widget.dates[0].toString('dd') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy') or widget.dates[0].toString('dd MMMM') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy')" /></h1>
+                        <t t-if="widget.dates.length">
+                            <h1> <t t-esc="widget.dates[0].toString('MMM yyyy') == widget.dates[widget.dates.length-1].toString('MMM yyyy') and widget.dates[0].toString('dd') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy') or widget.dates[0].toString('dd MMMM') + ' - ' + widget.dates[widget.dates.length-1].toString('dd MMMM yyyy')" /></h1>
+                        </t>
                     </div>
                     <div class="col-xs-3 col-md-3 btn-group">
                         <a class="btn btn-primary oe_timesheet_switch oe_timesheet_white" t-attf-data-mode="day"><span class="fa fa-calendar"/> Day</a>
@@ -181,7 +183,7 @@
                                     </t>
                                     <thead t-if="!widget.get('effective_readonly')" class="oe_timesheet_background_white">
                                         <tr>
-                                            <td colspan="6" t-if="_.isEmpty(days.account_group) and widget.is_any_accounts()">
+                                            <td colspan="6" t-if="_.isEmpty(days.account_group)">
                                                 <span class="oe_copy_accounts text-primary" colspan="5">
                                                     <a><h3 class="text-primary text-center">Copy and paste recent activities.</h3></a>
                                                 </span>
