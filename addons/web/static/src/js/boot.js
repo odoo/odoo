@@ -35,7 +35,7 @@
             }
             modules = _.without(modules, "web");
             if (inited)
-                throw new Error("OpenERP was already inited");
+                throw new Error("FEOS was already inited");
             inited = true;
             for(var i=0; i < modules.length; i++) {
                 var fct = openerp[modules[i]];
