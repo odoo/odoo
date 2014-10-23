@@ -21,7 +21,6 @@
 
 """ High-level objects for fields. """
 
-from copy import copy
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -29,8 +28,6 @@ from types import NoneType
 import logging
 import pytz
 import xmlrpclib
-
-from types import NoneType
 
 from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
