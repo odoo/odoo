@@ -473,6 +473,7 @@
                 <search string="Product Categories">
                     <field name="name" string="Product Categories"/>
                     <field name="parent_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -488,6 +489,9 @@
                                 <field name="name"/>
                             </h1>
                         </div>
+                        <group name="company" col="4">
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
                         <group>
                             <group name="parent" col="4">
                                 <field name="parent_id"/>
@@ -503,8 +507,9 @@
             <field name="model">product.category</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Product Categories">
+                <tree string="Product Categories">                    
                     <field name="complete_name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -515,6 +520,7 @@
             <field name="arch" type="xml">
                 <tree toolbar="True" string="Product Categories">
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

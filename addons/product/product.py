@@ -276,11 +276,13 @@ class product_category(osv.osv):
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
+        'company_id': fields.many2one('res.company', required=True, select=1),        
     }
 
 
     _defaults = {
         'type' : 'normal',
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.category', context=c),        
     }
 
     _parent_name = "parent_id"

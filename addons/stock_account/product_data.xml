@@ -6,6 +6,7 @@
             <field name="name">property_stock_journal</field>
             <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')]"/>
             <field eval="'account.journal,'+str(ref('stock_journal'))" model="account.journal" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record forcecreate="True" id="property_stock_account_output_prd" model="ir.property">
