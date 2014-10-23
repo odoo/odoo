@@ -102,6 +102,9 @@
                     <button type="button" class="btn btn-primary draft">Draft</button>
                     <button type="button" class="btn btn-primary launch">Launch</button>
                 </t>
+                <t t-if= "config == 0">
+                    <button type="button" class="btn btn-primary configure">Configure</button>
+                </t>
                 <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
               </div>
             </div><!-- /.modal-content -->

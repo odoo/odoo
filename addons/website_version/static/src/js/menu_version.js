@@ -166,10 +166,14 @@
                                 location.reload();
                             }
                             else{
-                                alert("Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create this experiment.");
+                                alert("Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.");
                             }
                         });
                     } 
+                });
+                self.wizard.on('click','.configure', function(){
+                    var website_id = $('html').attr('data-website-id');
+                    window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
                 });
             });
         },

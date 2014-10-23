@@ -190,9 +190,8 @@ class TableExporter(http.Controller):
             vals = {'name':name, 'google_id': False, 'state': 'running', 'website_id':context.get('website_id'), 'experiment_snapshot_ids':tab, 'objectives': int(objectives)}
             exp_obj = request.registry['website_version.experiment']
             exp_obj.create(cr, uid, vals, context=None)
-            return True
-        else:
-            return False
+        return check
+        
 
 
 

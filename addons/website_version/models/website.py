@@ -10,7 +10,7 @@ class NewWebsite(osv.Model):
     _inherit = "website"
 
     _columns = {
-        'tuto_sync': fields.boolean("Show tutorial"),
+        'tuto_sync': fields.boolean("How to get GA key and View ID"),
         'google_analytics_view_id': fields.char('View ID'),
         'google_management_authorization': fields.char('Google authorization')
     }
@@ -35,9 +35,7 @@ class NewWebsite(osv.Model):
         exp_ids = self.pool["website_version.experiment"].search(cr, uid, [('state','=','running'),('website_id.id','=',website.id)], context=context)
         exps = self.pool["website_version.experiment"].browse(cr, uid, exp_ids, context=context)
         if not 'EXP' in request.httprequest.cookies:
-            EXP = request.context.get('EXP')
-            if not EXP:
-                EXP = {}            
+            EXP = request.context.get('EXP', {})
         else:
             EXP = json.loads(request.httprequest.cookies.get('EXP'))
         for exp in exps:
