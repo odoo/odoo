@@ -288,6 +288,48 @@ ul.nav-stacked > li > a
 .hr
     padding: 4px 0
 
+
+.o_image_floating
+    width: 40%
+    margin: 4px
+    div.o_container
+        position: relative
+        mark
+            display: block
+            position: absolute
+            bottom: 0
+            width: 100%
+            background-color: rgba(86,61,124,.25)
+            a
+                color: white
+    &.o_hide_link div.o_container mark
+        display: none
+    &.o_margin_s
+        margin-bottom: 4px
+        &.pull-right
+            margin-left: 8px
+        &.pull-left
+            margin-right: 8px
+    &.o_margin_m
+        margin-bottom: 8px
+        &.pull-right
+            margin-left: 12px
+        &.pull-left
+            margin-right: 12px
+    &.o_margin_l
+        margin-bottom: 12px
+        &.pull-right
+            margin-left: 16px
+        &.pull-left
+            margin-right: 16px
+    &.o_margin_xl
+        margin-bottom: 24px
+        &.pull-right
+            margin-left: 32px
+        &.pull-left
+            margin-right: 32px
+
+
 /* Parallax Theme */
 
 div.carousel
@@ -413,6 +455,11 @@ span[data-oe-type="monetary"]
     white-space:nowrap
     overflow:hidden
     text-overflow:ellipsis
+
+.oe_website_spinner
+    width: 121px
+    input
+        text-align: center
 
 div.media_iframe_video
     height: 0

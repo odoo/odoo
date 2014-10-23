@@ -134,10 +134,10 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12,12),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
@@ -584,7 +584,13 @@ class product_template(osv.osv):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
-            res[product.id] = product[ptype] or 0.0
+            # standard_price field can only be seen by users in base.group_user
+            # Thus, in order to compute the sale price from the cost price for users not in this group
+            # We fetch the standard price as the superuser
+            if ptype != 'standard_price':
+                res[product.id] = product[ptype] or 0.0
+            else:
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -996,6 +1002,10 @@ class product_product(osv.osv):
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -1007,8 +1017,8 @@ class product_product(osv.osv):
             variant = ", ".join([v.name for v in product.attribute_value_ids])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
-            if partner_id:
-                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if partner_ids:
+                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False

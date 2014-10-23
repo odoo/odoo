@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:37+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:26+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
 #: field:product.template,product_variant_count:0
@@ -23,8 +23,8 @@ msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:724
-#: code:addons/product/product.py:1062
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -521,12 +521,12 @@ msgid "Blank DVD-RW"
 msgstr "Üres DVD-RW"
 
 #. module: product
-#: model:product.template,name:product.product_product_5_product_template
+#: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
 msgstr ""
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_5_product_template
+#: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
 msgstr ""
 
@@ -585,6 +585,11 @@ msgstr "Nem tudja megváltoztatni a kategóriát a létező mértékegységen '%
 #: model:product.public.category,name:product.case
 msgid "Case"
 msgstr "Rekesz"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "Kategória"
 
 #. module: product
 #: field:product.category,type:0
@@ -664,6 +669,11 @@ msgstr ""
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Számítógépek"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr ""
 
 #. module: product
 #: view:product.template:product.product_template_search_view
@@ -780,6 +790,7 @@ msgstr "Egyedi laptop a vevő igényei alapján."
 
 #. module: product
 #: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
 msgstr ""
 "Egyedi számítógép összeszerelve a vevői igénylési megrendelés alapján."
@@ -987,6 +998,13 @@ msgstr "Állandó"
 #: field:product.template,message_follower_ids:0
 msgid "Followers"
 msgstr "Követők"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1628,7 +1646,7 @@ msgid "New Price ="
 msgstr "Új ár ="
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid ""
 "New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
@@ -1693,6 +1711,7 @@ msgstr ""
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Other Info"
 msgstr "Egyéb információ"
 
@@ -1707,6 +1726,11 @@ msgstr "Másik árlista"
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Egyéb termékek"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1731,7 +1755,10 @@ msgstr "Csomagok száma rétegenként"
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 #: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
 msgid "Packaging"
 msgstr "Csomagolás"
 
@@ -1747,6 +1774,7 @@ msgstr ""
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
 msgid "Palletization"
 msgstr "Raklapozás"
 
@@ -2116,7 +2144,7 @@ msgid "Products by Category"
 msgstr "Termék kategóriánként"
 
 #. module: product
-#: code:addons/product/product.py:805
+#: code:addons/product/product.py:809
 #, python-format
 msgid "Products: "
 msgstr "Termékek: "
@@ -2425,15 +2453,6 @@ msgstr "Határozza meg az alap áron érvényesíthető maximum árkülönbözet
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Határozza meg az alapárra tehető minimum árkülönbözetet."
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-"Minimum mennyiség meghatározása melyet meg kell vásárolni/eladni a szabály "
-"érvényesítéséhez."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -2823,7 +2842,7 @@ msgid "Unit of Measure Categories"
 msgstr "Mértékegység kategóriák"
 
 #. module: product
-#: code:addons/product/product.py:704
+#: code:addons/product/product.py:705
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
 msgstr "Mértékegység kategória nem megfelelő!"
@@ -3133,3 +3152,10 @@ msgstr "a szülő vállalat"
 #: field:product.price.history,company_id:0
 msgid "unknown"
 msgstr "Ismeretlen"
+
+#~ msgid ""
+#~ "Specify the minimum quantity that needs to be bought/sold for the rule to "
+#~ "apply."
+#~ msgstr ""
+#~ "Minimum mennyiség meghatározása melyet meg kell vásárolni/eladni a szabály "
+#~ "érvényesítéséhez."

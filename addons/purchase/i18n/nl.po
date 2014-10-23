@@ -7,15 +7,327 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-09-17 08:00+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-29 18:23+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-19 08:21+0000\n"
+"X-Launchpad-Export-Date: 2014-09-30 07:24+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
+
+#. module: purchase
+#: model:email.template,body_html:purchase.email_template_edi_purchase_done
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
+"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
+"       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Orderdatum: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Orderreferentie: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Uw contactpersoon: <a "
+"href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n"
+"    <p>Dank u!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefoon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Website:&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+
+#. module: purchase
+#: model:email.template,body_html:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
+"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
+"       &nbsp;&nbsp;Aanvraagnumber: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Aanvraagdatum: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;aanvraagreferentie: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Uw contactpersoon: <a "
+"href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n"
+"    <p>Dank u!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefoon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Website:&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
@@ -50,7 +362,7 @@ msgstr ""
 "inkooporder annuleert."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:135
+#: code:addons/purchase/stock.py:185
 #, python-format
 msgid " Buy"
 msgstr " Kopen"
@@ -74,7 +386,7 @@ msgstr "# Regels"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr "# inkooporder"
+msgstr "# Inkooporders"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
@@ -91,312 +403,6 @@ msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 #: view:purchase.order:purchase.purchase_order_form
 msgid "(update)"
 msgstr "(bijwerken)"
-
-#. module: purchase
-#: model:email.template,body_html:purchase.email_template_edi_purchase_done
-msgid ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENCES</strong><br>\n"
-"         Order number: <strong>${object.name}</strong><br>\n"
-"         Order total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br>\n"
-"         Order date: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         Order reference: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"         Your reference: ${object.partner_ref}<br>\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"         Your contact: <a href=\"mailto:${object.validator.email or "
-"''}?subject=Order ${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web : <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hallo ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Hier is een ${object.state in ('draft', 'sent') and 'offerte "
-"aanvraag' or 'inkooporder bevestiging'} van ${object.company_id.name}: </p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENTIES</strong><br>\n"
-"         Ordernummer: <strong>${object.name}</strong><br>\n"
-"         Ordertotaal: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br>\n"
-"         Orderdatum: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         Order reference: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"         Uw referentie: ${object.partner_ref}<br>\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"         Uw contactpersoon: <a href=\"mailto:${object.validator.email or "
-"''}?subject=Order ${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br>\n"
-"    <p>Indien u vragen heeft, aarzel dan niet om contact met ons op te "
-"nemen.</p>\n"
-"    <p>Dank u!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefoon:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Website: <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-
-#. module: purchase
-#: model:email.template,body_html:purchase.email_template_edi_purchase
-msgid ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENCES</strong><br>\n"
-"         RFQ number: <strong>${object.name}</strong><br>\n"
-"         RFQ date: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         RFQ reference: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"         Your reference: ${object.partner_ref}<br>\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"         Your contact: <a href=\"mailto:${object.validator.email or "
-"''}?subject=Order ${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web : <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hallo ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Hier is een ${object.state in ('draft', 'sent') and 'offerte "
-"aanvraag' or 'inkooporder bevestiging'} from ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENTIES</strong><br>\n"
-"         Inkoopordernummer: <strong>${object.name}</strong><br>\n"
-"         Inkooporderdatum: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         Inkooporder referentie: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"         Uw referentie: ${object.partner_ref}<br>\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"         Your contact: <a href=\"mailto:${object.validator.email or "
-"''}?subject=Order ${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br>\n"
-"    <p>Als u vragen heeft, aarzel dan niet contact met ons op te nemen.</p>\n"
-"    <p>Dank u!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefoon:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Website: <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -775,6 +781,11 @@ msgid "Associated procurements"
 msgstr "Bijbehorende verwervingen"
 
 #. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
+msgid "Average Delivery Time"
+msgstr "Gemiddelde levertijd"
+
+#. module: purchase
 #: field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr "Gemiddelde prijs"
@@ -839,8 +850,8 @@ msgid "Bid Valid Until"
 msgstr "Bieding geldig t/m"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1157
-#: code:addons/purchase/stock.py:129
+#: code:addons/purchase/purchase.py:1160
+#: code:addons/purchase/stock.py:179
 #, python-format
 msgid "Buy"
 msgstr "Kopen"
@@ -873,7 +884,7 @@ msgid "Can be Purchased"
 msgstr "Inkoop product"
 
 #. module: purchase
-#: code:addons/purchase/stock.py:132
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Kan geen algemene koop route vinden."
@@ -894,17 +905,21 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1005
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
 "Het is niet mogelijk ene inkooporder te verwijderen in de '%s\"status."
 
 #. module: purchase
-#: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,category_id:0
 msgid "Category"
 msgstr "Categorie"
+
+#. module: purchase
+#: view:purchase.report:purchase.view_purchase_order_search
+msgid "Category of product"
+msgstr "Categorie van het product"
 
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
@@ -936,7 +951,7 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1211
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid "Configuration Error!"
 msgstr "Configuratiefout!"
@@ -1100,7 +1115,6 @@ msgstr "Omschrijving"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
-#: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "Bestemming"
@@ -1137,7 +1151,7 @@ msgid "Draft PO"
 msgstr "Concept inkoopporder"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1363
+#: code:addons/purchase/purchase.py:1366
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Concept inkooporder aangemaakt."
@@ -1163,7 +1177,7 @@ msgstr "E-mail samenstellen wizard"
 #: code:addons/purchase/purchase.py:529
 #: code:addons/purchase/purchase.py:546
 #: code:addons/purchase/purchase.py:589
-#: code:addons/purchase/stock.py:132
+#: code:addons/purchase/stock.py:182
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -1191,13 +1205,6 @@ msgstr "Verwachte maand"
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Uitgebreide filters"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:681
-#, python-format
-msgid "First cancel all receipts related to this purchase order."
-msgstr ""
-"Annuleer eerst alle inkomende leveringen behorende bij deze inkooporder."
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -1313,7 +1320,7 @@ msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:328
-#: code:addons/purchase/purchase.py:1005
+#: code:addons/purchase/purchase.py:1007
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1350,13 +1357,13 @@ msgid "Invoice Received"
 msgstr "Factuur ontvangen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1479
+#: code:addons/purchase/purchase.py:1482
 #, python-format
 msgid "Invoice paid"
 msgstr "Factuur betaald"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1459
+#: code:addons/purchase/purchase.py:1462
 #, python-format
 msgid "Invoice received"
 msgstr "Factuur ontvangen"
@@ -1520,6 +1527,11 @@ msgid "Messages and communication history"
 msgstr "Berichten en communicatie historie"
 
 #. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
+msgid "Monthly Purchases"
+msgstr "Maandelijkse inkopen"
+
+#. module: purchase
 #: view:website:purchase.report_purchaseorder
 msgid "Net Price"
 msgstr "Netto-prijs"
@@ -1530,19 +1542,19 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1202
+#: code:addons/purchase/purchase.py:1205
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Geen adres gedefinieerd voor de leverancier"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1200
+#: code:addons/purchase/purchase.py:1203
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Geen standaard leverancier gedefinieerd voor dit product"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1198
+#: code:addons/purchase/purchase.py:1201
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Geen leverancier voor dit product opgegeven!"
@@ -1585,7 +1597,6 @@ msgstr "Inkoop menu openen"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,date_order:0
 #: field:purchase.order.line,date_order:0
-#: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,date:0
 msgid "Order Date"
 msgstr "Orderdatum"
@@ -1602,6 +1613,7 @@ msgstr "Orderregels"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
+#: view:purchase.report:purchase.view_purchase_order_search
 msgid "Order Month"
 msgstr "Bestel maand"
 
@@ -1643,7 +1655,7 @@ msgid "Outgoing Mails"
 msgstr "Uitgaande E-mails"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1343
+#: code:addons/purchase/purchase.py:1346
 #, python-format
 msgid "PO: %s"
 msgstr "IO: %s"
@@ -1716,6 +1728,11 @@ msgid "Pre-generate draft invoices based on purchase orders"
 msgstr "Vooraf gegenereerde facturen gebaseerd op inkooporders"
 
 #. module: purchase
+#: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
+msgid "Price Per Supplier"
+msgstr "Prijs per leverancier"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
 msgid "Price Types"
 msgstr "Prijs types"
@@ -1741,7 +1758,7 @@ msgstr "Prijslijsten"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Print offerteaanvraag"
+msgstr "Offerteaanvraag afdrukken"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1758,7 +1775,6 @@ msgstr "Verwerving regel"
 #: field:purchase.order,product_id:0
 #: view:purchase.order.line:purchase.purchase_order_line_search
 #: field:purchase.order.line,product_id:0
-#: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "Product"
@@ -1798,7 +1814,7 @@ msgid "Products by Category"
 msgstr "Producten op categorie"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:840
+#: code:addons/purchase/purchase.py:842
 #, python-format
 msgid "Products received"
 msgstr "Producten ontvangen"
@@ -1911,7 +1927,7 @@ msgid "Purchase Pricelist"
 msgstr "Inkoopprijslijst"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1365
+#: code:addons/purchase/purchase.py:1368
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
 msgstr "Inkooporderregel aangemaakt en gekoppeld aan bestaande inkooporder"
@@ -1963,12 +1979,11 @@ msgstr "Hvhd"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
-#: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1367
+#: code:addons/purchase/purchase.py:1370
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
 msgstr "Hoeveelheid toegevoegd aan bestaande inkooporderregel"
@@ -2007,7 +2022,7 @@ msgstr "Offerteaanvraag gereed"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:318
-#: code:addons/purchase/purchase.py:934
+#: code:addons/purchase/purchase.py:936
 #, python-format
 msgid "RFQ created"
 msgstr "Offerteaanvraag aangemaakt"
@@ -2025,7 +2040,7 @@ msgstr "Offertes en inkopen"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr "Opnieuw afdrukken offerteaanvraag"
+msgstr "Offerteaanvraag opnieuw afdrukken"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -2058,11 +2073,6 @@ msgstr "Ontvangen ratio"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Reference"
 msgstr "Referentie"
-
-#. module: purchase
-#: view:purchase.report:purchase.view_purchase_order_search
-msgid "Reference UOM"
-msgstr "Referentie eenheid"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
@@ -2154,7 +2164,7 @@ msgid "Select an Open Sales Order"
 msgstr "Selecteer een open verkooprder"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1102
+#: code:addons/purchase/purchase.py:1104
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -2246,7 +2256,7 @@ msgid "Supplier Features"
 msgstr "Leveranciersopties"
 
 #. module: purchase
-#: view:res.partner:purchase.res_partner_view_purchase_buttons
+#: view:res.partner:purchase.res_partner_view_purchase_account_buttons
 msgid "Supplier Inv."
 msgstr "Lev. factuur"
 
@@ -2254,7 +2264,7 @@ msgstr "Lev. factuur"
 #: code:addons/purchase/purchase.py:435
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
-#: view:res.partner:purchase.res_partner_view_purchase_buttons
+#: view:res.partner:purchase.res_partner_view_purchase_account_buttons
 #, python-format
 msgid "Supplier Invoices"
 msgstr "Inkoopfacturen"
@@ -2296,7 +2306,7 @@ msgstr ""
 "inkoopprijs voor de geselecteerd producten."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1211
+#: code:addons/purchase/purchase.py:1214
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -2306,7 +2316,7 @@ msgstr ""
 "een instellingsfout te zijn!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1121
+#: code:addons/purchase/purchase.py:1123
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2316,7 +2326,7 @@ msgstr ""
 "ingesteld. U zou niet minder moeten bestellen."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1117
+#: code:addons/purchase/purchase.py:1119
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "De geselecteerde leverancier verkoopt dit product alleen per %s"
@@ -2350,7 +2360,7 @@ msgid "The total amount"
 msgstr "Het totaalbedrag"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1315
+#: code:addons/purchase/purchase.py:1318
 #, python-format
 msgid "There is no supplier associated to product %s"
 msgstr "Er is geen leverancier gekoppeld aan dit product %s"
@@ -2418,13 +2428,13 @@ msgid "Total amount"
 msgstr "Totaalbedrag"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:680
+#: code:addons/purchase/purchase.py:685
 #, python-format
 msgid "Unable to cancel the purchase order %s."
 msgstr "Niet mogelijk om de inkooporder te annuleren %s."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:687
+#: code:addons/purchase/purchase.py:691
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Niet mogelijk deze Inkoopporders te annuleren."
@@ -2443,6 +2453,11 @@ msgstr ""
 #: view:website:purchase.report_purchaseorder
 msgid "Unit Price"
 msgstr "Prijs"
+
+#. module: purchase
+#: field:purchase.report,quantity:0
+msgid "Unit Quantity"
+msgstr "Eenheid hoeveelheid"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -2508,7 +2523,6 @@ msgstr "Gevalideerd door:"
 
 #. module: purchase
 #: field:purchase.order,validator:0
-#: view:purchase.report:purchase.view_purchase_order_search
 msgid "Validated by"
 msgstr "Goedgekeurd door"
 
@@ -2524,15 +2538,14 @@ msgstr "Wacht lever. bevest."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
-#: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,picking_type_id:0
 msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1102
-#: code:addons/purchase/purchase.py:1117
-#: code:addons/purchase/purchase.py:1121
+#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1123
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2562,7 +2575,13 @@ msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr "Het is niet mogelijk een Inkoopporders zonder regels te bevestigen."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:688
+#: code:addons/purchase/purchase.py:686
+#, python-format
+msgid "You have already received some goods for it.  "
+msgstr "U heeft hier al goederen van ontvangen.  "
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:692
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
@@ -2573,3 +2592,6 @@ msgstr ""
 #: view:website:purchase.report_purchaseorder
 msgid "Your Order Reference"
 msgstr "Uw orderreferentie"
+
+#~ msgid "Reference UOM"
+#~ msgstr "Referentie eenheid"

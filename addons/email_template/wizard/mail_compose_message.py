@@ -98,7 +98,7 @@ class mail_compose_message(osv.TransientModel):
                 values['mail_server_id'] = template.mail_server_id.id
             if template.user_signature and 'body_html' in values:
                 signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will

@@ -258,24 +258,24 @@ openerp.ParentedMixin = {
                               current object is destroyed.
     */
     alive: function(promise, reject) {
-        var def = $.Deferred();
         var self = this;
-        promise.done(function() {
-            if (! self.isDestroyed()) {
-                if (! reject)
+        return $.Deferred(function (def) {
+            promise.then(function () {
+                if (!self.isDestroyed()) {
                     def.resolve.apply(def, arguments);
-                else
-                    def.reject();
-            }
-        }).fail(function() {
-            if (! self.isDestroyed()) {
-                if (! reject)
+                }
+            }, function () {
+                if (!self.isDestroyed()) {
                     def.reject.apply(def, arguments);
-                else
+                }
+            }).always(function () {
+                if (reject) {
+                    // noop if def already resolved or rejected
                     def.reject();
-            }
-        });
-        return def.promise();
+                }
+                // otherwise leave promise in limbo
+            });
+        }).promise();
     },
     /**
      * Inform the object it should destroy itself, releasing any

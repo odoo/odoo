@@ -51,7 +51,7 @@
                     if ($("input[name='email']").val() === "")
                         $("input[name='email']").val("website_event_sale_test_shoptest@websiteeventsaletest.odoo.com");
                     $("input[name='phone']").val("123");
-                    $("input[name='street']").val("123");
+                    $("input[name='street2']").val("123");
                     $("input[name='city']").val("123");
                     $("input[name='zip']").val("123");
                     $("select[name='country_id']").val("21");

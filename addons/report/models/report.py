@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import api
+from openerp.exceptions import AccessError
 from openerp.osv import osv
 from openerp.tools import config, which
 from openerp.tools.translate import _
@@ -453,9 +454,14 @@ class Report(osv.Model):
                             'res_model': save_in_attachment.get('model'),
                             'res_id': reporthtml[0],
                         }
-                        self.pool['ir.attachment'].create(cr, uid, attachment)
-                    _logger.info('The PDF document %s is now saved in the '
-                                 'database' % attachment['name'])
+                        try:
+                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                        except AccessError:
+                            _logger.warning("Cannot save PDF report %r as attachment",
+                                            attachment['name'])
+                        else:
+                            _logger.info('The PDF document %s is now saved in the database',
+                                         attachment['name'])
 
                 pdfdocuments.append(pdfreport_path)
             except:

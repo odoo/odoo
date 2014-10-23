@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 OpenERP S.A (<http://www.openerp.com>)
+#    Copyright (C) 2011-2014 OpenERP S.A. (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.charset import Charset
 from email.header import Header
-from email.utils import formatdate, make_msgid, COMMASPACE, parseaddr
+from email.utils import formatdate, make_msgid, COMMASPACE, getaddresses, formataddr
 from email import Encoders
 import logging
 import re
@@ -140,30 +140,15 @@ def encode_rfc2822_address_header(header_text):
        ``"Name"`` portion by the RFC2047-encoded
        version, preserving the address part untouched.
     """
-    header_text_utf8 = tools.ustr(header_text).encode('utf-8')
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    if header_text_ascii:
-        return header_text_ascii
+    def encode_addr(addr):
+        name, email = addr
+        if not try_coerce_ascii(name):
+            name = str(Header(name, 'utf-8'))
+        return formataddr((name, email))
 
-    name, email = parseaddr(header_text_utf8)
-    if not name:
-      return email
+    addresses = getaddresses([tools.ustr(header_text).encode('utf-8')])
+    return COMMASPACE.join(map(encode_addr, addresses))
 
-    # non-ASCII characters are present, attempt to
-    # replace all "Name" patterns with the RFC2047-
-    # encoded version
-    name_encoded = str(Header(name, 'utf-8'))
-    header_text_utf8 = "%s <%s>" % (name_encoded, email)
-    # try again after encoding
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    if header_text_ascii:
-        return header_text_ascii
-    # fallback to extracting pure addresses only, which could
-    # still cause a failure downstream if the actual addresses
-    # contain non-ASCII characters
-    return COMMASPACE.join(extract_rfc2822_addresses(header_text_utf8))
-
- 
 class ir_mail_server(osv.osv):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"

@@ -27,7 +27,7 @@ import types
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import models, tools
+from openerp import models, tools, api
 from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS, except_orm
@@ -181,6 +181,7 @@ class ir_model(osv.osv):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
             cr.commit() # must be committed before reloading registry in new cursor
+            api.Environment.reset()
             RegistryManager.new(cr.dbname)
             RegistryManager.signal_registry_change(cr.dbname)
 

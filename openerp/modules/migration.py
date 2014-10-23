@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -90,7 +90,7 @@ class MigrationManager(object):
             'post': '[%s>]',
         }
 
-        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.installed_version is None:
+        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.state == 'to install':
             return
 
         def convert_version(version):

@@ -121,14 +121,18 @@ class account_invoice_line(osv.osv):
                                 if inv.currency_id.id != company_currency:
                                     valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                                 if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
-                                    price_diff = round(i_line.price_unit - valuation_price_unit, account_prec)
-                                    line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
+                                    # price with discount and without tax included
+                                    price_unit = self.pool['account.tax'].compute_all(cr, uid, line['taxes'],
+                                        i_line.price_unit * (1-(i_line.discount or 0.0)/100.0), line['quantity'])['total']
+                                    price_line = round(valuation_price_unit * line['quantity'], account_prec)
+                                    price_diff = round(price_unit - price_line, account_prec)
+                                    line.update({'price': price_line})
                                     diff_res.append({
                                         'type': 'src',
                                         'name': i_line.name[:64],
-                                        'price_unit': price_diff,
+                                        'price_unit': round(price_diff / line['quantity'], account_prec),
                                         'quantity': line['quantity'],
-                                        'price': round(price_diff * line['quantity'], account_prec),
+                                        'price': price_diff,
                                         'account_id': acc,
                                         'product_id': line['product_id'],
                                         'uos_id': line['uos_id'],

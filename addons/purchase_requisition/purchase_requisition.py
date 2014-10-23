@@ -115,6 +115,7 @@ class purchase_requisition(osv.osv):
         res['context'] = {
             'search_default_groupby_product': True,
             'search_default_hide_cancelled': True,
+            'tender_id': ids[0],
         }
         res['domain'] = [('id', 'in', [line.id for line in po_lines])]
         return res
@@ -132,19 +133,19 @@ class purchase_requisition(osv.osv):
         return res
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
-        supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
-        picking_type_in = self.pool.get("purchase.order")._get_picking_in(cr, uid, context=context)
+        supplier_pricelist = supplier.property_product_pricelist_purchase
         return {
             'origin': requisition.name,
             'date_order': requisition.date_end or fields.datetime.now(),
             'partner_id': supplier.id,
-            'pricelist_id': supplier_pricelist,
-            'location_id': requisition.picking_type_id.default_location_dest_id.id,
+            'pricelist_id': supplier_pricelist.id,
+            'currency_id': supplier_pricelist and supplier_pricelist.currency_id.id or requisition.company_id.currency_id.id,
+            'location_id': requisition.procurement_id and requisition.procurement_id.location_id.id or requisition.picking_type_id.default_location_dest_id.id,
             'company_id': requisition.company_id.id,
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id': requisition.id,
             'notes': requisition.description,
-            'picking_type_id': picking_type_in,
+            'picking_type_id': requisition.picking_type_id.id
         }
 
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
@@ -404,6 +405,7 @@ class procurement_order(osv.osv):
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'company_id': procurement.company_id.id,
                 'procurement_id': procurement.id,
+                'picking_type_id': procurement.rule_id.picking_type_id.id,
                 'line_ids': [(0, 0, {
                     'product_id': procurement.product_id.id,
                     'product_uom_id': procurement.product_uom.id,
