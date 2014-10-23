@@ -199,7 +199,8 @@ class Report(osv.Model):
         headerhtml = []
         contenthtml = []
         footerhtml = []
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        irconfig_obj = self.pool['ir.config_parameter']
+        base_url = irconfig_obj.get_param(cr, uid, 'report.url') or irconfig_obj.get_param(cr, uid, 'web.base.url')
 
         # Minimal page renderer
         view_obj = self.pool['ir.ui.view']
