@@ -297,7 +297,12 @@ class product_pricelist(osv.osv):
                             price = price * (1.0+(res['price_discount'] or 0.0))
                             if res['price_round']:
                                 price = tools.float_round(price, precision_rounding=res['price_round'])
-                            price += (res['price_surcharge'] or 0.0)
+                            if context.get('uom'):
+                                # compute price_surcharge based on reference uom
+                                factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
+                            else:
+                                factor = 1.0
+                            price += (res['price_surcharge'] or 0.0) / factor
                             if res['price_min_margin']:
                                 price = max(price, price_limit+res['price_min_margin'])
                             if res['price_max_margin']:
