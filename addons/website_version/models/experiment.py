@@ -154,8 +154,6 @@ class Experiment(osv.Model):
             if not goals_obj.search(cr, uid, [('name','=',y['name'])],context=context):
                 vals ={'name':y['name'], 'google_ref':'ga:goal'+y['id']+'Completions'}
                 goals_obj.create(cr, uid, vals, context=None)
-
-
     
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
@@ -295,32 +293,13 @@ class google_management(osv.AbstractModel):
         webPropertyId = website.google_analytics_key
         accountId = webPropertyId.split('-')[1] 
         profileId = website.google_analytics_view_id
-
         params = {
             'access_token': self.get_token(cr, uid, context)
-        }
-        
+        }       
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         url = '/analytics/v3/management/accounts/%s/webproperties/%s/profiles/%s/experiments/%s' %(accountId, webPropertyId, profileId, google_id)
 
         return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
-
-
-
-    def get_list_account(self, cr, uid, context=None):
-        token = self.get_token(cr, uid, context)
-
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        params = {'access_token': token}
-
-        url = "/analytics/v3/management/accounts"
-        try:
-            status, content, _ = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except:
-            raise Warning("ho my good, there are a bug")
-            pass
-        return content  # need to check status via returned code (see calendar)
-
 
     def get_token(self, cr, uid, context=None):
         icp = self.pool['ir.config_parameter']
@@ -355,26 +334,15 @@ class google_management(osv.AbstractModel):
     def set_all_tokens(self, cr, uid, authorization_code, context=None):
         gs_pool = self.pool['google.service']
         all_token = gs_pool._get_google_token_json(cr, uid, authorization_code, self.STR_SERVICE, context=context)
-
         vals = {}
         vals['google_%s_rtoken' % self.STR_SERVICE] = all_token.get('refresh_token')
         vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
-        vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')
-
-        # write in ICP
-        print all_token
-        
+        vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')        
         icp = self.pool['ir.config_parameter']
-        # TEMP
-        #YOUR_WEBSITE.write(cr, SUPERUSER_ID, uid, vals, context=context)
-
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_rtoken' % self.STR_SERVICE, all_token.get('refresh_token'))
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE, datetime.now() + timedelta(seconds=all_token.get('expires_in')))
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE, all_token.get('access_token'))
 
-        # EXAMPLE OF USE AFTER
-        xxx = self.get_list_account(cr, uid)
-        import pprint; pprint.pprint(xxx)
 
 
     

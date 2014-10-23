@@ -170,7 +170,7 @@ class TableExporter(http.Controller):
             for v in s.view_ids:
                 snapshot_keys.add(v.key)
         exp_mod = request.registry['website_version.experiment']
-        exp_ids = exp_mod.search(cr,uid,[('state','=','running')],context=context)
+        exp_ids = exp_mod.search(cr,uid,[('state','=','running'),('website_id','=',context.get('website_id'))],context=context)
         exps = exp_mod.browse(cr,uid,exp_ids,context=context)
         for exp in exps:
             for exp_snap in exp.experiment_snapshot_ids:
