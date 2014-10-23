@@ -158,6 +158,15 @@ class stock_picking(osv.osv):
                 invoice_line_obj.write(cr, uid, inv_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
 
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Adding link between extra move and purchase order line if exists in the corresponding original move to be copied
+        """
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        res.update({'purchase_line_id': op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.purchase_line_id and  \
+                                   op.linked_move_operation_ids[-1].move_id.purchase_line_id.id or False})
+        return res
+
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
