@@ -86,7 +86,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 'name': res[i][1].name,
                 'debit': 0,
                 'credit': 0,
-                'tax_amount': res[i][1].sum_period,
+                'tax_amount': res[i][2],
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
@@ -185,9 +185,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 for code in obj_tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
                     sum_tax_add = sum_tax_add + code.sum_period
 
-            code.sum_period = sum_tax_add
-
-            res.append((account[0], code))
+            res.append((account[0], code, sum_tax_add))
         return res
 
     def _get_currency(self, form, context=None):
