@@ -285,6 +285,8 @@ class product_pricelist(osv.osv):
                                 price_tmp, round=False,
                                 context=context)
                 elif rule.base == -2:
+                    if not product.seller_ids:
+                        continue
                     for seller in product.seller_ids:
                         if (not partner) or (seller.name.id != partner):
                             continue
@@ -323,7 +325,7 @@ class product_pricelist(osv.osv):
                     rule_id = rule.id
                 break
 
-            if price:
+            if price is not False:
                 if 'uom' in context and not uom_price_already_computed:
                     uom = product.uos_id or product.uom_id
                     price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
