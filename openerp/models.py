@@ -2980,6 +2980,12 @@ class BaseModel(object):
                 if not partial:
                     raise
 
+        # update columns (fields may have changed), and column_infos
+        for name, field in self._fields.iteritems():
+            if field.store:
+                self._columns[name] = field.to_column()
+        self._inherits_reload()
+
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
         for field in self._fields.itervalues():

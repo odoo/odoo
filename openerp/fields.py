@@ -319,7 +319,8 @@ class Field(object):
                 self._free_attrs.append(attr)
             setattr(self, attr, value)
 
-        if not self.string:
+        if not self.string and not self.related:
+            # related fields get their string from their parent field
             self.string = name.replace('_', ' ').capitalize()
 
         # determine self.default and cls._defaults in a consistent way
