@@ -170,8 +170,8 @@
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
                              <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
-                          <button t-if="installed" disabled="disabled">Installed</button>
+                          <a class="btn btn-default btn-sm" type="object" name="button_immediate_install" states="uninstalled">Install</a>
+                          <a t-if="installed" class="btn btn-default btn-sm disabled" disabled="disabled">Installed</a>
                         </div>
                       </div>
                     </t>
