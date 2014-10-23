@@ -44,7 +44,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var to_destroy = this.widgets;
             this.widgets = [];
         }
-        if (widget instanceof instance.web.ViewManager) {
+        if (widget instanceof instance.web.Widget) {
             this.widgets.push(widget);
         } else {
             this.widgets.push({
@@ -103,11 +103,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             });
         }
     },
-    clear_widgets: function(vms) {
-        _.each(vms || this.widgets, function (vm) {
-            vm.destroy();
-        });
-        if (!vms) {
+    clear_widgets: function(widgets) {
+        _.invoke(widgets || this.widgets, 'destroy');
+        if (!widgets) {
             this.widgets = [];
             this.inner_widget = null;
         }
