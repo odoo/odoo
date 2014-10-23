@@ -109,10 +109,25 @@
                         <div t-field="notification.body"/>
                         <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
                     </div>
+                    <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close validation_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <div>
+                            <p>
+                                It appears your email has not been verified.
+                                <a class="send_validation_email" href="#" t-att-forum-id="forum.id">Click here to send a verification email allowing you to participate to the forum.</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div t-if="validation_email_done" class="alert alert-success alert-dismissable">
+                        <button type="button" class="close validated_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <div>
+                            <p>Congratulations! Your email has just been validated. You may now participate to our forums.</p>
+                        </div>
+                    </div>
                     <t t-raw="0"/>
                 </div>
                 <div class="col-sm-3" id="right-column">
-                    <div t-if="not header.get('ask_hide')" t-attf-class="btn-group btn-block mb16 #{user.karma &gt;= forum.karma_ask and '' or 'karma_required'}" t-attf-data-karma="#{forum.karma_ask}">
+                    <div t-if="not header.get('ask_hide')" t-attf-class="btn-group btn-block mb16 #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}" t-attf-data-karma="#{forum.karma_ask}">
                         <a type="button" class="btn btn-primary btn-lg col-sm-10" t-attf-href="/forum/#{slug(forum)}/#{forum.default_allow}">
                             <t t-if="forum.default_allow == 'ask_question'">Ask a Question</t>
                             <t t-if="forum.default_allow == 'post_link'">Submit a Post</t>
@@ -435,7 +450,7 @@
             <br/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control load_tags"/>
             <br/>
-            <button t-attf-class="btn btn-primary #{(user.karma &lt;= forum.karma_ask) and 'karma_required' or ''}"
+            <button t-attf-class="btn btn-primary #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                 id="btn_ask_your_question" t-att-data-karma="forum.karma_ask">Post Your Question</button>
         </form>
     </t>

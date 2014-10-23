@@ -272,6 +272,7 @@
             <field name="act_from" ref="act_ship"/>
             <field name="act_to" ref="act_ship_except"/>
             <field name="signal">ship_except</field>
+            <field name="condition" eval="True"/> <!-- Force empty -->
         </record>
         
         <record id="trans_ship_except_ship" model="workflow.transition">
