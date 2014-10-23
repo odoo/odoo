@@ -1742,7 +1742,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
             this.$filters[key].addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
             $('<span>')
-                .addClass('fa fa-trash-o')
+                .addClass('fa fa-trash-o remove-filter')
                 .click(function (event) {
                     event.stopImmediatePropagation(); 
                     self.remove_filter(filter, $filter, key);
