@@ -737,9 +737,9 @@ $sheet-padding: 16px
         .oe_footer
             background: #f0eeee
             text-align: center
+            flex-shrink: 0
             a
                 font-weight: bold
-                color: black
                 span
                     color: #a24689
     // }}}
@@ -845,6 +845,7 @@ $sheet-padding: 16px
         text-decoration: underline
     .oe_application
         height: 100%
+        width: 100%
         flex-grow: 1
     // }}}
     // ViewManager common {{{
@@ -855,6 +856,8 @@ $sheet-padding: 16px
         flex-direction: column
         .oe-view-manager-content
             overflow: auto
+            flex-grow: 1
+            position: relative
         .oe-view-manager-debug
             margin-right: 5px
     .oe-view-manager-header
@@ -870,6 +873,12 @@ $sheet-padding: 16px
                 position: relative
                 a
                     padding: 3px 25px
+            .oe_searchview_custom_public
+                a:after
+                    font-family: FontAwesome
+                    content: "\f0c0"
+                    color: #666
+                    margin-left: 3px
         .selected
             display: block
             a
@@ -1161,7 +1170,7 @@ $sheet-padding: 16px
             .fa-calendar
                 margin-left: -21px
                 cursor: pointer
-        span.fa-trash-o
+        span.remove-filter
             position: absolute
             top: 6px
             right: 10px

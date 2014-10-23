@@ -839,10 +839,10 @@
 .openerp .oe_leftbar .oe_footer {
   background: #f0eeee;
   text-align: center;
+  flex-shrink: 0;
 }
 .openerp .oe_leftbar .oe_footer a {
   font-weight: bold;
-  color: black;
 }
 .openerp .oe_leftbar .oe_footer a span {
   color: #a24689;
@@ -970,6 +970,7 @@
 }
 .openerp .oe_application {
   height: 100%;
+  width: 100%;
   flex-grow: 1;
 }
 .openerp .oe-view-manager {
@@ -980,6 +981,8 @@
 }
 .openerp .oe-view-manager .oe-view-manager-content {
   overflow: auto;
+  flex-grow: 1;
+  position: relative;
 }
 .openerp .oe-view-manager .oe-view-manager-debug {
   margin-right: 5px;
@@ -998,6 +1001,12 @@
 }
 .openerp .oe-view-manager-header .dropdown-menu li a {
   padding: 3px 25px;
+}
+.openerp .oe-view-manager-header .dropdown-menu .oe_searchview_custom_public a:after {
+  font-family: FontAwesome;
+  content: "";
+  color: #666;
+  margin-left: 3px;
 }
 .openerp .oe-view-manager-header .selected {
   display: block;
@@ -1368,7 +1377,7 @@
   margin-left: -21px;
   cursor: pointer;
 }
-.openerp .oe-search-options span.fa-trash-o {
+.openerp .oe-search-options span.remove-filter {
   position: absolute;
   top: 6px;
   right: 10px;
