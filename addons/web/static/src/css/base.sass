@@ -870,6 +870,16 @@ $sheet-padding: 16px
                 position: relative
                 a
                     padding: 3px 25px
+        .selected
+            display: block
+            a
+                font-weight: bold
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 6px
+                top: 3px
+                content: "\f00c"
         .oe-right-toolbar
             float: right
             > div
@@ -940,17 +950,6 @@ $sheet-padding: 16px
     .oe_view_manager_inline, .oe_view_manager_inlineview
         > .oe-view-manager-header
             display: none
-    .oe-search-options
-        .selected
-            display: block
-            a
-                font-weight: bold
-            a:before
-                font-family: FontAwesome
-                position: absolute
-                left: 6px
-                top: 3px
-                content: "\f00c"
 
         // }}}
     // FormPopup {{{

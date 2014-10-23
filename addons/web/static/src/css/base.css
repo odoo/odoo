@@ -999,6 +999,19 @@
 .openerp .oe-view-manager-header .dropdown-menu li a {
   padding: 3px 25px;
 }
+.openerp .oe-view-manager-header .selected {
+  display: block;
+}
+.openerp .oe-view-manager-header .selected a {
+  font-weight: bold;
+}
+.openerp .oe-view-manager-header .selected a:before {
+  font-family: FontAwesome;
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  content: "";
+}
 .openerp .oe-view-manager-header .oe-right-toolbar {
   float: right;
 }
@@ -1093,19 +1106,6 @@
 }
 .openerp .oe_view_manager_inline > .oe-view-manager-header, .openerp .oe_view_manager_inlineview > .oe-view-manager-header {
   display: none;
-}
-.openerp .oe-search-options .selected {
-  display: block;
-}
-.openerp .oe-search-options .selected a {
-  font-weight: bold;
-}
-.openerp .oe-search-options .selected a:before {
-  font-family: FontAwesome;
-  position: absolute;
-  left: 6px;
-  top: 3px;
-  content: "";
 }
 .openerp .oe_popup_form {
   display: table;
