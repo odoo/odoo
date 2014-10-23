@@ -1465,8 +1465,8 @@ class calendar_event(osv.Model):
         res = False
         new_id = False
 
-         # Special write of complex IDS
-        for event_id in ids:
+        # Special write of complex IDS
+        for event_id in list(ids):
             if len(str(event_id).split('-')) == 1:
                 continue
 
@@ -1484,7 +1484,7 @@ class calendar_event(osv.Model):
                 if data.get('rrule'):
                     new_id = self._detach_one_event(cr, uid, event_id, values, context=None)
 
-        res = super(calendar_event, self).write(cr, uid, ids, values, context=context)
+        res = super(calendar_event, self).write(cr, uid, [int(event_id) for event_id in ids], values, context=context)
 
         # set end_date for calendar searching
         if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \
@@ -1613,7 +1613,7 @@ class calendar_event(osv.Model):
                 if self.browse(cr, uid, event_id).recurrent_id:
                     ids_to_exclure.append(event_id)
                 else:
-                    ids_to_unlink.append(event_id)
+                    ids_to_unlink.append(int(event_id))
             else:
                 ids_to_exclure.append(event_id)
 
