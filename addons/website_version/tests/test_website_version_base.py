@@ -8,6 +8,7 @@ class TestWebsiteVersionBase(common.TransactionCase):
 
         # Usefull models
         self.ir_ui_view = self.registry('ir.ui.view')
+        self.ir_qweb = self.registry('website.qweb')
         self.snapshot = self.registry('website_version.snapshot')
         self.website = self.registry('website')
 
@@ -24,36 +25,36 @@ class TestWebsiteVersionBase(common.TransactionCase):
         self.arch_0_0_0_0 = self.ir_ui_view.browse(cr, uid, [self.view_0_0_0_0_id], context=None)[0].arch
         self.vals = {'arch':
                 """<t name="Homepage" priority="29" t-name="website.homepage">
-                  <t t-call="website.layout">
-                    <div id="wrap" class="oe_structure oe_empty">
-                      <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
-                        <ol class="carousel-indicators hidden">
-                          <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
-                        </ol>
-                        <div class="carousel-inner">
-                          <div class="item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/website/static/src/img/banner/mountains.jpg);">
-                            <div class="container">
-                              <div class="row content">
-                                <div class="carousel-content col-md-6 col-sm-12">
-                                  <h2>Snapshot 0.0.0.0 (Write test)</h2>
-                                  <h3>Click to customize this text</h3>
-                                  <p>
-                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
-                                  </p>
-                                </div>
-                                <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
+                <t t-call="website.layout">
+                  <div id="wrap" class="oe_structure oe_empty">
+                    <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
+                      <ol class="carousel-indicators hidden">
+                        <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
+                      </ol>
+                      <div class="carousel-inner">
+                        <div class="item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/website/static/src/img/banner/mountains.jpg);">
+                          <div class="container">
+                            <div class="row content">
+                              <div class="carousel-content col-md-6 col-sm-12">
+                                <h2>Snapshot 0.0.0.0</h2>
+                                <h3>Click to customize this text</h3>
+                                <p>
+                                  <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
+                                </p>
                               </div>
+                              <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
                             </div>
                           </div>
                         </div>
-                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
-                          <i class="fa fa-chevron-left"/>
-                        </div>
-                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
-                          <i class="fa fa-chevron-right"/>
-                        </div>
+                      </div>
+                      <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                        <i class="fa fa-chevron-left"/>
+                      </div>
+                      <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                        <i class="fa fa-chevron-right"/>
                       </div>
                     </div>
-                  </t>
-                </t>"""
+                  </div>
+                </t>
+              </t>"""
         }

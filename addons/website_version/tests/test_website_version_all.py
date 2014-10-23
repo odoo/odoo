@@ -1,7 +1,20 @@
 from . import test_website_version_base
 from openerp.osv.orm import except_orm
+from openerp.http import request
 
 class TestWebsiteVersionAll(test_website_version_base.TestWebsiteVersionBase):
+
+    def test_read_with_right_context(self):
+        """ Testing Read with right context """
+        cr, uid, master_view_id, snapshot_id, arch_0_0_0_0, website_id= self.cr, self.uid, self.master_view_id, self.snapshot_id, self.arch_0_0_0_0, self.website_id
+        # def loader(name):
+        #     return self.ir_ui_view.read_template(cr, uid, name, context={'website_id':website_id, 'snapshot_id':1})
+        # result = self.ir_qweb.render(cr, uid, 'website.homepage', qwebcontext=None, loader=loader, context={'website_id':website_id, 'snapshot_id':1})
+        result = self.ir_ui_view.render(cr, uid, 'website.homepage', values=None, engine='website.qweb', context={'website_id':website_id, 'snapshot_id':1})
+        print result
+
+        # result = self.ir_ui_view.read(cr, uid, [master_view_id], ['arch'], load='_classic_read')
+        # self.assertEqual(result[0]['arch'], arch_0_0_0_0, 'website_version: read: website_version must read the homepage_0_0_0_0 which is in the snapshot_0_0_0_0')
 
     def test_copy_snapshot(self):
         """ Testing Snapshot_copy"""
