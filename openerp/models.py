@@ -4658,7 +4658,7 @@ class BaseModel(object):
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
-        for field_name, field_def in fields.items():
+        for field_name, field_def in fields.items() and self._fields[field_name].copy:
             # removing the lang to compare untranslated values
             context_wo_lang = dict(context, lang=None)
             old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
