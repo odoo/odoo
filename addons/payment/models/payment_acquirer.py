@@ -79,7 +79,7 @@ class PaymentAcquirer(osv.Model):
             [('none', 'No automatic confirmation'),
              ('at_pay_confirm', 'At payment confirmation'),
              ('at_pay_now', 'At payment')],
-            string='Auto Confirmation', required=True),
+            string='Order Confirmation', required=True),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
