@@ -752,6 +752,7 @@ class account_journal(osv.osv):
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
+        'restart_sequence': fields.boolean('Restart numbering at each new fiscal year'),
     }
 
     _defaults = {
@@ -759,6 +760,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'restart_sequence': True,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -776,8 +778,18 @@ class account_journal(osv.osv):
                     return False
         return True
 
+    def _check_sequence(self, cr, uid, ids, context=None):
+        for journal in self.browse(cr, uid, ids, context=context):
+            fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid, [('company_id', '=', journal.company_id.id)])
+            for fiscalyear_id in fiscalyear_ids:
+                res = self.pool.get('account.sequence.fiscalyear').search(cr, uid, [('fiscalyear_id', '=', fiscalyear_id), ('sequence_main_id', '=', journal.sequence_id.id)], count=True)
+                if res == 0:
+                    return False
+        return True
+
     _constraints = [
         (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
+        (_check_sequence, 'Configuration error!\nA journal needs to have one sequence per fiscal year. Leave field empty to automatically create an adequate entry sequence', ['sequence_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -814,9 +826,29 @@ class account_journal(osv.osv):
             'padding': 4,
             'number_increment': 1
         }
+
+        domain = []
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
-        return self.pool.get('ir.sequence').create(cr, uid, seq)
+            domain = [('company_id', '=', vals['company_id'])]
+        ids = self.pool.get('account.fiscalyear').search(cr, uid, domain)
+
+        seq_fiscalyear_obj = self.pool.get('account.sequence.fiscalyear')
+        seq_obj = self.pool.get('ir.sequence')
+        main_seq = self.pool.get('ir.sequence').create(cr, uid, seq)
+
+        # Creating all the sequences for the fiscal years
+        for fiscalyear in self.pool.get('account.fiscalyear').browse(cr, uid, ids):
+            seq['name'] = vals['name'] + ' ' + fiscalyear.name
+            sequence = seq_obj.create(cr, uid, seq)
+            seq_fy = {
+                'sequence_id': sequence,
+                'sequence_main_id': main_seq,
+                'fiscalyear_id': fiscalyear.id,
+            }
+            seq_fiscalyear_obj.create(cr, uid, seq_fy)
+
+        return main_seq
 
     def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
@@ -894,6 +926,24 @@ class account_fiscalyear(osv.osv):
     _constraints = [
         (_check_duration, 'Error!\nThe start date of a fiscal year must precede its end date.', ['date_start','date_stop'])
     ]
+
+    def create(self, cr, uid, vals, context=None):
+        fy_id = super(account_fiscalyear, self).create(cr, uid, vals, context)
+        if 'company_id' in vals:
+            company_id = vals['company_id']
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        journal_obj = self.pool.get('account.journal')
+        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)], context=context)
+        for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
+            seq = self.pool.get('ir.sequence').copy(cr, uid, journal.sequence_id.id, {'name': journal.name + ' ' + 'name' in vals and vals['name'] or fy_id, 'fiscal_ids': []})
+            vals = {
+                'sequence_id': seq,
+                'sequence_main_id': journal.sequence_id.id,
+                'fiscalyear_id': fy_id,
+            }
+            self.pool.get('account.sequence.fiscalyear').create(cr, uid, vals, context=context)
+        return fy_id
 
     def create_period3(self, cr, uid, ids, context=None):
         return self.create_period(cr, uid, ids, context, 3)
