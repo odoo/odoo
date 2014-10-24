@@ -711,12 +711,16 @@ $sheet-padding: 16px
         -ms-flex-direction: column
         flex-direction: column
         justify-content: space-between
-        -ms-flex: 1 0 auto
+        -ms-flex: 0 0 auto
         flex-shrink: 0
+        flex-grow: 0
         width: 220px
+        height: 100%
         background: #f0eeee
         border-right: 1px solid $tag-border
         position: relative
+        display: inline-block\9
+        vertical-align: top\9
         a.oe_logo
             text-align: center
             flex-shrink: 0
@@ -850,9 +854,13 @@ $sheet-padding: 16px
         text-decoration: underline
     .oe_application
         height: 100%
-        width: 100%
         flex-grow: 1
         -ms-flex-negative: 1
+        display: inline-block\9
+        overflow: auto\9
+        width: calc(100% - 220px)
+        .oe_application
+            width: 100%
     // }}}
     // ViewManager common {{{
     .oe-view-manager
@@ -864,6 +872,18 @@ $sheet-padding: 16px
             overflow: auto
             flex-grow: 1
             position: relative
+            > div
+                position: absolute
+                position: static\9
+                top: 0
+                bottom: 0
+                right: 0
+                left: 0
+                display: none
+            .oe-view-manager-content
+                > div
+                    position: relative
+                    display: block
         .oe-view-manager-debug
             margin-right: 5px
     .oe-view-manager-header
@@ -2544,6 +2564,13 @@ div.tour-backdrop
 body
     overflow: hidden
 
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
+    .oe-view-manager-content
+        > div
+            position: absolute !important
+        .oe-view-manager-content
+            > div
+                position: relative !important
 
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
