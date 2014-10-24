@@ -53,9 +53,11 @@ class MailMail(osv.Model):
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         track_url = urlparse.urljoin(
-            base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
-                'mail_id': mail.id,
-                'params': urllib.urlencode({'db': cr.dbname})
+            base_url, '/web/dbredirect?%(params)s' % {
+                'params': urllib.urlencode({
+                    'db': cr.dbname,
+                    'redirect': '/mail/track/%s/blank.gif' % mail.id,
+                })
             }
         )
         return '<img src="%s" alt=""/>' % track_url
@@ -78,7 +80,6 @@ class MailMail(osv.Model):
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
-
         # generate tracking URL
         if mail.statistics_ids:
             tracking_url = self._get_tracking_url(cr, uid, mail, partner, context=context)
