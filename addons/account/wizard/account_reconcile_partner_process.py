@@ -34,7 +34,7 @@ class account_partner_reconcile_process(osv.osv_memory):
                                                                 LEFT JOIN res_partner p ON (p.id = l.partner_id)
                                     WHERE a.reconcile = 't'
                                     AND l.reconcile_id IS NULL
-                                    AND  (%s >  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') OR  p.last_reconciliation_date IS NULL )
+                                    AND  (%s >  to_char(p.last_time_entries_checked, 'YYYY-MM-DD') OR  p.last_time_entries_checked IS NULL )
                                     AND  l.state <> 'draft'
                                     GROUP BY l.partner_id) AS tmp
                               WHERE debit > 0
@@ -48,7 +48,7 @@ class account_partner_reconcile_process(osv.osv_memory):
                 "SELECT l.partner_id " \
                 "FROM account_move_line AS l LEFT JOIN res_partner p ON (p.id = l.partner_id) " \
                 "WHERE l.reconcile_id IS NULL " \
-                "AND %s =  to_char(p.last_reconciliation_date, 'YYYY-MM-DD') " \
+                "AND %s =  to_char(p.last_time_entries_checked, 'YYYY-MM-DD') " \
                 "AND l.state <> 'draft' " \
                 "GROUP BY l.partner_id ",(time.strftime('%Y-%m-%d'),)
         )
@@ -80,7 +80,7 @@ class account_partner_reconcile_process(osv.osv_memory):
 
         partner_id = move_line_obj.read(cr, uid, context['active_id'], ['partner_id'])['partner_id']
         if partner_id:
-            res_partner_obj.write(cr, uid, partner_id[0], {'last_reconciliation_date': time.strftime('%Y-%m-%d')}, context)
+            res_partner_obj.write(cr, uid, partner_id[0], {'last_time_entries_checked': time.strftime('%Y-%m-%d')}, context)
         #TODO: we have to find a way to update the context of the current tab (we could open a new tab with the context but it's not really handy)
         #TODO: remove that comments when the client side dev is done
         return {'type': 'ir.actions.act_window_close'}

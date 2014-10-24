@@ -487,13 +487,10 @@ class account_account(osv.osv):
         'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
-        'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', copy=False,
-            help='Date on which the account entries were fully reconciled last time. '
-                 'It differs from the last date where a reconciliation has been made for this account, '
-                 'as here we depict the fact that nothing more was to be reconciled at this date. '
-                 'This can be achieved in 2 different ways: either the last unreconciled debit/credit '
-                 'entry of this account was reconciled, either the user pressed the button '
-                 '"Nothing more to reconcile" during the manual reconciliation process.'),
+        'last_time_entries_checked': fields.datetime('Latest Manual Reconciliation Date', copy=False,
+            help='Last time the manual reconciliation was performed on this account.'
+                 'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit'
+                 'Or if you click the "Done" button.'),
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
@@ -737,7 +734,7 @@ class account_account(osv.osv):
             WHERE a.reconcile IS TRUE
             AND a.id = %s
             AND l.reconcile_id IS NULL
-            AND (a.last_reconciliation_date IS NULL OR l.date > a.last_reconciliation_date)
+            AND (a.last_time_entries_checked IS NULL OR l.date > a.last_time_entries_checked)
             AND l.state <> 'draft'
             GROUP BY l.account_id''', (account_id,))
         res = cr.dictfetchone()
@@ -746,7 +743,7 @@ class account_account(osv.osv):
         return False
 
     def mark_as_reconciled(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        return self.write(cr, uid, ids, {'last_time_entries_checked': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
 class account_journal(osv.osv):
     _name = "account.journal"

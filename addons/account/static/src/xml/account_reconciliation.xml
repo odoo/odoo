@@ -318,7 +318,7 @@
                 <td class="cell_action"></td>
                 <td class="cell-title" colspan="2">
                     <span class="cell_item_name"><t t-if="data.partner_name" t-esc="data.partner_name" /><t t-if="data.partner_name === undefined" t-esc="data.account_code" /></span>
-                    <span class="cell_last_reconciliation_date">Last Reconciliation : <t t-esc="data.last_reconciliation_date or 'Never'" /></span>
+                    <span class="cell_last_time_entries_checked" t-if="data.last_time_entries_checked">Last Reconciliation : <t t-esc="data.last_time_entries_checked" /></span>
                 </td>
                 <td class="cell_title_account_code" colspan="2"><t t-esc="data.account_code" /></td>
                 <td class="cell_info_popover"></td>

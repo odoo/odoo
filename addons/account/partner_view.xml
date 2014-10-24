@@ -138,7 +138,7 @@
                         <group string="Accounting Entries" name="accounting_entries">
                             <field name="property_account_receivable" groups="account.group_account_invoice" />
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
-                            <field name="last_reconciliation_date"/>
+                            <field name="last_time_entries_checked"/>
                             <button string="Reconcile" type="action" class="oe_highlight"
                                 name="%(action_reconcile_partner)d"
                                 attrs="{'invisible':[('is_company','=',False),('parent_id','=',False)]}"/>

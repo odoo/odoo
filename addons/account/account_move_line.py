@@ -763,8 +763,8 @@ class account_move_line(osv.osv):
 
         partner_id_condition = partner_id and 'AND p.id = '+str(partner_id) or ''
         cr.execute(
-             """SELECT partner_id, partner_name, to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
-                    SELECT partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code,
+             """SELECT partner_id, partner_name, to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, account_id, account_name, account_code FROM (
+                    SELECT partner_id, partner_name, last_time_entries_checked, account_id, account_name, account_code,
                         MAX(max_date) AS max_date,
                         SUM(debit) AS debit,
                         SUM(credit) AS credit
@@ -772,7 +772,7 @@ class account_move_line(osv.osv):
                         -- The first subrequest is required in order for all lines in a partial reconciliations
                         -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
                         SELECT p.id AS partner_id,
-                            p.last_reconciliation_date,
+                            p.last_time_entries_checked,
                             p.name AS partner_name,
                             a.id AS account_id,
                             a.name AS account_name,
@@ -793,7 +793,7 @@ class account_move_line(osv.osv):
                         UNION
 
                         SELECT p.id AS partner_id,
-                            p.last_reconciliation_date,
+                            p.last_time_entries_checked,
                             p.name AS partner_name,
                             a.id AS account_id,
                             a.name AS account_name,
@@ -811,12 +811,12 @@ class account_move_line(osv.osv):
                         %s
                         GROUP BY l.partner_id, p.id, a.id
                     ) AS s 
-                    GROUP BY partner_id, partner_name, last_reconciliation_date, account_id, account_name, account_code
+                    GROUP BY partner_id, partner_name, last_time_entries_checked, account_id, account_name, account_code
                 ) AS s
                 WHERE debit > 0
                 AND credit > 0
-                AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date
+                AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                ORDER BY last_time_entries_checked
             """ % (partner_id_condition, partner_id_condition))
 
         
@@ -845,15 +845,15 @@ class account_move_line(osv.osv):
 
         account_id_condition = account_id and 'AND a.id = '+str(account_id) or ''
         cr.execute(
-            """SELECT to_char(last_reconciliation_date, 'YYYY-MM-DD') AS last_reconciliation_date, account_id, account_name, account_code FROM (
-                    SELECT last_reconciliation_date, account_id, account_name, account_code,
+            """SELECT to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked, account_id, account_name, account_code FROM (
+                    SELECT last_time_entries_checked, account_id, account_name, account_code,
                         MAX(max_date) AS max_date,
                         SUM(debit) AS debit,
                         SUM(credit) AS credit
                     FROM (
                         -- The first subrequest is required in order for all lines in a partial reconciliations
                         -- to be considered as ONE debit OR ONE credit (since amount_residual isn't stored in the DB) 
-                        SELECT a.last_reconciliation_date,
+                        SELECT a.last_time_entries_checked,
                             a.id AS account_id,
                             a.name AS account_name,
                             a.code AS account_code,
@@ -873,7 +873,7 @@ class account_move_line(osv.osv):
 
                         UNION
 
-                        SELECT a.last_reconciliation_date,
+                        SELECT a.last_time_entries_checked,
                             a.id AS account_id,
                             a.name AS account_name,
                             a.code AS account_code,
@@ -891,12 +891,12 @@ class account_move_line(osv.osv):
                         %s
                         GROUP BY l.reconcile_partial_id, a.id
                     ) AS s 
-                    GROUP BY last_reconciliation_date, account_id, account_name, account_code
+                    GROUP BY last_time_entries_checked, account_id, account_name, account_code
                 ) AS s
                 WHERE debit > 0
                 AND credit > 0
-                AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date
+                AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                ORDER BY last_time_entries_checked
             """ % (account_id_condition, account_id_condition))
         
         # Apply ir_rules by filtering out
@@ -1186,17 +1186,17 @@ class account_move_line(osv.osv):
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
+                SELECT l.partner_id, p.last_time_entries_checked, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
                     AND l.state <> 'draft'
-                    GROUP BY l.partner_id, p.last_reconciliation_date
+                    GROUP BY l.partner_id, p.last_time_entries_checked
                 ) AS s
-                WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date""")
+                WHERE debit > 0 AND credit > 0 AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                ORDER BY last_time_entries_checked""")
         ids = [x[0] for x in cr.fetchall()]
         if not ids:
             return []
@@ -1393,13 +1393,6 @@ class account_move_line(osv.osv):
         for id in ids:
             workflow.trg_trigger(uid, 'account.move.line', id, cr)
 
-        if lines and lines[0]:
-            partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
-                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
-            account_id = lines[0].account_id and lines[0].account_id.id or False
-            if account_id and not account_obj.has_something_to_reconcile(cr, uid, account_id, context=context):
-                account_obj.mark_as_reconciled(cr, uid, [account_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
