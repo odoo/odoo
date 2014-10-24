@@ -62,6 +62,13 @@ class sale_order_line(osv.osv):
         'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
     }
 
+    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
+        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
+        if line.event_id:
+            event = self.pool['event.event'].read(cr, uid, line.event_id.id, ['name'], context=context)
+            res['name'] = '%s: %s' % (res['name'], event['name'])
+        return res
+
     def product_id_change(self, cr, uid, ids,
                           pricelist, 
                           product,
