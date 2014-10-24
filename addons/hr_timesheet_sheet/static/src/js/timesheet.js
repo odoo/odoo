@@ -362,7 +362,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                             }
                         }
                     });
-                    self.get_description_box(account[0].account_id, day_count).change(function(e) {
+                    self.get_description_box(account[0].account_id, day_count).off('change').on('change', function(e) {
                         account[0].name = $(this).val();
                         self.parent.sync();
                     });
@@ -586,12 +586,12 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         }
         */
     },
-    copy_data: function(data, account_defaults) {
+    copy_data: function(data, onchange_result) {
         var self = this;
-        
+
         var count = this.get('count');
         self.days[count].account_group = data;
-        self.days[count].account_defaults = _.extend({}, this.parent.default_get, account_defaults);
+        self.days[count].account_defaults = _.extend({}, this.parent.default_get, onchange_result);
         _.each(self.days[count].account_group, function(account) {
             var d = self.days[count].day.toString("yyyy-MM-dd");
             _.each(account,function(account) {
@@ -604,7 +604,11 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
         //TODO: Switching view doesn't reflected with copied data
         this.parent.sync();
-        self.parent.display_data(this.options);
+        //if (!self.days[count].account_defaults) {
+            self.parent.initialize_content();
+        //} else {
+        //    self.parent.display_data(this.options);
+        //}
     },
     get_last_activities: function() {
         var self = this;
