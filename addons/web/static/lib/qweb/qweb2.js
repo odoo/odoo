@@ -26,12 +26,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // TODO: templates orverwritten could be called by t-call="__super__" ?
 // TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
-    expressions_cache: {
-        // special case for template bodies, __content__ doesn't work in
-        // Python impl because safe_eval -> assert_no_dunder_name so use
-        // Python impl's magical 0 variable instead
-        '0': 'dict[0]',
-    },
+    expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
     ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
@@ -419,7 +414,8 @@ QWeb2.Engine = (function() {
             }
         },
         extend : function(template, extend_node) {
-            if (!this.jQuery) {
+            var jQuery = this.jQuery;
+            if (!jQuery) {
                 return this.tools.exception("Can't extend template " + template + " without jQuery");
             }
             var template_dest = this.templates[template];
@@ -431,18 +427,25 @@ QWeb2.Engine = (function() {
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
-                        target = this.jQuery(jquery, template_dest);
+                        target = jQuery(jquery, template_dest);
                     } else {
                         this.tools.exception(error_msg + "No expression given");
                     }
                     error_msg += "' (expression='" + jquery + "') : ";
                     if (operation) {
-                        var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
+                        var allowed_operations = "append,prepend,before,after,replace,inner,attributes".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](child.cloneNode(true).childNodes);
+                        if (operation === 'attributes') {
+                            jQuery('attribute', child).each(function () {
+                                var attrib = jQuery(this);
+                                target.attr(attrib.attr('name'), attrib.text());
+                            });
+                        } else {
+                            target[operation](child.cloneNode(true).childNodes);
+                        }
                     } else {
                         try {
                             var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
@@ -450,7 +453,7 @@ QWeb2.Engine = (function() {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
                         try {
-                            f.apply(target, [this.jQuery, template_dest.ownerDocument]);
+                            f.apply(target, [jQuery, template_dest.ownerDocument]);
                         } catch(error) {
                             return this.tools.exception("Runtime " + error_msg + error);
                         }
@@ -594,6 +597,12 @@ QWeb2.Element = (function() {
             QWeb2.expressions_cache[e] = r;
             return r;
         },
+        format_str: function (e) {
+            if (e == '0') {
+                return 'dict[0]';
+            }
+            return this.format_expression(e);
+        },
         string_interpolation : function(s) {
             var _this = this;
             if (!s) {
@@ -608,7 +617,7 @@ QWeb2.Element = (function() {
                 // extract literal string between previous and current match
                 append_literal(s.slice(start, re.lastIndex - m[0].length));
                 // extract matched expression
-                r.push('(' + this.format_expression(m[2] || m[1]) + ')');
+                r.push('(' + this.format_str(m[2] || m[1]) + ')');
                 // update position of new matching
                 start = re.lastIndex;
             }
@@ -737,7 +746,7 @@ QWeb2.Element = (function() {
                     + "));");
         },
         compile_action_raw : function(value) {
-            this.top("r.push(" + (this.format_expression(value)) + ");");
+            this.top("r.push(" + (this.format_str(value)) + ");");
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");

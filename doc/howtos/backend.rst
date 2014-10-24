@@ -181,7 +181,7 @@ Some attributes are available on all fields, here are the most common ones:
     If ``True``, the field can not be empty, it must either have a default
     value or always be given a value when creating a record.
 :attr:`~openerp.fields.Field.help` (``unicode``, default: ``''``)
-    Long-formm, provides a help tooltip to users in the UI.
+    Long-form, provides a help tooltip to users in the UI.
 :attr:`~openerp.fields.Field.index` (``bool``, default: ``False``)
     Requests that Odoo create a `database index`_ on the column
 

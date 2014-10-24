@@ -178,7 +178,12 @@ def get_pg_type(f, type_override=None):
     if field_type in FIELDS_TO_PGTYPES:
         pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
-        if f.digits:
+        # Explicit support for "falsy" digits (0, False) to indicate a
+        # NUMERIC field with no fixed precision. The values will be saved
+        # in the database with all significant digits.
+        # FLOAT8 type is still the default when there is no precision because
+        # it is faster for most operations (sums, etc.)
+        if f.digits is not None:
             pg_type = ('numeric', 'NUMERIC')
         else:
             pg_type = ('float8', 'DOUBLE PRECISION')
@@ -239,7 +244,7 @@ class MetaModel(api.Meta):
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
-                _logger.warning("Field %r erasing an existing value", name)
+                _logger.warning("In class %s, field %r overriding an existing value", self, name)
             setattr(self, name, column.to_field())
 
 
@@ -461,16 +466,14 @@ class BaseModel(object):
     @classmethod
     def _add_field(cls, name, field):
         """ Add the given `field` under the given `name` in the class """
-        field.set_class_name(cls, name)
-
-        # add field in _fields (for reflection)
+        # add field as an attribute and in cls._fields (for reflection)
+        if not isinstance(getattr(cls, name, field), Field):
+            _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
+        setattr(cls, name, field)
         cls._fields[name] = field
 
-        # add field as an attribute, unless another kind of value already exists
-        if isinstance(getattr(cls, name, field), Field):
-            setattr(cls, name, field)
-        else:
-            _logger.warning("In model %r, member %r is not a field", cls._name, name)
+        # basic setup of field
+        field.set_class_name(cls, name)
 
         if field.store:
             cls._columns[name] = field.to_column()
@@ -806,10 +809,11 @@ class BaseModel(object):
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
 
-        # retrieve new-style fields and duplicate them (to avoid clashes with
-        # inheritance between different models)
+        # retrieve new-style fields (from above registry class) and duplicate
+        # them (to avoid clashes with inheritance between different models)
         cls._fields = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
+        above = cls.__bases__[0]
+        for attr, field in getmembers(above, Field.__instancecheck__):
             if not field.inherited:
                 cls._add_field(attr, field.new())
 
@@ -1305,7 +1309,8 @@ class BaseModel(object):
                 except Exception, e:
                     raise ValidationError("Error while validating constraint\n\n%s" % tools.ustr(e))
 
-    def default_get(self, cr, uid, fields_list, context=None):
+    @api.model
+    def default_get(self, fields_list):
         """ default_get(fields) -> default_values
 
         Return default values for the fields in `fields_list`. Default
@@ -1314,60 +1319,56 @@ class BaseModel(object):
 
         :param fields_list: a list of field names
         :return: a dictionary mapping each field name to its corresponding
-            default value; the keys of the dictionary are the fields in
-            `fields_list` that have a default value different from ``False``.
+            default value, if it has one.
 
-        This method should not be overridden. In order to change the
-        mechanism for determining default values, you should override method
-        :meth:`add_default_value` instead.
         """
         # trigger view init hook
-        self.view_init(cr, uid, fields_list, context)
+        self.view_init(fields_list)
 
-        # use a new record to determine default values; evaluate fields on the
-        # new record and put default values in result
-        record = self.new(cr, uid, {}, context=context)
-        result = {}
+        defaults = {}
+        parent_fields = defaultdict(list)
+
         for name in fields_list:
-            if name in self._fields:
-                value = record[name]
-                if name in record._cache:
-                    result[name] = value        # it really is a default value
+            # 1. look up context
+            key = 'default_' + name
+            if key in self._context:
+                defaults[name] = self._context[key]
+                continue
 
-        # convert default values to the expected format
-        result = self._convert_to_write(result)
-        return result
+            # 2. look up ir_values
+            #    Note: performance is good, because get_defaults_dict is cached!
+            ir_values_dict = self.env['ir.values'].get_defaults_dict(self._name)
+            if name in ir_values_dict:
+                defaults[name] = ir_values_dict[name]
+                continue
 
-    def add_default_value(self, field):
-        """ Set the default value of `field` to the new record `self`.
-            The value must be assigned to `self`.
-        """
-        assert not self.id, "Expected new record: %s" % self
-        cr, uid, context = self.env.args
-        name = field.name
+            field = self._fields.get(name)
 
-        # 1. look up context
-        key = 'default_' + name
-        if key in context:
-            self[name] = context[key]
-            return
+            # 3. look up property fields
+            #    TODO: get rid of this one
+            if field and field.company_dependent:
+                defaults[name] = self.env['ir.property'].get(name, self._name)
+                continue
 
-        # 2. look up ir_values
-        #    Note: performance is good, because get_defaults_dict is cached!
-        ir_values_dict = self.env['ir.values'].get_defaults_dict(self._name)
-        if name in ir_values_dict:
-            self[name] = ir_values_dict[name]
-            return
+            # 4. look up field.default
+            if field and field.default:
+                defaults[name] = field.default(self)
+                continue
 
-        # 3. look up property fields
-        #    TODO: get rid of this one
-        column = self._columns.get(name)
-        if isinstance(column, fields.property):
-            self[name] = self.env['ir.property'].get(name, self._name)
-            return
+            # 5. delegate to parent model
+            if field and field.inherited:
+                field = field.related_field
+                parent_fields[field.model_name].append(field.name)
 
-        # 4. delegate to field
-        field.determine_default(self)
+        # convert default values to the right format
+        defaults = self._convert_to_cache(defaults, validate=False)
+        defaults = self._convert_to_write(defaults)
+
+        # add default values for inherited fields
+        for model, names in parent_fields.iteritems():
+            defaults.update(self.env[model].default_get(names))
+
+        return defaults
 
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
@@ -1978,11 +1979,20 @@ class BaseModel(object):
         qualified_field = self._inherits_join_calc(split[0], query)
         if temporal:
             display_formats = {
-                'day': 'dd MMM YYYY', 
-                'week': "'W'w YYYY", 
-                'month': 'MMMM YYYY', 
-                'quarter': 'QQQ YYYY', 
-                'year': 'YYYY'
+                # Careful with week/year formats:
+                #  - yyyy (lower) must always be used, *except* for week+year formats
+                #  - YYYY (upper) must always be used for week+year format
+                #         e.g. 2006-01-01 is W52 2005 in some locales (de_DE),
+                #                         and W1 2006 for others
+                #
+                # Mixing both formats, e.g. 'MMM YYYY' would yield wrong results,
+                # such as 2006-01-01 being formatted as "January 2005" in some locales.
+                # Cfr: http://babel.pocoo.org/docs/dates/#date-fields
+                'day': 'dd MMM yyyy', # yyyy = normal year
+                'week': "'W'w YYYY",  # w YYYY = ISO week-year
+                'month': 'MMMM yyyy',
+                'quarter': 'QQQ yyyy',
+                'year': 'yyyy',
             }
             time_intervals = {
                 'day': dateutil.relativedelta.relativedelta(days=1),
@@ -2967,13 +2977,11 @@ class BaseModel(object):
     def _setup_fields(self, partial=False):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
-            if partial and field.manual and \
-                    field.relational and \
-                    (field.comodel_name not in self.pool or \
-                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
-                # do not set up manual fields that refer to unknown models
-                continue
-            field.setup(self.env)
+            try:
+                field.setup(self.env)
+            except Exception:
+                if not partial:
+                    raise
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
@@ -3127,25 +3135,27 @@ class BaseModel(object):
         if len(records) > PREFETCH_MAX:
             records = records[:PREFETCH_MAX] | self
 
-        # by default, simply fetch field
-        fnames = {field.name}
-
-        if self.env.in_draft:
-            # we may be doing an onchange, do not prefetch other fields
-            pass
-        elif self.env.field_todo(field):
-            # field must be recomputed, do not prefetch records to recompute
-            records -= self.env.field_todo(field)
-        elif not self._context.get('prefetch_fields', True):
-            # do not prefetch other fields
-            pass
-        elif self._columns[field.name]._prefetch:
-            # here we can optimize: prefetch all classic and many2one fields
-            fnames = set(fname
+        # determine which fields can be prefetched
+        if not self.env.in_draft and \
+                self._context.get('prefetch_fields', True) and \
+                self._columns[field.name]._prefetch:
+            # prefetch all classic and many2one fields that the user can access
+            fnames = {fname
                 for fname, fcolumn in self._columns.iteritems()
                 if fcolumn._prefetch
                 if not fcolumn.groups or self.user_has_groups(fcolumn.groups)
-            )
+            }
+        else:
+            fnames = {field.name}
+
+        # important: never prefetch fields to recompute!
+        get_recs_todo = self.env.field_todo
+        for fname in list(fnames):
+            if get_recs_todo(self._fields[fname]):
+                if fname == field.name:
+                    records -= get_recs_todo(field)
+                else:
+                    fnames.discard(fname)
 
         # fetch records with read()
         assert self in records and field.name in fnames
@@ -3638,10 +3648,12 @@ class BaseModel(object):
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
-            if key in self._columns:
-                old_vals[key] = val
-            elif key in self._fields:
-                new_vals[key] = val
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
             else:
                 unknown.append(key)
 
@@ -3937,10 +3949,12 @@ class BaseModel(object):
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
         for key, val in vals.iteritems():
-            if key in self._all_columns:
-                old_vals[key] = val
-            elif key in self._fields:
-                new_vals[key] = val
+            field = self._fields.get(key)
+            if field:
+                if field.store or field.inherited:
+                    old_vals[key] = val
+                if field.inverse and not field.inherited:
+                    new_vals[key] = val
             else:
                 unknown.append(key)
 
@@ -5258,7 +5272,7 @@ class BaseModel(object):
 
     #
     # New records - represent records that do not exist in the database yet;
-    # they are used to compute default values and perform onchanges.
+    # they are used to perform onchanges.
     #
 
     @api.model

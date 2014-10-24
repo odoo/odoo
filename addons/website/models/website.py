@@ -778,7 +778,7 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
