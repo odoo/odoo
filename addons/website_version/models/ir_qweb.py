@@ -25,7 +25,6 @@ class QWeb(orm.AbstractModel):
         if context is None:
             context = {}         
         website_id=context.get('website_id')
-        from pudb import set_trace; set_trace()
         if website_id:
             if 'experiment_id' in context:
                 exp_snap_id = self.pool["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)

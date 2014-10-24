@@ -112,7 +112,8 @@
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.draft', function(){
-                    var name = $('.name').val();
+                    self.wizard.find('.message').remove();
+                    var name = self.wizard.find('.name').val();
                     var tab = self.wizard.find('.version');
                     var result = [];
                     var i;
@@ -123,12 +124,12 @@
                     }
                     var objectives = self.wizard.find('.box').val();
                     var check = true;
-                    if (name ==''){
-                        alert("You must give a name to your experiment.");
+                    if (name =='' || name == null){
+                        self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
                         check = false;
                     }
                     if (result.length == 0 && check){
-                        alert("You must choose at least one version in your experiment.");
+                        self.wizard.find(".versions").after("<p class='message' style='color : red'> *You must select at least one version which is not the original</p>");
                         check = false;
                     }
                     if(check){
@@ -140,6 +141,7 @@
                 });
             
                 self.wizard.on('click','.launch', function(){
+                    self.wizard.find('.message').remove();
                     var name = $('.name').val();
                     var tab = self.wizard.find('.version');
                     var result = [];
@@ -151,12 +153,12 @@
                     }
                     var objectives = self.wizard.find('.box').val();
                     var check = true;
-                    if (name ==''){
-                        alert("You must give a name to your experiment.");
+                    if (name =='' || name == null){
+                        self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
                         check = false;
                     }
                     if (result.length == 0 && check){
-                        alert("You must choose at least one version in your experiment.");
+                        self.wizard.find(".versions").after("<p class='message' style='color : red'> *You must select at least one version which is not the original</p>");
                         check = false;
                     }
                     if(check){
@@ -166,7 +168,7 @@
                                 location.reload();
                             }
                             else{
-                                alert("Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.");
+                                self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.</p>");
                             }
                         });
                     } 
