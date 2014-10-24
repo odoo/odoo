@@ -1480,22 +1480,21 @@
 </t>
 
 <t t-name="AbstractFormPopup.render">
-    <div>
-        <table style="width:100%">
-            <tr style="width:100%">
-                <td style="width:100%">
-                    <div class="oe-search-options btn-group"/>
-                    <div class="oe_popup_search"></div>
-                    <div class="oe_popup_list_pager"></div>
-                </td>
-            </tr>
-            <tr style="width:100%">
-                <td style="width:100%">
-                    <div class="oe_popup_list" style="width:100%"></div>
-                </td>
-            </tr>
-        </table>
-        <div class="oe_popup_form" style="width:100%"></div>
+    <div class="container-fluid">
+        <div class="row oe-modal-header">
+            <div class="col-md-8 col-md-offset-4 oe_popup_search">
+            </div>
+        </div>
+        <div class="row oe-modal-header">
+            <div class="col-md-8 col-md-offset-4">
+                <div class="oe-search-options btn-group"/>
+                <div class="oe_popup_list_pager"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="oe_popup_list"/>
+        </div>
+        <div class="row oe_popup_form"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">

@@ -1156,10 +1156,6 @@
 .openerp .oe_popup_list_pager {
   float: right;
 }
-.openerp .oe_popup_search {
-  width: 50%;
-  float: right;
-}
 .openerp .oe_searchview {
   cursor: text;
   position: relative;
@@ -3049,6 +3045,7 @@ body.oe_single_form .oe_single_form_container {
 }
 .modal .modal-body {
   overflow-x: auto;
+  min-height: 200px;
 }
 .modal .modal-footer {
   text-align: left;
@@ -3059,7 +3056,18 @@ body.oe_single_form .oe_single_form_container {
 .modal .oe_act_window.modal-body {
   padding: 0;
 }
+.modal .oe-modal-header {
+  background-color: #f0eeee;
+}
+.modal .oe-view-manager-content > div {
+  position: static !important;
+}
 
+@media (min-width: 768px) {
+  .modal .modal-body {
+    max-height: calc(100vh - 200px);
+  }
+}
 .ui-datepicker {
   z-index: 1500 !important;
 }

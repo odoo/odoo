@@ -998,9 +998,6 @@ $sheet-padding: 16px
         // End of customize
     .oe_popup_list_pager
         float: right
-    .oe_popup_search
-        width: 50%
-        float: right
     // }}}
     // SearchView {{{
     .oe_searchview
@@ -2515,12 +2512,21 @@ body.oe_single_form
         font-size: 20px
     .modal-body
         overflow-x: auto
+        min-height: 200px
     .modal-footer
         text-align: left
     .oe_button
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
+    .oe-modal-header
+        background-color: #f0eeee
+    .oe-view-manager-content > div
+        position: static !important
+
+@media (min-width: 768px)
+    .modal .modal-body
+        max-height: calc(100vh - 200px)
 
 .ui-datepicker
     z-index: 1500 !important
