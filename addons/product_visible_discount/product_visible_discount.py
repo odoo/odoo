@@ -44,6 +44,7 @@ class sale_order_line(osv.osv):
             fiscal_position=False, flag=False, context=None):
 
         def get_real_price(res_dict, product_id, qty, uom, pricelist):
+            """Retrieve the price before applying the pricelist"""
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
             product_obj = self.pool.get('product.product')
@@ -60,9 +61,8 @@ class sale_order_line(osv.osv):
 
             factor = 1.0
             if uom and uom != product.uom_id.id:
-                product_uom_obj = self.pool.get('product.uom')
-                uom_data = product_uom_obj.browse(cr, uid,  product.uom_id.id)
-                factor = uom_data.factor
+                # the unit price is in a different uom
+                factor = self.pool['product.uom']._compute_qty(cr, uid, uom, 1.0, product.uom_id.id)
             return product_read[field_name] * factor
 
 
