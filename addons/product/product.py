@@ -572,7 +572,7 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
             'product.template': (_get_name_template_ids, ['name'], 10),
-            'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_tmpl_id'], 10),
+            'product.product': (lambda self, cr, uid, ids, c=None: ids, ['product_tmpl_id'], 10),
 
             }, select=True),
         'color': fields.integer('Color Index'),
