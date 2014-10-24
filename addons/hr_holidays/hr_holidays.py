@@ -50,11 +50,13 @@ class hr_holidays_status(osv.osv):
                 if holiday.state == 'validate':
                     status_dict['max_leaves'] += holiday.number_of_days
                     status_dict['remaining_leaves'] += holiday.number_of_days
-            elif holiday.type == 'remove':  # number of days is negative
+            elif holiday.type == 'remove' and holiday.state == 'validate':
+                # number of days is negative
+                # count only validated allocation request; otherwise users may
+                # create pending allocations to create new leave requests
                 status_dict['virtual_remaining_leaves'] += holiday.number_of_days
-                if holiday.state == 'validate':
-                    status_dict['leaves_taken'] -= holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                status_dict['leaves_taken'] -= holiday.number_of_days
+                status_dict['remaining_leaves'] += holiday.number_of_days
         return result
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
