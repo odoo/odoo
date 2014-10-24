@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api, _
+import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 
 
@@ -9,7 +10,7 @@ class event_event(models.Model):
 
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket',
-        default=lambda rec: rec._default_tickets())
+            default=lambda rec: rec._default_tickets(), copy=True)
     seats_max = fields.Integer(
         string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
@@ -49,7 +50,9 @@ class event_ticket(models.Model):
         required=True, domain=[("event_type_id", "!=", False)],
         default=lambda self: self._default_product_id())
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', 'Registrations')
-    price = fields.Float('Price')
+    price = fields.Float('Price', digits=dp.get_precision('Product Price'))
+    price_reduce = fields.Float("Price Reduce", compute="_get_price_compute", store=False,
+                                digits=dp.get_precision('Product Price'))
     deadline = fields.Date("Sales End")
     is_expired = fields.Boolean('Is Expired', compute='_is_expired', store=True)
 
@@ -70,6 +73,13 @@ class event_ticket(models.Model):
         #        than using UTC all the time.
         current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
         self.is_expired = self.deadline < current_date
+
+    @api.one
+    @api.depends('price', 'product_id.lst_price', 'product_id.price')
+    def _get_price_compute(self):
+        product = self.product_id
+        discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+        self.price_reduce = (1.0 - discount) * self.price
 
     seats_max = fields.Integer('Maximum Available Seats', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
