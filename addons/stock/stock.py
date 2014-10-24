@@ -2641,12 +2641,29 @@ class stock_inventory(osv.osv):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
             #clean the existing inventory lines before redoing an inventory proposal
+            # INSTEAD: if there are already inventory lines, respect those
             line_ids = [line.id for line in inventory.line_ids]
-            inventory_line_obj.unlink(cr, uid, line_ids, context=context)
-            #compute the inventory lines and create them
-            vals = self._get_inventory_lines(cr, uid, inventory, context=context)
-            for product_line in vals:
-                inventory_line_obj.create(cr, uid, product_line, context=context)
+            if not line_ids:
+                #compute the inventory lines and create them
+                vals = self._get_inventory_lines(cr, uid, inventory, context=context)
+                for product_line in vals:
+                    inventory_line_obj.create(cr, uid, product_line, context=context)
+            else:
+                # On import calculate theoretical quantity
+                quant_obj = self.pool.get("stock.quant")
+                for line in inventory.line_ids:
+                    dom = [('location_id', 'child_of', line.location_id.id), ('lot_id', '=', line.prod_lot_id.id),
+                        ('product_id','=', line.product_id.id), ('owner_id', '=', line.partner_id.id)]
+                    if line.package_id:
+                        dom += [('package_id', '=', line.package_id.id)]
+                    if line.company_id:
+                        dom += [('company_id', '=', line.company_id.id)]
+                    quants = quant_obj.search(cr, uid, dom, context=context)
+                    tot_qty = 0
+                    for quant in quant_obj.browse(cr, uid, quants, context=context):
+                        tot_qty += quant.qty
+                    inventory_line_obj.write(cr, uid, [line.id],{'theoretical_qty': tot_qty}, context=context)
+
         return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
@@ -2712,7 +2729,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'theoretical_qty': fields.float('Theoretical Quantity', readonly=True),
+        'theoretical_qty': fields.float('Theoretical Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
         'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
                                                                                             'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
