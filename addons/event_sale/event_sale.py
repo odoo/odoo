@@ -129,7 +129,7 @@ class event_event(osv.osv):
     _inherit = 'event.event'
 
     event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
-        default=lambda rec: rec._default_tickets())
+        default=lambda rec: rec._default_tickets(), copy=True)
     seats_max = Integer(string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
