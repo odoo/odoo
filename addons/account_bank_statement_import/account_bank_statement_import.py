@@ -105,7 +105,7 @@ class account_bank_statement_import(osv.TransientModel):
         
         # Filter out already imported transactions and create statements
         statement_ids = []
-        num_ignored_statement_lines = 0
+        ignored_statement_lines_import_ids = []
         cr.execute("SELECT unique_import_id FROM account_bank_statement_line")
         already_imported_lines = [x[0] for x in cr.fetchall()]
         for st_vals in bank_statement_vals:
@@ -114,7 +114,7 @@ class account_bank_statement_import(osv.TransientModel):
                 if not 'unique_import_id' in line_vals[2] or line_vals[2]['unique_import_id'] not in already_imported_lines:
                     filtered_st_lines.append(line_vals)
                 else:
-                    num_ignored_statement_lines += 1
+                    ignored_statement_lines_import_ids.append(line_vals[2]['unique_import_id'])
             if len(filtered_st_lines) > 0:
                 st_vals['line_ids'] = filtered_st_lines
                 statement_ids.append(bs_obj.create(cr, uid, st_vals, context=context))
@@ -123,10 +123,16 @@ class account_bank_statement_import(osv.TransientModel):
 
         # Prepare import feedback
         notifications = []
-        if num_ignored_statement_lines > 1:
+        num_ignored = len(ignored_statement_lines_import_ids)
+        if num_ignored > 0:
             notifications += [{
-                'type': 'warning', # note : can be success, info, warning or danger
-                'message': _("%d transactions had already been imported and were ignored.") % num_ignored_statement_lines
+                'type': 'warning',
+                'message': _("%d transactions had already been imported and were ignored.") % num_ignored if num_ignored > 1 else _("1 transaction had already been imported and was ignored."),
+                'details': { # Not sure this is a good design
+                    'name': _('Already imported items'),
+                    'model': 'account.bank.statement.line',
+                    'ids': self.pool.get('account.bank.statement.line').search(cr, uid, [('unique_import_id', 'in', ignored_statement_lines_import_ids)], context=context)
+                }
             }]
 
         return statement_ids, notifications

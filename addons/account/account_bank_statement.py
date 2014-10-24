@@ -465,7 +465,7 @@ class account_bank_statement_line(osv.osv):
         st_lines = self.search(cr, uid, st_lines_filter, order='statement_id, id')
 
         # Try to automatically reconcile statement lines
-        num_auto_reconciled = 0
+        automatic_reconciliation_entries = []
         st_lines_left = []
         for st_line in self.browse(cr, uid, st_lines):
             counterpart = self.get_unambiguous_reconciliation_proposition(cr, uid, st_line, context=context)
@@ -479,8 +479,11 @@ class account_bank_statement_line(osv.osv):
                     # This is what the reconciliation widget does.
                     move_line_dict['counterpart_move_line_id'] = move_line_dict['id']
                     move_line_dict['debit'], move_line_dict['credit'] = move_line_dict['credit'], move_line_dict['debit']
-                self.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
-                num_auto_reconciled += 1
+                try:
+                    self.process_reconciliation(cr, uid, st_line.id, counterpart, context=context)
+                    automatic_reconciliation_entries.append(st_line.journal_entry_id.id)
+                except:
+                    st_lines_left.append(st_line)
             else:
                 st_lines_left.append(st_line)
 
@@ -494,10 +497,16 @@ class account_bank_statement_line(osv.osv):
 
         # Collect various informations for the reconciliation widget
         notifications = []
+        num_auto_reconciled = len(automatic_reconciliation_entries)
         if num_auto_reconciled > 0:
             notifications += [{
                 'type': 'info',
-                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled.")
+                'message': _("%d transactions were automatically reconciled.") % num_auto_reconciled if num_auto_reconciled > 1 else _("1 transaction was automatically reconciled."),
+                'details': {
+                    'name': _("Automatically reconciled items"),
+                    'model': 'account.move',
+                    'ids': automatic_reconciliation_entries
+                }
             }]
 
         num_already_reconciled_lines = 0

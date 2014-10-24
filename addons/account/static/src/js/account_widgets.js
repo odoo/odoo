@@ -39,7 +39,9 @@ openerp.account = function (instance) {
     instance.web.account.abstractReconciliation = instance.web.Widget.extend({
         className: 'oe_reconciliation',
 
-        events: {},
+        events: {
+            "click *[rel='do_action']": "doActionClickHandler",
+        },
     
         init: function(parent, context) {
             this._super(parent);
@@ -49,7 +51,7 @@ openerp.account = function (instance) {
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
     
-            // Stuff used by the children reconciliationLine
+            this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
             this.crash_manager = new instance.web.CrashManager();
             this.formatCurrencies; // Method that formats the currency ; loaded from the server
             this.model_res_users = new instance.web.Model("res.users");
@@ -219,6 +221,33 @@ openerp.account = function (instance) {
                 });
 
                 return $.when.apply($, deferred_promises);
+            });
+        },
+
+        displayNotifications: function(notifications, speed) {
+            speed = speed === undefined ? this.aestetic_animation_speed : speed;
+            for (var i=0; i<notifications.length; i++) {
+                var $notification = $(QWeb.render("reconciliation_notification", {
+                    type: notifications[i].type,
+                    message: notifications[i].message,
+                    details: notifications[i].details,
+                })).hide();
+                $notification.appendTo(this.$(".notification_area")).slideDown(speed);
+            }
+        },
+
+        doActionClickHandler: function(e) {
+            var name = e.currentTarget.dataset.action_nam;
+            var model = e.currentTarget.dataset.model;
+            var ids = e.currentTarget.dataset.ids.split(",").map(Number);
+            this.action_manager.do_action({
+                name: name,
+                res_model: model,
+                domain: [['id', 'in', ids]],
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: "list",
+                view_mode: "list"
             });
         },
     
@@ -979,6 +1008,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
+            context.display_name = this.title; // Used by breadcrumb
             this.notifications = context.context.notifications || [];
             this.lines = []; // list of reconciliations identifiers to instantiate children widgets
             this.last_displayed_reconciliation_index = undefined; // Flow control
@@ -1071,20 +1101,6 @@ openerp.account = function (instance) {
                         });
                 });
             });
-        },
-
-        displayNotifications: function(notifications, speed) {
-            speed = speed === undefined ? this.aestetic_animation_speed : speed;
-            var self = this;
-            for (var i=0; i<notifications.length; i++) {
-                var notification = $("<div class='notification alert alert-"+ notifications[i].type +"' role='alert'>"+ notifications[i].message +"</div>").hide();
-                notification.appendTo(this.$(".notification_area")).slideDown(speed);
-                notification.css("cursor", "pointer").click(function() {
-                    $(this).slideUp(self.animation_speed, function() {
-                        $(this).remove();
-                    });
-                });
-            }
         },
 
         statementNameClickHandler: function() {
@@ -1310,6 +1326,7 @@ openerp.account = function (instance) {
             });
         },
 
+        // TODO : refactor this
         goBackToStatementsTreeView: function() {
             var self = this;
             new instance.web.Model("ir.model.data")
@@ -1321,18 +1338,18 @@ openerp.account = function (instance) {
                     // var action_manager = self;
                     // while (! action_manager instanceof ActionManager)
                     //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
+                    var breadcrumbs = self.action_manager.widgets;
                     var found = false;
                     for (var i=breadcrumbs.length-1; i>=0; i--) {
                         if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
                             var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
+                            self.action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
                             found = true;
                         }
                     }
-                    if (!found)
-                        instance.web.Home(self);
+                    if (!found) {
+                        self.action_manager.do_action(action_id);
+                    }
                 });
         },
     
@@ -1871,7 +1888,6 @@ openerp.account = function (instance) {
                 .then(function () {
                     return $.when(self.restart("match")).then(function(){
                         self.is_consistent = true;
-                        if (callback) callback();
                     });
                 });
         },
@@ -1946,6 +1962,7 @@ openerp.account = function (instance) {
             this.model_partner = new instance.web.Model("res.partner");
             this.model_account = new instance.web.Model("account.account");
             this.title = _t("Journal Items to Reconcile");
+            context.display_name = _t("Reconciliation"); // Used by breadcrumb
             this.max_reconciliations_displayed = 10;
             this.max_move_lines_displayed = 20;
             this.partner_id = context.context.partner_id;
