@@ -45,6 +45,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.widgets = [];
         }
         if (widget instanceof instance.web.Widget) {
+            var title = widget.get('title') || action.display_name || action.name;
+            widget.set('title', title);
             this.widgets.push(widget);
         } else {
             this.widgets.push({
@@ -65,25 +67,35 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     get_breadcrumbs: function () {
-        return _.flatten(_.map(this.widgets, function (vm) {
-            return vm.view_stack.map(function (view, index) { 
-                return {
-                    title: view.controller.get('title') || vm.title,
-                    index: index,
-                    view_manager: vm,
-                }; 
-            });
+        return _.flatten(_.map(this.widgets, function (widget) {
+            if (widget instanceof instance.web.ViewManager) {
+                return widget.view_stack.map(function (view, index) { 
+                    return {
+                        title: view.controller.get('title') || widget.title,
+                        index: index,
+                        widget: widget,
+                    }; 
+                });
+            } else {
+                return {title: widget.get('title'), widget: widget };
+            }
         }), true);
     },
     history_back: function() {
-        var widget = _.last(this.widgets),
-            nbr_views = widget.view_stack.length;
-        if (nbr_views > 1) {
-            this.select_widget(widget, nbr_views - 2);
+        var widget = _.last(this.widgets);
+        if (widget instanceof instance.web.ViewManager) {
+            var nbr_views = widget.view_stack.length;
+            if (nbr_views > 1) {
+                this.select_widget(widget, nbr_views - 2);
+            } else if (this.widgets.length > 1) {
+                widget = this.widgets[this.widgets.length -2];
+                nbr_views = widget.view_stack.length;
+                this.select_view(widget, nbr_views - 2)
+            }
         } else if (this.widgets.length > 1) {
-            widget = this.widgets[this.widgets.length -2];
-            nbr_views = widget.view_stack.length;
-            this.select_view(widgets, nbr_views - 2)
+            widget = this.widgets[this.widgets.length - 2];
+            var index = widget.view_stack && widget.view_stack.length - 1;
+            this.select_widget(widget, index);
         }
     },
     select_widget: function(widget, index) {
@@ -91,17 +103,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.webclient.has_uncommitted_changes()) {
             return false;
         }
-        var vm_index = this.widgets.indexOf(widget);
-        if (widget.select_view) {
-            widget.select_view(index).done(function () {
-                _.each(self.widgets.splice(vm_index + 1), function (vm) {
-                    vm.destroy();
-                });
-                self.inner_widget = _.last(self.widgets);
-                self.inner_widget.display_breadcrumbs();
-                self.inner_widget.$el.show();
+        var widget_index = this.widgets.indexOf(widget),
+            def = $.when(widget.select_view && widget.select_view(index));
+
+        def.done(function () {
+            _.each(self.widgets.splice(widget_index + 1), function (w) {
+                w.destroy();
             });
-        }
+            self.inner_widget = _.last(self.widgets);
+            self.inner_widget.display_breadcrumbs && self.inner_widget.display_breadcrumbs();
+            self.inner_widget.$el.show();
+        });
     },
     clear_widgets: function(widgets) {
         _.invoke(widgets || this.widgets, 'destroy');
@@ -665,7 +677,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var $breadcrumbs = _.map(_.initial(breadcrumbs), function (bc) {
             var $link = $('<a>').text(bc.title);
             $link.click(function () {
-                self.action_manager.select_widget(bc.view_manager, bc.index);
+                self.action_manager.select_widget(bc.widget, bc.index);
             });
             return $('<li>').append($link);
         });
