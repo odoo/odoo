@@ -765,6 +765,7 @@
             <field name="model">account.operation.template</field>
             <field name="arch" type="xml">
                 <tree string="Bank Reconciliation Move Presets">
+                    <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="amount_type"/>

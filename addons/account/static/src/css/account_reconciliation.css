@@ -273,10 +273,21 @@
       border-radius: 5px;
       padding: 10px; }
       .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add {
+        position: relative;
         margin-bottom: 10px;
         clear: both; }
         .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add:empty {
           display: none; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add .presets_config {
+          display: none;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 100; }
+          .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add .presets_config .dropdown-menu {
+            font-size: 1em; }
+        .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add:hover .presets_config, .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add .presets_config.open {
+          display: inline; }
       .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add:empty {
         display: none; }
       .openerp .oe_reconciliation .oe_reconciliation_line .create .oe_form > table {

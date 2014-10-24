@@ -467,11 +467,28 @@ $aestetic_animation_speed: 300ms;
             padding: 10px;
 
             .quick_add {
+                position: relative;
                 margin-bottom: 10px;
                 clear: both;
 
                 &:empty {
                     display: none;
+                }
+
+                .presets_config {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    z-index: 100;
+
+                    .dropdown-menu {
+                        font-size: 1em; // Since there's no dropdown-menu-sm class in bootstrap
+                    }
+                }
+
+                &:hover .presets_config, .presets_config.open {
+                    display: inline;
                 }
             }
             .quick_add:empty {

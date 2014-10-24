@@ -3596,6 +3596,7 @@ class account_operation_template(osv.osv):
     _description = "Preset to create move lines during a reconciliation"
     _columns = {
         'name': fields.char('Button Label', required=True),
+        'sequence': fields.integer('Sequence', required=True),
         'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type','!=','view')]),
         'journal_id': fields.many2one('account.journal', 'Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation."),
         'label': fields.char('Label'),
@@ -3613,6 +3614,7 @@ class account_operation_template(osv.osv):
         'second_analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
     }
     _defaults = {
+        'sequence': 10,
         'amount_type': 'percentage',
         'amount': 100.0,
         'has_second_line': False,

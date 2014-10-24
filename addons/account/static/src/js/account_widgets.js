@@ -31,7 +31,7 @@ openerp.account = function (instance) {
 
     TODO
 
-    Reconciliation widgets' instanciation performances can be improved by generating the "createForm" once in the parent
+    Reconciliation widgets' instanciation performances can be improved by generating the shared DOM once in the parent
     then cloning it for each new child.
     
     */
@@ -41,6 +41,8 @@ openerp.account = function (instance) {
 
         events: {
             "click *[rel='do_action']": "doActionClickHandler",
+            "click .presets_config_create": "presetConfigCreateClickHandler",
+            "click .presets_config_edit": "presetConfigEditClickHandler",
         },
     
         init: function(parent, context) {
@@ -172,15 +174,14 @@ openerp.account = function (instance) {
 
                 // Get operation templates
                 deferred_promises.push(new instance.web.Model("account.operation.template")
-                    .query(['id','name',
-                        'account_id','journal_id','label','amount_type','amount','tax_id','analytic_account_id',
-                        'has_second_line',
-                        'second_account_id','second_journal_id','second_label','second_amount_type','second_amount','second_tax_id','second_analytic_account_id'])
+                    .query()
+                    .order_by('sequence, id')
                     .all().then(function (data) {
                         _(data).each(function(datum){
                             var preset = {
                                 id: datum.id,
                                 name: datum.name,
+                                sequence: datum.sequence,
                                 lines: [{
                                     account_id: datum.account_id,
                                     journal_id: datum.journal_id,
@@ -244,6 +245,28 @@ openerp.account = function (instance) {
                 name: name,
                 res_model: model,
                 domain: [['id', 'in', ids]],
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: "list",
+                view_mode: "list"
+            });
+        },
+
+        presetConfigCreateClickHandler: function() {
+            this.action_manager.do_action({
+                name: "Operation Templates",
+                res_model: "account.operation.template",
+                views: [[false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: "form",
+                view_mode: "form"
+            });
+        },
+
+        presetConfigEditClickHandler: function() {
+            this.action_manager.do_action({
+                name: "Operation Templates",
+                res_model: "account.operation.template",
                 views: [[false, 'list'], [false, 'form']],
                 type: 'ir.actions.act_window',
                 view_type: "list",
@@ -494,6 +517,38 @@ openerp.account = function (instance) {
                 }
             }
             self.field_manager.do_show();
+        },
+
+        // Create the HTML code for the list of preset buttons, with a dropdown if needed
+        renderPresetsButtons: function(presets) {
+            var presets_array = [];
+            for (var id in presets)
+                if (presets.hasOwnProperty(id))
+                    presets_array.push(presets[id]);
+            presets_array = _.sortBy(presets_array, function(o){ return o.sequence });
+            var temp = $("<div class='quick_add'><div class='btn-group btn-group-sm sandbox_lillibullero'></div></div>").appendTo(this.$el);
+            var sandbox_dom = this.$(".sandbox_lillibullero");
+            var dropdown_width = $(QWeb.render("presets_dropdown", {presets: []})).appendTo(sandbox_dom).outerWidth();
+            var max_width = 540; // Warning : hardcoded value (would be pretty tricky to compute from the DOM)
+            var total_width = 0;
+            var html = "";
+            while (presets_array.length > 0) {
+                var preset = presets_array[0];
+                var preset_html = QWeb.render("preset_button", {id: preset.id, name: preset.name});
+                var actual_max_width = (presets_array.length === 1 ? max_width : max_width - dropdown_width);
+                total_width += $(preset_html).appendTo(sandbox_dom).outerWidth();
+                if (total_width < actual_max_width) {
+                    html += preset_html;
+                    presets_array.shift();
+                } else {
+                    break;
+                }
+            }
+            if (presets_array.length > 0) {
+                html += QWeb.render("presets_dropdown", {presets: presets_array});
+            }
+            temp.remove();
+            return html;
         },
 
     
@@ -1508,13 +1563,9 @@ openerp.account = function (instance) {
 
         render: function() {
             var self = this;
-            var presets_array = [];
-            for (var id in self.presets)
-                if (self.presets.hasOwnProperty(id))
-                    presets_array.push(self.presets[id]);
             self.$el.prepend(QWeb.render("bank_statement_reconciliation_line", {
                 line: self.st_line,
-                presets: presets_array
+                presets: self.renderPresetsButtons(self.presets),
             }));
             
             // Stuff that require the template to be rendered
@@ -2209,13 +2260,9 @@ openerp.account = function (instance) {
 
         render: function() {
             var self = this;
-            var presets_array = [];
-            for (var id in self.presets)
-                if (self.presets.hasOwnProperty(id))
-                    presets_array.push(self.presets[id]);
             self.$el.prepend(QWeb.render("manual_reconciliation_line", {
                 data: self.data,
-                presets: presets_array,
+                presets: self.renderPresetsButtons(self.presets),
             }));
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
