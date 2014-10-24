@@ -804,12 +804,16 @@
   -ms-flex-direction: column;
   flex-direction: column;
   justify-content: space-between;
-  -ms-flex: 1 0 auto;
+  -ms-flex: 0 0 auto;
   flex-shrink: 0;
+  flex-grow: 0;
   width: 220px;
+  height: 100%;
   background: #f0eeee;
   border-right: 1px solid #afafb6;
   position: relative;
+  display: inline-block\9;
+  vertical-align: top\9;
 }
 .openerp .oe_leftbar a.oe_logo {
   text-align: center;
@@ -975,9 +979,14 @@
 }
 .openerp .oe_application {
   height: 100%;
-  width: 100%;
   flex-grow: 1;
   -ms-flex-negative: 1;
+  display: inline-block\9;
+  overflow: auto\9;
+  width: calc(100% - 220px);
+}
+.openerp .oe_application .oe_application {
+  width: 100%;
 }
 .openerp .oe-view-manager {
   width: 100%;
@@ -989,6 +998,19 @@
   overflow: auto;
   flex-grow: 1;
   position: relative;
+}
+.openerp .oe-view-manager .oe-view-manager-content > div {
+  position: absolute;
+  position: static\9;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: none;
+}
+.openerp .oe-view-manager .oe-view-manager-content .oe-view-manager-content > div {
+  position: relative;
+  display: block;
 }
 .openerp .oe-view-manager .oe-view-manager-debug {
   margin-right: 5px;
@@ -3087,4 +3109,13 @@ div.tour-backdrop {
 
 body {
   overflow: hidden;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .oe-view-manager-content > div {
+    position: absolute !important;
+  }
+  .oe-view-manager-content .oe-view-manager-content > div {
+    position: relative !important;
+  }
 }
