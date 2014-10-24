@@ -922,7 +922,7 @@ class product_product(osv.osv):
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
-            'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
+            'product.product': (lambda self, cr, uid, ids, c=None: ids, ['product_tmpl_id'], 10),
         }, select=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
 
