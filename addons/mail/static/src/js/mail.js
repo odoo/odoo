@@ -225,6 +225,7 @@ openerp.mail = function (session) {
             this.name = datasets.name ||  false,
             this.record_name = datasets.record_name ||  false,
             this.body = datasets.body || '',
+            this.body_original = datasets.body_original || '',
             this.vote_nb = datasets.vote_nb || 0,
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
@@ -976,6 +977,7 @@ openerp.mail = function (session) {
         },
 
         expender: function () {
+            var self = this;
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: _t('read more'),
@@ -983,7 +985,15 @@ openerp.mail = function (session) {
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',
-                });
+                afterExpand: function(){
+                    self.$('.oe_msg_body').hide();
+                    self.$('.oe_msg_original').show();
+                },
+                onCollapse: function(){
+                    self.$('.oe_msg_body').show();
+                    self.$('.oe_msg_original').hide();
+                },
+            });
         },
 
         /**
