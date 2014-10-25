@@ -215,7 +215,7 @@ class TableExporter(http.Controller):
         for v in views:
             if not user_groups.issuperset(v.groups_id):
                 continue
-            if full or (v.customize_show and v.inherit_id.id != view_theme_id) and not v.key in check:
+            if full or (v.customize_show and v.inherit_id.id != view_theme_id) and not v.key in check :
                 check.append(v.key)
                 if v.inherit_id not in done:
                     result.append({

@@ -15,7 +15,7 @@ class ViewVersion(osv.Model):
         'snapshot_id' : fields.many2one('website_version.snapshot',ondelete='cascade', string="Snapshot_id"),
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, toggle=False, context=None):
         if context is None:
             context = {}
         try:
@@ -25,7 +25,7 @@ class ViewVersion(osv.Model):
         
         snapshot_id=context.get('snapshot_id')
 
-        if snapshot_id and not context.get('mykey'):
+        if snapshot_id and not context.get('mykey') and not toggle:
             ctx = dict(context, mykey=True)
             snap = self.pool['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
@@ -132,11 +132,14 @@ class ViewVersion(osv.Model):
     def toggle(self, cr, uid, ids, context=None):
         """ Switches between enabled and disabled statuses
         """
-        if not context.get('snapshot_id'):
-            for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
-                all_id = self.search(cr, uid, [('key','=',view.key)], context=dict(context or {}, active_test=False))
-                for v in self.browse(cr, uid, all_id, context=dict(context or {}, active_test=False)):
-                    v.write({'active': not v.active})
+        #if not context.get('snapshot_id'):
+        for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
+            # if context.get('website_id'):
+            #     all_id = self.search(cr, uid, [('key','=',view.key),'|',('website_id','=',context.get('website_id')),('website_id','=',False)], context=dict(context or {}, active_test=False))
+            # else:
+            all_id = self.search(cr, uid, [('key','=',view.key)], context=dict(context or {}, active_test=False))
+            for v in self.browse(cr, uid, all_id, context=dict(context or {}, active_test=False)):
+                v.write({'active': not v.active}, toggle=True)
 
 
         
