@@ -53,5 +53,31 @@
         }
     });
 
+    website.EditorBarCustomize.include({  
+        start: function() {
+            return this._super();
+        },
+        load_menu: function () {
+            var self = this;
+            if(this.loaded) {
+                return;
+            }
+            openerp.jsonRpc('/website_version/customize_template_get', 'call', { 'xml_id': this.view_name }).then(
+                function(result) {
+                    _.each(result, function (item) {
+                        if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.header) {
+                            self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
+                        } else {
+                            self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
+                                item.id, item.active ? '-check' : '', item.name));
+                        }
+                    });
+                    self.loaded = true;
+                }
+            );
+        }
+    });
+
     
 })();

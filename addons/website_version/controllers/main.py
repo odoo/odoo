@@ -191,6 +191,51 @@ class TableExporter(http.Controller):
             exp_obj = request.registry['website_version.experiment']
             exp_obj.create(cr, uid, vals, context=None)
         return check
+
+    @http.route('/website_version/customize_template_get', type='json', auth='user', website=True)
+    def customize_template_get(self, xml_id, full=False, bundles=False):
+        """ Lists the templates customizing ``xml_id``. By default, only
+        returns optional templates (which can be toggled on and off), if
+        ``full=True`` returns all templates customizing ``xml_id``
+        ``bundles=True`` returns also the asset bundles
+        """
+        imd = request.registry['ir.model.data']
+        view_model, view_theme_id = imd.get_object_reference(
+            request.cr, request.uid, 'website', 'theme')
+
+        user = request.registry['res.users']\
+            .browse(request.cr, request.uid, request.uid, request.context)
+        user_groups = set(user.groups_id)
+
+        views = request.registry["ir.ui.view"]\
+            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
+        done = set()
+        result = []
+        check = []
+        for v in views:
+            if not user_groups.issuperset(v.groups_id):
+                continue
+            if full or (v.customize_show and v.inherit_id.id != view_theme_id) and not v.key in check:
+                check.append(v.key)
+                if v.inherit_id not in done:
+                    result.append({
+                        'name': v.inherit_id.name,
+                        'id': v.id,
+                        'xml_id': v.xml_id,
+                        'inherit_id': v.inherit_id.id,
+                        'header': True,
+                        'active': False
+                    })
+                    done.add(v.inherit_id)
+                result.append({
+                    'name': v.name,
+                    'id': v.id,
+                    'xml_id': v.xml_id,
+                    'inherit_id': v.inherit_id.id,
+                    'header': False,
+                    'active': v.active,
+                })
+        return result
         
 
 

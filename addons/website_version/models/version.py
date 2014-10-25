@@ -71,7 +71,7 @@ class ViewVersion(osv.Model):
                 self.unlink(cr, uid, master_id, context=context)
             self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
-    _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id'))
+    _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id','inherit_id'))
 
     @tools.ormcache_context(**_read_template_cache)
     def _read_template(self, cr, uid, view_id, context=None):
@@ -128,6 +128,16 @@ class ViewVersion(osv.Model):
                     result.append(x)
             return result
         return arch 
+
+    def toggle(self, cr, uid, ids, context=None):
+        """ Switches between enabled and disabled statuses
+        """
+        if not context.get('snapshot_id'):
+            for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
+                all_id = self.search(cr, uid, [('key','=',view.key)], context=dict(context or {}, active_test=False))
+                for v in self.browse(cr, uid, all_id, context=dict(context or {}, active_test=False)):
+                    v.write({'active': not v.active})
+
 
         
                 

@@ -17,7 +17,7 @@ OpenERP Website CMS
         'views/marketing_view.xml',
         'views/website_views.xml',
         'views/res_config.xml',
-        'data/demo.xml',
+        # 'data/demo.xml',
         'data/data.xml',
     ],
     'demo': [],
