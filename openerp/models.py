@@ -4663,7 +4663,7 @@ class BaseModel(object):
             context_wo_lang = dict(context, lang=None)
             old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
             # we must recursively copy the translations for o2o and o2m
-            if field_def['type'] == 'one2many':
+            if field_def['type'] == 'one2many' and self._fields[field_name].copy:
                 target_obj = self.pool[field_def['relation']]
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
