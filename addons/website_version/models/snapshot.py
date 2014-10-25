@@ -25,8 +25,9 @@ class Snapshot(osv.Model):
             if result:
                 raise Warning("You cannot delete a version which is in a running experiment.")
             #To avoid problem when we delete versions in Backend
-            request.session['snapshot_id'] = 0
-            request.session['master'] = 1
+            if request:
+                request.session['snapshot_id'] = 0
+                request.session['master'] = 1
         return super(Snapshot, self).unlink(cr, uid, ids, context=context)
 
     def action_publish(self,cr,uid,ids,context=None):
