@@ -275,6 +275,7 @@ class Field(object):
     string = None               # field label
     help = None                 # field tooltip
     readonly = False
+    save_readonly = False
     required = False
     states = None
     groups = False              # csv list of group xml ids
@@ -603,6 +604,7 @@ class Field(object):
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
+    _description_save_readonly = property(attrgetter('save_readonly'))
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
