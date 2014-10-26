@@ -48,15 +48,13 @@
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
                     ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), {'cookieDomain': 'none'});
-                    console.log('GA key='+'<t t-esc="website.google_analytics_key"/>');
                     ga('send','pageview');
                     edit = $('html').attr('data-editable');
                     if (edit != "1"){
                         var view_id = $('html').attr('data-view-xmlid');
                         openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
-                                var exp = result['ExpId']
-                                var snap = result['VarId']
-                                console.log(exp+':'+snap);
+                                var exp = result['ExpId'];
+                                var snap = result['VarId'];
                                 ga('set', 'expId', exp); 
                                 ga('set', 'expVar', snap);
                                 ga('send', 'pageview');

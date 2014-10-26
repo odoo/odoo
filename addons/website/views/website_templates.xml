@@ -94,17 +94,8 @@
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), {'cookieDomain': 'none'});
+                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
                     ga('send','pageview');
-
-                    var view_id = $('html').attr('data-view-xmlid');
-                    openerp.jsonRpc( '/website_version/get_analytics', 'call', { 'view_id':view_id }).then(function (result) {
-                            var exp = result['ExpId'];
-                            var snap = result['VarId'];
-                            ga('set', 'expId', exp); 
-                            ga('set', 'expVar', snap);
-                            ga('send', 'pageview');
-                        });
                 </script>
             </t>
         </head>

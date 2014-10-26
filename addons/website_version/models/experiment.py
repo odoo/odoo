@@ -91,7 +91,6 @@ class Experiment(osv.Model):
                         raise Warning("Your experiment must be running to be ended.")
                     if current[1]["status"] == 'ENDED':
                         raise Warning("You cannot modify the state of an ended experiement.")
-                    print current[1]["status"]
                     temp['status'] = state
                 else:
                     temp['status'] = exp.state

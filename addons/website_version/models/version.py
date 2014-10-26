@@ -71,6 +71,15 @@ class ViewVersion(osv.Model):
                 self.unlink(cr, uid, master_id, context=context)
             self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
+    def get_view_id(self, cr, uid, xml_id, context=None):
+        if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
+            domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
+            [xml_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context)
+        else:
+            xml_id = super(ViewVersion, self).get_view_id(cr, uid, xml_id, context=context)
+        return xml_id
+
+
     _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id'))
 
     @tools.ormcache_context(**_read_template_cache)
