@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import Warning
 from openerp import SUPERUSER_ID
 from datetime import datetime, timedelta
 from openerp.osv import osv, fields
 import simplejson
-from openerp.http import request
 
 
 class Experiment_snapshot(osv.Model):
@@ -145,7 +144,6 @@ class Experiment(osv.Model):
     def update_goals(self,cr,uid,ids,context=None):
         gm_obj = self.pool['google.management']
         goals_obj = self.pool['website_version.goals']
-        ids = goals_obj.search(cr, uid, [],context=context)
         website_id = context.get('website_id')
         if not website_id:
             raise Warning("You must specify the website.")

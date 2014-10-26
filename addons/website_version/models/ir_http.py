@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import openerp
 from openerp.http import request
-from openerp.tools import config
 from openerp.osv import orm
-import werkzeug.wrappers
 import json
 
 class ir_http(orm.AbstractModel):

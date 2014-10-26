@@ -11,8 +11,8 @@
         start: function() {
             var self = this;
             $('#master_edit_button').click(function() {
-                var m_names = new Array("jan", "feb", "mar", 
-                "apr", "may", "jun", "jul", "aug", "sep", 
+                var m_names = new Array("jan", "feb", "mar",
+                "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
                 var d = new Date();
                 var curr_date = d.getDate();
@@ -53,7 +53,7 @@
         }
     });
 
-    website.EditorBarCustomize.include({  
+    website.EditorBarCustomize.include({
         start: function() {
             return this._super();
         },

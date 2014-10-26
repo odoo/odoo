@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import osv,fields
-import werkzeug.wrappers
-from openerp.http import request, Response
+from openerp.http import request
 import random
 import json
 
