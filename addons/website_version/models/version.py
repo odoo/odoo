@@ -71,7 +71,7 @@ class ViewVersion(osv.Model):
                 self.unlink(cr, uid, master_id, context=context)
             self.copy(cr, uid, view_id, {'key':key, 'website_id': view.website_id.id, 'snapshot_id': None}, context=context)
 
-    _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id','inherit_id'))
+    _read_template_cache = dict(accepted_keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id','snapshot_id'))
 
     @tools.ormcache_context(**_read_template_cache)
     def _read_template(self, cr, uid, view_id, context=None):
