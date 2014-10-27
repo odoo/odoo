@@ -406,7 +406,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$pager.remove();
         if (this.get("actual_mode") === "create")
             return;
-        this.$pager = $(QWeb.render("FormView.pager", {'widget':self})).hide();
+        this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
         if (this.options.$pager) {
             this.$pager.appendTo(this.options.$pager);
         } else {
@@ -423,6 +423,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 $el.removeAttr("disabled");
             });
         });
+        this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
         this.$pager.toggle(this.dataset.ids.length > 1);

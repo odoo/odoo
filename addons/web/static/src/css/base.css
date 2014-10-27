@@ -82,6 +82,8 @@
    */
 }
 .openerp.openerp_webclient_container {
+  height: 95%;
+  height: -webkit-calc(100% - 34px);
   height: calc(100% - 34px);
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -89,6 +91,8 @@
 }
 @media (max-width: 768px) {
   .openerp.openerp_webclient_container {
+    height: 95%;
+    height: -webkit-calc(100% - 52px);
     height: calc(100% - 52px);
   }
 }
@@ -488,17 +492,17 @@
 .openerp .oe_button.oe_link span:hover {
   text-decoration: underline;
 }
-.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+.openerp .oe_star_on, .openerp .oe_star_off {
   color: #cccccc;
   text-shadow: 0 0 2px black;
   vertical-align: top;
   position: relative;
   top: -8px;
 }
-.openerp .oe_webclient .oe_star_on:hover, .openerp .oe_webclient .oe_star_off:hover {
+.openerp .oe_star_on:hover, .openerp .oe_star_off:hover {
   text-decoration: none;
 }
-.openerp .oe_webclient .oe_star_on {
+.openerp .oe_star_on {
   color: gold;
 }
 .openerp p.oe_grey {
@@ -787,11 +791,6 @@
 .openerp .oe_database_manager .oe_database_manager_menu {
   color: #000;
 }
-.openerp .oe_webclient {
-  width: 100%;
-  height: 100%;
-  border-spacing: 0px;
-}
 .openerp .oe_content_full_screen .oe_application {
   top: 0;
   left: 0;
@@ -993,6 +992,7 @@
   -ms-flex-negative: 1;
   display: inline-block\9;
   overflow: auto\9;
+  width: -webkit-calc(100% - 220px);
   width: calc(100% - 220px);
 }
 .openerp .oe_application .oe_application {
@@ -1350,6 +1350,7 @@
 }
 .openerp .oe-search-options .oe-group-selector {
   margin: 3px 25px;
+  min-width: -webkit-calc(100% - 40px);
   min-width: calc(100% - 40px);
   max-width: 250px;
   width: auto;
@@ -1392,10 +1393,12 @@
 }
 .openerp .oe-search-options .searchview_extended_prop_field {
   display: inline;
+  width: -webkic-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 .openerp .oe-search-options .searchview_extended_prop_op {
   margin: 3px 0;
+  width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 .openerp .oe-search-options .searchview_extended_delete_prop {
@@ -1403,12 +1406,15 @@
   display: inline;
 }
 .openerp .oe-search-options .searchview_extended_prop_value {
+  width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 .openerp .oe-search-options .searchview_extended_prop_value > select, .openerp .oe-search-options .searchview_extended_prop_value > input {
+  width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 .openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_main {
+  width: -webkit-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 .openerp .oe-search-options .searchview_extended_prop_value .oe_datepicker_master {
@@ -3073,15 +3079,13 @@ body.oe_single_form .oe_single_form_container {
 .modal .oe_act_window.modal-body {
   padding: 0;
 }
-.modal .oe-modal-header {
-  background-color: #f0eeee;
-}
 .modal .oe-view-manager-content > div {
   position: static !important;
 }
 
 @media (min-width: 768px) {
   .modal .modal-body {
+    max-height: -webkit-calc(100vh - 200px);
     max-height: calc(100vh - 200px);
   }
 }

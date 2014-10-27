@@ -198,12 +198,16 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
+        height: 95%
+        height: -webkit-calc(100% - 34px)
         height: calc(100% - 34px)
         display: -ms-flexbox
         display: -webkit-flex
         display: flex
     @media (max-width: 768px)
         &.openerp_webclient_container
+            height: 95%
+            height: -webkit-calc(100% - 52px)
             height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
@@ -457,17 +461,16 @@ $sheet-padding: 16px
             font-weight: bold
             &:hover
                 text-decoration: underline
-    .oe_webclient
-        .oe_star_on, .oe_star_off
-            color: #cccccc
-            text-shadow: 0 0 2px black
-            vertical-align: top
-            position: relative
-            top: -8px
-        .oe_star_on:hover, .oe_star_off:hover
-            text-decoration: none
-        .oe_star_on
-            color: gold
+    .oe_star_on, .oe_star_off
+        color: #cccccc
+        text-shadow: 0 0 2px black
+        vertical-align: top
+        position: relative
+        top: -8px
+    .oe_star_on:hover, .oe_star_off:hover
+        text-decoration: none
+    .oe_star_on
+        color: gold
     p.oe_grey
         max-width: 650px
     .oe_grey
@@ -691,12 +694,6 @@ $sheet-padding: 16px
         .oe_database_manager_menu
             color: #000
     // }}}
-    // WebClient {{{
-    .oe_webclient
-        width: 100%
-        height: 100%
-        border-spacing: 0px
-    // }}}
     // WebClient.fullscreen {{{
     .oe_content_full_screen
         .oe_application
@@ -868,6 +865,7 @@ $sheet-padding: 16px
         -ms-flex-negative: 1
         display: inline-block\9
         overflow: auto\9
+        width: -webkit-calc(100% - 220px)
         width: calc(100% - 220px)
         .oe_application
             width: 100%
@@ -1154,6 +1152,7 @@ $sheet-padding: 16px
             padding-right: 10px
         .oe-group-selector
             margin: 3px 25px
+            min-width: -webkit-calc(100% - 40px)
             min-width: calc(100% - 40px)
             max-width: 250px
             width: auto
@@ -1190,19 +1189,24 @@ $sheet-padding: 16px
                     margin-left: 0
         .searchview_extended_prop_field
             display: inline
+            width: -webkic-calc(100% - 20px)
             width: calc(100% - 20px)
         
         .searchview_extended_prop_op
             margin: 3px 0
+            width: -webkit-calc(100% - 20px)
             width: calc(100% - 20px)
         .searchview_extended_delete_prop
             float: right
             display: inline
         .searchview_extended_prop_value
+            width: -webkit-calc(100% - 20px)
             width: calc(100% - 20px)
             > select, > input
+                width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
             .oe_datepicker_main
+                width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
             .oe_datepicker_master
                 width: 100%
@@ -2535,13 +2539,12 @@ body.oe_single_form
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
-    .oe-modal-header
-        background-color: #f0eeee
     .oe-view-manager-content > div
         position: static !important
 
 @media (min-width: 768px)
     .modal .modal-body
+        max-height: -webkit-calc(100vh - 200px)
         max-height: calc(100vh - 200px)
 
 .ui-datepicker
