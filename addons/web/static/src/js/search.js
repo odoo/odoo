@@ -1725,8 +1725,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     append_filter: function (filter) {
         var self = this,
             key = this.key_for(filter),
-            $filter,
-            warning = _t("This filter is global and will be removed for everybody if you continue.");
+            $filter;
 
         this.$divider.show();
         if (key in this.$filters) {
@@ -1778,7 +1777,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
             delete self.$filters[key];
             delete self.filters[key];
             if (_.isEmpty(self.filters)) {
-                self.$('li.divider').remove();
+                self.$divider.hide();
             }
         });        
     },
