@@ -25,6 +25,76 @@ $(function () {
         });
     }, 100);
 
+    // lang switcher
+    function findSheet(pattern, fromSheet) {
+        if (fromSheet) {
+            for(var i=0; i<fromSheet.cssRules.length; ++i) {
+                var rule = fromSheet.cssRules[i];
+                if (rule.type !== CSSRule.IMPORT_RULE) { continue; }
+                if (pattern.test(rule.href)) {
+                    return rule.styleSheet;
+                }
+            }
+            return null;
+        }
+        var sheets = document.styleSheets;
+        for(var j=0; j<sheets.length; ++j) {
+            var sheet = sheets[j];
+            if (pattern.test(sheet.href)) {
+                return sheet;
+            }
+            var subSheet;
+            if (subSheet = findSheet(pattern, sheet)) {
+                return subSheet;
+            }
+        }
+        return null;
+    }
+    function buildSwitcher(languages) {
+        var root = document.createElement('ul');
+        root.className = "switcher";
+        for(var i=0; i<languages.length; ++i) {
+            var item = document.createElement('li');
+            item.textContent = languages[i];
+            if (i === 0) {
+                item.className = "active";
+            }
+            root.appendChild(item);
+        }
+        return root;
+    }
+    if ($('div.document-super').hasClass('stripe')) { (function () {
+        var sheet = findSheet(/style\.css$/);
+        if (!sheet) { return; }
+
+        // collect languages
+        var languages = {};
+        $('div.switchable').each(function () {
+            var classes = this.className.split(/\s+/);
+            for (var i = 0; i < classes.length; ++i) {
+                var cls = classes[i];
+                if (!/^highlight-/.test(cls)) { continue; }
+                languages[cls.slice(10)] = true;
+            }
+        });
+
+        $(buildSwitcher(Object.keys(languages)))
+            .prependTo('div.documentwrapper')
+            .on('click', 'li', function (e) {
+                $(e.target).addClass('active')
+                    .siblings().removeClass('active');
+                var id = e.target.textContent;
+                var lastIndex = sheet.cssRules.length - 1;
+                var content = sheet.cssRules[lastIndex].style.cssText;
+                var sel = [
+                    '.stripe .only-', id, ', ',
+                    '.stripe .highlight-', id, ' > .highlight'
+                ].join('');
+                sheet.deleteRule(lastIndex);
+                sheet.insertRule(sel + '{' + content + '}', lastIndex);
+        });
+    })(); }
+
     // Config ZeroClipboard
     ZeroClipboard.config({
         moviePath: '_static/ZeroClipboard.swf',

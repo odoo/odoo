@@ -593,9 +593,49 @@ td.field-body {
       }
     }
   }
+
+  .switcher {
+    color: white;
+    width: auto !important;
+    float: none !important;
+
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+
+    right: 0.5em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 5;
+
+    li {
+      background-color: #0f131a;
+      padding: 0.4em 1em;
+      border: 1px solid #333;
+      border-left-width: 0;
+      cursor: pointer;
+      &:first-child {
+        border-left-width: 1px;
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+      &:hover {
+        background-color: #222;
+      }
+      &.active {
+        background-color: #333;
+      }
+    }
+  }
+
   // === show/hide code snippets ===
-  .switchable > .highlight,
-  [class*=only-] {
+  [class*=only-],
+  .switchable > .highlight {
     display: none;
   }
   // must be final rule of page

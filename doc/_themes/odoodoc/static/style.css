@@ -6757,8 +6757,43 @@ td.field-body > ul {
     border-left: 1px solid #777777;
   }
 }
-.stripe .switchable > .highlight,
-.stripe [class*=only-] {
+.stripe .switcher {
+  color: white;
+  width: auto !important;
+  float: none !important;
+  position: fixed;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  right: 0.5em;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 5;
+}
+.stripe .switcher li {
+  background-color: #0f131a;
+  padding: 0.4em 1em;
+  border: 1px solid #333;
+  border-left-width: 0;
+  cursor: pointer;
+}
+.stripe .switcher li:first-child {
+  border-left-width: 1px;
+  border-radius: 5px 0 0 5px;
+}
+.stripe .switcher li:last-child {
+  border-radius: 0 5px 5px 0;
+}
+.stripe .switcher li:hover {
+  background-color: #222;
+}
+.stripe .switcher li.active {
+  background-color: #333;
+}
+.stripe [class*=only-],
+.stripe .switchable > .highlight {
   display: none;
 }
 .stripe .only-python,
