@@ -83,7 +83,6 @@ class account_fiscal_position(osv.osv):
                 if t.tax_src_id == tax:
                     if t.tax_dest_id:
                         result |= t.tax_dest_id
-                    break
             else:
                 result |= tax
         return result
