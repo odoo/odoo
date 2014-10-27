@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <!--
 
     Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+    Copyright (C) 20014-Now hans.yonathan@falinwa.com   <general chart data>
 
     科目类型
 我们借用这个对象生成资产负债表和损益表
@@ -304,6 +305,111 @@
             <field name="code">bs121</field>
             <field name="close_method">balance</field>
             <field name="report_type">liability</field>
+        </record>
+        
+        <!-- Account Type for General Business Chart -->
+        <record id="user_type_fal_capital" model="account.account.type">
+            <field name="name">资产类(Asset)</field>
+            <field name="code">Asset</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_fal_accountreceivable" model="account.account.type">
+            <field name="name">应收款类(Account Receivable)</field>
+            <field name="code">Asset</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">asset</field>
         </record>        
+        <record id="user_type_fal_assetview" model="account.account.type">
+            <field name="name">资产类视图(Asset View)</field>
+            <field name="code">Asset view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_fal_bank" model="account.account.type">
+            <field name="name">银行存款(Bank)</field>
+            <field name="code">Bank</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>        
+        <record id="user_type_fal_cash" model="account.account.type">
+            <field name="name">库存现金(Cash)</field>
+            <field name="code">Cash</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_fal_costview" model="account.account.type">
+            <field name="name">成本类视图(COGS View)</field>
+            <field name="code">COGS View</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>        
+        <record id="user_type_fal_cost" model="account.account.type">
+            <field name="name">成本类(COGS)</field>
+            <field name="code">COGS</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_fal_equity" model="account.account.type">
+            <field name="name">所有者权益(Equity)</field>
+            <field name="code">Equity</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_fal_equity_view" model="account.account.type">
+            <field name="name">所有者权益类视图(Equity View)</field>
+            <field name="code">Equity</field>
+            <field name="close_method">none</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_fal_pl_expense" model="account.account.type">
+            <field name="name">损益费用类(P&amp;L Expense)</field>
+            <field name="code">Expense</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>        
+        <record id="user_type_fal_pl_expense_view" model="account.account.type">
+            <field name="name">损益费用类视图(P&amp;L Expense View)</field>
+            <field name="code">Expense view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="user_type_fal_pl_income" model="account.account.type">
+            <field name="name">损益收入类(P&amp;L Income)</field>
+            <field name="code">Income</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>        
+        <record id="user_type_fal_pl_income_view" model="account.account.type">
+            <field name="name">损益收入类视图(P&amp;L Income View)</field>
+            <field name="code">Income view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
+        </record>
+        <record id="user_type_fal_accountpayable" model="account.account.type">
+            <field name="name">应付款类(Account Payable)</field>
+            <field name="code">Liability</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
+        </record>        
+        <record id="user_type_fal_debt" model="account.account.type">
+            <field name="name">负债类(Liability)</field>
+            <field name="code">Liability</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_fal_liability_view" model="account.account.type">
+            <field name="name">负债类视图(Liability View)</field>
+            <field name="code">Liability View</field>
+            <field name="close_method">none</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_fal_all" model="account.account.type">
+            <field name="name">所有科目(Root View)</field>
+            <field name="code">View</field>
+            <field name="close_method">none</field>
+            <field name="report_type">none</field>
+        </record>
+
     </data>
 </openerp>
