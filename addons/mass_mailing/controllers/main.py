@@ -13,7 +13,8 @@ class MassMailController(http.Controller):
         mail_mail_stats = request.registry.get('mail.mail.statistics')
         mail_mail_stats.set_opened(request.cr, SUPERUSER_ID, mail_mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
-        response.mimetype = 'image/gif'
+        response.headers['Content-Type'] = 'image/gif'
+        response.headers['Cache-Control'] = 'no-cache, max-age=0'
         response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
         return response
 
