@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-import urllib
-import urlparse
+import werkzeug
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -52,24 +51,21 @@ class MailMail(osv.Model):
 
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        track_url = urlparse.urljoin(
-            base_url, '/web/dbredirect?%(params)s' % {
-                'params': urllib.urlencode({
-                    'db': cr.dbname,
-                    'redirect': '/mail/track/%s/blank.gif' % mail.id,
-                })
-            }
-        )
+        track_url = werkzeug.Href(base_url)({
+            'db': cr.dbname,
+            'redirect': '/mail/track/%s/blank.gif' % mail.id,
+        })
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, cr, uid, mail, email_to, msg=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        url = urlparse.urljoin(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+        url = werkzeug.Href(base_url)({
+            'db': cr.dbname,
+            'redirect': '/mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': mail.mailing_id.id,
-                'params': urllib.urlencode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
-            }
-        )
+                'params': {'res_id': mail.res_id, 'email': email_to},
+            },
+        })
         return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
