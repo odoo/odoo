@@ -37,14 +37,18 @@ class table_compute(object):
         for p in products:
             x = min(max(p.website_size_x, 1), PPR)
             y = min(max(p.website_size_y, 1), PPR)
-            if index>PPG:
+            if index>=PPG:
                 x = y = 1
 
             pos = minpos
             while not self._check_place(pos%PPR, pos/PPR, x, y):
                 pos += 1
-
-            if index>PPG and (pos/PPR)>maxy:
+            # if 21st products (index 20) and the last line is full (PPR products in it), break
+            # (pos + 1.0) / PPR is the line where the product would be inserted
+            # maxy is the number of existing lines
+            # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
+            # and to force python to not round the division operation
+            if index >= PPG and ((pos + 1.0) / PPR) > maxy:
                 break
 
             if x==1 and y==1:   # simple heuristic for CPU optimization
@@ -98,17 +102,20 @@ class QueryURL(object):
         return path
 
 
+def get_pricelist():
+    cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+    sale_order = context.get('sale_order')
+    if sale_order:
+        pricelist = sale_order.pricelist_id
+    else:
+        partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+        pricelist = partner.property_product_pricelist
+    return pricelist
+
 class website_sale(http.Controller):
 
     def get_pricelist(self):
-        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        sale_order = context.get('sale_order')
-        if sale_order:
-            pricelist = sale_order.pricelist_id
-        else:
-            partner = pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-            pricelist = partner.property_product_pricelist
-        return pricelist
+        return get_pricelist()
 
     def get_attribute_value_ids(self, product):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry

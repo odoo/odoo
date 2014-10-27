@@ -257,7 +257,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            this.do_show({ reload: warm });
+            this.do_show();
         }
     },
     /**
