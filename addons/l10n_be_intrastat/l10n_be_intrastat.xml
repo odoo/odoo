@@ -23,12 +23,11 @@
         <record model="ir.ui.view" id="intra_view_transaction_form">
             <field name="name">intra.view.transaction_form</field>
             <field name="model">l10n_be_intrastat.transaction</field>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Intrastat transaction form">
                     <group>
-                    <field name="code" readonly="1"/>
-                    <field name="description" readonly="1"/>
+                    <field name="code"/>
+                    <field name="description"/>
                 </group>
                 </form>
             </field>
@@ -38,7 +37,6 @@
         <record model="ir.ui.view" id="intra_view_transaction_tree">
             <field name="name">intra.view.transaction_tree</field>
             <field name="model">l10n_be_intrastat.transaction</field>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <tree string="Intrastat transaction types">
                     <field name="code"/>
@@ -51,12 +49,11 @@
         <record model="ir.ui.view" id="intra_view_transport_mode_form">
             <field name="name">intra.view.transport_mode_form</field>
             <field name="model">l10n_be_intrastat.transport_mode</field>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Intrastat transpartation mode form">
                     <group>
-                    <field name="code" readonly="1"/>
-                    <field name="name" readonly="1"/>
+                    <field name="code"/>
+                    <field name="name"/>
                 </group>
                 </form>
             </field>
@@ -66,7 +63,6 @@
         <record model="ir.ui.view" id="intra_view_transport_mode_tree">
             <field name="name">intra.view.transport_mode_tree</field>
             <field name="model">l10n_be_intrastat.transport_mode</field>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <tree string="Intrastat transportation modes">
                     <field name="code"/>
@@ -96,7 +92,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_registry']" position="after">
-                    <field name="region_id" attrs="{'required': [('country_id', '=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
+                    <field name="region_id" domain="[('country_id','=',country_id)]"/>
                     <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
                     <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>

@@ -22,8 +22,9 @@ import base64
 import time
 import xml.etree.ElementTree as ET
 from collections import namedtuple
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
+from openerp import exceptions, SUPERUSER_ID, tools
 from openerp.osv import fields, osv
 from openerp.report import report_sxw
 from openerp.tools.translate import _
@@ -44,13 +45,8 @@ class xml_decl(osv.TransientModel):
         return tax_code_ids and tax_code_ids[0] or False
 
     def _get_def_monthyear(self, cr, uid, context=None):
-        td = date.today()
-        if td.day <= 20: #Review: 20 should be a parameter, maybe ir.config.parameter
-            #we take the previous month
-            #Because you've until the 20th day of the month
-            #to give your intrastat report
-            td = date(td.year, td.month, 1)
-            td = td - timedelta(1)
+        td = datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT).date()
+        #date.today()
         return td.year, td.month
 
     def _get_def_month(self, cr, uid, context=None):
@@ -75,7 +71,6 @@ class xml_decl(osv.TransientModel):
         'msg': fields.text('File created', size=14, readonly=True),
         'file_save': fields.binary('Save File', readonly=True),
         'comments': fields.text('Comments'),
-        #Find better name for step
         'state': fields.selection([('draft', 'Draft'), ('download', 'Download')], string="State"),
         }
 
@@ -98,10 +93,12 @@ class xml_decl(osv.TransientModel):
         decl_datas = self.browse(cr, uid, ids[0])
         company = decl_datas.tax_code_id.company_id
         if not (company.partner_id and company.partner_id.country_id and company.partner_id.country_id.id):
-            raise osv.except_osv(_('Insufficient Data!'), _('No Country associated with your company.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+            raise exceptions.RedirectWarning(_('Insufficient Data!\nNo Country associated with your company.'), action_id, _('Go to the companies configuration'))
         kbo = company.company_registry
         if not kbo:
-            raise osv.except_osv(_('Insufficient Data!'), _('No company registry associated with your company.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+            raise exceptions.RedirectWarning(_('Insufficient Data!\nNo company registry associated with your company.'), action_id, _('Go to the companies configuration'))
         if len(decl_datas.month) != 2:
             decl_datas.month = "0%s" % decl_datas.month
         if int(decl_datas.month)<1 or int(decl_datas.month)>12:
@@ -121,13 +118,13 @@ class xml_decl(osv.TransientModel):
         ET.SubElement(admin, 'To').text = "NBB"
         ET.SubElement(admin, 'Domain').text = "SXX"
         if decl_datas.arrivals == 'be-standard':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=False, extendedmode=False, context=context))
+            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company, dispatchmode=False, extendedmode=False, context=context))
         elif decl_datas.arrivals == 'be-extended':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=False, extendedmode=True, context=context))
+            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company, dispatchmode=False, extendedmode=True, context=context))
         if decl_datas.dispatches == 'be-standard':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=True, extendedmode=False, context=context))
+            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company, dispatchmode=True, extendedmode=False, context=context))
         elif decl_datas.dispatches == 'be-extended':
-            decl.append(self._get_lines(cr, uid, ids, decl_datas, company, dispatchmode=True, extendedmode=True, context=context))
+            decl.append(self._get_lines(cr, SUPERUSER_ID, ids, decl_datas, company, dispatchmode=True, extendedmode=True, context=context))
 
         #Get xml string with declaration
         data_file = ET.tostring(decl, encoding='UTF-8', method='xml')
@@ -158,6 +155,7 @@ class xml_decl(osv.TransientModel):
         saleorder_mod = self.pool['sale.order']
         trans_mod = self.pool['l10n_be_intrastat.transport_mode']
         warehouse_mod = self.pool['stock.warehouse']
+        picking_mod = self.pool['stock.picking']
 
         if dispatchmode:
             mode1 = 'out_invoice'
@@ -226,14 +224,16 @@ class xml_decl(osv.TransientModel):
             #If purchase, comes from purchase order, linked to a location,
             #which is linked to the warehouse
             #if sales, the sale order is linked to the warehouse
+            #if sales, from a delivery order, linked to a location,
+            #which is linked to the warehouse
             #If none found, get the company one.
             exreg = None
             if invoiceline.invoice_id.type in ('in_invoice', 'in_refund'):
                 #comes from purchase
                 if invoiceline.invoice_id.origin:
-                    po_ids = purchaseorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
+                    po_ids = purchaseorder_mod.search(cr, SUPERUSER_ID, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
                     if po_ids and po_ids[0]:
-                        purchaseorder = purchaseorder_mod.browse(cr, uid, po_ids[0])
+                        purchaseorder = purchaseorder_mod.browse(cr, SUPERUSER_ID, po_ids[0])
                         region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, purchaseorder.location_id.id, context=context)
                         if region_id:
                             exreg = region_mod.browse(cr, uid, region_id).code
@@ -245,18 +245,29 @@ class xml_decl(osv.TransientModel):
                         saleorder = saleorder_mod.browse(cr, uid, so_ids[0], context=context)
                         if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
                             exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
+                    else:
+                        #search on deliveries
+                        delivery_ids = picking_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
+                        if delivery_ids and delivery_ids[0]:
+                            delivery = picking_mod.browse(cr, uid, delivery_ids[0], context=context)
+                            if delivery and delivery.location_id and delivery.location_id[0]:
+                                region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, delivery.location_id[0].id, context=context)
+                                if region_id:
+                                    exreg = region_mod.browse(cr, uid, region_id).code
+
             if not exreg:
                 if company.region_id:
                     exreg = company.region_id.code
                 else:
-                    raise osv.except_osv(_('Incorrect Data!'), _('Define at least region of company'))
+                    model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+                    raise exceptions.RedirectWarning(_('Please set the intrastat region for your company.\nThis can be done in the Settings menu.'), action_id, _('Go to the companies configuration'))
 
             #Check commodity codes
             intrastat_id = product_mod.get_intrastat_recursively(cr, uid, invoiceline.product_id.id, context=context)
             if intrastat_id:
                 exgo = intrastatcode_mod.browse(cr, uid, intrastat_id, context=context).name
             else:
-                raise osv.except_osv(_('Incorrect Data!'), _('Product %s has not intrastat code') % (invoiceline.product_id.name))
+                raise osv.except_osv(_('Incorrect Data!'), _('Product %s has no intrastat code') % (invoiceline.product_id.name))
 
             #In extended mode, 2 more fields required
             if extendedmode:
@@ -266,7 +277,8 @@ class xml_decl(osv.TransientModel):
                 elif company.transport_mode_id:
                     extpc = company.transport_mode_id.code
                 else:
-                    raise osv.except_osv(_('Incorrect Data!'), _('Define at least default transport of company'))
+                    model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+                    raise exceptions.RedirectWarning(_('Please define the default intrastat transport mode for your company.\nThis can be done in the Settings menu.'), action_id, _('Go to the companies configuration'))
 
                 #Check incoterm
                 if invoiceline.invoice_id.incoterm_id:
@@ -274,7 +286,8 @@ class xml_decl(osv.TransientModel):
                 elif company.incoterm_id:
                     exdeltrm = company.incoterm_id.code
                 else:
-                    raise osv.except_osv(_('Incorrect Data!'), _('Define at least default INCOTERM of company'))
+                    model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_company_form')
+                    raise exceptions.RedirectWarning(_('Please define the default Incoterm for your company.\nThis can be done in the Settings menu.'), action_id, _('Go to the companies configuration'))
             else:
                 extpc = ""
                 exdeltrm = ""

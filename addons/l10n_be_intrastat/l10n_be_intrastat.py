@@ -49,8 +49,8 @@ class intrastat_transaction(osv.osv):
     _name = 'l10n_be_intrastat.transaction'
     _rec_name = 'code'
     _columns = {
-        'code': fields.char('Code', required=True),
-        'description': fields.text('Description'),
+        'code': fields.char('Code', required=True, readonmly=True),
+        'description': fields.text('Description', readonly=True),
     }
 
     _sql_constraints = [
@@ -61,8 +61,8 @@ class intrastat_transaction(osv.osv):
 class intrastat_transport_mode(osv.osv):
     _name = 'l10n_be_intrastat.transport_mode'
     _columns = {
-        'code': fields.char('Code', required=True),
-        'name': fields.char('Description'),
+        'code': fields.char('Code', required=True, readonmly=True),
+        'name': fields.char('Description', readonmly=True),
     }
 
     _sql_constraints = [

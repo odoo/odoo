@@ -6,7 +6,7 @@
             <field name="name">Intrastat XML Declaration</field>
             <field name="model">l10n_be_intrastat_xml.xml_decl</field>
             <field name="arch" type="xml">
-                <form string="XML Intratstat Declaration" version="7.0">
+                <form string="XML Intratstat Declaration">
                 <!-- Need the field in the view in order to be able to hide or show part of the view according the state -->
                 <field name="state" invisible="1" />
                 	<group states="draft">
@@ -54,7 +54,6 @@
             action="action_intrastat_xml_declaration"
             id="l10n_be_intrastat_xml_declaration"
             groups="account.group_account_manager"/>
-            <!--  I had to change the ID in order to be able to install de module -->
     </data>
 
 </openerp>

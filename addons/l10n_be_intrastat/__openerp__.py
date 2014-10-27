@@ -31,7 +31,7 @@ Based on invoices.
     'depends': ['report_intrastat', 'sale_stock', 'account_accountant', 'l10n_be'],
     'data': [
         'data/regions.xml',
-        'data/report.intrastat.code.xml',
+        'data/report.intrastat.code.csv',
         'data/transaction.codes.xml',
         'data/transport.modes.xml',
         'security/groups.xml',
