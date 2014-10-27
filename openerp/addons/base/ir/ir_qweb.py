@@ -1007,6 +1007,30 @@ class QwebWidgetMonetary(osv.AbstractModel):
             formatted_amount, pre=pre, post=post
         ).format(symbol=display.symbol,)
 
+class QwebWidgetDateTime(osv.AbstractModel):
+    _name = 'ir.qweb.widget.datetime'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        if options is None : options={}
+        lang = qwebcontext.context.get('lang') or 'en_US'
+        locale = babel.Locale.parse(lang)
+        res_lang = self.pool.get('res.lang')
+        lang_id = res_lang.search(qwebcontext.cr,qwebcontext.uid, [('code','=',lang)], limit=1, context=qwebcontext.context)[0]
+        lang_obj = res_lang.browse(qwebcontext.cr, qwebcontext.uid,lang_id,context=qwebcontext.context)
+        value = self.pool['ir.qweb'].eval_str(inner, qwebcontext)
+        value = datetime.datetime.strptime(value.split(".")[0], openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        value = fields.datetime.context_timestamp(qwebcontext.cr, qwebcontext.uid, timestamp=value)
+        strftime_pattern = (u"%s %s" % (lang_obj.date_format, lang_obj.time_format))
+        if options.get('format') == 'time':
+            strftime_pattern = (u"%s" % (lang_obj.time_format))
+        if options.get('format') == 'date':
+            strftime_pattern = (u"%s" % (lang_obj.date_format))
+        pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
+        if options.get('hide_seconds'):
+            pattern = pattern.replace(":ss", "").replace(":s", "")
+        return babel.dates.format_datetime(value, format=pattern, locale=locale)
+
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
     objects with a ``__html__`` methods but AFAIK does not provide any such

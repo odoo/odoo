@@ -122,8 +122,7 @@
     <div class="header">
         <div class="row">
             <div class="col-xs-3">
-                <span t-esc="time.strftime('%Y-%m-%d')"/>
-                <span t-esc="time.strftime('%H:%M')"/>
+                <span t-esc="datetime.datetime.now()" t-esc-options='{"widget": "datetime","hide_seconds": "True"}'/>
             </div>
             <div class="col-xs-2 col-xs-offset-2 text-center">
                 <span t-esc="company.name"/>
