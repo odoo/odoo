@@ -79,7 +79,7 @@ class sale_order_line(osv.osv):
                 price=result['price_unit']
             else:
                 return res
-
+            uom = result.get('product_uom', uom)
             product = product_obj.browse(cr, uid, product, context)
             list_price = pricelist_obj.price_get(cr, uid, [pricelist],
                     product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })
