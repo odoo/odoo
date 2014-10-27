@@ -50,16 +50,14 @@ class MailMail(osv.Model):
         return mail_id
 
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        track_url = werkzeug.Href(base_url)({
+        track_url = werkzeug.Href('/web/dbredirect')({
             'db': cr.dbname,
             'redirect': '/mail/track/%s/blank.gif' % mail.id,
         })
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, cr, uid, mail, email_to, msg=None, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        url = werkzeug.Href(base_url)({
+        url = werkzeug.Href('/web/dbredirect')({
             'db': cr.dbname,
             'redirect': '/mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': mail.mailing_id.id,
