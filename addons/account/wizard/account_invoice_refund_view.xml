@@ -34,6 +34,7 @@
                          <group>
                              <field name="description"/>
                              <field name="journal_id" widget='selection'/>
+                             <field name="journal_id" widget='selection' attrs="{'invisible':[('same_journal', '=', 'True')]}"/>
                          </group><group>
                              <field name="date"/>
                              <field name="period"/>

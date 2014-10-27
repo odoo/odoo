@@ -79,5 +79,124 @@
             <field name="prefix">A0100100115</field>
             <field name="padding">8</field>
         </record>
+
+
+
+        <record id="ir_sequence_cf_credito_fiscal_fy" model="ir.sequence">
+            <field eval="'Account Default Miscellaneous Journal '+time.strftime('%Y')" name="name" />
+            <field name="code">cf.credito.fiscal</field>
+            <field name="prefix">A0100100101/%(year)s/</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_consumidor_final_fy" model="ir.sequence">
+            <field eval="'Factura a Consumidor Final (Sin Valor de Crédito Fiscal) '+time.strftime('%Y')" name="name" />
+            <field name="code">cf.consumidor.final</field>
+            <field name="prefix">A0100100102/%(year)s/</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_nota_debito_fy" model="ir.sequence">
+            <field eval="'Nota de Débito '+time.strftime('%Y')" name="name" />
+            <field name="prefix">A0100100103/%(year)s/</field>
+            <field name="active" eval="True"/>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_nota_credito_fy" model="ir.sequence">
+            <field eval="'Nota de Crédito '+time.strftime('%Y')" name="name" />
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100104/%(year)s/</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_proveedores_informales_fy" model="ir.sequence">
+            <field eval="'Registro de Proveedores Informales '+time.strftime('%Y')" name="name" />
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100111/%(year)s/</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_ingreso_unico_fy" model="ir.sequence">
+            <field eval="'Registro único de ingresos '+time.strftime('%Y')" name="name" />
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100112/%(year)s/</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_gastos_menores_fy" model="ir.sequence">
+            <field eval="'Registro de Gastos Menores '+time.strftime('%Y')" name="name" />
+            <field name="active" eval="True"/>
+            <field name="prefix">A0100100113/%(year)s/</field>
+            <field name="suffix"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="ir_sequence_cf_regimenes_especiales_fy" model="ir.sequence">
+            <field eval="'Registro regimenes especiales de tributación '+time.strftime('%Y')" name="name" />
+            <field name="code">cf.regimenes.especiales</field>
+            <field name="prefix">A0100100114/%(year)s/</field>
+            <field name="padding">8</field>
+        </record>
+        <record id="ir_sequence_cf_gubernamentales_fy" model="ir.sequence">
+            <field eval="'Gubernamentales '+time.strftime('%Y')" name="name" />
+            <field name="code">cf.regimenes.gubernamentales</field>
+            <field name="prefix">A0100100115/%(year)s/</field>
+            <field name="padding">8</field>
+        </record>
+
+
+        <record id="account_sequence_cf_credito_fiscal_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_credito_fiscal_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_credito_fiscal" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_consumidor_final_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_consumidor_final_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_consumidor_final" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_nota_debito_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_nota_debito_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_nota_debito" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_nota_credito_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_nota_credito_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_nota_credito" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_proveedores_informales_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_proveedores_informales_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_proveedores_informales" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_ingreso_unico_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_ingreso_unico_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_ingreso_unico" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_gastos_menores_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_gastos_menores_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_gastos_menores" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_regimenes_especiales_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_regimenes_especiales_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_regimenes_especiales" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+        <record id="account_sequence_cf_gubernamentales_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="ir_sequence_cf_gubernamentales_fy" />
+            <field name="sequence_main_id" ref="ir_sequence_cf_gubernamentales" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
     </data>
 </openerp>

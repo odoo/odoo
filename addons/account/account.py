@@ -740,7 +740,8 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False),
+        'sequence_id': fields.many2one('ir.sequence', 'Invoice Entry Sequence', help="This field contains the information related to the numbering of the invoice journal entries of this journal.", required=True, copy=False),
+        'refunds_sequence_id': fields.many2one('ir.sequence', 'Refunds Entry Sequence', help="This field contains the information related to the numbering of the refunds journal entries of this journal.", copy=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -761,6 +762,7 @@ class account_journal(osv.osv):
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'restart_sequence': True,
+        'refunds_sequence_id': False,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -812,7 +814,7 @@ class account_journal(osv.osv):
                     raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, vals, context=None):
+    def create_sequence(self, cr, uid, vals, refunds=False, context=None):
         """ Create new no_gap entry sequence for every new Joural
         """
         # in account.journal code is actually the prefix of the sequence
@@ -826,6 +828,9 @@ class account_journal(osv.osv):
             'padding': 4,
             'number_increment': 1
         }
+
+        if refunds:
+            seq['prefix'] = prefix + "R/%(year)s/"
 
         domain = []
         if 'company_id' in vals:
@@ -855,6 +860,8 @@ class account_journal(osv.osv):
             # if we have the right to create a journal, we should be able to
             # create it's sequence.
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context)})
+        # if not 'refunds_sequence_id' in vals or not vals['refunds_sequence_id']:
+        #     vals.update({'refunds_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, True, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):
