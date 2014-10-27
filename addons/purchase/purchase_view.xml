@@ -350,6 +350,7 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
