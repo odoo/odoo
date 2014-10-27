@@ -1768,8 +1768,9 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     },
     remove_filter: function (filter, $filter, key) {
         var self = this;
-        var warning = _t("This filter is global and will be removed for everybody if you continue.");
-        if (!(filter.user_id || confirm(warning))) {
+        var global_warning = _t("This filter is global and will be removed for everybody if you continue."),
+            warning = _t("Are you sure that you want to remove this filter?");
+        if (!confirm(filter.user_id ? warning : global_warning)) {
             return;
         }
         this.model.call('unlink', [filter.id]).done(function () {
