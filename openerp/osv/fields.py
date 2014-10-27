@@ -83,7 +83,28 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
     _deprecated = False
-    copy = True # whether the field is copied by BaseModel.copy()
+
+    copy = True                 # whether value is copied by BaseModel.copy()
+    string = None
+    help = ""
+    required = False
+    readonly = False
+    _domain = []
+    _context = {}
+    states = None
+    priority = 0
+    change_default = False
+    size = None
+    ondelete = None
+    translate = False
+    select = False
+    manual = False
+    write = False
+    read = False
+    selectable = True
+    group_operator = False
+    groups = False              # CSV list of ext IDs of groups
+    deprecated = False          # Optional deprecation warning
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
@@ -92,33 +113,28 @@ class _column(object):
         It corresponds to the 'state' column in ir_model_fields.
 
         """
-        if domain is None:
-            domain = []
-        if context is None:
-            context = {}
-        self.states = states or {}
-        self.string = string
-        self.readonly = readonly
-        self.required = required
-        self.size = size
-        self.help = args.get('help', '')
-        self.priority = priority
-        self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else 'set null'
-        self.translate = translate
-        self._domain = domain
-        self._context = context
-        self.write = False
-        self.read = False
-        self.select = select
-        self.manual = manual
-        self.selectable = True
-        self.group_operator = args.get('group_operator', False)
-        self.groups = False  # CSV list of ext IDs of groups that can access this field
-        self.deprecated = False # Optional deprecation warning
+        args0 = {
+            'string': string,
+            'required': required,
+            'readonly': readonly,
+            '_domain': domain,
+            '_context': context,
+            'states': states,
+            'priority': priority,
+            'change_default': change_default,
+            'size': size,
+            'ondelete': ondelete.lower() if ondelete else None,
+            'translate': translate,
+            'select': select,
+            'manual': manual,
+        }
+        for key, val in args0.iteritems():
+            if val:
+                setattr(self, key, val)
+
         self._args = args
-        for a in args:
-            setattr(self, a, args[a])
+        for key, val in args.iteritems():
+            setattr(self, key, val)
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
@@ -150,6 +166,8 @@ class _column(object):
         base_items = [
             ('column', self),                   # field interfaces self
             ('copy', self.copy),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
@@ -160,8 +178,6 @@ class _column(object):
             ('groups', self.groups),
             ('change_default', self.change_default),
             ('deprecated', self.deprecated),
-        ]
-        truthy_items = filter(itemgetter(1), [
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
@@ -619,6 +635,8 @@ class many2one(_column):
     _symbol_c = '%s'
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
+
+    ondelete = 'set null'
 
     def __init__(self, obj, string='unknown', auto_join=False, **args):
         _column.__init__(self, string=string, **args)
