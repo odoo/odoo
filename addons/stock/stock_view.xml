@@ -1030,6 +1030,7 @@
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                                <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin">
@@ -1092,6 +1093,7 @@
                         <field name="create_date" invisible="1"/>
                         <field name="date"/>
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
+                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group string="Locations" groups="stock.group_locations">
                         <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
