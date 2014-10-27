@@ -534,7 +534,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
                 activity['id'] = this.project_timesheet_db.get_unique_id();
                 var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date);
-                activity['hours'] = hours;
+                activity['unit_amount'] = hours;
                 activity['command'] = 0; //By default command = 0, activity which is to_create
                 this.project_timesheet_model.add_activity(activity);
                 this.project_timesheet_model.add_project(activity);
@@ -608,7 +608,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             var project_activity_data = {};
             //$form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
-            project_activity_data['hours'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100));
+            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100));
             project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
             project_activity_data['task_id'] = [self.task_m2o.get("value"), self.task_m2o.get("display_string")];
             project_activity_data['name'] = this.$("#name").val();
@@ -624,9 +624,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             project_activity_data['date'] = date; //Current date in accepted format
             //project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             project_activity_data['id'] = this.project_timesheet_db.get_unique_id();
-            console.log("project_activity_data['id'] is :: ", project_activity_data['id']);
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
-            console.log("project_activity_data is inside on_activity_add ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -678,7 +676,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super();
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
-            this.project_m2o.on("change:value", this, function() {
+            this.project_m2o.$el.find("textarea").on("change", this, function() {
                 this.task_m2o.set({display_string: false, value: false});
                 this.task_m2o.display_string(false);
                 this.set_project_model();
@@ -765,7 +763,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         self.task_m2o.set({display_string: field_val[1], value: field_val[0]});
                         self.task_m2o.display_string(field_val);
                         break;
-                    case "hours":
+                    case "unit_amount":
                         var formatted = self.format_duration(field_val);
                         self.$el.find("#hours").val(formatted[0]);
                         self.$el.find("#minutes").val(formatted[1]);
@@ -964,13 +962,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 _.each(groups, function(group) {
                     if (date_activities[key]) {
                         if (date_activities[key]['task_id']) {
-                            date_activities[key]['hours'] += parseFloat((group.hours).toFixed(2));
+                            date_activities[key]['unit_amount'] += parseFloat((group.unit_amount).toFixed(2));
                         } else {
-                            date_activities[key]['unallocated'] += parseFloat((group.hours).toFixed(2));
+                            date_activities[key]['unallocated'] += parseFloat((group.unit_amount).toFixed(2));
                         }
                     } else {
                         group['unallocated'] = 0;
-                        group['hours'] = parseFloat((group.hours).toFixed(2));
+                        group['unit_amount'] = parseFloat((group.unit_amount).toFixed(2));
                         group['day'] = moment(group.date).format("ddd MM");
                         date_activities[key] = group;
                     }
@@ -987,7 +985,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         draw_chart: function(chart, graph_data) {
             var week_total = 0;
             var table_data = {};
-            _.each(graph_data, function(record) {week_total += record.hours;});
+            _.each(graph_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
             this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], formatted_value[1]));
             var project_groups = _.groupBy(graph_data, function(record) {
@@ -996,11 +994,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.each(project_groups, function(groups, key) {
                 _.each(groups, function(group) {
                     if (table_data[key]) {
-                        table_data[key]['hours'] += group.hours;
+                        table_data[key]['unit_amount'] += group.unit_amount;
                     } else {
                         table_data[key] = {
                             project_name: group.project_id[1],
-                            hours: group.hours
+                            unit_amount: group.unit_amount
                         };
                     }
                 });

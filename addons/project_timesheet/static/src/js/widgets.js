@@ -261,7 +261,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
         get_total: function() {
             var total = 0;
-            _.each(this.activities, function(activity) { total += activity.hours;});
+            _.each(this.activities, function(activity) { total += activity.unit_amount;});
             return this.format_duration(total);
         }
     });

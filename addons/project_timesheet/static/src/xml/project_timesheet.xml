@@ -53,7 +53,7 @@
                             <div>
                                 <div>
                                     <strong><t t-esc="activity.project_id[1]"></t></strong>
-                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.hours)"></t></span> <!-- call format_hour method of this screen -->
+                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.unit_amount)"></t></span> <!-- call format_hour method of this screen -->
                                 </div>
                                 <div class="pt_description_task">
                                     <t t-if="activity.task_id and activity.task_id.length" t-esc="activity.task_id[1]"></t>
@@ -282,7 +282,7 @@
                 <t t-foreach="projects" t-as="project">
                     <tr>
                         <td><t t-esc="project.project_name"></t></td>
-                        <t t-set="duration" t-value="widget.format_duration(project.hours)"></t>
+                        <t t-set="duration" t-value="widget.format_duration(project.unit_amount)"></t>
                         <td class="hours"><t t-esc="duration[0]"></t>h  <span t-if="duration[1]"><t t-esc="duration[1]"></t>min</span></td>
                     </tr>
                 </t>

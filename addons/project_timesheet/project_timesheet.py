@@ -360,6 +360,37 @@ class hr_analytic_timesheet(osv.Model):
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
+    def load_data(self, cr, uid, domain=None, fields=None, context=None):
+        activities = []
+        analytic_lines = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
+        tasks = [x['task_id'] for x in analytic_lines]
+        task_ids = list(set([x[0] for x in tasks if not isinstance(x, bool)]))
+        accounts = [x['account_id'] for x in analytic_lines]
+        account_ids = list(set([x[0] for x in accounts if not isinstance(x, bool)]))
+        #tasks_read = self.pool.get('project.task').search_read(cr, uid, [('id', 'in', task_ids)], ['project_id', "priority"], context=context)
+        tasks_read = self.pool.get('project.task').search_read(cr, uid, [('id', 'in', task_ids)], ["priority"], context=context)
+        project_read = self.pool.get('project.project').search_read(cr, uid, [('analytic_account_id', 'in', account_ids)], ['id', 'name', 'analytic_account_id'], context=context)
+        def match_task(task, activity):
+            return activity['task_id'] and activity['task_id'][0] == task['id']
+        for task in tasks_read:
+            activities = filter(lambda activity: match_task(task, activity), analytic_lines)
+            for activity in activities:
+                #activity['project_id'] = task['project_id'];
+                activity['priority'] = int(task['priority']);
+
+        def match_account(project, activity):
+            return activity['account_id'] and activity['account_id'][0] == project['analytic_account_id'][0]
+        for project in project_read:
+            activities = filter(lambda activity: match_account(project, activity), analytic_lines)
+            for activity in activities:
+                activity['project_id'] = (project['id'], project['name']);
+
+        def is_project(line):
+            return line.get('project_id')
+        project_analytic_lines = filter(is_project, analytic_lines)
+        print "\n\project_analytic_lines are ::: ", project_analytic_lines
+        return project_analytic_lines
+
     def sync_data(self, cr, uid, datas, context=None):
         """
         This method synchronized the data given by Project Timesheet UI,
@@ -389,93 +420,97 @@ class hr_analytic_timesheet(osv.Model):
                     record[field][0] = real_id
 
         for record in datas:
-            project_id = False
-            task_id = False
-            vals_line = {}
-            #TODO: We can use Savepoint, cr.commit, cr.rollback, use try,except block, if exception occurs due to no right or due to other reason cr.rollback and pu that record in fail record list
-            current_record = copy.deepcopy(record)
-            if pattern.match(str(record['project_id'][0])):
-                project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
-                replace_virtual_id('project_id', record['project_id'][0], project_id)
-            else:
-                project_id = record['project_id'][0]
-            project_record = project_obj.browse(cr, uid, project_id, context=context)
-            if project_id in missing_project_id or not project_record:
-                missing_project_id.append(project_id)
-                continue
-            if record['task_id']:
-                if pattern.match(str(record['task_id'][0])):
-                    project_id = record['project_id'][0]
-                    task_id = task_obj.create(cr, uid, {'name': record['task_id'][1]}, context=context)
-                    replace_virtual_id('task_id', record['task_id'][0], task_id)
+            try:
+                cr.execute('SAVEPOINT sync_record')
+                project_id = False
+                task_id = False
+                vals_line = {}
+                #TODO: We can use Savepoint, cr.commit, cr.rollback, use try,except block, if exception occurs due to no right or due to other reason cr.rollback and pu that record in fail record list
+                current_record = copy.deepcopy(record)
+                if pattern.match(str(record['project_id'][0])):
+                    project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
+                    replace_virtual_id('project_id', record['project_id'][0], project_id)
                 else:
-                    task_id = record['task_id'][0]
-                record['task_id'] = task_id
-                if task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
-                    missing_task_id.append(task_id)
+                    project_id = record['project_id'][0]
+                project_record = project_obj.browse(cr, uid, project_id, context=context)
+                if project_id in missing_project_id or not project_record:
+                    missing_project_id.append(project_id)
                     continue
+                if record['task_id']:
+                    if pattern.match(str(record['task_id'][0])):
+                        project_id = record['project_id'][0]
+                        task_id = task_obj.create(cr, uid, {'name': record['task_id'][1]}, context=context)
+                        replace_virtual_id('task_id', record['task_id'][0], task_id)
+                    else:
+                        task_id = record['task_id'][0]
+                    record['task_id'] = task_id
+                    if task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
+                        missing_task_id.append(task_id)
+                        continue
+    
+                #vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
+                vals_line['name'] = record['name']
+                vals_line['task_id'] = record.get('task_id', False)
+                vals_line['user_id'] = record['user_id']
+                vals_line['product_id'] = user_related_details['product_id']
+                vals_line['date'] = record['date'][:10]
+                # Calculate quantity based on employee's product's uom
+                vals_line['unit_amount'] = record['unit_amount']
+    
+                #project_read = project_obj.read(cr, uid, project_id, ['analytic_account_id'], context=context)
+                account_id = project_record.analytic_account_id.id
+                #vals_line['product_id'] = user_related_details['product_id']
+                #TO Remove: Once we load hr.analytic.timesheet in load_data
+                default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+                if user_related_details['product_uom_id'] != default_uom:
+                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, record['unit_amount'], user_related_details['product_uom_id'])
+                if account_id:
+                    vals_line['account_id'] = account_id
+                    res = self.on_change_account_id(cr, uid, False, account_id)
+                    if res.get('value'):
+                        vals_line.update(res['value'])
+                    vals_line['general_account_id'] = user_related_details['general_account_id']
+                    vals_line['journal_id'] = user_related_details['journal_id']
+                    vals_line['amount'] = 0.0
+                    vals_line['product_uom_id'] = user_related_details['product_uom_id']
+                else:
+                    fail_records.append(current_record)
+                    continue
+    
+                record.pop('project_id')
+                if record['command'] == 0:
+                    context = dict(context, recompute=True)
+                    timeline_id = self.create(cr, uid, vals_line, context=context) #Handle fail, if fail add into failed record
+                    # Compute based on pricetype
+                    amount_unit = self.on_change_unit_amount(cr, uid, timeline_id,
+                        vals_line['product_id'], vals_line['unit_amount'], False, False, vals_line['journal_id'], context=context)
+                    if amount_unit and 'amount' in amount_unit.get('value',{}):
+                        updv = { 'amount': amount_unit['value']['amount'] }
+                        self.write(cr, uid, [timeline_id], updv, context=context)
+                elif record['command'] == 1:
+                    id = reocrd.id
+                    record.pop('id')
+                    # Compute based on pricetype
+                    amount_unit = self.on_change_unit_amount(cr, uid, line_id.id,
+                        prod_id=prod_id, company_id=False,
+                        unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
+    
+                    if amount_unit and 'amount' in amount_unit.get('value',{}):
+                        vals_line['amount'] = amount_unit['value']['amount']
+                    self.write(cr, uid, id, vals_line, context=context) #Handle fail and MissingError, if fail add into failed record
+                elif record['command'] == 2:
+                    self.delete(cr, uid, record.id, context=context) #Handle fail and MissingError, if fail add into failed record
+                elif record['command'] == 4:
+                    #TO Implement, logic of Link
+                    pass
+            except Exception, e:
+                fail_records.append(record)
+                cr.execute('ROLLBACK TO SAVEPOINT sync_record')
+            finally:
+                cr.execute('RELEASE SAVEPOINT sync_record')
 
-            #vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
-            vals_line['name'] = record['name']
-            vals_line['task_id'] = record.get('task_id', False)
-            vals_line['user_id'] = record['user_id']
-            vals_line['product_id'] = user_related_details['product_id']
-            vals_line['date'] = record['date'][:10]
-            # Calculate quantity based on employee's product's uom
-            vals_line['unit_amount'] = record['hours']
-
-            #project_read = project_obj.read(cr, uid, project_id, ['analytic_account_id'], context=context)
-            account_id = project_record.analytic_account_id.id
-            #vals_line['product_id'] = user_related_details['product_id']
-            #TO Remove: Once we load hr.analytic.timesheet in load_data
-            default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
-            if user_related_details['product_uom_id'] != default_uom:
-                vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, record['hours'], user_related_details['product_uom_id'])
-            if account_id:
-                vals_line['account_id'] = account_id
-                res = self.on_change_account_id(cr, uid, False, account_id)
-                if res.get('value'):
-                    vals_line.update(res['value'])
-                vals_line['general_account_id'] = user_related_details['general_account_id']
-                vals_line['journal_id'] = user_related_details['journal_id']
-                vals_line['amount'] = 0.0
-                vals_line['product_uom_id'] = user_related_details['product_uom_id']
-            else:
-                fail_records.append(current_record)
-                continue
-
-            record.pop('project_id')
-            print "\n\nrecord is ::: ", record
-            if record['command'] == 0:
-                context = dict(context, recompute=True)
-                timeline_id = self.create(cr, uid, vals_line, context=context) #Handle fail, if fail add into failed record
-                # Compute based on pricetype
-                amount_unit = self.on_change_unit_amount(cr, uid, timeline_id,
-                    vals_line['product_id'], vals_line['unit_amount'], False, False, vals_line['journal_id'], context=context)
-                if amount_unit and 'amount' in amount_unit.get('value',{}):
-                    updv = { 'amount': amount_unit['value']['amount'] }
-                    self.write(cr, uid, [timeline_id], updv, context=context)
-            elif record['command'] == 1:
-                id = reocrd.id
-                record.pop('id')
-                # Compute based on pricetype
-                amount_unit = self.on_change_unit_amount(cr, uid, line_id.id,
-                    prod_id=prod_id, company_id=False,
-                    unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
-
-                if amount_unit and 'amount' in amount_unit.get('value',{}):
-                    vals_line['amount'] = amount_unit['value']['amount']
-                self.write(cr, uid, id, vals_line, context=context) #Handle fail and MissingError, if fail add into failed record
-            elif record['command'] == 2:
-                self.delete(cr, uid, record.id, context=context) #Handle fail and MissingError, if fail add into failed record
-            elif record['command'] == 4:
-                #TO Implement, logic of Link
-                pass
-
-        #Sync compelte
-        #Re-read data and return it to client so that it updates its localstorage
-        #Data will be last 30 days records + failed record
-        #return {'error': {'message': e.message}, 'datas': datas}
-        return True
+        print "\n\nfail_records is ::: ", fail_records
+        result = self.load_data(cr, uid, context=context)
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,7 +8,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.task_id = options.task_id || null;
             this.project_id = options.project_id || null;
             this.name = options.name || null; //Actually description field
-            this.hours = options.hours || null;
+            this.unit_amount = options.unit_amount || null;
             this.command = options.command || 0;
         },
         export_as_JSON: function() {
@@ -16,7 +16,7 @@ function odoo_project_timesheet_models(project_timesheet) {
                 id: this.id,
                 date: this.date,
                 name: this.name,
-                hours: this.hours,
+                unit_amount: this.unit_amount,
                 command: this.command,
                 task_id: this.task_id,
                 project_id: this.project_id,
@@ -154,9 +154,9 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get("activities");
             if(activity_collection.get(data.id)) {
                 var activity_model = activity_collection.get(data.id);
-                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], hours: data['hours'], command: (data['command'] || 0)});
+                _.extend(activity_model, {id: data['id'], name: data['name'], task_id: data['task_id'], project_id: data['project_id'], date: data['date'], unit_amount: data['unit_amount'], command: (data['command'] || 0)});
             } else {
-                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], hours: data['hours'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'] });
+                var activity = new project_timesheet.task_activity_model({project_timesheet_model: this, project_timesheet_db: this.project_timesheet_db}, {id: data['id'], name: data['name'], unit_amount: data['unit_amount'], date: data['date'], task_id: data['task_id'], project_id: data['project_id'] });
                 this.get('activities').add(activity);
             }
             this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
@@ -213,6 +213,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var momObj = new moment();
             var end_date = project_timesheet.datetime_to_str(momObj._d);
             var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
+            /*
             return new project_timesheet.Model(project_timesheet.session, "project.task.work").call("search_read", {
                 domain: [["date", ">=", start_date], ["date", "<=", end_date]],
                 fields: ["id", "task_id", "name", "hours", "date"]
@@ -234,7 +235,14 @@ function odoo_project_timesheet_models(project_timesheet) {
                     });
                     self.project_timesheet_db.add_activities(work_activities);
                 });
-            }).promise();
+            })
+            */
+           return new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("load_data", {
+               domain: [["date", ">=", start_date], ["date", "<=", end_date]],
+               fields: ["id", "task_id", "name", "unit_amount", "date", "account_id"]
+           }).then(function(work_activities) {
+               self.project_timesheet_db.add_activities(work_activities);
+           }).promise();
         },
         //TO REMOVE: If not necessary
         set_screen_data: function(key,value){
