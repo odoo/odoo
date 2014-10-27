@@ -41,8 +41,8 @@
         },
         
         create_snapshot: function() {
-            var m_names = new Array("jan", "feb", "mar", 
-                "apr", "may", "jun", "jul", "aug", "sep", 
+            var m_names = new Array("jan", "feb", "mar",
+                "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
             var d = new Date();
             var curr_date = d.getDate();
@@ -57,8 +57,11 @@
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'copy': 1 }).then(function (result) {
 
-                    location.reload();
-                    alert("You are actually working on "+name+ " version.");
+                    self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
+                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                    self.wizard.on('click','.confirm', function(){
+                        location.reload();
+                    });
                 }).fail(function(){
                     alert("This name already exists.");
                 });
