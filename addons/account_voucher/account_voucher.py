@@ -920,6 +920,12 @@ class account_voucher(osv.osv):
                     reconcile_pool.unlink(cr, uid, [line.reconcile_id.id])
                     if len(move_lines) >= 2:
                         move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto',context=context)
+                if line.reconcile_partial_id:
+                    move_lines = [move_line.id for move_line in line.reconcile_partial_id.line_partial_ids]
+                    move_lines.remove(line.id)
+                    reconcile_pool.unlink(cr, uid, [line.reconcile_partial_id.id])
+                    if len(move_lines) >= 2:
+                        move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto',context=context)
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])
