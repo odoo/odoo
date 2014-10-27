@@ -982,11 +982,11 @@ and ``message`` is the error message.
 Advanced Views
 ==============
 
-Tree views
-----------
+Lists (Tree views)
+------------------
 
 Tree views can take supplementary attributes to further customize their
-behavior:
+behavior (:ref:`see details <reference/views/list>`):
 
 ``colors``
     mappings of colors to conditions. If the condition evaluates to ``True``,
