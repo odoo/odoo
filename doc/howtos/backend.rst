@@ -108,7 +108,7 @@ files in the module.
 For instance, if the module has a single ``mymodule.py`` file ``__init__.py``
 might contain::
 
-    import mymodule
+    from . import mymodule
 
 Fortunately, there is a mechanism to help you set up an module. The command
 ``odoo.py`` has a subcommand :ref:`scaffold <reference/cmdline/scaffold>` to
