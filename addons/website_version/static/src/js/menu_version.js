@@ -5,7 +5,6 @@
     var website=openerp.website;
     var QWeb = openerp.qweb;
     website.add_template_file('/website_version/static/src/xml/all_versions.xml');
-    website.add_template_file('/website_version/static/src/xml/publish.xml');
     
     website.EditorVersion = openerp.Widget.extend({
         start: function() {
@@ -63,7 +62,9 @@
                         location.reload();
                     });
                 }).fail(function(){
-                    alert("This name already exists.");
+                    self.wizard = $(openerp.qweb.render("website_version.message",{message:"This name already exists."}));
+                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
+
                 });
             });
         },
@@ -85,11 +86,20 @@
             var snapshot_id = $(event.currentTarget).parent().data("snapshot_id");
             openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     if (result){
-                        alert("You cannot delete this version because it is in a running experiment");
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete this version because it is in a running experiment"}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     }
                     else{
-                        openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                            location.reload();
+                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete this version."}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                        self.wizard.on('click','.confirm', function(){
+                            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been deleted."}));
+                                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                                self.wizard.on('click','.confirm', function(){
+                                    location.reload();
+                                });
+                            });
                         });
                     }
                 });
@@ -98,8 +108,11 @@
         publish_version: function(event) {
             var snapshot_id = $(event.currentTarget).data("snapshot_id");
             openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                    location.reload();
-                    alert("Your version "+result+" has been published.");
+                    self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been published."}));
+                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                    self.wizard.on('click','.confirm', function(){
+                        location.reload();
+                    });
                 });
         },
 
@@ -122,7 +135,7 @@
                     var i;
                     for (i = 0; i < tab.length; i++) {
                         if ($(tab[i]).is(':checked')) {
-                            result.push($(tab[i]).attr('data-version_id'))
+                            result.push($(tab[i]).attr('data-version_id'));
                         }
                     }
                     var objectives = self.wizard.find('.box').val();
@@ -137,10 +150,14 @@
                     }
                     if(check){
                         openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
-                            alert("Your experiment " + name + " is created. Now you can manage this experiment by clicking on Manage Experiments.");
-                            location.reload();
+
+                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your experiment " + name + " is created. Now you can manage this experiment by clicking on Manage Experiments."}));
+                            self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                            self.wizard.on('click','.confirm', function(){
+                                location.reload();
+                            });
                         });
-                    } 
+                    }
                 });
             
                 self.wizard.on('click','.launch', function(){
@@ -167,14 +184,18 @@
                     if(check){
                         openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
                             if (result){
-                                alert("Your experiment " + name + " is launched. Now you can check its statistics by clicking on Statistics.");
-                                location.reload();
+                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your experiment " + name + " is launched. Now you can check its statistics by clicking on Statistics."}));
+                                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                                self.wizard.on('click','.confirm', function(){
+                                    location.reload();
+                                });
+
                             }
                             else{
                                 self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.</p>");
                             }
                         });
-                    } 
+                    }
                 });
                 self.wizard.on('click','.configure', function(){
                     var website_id = $('html').attr('data-website-id');

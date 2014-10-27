@@ -38,12 +38,13 @@ class TableExporter(http.Controller):
     def delete_snapshot(self, snapshot_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
+        snapshot_name = snap.browse(cr, uid, [int(snapshot_id)], context=context)[0].name
         snap.unlink(cr, uid, [int(snapshot_id)], context=context)
         current_id = request.context.get('snapshot_id')
         if int(snapshot_id)== current_id:
             request.session['snapshot_id'] = 0
             request.session['master'] = 1
-        return snapshot_id
+        return snapshot_name
 
     @http.route(['/website_version/check_snapshot'], type = 'json', auth = "user", website = True)
     def check_snapshot(self, snapshot_id):

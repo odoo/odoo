@@ -4,6 +4,8 @@
     var _t = openerp._t;
     
     var website=openerp.website;
+    
+    website.add_template_file('/website_version/static/src/xml/all_versions.xml');
 
     website.action= {};
     
@@ -28,11 +30,16 @@
                     var context = website.get_context();
                     openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'copy': 0 }).then(function (result) {
                         $('html').data('snapshot_id', result);
-                        self.save();
-                        location.reload();
-                        alert("You are actually working on "+name+ " version.");
+                        
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                        self.wizard.on('click','.confirm', function(){
+                            self.save();
+                            location.reload();
+                        });
                     }).fail(function(){
-                        alert("This name already exists.");
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"This name already exists."}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     });
                 });
             
