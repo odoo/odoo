@@ -659,7 +659,7 @@ class account_bank_statement_line(osv.osv):
             domain += [('account_id.type', '=', 'receivable')]
         else:
             domain += [('account_id.type', '=', 'payable')]
-        domain += [(amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))]
+        domain += [('reconcile_id', '=', False), (amount_field, '>', 0), (amount_field, '<', (sign * st_line.amount))]
         if amount_field == 'amount_currency' and st_line.amount < 0:
             domain = [(amount_field, '<', 0), (amount_field, '>', (sign * st_line.amount))]
         mv_lines = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
@@ -684,7 +684,7 @@ class account_bank_statement_line(osv.osv):
         if additional_domain is None:
             additional_domain = []
 
-        # TOCHECK : journal domain OK ?
+        # ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])
         additional_domain += ['|', ('reconcile_id', '=', False), '&', ('statement_id', '=', False), ('journal_id.type', 'in', ['sale','sale_refund','purchase','purchase_refund'])]
         if st_line.partner_id.id or overlook_partner:
             additional_domain += [('account_id.type', 'in', ['payable', 'receivable'])]
@@ -770,6 +770,24 @@ class account_bank_statement_line(osv.osv):
                 if mv_line.reconcile_id.id and mv_line.statement_id.id:
                     raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
 
+        # Particular use case : using reconciled move lines (fr: rapprochement bancaire)
+        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('is_reconciled') and x['is_reconciled'] == True]) > 0
+        if num_already_reconciled_items > 0:
+            # Check only using already reconciled move lines
+            if len(mv_line_dicts) != num_already_reconciled_items:
+                raise osv.except_osv(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+            # Check all move lines are from the same move
+            move_id = aml_obj.browse(cr, uid, mv_line_dicts[0].get('counterpart_move_line_id'), context=context).move_id.id
+            for mv_line_dict in mv_line_dicts:
+                if move_id != aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context).move_id.id:
+                    raise osv.except_osv(_('Error!'), _('You cannot mix items from different journal entries.'))
+            # Link move lines to the bank statement
+            for mv_line_dict in mv_line_dicts:
+                aml_obj.write(cr, uid, mv_line_dict['counterpart_move_line_id'], {'statement_id': st_line.statement_id.id}, context=context)
+            # Mark the statement line as reconciled
+            self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
+            return
+
         # Create the move
         move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
         move_vals = bs_obj._prepare_move(cr, uid, st_line, move_name, context=context)
@@ -788,12 +806,6 @@ class account_bank_statement_line(osv.osv):
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
         
-        # For alredy reconciled move lines, just link them to the bank statement
-        for mv_line_dict in mv_line_dicts:
-            if mv_line_dict.get('is_reconciled') and mv_line_dict['is_reconciled'] == True:
-                aml_obj.write(cr, uid, mv_line_dict['counterpart_move_line_id'], {'statement_id': id}, context=context)
-        mv_line_dicts = [x for x in mv_line_dicts if not mv_line_dict.get('is_reconciled') or mv_line_dict['is_reconciled'] == False]
-
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False

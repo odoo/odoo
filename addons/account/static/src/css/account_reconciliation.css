@@ -172,10 +172,16 @@
     .openerp .oe_reconciliation .oe_reconciliation_line table.details td:first-child {
       padding-right: 10px;
       font-weight: bold; }
+    .openerp .oe_reconciliation .oe_reconciliation_line table.details tr.one_line_info td {
+      padding-top: 10px;
+      text-align: center;
+      color: #44c; }
     .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view, .openerp .oe_reconciliation .oe_reconciliation_line .match table {
       width: 100%; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tbody tr, .openerp .oe_reconciliation .oe_reconciliation_line .match table tbody tr {
         cursor: pointer; }
+      .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view tr.already_reconciled, .openerp .oe_reconciliation .oe_reconciliation_line .match table tr.already_reconciled {
+        color: #44c; }
       .openerp .oe_reconciliation .oe_reconciliation_line .accounting_view td, .openerp .oe_reconciliation .oe_reconciliation_line .match table td {
         padding: 1px 8px;
         vertical-align: middle; }

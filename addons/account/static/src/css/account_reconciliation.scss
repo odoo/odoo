@@ -3,6 +3,7 @@ $mainTableBordersPadding: 3px;
 $lightBorder: 1px solid #bbb;
 $accountingBorder: 1px solid #000;
 $initialLineBackground: #f0f0f0;
+$infoColor: #44c;
 // Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
 $aestetic_animation_speed: 300ms;
 
@@ -193,7 +194,7 @@ $aestetic_animation_speed: 300ms;
         content: "\2b";
     }
 
-    // bankStatementReconciliationLine widget
+    // reconciliationLine widget
     .oe_reconciliation_line {
         margin-bottom: 30px;
 
@@ -295,6 +296,14 @@ $aestetic_animation_speed: 300ms;
                 padding-right: 10px;
                 font-weight: bold;
             }
+
+            tr.one_line_info {
+                td {
+                    padding-top: 10px;
+                    text-align: center;
+                    color: $infoColor;
+                }
+            }
         }
 
         /* arrays of move lines */
@@ -303,6 +312,10 @@ $aestetic_animation_speed: 300ms;
 
             tbody tr {
                 cursor: pointer;
+            }
+
+            tr.already_reconciled {
+                color: $infoColor;
             }
 
             td {

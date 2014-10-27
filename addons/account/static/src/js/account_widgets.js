@@ -350,6 +350,7 @@ openerp.account = function (instance) {
             this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
             this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.map_account_id_code = this.getParent().map_account_id_code;
+            this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
@@ -1526,9 +1527,9 @@ openerp.account = function (instance) {
                 this.partner_id = undefined;
             }
 
+            this.is_rapprochement; // matching a statement line with an already reconciled journal item
             this.st_line_id = context.line_id;
             this.model_bank_statement_line = this.getParent().model_bank_statement_line;
-            this.presets = this.getParent().presets;
         },
 
         loadData: function() {
@@ -1697,6 +1698,15 @@ openerp.account = function (instance) {
                 }});
                 return;
             }
+            // Warn the user if he's selecting reconciled and unreconciled lines
+            var last_selected_line = _.last(self.get("mv_lines_selected"));
+            if (last_selected_line && last_selected_line.is_reconciled !== line.is_reconciled) {
+                self.getParent().crash_manager.show_warning({data: {
+                    exception_type: "Chair-To-Keyboard Interface",
+                    message: _t("You cannot mix reconciled and unreconciled items.")
+                }});
+                return;
+            }
 
             $(mv_line).attr('data-selected','true');
             self.set("mv_lines_selected", self.get("mv_lines_selected").concat(line));
@@ -1747,12 +1757,12 @@ openerp.account = function (instance) {
         balanceChanged: function() {
             var self = this;
             var balance = self.get("balance");
+            self.$(".button_ok").removeAttr("disabled");
             self.$(".tbody_open_balance").empty();
-            // Special case hack : no identified partner
-            if (self.st_line.has_no_partner) {
+            // Special case hack : no identified partner or rapprochement
+            if (self.st_line.has_no_partner || self.is_rapprochement) {
                 if (Math.abs(balance).toFixed(4) === "0.0000") {
                     self.$(".button_ok").addClass("oe_highlight");
-                    self.$(".button_ok").removeAttr("disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = true;
                 } else {
@@ -1760,15 +1770,17 @@ openerp.account = function (instance) {
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
-                    var debit = (balance > 0 ? self.formatCurrencies(balance, self.currency_id) : "");
-                    var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.currency_id) : "");
-                    var $line = $(QWeb.render("reconciliation_line_open_balance", {
-                        debit: debit,
-                        credit: credit,
-                        account_code: self.map_account_id_code[self.st_line.open_balance_account_id],
-                        label: "Choose counterpart"
-                    }));
-                    self.$(".tbody_open_balance").append($line);
+                    if (!self.is_rapprochement) {
+                        var debit = (balance > 0 ? self.formatCurrencies(balance, self.currency_id) : "");
+                        var credit = (balance < 0 ? self.formatCurrencies(-1*balance, self.currency_id) : "");
+                        var $line = $(QWeb.render("reconciliation_line_open_balance", {
+                            debit: debit,
+                            credit: credit,
+                            account_code: self.map_account_id_code[self.st_line.open_balance_account_id],
+                            label: "Choose counterpart"
+                        }));
+                        self.$(".tbody_open_balance").append($line);
+                    }
                 }
                 return;
             }
@@ -1809,6 +1821,12 @@ openerp.account = function (instance) {
 
             self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
+
+            // Warning : this could be tricky, remove this comment if you don't run into a bug after thorough testing
+            if (added_lines.length > 0 && added_lines[0].is_reconciled)
+                self.is_rapprochement = true;
+            else
+                self.is_rapprochement = false;
             
             self._super(elt, val);
         },
@@ -2252,7 +2270,6 @@ openerp.account = function (instance) {
             _.each(context.data.reconciliation_proposition, function(line) {
                 this.decorateMoveLine(line);
             }, this);
-            this.presets = this.getParent().presets;
             // Make sure a partial reconciliation will appear only once by excluding siblings of a selected partially reconciled move line
             this.excluded_move_lines_ids = [];
             this.set("mv_lines_selected", context.data.reconciliation_proposition);

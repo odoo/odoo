@@ -114,7 +114,7 @@
     </t>
 
     <t t-name="reconciliation_move_line">
-        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
+        <tr t-att-class="'mv_line'+(line.is_reconciled ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
             <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
@@ -260,7 +260,7 @@
 
     <t t-name="bank_statement_reconciliation_move_line_details" t-extend="reconciliation_move_line_details">
         <t t-jquery=".details" t-operation="append">
-            <tr t-if='line.is_reconciled'>
+            <tr class="one_line_info" t-if='line.is_reconciled'>
                 <td colspan="2">This item is already reconciled</td>
             </tr>
         </t>
