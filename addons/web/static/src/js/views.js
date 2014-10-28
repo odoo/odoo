@@ -715,6 +715,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('view_loaded', this, function () {
             view_loaded.resolve();
         });
+        this.$('.oe-view-manager-pager > span').hide();
         return $.when(controller.appendTo($container), view_loaded)
                 .done(function () { 
                     self.trigger("controller_inited", view.type, controller);
