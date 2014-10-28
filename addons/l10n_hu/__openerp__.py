@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2014 InnOpen Group Kft (<http://www.innopen.eu>).
+#    Copyright (C) 2014 InnOpen Group Kft  - Peter Herczeg (<http://www.innopen.eu>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -34,6 +34,7 @@ This module consists :
  - Hungarian taxes
  - Hungarian Bank information
  
+ Created by Peter Herczeg
  """,
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',
