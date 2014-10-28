@@ -32,10 +32,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         self.account_ids = []
         self.localcontext.update( {
             'time': time,
-            'lines': self.lines,
-            'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit,
-            'sum_litige': self._sum_litige,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_filter': self._get_filter,
@@ -69,7 +65,20 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "WHERE a.type IN %s " \
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
-        return super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
+        res = super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
+        lines = self.lines()
+        sum_debit = sum_credit = sum_litige = 0
+        for line in filter(lambda x: x['type'] == 3, lines):
+            sum_debit += line['debit'] or 0
+            sum_credit += line['credit'] or 0
+            sum_litige += line['enlitige'] or 0
+        self.localcontext.update({
+            'lines': lambda: lines,
+            'sum_debit': lambda: sum_debit,
+            'sum_credit': lambda: sum_credit,
+            'sum_litige': lambda: sum_litige,
+        })
+        return res
 
     def lines(self):
         move_state = ['draft','posted']
@@ -234,62 +243,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
             i = i + 1
         return completearray
-
-    def _sum_debit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        self.cr.execute(
-                "SELECT sum(debit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s"  \
-                    "AND am.state IN %s" \
-                    "AND " + self.query + "",
-                    (tuple(self.account_ids), tuple(move_state)))
-        temp_res = float(self.cr.fetchone()[0] or 0.0)
-        return temp_res
-
-    def _sum_credit(self):
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        self.cr.execute(
-                "SELECT sum(credit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s" \
-                    "AND am.state IN %s" \
-                    "AND " + self.query + "",
-                    (tuple(self.account_ids), tuple(move_state)))
-        temp_res = float(self.cr.fetchone()[0] or 0.0)
-        return temp_res
-
-    def _sum_litige(self):
-        #gives the total of move lines with blocked boolean set to TRUE for the report selection
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
-
-        if not self.ids:
-            return 0.0
-        self.cr.execute(
-                "SELECT sum(debit-credit) " \
-                "FROM account_move_line AS l " \
-                "JOIN account_move am ON (am.id = l.move_id)" \
-                "WHERE l.account_id IN %s" \
-                    "AND am.state IN %s" \
-                    "AND " + self.query + " " \
-                    "AND l.blocked=TRUE ",
-                    (tuple(self.account_ids), tuple(move_state), ))
-        temp_res = float(self.cr.fetchone()[0] or 0.0)
-        return temp_res
 
     def _get_partners(self):
 
