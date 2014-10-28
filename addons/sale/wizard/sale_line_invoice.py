@@ -100,6 +100,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     flag = False
                     break
             if flag:
+                line.order_id.write({'state': 'progress'})
                 wf_service.trg_validate(uid, 'sale.order', order.id, 'all_lines', cr)
 
         if not invoices:
