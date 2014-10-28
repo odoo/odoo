@@ -4,8 +4,6 @@
     var _t = openerp._t;
     
     var website=openerp.website;
-    
-    // website.add_template_file('/website_version/static/src/xml/all_versions.xml');
 
     website.action= {};
     
