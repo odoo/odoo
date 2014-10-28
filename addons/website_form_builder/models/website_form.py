@@ -10,10 +10,10 @@ class website_form(osv.Model):
     _name = 'website.form'
 
     _columns = {
-        'model'                 : fields.char("Model"),
-        'blacklist_field_ids'   : fields.many2many('ir.model.fields',string='Black List'),
-        'name'                  : fields.text("Label for Model Selection",translate=True),
-        'metadata_field_ref'    : fields.text("Specify the field wich will contain meta and custom datas"),
+        'model'                 : fields.many2one('ir.model','Model',ondelete='cascade'),
+        'blacklist_field_ids'   : fields.many2many('ir.model.fields', string='Black List'),
+        'name'                  : fields.char("Help Label", help="Label for Model Selection",translate=True),
+        'metadata_field_ref'    : fields.many2one('ir.model.fields', 'Default Field', ondelete='cascade', help="Specify the field wich will contain meta and custom datas"),
     }
     _defaults = {
         'blacklist_field_ids': [],
@@ -40,7 +40,7 @@ class website_form(osv.Model):
         output = []
         ids = self.search(cr, uid, [], context=context)
         for elem in self.browse(cr, uid, ids):
-            output.append({'model': elem.model, 'name': elem.name})
+            output.append({'model': elem.model.model, 'name': elem.name})
         return output
     
     # return all meta-fields of the selected model
@@ -64,7 +64,8 @@ class website_form(osv.Model):
         for key, val in output.iteritems():
             if 'relation' in val and val['relation'] == 'ir.attachment':
                 print val['type']
-                val['type'] = 'binary'
+                val['type'] = 'manyBinary2many' if ((val['type'] == 'many2many') or (val['type'] == 'one2many')) else 'oneBinary2many'
+                print val['type']
 
 
         return output

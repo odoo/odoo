@@ -140,61 +140,73 @@
 <template id="apply">
     <t t-call="website.layout">
         <t t-set="additional_title">Apply Job</t>
-        <div id="wrap">
-            <div class="container">
+        
+            <div id="wrap"  class="container">
                 <h1 class="text-center">
                     Job Application Form
                 </h1>
                 <h2 t-if="job" class="text-center text-muted">
                     <span t-field="job.name"/>
                 </h2>
+                <!-- TODO Multilingual form action support ? -->
+                <form action="/website_form/hr.applicant/"  method=         "post" 
+                                                            class=          "editForm form-horizontal mt32" 
+                                                            enctype=        "multipart/form-data" 
+                                                            data-model=     "hr.applicant" 
+                                                            data-success=   "/jobs/thankyou"
+                                                            data-fail=      "/jobs/error">
 
-                <div class="row">
-                    <section id="forms">
-                        <!-- TODO Multilingual form action support ? -->
-                        <form class="form-horizontal mt32" action="/jobs/thankyou" method="post" enctype="multipart/form-data">
-                            <input type="hidden" t-att-value="job and job.department_id.id or False" name="department_id"/>
-                            <input type="hidden" t-att-value="job and job.id or False" name="job_id"/>
-                            <div t-attf-class="form-group #{error.get('partner_name') and 'has-error' or ''}">
-                                <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <input type="text" t-att-value="default.get('partner_name')" class="form-control" name="partner_name" required="True"/>
-                                </div>
+                    
+                    <input type="hidden" class="form-control form-data" t-att-value="job and job.department_id.id or False" name="department_id"/>
+                    <input type="hidden" class="form-control form-data" t-att-value="job and job.id or False" name="job_id"/>    
+                    <div class="oe_structure">
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control form-data" name="partner_name" required="True"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('email_from') and 'has-error' or ''}">
-                                <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <input type="email" t-att-value="default.get('email_from')" class="form-control" name="email_from" required="True"/>
-                                </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="email" class="form-control form-data" name="email_from" required="True"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
-                                <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <input type="text" t-att-value="default.get('phone')" class="form-control" name="phone" required="True"/>
-                                </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control form-data" name="phone" required="True"/>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-sm-4 control-label" for="description">Short Introduction</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <textarea  class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
-                                </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="textarea">
+                            <label class="col-md-3 col-sm-4 control-label" for="description">Short Introduction</label>
+                            <div class="col-md-7 col-sm-8">
+                                <textarea  class="form-control form-data" name="description" style="min-height: 120px"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="col-md-3 col-sm-4 control-label" for="ufile">Resume</label>
-                                <div class="col-md-7 col-sm-8">
-                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
-                                    <span t-if="error.get('ufile')">Please send again your resume.</span>
+                        </div>
+
+                        <div class="form-group form-field input-file" data-form="inputfile">
+                            <label for="ufile" class="col-md-3 col-sm-4 control-label">Resume</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-primary btn-file">
+                                            <span class="browse-label">Browse</span>
+                                            <input type="file" multiple="true" class="form-data input-file" id="fileInput" name="ufile" />
+                                        </span>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="no file" readonly="true" />
                                 </div>
+                                <p class="help-block">Select a file.</p>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                             </div>
-                        </form>
-                    </section>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </form>
         </div>
     </t>
 </template>
@@ -208,6 +220,31 @@
                     <p>
                         Your job application has been successfully registered,
                         we will get back to you soon.
+                    </p>
+                </div>
+                <section class="oe_dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt16 mb16">
+                                <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="error">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <div class="container">
+                    <h1>We are sorry !</h1>
+                    <p>
+                        Your job application has not been registered,
+                        Please contact us by mail or by phone.
                     </p>
                 </div>
                 <section class="oe_dark">

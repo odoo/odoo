@@ -14,7 +14,8 @@ OpenERP Contact Form
         'views/snippets.xml',
         'security/ir.model.access.csv',
         'views/templates.xml',
-        'data/website_form_mail.xml'
+        'data/website_form_mail.xml',
+        'views/model_list.xml'
     ],
     'qweb': [
         'static/src/xml/website.form.editor.wizard.template.xml'

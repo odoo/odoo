@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_model_list">
+            <field name="name">view.model.list</field>
+            <field name="model">website.form</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="List of models">
+                    <field name="model"/>
+                    <field name="name"/>
+                    <field name="metadata_field_ref"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_model">
+            <field name="name">view.model</field>
+            <field name="model">website.form</field>
+            <field name="type">form</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Form Builder Module">
+                    <sheet string="Allow a new model for the Form Builder">
+                        <group col="4">
+                            <field name="model"/>
+                            <field name="metadata_field_ref"/>
+                            <field name="name" colspan="4"/>
+                        </group>
+                        <group col="4">
+                            <field name="blacklist_field_ids" widget="many2many_tags" colspan="4" domain="[('model', '=', model)]"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_model_list">
+            <field name="name">action.model_list</field>
+            <field name="view_id" ref="view_model_list" />
+            <field name="res_model">website.form</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a model for the website form builder
+              </p>
+            </field>
+        </record>
+        <menuitem name="Website Form" groups="base.group_no_one" id="menu_model_list" parent="base.menu_custom" action="action_model_list"/>
+    </data>
+</openerp>

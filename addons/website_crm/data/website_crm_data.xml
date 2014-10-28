@@ -2,10 +2,10 @@
 <openerp>
     <data>
         <record id="id_form_lead" model="website.form">
-            <field name="model">crm.lead</field>
+            <field name="model" ref="crm.model_crm_lead" />
             <field name="blacklist_field_ids" eval="[(6,0,[ref('crm.field_crm_lead_probability'),ref('crm.field_crm_lead_report_section_id')])]" />
             <field name="name">Create Lead with CRM</field>
-            <field name="metadata_field_ref">description</field>
+            <field name="metadata_field_ref" ref="crm.field_crm_lead_description" />
         </record>
     </data>
 </openerp>

@@ -39,7 +39,7 @@
         		var args = {};
         		var size = $field.prop('files').length;
 				$.each($field.prop('files'), function (i, val) {
-					args[$field.attr('name')+(($field.prop('files').length > 1)? '_' +i:'')] = val;
+					args[$field.attr('name')+(($field.prop('files').length > 1)? '['+i+']':'')] = val;
 				});
 				return ($.isEmptyObject(args)) ? null:args;
 				
@@ -47,7 +47,7 @@
         };
 
 	website.snippet.animationRegistry.editForm = website.snippet.Animation.extend({
-		selector: ".editForm",
+		selector: 'form[action*="/website_form/"]',
 		start: function() {
 			var self = this;
 			this.$target.find('button').on('click',function(e) {self.send(e);});
@@ -142,10 +142,10 @@
 				var fail_page = this.$target.data('fail');
 
 				openerp.post('/website_form/'+model,args)
-				.then(function (data) {
-						var len = (data.fail_required != null) ? data.fail_required.length:0;
+				.then(function (data) {		
 						progress.modal('hide');
 				    	if(data) {
+				    		var len = (data.fail_required != null) ? data.fail_required.length:0;
 				    		if(data.id) $(location).attr('href',success_page);
 				    		else {
 				    			if(!len) $(location).attr('href',fail_page);
@@ -186,7 +186,7 @@
       			labels = '';
       			
       			$.each(input.get(0).files, function(index, value) {
-      				if(labels.length != 0) labels += ', ';
+        			if(labels.length != 0) labels += ', ';
       				labels += value.name.replace(/\\/g, '/').replace(/.*\//, '');
       				
       			});

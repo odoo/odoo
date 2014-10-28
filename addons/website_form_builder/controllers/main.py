@@ -17,40 +17,47 @@ class contactus(http.Controller):
                        'boolean': self.boolean,'integer': self.integer,'float': self.float}
     
     # List of filters following type of field to be fault tolerent
-    
-    def char(self,label,input):
+    def get_int(self,x):
+        return int(''.join(ele for ele in x if ele.isdigit()))
+
+    def get_float(self,x):
+        return float(''.join(ele for ele in x if ele.isdigit() or ele == '.'))
+
+    def char(self, label, input):
         return input
     
-    def text(self,label,input):
+    def text(self, label, input):
         return input
     
-    def many2one(self,label,input):
-        return int(input or 0)
+    def many2one(self, label, input):
+        return int(self.get_int(input) or 0)
     
-    def one2many(self,label,input):
+    def one2many(self, label, input):
         output = []
         input = input.split(',')
         for elem in input:
-            input_int = int(elem or 0)
+            input_int = int(self.get_int(elem) or 0)
             if input_int :
                 output.append(input_int)     
         return output
     
-    def many2many(self,label,input):
+    def many2many(self, label, input, *args):
+        op = (6,0)
+        if len(args) == 1: op = args[0]
         output = self.one2many(label,input)
-        return [(6,0,output)]
+        return [op + (output,)]
     
-    def selection(self,label,input):
-        return int(input or 0)
+    def selection(self, label, input):
+        return int(self.get_int(input) or 0)
     
-    def boolean(self,label,input):
+    def boolean(self, label, input):
         return (input != 0)
     
-    def integer(self,label,input):
-        return int(input or 0)
+    def integer(self, label, input):
+        return int(self.get_int(input) or 0)
     
-    def float(self,label,input):
-        return float(input or 0)
+    def float(self, label, input):
+        return float(self.get_float(input) or 0)
 
     # Extract all data sent by the form and sort its on several properties
     def extractData(self, **kwargs):
@@ -58,6 +65,7 @@ class contactus(http.Controller):
         for field_name, field_value in kwargs.items():  
             print field_name, ' : ', field_value, '\n'
             if hasattr(field_value, 'filename'):
+                field_value.field_name = field_name
                 self._files.append(field_value)
                 
             elif field_name in request.registry[self._model]._all_columns and field_name not in self._BLACKLIST:
@@ -66,7 +74,7 @@ class contactus(http.Controller):
                 if field_filtered: self._post[field_name] = field_filtered
                 
             elif field_name not in self._TECHNICAL:
-                self._custom += "%s : %s\n" % (field_name, self._request.httprequest.form.getlist(field_name))
+                self._custom += "%s : %s\n" % (field_name, field_value)
                 
                 
         environ = request.httprequest.headers.environ 
@@ -81,23 +89,31 @@ class contactus(http.Controller):
         return any(self.error)
     
     # Link all files attached on the form
-    def linkAttachment(self,id):
+    def linkAttachment(self,id_record):
         
         for file in self._files:
+            file.field_name = file.field_name.split('[')[0]
+            print file.field_name, '\n'
             attachment_value = {
                 'name': file.filename,
                 'res_name': file.filename,
                 'res_model': self._model,
-                'res_id': id,
+                'res_id': id_record,
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
             }
             id_a = request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)  
-            print attachment
+            if file.field_name in request.registry[self._model]._all_columns and file.field_name not in self._BLACKLIST:
+                type = request.registry[self._model]._all_columns[file.field_name].column._type;
+                values = {}
+                values[file.field_name] = self.filter[type](file.field_name, str(id_a), (4,));
+                print 'update file list : - id_attachment :', id_a, '; id_message : ', id_record, ' value: ', values
+                print 'reponse : ', request.registry[self._model].write(request.cr, SUPERUSER_ID, [id_record], values, request.context);
         
      
-    def insert(self):     
+    def insert(self):
         values = self._post;
+        if self.field not in values : values[self.field] = ''
         values[self.field] += "\n\n" + self._custom + "\n\n" + self._meta
         print 'INSERT :: ', values
         return request.registry[self._model].create(request.cr, SUPERUSER_ID, values, request.context);
@@ -138,7 +154,7 @@ class contactus(http.Controller):
 
         print "authorized model \n\n"
 
-        self.field      = obj_form.get_model_infos(request.cr, SUPERUSER_ID, self._model).metadata_field_ref
+        self.field      = obj_form.get_model_infos(request.cr, SUPERUSER_ID, self._model).metadata_field_ref.name
         self._BLACKLIST = obj_form.get_blacklist(request.cr, SUPERUSER_ID, self._model)
         self._REQUIRED  = obj_form.get_required(request.cr, SUPERUSER_ID, self._model)
 
@@ -146,18 +162,19 @@ class contactus(http.Controller):
         
         print "error : ", self.error, "\n\n"
         try:     
-            if(any(self.error)) :   id = 0
-            else :                  id = self.insert()
-        except:
-            id = 0
+            if(any(self.error)) :   id_record = 0
+            else :                  id_record = self.insert()
+        except ValueError:
+            print ValueError
+            id_record = 0
         
         
-        if id: 
-            self.linkAttachment(id)
+        if id_record: 
+            self.linkAttachment(id_record)
 
         if self.error : 
-            response = json.dumps({'id': id, 'fail_required' : self.error});
+            response = json.dumps({'id': id_record, 'fail_required' : self.error});
         else : 
-            response = json.dumps({'id': id, 'fail_required': None});
+            response = json.dumps({'id': id_record, 'fail_required': None});
 
         return request.website.render("website_form_builder.xmlresponse",{'response':response})
