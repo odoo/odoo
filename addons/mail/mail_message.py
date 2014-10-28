@@ -373,7 +373,6 @@ class mail_message(osv.Model):
                 'type': message.type,
                 'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
-                'body_original': message.body if message.type == 'email' else None,
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,

@@ -257,10 +257,7 @@
                         <t t-if="widget.subject" t-esc="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-raw="!widget.body_original || widget.body.length > widget.options.truncate_limit ? widget.body: widget.body_original"/>
-                    </div>
-                    <div t-if="widget.body_original" class="oe_msg_original" style="display:none;">
-                        <t t-raw="widget.body_original"/>
+                        <t t-raw="widget.body"/>
                     </div>
                 </div>
                 <div class="oe_msg_footer">
