@@ -48,7 +48,7 @@ class DiagramView(openerp.http.Controller):
         for tr in transitions:
             list_tr.append(tr)
             connectors.setdefault(tr, {
-                'id': tr,
+                'id': int(tr),
                 's_id': transitions[tr][0],
                 'd_id': transitions[tr][1]
             })
