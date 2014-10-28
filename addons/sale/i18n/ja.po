@@ -7,15 +7,114 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:47+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:33+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        You can view your quotation online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: sale
 #: field:product.product,sales_count:0
@@ -75,104 +174,6 @@ msgstr ""
 "* 受注が例外として処理されると「例外」が設定されます。\n"
 "* 受注の明細が用意されると「完了」になります。\n"
 "* 受注を取り消すと「キャンセル済」が設定されます。"
-
-#. module: sale
-#: model:email.template,body_html:sale.email_template_edi_sale
-msgid ""
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"         <strong>REFERENCES</strong><br>\n"
-"         Order number: <strong>${object.name}</strong><br>\n"
-"         Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br>\n"
-"         Order date: ${object.date_order}<br>\n"
-"       % if object.origin:\n"
-"         Order reference: ${object.origin}<br>\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"         Your reference: ${object.client_order_ref}<br>\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"         Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order ${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
-"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
-"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
-"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
-"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\" "
-"href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in "
-"('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\">\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br>\n"
-"    <br>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:  ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web : <a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -437,7 +438,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "分析アカウント"
@@ -458,7 +458,7 @@ msgid "Before Delivery"
 msgstr "配送前"
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -510,19 +510,19 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: sale
-#: code:addons/sale/sale.py:581
+#: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "この受注は取消できません。"
 
 #. module: sale
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "'%s'状態の受注明細は削除できません。"
 
 #. module: sale
-#: code:addons/sale/sale.py:1134
+#: code:addons/sale/sale.py:1133
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -579,7 +579,7 @@ msgid "Company"
 msgstr "会社"
 
 #. module: sale
-#: code:addons/sale/sale.py:1142
+#: code:addons/sale/sale.py:1141
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
@@ -683,11 +683,12 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
+#: view:sale.report:sale.view_order_product_search
 msgid "Customer"
 msgstr "顧客"
 
 #. module: sale
-#: code:addons/sale/sale.py:457
+#: code:addons/sale/sale.py:464
 #, python-format
 msgid "Customer Invoices"
 msgstr "顧客請求書"
@@ -842,12 +843,12 @@ msgid "Enable Invoicing Sales order lines"
 msgstr "受注明細単位の請求を有効化"
 
 #. module: sale
-#: code:addons/sale/sale.py:148
-#: code:addons/sale/sale.py:383
-#: code:addons/sale/sale.py:515
-#: code:addons/sale/sale.py:612
-#: code:addons/sale/sale.py:930
-#: code:addons/sale/sale.py:947
+#: code:addons/sale/sale.py:154
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522
+#: code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:927
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -868,7 +869,7 @@ msgid "False"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:582
+#: code:addons/sale/sale.py:589
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "始めにこの受注に紐づく全ての請求書を取り消してください。"
@@ -985,7 +986,7 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:298
+#: code:addons/sale/sale.py:305
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1003,7 +1004,7 @@ msgid "In Progress"
 msgstr "進行中"
 
 #. module: sale
-#: code:addons/sale/sale.py:267
+#: code:addons/sale/sale.py:274
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before!"
@@ -1016,9 +1017,9 @@ msgid "Incorrect Data"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:267
-#: code:addons/sale/sale.py:986
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:274
+#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:1164
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1107,7 +1108,7 @@ msgid "Invoice created"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1224
+#: code:addons/sale/sale.py:1217
 #, python-format
 msgid "Invoice paid"
 msgstr ""
@@ -1231,19 +1232,19 @@ msgid "New Mail"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid "No Customer Defined!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1126
+#: code:addons/sale/sale.py:1125
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "価格リストがありません： "
 
 #. module: sale
-#: code:addons/sale/sale.py:1137
+#: code:addons/sale/sale.py:1136
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "適切な価格リスト行が見つかりません："
@@ -1301,11 +1302,6 @@ msgid "Order"
 msgstr "オーダー"
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Order Date"
-msgstr "オーダー日"
-
-#. module: sale
 #: view:sale.order:sale.view_order_form
 #: field:sale.order,order_line:0
 msgid "Order Lines"
@@ -1318,6 +1314,7 @@ msgstr "請求対象受注明細"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
 msgid "Order Month"
 msgstr ""
 
@@ -1369,7 +1366,6 @@ msgstr "支払済"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,partner_id:0
 msgid "Partner"
 msgstr "パートナ"
@@ -1395,13 +1391,13 @@ msgid "Percentage"
 msgstr "パーセント"
 
 #. module: sale
-#: code:addons/sale/sale.py:931
+#: code:addons/sale/sale.py:928
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:384
+#: code:addons/sale/sale.py:391
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -1423,7 +1419,7 @@ msgid "Pricelist"
 msgstr "価格リスト"
 
 #. module: sale
-#: code:addons/sale/sale.py:297
+#: code:addons/sale/sale.py:304
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "価格リストの警告。"
@@ -1455,10 +1451,10 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
+#: field:sale.order,product_id:0
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 #: field:sale.order.line,product_id:0
-#: view:sale.report:sale.view_order_product_search
 #: field:sale.report,product_id:0
 msgid "Product"
 msgstr "製品"
@@ -1548,7 +1544,7 @@ msgid "Quotation confirmed"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:355
+#: code:addons/sale/sale.py:362
 #, python-format
 msgid "Quotation created"
 msgstr ""
@@ -1600,11 +1596,6 @@ msgid "Recreate Invoice"
 msgstr "請求書再作成"
 
 #. module: sale
-#: view:sale.report:sale.view_order_product_search
-msgid "Reference Unit of Measure"
-msgstr "参照単位"
-
-#. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
 msgstr "この受注の生成の基となったドキュメント"
@@ -1627,6 +1618,11 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Revenue of sent invoices per month."
+msgstr ""
+
+#. module: sale
+#: field:procurement.order,sale_line_id:0
+msgid "Sale Order Line"
 msgstr ""
 
 #. module: sale
@@ -1665,13 +1661,17 @@ msgid "Sales Analysis"
 msgstr "販売分析"
 
 #. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_sales_funnel
+msgid "Sales Funnel"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
 msgstr "受注による請求書作成"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:598
+#: code:addons/sale/sale.py:284
 #: model:ir.model,name:sale.model_sale_order
 #: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
@@ -1780,11 +1780,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
 msgstr "例外の受注"
-
-#. module: sale
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr ""
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1955,7 +1950,7 @@ msgid "The value of Advance Amount must be positive."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:945
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -1963,7 +1958,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:148
+#: code:addons/sale/sale.py:154
 #, python-format
 msgid "There is no default company for the current user!"
 msgstr ""
@@ -2217,13 +2212,13 @@ msgid "What do you want to invoice?"
 msgstr "どの請求をしますか？"
 
 #. module: sale
-#: code:addons/sale/sale.py:986
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr "請求済の受注明細は取り消せません。"
 
 #. module: sale
-#: code:addons/sale/sale.py:612
+#: code:addons/sale/sale.py:605
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "明細のない受注は確定できません。"
@@ -2235,14 +2230,14 @@ msgid "You cannot create invoice when sales order is not confirmed."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:516
+#: code:addons/sale/sale.py:523
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
 msgstr "同じパートナに対する異なった通貨を持つ受注はグループ化できません。"
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:1123
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -2266,3 +2261,9 @@ msgstr ""
 #: view:res.partner:sale.res_partner_address_type
 msgid "sale.group_delivery_invoice_address"
 msgstr ""
+
+#~ msgid "Order Date"
+#~ msgstr "オーダー日"
+
+#~ msgid "Reference Unit of Measure"
+#~ msgstr "参照単位"

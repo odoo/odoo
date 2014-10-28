@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-30 10:39+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-01 01:09+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-31 08:16+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-10-02 06:43+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
@@ -212,20 +212,20 @@ msgid ""
 "        If I do not answer, please let me a message with some schedules to "
 "call you back.</p>\n"
 "        <p>Kind regards,</p>\n"
-"        <br>\n"
+"        <br/>\n"
 "         ${object.user_id.signature | safe}"
 msgstr ""
 "<p>Estimado ${object.partner_name or 'applicant'},</p>\n"
-"<p>¡Enhorabuena! ¡Su CV ha llamado nuestro interés!\n"
-"Le llamaré tan pronto como sea posible para realizar una pequeña entrevista "
-"telefónica de 10 minutos y planear una primera reunión</p>\n"
-"<p>Si no podemos contactarle o si pierde la llamada, siéntase libre de "
-"contactarme en el número ${object.user_id.partner_id.phone}. Si no le "
-"contesto, déjeme por favor un mensaje, con horarios disponibles,  para "
-"volverle a llamar.</p>\n"
-"<p>Saludos cordiales,</p>\n"
-"<br>\n"
-"${object.user_id.signature | safe}"
+"        <p>¡Enhorabuena! ¡Su CV nos ha resultado de interés!\n"
+"        Le llamaré lo antes posible para realizar una entrevista telefónica "
+"de 10 minutos y planificar una primera reunión.</p>\n"
+"        <p>Si no podemos contactarle o si pierde esa llamada, puede "
+"contactarme directamente en el número de contacto.\n"
+"        Si no le contesto, por favor deje un mensaje con varias posibles "
+"fechas y horas para llamarle después.</p>\n"
+"        <p>Saludos cordiales,</p>\n"
+"        <br/>\n"
+"         ${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:email.template,body_html:hr_recruitment.applicant_refuse
@@ -238,17 +238,17 @@ msgid ""
 "        campaign has reached its term.</p>\n"
 "        <p>If you want more details, feel free to contact us by phone.</p>\n"
 "        <p>Kind regards,</p>\n"
-"        <br>\n"
+"        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
 msgstr ""
 "<p>Estimado ${object.partner_name or 'applicant'},</p>\n"
-"<p>Le agradecemos su interés en nuestra compañía y su solicitud.\n"
-"Desafortunadamente, su perfil no casa con nuestras necesidades o nuestra "
-"campaña de contratación ha llegado a su término.</p>\n"
-"<p>Si quiere más detalles, siéntase libre de contactar con nosotros.</p>\n"
-"<p>Saludos cordiales,</p>\n"
-"<br>\n"
-"${object.user_id and object.user_id.signature | safe or ''}"
+"        <p>Agradecemos su interés en nuestra compañía y su solicitud.\n"
+"        Desafortunadamente, su perfil no concuerda con nuestras necesidades "
+"o nuestra campaña de contratación ha terminado.</p>\n"
+"        <p>Si desea más detalles, no dude en contactarnos por teléfono.</p>\n"
+"        <p>Saludos cordiales,</p>\n"
+"        <br/>\n"
+"         ${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:survey.survey,description:hr_recruitment.recruitment_form
@@ -343,7 +343,7 @@ msgid "Applicant's Name"
 msgstr "Nombre del candidato"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:92
+#: code:addons/hr_recruitment/hr_recruitment.py:93
 #: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
 #: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
 #, python-format
@@ -531,14 +531,14 @@ msgid "Company Website"
 msgstr "Sitio web de la compañía"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:374
+#: code:addons/hr_recruitment/hr_recruitment.py:377
 #: field:hr.applicant,partner_id:0
 #, python-format
 msgid "Contact"
 msgstr "Contacto"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:376
+#: code:addons/hr_recruitment/hr_recruitment.py:379
 #, python-format
 msgid "Contact Email"
 msgstr "Correo electrónico de contacto"
@@ -609,10 +609,15 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 #: field:hr.applicant,create_date:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 msgid "Creation Date"
 msgstr "Fecha creación"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Creation Week"
+msgstr "Semana de creación"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_last_post:0
@@ -661,7 +666,6 @@ msgstr ""
 #: field:hr.applicant,type_id:0
 #: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
 #: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -1047,7 +1051,6 @@ msgstr "Fecha del último mensaje"
 
 #. module: hr_recruitment
 #: field:hr.applicant,last_stage_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,last_stage_id:0
 msgid "Last Stage"
 msgstr "Última etapa"
@@ -1055,7 +1058,6 @@ msgstr "Última etapa"
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 #: field:hr.applicant,date_last_stage_update:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr "Actualización de la última etapa"
@@ -1118,15 +1120,6 @@ msgid "Master Degree"
 msgstr "Titulación máster"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-msgid ""
-"Match this group by with a specific stage filter in order to analyse the "
-"recruitment process"
-msgstr ""
-"Casar este grupo con un filtro específico de etapa para analizar el proceso "
-"de reclutamiento"
-
-#. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
 msgid "Meeting"
 msgstr "Reunión"
@@ -1184,7 +1177,7 @@ msgid "New Applicant"
 msgstr "Nuevo solicitante"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:496
+#: code:addons/hr_recruitment/hr_recruitment.py:504
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Nuevo empleado contratado: %s"
@@ -1195,8 +1188,8 @@ msgid "New Mail"
 msgstr "Nuevo correo"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:414
-#: code:addons/hr_recruitment/hr_recruitment.py:441
+#: code:addons/hr_recruitment/hr_recruitment.py:421
+#: code:addons/hr_recruitment/hr_recruitment.py:449
 #, python-format
 msgid "New application from %s"
 msgstr "Nuevo solicitante de %s"
@@ -1217,7 +1210,7 @@ msgid "Next Actions"
 msgstr "Próximas acciones"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:388
+#: code:addons/hr_recruitment/hr_recruitment.py:391
 #, python-format
 msgid "No Subject"
 msgstr "Sin sujeto"
@@ -1253,7 +1246,6 @@ msgid "Office location"
 msgstr "Ubicación de la oficina"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
@@ -1683,7 +1675,7 @@ msgid "Very important"
 msgstr "Muy importante"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:499
+#: code:addons/hr_recruitment/hr_recruitment.py:507
 #, python-format
 msgid "Warning!"
 msgstr "¡Advertencia!"
@@ -1719,7 +1711,7 @@ msgid "Word of Mouth"
 msgstr "Boca a boca"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:499
+#: code:addons/hr_recruitment/hr_recruitment.py:507
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1736,7 +1728,7 @@ msgid "e.g. Call for interview"
 msgstr "Por ejemplo, llamar para una entrevista"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:512
+#: code:addons/hr_recruitment/hr_recruitment.py:520
 #, python-format
 msgid "job applicants"
 msgstr "solicitudes de trabajo"

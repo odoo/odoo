@@ -93,7 +93,7 @@
         options = _.extend({
             window_title: '',
             field_name: '',
-            default: '',
+            'default': '', // dict notation for IE<9
             init: function() {}
         }, options || {});
 
@@ -106,7 +106,7 @@
         var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
-        field.val(options.default);
+        field.val(options['default']); // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.is('select')) {
                 var select = field[0];

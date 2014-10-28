@@ -20,6 +20,7 @@ needs_sphinx = '1.1'
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
+    'sphinx.ext.ifconfig',
     'sphinx.ext.todo',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
@@ -44,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'odoo developer documentation'
+project = u'odoo'
 copyright = u'2014, OpenERP s.a.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -165,9 +166,14 @@ html_sidebars = {
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
 
+# default must be set otherwise ifconfig blows up
+todo_include_todos = False
+
 intersphinx_mapping = {
     'python': ('https://docs.python.org/2/', None),
-    'werkzeug': ('http://werkzeug.pocoo.org/docs/0.9/', None),
+    'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
+    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
+    'django': ('https://django.readthedocs.org/en/latest/', None),
 }
 
 github_user = 'odoo'

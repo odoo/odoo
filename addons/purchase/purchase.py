@@ -701,7 +701,7 @@ class purchase_order(osv.osv):
         product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
-            price_unit *= order_line.product_uom.factor
+            price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
@@ -1353,6 +1353,7 @@ class procurement_order(osv.osv):
                         'location_id': procurement.location_id.id,
                         'picking_type_id': procurement.rule_id.picking_type_id.id,
                         'pricelist_id': partner.property_product_pricelist_purchase.id,
+                        'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,

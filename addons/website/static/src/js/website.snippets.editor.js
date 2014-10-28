@@ -972,7 +972,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content>.row, [data-slide]').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();
@@ -1130,7 +1130,7 @@
             this._super();
 
             /* Fix: backward compatibility saas-3 */
-            this.$target.find('.item.text_image .container').find('> .carousel-caption > div, > img.carousel-image').attr('contentEditable', 'true');
+            this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
         },
     });
 
@@ -1497,10 +1497,11 @@
             this.$target.transfo({
                 hide: true,
                 callback: function () {
-                    var pos = $(this).data("transfo").$center.offset();
+                    var center = $(this).data("transfo").$markup.find('.transfo-scaler-mc').offset();
+                    var $option = self.$overlay.find('.btn-group:first');
                     self.$overlay.css({
-                        'top': pos.top,
-                        'left': pos.left,
+                        'top': center.top - $option.height()/2,
+                        'left': center.left,
                         'position': 'absolute',
                     });
                     self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");

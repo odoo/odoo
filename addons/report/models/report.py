@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp import api
+from openerp import SUPERUSER_ID
+from openerp.exceptions import AccessError
 from openerp.osv import osv
 from openerp.tools import config, which
 from openerp.tools.translate import _
@@ -97,7 +99,7 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        context.update(inherit_branding=True)  # Tell QWeb to brand the generated html
+        context = dict(context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
         view_obj = self.pool['ir.ui.view']
 
@@ -198,7 +200,8 @@ class Report(osv.Model):
         headerhtml = []
         contenthtml = []
         footerhtml = []
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        irconfig_obj = self.pool['ir.config_parameter']
+        base_url = irconfig_obj.get_param(cr, SUPERUSER_ID, 'report.url') or irconfig_obj.get_param(cr, SUPERUSER_ID, 'web.base.url')
 
         # Minimal page renderer
         view_obj = self.pool['ir.ui.view']
@@ -453,9 +456,14 @@ class Report(osv.Model):
                             'res_model': save_in_attachment.get('model'),
                             'res_id': reporthtml[0],
                         }
-                        self.pool['ir.attachment'].create(cr, uid, attachment)
-                    _logger.info('The PDF document %s is now saved in the '
-                                 'database' % attachment['name'])
+                        try:
+                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                        except AccessError:
+                            _logger.warning("Cannot save PDF report %r as attachment",
+                                            attachment['name'])
+                        else:
+                            _logger.info('The PDF document %s is now saved in the database',
+                                         attachment['name'])
 
                 pdfdocuments.append(pdfreport_path)
             except:

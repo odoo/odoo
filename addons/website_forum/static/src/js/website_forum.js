@@ -6,8 +6,8 @@ $(document).ready(function () {
                 ev.preventDefault();
                 var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
                     '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                    karma + ' karma is required to perform this action. You can earn karma by answering questions or having '+
-                    'your answers upvoted by the community.</div>');
+                    karma + ' karma is required to perform this action. You can earn karma by having '+
+                            'your answers upvoted by the community.</div>');
                 var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
                 if (vote_alert.length == 0) {
                     $(ev.currentTarget).parent().append($warning);
@@ -50,7 +50,6 @@ $(document).ready(function () {
                         }
                     }
                 });
-            return true;
         });
 
         $('.accept_answer').not('.karma_required').on('click', function (ev) {
@@ -76,7 +75,6 @@ $(document).ready(function () {
                     }
                 }
             });
-            return true;
         });
 
         $('.favourite_question').on('click', function (ev) {
@@ -89,7 +87,6 @@ $(document).ready(function () {
                     $link.removeClass("forum_favourite_question")
                 }
             });
-            return true;
         });
 
         $('.comment_delete').on('click', function (ev) {
@@ -98,15 +95,29 @@ $(document).ready(function () {
             openerp.jsonRpc($link.data('href'), 'call', {}).then(function (data) {
                 $link.parents('.comment').first().remove();
             });
-            return true;
         });
 
         $('.notification_close').on('click', function (ev) {
             ev.preventDefault();
             var $link = $(ev.currentTarget);
             openerp.jsonRpc("/forum/notification_read", 'call', {
-                'notification_id': $link.attr("id")})
-            return true;
+                'notification_id': $link.attr("id")});
+        });
+
+        $('.send_validation_email').on('click', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            openerp.jsonRpc("/forum/send_validation_email", 'call', {
+                'forum_id': $link.attr('forum-id'),
+            }).then(function (data) {
+                if (data) {
+                    $('button.validation_email_close').click();
+                }
+            });
+        });
+
+        $('.validated_email_close').on('click', function (ev) {
+            openerp.jsonRpc("/forum/validate_email/close", 'call', {});
         });
 
         if($('input.load_tags').length){

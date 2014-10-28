@@ -128,7 +128,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True),
+        'partner_id': fields.many2one('res.partner', 'Account Owner', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
         'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),

@@ -467,7 +467,6 @@ class Home(http.Controller):
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
-
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
@@ -478,6 +477,11 @@ class Home(http.Controller):
             return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
         else:
             return login_redirect()
+
+    @http.route('/web/dbredirect', type='http', auth="none")
+    def web_db_redirect(self, redirect='/', **kw):
+        ensure_db()
+        return werkzeug.utils.redirect(redirect, 303)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -1179,7 +1183,7 @@ class Binary(http.Controller):
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
-    ], type='http', auth="none")
+    ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo.png'
         placeholder = functools.partial(get_module_resource, 'web', 'static', 'src', 'img')

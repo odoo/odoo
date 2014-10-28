@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:26+0000\n"
 "PO-Revision-Date: 2014-08-14 16:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 08:11+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -146,6 +146,16 @@ msgid ""
 "    * Setup wizard changes\n"
 "        - Copy translations for COA, Tax, Tax Code and Fiscal Position from\n"
 "          templates to target objects.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_documentation_examples
+msgid ""
+"\n"
+"    Contains pieces of code to be used as technical documentation examples\n"
+"    (via the ``literalinclude`` directive) in situations where they can be\n"
+"    syntax-checked and tested.\n"
 "    "
 msgstr ""
 
@@ -289,104 +299,6 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new\n"
 "pads (by default, http://ietherpad.com/).\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_auth_ldap
-msgid ""
-"\n"
-"Adds support for authentication by LDAP server.\n"
-"===============================================\n"
-"This module allows users to login with their LDAP username and password, "
-"and\n"
-"will automatically create OpenERP users for them on the fly.\n"
-"\n"
-"**Note:** This module only work on servers who have Python's ``ldap`` module "
-"installed.\n"
-"\n"
-"Configuration:\n"
-"--------------\n"
-"After installing this module, you need to configure the LDAP parameters in "
-"the\n"
-"Configuration tab of the Company details. Different companies may have "
-"different\n"
-"LDAP servers, as long as they have unique usernames (usernames need to be "
-"unique\n"
-"in OpenERP, even across multiple companies).\n"
-"\n"
-"Anonymous LDAP binding is also supported (for LDAP servers that allow it), "
-"by\n"
-"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
-"This does not allow anonymous authentication for users, it is only for the "
-"master\n"
-"LDAP account that is used to verify if a user exists before attempting to\n"
-"authenticate it.\n"
-"\n"
-"Securing the connection with STARTTLS is available for LDAP servers "
-"supporting\n"
-"it, by enabling the TLS option in the LDAP configuration.\n"
-"\n"
-"For further options configuring the LDAP settings, refer to the ldap.conf\n"
-"manpage: manpage:`ldap.conf(5)`.\n"
-"\n"
-"Security Considerations:\n"
-"------------------------\n"
-"Users' LDAP passwords are never stored in the OpenERP database, the LDAP "
-"server\n"
-"is queried whenever a user needs to be authenticated. No duplication of the\n"
-"password occurs, and passwords are managed in one place only.\n"
-"\n"
-"OpenERP does not manage password changes in the LDAP, so any change of "
-"password\n"
-"should be conducted by other means in the LDAP directory directly (for LDAP "
-"users).\n"
-"\n"
-"It is also possible to have local OpenERP users in the database along with\n"
-"LDAP-authenticated users (the Administrator account is one obvious "
-"example).\n"
-"\n"
-"Here is how it works:\n"
-"---------------------\n"
-"    * The system first attempts to authenticate users against the local "
-"OpenERP\n"
-"      database;\n"
-"    * if this authentication fails (for example because the user has no "
-"local\n"
-"      password), the system then attempts to authenticate against LDAP;\n"
-"\n"
-"As LDAP users have blank passwords by default in the local OpenERP database\n"
-"(which means no access), the first step always fails and the LDAP server is\n"
-"queried to do the authentication.\n"
-"\n"
-"Enabling STARTTLS ensures that the authentication query to the LDAP server "
-"is\n"
-"encrypted.\n"
-"\n"
-"User Template:\n"
-"--------------\n"
-"In the LDAP configuration on the Company form, it is possible to select a "
-"*User\n"
-"Template*. If set, this user will be used as template to create the local "
-"users\n"
-"whenever someone authenticates for the first time via LDAP authentication. "
-"This\n"
-"allows pre-setting the default groups and menus of the first-time users.\n"
-"\n"
-"**Warning:** if you set a password for the user template, this password will "
-"be\n"
-"         assigned as local password for each new LDAP user, effectively "
-"setting\n"
-"         a *master password* for these users (until manually changed). You\n"
-"         usually do not want this. One easy way to setup a template user is "
-"to\n"
-"         login once with a valid LDAP user, let OpenERP create a blank "
-"local\n"
-"         user with the same login (and a blank password), then rename this "
-"new\n"
-"         user to a username that does not exist in LDAP, and setup its "
-"groups\n"
-"         the way you want.\n"
 "    "
 msgstr ""
 
@@ -755,45 +667,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_co
-msgid ""
-"\n"
-"Chart of account for Colombia\n"
-"=============================\n"
-"\n"
-"Source of this chart of account is here_.\n"
-"\n"
-"All the documentation available in this website is embeded in this module, "
-"to\n"
-"be sure when you open OpenERP it has all necesary information to manage \n"
-"accounting en Colombia.\n"
-"\n"
-"The law that enable this chart of account as valid for this country is \n"
-"available in this other link_.\n"
-"\n"
-"This module has the intention to put available out of the box the chart of \n"
-"account for Colombia in Openerp.\n"
-"\n"
-"We recommend install the module account_anglo_sxon to be able to have the "
-"cost\n"
-"accounting correctly setted in out invoices.\n"
-"\n"
-"After installing this module, the Configuration wizard for accounting is "
-"launched.\n"
-"    * We have the account templates which can be helpful to generate Charts "
-"of Accounts.\n"
-"    * On that particular wizard, you will be asked to pass the name of the "
-"company,\n"
-"      the chart template to follow, the no. of digits to generate, the code "
-"for your\n"
-"      account and bank account, currency to create journals.\n"
-"\n"
-".. _here: http://puc.com.co/\n"
-".. _link: http://puc.com.co/normatividad/\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
 msgid ""
 "\n"
@@ -1057,19 +930,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_auth_crypt
-msgid ""
-"\n"
-"Ecrypted passwords\n"
-"==================\n"
-"\n"
-"Interaction with LDAP authentication:\n"
-"-------------------------------------\n"
-"This module is currently not compatible with the ``user_ldap`` module and\n"
-"will disable LDAP authentication completely if installed at the same time.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_email_template
 msgid ""
 "\n"
@@ -1113,6 +973,37 @@ msgid ""
 "    **Technical note:** only the templating system of the original Power "
 "Email by Openlabs was kept.\n"
 "    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_auth_crypt
+msgid ""
+"\n"
+"Encrypted passwords\n"
+"===================\n"
+"\n"
+"Replaces the default password storage with a strong cryptographic\n"
+"hash.\n"
+"\n"
+"The key derivation function currently used is RSA Security LLC's\n"
+"industry-standard ``PKDF2``, in combination with ``SHA512``.\n"
+"This includes salting and key stretching with several thousands\n"
+"rounds.\n"
+"\n"
+"All passwords are encrypted as soon as the module is installed.\n"
+"This may take a few minutes if there are thousands of users.\n"
+"\n"
+"Past versions of encrypted passwords will be automatically upgraded\n"
+"to the current scheme whenever a user authenticates\n"
+"(``auth_crypt`` was previously using the weaker ``md5crypt`` key\n"
+"derivation function).\n"
+"\n"
+"Note: Installing this module permanently prevents user password\n"
+"recovery and cannot be undone. It is thus recommended to enable\n"
+"some password reset mechanism for users, such as the one provided\n"
+"by the ``auth_signup`` module (signup for new users does not\n"
+"necessarily have to be enabled).\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -3084,6 +2975,21 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_do
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Dominican "
+"Republic.\n"
+"============================================================================="
+"=\n"
+"\n"
+"* Chart of Accounts.\n"
+"* The Tax Code Chart for Domincan Republic\n"
+"* The main taxes used in Domincan Republic\n"
+"* Fiscal position for local "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
 msgid ""
 "\n"
@@ -4606,8 +4512,8 @@ msgstr "%p - Equivalente do AM or PM."
 #: code:addons/base/ir/ir_filters.py:36
 #: code:addons/base/res/res_partner.py:355
 #: code:addons/base/res/res_users.py:120
-#: code:addons/base/res/res_users.py:366
-#: code:addons/base/res/res_users.py:368
+#: code:addons/base/res/res_users.py:371
+#: code:addons/base/res/res_users.py:373
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -4628,7 +4534,7 @@ msgid "%y - Year without century [00,99]."
 msgstr "%y - Ano sem século [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:977
+#: code:addons/base/ir/ir_model.py:997
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -4957,7 +4863,7 @@ msgid "A module with dummy methods."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:837
+#: code:addons/base/ir/ir_qweb.py:835
 #, python-format
 msgid "A unit must be provided to duration widgets"
 msgstr ""
@@ -5206,6 +5112,8 @@ msgstr "Ações"
 #: field:ir.model.access,active:0
 #: field:ir.rule,active:0
 #: field:ir.sequence,active:0
+#: view:ir.ui.view:base.view_view_search
+#: field:ir.ui.view,active:0
 #: field:res.bank,active:0
 #: field:res.currency,active:0
 #: field:res.lang,active:0
@@ -5291,6 +5199,101 @@ msgid "Address format..."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_auth_ldap
+msgid ""
+"Adds support for authentication by LDAP server.\n"
+"===============================================\n"
+"This module allows users to login with their LDAP username and password, "
+"and\n"
+"will automatically create OpenERP users for them on the fly.\n"
+"\n"
+"**Note:** This module only work on servers who have Python's ``ldap`` module "
+"installed.\n"
+"\n"
+"Configuration:\n"
+"--------------\n"
+"After installing this module, you need to configure the LDAP parameters in "
+"the\n"
+"Configuration tab of the Company details. Different companies may have "
+"different\n"
+"LDAP servers, as long as they have unique usernames (usernames need to be "
+"unique\n"
+"in OpenERP, even across multiple companies).\n"
+"\n"
+"Anonymous LDAP binding is also supported (for LDAP servers that allow it), "
+"by\n"
+"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
+"This does not allow anonymous authentication for users, it is only for the "
+"master\n"
+"LDAP account that is used to verify if a user exists before attempting to\n"
+"authenticate it.\n"
+"\n"
+"Securing the connection with STARTTLS is available for LDAP servers "
+"supporting\n"
+"it, by enabling the TLS option in the LDAP configuration.\n"
+"\n"
+"For further options configuring the LDAP settings, refer to the ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Security Considerations:\n"
+"------------------------\n"
+"Users' LDAP passwords are never stored in the OpenERP database, the LDAP "
+"server\n"
+"is queried whenever a user needs to be authenticated. No duplication of the\n"
+"password occurs, and passwords are managed in one place only.\n"
+"\n"
+"OpenERP does not manage password changes in the LDAP, so any change of "
+"password\n"
+"should be conducted by other means in the LDAP directory directly (for LDAP "
+"users).\n"
+"\n"
+"It is also possible to have local OpenERP users in the database along with\n"
+"LDAP-authenticated users (the Administrator account is one obvious "
+"example).\n"
+"\n"
+"Here is how it works:\n"
+"---------------------\n"
+"    * The system first attempts to authenticate users against the local "
+"OpenERP\n"
+"      database;\n"
+"    * if this authentication fails (for example because the user has no "
+"local\n"
+"      password), the system then attempts to authenticate against LDAP;\n"
+"\n"
+"As LDAP users have blank passwords by default in the local OpenERP database\n"
+"(which means no access), the first step always fails and the LDAP server is\n"
+"queried to do the authentication.\n"
+"\n"
+"Enabling STARTTLS ensures that the authentication query to the LDAP server "
+"is\n"
+"encrypted.\n"
+"\n"
+"User Template:\n"
+"--------------\n"
+"In the LDAP configuration on the Company form, it is possible to select a "
+"*User\n"
+"Template*. If set, this user will be used as template to create the local "
+"users\n"
+"whenever someone authenticates for the first time via LDAP authentication. "
+"This\n"
+"allows pre-setting the default groups and menus of the first-time users.\n"
+"\n"
+"**Warning:** if you set a password for the user template, this password will "
+"be\n"
+"         assigned as local password for each new LDAP user, effectively "
+"setting\n"
+"         a *master password* for these users (until manually changed). You\n"
+"         usually do not want this. One easy way to setup a template user is "
+"to\n"
+"         login once with a valid LDAP user, let OpenERP create a blank "
+"local\n"
+"         user with the same login (and a blank password), then rename this "
+"new\n"
+"         user to a username that does not exist in LDAP, and setup its "
+"groups\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_administration
 msgid "Administration"
 msgstr "Administração"
@@ -5303,9 +5306,9 @@ msgstr ""
 "Divisões administrativas de um país. Exemplos: Distrito, Concelho, Freguesia"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:531
-#: code:addons/base/ir/ir_model.py:592
-#: code:addons/base/ir/ir_model.py:1096
+#: code:addons/base/ir/ir_model.py:548
+#: code:addons/base/ir/ir_model.py:609
+#: code:addons/base/ir/ir_model.py:1116
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
@@ -5399,11 +5402,6 @@ msgstr ""
 #: selection:ir.model.fields,select_level:0
 msgid "Always Searchable"
 msgstr "Sempre Pesquisável"
-
-#. module: base
-#: selection:ir.ui.view,application:0
-msgid "Always applied"
-msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:373
@@ -5500,7 +5498,7 @@ msgid "Applicant Resumes and Letters"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:728
+#: code:addons/base/res/res_users.py:735
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
@@ -5513,11 +5511,6 @@ msgstr "Aplicação"
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
 msgstr "Termos da Aplicação"
-
-#. module: base
-#: field:ir.ui.view,application:0
-msgid "Application status"
-msgstr ""
 
 #. module: base
 #: view:res.config:base.res_config_view_base
@@ -6178,7 +6171,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:342
+#: code:addons/base/res/res_users.py:347
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Não pode remover o utilizador raiz!"
@@ -6191,16 +6184,10 @@ msgstr ""
 "Não é possível atualizar o módulo '%s' porque este não está instalado."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:439
+#: code:addons/base/ir/ir_model.py:456
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Só é possível renomear uma coluna de cada vez!"
-
-#. module: base
-#: code:addons/base/ir/ir_ui_view.py:300
-#, python-format
-msgid "Can't toggle view %d with application %r"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -6254,7 +6241,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Não se pode duplicar a configuração!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:441
+#: code:addons/base/ir/ir_model.py:458
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr "Não é possível renomear coluna para% s, pois essa coluna já existe!"
@@ -6338,7 +6325,7 @@ msgid "Change the user password."
 msgstr "Muda a senha de utilizador."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:379
+#: code:addons/base/res/res_partner.py:378
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -6348,20 +6335,20 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:450
+#: code:addons/base/ir/ir_model.py:467
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Alterar o modelo de um campo é proibido!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:396
+#: code:addons/base/ir/ir_model.py:413
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 "Modificar o sistema de armazenamento do campo \"%s\" não é permitido."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:453
+#: code:addons/base/ir/ir_model.py:470
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -6614,6 +6601,11 @@ msgid "Colombian - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_co
+msgid "Colombian Accounting and Tax Preconfiguration"
+msgstr ""
+
+#. module: base
 #: field:res.partner,color:0
 msgid "Color Index"
 msgstr "Índice de Cor"
@@ -6844,13 +6836,13 @@ msgid "Connection Security"
 msgstr "Segurança da Conexão"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:217
+#: code:addons/base/ir/ir_mail_server.py:219
 #, python-format
 msgid "Connection Test Failed!"
 msgstr "Teste de Ligação Falhou!"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:224
+#: code:addons/base/ir/ir_mail_server.py:226
 #, python-format
 msgid "Connection Test Succeeded!"
 msgstr "Teste de Ligação Bem Sucedido!"
@@ -6984,7 +6976,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Costa Rica - Contabilidade"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:630
+#: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "Não foi possível criar o contacto sem o endereço de email!"
@@ -7422,7 +7414,7 @@ msgid "Custom Shortcuts"
 msgstr "Atalhos Personalizados"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:361
+#: code:addons/base/ir/ir_model.py:374
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Os campos personalizados devem ter um nome iniciado por 'x_'!"
@@ -7690,7 +7682,7 @@ msgid "Delete Access Right"
 msgstr "Eliminar direito de acesso"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:835
+#: code:addons/base/ir/ir_actions.py:839
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr ""
@@ -7890,8 +7882,8 @@ msgid "Document Management System"
 msgstr "Sistema de gestão de documentos"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:754
-#: code:addons/base/ir/ir_model.py:757
+#: code:addons/base/ir/ir_model.py:771
+#: code:addons/base/ir/ir_model.py:774
 #, python-format
 msgid "Document model"
 msgstr "Modelo de documento"
@@ -7899,6 +7891,11 @@ msgstr "Modelo de documento"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_documentation_examples
+msgid "Documentation examples test"
 msgstr ""
 
 #. module: base
@@ -7924,6 +7921,11 @@ msgstr "Dominica"
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
 msgstr "República Dominicana"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_do
+msgid "Dominican Republic - Accounting"
+msgstr ""
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -7958,7 +7960,7 @@ msgid "Duplicating workflows is not possible, please create a new workflow"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:835
+#: code:addons/base/ir/ir_qweb.py:833
 #, python-format
 msgid "Durations can't be negative"
 msgstr ""
@@ -8004,14 +8006,6 @@ msgid "Ecuador - Accounting"
 msgstr "Equador - Contabilidade"
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:261
-#, python-format
-msgid ""
-"Editor disabled because some content can not be seen by a user who does not "
-"belong to the groups %s"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.eg
 msgid "Egypt"
 msgstr "Egipto"
@@ -8027,7 +8021,7 @@ msgid "Electronic Data Interchange (EDI)"
 msgstr "Interface Electrónico de Documentos (EDI)"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:496
+#: code:addons/base/ir/ir_ui_view.py:482
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -8128,15 +8122,15 @@ msgid "Eritrea"
 msgstr "Eritreia"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:840
-#: code:addons/base/ir/ir_model.py:164
-#: code:addons/base/ir/ir_model.py:283
-#: code:addons/base/ir/ir_model.py:297
-#: code:addons/base/ir/ir_model.py:337
-#: code:addons/base/ir/ir_model.py:356
-#: code:addons/base/ir/ir_model.py:361
-#: code:addons/base/ir/ir_model.py:364
-#: code:addons/base/ir/ir_translation.py:392
+#: code:addons/base/ir/ir_actions.py:844
+#: code:addons/base/ir/ir_model.py:176
+#: code:addons/base/ir/ir_model.py:296
+#: code:addons/base/ir/ir_model.py:310
+#: code:addons/base/ir/ir_model.py:350
+#: code:addons/base/ir/ir_model.py:369
+#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:377
+#: code:addons/base/ir/ir_translation.py:396
 #: code:addons/base/module/module.py:339
 #: code:addons/base/module/module.py:381
 #: code:addons/base/module/module.py:386
@@ -8144,7 +8138,7 @@ msgstr "Eritreia"
 #: code:addons/base/module/module.py:522
 #: code:addons/base/module/module.py:548
 #: code:addons/base/module/module.py:562
-#: code:addons/base/res/res_currency.py:229
+#: code:addons/base/res/res_currency.py:230
 #: code:addons/base/res/res_users.py:126
 #: code:addons/custom.py:554
 #, python-format
@@ -8163,7 +8157,7 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Erro ! Não pode criar categorias recursivamente."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:369
+#: code:addons/base/ir/ir_ui_view.py:355
 #, python-format
 msgid ""
 "Error context:\n"
@@ -8171,16 +8165,16 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:396
-#: code:addons/base/ir/ir_model.py:398
-#: code:addons/base/ir/ir_model.py:425
-#: code:addons/base/ir/ir_model.py:439
-#: code:addons/base/ir/ir_model.py:441
-#: code:addons/base/ir/ir_model.py:443
-#: code:addons/base/ir/ir_model.py:450
-#: code:addons/base/ir/ir_model.py:453
+#: code:addons/base/ir/ir_model.py:413
+#: code:addons/base/ir/ir_model.py:415
+#: code:addons/base/ir/ir_model.py:442
+#: code:addons/base/ir/ir_model.py:456
+#: code:addons/base/ir/ir_model.py:458
+#: code:addons/base/ir/ir_model.py:460
+#: code:addons/base/ir/ir_model.py:467
+#: code:addons/base/ir/ir_model.py:470
 #: code:addons/base/module/wizard/base_update_translations.py:39
-#: code:addons/base/res/res_currency.py:58
+#: code:addons/base/res/res_currency.py:59
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -8226,7 +8220,7 @@ msgid "Events Sales"
 msgstr "Vendas dos Eventos"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:224
+#: code:addons/base/ir/ir_mail_server.py:226
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr "Tudo parece configurado corretamente!"
@@ -8274,8 +8268,8 @@ msgstr "Execução"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
-msgid "Expense Management"
-msgstr "Gestão de despesas"
+msgid "Expense Tracker"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
@@ -8475,7 +8469,7 @@ msgid "Field Type"
 msgstr "Tipo de Campo"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:845
+#: code:addons/base/ir/ir_ui_view.py:834
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr ""
@@ -8703,7 +8697,7 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "Para campos de relacionamento, o nome técnico do modelo de destino"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:356
+#: code:addons/base/ir/ir_model.py:369
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Para campos de seleção, as opções de seleção devem ser dadas!"
@@ -9290,7 +9284,7 @@ msgid "Here is the exported translation file:"
 msgstr "Aqui está o ficheiro de tradução:"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:217
+#: code:addons/base/ir/ir_mail_server.py:219
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -9651,12 +9645,11 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: help:ir.ui.view,application:0
+#: help:ir.ui.view,active:0
 msgid ""
 "If this view is inherited,\n"
-"* if always, the view always extends its parent\n"
-"* if enabled, the view currently extends its parent but can be disabled\n"
-"* if disabled, the view currently does not extend its parent but can be "
+"* if True, the view always extends its parent\n"
+"* if False, the view currently does not extend its parent but can be "
 "enabled\n"
 "             "
 msgstr ""
@@ -9858,6 +9851,11 @@ msgid "Inherited Views"
 msgstr ""
 
 #. module: base
+#: field:ir.model,inherited_model_ids:0
+msgid "Inherited models"
+msgstr ""
+
+#. module: base
 #: field:res.groups,implied_ids:0
 msgid "Inherits"
 msgstr "Heranças"
@@ -9917,12 +9915,6 @@ msgstr "Instalado"
 #: view:ir.module.module:base.module_form
 msgid "Installed Features"
 msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,name:base.open_module_tree
-#: model:ir.ui.menu,name:base.menu_module_tree
-msgid "Installed Modules"
-msgstr "Módulos instalados"
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -9997,7 +9989,7 @@ msgid "Invalid Bank Account Type Name format."
 msgstr "Formato inválido para o nome do tipo de conta bancária."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "Invalid Search Criteria"
 msgstr "Critério de Pesquisa Inválido"
@@ -10008,13 +10000,13 @@ msgid "Invalid arguments"
 msgstr "Argumentos inválidos"
 
 #. module: base
-#: code:addons/base/res/res_users.py:839
+#: code:addons/base/res/res_users.py:846
 #, python-format
 msgid "Invalid context default_groups_ref value (model.name_id) : \"%s\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:839
+#: code:addons/base/res/res_users.py:846
 #, python-format
 msgid "Invalid context value"
 msgstr ""
@@ -10048,7 +10040,7 @@ msgid "Invalid model name in the action definition."
 msgstr "Nome de modelo inválido na definição da ação"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:488
+#: code:addons/base/ir/ir_ui_view.py:474
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
@@ -10147,8 +10139,8 @@ msgstr "Israel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
-msgid "Issue Tracker"
-msgstr "Acompanhamento de problemas"
+msgid "Issue Tracking"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10740,13 +10732,13 @@ msgid "Lithuanian / Lietuvių kalba"
 msgstr "Lituano / Lietuvių kalba"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_im_livechat
-msgid "Live Chat with Visitors/Customers"
+#: model:ir.module.module,shortdesc:base.module_im_livechat
+msgid "Live Chat"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_im_livechat
-msgid "Live Support"
+#: model:ir.module.module,summary:base.module_im_livechat
+msgid "Live Chat with Visitors/Customers"
 msgstr ""
 
 #. module: base
@@ -10760,6 +10752,12 @@ msgstr "Load"
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 msgid "Load a Translation"
 msgstr "Carregar uma tradução"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.open_module_tree
+#: model:ir.ui.menu,name:base.menu_module_tree
+msgid "Local Modules"
+msgstr ""
 
 #. module: base
 #: field:res.lang,code:0
@@ -10866,13 +10864,13 @@ msgid "Madam"
 msgstr "Senhora"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:483
+#: code:addons/base/ir/ir_mail_server.py:485
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:479
+#: code:addons/base/ir/ir_mail_server.py:481
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -11219,7 +11217,7 @@ msgid "Miss"
 msgstr "Menina"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:457
+#: code:addons/base/ir/ir_mail_server.py:459
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Falta Servidor SMTP"
@@ -11259,13 +11257,13 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:364
+#: code:addons/base/ir/ir_model.py:377
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "O modelo %s não existe!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:164
+#: code:addons/base/ir/ir_model.py:176
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr ""
@@ -11328,8 +11326,8 @@ msgstr ""
 "Nome do modelo onde está localizado o método que é chamado, exº 'res.partner'"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:598
-#: code:addons/base/ir/ir_ui_view.py:802
+#: code:addons/base/ir/ir_ui_view.py:584
+#: code:addons/base/ir/ir_ui_view.py:791
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr ""
@@ -11678,7 +11676,7 @@ msgid "New Zealand"
 msgstr "Nova Zelândia"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:443
+#: code:addons/base/ir/ir_model.py:460
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -11740,7 +11738,7 @@ msgid "Niue"
 msgstr "Niue"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:58
+#: code:addons/base/res/res_currency.py:59
 #, python-format
 msgid "No currency rate associated for currency '%s' for the given period"
 msgstr ""
@@ -11766,7 +11764,7 @@ msgstr ""
 "'%%(field)s'"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:229
+#: code:addons/base/res/res_currency.py:230
 #, python-format
 msgid ""
 "No rate found \n"
@@ -11811,6 +11809,11 @@ msgstr "Ilhas Marianas do Norte"
 #: model:res.country,name:base.no
 msgid "Norway"
 msgstr "Noruega"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_no
+msgid "Norway - Chart of Accounts"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11925,6 +11928,13 @@ msgid "Occitan (FR, post 1500) / Occitan"
 msgstr "Occitan (FR, post 1500) / Occitan"
 
 #. module: base
+#. openerp-web
+#: code:addons/base/static/src/js/apps.js:105
+#, python-format
+msgid "Odoo Apps will be available soon"
+msgstr ""
+
+#. module: base
 #: help:ir.sequence,padding:0
 msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
@@ -11979,6 +11989,11 @@ msgid "On delete property for many2one fields"
 msgstr "Em apagar propriedades para os campos many2one"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_voucher
+msgid "Online Billing"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
 msgstr ""
@@ -12028,7 +12043,7 @@ msgid "Only if this bank account belong to your company"
 msgstr "Apenas se a conta bancária pertencer à sua empresa"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:754
+#: code:addons/base/ir/ir_model.py:771
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -12150,16 +12165,6 @@ msgid "Optional username for SMTP authentication"
 msgstr "Nome de Utilizador opcional para autentificação de SMTP"
 
 #. module: base
-#: selection:ir.ui.view,application:0
-msgid "Optional, disabled"
-msgstr ""
-
-#. module: base
-#: selection:ir.ui.view,application:0
-msgid "Optional, enabled"
-msgstr ""
-
-#. module: base
 #: selection:workflow.activity,split_mode:0
 msgid "Or"
 msgstr "Ou"
@@ -12170,8 +12175,8 @@ msgid "Original View"
 msgstr "Vista original"
 
 #. module: base
-#: code:addons/base/res/res_users.py:739
-#: code:addons/base/res/res_users.py:891
+#: code:addons/base/res/res_users.py:746
+#: code:addons/base/res/res_users.py:898
 #: selection:res.partner,type:0
 #: view:res.users:base.user_groups_view
 #, python-format
@@ -12406,7 +12411,7 @@ msgid "Partners Geo-Localization"
 msgstr "Geo-Localização de Parceiros"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:766
+#: code:addons/base/res/res_partner.py:765
 #, python-format
 msgid "Partners: "
 msgstr "Parceiros: "
@@ -12503,9 +12508,9 @@ msgid "Periodical Evaluations, Appraisals, Surveys"
 msgstr "Avaliações periódicas, decisões, pesquisas"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:531
-#: code:addons/base/ir/ir_model.py:592
-#: code:addons/base/ir/ir_model.py:1096
+#: code:addons/base/ir/ir_model.py:548
+#: code:addons/base/ir/ir_model.py:609
+#: code:addons/base/ir/ir_model.py:1116
 #, python-format
 msgid "Permission Denied"
 msgstr "Permissão negada"
@@ -12570,7 +12575,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "Plano de contas SNC para Portugal"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:757
+#: code:addons/base/ir/ir_model.py:774
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -12579,7 +12584,7 @@ msgstr ""
 "erro."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:458
+#: code:addons/base/ir/ir_mail_server.py:460
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -12608,7 +12613,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:840
+#: code:addons/base/ir/ir_actions.py:844
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr ""
@@ -12858,7 +12863,7 @@ msgid "Properties"
 msgstr "Propriedades"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/ir/ir_model.py:443
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -13214,7 +13219,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:398
+#: code:addons/base/ir/ir_model.py:415
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Não é permitido mudar o nome de sparse field \"%s\""
@@ -13363,6 +13368,11 @@ msgid "Restaurant extensions for the Point of Sale "
 msgstr ""
 
 #. module: base
+#: selection:ir.model.fields,on_delete:0
+msgid "Restrict"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,multi:0
 msgid "Restrict to lists"
 msgstr ""
@@ -13434,7 +13444,7 @@ msgid "Rules can not be applied on the Record Rules model."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:817
+#: code:addons/base/ir/ir_actions.py:821
 #, python-format
 msgid "Run %s"
 msgstr ""
@@ -13481,7 +13491,7 @@ msgid "SMTP Server"
 msgstr "Servidor SMTP"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:242
+#: code:addons/base/ir/ir_mail_server.py:244
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr "Modo SMTP-sobre-SSL indisponível"
@@ -13894,6 +13904,11 @@ msgid "Server Action"
 msgstr "Ação do servidor"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_server_object_lines
+msgid "Server Action value mapping"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
 #: view:ir.actions.server:base.view_server_action_search
 #: view:ir.actions.server:base.view_server_action_tree
@@ -13930,7 +13945,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:505
+#: code:addons/base/res/res_users.py:512
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "Definir passwords em branco não é permitido por razões de segurança!"
@@ -13960,6 +13975,13 @@ msgstr "Partilhado"
 #: selection:res.partner,type:0
 msgid "Shipping"
 msgstr "Envio"
+
+#. module: base
+#. openerp-web
+#: code:addons/base/static/src/js/apps.js:105
+#, python-format
+msgid "Showing locally available modules"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -14033,7 +14055,7 @@ msgid "Size"
 msgstr "Tamanho"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:302
+#: code:addons/base/ir/ir_model.py:315
 #, python-format
 msgid "Size of the field can never be less than 0 !"
 msgstr ""
@@ -14106,25 +14128,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Às vezes chamado de BIC ou Swift."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:748
+#: code:addons/base/ir/ir_model.py:765
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Infelizmente, não está autorizado a aceder a este documento."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:750
+#: code:addons/base/ir/ir_model.py:767
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Infelizmente, não pode criar este tipo de documento."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:751
+#: code:addons/base/ir/ir_model.py:768
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Infelizmente, não pode apagar este documento."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:749
+#: code:addons/base/ir/ir_model.py:766
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Infelizmente, não pode alterar este documento."
@@ -14830,7 +14852,7 @@ msgstr ""
 "Pode usar este campo para procura rápida."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:126
+#: code:addons/base/ir/ir_model.py:138
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -14839,7 +14861,7 @@ msgstr ""
 "especial!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:298
+#: code:addons/base/ir/ir_model.py:311
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -14848,7 +14870,7 @@ msgstr ""
 "Ao Selecionar a expressão Opções deve estar no[('key','Label'), ...] formato!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:284
+#: code:addons/base/ir/ir_model.py:297
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -14970,6 +14992,11 @@ msgstr ""
 "houver)"
 
 #. module: base
+#: help:ir.model,inherited_model_ids:0
+msgid "The list of models that extends the current model."
+msgstr ""
+
+#. module: base
 #: help:ir.filters,action_id:0
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
@@ -15037,7 +15064,7 @@ msgstr ""
 "lista de trigémeos. por exemplo: [('color','=','red')]"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -15100,7 +15127,7 @@ msgid "The record id this is attached to"
 msgstr ""
 
 #. module: base
-#: code:addons/fields.py:794
+#: code:addons/fields.py:800
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -15171,7 +15198,7 @@ msgid "This Window"
 msgstr "Esta janela"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:337
+#: code:addons/base/ir/ir_model.py:350
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Esta coluna contém dados do módulo e não pode ser removida!"
@@ -15233,6 +15260,12 @@ msgstr ""
 "Este é o nome do anexo usado para guardar o relatório. Deixe vazio para não "
 "guardar os relatórios impressos como anexos. Pode usar um expressão python "
 "com as variáveis tempo do objeto."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_no
+msgid ""
+"This is the module to manage the accounting chart for Norway in Open ERP."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_mass_mailing
@@ -15442,7 +15475,7 @@ msgid "Translation comments"
 msgstr "Comentários à tradução"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:392
+#: code:addons/base/ir/ir_translation.py:396
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra OpenERP "
@@ -15654,6 +15687,11 @@ msgstr ""
 "não satisfeita: %s"
 
 #. module: base
+#: view:ir.ui.view:base.view_view_search
+msgid "Unactive"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
 msgstr "Sem categoria"
@@ -15691,7 +15729,7 @@ msgid "United States - Chart of accounts"
 msgstr "Estados Unidos - Planos de Contas"
 
 #. module: base
-#: code:addons/report_sxw.py:390
+#: code:addons/report_sxw.py:391
 #, python-format
 msgid "Unknown report type: %s"
 msgstr "Tipo de relatório desconhecido: %s"
@@ -15904,12 +15942,6 @@ msgstr "Interface do Utilizador"
 #: field:change.password.user,user_login:0
 msgid "User Login"
 msgstr "Login do utilizador"
-
-#. module: base
-#: code:addons/base/ir/ir_qweb.py:263
-#, python-format
-msgid "User does not belong to groups %s"
-msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_defaults
@@ -16172,12 +16204,12 @@ msgid "Warehouse Management: Waves"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:835
-#: code:addons/base/ir/ir_mail_server.py:490
+#: code:addons/base/ir/ir_actions.py:839
+#: code:addons/base/ir/ir_mail_server.py:492
 #: code:addons/base/ir/ir_sequence.py:260
-#: code:addons/base/res/res_partner.py:378
-#: code:addons/base/res/res_partner.py:550
-#: code:addons/base/res/res_partner.py:630
+#: code:addons/base/res/res_partner.py:377
+#: code:addons/base/res/res_partner.py:549
+#: code:addons/base/res/res_partner.py:629
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
@@ -16191,7 +16223,7 @@ msgstr "Mensagens de Aviso e Alertas"
 #: code:addons/base/ir/ir_sequence.py:134
 #: code:addons/base/ir/ir_sequence.py:160
 #: code:addons/base/res/res_config.py:469
-#: code:addons/base/res/res_users.py:505
+#: code:addons/base/res/res_users.py:512
 #, python-format
 msgid "Warning!"
 msgstr "Aviso!"
@@ -16570,7 +16602,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:550
+#: code:addons/base/res/res_partner.py:549
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -16588,7 +16620,7 @@ msgid "You can not register two fonts with the same name"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:342
+#: code:addons/base/res/res_users.py:347
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -16673,7 +16705,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:243
+#: code:addons/base/ir/ir_mail_server.py:245
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -16682,7 +16714,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:491
+#: code:addons/base/ir/ir_mail_server.py:493
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -16853,11 +16885,6 @@ msgid "eInvoicing"
 msgstr "Faturação Electrónica"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_voucher
-msgid "eInvoicing & Payments"
-msgstr "Faturação & Pagamentos"
-
-#. module: base
 #: view:res.users:base.view_users_simple_form
 msgid "email@yourcompany.com"
 msgstr ""
@@ -16928,7 +16955,7 @@ msgid "ltd"
 msgstr "ltd"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:367
+#: code:addons/base/ir/ir_ui_view.py:353
 #, python-format
 msgid "n/a"
 msgstr ""
@@ -17130,3 +17157,15 @@ msgstr "Ilhas Åland"
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "中国会计科目表"
 msgstr ""
+
+#~ msgid "eInvoicing & Payments"
+#~ msgstr "Faturação & Pagamentos"
+
+#~ msgid "Expense Management"
+#~ msgstr "Gestão de despesas"
+
+#~ msgid "Issue Tracker"
+#~ msgstr "Acompanhamento de problemas"
+
+#~ msgid "Installed Modules"
+#~ msgstr "Módulos instalados"
