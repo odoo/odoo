@@ -632,9 +632,6 @@ class account_bank_statement_line(osv.osv):
             if match_ids:
                 return [match_ids[0]]
 
-        if not st_line.partner_id.id:
-            return []
-
         # How to compare statement line amount and move lines amount
         company_currency = st_line.journal_id.company_id.currency_id.id
         statement_currency = st_line.journal_id.currency.id or company_currency
@@ -652,6 +649,9 @@ class account_bank_statement_line(osv.osv):
         match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=2, additional_domain=[(amount_field, '=', (sign * st_line.amount))])
         if match_ids:
             return [match_ids[0]]
+
+        if not st_line.partner_id.id:
+            return []
 
         # Look for a set of move line whose amount is <= to the line's amount
         domain = []

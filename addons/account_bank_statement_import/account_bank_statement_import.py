@@ -100,8 +100,17 @@ class account_bank_statement_import(osv.TransientModel):
     def import_bank_statements(self, cr, uid, bank_statement_vals=False, context=None):
         """ Create new bank statements from imported values, filtering out already imported transactions, and returns data used by the reconciliation widget """
         bs_obj = self.pool.get('account.bank.statement')
+
+        # Check values
         if len(bank_statement_vals) == 0:
-            raise osv.except_osv(_('Error'), _('The file doesn\'t contain any bank statement (or wasn\'t properly processed).'))
+            raise osv.except_osv(_('Error'), _('This file doesn\'t contain any statement.'))
+        
+        no_st_line = True
+        for st_vals in bank_statement_vals:
+            if st_vals['line_ids'] and len(st_vals['line_ids']) > 0:
+                no_st_line = False
+        if no_st_line:
+            raise osv.except_osv(_('Error'), _('This file doesn\'t contain any transaction.'))
         
         # Filter out already imported transactions and create statements
         statement_ids = []

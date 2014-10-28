@@ -330,6 +330,9 @@ openerp.account = function (instance) {
             this.decorateMoveLine = this.getParent().decorateMoveLine;
             this.formatCurrencies = this.getParent().formatCurrencies;
 
+            if (context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
+                console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
+
             if (context.initial_data_provided) {
                 // Process data
                 _.each(context.reconciliation_proposition, function(line) {
@@ -1382,30 +1385,16 @@ openerp.account = function (instance) {
             });
         },
 
-        // TODO : refactor this
+        // TODO : https://www.odoo.com/web#id=10409&view_type=form&model=project.task&action=333&active_id=133
         goBackToStatementsTreeView: function() {
             var self = this;
             new instance.web.Model("ir.model.data")
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var breadcrumbs = self.action_manager.widgets;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            self.action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        self.action_manager.do_action(action_id);
-                    }
+                    self.action_manager.do_action(action_id, {
+                        clear_breadcrumbs: true
+                    });
                 });
         },
     
@@ -1509,11 +1498,14 @@ openerp.account = function (instance) {
         init: function(parent, context) {
             this.template_prefix = "bank_statement_";
             this._super(parent, context);
+
+            if (context.line_id === undefined ||
+                context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
+                console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
     
             this.formatCurrency = this.getParent().formatCurrency;
             if (context.initial_data_provided) {
                 // Process data
-
                 this.st_line = context.line;
                 this.decorateStatementLine(this.st_line);
                 this.currency_id = this.st_line.currency_id;
@@ -2066,6 +2058,9 @@ openerp.account = function (instance) {
                     },
                 }
             }, this.create_form_fields);
+
+            if (this.partner_id && this.account_id)
+                console.error("[Warning] manualReconciliation instanciated with incorrect context.");
         },
     
         start: function() {
@@ -2089,6 +2084,12 @@ openerp.account = function (instance) {
                     // If nothing to reconcile, stop here
                     if (data_partner_len + data_account_len === 0) {
                         self.$el.prepend(QWeb.render("manual_reconciliation_nothing_to_reconcile"));
+                        // And if reconciling a given item, update its last_time_entries_checked
+                        var id = self.partner_id || self.account_id;
+                        if (id) {
+                            var model = (self.partner_id ? self.model_partner : self.model_account);
+                            model.call("mark_as_reconciled", [[id]]);
+                        }
                         return;
                     }
 

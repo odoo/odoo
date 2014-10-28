@@ -679,6 +679,43 @@
 
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
 
+        <record id="view_bank_statement_line_form" model="ir.ui.view">
+            <field name="name">bank.statement.line.form</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="priority">8</field>
+            <field name="arch" type="xml">
+            <form string="Statement Line" create="false">
+                <group col="4">
+                    <field name="statement_id" readonly="1"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="sequence"/>
+                    <field name="note"/>
+                </group>
+            </form>
+            </field>
+        </record>
+        <record id="view_bank_statement_line_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.tree</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="priority">8</field>
+            <field name="arch" type="xml">
+                <tree string="Statement lines">
+                    <field name="sequence" readonly="1" invisible="1"/>
+                    <field name="statement_id" readonly="1" />
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="note"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
             <field name="res_model">account.bank.statement</field>

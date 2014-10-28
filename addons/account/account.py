@@ -487,7 +487,7 @@ class account_account(osv.osv):
         'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
-        'last_time_entries_checked': fields.datetime('Latest Manual Reconciliation Date', copy=False,
+        'last_time_entries_checked': fields.datetime('Latest Manual Reconciliation Date', readonly=True, copy=False,
             help='Last time the manual reconciliation was performed on this account.'
                  'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit'
                  'Or if you click the "Done" button.'),

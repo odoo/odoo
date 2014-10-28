@@ -830,12 +830,10 @@ class account_move_line(osv.osv):
         rows = [row for row in rows if row['account_id'] in allowed_ids]
 
         # Fetch other data
-        excluded_ids = []
         for row in rows:
             account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
-            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], excluded_ids=excluded_ids, context=context)
-            excluded_ids += row['reconciliation_proposition']
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], partner_id=row['partner_id'], context=context)
 
         return rows
     
@@ -906,20 +904,19 @@ class account_move_line(osv.osv):
         rows = [row for row in rows if row['account_id'] in allowed_ids]
 
         # Fetch other data
-        excluded_ids = []
         for row in rows:
             account = self.pool.get('account.account').browse(cr, uid, row['account_id'], context=context)
             row['currency_id'] = account.currency_id.id or account.company_currency_id.id
-            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], excluded_ids=excluded_ids, context=context)
-            excluded_ids += row['reconciliation_proposition']
+            row['reconciliation_proposition'] = self.get_reconciliation_proposition(cr, uid, account_id=row['account_id'], context=context)
 
         return rows
 
-    def get_reconciliation_proposition(self, cr, uid, account_id, partner_id=False, excluded_ids=None, context=None):
+    def get_reconciliation_proposition(self, cr, uid, account_id, partner_id=False, context=None):
         """ Returns two lines whose amount are opposite """
         partner_id_condition = partner_id and 'AND a.partner_id = %d AND b.partner_id = %d' % (partner_id, partner_id) or ''
 
         # Get pairs
+        # TODO : once amount_residual is stored, use it and remove 'reconcile_partial_id IS NULL'
         cr.execute(
             """ SELECT a.id, b.id
                 FROM account_move_line a, account_move_line b

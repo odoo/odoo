@@ -51,7 +51,7 @@ class account_bank_statement_import(osv.TransientModel):
                 bank_account_id, partner_id = self._detect_partner(cr, uid, transaction.payee, identifying_field='owner_name', context=context)
                 vals_line = {
                     'date': transaction.date,
-                    'name': transaction.payee + ': ' + transaction.memo,
+                    'name': transaction.payee + (transaction.memo and ': ' + transaction.memo or ''),
                     'ref': transaction.id,
                     'amount': transaction.amount,
                     'partner_id': partner_id,

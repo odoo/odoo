@@ -323,7 +323,7 @@ class res_partner(osv.osv):
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
         'last_time_entries_checked': fields.datetime(
-            'Latest Manual Reconciliation Date', copy=False,
+            'Latest Manual Reconciliation Date', readonly=True, copy=False,
             help='Last time the manual reconciliation was performed for this partner.'
                  'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit'
                  'Or if you click the "Done" button.'),
