@@ -762,9 +762,9 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-        'restart_sequence': True,
+        'restart_sequence': False,
         'refunds_sequence_id': False,
-        'refunds_sequence': True,
+        'refunds_sequence': False,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -844,7 +844,7 @@ class account_journal(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         main_seq = self.pool.get('ir.sequence').create(cr, uid, seq)
 
-        if not 'restart_sequence' in vals or vals['restart_sequence']:
+        if 'restart_sequence' in vals and vals['restart_sequence']:
             seq_fiscalyear_obj = self.pool.get('account.sequence.fiscalyear')
 
             # Creating all the sequences for the fiscal years
@@ -863,7 +863,7 @@ class account_journal(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context=context)})
-        if not 'refunds_sequence' in vals or vals['refunds_sequence']:
+        if 'refunds_sequence' in vals and vals['refunds_sequence']:
             vals.update({'refunds_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refunds=True, context=context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
