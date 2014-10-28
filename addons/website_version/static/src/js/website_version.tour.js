@@ -78,6 +78,7 @@
                 title:     _t("Customize banner's text"),
                 content:   _t("Click in the text and start editing it."),
                 sampleText: 'Here, a customized text',
+                popover:   { next: _t("Continue") },
             },
             {
                 waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
@@ -158,12 +159,12 @@
             {
                 title:     _t("Delete the version"),
                 content:   _t("Now we will delete the version you have just published."),
+                waitNot:   '.modal button[type="button"]:contains("Ok")',
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
 
             {
                 title:     _t("Click on Version"),
-                waitNot:   '.modal button[type="button"]:contains("Ok")',
                 element:   'a[id="version-menu-button"]:contains("Version"):first',
                 popover:   { fixed: true },
             },
