@@ -4,6 +4,7 @@
        <record id="account.check_journal" model="account.journal">
             <field name="allow_check_writing" eval="1" />
             <field name="sequence_id" ref="sequence_check_number"/>
+            <field name="restart_sequence" eval="False" />
         </record>
     </data>
 </openerp>

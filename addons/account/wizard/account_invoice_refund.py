@@ -41,6 +41,7 @@ class account_invoice_refund(osv.osv_memory):
 
     def _get_same_journal(self, cr, uid, context=None):
         inv = self._get_inv(cr, uid, context=context)
+        return False
         if inv and inv.refunds_sequence_id:
             return True
         else:

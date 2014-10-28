@@ -782,6 +782,8 @@ class account_journal(osv.osv):
 
     def _check_sequence(self, cr, uid, ids, context=None):
         for journal in self.browse(cr, uid, ids, context=context):
+            if not journal.restart_sequence:
+                continue
             fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid, [('company_id', '=', journal.company_id.id)])
             for fiscalyear_id in fiscalyear_ids:
                 res = self.pool.get('account.sequence.fiscalyear').search(cr, uid, [('fiscalyear_id', '=', fiscalyear_id), ('sequence_main_id', '=', journal.sequence_id.id)], count=True)
@@ -791,7 +793,7 @@ class account_journal(osv.osv):
 
     _constraints = [
         (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
-        (_check_sequence, 'Configuration error!\nA journal needs to have one sequence per fiscal year. Leave field empty to automatically create an adequate entry sequence', ['sequence_id']),
+        (_check_sequence, 'Configuration error!\nA journal needs to have one sequence per fiscal year. Leave field empty to automatically create an adequate entry sequence', ['sequence_id', 'restart_sequence']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
