@@ -244,7 +244,7 @@
                 <para style="terp_default_8">[[o.contract_id.qualif or '_']]</para>
                 <para style="terp_default_8">[[o.contract_id.niveau or '_']]</para>
                 <para style="terp_default_8">[[o.contract_id.coef or '_']]</para>
-                <para style="P5">[[o.contract_id.date_start or '_']] Sortie : [[o.contract_id.date_end or '']] </para>
+                <para style="P5">[[ formatLang(o.contract_id.date_start, date=True) or '_']] Sortie : [[ formatLang(o.contract_id.date_end, date=True) or '_']] </para>
               </td>
             </tr>
             <tr>

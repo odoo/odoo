@@ -353,7 +353,7 @@ class res_users(osv.osv):
         if not context:
             context={}
         ids = []
-        if name:
+        if name and operator in ['=', 'ilike']:
             ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
@@ -367,6 +367,12 @@ class res_users(osv.osv):
         if 'login' not in default:
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
+
+    def copy_data(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({'login_date': False})
+        return super(res_users, self).copy_data(cr, uid, ids, default, context=context)
 
     @tools.ormcache(skiparg=2)
     def context_get(self, cr, uid, context=None):

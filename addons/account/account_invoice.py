@@ -27,6 +27,7 @@ import openerp.exceptions
 from openerp import netsvc, SUPERUSER_ID
 from openerp import pooler
 from openerp.osv import fields, osv, orm
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
@@ -354,13 +355,22 @@ class account_invoice(osv.osv):
         if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
             partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
-                view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
+                try:
+                    view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'invoice_tree')[1]
+                except ValueError:
+                    view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')], limit=1)
                 view_type = 'tree'
             if view_type == 'form':
                 if partner['supplier'] and not partner['customer']:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')])
+                    try:
+                        view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'invoice_supplier_form')[1]
+                    except ValueError:
+                        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')], limit=1)
                 elif partner['customer'] and not partner['supplier']:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')])
+                    try:
+                        view_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'invoice_form')[1]
+                    except ValueError:
+                        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')], limit=1)
         if view_id and isinstance(view_id, (list, tuple)):
             view_id = view_id[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
@@ -826,7 +836,8 @@ class account_invoice(osv.osv):
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
                     raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if not key in tax_key:
@@ -923,9 +934,7 @@ class account_invoice(osv.osv):
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             # I disabled the check_total feature
-            group_check_total_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'group_supplier_inv_check_total')[1]
-            group_check_total = self.pool.get('res.groups').browse(cr, uid, group_check_total_id, context=context)
-            if group_check_total and uid in [x.id for x in group_check_total.users]:
+            if self.pool['res.users'].has_group(cr, uid, 'account.group_supplier_inv_check_total'):
                 if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0)):
                     raise osv.except_osv(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 

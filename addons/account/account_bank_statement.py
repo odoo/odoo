@@ -224,7 +224,7 @@ class account_bank_statement(osv.osv):
             amount_currency=amt_cur, currency_id=cur_id, analytic_id=anl_id, context=context)
         return res
 
-    def _get_counter_part_account(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_account(self, cr, uid, st_line, context=None):
         """Retrieve the account to use in the counterpart move.
            This method may be overridden to implement custom move generation (making sure to
            call super() to establish a clean extension chain).
@@ -237,7 +237,7 @@ class account_bank_statement(osv.osv):
             return st_line.statement_id.journal_id.default_credit_account_id.id
         return st_line.statement_id.journal_id.default_debit_account_id.id
 
-    def _get_counter_part_partner(sefl, cr, uid, st_line, context=None):
+    def _get_counter_part_partner(self, cr, uid, st_line, context=None):
         """Retrieve the partner to use in the counterpart move.
            This method may be overridden to implement custom move generation (making sure to
            call super() to establish a clean extension chain).

@@ -801,9 +801,13 @@ class mail_thread(osv.AbstractModel):
                 body = tools.append_content_to_html(u'', body, preserve=True)
         else:
             alternative = False
+            mixed = False
+            html = u''
             for part in message.walk():
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
+                if part.get_content_type() == 'multipart/mixed':
+                    mixed = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
                 # part.get_filename returns decoded value if able to decode, coded otherwise.
@@ -830,8 +834,11 @@ class mail_thread(osv.AbstractModel):
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
+                    # mutlipart/alternative have one text and a html part, keep only the second
+                    # mixed allows several html parts, append html content
+                    append_content = not alternative or (html and mixed)
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
-                    if alternative:
+                    if not append_content:
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
@@ -1159,7 +1166,9 @@ class mail_thread(osv.AbstractModel):
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         if self._mail_flat_thread and not parent_id and thread_id:
-            message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
+            message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model), ('type', '=', 'email')], context=context, order="id ASC", limit=1)
+            if not message_ids:
+                message_ids = message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:

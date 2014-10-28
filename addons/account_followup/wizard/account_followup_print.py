@@ -163,7 +163,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
                 nbprints += 1
-                message = _("Follow-up letter of ") + "<I> " + partner.partner_id.latest_followup_level_id_without_lit.name + "</I>" + _(" will be sent")
+                message = "%s<I> %s </I>%s" % (_("Follow-up letter of "), partner.partner_id.latest_followup_level_id_without_lit.name, _(" will be sent"))
                 partner_obj.message_post(cr, uid, [partner.partner_id.id], body=message, context=context)
         if nbunknownmails == 0:
             resulttext += str(nbmails) + _(" email(s) sent")
