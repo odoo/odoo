@@ -1,62 +1,31 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import models, api, _
+from openerp.exceptions import Warning
 
 
-class account_aged_trial_balance(osv.osv_memory):
+class account_aged_trial_balance(models.TransientModel):
     _inherit = 'account.common.partner.report'
     _name = 'account.aged.trial.balance'
     _description = 'Account Aged Trial balance Report'
 
-    _columns = {
-        'period_length':fields.integer('Period Length (days)', required=True),
-        'direction_selection': fields.selection([('past','Past'),
-                                                 ('future','Future')],
-                                                 'Analysis Direction', required=True),
-        'journal_ids': fields.many2many('account.journal', 'account_aged_trial_balance_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
-    }
-    _defaults = {
-        'period_length': 30,
-        'date_from': lambda *a: time.strftime('%Y-%m-%d'),
-        'direction_selection': 'past',
-    }
+    period_length = fields.integer('Period Length (days)', required=True, default=30)
+    direction_selection = fields.selection([('past','Past'), ('future','Future')],
+        string='Analysis Direction', required=True, default='past')
+    journal_ids = fields.many2many('account.journal', string='Journals', required=True, default='movement')
 
-    def _print_report(self, cr, uid, ids, data, context=None):
+    @api.multi
+    def _print_report(self, data):
         res = {}
-        if context is None:
-            context = {}
-
-        data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection'])[0])
+        data = self.pre_print_report(data)
+        data['form'].update(self.read(self.ids, ['period_length', 'direction_selection'])[0])
 
         period_length = data['form']['period_length']
         if period_length<=0:
-            raise osv.except_osv(_('User Error!'), _('You must set a period length greater than 0.'))
+            raise Warning(_('You must set a period length greater than 0.'))
         if not data['form']['date_from']:
-            raise osv.except_osv(_('User Error!'), _('You must set a start date.'))
+            raise Warning(_('You must set a start date.'))
 
         start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
 
@@ -81,6 +50,4 @@ class account_aged_trial_balance(osv.osv_memory):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
-        return self.pool['report'].get_action(cr, uid, [], 'account.report_agedpartnerbalance', data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        return self.pool['report'].get_action([], 'account.report_agedpartnerbalance', data=data)
