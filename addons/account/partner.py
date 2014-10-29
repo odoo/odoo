@@ -79,11 +79,13 @@ class account_fiscal_position(osv.osv):
     def map_tax(self, taxes):
         result = self.env['account.tax'].browse()
         for tax in taxes:
+            ok = False
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
                     if t.tax_dest_id:
                         result |= t.tax_dest_id
-            else:
+                    ok = True
+            if not ok:
                 result |= tax
         return result
 
