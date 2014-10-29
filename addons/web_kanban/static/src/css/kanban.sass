@@ -46,11 +46,14 @@
     transition: $transition
 // }}}
 
+.ui-tabs 
+    .oe-view-manager-view-kanban
+        position: static
 .openerp .oe_kanban_view
     // KanbanView {{{
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
-    height: inherit
+    height: 100%
     .oe_kanban_column_higlight
         background: #eeddf6 !important
     .oe_view_nocontent
@@ -200,7 +203,7 @@
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
-        writing-mode: tb-rl
+        writing-mode: vertical-rl
         -webkit-transform: rotate(90deg)
         -moz-transform: rotate(90deg)
         -o-transform: rotate(90deg)

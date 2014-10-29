@@ -1725,8 +1725,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     append_filter: function (filter) {
         var self = this,
             key = this.key_for(filter),
-            $filter,
-            warning = _t("This filter is global and will be removed for everybody if you continue.");
+            $filter;
 
         this.$divider.show();
         if (key in this.$filters) {
@@ -1742,7 +1741,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
             this.$filters[key].addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
             $('<span>')
-                .addClass('fa fa-trash-o')
+                .addClass('fa fa-trash-o remove-filter')
                 .click(function (event) {
                     event.stopImmediatePropagation(); 
                     self.remove_filter(filter, $filter, key);
@@ -1768,8 +1767,9 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
     },
     remove_filter: function (filter, $filter, key) {
         var self = this;
-        var warning = _t("This filter is global and will be removed for everybody if you continue.");
-        if (!(filter.user_id || confirm(warning))) {
+        var global_warning = _t("This filter is global and will be removed for everybody if you continue."),
+            warning = _t("Are you sure that you want to remove this filter?");
+        if (!confirm(filter.user_id ? warning : global_warning)) {
             return;
         }
         this.model.call('unlink', [filter.id]).done(function () {
@@ -1777,7 +1777,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
             delete self.$filters[key];
             delete self.filters[key];
             if (_.isEmpty(self.filters)) {
-                self.$('li.divider').remove();
+                self.$divider.hide();
             }
         });        
     },

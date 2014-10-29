@@ -897,9 +897,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
-        var create_nocontent = this.$buttons;
+        var create_nocontent = this.$buttons.closest('.col-md-6');
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.openerpBounce();
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 250);
         });
     }
 });

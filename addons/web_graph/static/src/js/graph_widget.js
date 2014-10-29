@@ -73,6 +73,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             self.$('.graph_options_selection label').last().toggle(result);
         });
 
+        this.$buttons.find('button').tooltip();
+        
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:_t('Count')};

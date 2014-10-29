@@ -198,10 +198,16 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
+        height: 95%
+        height: -webkit-calc(100% - 34px)
         height: calc(100% - 34px)
-        overflow: auto
+        display: -ms-flexbox
+        display: -webkit-flex
+        display: flex
     @media (max-width: 768px)
         &.openerp_webclient_container
+            height: 95%
+            height: -webkit-calc(100% - 52px)
             height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
@@ -455,17 +461,16 @@ $sheet-padding: 16px
             font-weight: bold
             &:hover
                 text-decoration: underline
-    .oe_webclient
-        .oe_star_on, .oe_star_off
-            color: #cccccc
-            text-shadow: 0 0 2px black
-            vertical-align: top
-            position: relative
-            top: -8px
-        .oe_star_on:hover, .oe_star_off:hover
-            text-decoration: none
-        .oe_star_on
-            color: gold
+    .oe_star_on, .oe_star_off
+        color: #cccccc
+        text-shadow: 0 0 2px black
+        vertical-align: top
+        position: relative
+        top: -8px
+    .oe_star_on:hover, .oe_star_off:hover
+        text-decoration: none
+    .oe_star_on
+        color: gold
     p.oe_grey
         max-width: 650px
     .oe_grey
@@ -689,12 +694,6 @@ $sheet-padding: 16px
         .oe_database_manager_menu
             color: #000
     // }}}
-    // WebClient {{{
-    .oe_webclient
-        width: 100%
-        height: 100%
-        border-spacing: 0px
-    // }}}
     // WebClient.fullscreen {{{
     .oe_content_full_screen
         .oe_application
@@ -705,58 +704,59 @@ $sheet-padding: 16px
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
-        display: none
+        display: -ms-flexbox
+        display: -webkit-flex
+        display: flex
+        -ms-flex-direction: column
+        -webkit-flex-direction: column
+        flex-direction: column
+        -webkit-justify-content: space-between
+        justify-content: space-between
+        -ms-flex: 0 0 auto
+        -webkit-flex-shrink: 0
+        flex-shrink: 0
+        -webkit-flex-grow: 0
+        flex-grow: 0
         width: 220px
+        height: 100%
         background: #f0eeee
         border-right: 1px solid $tag-border
-        text-shadow: none
-        > div
-            height: 100%
-            display: table
-            width: 220px
-            position: relative
-            a.oe_logo
-                display: table-row
+        position: relative
+        display: inline-block\9
+        vertical-align: top\9
+        a.oe_logo
+            text-align: center
+            -webkit-flex-shrink: 0
+            flex-shrink: 0
+            img
+                margin: 14px 0
+                border: 0
+            .oe_logo_edit
+                margin: 14px 0
+                position: absolute
+                top: 1px
+                padding: 4px
+                width: 100%
+                display: none
                 text-align: center
-                img
-                    margin: 14px 0
-                    border: 0
-                .oe_logo_edit
-                    margin: 14px 0
-                    position: absolute
-                    top: 1px
-                    padding: 4px
-                    width: 100%
-                    display: none
-                    text-align: center
-                    color: #eee
-                    background: rgba(37,37,37,0.9)
-                    @include box-sizing(border)
-                &:hover .oe_logo_edit_admin
-                    display: block
-            > div
-                display: table-row
-                height: 100%
-                > div
-                    position: relative
-                    height: 100%
-                    > div.oe_secondary_menus_container
-                        position: absolute
-                        position: static\9
-                        top: 0
-                        bottom: 0
-                        left: 0
-                        right: 0
-                        overflow-x: hidden
-                        overflow-y: auto
-            .oe_footer
-                background: #f0eeee
-                text-align: center
-                a
-                    font-weight: bold
-                    color: black
-                    span
-                        color: #a24689
+                color: #eee
+                background: rgba(37,37,37,0.9)
+                @include box-sizing(border)
+            &:hover .oe_logo_edit_admin
+                display: block
+        .oe_secondary_menus_container
+            -webkit-flex-grow: 1
+            flex-grow: 1
+            overflow-y: auto
+        .oe_footer
+            background: #f0eeee
+            text-align: center
+            -webkit-flex-shrink: 0
+            flex-shrink: 0
+            a
+                font-weight: bold
+                span
+                    color: #a24689
     // }}}
     // Webclient.leftbar items {{{
 
@@ -859,47 +859,52 @@ $sheet-padding: 16px
     a.oe_form_uri:hover
         text-decoration: underline
     .oe_application
-        width: 100%
         height: 100%
-        overflow: hidden
-        > div
-            position: relative
-            height: 100%
-        .oe-view-manager
-            .oe-view-manager-debug
-                margin-right: 5px
-            .oe-view-manager-content
-                display: table-row
-                height: 100%
-
-        .oe-view-manager-body
-            position: relative
-            height: 100%
-            a
-                color: $link-color
-            .oe-view-manager-view-kanban:not(:empty)
-                height: 100%
-            > div
-                position: absolute
-                top: 0
-                bottom: 0
-                left: 0
-                right: 0
-                overflow: auto
-        .oe_form_field_one2many
-            .oe-view-manager-views
-                position: initial
-
+        -webkit-flex-grow: 1
+        flex-grow: 1
+        -ms-flex-negative: 1
+        display: inline-block\9
+        overflow: auto\9
+        width: -webkit-calc(100% - 220px)
+        width: calc(100% - 220px)
+        .oe_application
+            width: 100%
     // }}}
     // ViewManager common {{{
     .oe-view-manager
-        display: table
         width: 100%
         height: 100%
+        display: -webkit-flex
+        display: flex
+        -webkit-flex-direction: column
+        flex-direction: column
+        .oe-view-manager-content
+            overflow: auto
+            -webkit-flex-grow: 1
+            flex-grow: 1
+            position: relative
+            a
+                color: $link-color
+            > div
+                position: absolute
+                position: static\9
+                top: 0
+                bottom: 0
+                right: 0
+                left: 0
+                display: none
+            .oe-view-manager-content
+                > div
+                    position: relative
+                    display: block
+        .oe-view-manager-debug
+            margin-right: 5px
     .oe-view-manager-header
-        display: table-row
         background-color: rgb(240, 238, 238)
         border-bottom: 1px solid #afafb6
+        -webkit-flex-shrink: 0
+        flex-shrink: 0
+        width: 100%
         -webkit-user-select: none
         -moz-user-select: none
         user-select: none
@@ -908,12 +913,26 @@ $sheet-padding: 16px
                 position: relative
                 a
                     padding: 3px 25px
+            .oe_searchview_custom_public
+                a:after
+                    font-family: FontAwesome
+                    content: "\f0c0"
+                    color: #666
+                    margin-left: 3px
+        .selected
+            display: block
+            a
+                font-weight: bold
+            a:before
+                font-family: FontAwesome
+                position: absolute
+                left: 6px
+                top: 3px
+                content: "\f00c"
         .oe-right-toolbar
             float: right
             > div
                 display: inline-block
-        .row
-            margin: 0
         .row:first-child
             padding-top: 3px
             padding-bottom: 3px
@@ -980,28 +999,7 @@ $sheet-padding: 16px
     .oe_view_manager_inline, .oe_view_manager_inlineview
         > .oe-view-manager-header
             display: none
-    .oe-search-options
-        .selected
-            display: block
-            a
-                font-weight: bold
-            a:before
-                font-family: FontAwesome
-                position: absolute
-                left: 6px
-                top: 3px
-                content: "\f00c"
 
-    .oe_application 
-        > div    
-            > div
-                > .oe-view-manager-body
-                    position: absolute
-                    top: 90px
-                    bottom: 0
-                    left: 0
-                    right: 0
-                    overflow: auto
         // }}}
     // FormPopup {{{
     .oe_popup_form 
@@ -1013,9 +1011,6 @@ $sheet-padding: 16px
             font-weight: normal
         // End of customize
     .oe_popup_list_pager
-        float: right
-    .oe_popup_search
-        width: 50%
         float: right
     // }}}
     // SearchView {{{
@@ -1157,6 +1152,7 @@ $sheet-padding: 16px
             padding-right: 10px
         .oe-group-selector
             margin: 3px 25px
+            min-width: -webkit-calc(100% - 40px)
             min-width: calc(100% - 40px)
             max-width: 250px
             width: auto
@@ -1193,26 +1189,31 @@ $sheet-padding: 16px
                     margin-left: 0
         .searchview_extended_prop_field
             display: inline
+            width: -webkic-calc(100% - 20px)
             width: calc(100% - 20px)
         
         .searchview_extended_prop_op
             margin: 3px 0
+            width: -webkit-calc(100% - 20px)
             width: calc(100% - 20px)
         .searchview_extended_delete_prop
             float: right
             display: inline
         .searchview_extended_prop_value
+            width: -webkit-calc(100% - 20px)
             width: calc(100% - 20px)
             > select, > input
+                width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
             .oe_datepicker_main
+                width: -webkit-calc(100% - 20px)
                 width: calc(100% - 20px)
             .oe_datepicker_master
                 width: 100%
             .fa-calendar
                 margin-left: -21px
                 cursor: pointer
-        span.fa-trash-o
+        span.remove-filter
             position: absolute
             top: 6px
             right: 10px
@@ -2531,12 +2532,20 @@ body.oe_single_form
         font-size: 20px
     .modal-body
         overflow-x: auto
+        min-height: 200px
     .modal-footer
         text-align: left
     .oe_button
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
+    .oe-view-manager-content > div
+        position: static !important
+
+@media (min-width: 768px)
+    .modal .modal-body
+        max-height: -webkit-calc(100vh - 200px)
+        max-height: calc(100vh - 200px)
 
 .ui-datepicker
     z-index: 1500 !important
@@ -2580,11 +2589,13 @@ div.tour-backdrop
 body
     overflow: hidden
 
-// hack to make IE11 work
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
-    .oe_secondary_menus_container 
-        position: static !important
-
+    .oe-view-manager-content
+        > div
+            position: absolute !important
+        .oe-view-manager-content
+            > div
+                position: relative !important
 
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
