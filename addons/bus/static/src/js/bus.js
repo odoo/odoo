@@ -14,7 +14,7 @@
         },
         start_polling: function(){
             if(!this.activated){
-                setTimeout(this.poll(), 1);
+                this.poll();
                 this.stop = false;
             }
         },
