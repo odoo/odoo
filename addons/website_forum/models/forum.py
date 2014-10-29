@@ -123,6 +123,7 @@ class Forum(models.Model):
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
                                   default=30, oldname='karma_editor_link_files')
+    karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
 
     @api.one
     @api.constrains('allow_question', 'allow_discussion', 'allow_link', 'default_post_type')

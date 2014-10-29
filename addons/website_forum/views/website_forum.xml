@@ -292,6 +292,9 @@
                     <td class="faq-rep-item"><strong t-field="forum.karma_editor"/></td>
                     <td>insert text link, upload files</td>
                 </tr><tr>
+                    <td class="faq-rep-item"><strong t-field="forum.karma_user_bio"/></td>
+                    <td>your biography can be seen as tooltip</td>
+                </tr><tr>
                     <td class="faq-rep-item"><strong t-field="forum.karma_comment_unlink_own"/></td>
                     <td>delete own comment</td>
                 </tr><tr>
@@ -807,7 +810,12 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
-                <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                <div class="o_forum_bio_expand" t-if=" answer.create_uid.karma >= answer.forum_id.karma_user_bio">
+                    <t t-call="website_forum.forum_user_tooltip"/>
+                </div>
+                <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }" class="o_forum_user_info">
+                    <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                </a>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
@@ -877,6 +885,34 @@
                 </t>
             </div>
         </div>
+    </div>
+</template>
+
+<!-- Template for user tooltip  -->
+<template id="forum_user_tooltip">
+    <div class="o_forum_user_bio text-left panel panel-body">
+        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }">
+            <img class="pull-left img img-rounded img-avatar-big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+        </a>
+        <div class="o_forum_tooltip_header">
+            <h4 class="o_forum_tooltip_heading"><a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
+                t-field="answer.create_uid"
+                t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                style="display: inline-block;"/>
+            </h4>
+            <span t-field="answer.create_uid.company_id.name" class="o_forum_tooltip_line"/><br/>
+            <a t-att-href="answer.create_uid.company_id.website" t-if="answer.create_uid.company_id.website">
+                <span t-field="answer.create_uid.company_id.website" class="o_forum_tooltip_line"/>
+            </a>
+            <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
+            <t t-set="answer_uid" t-value="answer.create_uid.sudo()" />
+            <div class="o_forum_tooltip_line" t-if="answer_uid.partner_id.country_id or answer_uid.partner_id.city">
+                <span t-field="answer_uid.partner_id.city"/><span t-if="answer_uid.partner_id.city and answer_uid.partner_id.country_id">, </span><span t-field="answer_uid.partner_id.country_id"/>
+            </div>
+        </div>
+        <t t-if="answer_uid.partner_id.website_description">
+            <span t-field="answer_uid.partner_id.website_description"/>
+        </t>
     </div>
 </template>
 
