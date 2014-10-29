@@ -731,7 +731,10 @@ class pos_order(osv.osv):
 
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            picking_obj.force_assign(cr, uid, [picking_id], context)
+            try:
+                picking_obj.action_assign(cr, uid, [picking_id], context)
+            except:
+                picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):
