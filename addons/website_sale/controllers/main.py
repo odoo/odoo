@@ -455,7 +455,7 @@ class website_sale(http.Controller):
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
                 for field_name in all_fields if getattr(data, field_name))
-            if data.parent_id:
+            if address_type == 'billing' and data.parent_id:
                 query[prefix + 'street'] = data.parent_id.name
 
         if query.get(prefix + 'state_id'):
