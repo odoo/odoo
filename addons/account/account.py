@@ -762,8 +762,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-        'restart_sequence': False,
-        'refund_sequence_id': False,
+        'restart_sequence': True,
         'refund_sequence': False,
     }
     _sql_constraints = [

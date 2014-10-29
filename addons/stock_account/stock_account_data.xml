@@ -7,12 +7,10 @@
             <field eval="3" name="padding"/>
             <field name="prefix">STJ/%(year)s/</field>
         </record>
-
         <record forcecreate="1" id="stock_journal" model="account.journal">
             <field name="name">Stock Journal</field>
             <field name="code">STJ</field>
             <field name="type">general</field>
-            <field name="sequence_id" ref="stock_journal_sequence"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="restart_sequence" eval="False" />
         </record>
