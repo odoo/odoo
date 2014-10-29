@@ -45,10 +45,14 @@
   height: auto !important;
 }
 
-img.img-avatar {
+img.o_forum_avatar {
   max-height: 40px;
   margin-right: 10px;
 }
+
+img.o_forum_avatar_big {
+  max-width: 75px;
+  margin-right: 10px; }
 
 .oe_grey {
   background-color: #eeeeee;
@@ -143,3 +147,27 @@ button.btn-link.text-muted {
   color: #999;
 }
 
+.o_forum_user_bio_expand {
+  position: absolute;
+  z-index: 200;
+  display: none; }
+
+.o_forum_tooltip_heading {
+  padding: 0px;
+  margin: 0px;
+  font-size: 18px; }
+
+.o_forum_user_bio {
+  color: black;
+  width: 318px;
+  min-height: 100px;
+  cursor: auto;
+  border: 1px solid darkgray;
+  background-color: whitesmoke;
+  line-height: 13px;
+  font-size: 11px;
+  word-wrap: break-word; }
+  .o_forum_user_bio .o_forum_tooltip_line {
+    min-height: 13px; }
+  .o_forum_user_bio .o_forum_tooltip_header {
+    min-height: 75px; }

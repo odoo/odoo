@@ -28,6 +28,23 @@ if(!$('.website_forum').length) {
         }
     });
 
+    // Extended user biography toogle
+    $('.o_forum_user_info').hover(
+        function () {
+           $(this).parent().find('.o_forum_user_bio_expand').delay(500).toggle('fast');
+        },
+        function () {
+            $(this).parent().find('.o_forum_user_bio_expand').clearQueue();
+        }
+    );
+
+    $('.o_forum_user_bio_expand').hover(
+        function () {},
+        function () {
+            $(this).fadeOut('fast');
+        }
+    );
+
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
