@@ -73,14 +73,6 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,running,ended" clickable="True"/>
                     </header>
                     <sheet string="Exp">
-                        <!-- <div attrs="{'invisible' : [('experiment_snapshot_ids', '!=', False)]}" class="oe_view_nocontent">
-                            <p class="oe_view_nocontent_create">
-                              Click to start a session.
-                            </p><p>
-                              You may have to control your cash amount in your cash register, before
-                              being able to start selling through the touchscreen interface.
-                            </p>
-                        </div> -->
                         <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
                             type="action" class="oe_stat_button pull-right" />
                         <div class="oe_title">
@@ -91,7 +83,7 @@
                         </div>
                         <group col="4">
                             <field name="website_id"/>
-                            <field name="google_id"/>
+                            <field name="google_id" readonly="1" groups="base.group_no_one"/>
                             <label for="objectives"/>
                             <div>
                                 <field name="objectives" class="oe_inline" widget="selection"/>
@@ -104,7 +96,6 @@
                                     <tree string="PPP" editable="bottom"> 
                                         <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                                         <field name="frequency" colspan="4"/>
-                                        <!-- <field name="google_index" colspan="4"/> -->
                                     </tree>
                                 </field>
                                

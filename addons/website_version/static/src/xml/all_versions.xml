@@ -67,7 +67,7 @@
                     <t t-if="snapshots.length != 0 and config == 1">  
                         <form id="productForm" class="form-horizontal" role="form">              
                             <div class="form-group form-group">
-                                <label class="col-sm-3 control-label" style="color : rgb(17, 119, 218)">Experiment Name</label>
+                                <label class="col-sm-3 control-label">Experiment Name</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control form-field-label name "/>
                                 </div>
@@ -123,8 +123,17 @@
                 </div>
               <div class="modal-footer">
                 <t t-if="snapshots.length != 0 and config == 1"> 
-                    <button type="button" class="btn btn-primary draft">Draft</button>
-                    <button type="button" class="btn btn-primary launch">Launch</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary launch">Launch</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" class="btn btn-link btn-xs draft">Draft</a>
+                            </li>
+                        </ul>
+                    </div>
                 </t>
                 <t t-if= "config == 0">
                     <button type="button" class="btn btn-primary configure">Configure</button>
