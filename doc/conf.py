@@ -187,6 +187,9 @@ def setup(app):
     app.connect('html-page-context', versionize)
     app.add_config_value('versions', '', 'env')
 
+    app.connect('html-page-context', analytics)
+    app.add_config_value('google_analytics_key', False, 'env')
+
 def canonicalize(app, pagename, templatename, context, doctree):
     """ Adds a 'canonical' URL for the current document in the rendering
     context. Requires the ``canonical_root`` setting being set. The canonical
@@ -211,6 +214,12 @@ def versionize(app, pagename, templatename, context, doctree):
         for vs in app.config.versions.split(',')
         if vs != app.config.version
     ]
+
+def analytics(app, pagename, templatename, context, doctree):
+    if not app.config.google_analytics_key:
+        return
+
+    context['google_analytics_key'] = app.config.google_analytics_key
 
 def _build_url(root, branch, pagename):
     return "{canonical_url}{canonical_branch}/{canonical_page}".format(
