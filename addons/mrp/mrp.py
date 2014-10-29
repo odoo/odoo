@@ -308,7 +308,7 @@ class mrp_bom(osv.osv):
             for prop_id in bom.property_ids:
                 if prop_id.id in properties:
                     prop += 1
-            if (prop > max_prop) or ((max_prop == 0) and not result):
+            if (prop > max_prop) and not result:
                 result = bom.id
                 max_prop = prop
         return result
@@ -341,6 +341,7 @@ class mrp_bom(osv.osv):
                 phantom = True
             else:
                 phantom = False
+                addthis = True
         if not phantom:
             if addthis and not bom.bom_lines:
                 result.append(
