@@ -10,13 +10,11 @@ class account_vat_declaration(models.TransientModel):
         taxes = self.env['account.tax.code'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
         return taxes and taxes[0] or False
 
-
     based_on = fields.Selection([('invoices', 'Invoices'), ('payments', 'Payments'),],
         string='Based on', required=True, default='invoices')
     chart_tax_id = fields.Many2one('account.tax.code', string='Chart of Tax', required=True,
         help='Select Charts of Taxes', domain = [('parent_id','=', False)], default=lambda self: self._get_tax())
     display_detail = fields.Boolean(string='Display Detail')
-
 
     @api.multi
     def create_vat(self):
