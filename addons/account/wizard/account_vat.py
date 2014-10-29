@@ -1,66 +1,37 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+from openerp import models, fields, api, _
 
-from openerp.osv import fields, osv
-
-
-class account_vat_declaration(osv.osv_memory):
+class account_vat_declaration(models.TransientModel):
     _name = 'account.vat.declaration'
     _description = 'Account Vat Declaration'
     _inherit = "account.common.report"
-    _columns = {
-        'based_on': fields.selection([('invoices', 'Invoices'),
-                                      ('payments', 'Payments'),],
-                                      'Based on', required=True),
-        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
-        'display_detail': fields.boolean('Display Detail'),
-    }
 
-    def _get_tax(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
+    @api.model
+    def _get_tax(self):
+        taxes = self.env['account.tax.code'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
         return taxes and taxes[0] or False
 
-    _defaults = {
-        'based_on': 'invoices',
-        'chart_tax_id': _get_tax
-    }
 
-    def create_vat(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+    based_on = fields.Selection([('invoices', 'Invoices'), ('payments', 'Payments'),],
+        string='Based on', required=True, default='invoices')
+    chart_tax_id = fields.Many2one('account.tax.code', string='Chart of Tax', required=True,
+        help='Select Charts of Taxes', domain = [('parent_id','=', False)], default=lambda self: self._get_tax())
+    display_detail = fields.Boolean(string='Display Detail')
 
-        datas = {'ids': context.get('active_ids', [])}
-        datas['model'] = 'account.tax.code'
-        datas['form'] = self.read(cr, uid, ids, context=context)[0]
+
+    @api.multi
+    def create_vat(self):
+        datas = {
+         'ids': self._context.get('active_ids', []),
+         'model': 'account.tax.code',
+         'form': self.read(self.ids)[0]
+        }
 
         for field in datas['form'].keys():
             if isinstance(datas['form'][field], tuple):
                 datas['form'][field] = datas['form'][field][0]
 
-        taxcode_obj = self.pool.get('account.tax.code')
         taxcode_id = datas['form']['chart_tax_id']
-        taxcode = taxcode_obj.browse(cr, uid, [taxcode_id], context=context)[0]
+        taxcode = self.env['account.tax.code'].browse(taxcode_id)
         datas['form']['company_id'] = taxcode.company_id.id
 
-        return self.pool['report'].get_action(cr, uid, [], 'account.report_vat', data=datas, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        return self.pool['report'].get_action([], 'account.report_vat', data=datas)
