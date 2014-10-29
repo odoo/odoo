@@ -367,7 +367,6 @@ class website_sale(http.Controller):
         shipping_ids = []
         checkout = {}
         if not data:
-            print request.uid, request.website.user_id.id
             if request.uid != request.website.user_id.id:
                 checkout.update( self.checkout_parse("billing", partner) )
                 shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
