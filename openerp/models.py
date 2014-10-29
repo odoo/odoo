@@ -1654,7 +1654,7 @@ class BaseModel(object):
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
+        """ search(args[, offset=0][, limit=None][, order=None])
 
         Searches for records based on the ``args``
         :ref:`search domain <reference/orm/domains>`.
@@ -1664,9 +1664,6 @@ class BaseModel(object):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
-        :param bool count: if ``True``, the call should return the number of
-                           records matching ``args`` rather than the records
-                           themselves.
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
@@ -2982,6 +2979,12 @@ class BaseModel(object):
             except Exception:
                 if not partial:
                     raise
+
+        # update columns (fields may have changed), and column_infos
+        for name, field in self._fields.iteritems():
+            if field.store:
+                self._columns[name] = field.to_column()
+        self._inherits_reload()
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)

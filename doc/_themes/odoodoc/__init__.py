@@ -25,3 +25,8 @@ class Exercise(admonitions.BaseAdmonition):
 
 from sphinx.locale import admonitionlabels, l_
 admonitionlabels['exercise'] = l_('Exercise')
+
+# monkeypatch PHP lexer to not require <?php
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+lexers['php'] = PhpLexer(startinline=True)

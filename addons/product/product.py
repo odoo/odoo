@@ -558,7 +558,7 @@ class product_template(osv.osv):
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
@@ -925,6 +925,7 @@ class product_product(osv.osv):
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
+        'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is product variant'),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",

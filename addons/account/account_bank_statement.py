@@ -383,12 +383,17 @@ class account_bank_statement(osv.osv):
         return {'value': res}
 
     def unlink(self, cr, uid, ids, context=None):
+        statement_line_obj = self.pool['account.bank.statement.line']
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
+            # Explicitly unlink bank statement lines
+            # so it will check that the related journal entries have
+            # been deleted first
+            statement_line_obj.unlink(cr, uid, [line.id for line in item.line_ids], context=context)
         return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
@@ -809,7 +814,7 @@ class account_bank_statement_line(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
         'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
-        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
+        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='restrict'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
         'ref': fields.char('Reference'),
