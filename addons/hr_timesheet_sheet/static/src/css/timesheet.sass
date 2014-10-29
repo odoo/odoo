@@ -46,7 +46,7 @@
     border-left: 1px solid #cccccc
     border-bottom-left-radius: 4px
     border-top-left-radius: 4px
-  .oe_timesheet_weekly_day_total
+  .oe_timesheet_weekly_super_total
     border-top-right-radius: 4px
     border-bottom-right-radius: 4px
     vertical-align: middle
@@ -65,6 +65,9 @@
       width: 100%
     .oe_nav
       margin: 0px !important
+  .oe_timesheet_weekly .oe_nav
+    margin: 0px !important
+  .oe_timesheet_daily
     h5
       color: #428bca !important
     .oe_header
@@ -91,12 +94,23 @@
         left: initial
         line-height: initial
         width: initial
-    .oe_timesheet_daily_delete
+    .oe_delete_line
       float: right
-      padding-top: 5px
-      button
-        border: none
-        background: transparent
-        padding: 0
-    .oe_display_day_total
-      font-size: 12px
+      padding-top: 10px
+      cursor: pointer
+  .oe_timesheet_weekly .oe_delete_line
+    float: right
+    padding-top: 10px
+    cursor: pointer
+    padding-top: 3px !important
+  .oe_timesheet_daily .oe_edit_account
+    cursor: pointer
+  .oe_timesheet_weekly
+    .oe_edit_account
+      cursor: pointer
+    .oe_change_account
+      display: inline
+      margin-top: 3px
+      margin-left: 3px
+  .oe_timesheet_daily .oe_display_day_total
+    font-size: 12px

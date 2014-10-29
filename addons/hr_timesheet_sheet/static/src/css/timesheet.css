@@ -57,7 +57,7 @@
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
 }
-.openerp .oe_timesheet_weekly_day_total {
+.openerp .oe_timesheet_weekly_super_total {
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   vertical-align: middle;
@@ -79,7 +79,7 @@
 .openerp .oe_timesheet_daily .oe_daily_header {
   width: 100%;
 }
-.openerp .oe_timesheet_daily .oe_nav {
+.openerp .oe_timesheet_daily .oe_nav, .openerp .oe_timesheet_weekly .oe_nav {
   margin: 0px !important;
 }
 .openerp .oe_timesheet_daily h5 {
@@ -117,14 +117,21 @@
   line-height: initial;
   width: initial;
 }
-.openerp .oe_timesheet_daily .oe_timesheet_daily_delete {
+.openerp .oe_timesheet_daily .oe_delete_line, .openerp .oe_timesheet_weekly .oe_delete_line {
   float: right;
-  padding-top: 5px;
+  padding-top: 10px;
+  cursor: pointer;
 }
-.openerp .oe_timesheet_daily .oe_timesheet_daily_delete button {
-  border: none;
-  background: transparent;
-  padding: 0;
+.openerp .oe_timesheet_weekly .oe_delete_line {
+  padding-top: 3px !important;
+}
+.openerp .oe_timesheet_daily .oe_edit_account, .openerp .oe_timesheet_weekly .oe_edit_account {
+  cursor: pointer;
+}
+.openerp .oe_timesheet_weekly .oe_change_account {
+  display: inline;
+  margin-top: 3px;
+  margin-left: 3px;
 }
 .openerp .oe_timesheet_daily .oe_display_day_total {
   font-size: 12px;

@@ -73,15 +73,41 @@ openerp.hr_timesheet_sheet = function(instance) {
             data_to_update = _(self.get("sheets")).chain()
             .map(function(record) {
                 if (record.id) {
-                    tmp = [1, record.id, record]
+                    tmp = [1, record.id, record];
                     //delete record.id; //It'll be OK even if we do not delete id key, server will manage and will remove MAGIC COLUMNS from vals
                 } else {
-                    tmp = [0, false, record]
+                    tmp = [0, false, record];
                 }
                 return tmp;
             }).value();
             self.field_manager.set_values({timesheet_ids: data_to_update}).done(function() {
                 self.updating = false;
+            });
+        },
+        unlink_sheets_records: function(initial_o2m_value, ops) {
+            var self = this;
+            var data_to_update = [], tmp = [];
+            if (self.querying)
+                return;
+            self.updating = true;
+            var is_record_available = function(id) {
+                return _.find(ops, function(record) { return record.id === id; });
+            };
+            data_to_update = _(initial_o2m_value).chain()
+            .map(function(record) {
+                if (record.id && is_record_available(record.id)) {
+                    tmp = [1, record.id, record];
+                    //delete record.id; //It'll be OK even if we do not delete id key, server will manage and will remove MAGIC COLUMNS from vals
+                } else if(!record.id) {
+                    tmp = [0, false, record];
+                } else if (!is_record_available(record.id)) {
+                    tmp = [2, record.id, false];
+                }
+                return tmp;
+            }).value();
+            self.field_manager.set_values({timesheet_ids: data_to_update}).done(function() {
+                self.updating = false;
+                self.query_sheets();
             });
         },
         initialize_field: function() {
@@ -137,11 +163,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                         account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
                         // group by days
                         account_id = account_id === "false" ? false :  Number(account_id);
-                        var index = _.groupBy(lines, "date");
-                        var days = _.map(dates, function(date) {
-                            var day = {day: date, lines: index[instance.web.date_to_str(date)] || []};
+                        var group_by_date = _.groupBy(lines, "date");
+                        var days = _.map(dates, function(date, index) {
+                            var day = {day: date, lines: group_by_date[instance.web.date_to_str(date)] || [], day_index: index, week: date.getWeek()};
                             // add line where we will insert/remove hours
-                            var to_add = _.find(day.lines, function(line) { return line.name === self.description_line });
+                            var to_add = _.find(day.lines, function(line) { return line.name === self.description_line;});
                             if (to_add) {
                                 day.lines = _.without(day.lines, to_add);
                                 day.lines.unshift(to_add);
@@ -222,20 +248,16 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             }
         },
-        //We can keep this method in parent class, or we can put it separately for day and week
-        //but if we want to put it separate then we need to save this.dfm in parent class because destroy_content is called from initialize content
-        init_add_account: function(current_date, account_ids) {
-            var self = this;
-            if (self.dfm)
+        init_account: function(account_ids) {
+            if (this.dfm)
                 return;
-            self.$(".oe_timesheet_add_row").show();
-            self.dfm = new instance.web.form.DefaultFieldManager(self);
-            self.dfm.extend_field_desc({
+            this.dfm = new instance.web.form.DefaultFieldManager(this);
+            this.dfm.extend_field_desc({
                 account: {
                     relation: "account.analytic.account",
                 },
             });
-            self.account_m2o = new instance.web.form.FieldMany2One(self.dfm, {
+            this.account_m2o = new instance.web.form.FieldMany2One(this.dfm, {
                 attrs: {
                     name: "account",
                     type: "many2one",
@@ -252,8 +274,13 @@ openerp.hr_timesheet_sheet = function(instance) {
                     modifiers: '{"required": true}',
                 },
             });
-            self.account_m2o.prependTo(self.$(".oe_timesheet_add_row"));
-            self.$(".oe_timesheet_add_row a").click(function() {
+        },
+        init_add_account: function(current_date, account_ids) {
+            var self = this;
+            this.init_account(account_ids);
+            this.$(".oe_timesheet_add_row").show();
+            this.account_m2o.prependTo(this.$(".oe_timesheet_add_row"));
+            this.$(".oe_timesheet_add_row a").click(function() {
                 var id = self.account_m2o.get_value();
                 if (id === false) {
                     self.dfm.set({display_invalid_fields: true});
@@ -272,6 +299,22 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
         },
+        on_edit_account: function($target_elem, account_id,  account_ids) {
+            var self = this;
+            this.init_account(account_ids);
+            this.account_m2o.replace($target_elem);
+            this.account_m2o.$el.append($("<button class='btn btn-primary btn-xs oe_change_account'>Change</button>"));
+            this.account_m2o.set_value(account_id);
+            this.account_m2o.current_value = this.account_m2o.old_value = account_id;
+            this.account_m2o.on("change:value", this, function() {
+                self.account_m2o.old_value = self.account_m2o.current_value;
+                //New record will set false in the current value and when new record is set old value = new value(i.e. false)
+                if (self.account_m2o.get('value')) {
+                    self.account_m2o.current_value = self.account_m2o.get('value');
+                }
+            });
+            this.account_m2o.$el.find(".oe_change_account").click(function() {self.active_widget.on_change_account(self.account_m2o.old_value, self.account_m2o.current_value);});
+        },
         do_switch_mode: function (event, options) {
             this.destroy_content();
             var $target = $(event.currentTarget);
@@ -286,12 +329,12 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.set({sheets: this.active_widget.generate_o2m_value()});
             this.setting = false;
         },
-        //converts hour value to float
         parse_client: function(value) {
+            //converts hour value to float
             return instance.web.parse_value(value, { type:"float_time" });
         },
-        //converts float value to hour
-        format_client:function(value){
+        format_client:function(value) {
+            //converts float value to hour
             return instance.web.format_value(value, { type:"float_time" });
         },
         ignore_fields: function() {
@@ -307,6 +350,8 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         "click .oe_timesheet_switch": "do_switch_mode",
         "click .oe_copy_accounts a": "copy_accounts",
         "click .oe_timer": "timer",
+        "click .oe_edit_account": "on_edit_account",
+        "click .oe_delete_line": "on_delete_line",
     },
     init: function (parent, options) {
         var self = this;
@@ -376,13 +421,13 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             self.$(".oe_timesheet_daily_adding a").click(_.bind(this.parent.init_add_account, this.parent, instance.web.date_to_str(self.days[self.get('count')].day), _.keys(self.days[self.get('count')].account_group)));
         }
     },
-    /*
-        Synchronize data with Timesheet widget, note that we having accounts and all that in Timesheet's intialize_content method
-        For day mode we are reformatting data the way day mode accepts
-        so when we update input boxes of day mode it will not change main account's lines
-        This method will synchronize data of accounts of main Timesheet widget 
-    */
     sync_parent_data: function(updated_account, day_count) {
+        /*
+            Synchronize data with Timesheet widget, note that we having accounts and all that in Timesheet's intialize_content method
+            For day mode we are reformatting data the way day mode accepts
+            so when we update input boxes of day mode it will not change main account's lines
+            This method will synchronize data of accounts of main Timesheet widget 
+        */
         var self = this;
         _.each(this.parent.accounts, function(account) {
             if (account.account == updated_account.account_id) {
@@ -391,12 +436,12 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             }
         });
     },
-    /*
-        This method will use the data of Timesheet widget, it will not call all default_get and etc calls to server,
-        Instead this method will only reformat the data in the way day mode requires
-        return: it returns deferred object
-    */
     format_data_in_days: function() {
+        /*
+            This method will use the data of Timesheet widget, it will not call all default_get and etc calls to server,
+            Instead this method will only reformat the data in the way day mode requires
+            return: it returns deferred object
+        */
         var self = this;
         var dates;
         var days;
@@ -530,11 +575,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
         return ops;
     },
-    /*
-    is_any_accounts: function() {
-        return _.any(_.find(this.days, function(day) {return !_.isEmpty(day.account_group)}));
-    },
-    */
     copy_accounts: function(e) {
         var self = this;
         var index = this.get('count');
@@ -568,23 +608,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
                });
            }
        });
-       /*
-        while (index >= 0) {
-            if(_.isEmpty(self.days[index].account_group)) {
-                if(index == 0){
-                    var latest_activities = self.get_last_activities();
-                    if (latest_activities) {
-                        self.copy_data(JSON.parse(JSON.stringify(_.groupBy(latest_activities, "account_id"))));
-                    }
-                    break;
-                } else
-                    index -= 1;
-            } else {
-                self.copy_data(JSON.parse(JSON.stringify(this.days[index].account_group)));
-                break;
-            }
-        }
-        */
     },
     copy_data: function(data, onchange_result) {
         var self = this;
@@ -604,11 +627,7 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         });
         //TODO: Switching view doesn't reflected with copied data
         this.parent.sync();
-        //if (!self.days[count].account_defaults) {
-            self.parent.initialize_content();
-        //} else {
-        //    self.parent.display_data(this.options);
-        //}
+        self.parent.initialize_content();
     },
     get_last_activities: function() {
         var self = this;
@@ -698,6 +717,42 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     toggle_active: function(day_count) {
         this.$el.find(".oe_nav_button[data-day-counter|="+day_count+"]").addClass("oe_active_day").siblings().removeClass("oe_active_day");
     },
+    on_delete_line: function(e) {
+        if (!confirm(_t("Are you sure you want to delete lines of account, note that this will delete all lines of selected account in current day."))) {
+            return;
+        }
+        var account_id = parseInt($(e.target).data("account"));
+        var count = this.get("count");
+        var initial_o2m_value = this.generate_o2m_value();
+        var day = _.find(this.days, function(day) { return day.day_index === count; });
+        delete day.account_group[account_id];
+        var ops = this.generate_o2m_value();
+        this.parent.unlink_sheets_records(initial_o2m_value, ops);
+    },
+    on_edit_account: function(e) {
+        var self = this;
+        var day_count = this.get("count");
+        var account_id = parseInt($(e.target).data('id'));
+        var account_ids = _.keys(this.days[day_count].account_group);
+        this.parent.on_edit_account($(e.target).parent(), account_id, account_ids);
+    },
+    on_change_account: function(old_account_id, current_account_id) {
+        var self = this;
+        var day_count = this.get("count");
+        if (old_account_id === current_account_id) {
+            return;
+        }
+        account_group = _.find(this.days[day_count].account_group, function(account_value, account_id) { return account_id == old_account_id;});
+        return new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], current_account_id]).then(function(res) {
+            delete self.days[day_count].account_group[old_account_id];
+            self.days[day_count].account_group[current_account_id] = account_group;
+            _.each(account_group, function(account_line) {
+                _.extend(account_line, res.value, {account_id: current_account_id});
+            });
+            var ops = self.generate_o2m_value();
+            self.parent.set({"sheets": ops});
+        });
+    },
     navigateAll: function(e){
         var self = this;
         if (this.parent.dfm)
@@ -748,16 +803,36 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     events: {
         "click .oe_timesheet_weekly_account a": "go_to",
         "click .oe_timesheet_switch, .oe_timesheet_weekly_day": "do_switch_mode",
+        "click .oe_timesheet_weekly .oe_nav_button": "navigateAll",
+        "click .oe_edit_account": "on_edit_account",
+        "click .oe_delete_line": "on_delete_account",
     },
-    init: function (parent) {
+    init: function (parent, options) {
+        var self = this;
         this.parent = parent;
         this._super(parent);
+        this.options = options || {};
         this.set('effective_readonly', this.parent.get("effective_readonly"));
         this.dates = parent.dates;
         this.accounts = parent.accounts;
         this.account_names = parent.account_names;
         this.default_get = parent.default_get;
         this.account_defaults = parent.account_defaults;
+        this.days = _.map(parent.dates, function(date, index) {
+            var week = date.getWeek();
+            var day = {date: date, week: week, day_index: index, };
+            return day;
+        });
+        this.on("change:week", this, function() {
+            _.extend(self.options, {'week': self.get('week')});
+            self.parent.options = self.options;
+        });
+        if (!options || (options && !options.week)) {
+            this.week = _.first(_.map(this.days, function(day) {return day.week;}));
+            this.set('week', this.week);
+        } else {
+            this.set('week', (options || {}).week);
+        }
     },
     start: function() {
         this.display_data();
@@ -768,17 +843,17 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     display_data: function() {
         var self = this;
         _.each(self.accounts, function(account) {
-            _.each(_.range(account.days.length), function(day_count) {
+            _.each(account.days, function(day, day_count) {
                 if (!self.parent.get('effective_readonly')) {
-                    self.parent.get_box(account.account, day_count).val(self.sum_box(account, day_count, true)).change(function() {
+                    self.parent.get_box(account.account, day.day_index).val(self.sum_box(account, day.day_index, true)).change(function() {
                         var num = $(this).val();
                         if (self.parent.is_valid_value(num)){
                             num = (num == 0)?0:Number(self.parent.parse_client(num));
                         }
                         if (isNaN(num)) {
-                            $(this).val(self.sum_box(account, day_count, true));
+                            $(this).val(self.sum_box(account, day.day_index, true));
                         } else {
-                            account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
+                            account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day.day_index);
                             var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id;
                             var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id;
                             self.parent.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
@@ -787,12 +862,12 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
                                 self.parent.sync();
                             }));
                             if(!isNaN($(this).val())){
-                                $(this).val(self.sum_box(account, day_count, true));
+                                $(this).val(self.sum_box(account, day.day_index, true));
                             }
                         }
                     });
                 } else {
-                    self.parent.get_box(account.account, day_count).html(self.sum_box(account, day_count, true));
+                    self.parent.get_box(account.account, day.day_index).html(self.sum_box(account, day.day_index, true));
                 }
             });
         });
@@ -819,27 +894,35 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
     get_day_total: function(day_count) {
         return this.$('[data-day-total="' + day_count + '"]');
     },
-    get_super_total: function() {
+    get_week_total: function() {
         return this.$('.oe_timesheet_weekly_supertotal');
+    },
+    get_super_total: function() {
+        return this.$('.oe_timesheet_weekly_super_total');
     },
     display_totals: function() {
         var self = this;
         var day_tots = _.map(_.range(self.dates.length), function() { return 0 });
-        var super_tot = 0;
+        var week_tot = 0;
+        var super_total = 0;
         _.each(self.accounts, function(account) {
             var acc_tot = 0;
-            _.each(_.range(self.dates.length), function(day_count) {
-                var sum = self.sum_box(account, day_count);
-                acc_tot += sum;
-                day_tots[day_count] += sum;
-                super_tot += sum;
+            _.each(self.days, function(day) {
+                var sum = self.sum_box(account, day.day_index);
+                if (day.week == self.get('week')) {
+                    acc_tot += sum;
+                    day_tots[day.day_index] += sum;
+                    week_tot += sum;
+                }
+                super_total += sum;
             });
             self.get_total(account.account).html(self.parent.format_client(acc_tot));
         });
         _.each(_.range(self.dates.length), function(day_count) {
             self.get_day_total(day_count).html(self.parent.format_client(day_tots[day_count]));
         });
-        self.get_super_total().html(self.parent.format_client(super_tot));
+        self.get_week_total().html(self.parent.format_client(week_tot));
+        self.get_super_total().html("Total <br/><small>" + self.parent.format_client(super_total));
     },
     generate_o2m_value: function() {
         var self = this;
@@ -872,6 +955,75 @@ instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.Widget.extend({
             });
         });
         return ops;
+    },
+    on_delete_account: function(e) {
+        var account_id = parseInt($(e.target).data("account"));
+        if (!confirm(_t("Are you sure ? you want to delete all lines of this account, note that this will all lines of selected account."))) {
+            return;
+        }
+        var initial_o2m_value = this.generate_o2m_value();
+        this.accounts = _.reject(this.accounts, function(account) { return account.account === account_id;});
+        var ops = this.generate_o2m_value();
+        this.parent.unlink_sheets_records(initial_o2m_value, ops);
+    },
+    on_edit_account: function(e) {
+        var self = this;
+        var account_ids = _.map(this.accounts, function(account) {return account.account;});
+        var account_id = parseInt($(e.target).data('id'));
+        this.parent.on_edit_account($(e.target).parent(), account_id, account_ids);
+    },
+    on_change_account: function(old_account_id, current_account_id) {
+        var self = this;
+        if (old_account_id === current_account_id) {
+            return;
+        }
+        account = _.find(this.accounts, function(account) {return account.account == old_account_id;});
+        return new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], current_account_id]).then(function(res) {
+            _.extend(account, {account: current_account_id});
+            _.each(account.days, function(day) {
+                _.each(day.lines, function(line) {
+                    _.extend(line, res.value, {account_id: current_account_id});
+                });
+            });
+            var ops = self.generate_o2m_value();
+            self.parent.set({"sheets": ops});
+        });
+    },
+    navigateAll: function(e){
+        var self = this;
+        if (this.parent.dfm)
+            this.parent.destroy_content();
+        var navigate = $(e.target).data("navigate");
+        if (navigate == "prev_week")
+            this.navigatePrev();
+        else if (navigate == "next_week")
+            this.navigateNext();
+        else if (navigate == "this_week") {
+            for(var i = 0; i < this.days.length; i++) {
+                if (_.isEqual(this.days[i].week, new Date().getWeek())) {
+                    this.update_count(this.days[i].week);
+                    break;
+                }
+            }
+        }
+        this.parent.display_data(this.options);
+    },
+    update_count: function (count) {
+        this.set('week', count);
+    },
+    navigateNext: function() {
+        if(this.get('week') == _.last(_.map(this.days, function(day) {return day.week;})))
+            this.update_count(this.days[0].week);
+        else 
+            this.update_count(this.get('week')+1);
+    },
+    navigatePrev: function() {
+        if (this.get('week') == _.first(_.map(this.days, function(day) {return day.week;}))) {
+            this.update_count(this.days[this.days.length-1].week);
+        }
+        else {
+            this.update_count(this.get('week')-1);
+        }
     },
 });
 instance.web.form.custom_widgets.add('timesheet', 'instance.hr_timesheet_sheet.Timesheet');
