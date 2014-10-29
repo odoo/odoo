@@ -82,8 +82,8 @@ class account_fiscal_position(osv.osv):
             tax_count = 0
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
+                    tax_count += 1
                     if t.tax_dest_id:
-                        tax_count += 1
                         result |= t.tax_dest_id
             if not tax_count:
                 result |= tax
