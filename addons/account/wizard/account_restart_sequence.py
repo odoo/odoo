@@ -37,7 +37,7 @@ class account_restart_sequence(osv.osv_memory):
             if form['journal_ids']:
                 for fy in self.pool.get('account.fiscalyear').browse(cr, uid, context['active_ids'], context=context):
                     for journal in self.pool.get('account.journal').browse(cr, uid, form['journal_ids'], context=context):
-                        sequences = journal.refunds_sequence and [journal.sequence_id.id, journal.refunds_sequence_id.id] or [journal.sequence_id.id]
+                        sequences = journal.refund_sequence and [journal.sequence_id.id, journal.refund_sequence_id.id] or [journal.sequence_id.id]
                         for sequence in sequences:
                             updates = {
                                 'name': journal.name + ' ' + fy.name,

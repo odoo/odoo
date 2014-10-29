@@ -741,7 +741,7 @@ class account_journal(osv.osv):
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Invoice Entry Sequence', help="This field contains the information related to the numbering of the invoice journal entries of this journal.", required=True, copy=False),
-        'refunds_sequence_id': fields.many2one('ir.sequence', 'Refunds Entry Sequence', help="This field contains the information related to the numbering of the refunds journal entries of this journal.", copy=False),
+        'refund_sequence_id': fields.many2one('ir.sequence', 'Refunds Entry Sequence', help="This field contains the information related to the numbering of the refunds journal entries of this journal.", copy=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -754,7 +754,7 @@ class account_journal(osv.osv):
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
         'restart_sequence': fields.boolean('Create a new sequence for each fiscal year'),
-        'refunds_sequence': fields.boolean('Add another sequence for refunds'),
+        'refund_sequence': fields.boolean('Add another sequence for refunds'),
     }
 
     _defaults = {
@@ -763,8 +763,8 @@ class account_journal(osv.osv):
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'restart_sequence': False,
-        'refunds_sequence_id': False,
-        'refunds_sequence': False,
+        'refund_sequence_id': False,
+        'refund_sequence': False,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -849,10 +849,11 @@ class account_journal(osv.osv):
         return main_seq
 
     def create(self, cr, uid, vals, context=None):
+        # We just need to create the relevant sequences according to the chosen options
         if not 'sequence_id' in vals or not vals['sequence_id']:
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context=context)})
-        if 'refunds_sequence' in vals and vals['refunds_sequence']:
-            vals.update({'refunds_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refunds=True, context=context)})
+        if 'refund_sequence' in vals and vals['refund_sequence']:
+            vals.update({'refund_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refunds=True, context=context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):
@@ -1337,8 +1338,9 @@ class account_move(osv.osv):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
+                        # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
                         if invoice and invoice.type in ['out_refund', 'in_refund']:
-                            sequence = journal.refunds_sequence and journal.refunds_sequence_id.id or journal.sequence_id.id
+                            sequence = journal.refund_sequence and journal.refund_sequence_id.id or journal.sequence_id.id
                         else:
                             sequence = journal.sequence_id.id
                         c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}

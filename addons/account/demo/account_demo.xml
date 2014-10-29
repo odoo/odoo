@@ -14,103 +14,6 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         
-        
-         <!--
-         Account Journal Fiscal Year Sequences
-         -->
-
-         <record id="sequence_sale_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Sales Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">SAJ/%(year)s/</field>
-         </record>
-         <record id="sequence_refund_sales_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Sales Credit Note Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">SCNJ/%(year)s/</field>
-         </record>
-         <record id="sequence_purchase_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Expenses Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">EXJ/%(year)s/</field>
-         </record>
-         <record id="sequence_refund_purchase_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Expenses Credit Notes Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">ECNJ/%(year)s/</field>
-         </record>
-         <record id="sequence_bank_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Bank Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">BNK/%(year)s/</field>
-         </record>
-         <record id="sequence_check_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Checks Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">CHK/%(year)s/</field>
-         </record>
-         <record id="sequence_cash_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Cash Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">CSH/%(year)s/</field>
-         </record>
-         <record id="sequence_opening_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Opening Entries Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">OPEJ/%(year)s/</field>
-         </record>
-         <record id="sequence_miscellaneous_journal_fy" model="ir.sequence">
-             <field eval="'Account Default Miscellaneous Journal '+time.strftime('%Y')" name="name" />
-             <field eval="3" name="padding"/>
-             <field name="prefix">MISJ/%(year)s/</field>
-         </record>
-
-        <record id="sequence_fy_sale_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_sale_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_sale_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_refund_sales_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_refund_sales_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_refund_sales_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_purchase_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_purchase_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_purchase_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_refund_purchase_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_refund_purchase_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_refund_purchase_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_bank_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_bank_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_bank_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_check_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_check_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_check_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_cash_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_cash_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_cash_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_opening_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_opening_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_opening_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        <record id="sequence_fy_miscellaneous_journal" model="account.sequence.fiscalyear">
-            <field name="sequence_id" ref="sequence_miscellaneous_journal_fy" />
-            <field name="sequence_main_id" ref="sequence_miscellaneous_journal" />
-            <field name="fiscalyear_id" ref="data_fiscalyear" />
-        </record>
-        
         <!--
         Fiscal Periods
         -->    
@@ -221,8 +124,7 @@
             <field eval="time.strftime('%Y')+'-12-31'" name="date_stop"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-    
-
+        
         <!-- Payment Term -->
         
         <record id="account_payment_term" model="account.payment.term">
