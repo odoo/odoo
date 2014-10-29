@@ -66,6 +66,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_statement_from_invoice_view.xml',
+        'wizard/account_restart_sequence_view.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',

@@ -312,75 +312,69 @@
             <field name="name">Sales Journal - (test)</field>
             <field name="code">TSAJ</field>
             <field name="type">sale</field>
-            <field name="sequence_id" ref="sequence_sale_journal"/>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="refund_sales_journal" model="account.journal">
             <field name="name">Sales Credit Note Journal - (test)</field>
             <field name="code">TSCNJ</field>
             <field name="type">sale_refund</field>
-            <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
 
         <record id="expenses_journal" model="account.journal">
             <field name="name">Expenses Journal - (test)</field>
             <field name="code">TEXJ</field>
             <field name="type">purchase</field>
-            <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="refund_expenses_journal" model="account.journal">
             <field name="name">Expenses Credit Notes Journal - (test)</field>
             <field name="code">TECNJ</field>
             <field name="type">purchase_refund</field>
-            <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
 
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank Journal - (test)</field>
             <field name="code">TBNK</field>
             <field name="type">bank</field>
-            <field name="sequence_id" ref="sequence_bank_journal"/>
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="check_journal" model="account.journal">
             <field name="name">Checks Journal - (test)</field>
             <field name="code">TCHK</field>
             <field name="type">bank</field>
-            <field name="sequence_id" ref="sequence_check_journal"/>
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash Journal - (test)</field>
@@ -396,35 +390,32 @@
                  that test Odoo arrive directly in the touchscreen UI.
             -->
             <field name="cash_control" eval="False"/>
-            <field name="sequence_id" ref="sequence_cash_journal"/>
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="miscellaneous_journal" model="account.journal">
             <field name="name">Miscellaneous Journal - (test)</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
-            <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <record id="opening_journal" model="account.journal">
             <field name="name">Opening Entries Journal - (test)</field>
             <field name="code">TOEJ</field>
             <field name="type">situation</field>
-            <field name="sequence_id" ref="sequence_opening_journal"/>
             <field name="default_debit_account_id" ref="o_income"/>
             <field name="default_credit_account_id" ref="o_expense"/>
             <field eval="True" name="centralisation"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
 
         <record id="bank_journal_usd" model="account.journal">
@@ -434,8 +425,8 @@
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
-            <field name="restart_sequence" eval="False"/>
-            <field name="refunds_sequence" eval="False"/>
+            <field name="restart_sequence" eval="True"/>
+            <field name="refunds_sequence" eval="True"/>
         </record>
         <!--
         Product income and expense accounts, default parameters
