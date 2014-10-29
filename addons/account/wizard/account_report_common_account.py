@@ -1,6 +1,6 @@
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
-class account_common_account_report(osv.osv_memory):
+class account_common_account_report(models.TransientModel):
     _name = 'account.common.account.report'
     _description = 'Account Common Account Report'
     _inherit = "account.common.report"
