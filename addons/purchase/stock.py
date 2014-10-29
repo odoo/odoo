@@ -161,7 +161,7 @@ class stock_partial_picking(osv.osv_memory):
             return text % value
         return super(stock_partial_picking, self).__get_help_text(cursor, user, picking_id, context=context)
 
-# Redefinition of the new field in order to update the model stock.picking.in in the orm
+# Redefinition of the new field in order to update the models stock.picking.in and stock.picking.out in the orm
 # FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
 #        the bug is fixed
 class stock_picking_in(osv.osv):
@@ -171,4 +171,11 @@ class stock_picking_in(osv.osv):
             ondelete='set null', select=True),
         'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse', readonly=True),
     }
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+            ondelete='set null', select=True),
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
