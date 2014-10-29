@@ -292,7 +292,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if (!order) {
                 return;
             } else if ( !order.is_empty() ){
-                this.screen_selector.show_popup('confirm',{
+                this.pos_widget.screen_selector.show_popup('confirm',{
                     message: _t('Destroy Current Order ?'),
                     comment: _t('You will lose any data associated with the current order'),
                     confirm: function(){
