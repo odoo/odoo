@@ -81,6 +81,18 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         }), true);
     },
+    get_title: function () {
+        if (this.widgets.length === 1) {
+            // horrible hack to display the action title instead of "New" for the actions
+            // that use a form view to edit something that do not correspond to a real model
+            // for example, point of sale "Your Session" or most settings form,
+            var widget = this.widgets[0];
+            if (widget instanceof instance.web.ViewManager && widget.view_stack.length === 1) {
+                return widget.title;
+            }
+        }
+        return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
+    },
     history_back: function() {
         var widget = _.last(this.widgets);
         if (widget instanceof instance.web.ViewManager) {
@@ -132,7 +144,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 // this action has been explicitly marked as not pushable
                 return;
             }
-            state.title = this.inner_action.name;
+            state.title = this.get_title(); 
             if(this.inner_action.type == 'ir.actions.act_window') {
                 state.model = this.inner_action.res_model;
             }
