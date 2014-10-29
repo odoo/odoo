@@ -26,7 +26,7 @@ class account_report_general_ledger(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        data['form'].update(self.read(self.ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
+        data['form'].update(self.read(['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
 

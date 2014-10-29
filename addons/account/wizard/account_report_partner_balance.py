@@ -16,5 +16,5 @@ class account_partner_balance(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        data['form'].update(self.read(self.ids, ['display_partner'])[0])
+        data['form'].update(self.read(['display_partner'])[0])
         return self.env['report'].get_action([], 'account.report_partnerbalance', data=data)

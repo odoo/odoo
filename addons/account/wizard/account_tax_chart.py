@@ -25,7 +25,7 @@ class account_tax_chart(models.TransientModel):
         @return: dictionary of Open account chart window on given fiscalyear and all Entries or posted entries
         """
         result = self.env.ref('account', 'action_tax_code_tree')
-        result = self.env['ir.actions.act_window'].read(result.id)
+        result = result.read()
         if self.period_id:
             result['context'] = str({'period_id': self.period_id.id, \
                                      'fiscalyear_id': self.period_id.fiscalyear_id.id, \

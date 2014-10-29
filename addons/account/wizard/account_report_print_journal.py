@@ -33,7 +33,7 @@ class account_print_journal(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        data['form'].update(self.read(self.ids, ['sort_selection'])[0])
+        data['form'].update(self.read(['sort_selection'])[0])
         if self._context.get('sale_purchase_only'):
             return self.env['report'].get_action([], 'account.report_salepurchasejournal', data=data)
         else:

@@ -19,7 +19,7 @@ class account_aged_trial_balance(models.TransientModel):
     def _print_report(self, data):
         res = {}
         data = self.pre_print_report(data)
-        data['form'].update(self.read(self.ids, ['period_length', 'direction_selection'])[0])
+        data['form'].update(self.read(['period_length', 'direction_selection'])[0])
 
         period_length = data['form']['period_length']
         if period_length<=0:

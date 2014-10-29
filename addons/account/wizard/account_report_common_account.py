@@ -12,6 +12,6 @@ class account_common_account_report(models.TransientModel):
 
     @api.multi
     def pre_print_report(self, data):
-        data['form'].update(self.read(self.ids, ['display_account'])[0])
+        data['form'].update(self.read(['display_account'])[0])
         return data
 

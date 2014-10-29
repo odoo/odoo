@@ -14,6 +14,6 @@ class account_common_partner_report(models.TransientModel):
 
     @api.multi
     def pre_print_report(self, data):
-        data['form'].update(self.read(self.ids, ['result_selection'])[0])
+        data['form'].update(self.read(['result_selection'])[0])
         return data
 

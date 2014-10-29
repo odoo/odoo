@@ -21,7 +21,7 @@ class account_common_journal_report(models.TransientModel):
 
     @api.multi
     def pre_print_report(self, data):
-        data['form'].update(self.read(self.ids, ['amount_currency'])[0])
+        data['form'].update(self.read(['amount_currency'])[0])
         fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.env['account.fiscalyear'].search([('state', '=', 'draft')])
         period_list = data['form']['periods'] or self.env['account.period'].search([('fiscalyear_id', 'in', fy_ids)])
         data['form']['active_ids'] = self.env['account.journal.period'].search([('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)])

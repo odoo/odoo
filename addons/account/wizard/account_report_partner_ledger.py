@@ -31,7 +31,7 @@ class account_partner_ledger(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        data['form'].update(self.read(self.ids, ['initial_balance', 'filter', 'page_split', 'amount_currency'])[0])
+        data['form'].update(self.read(['initial_balance', 'filter', 'page_split', 'amount_currency'])[0])
         if data['form'].get('page_split') is True: 
             return self.env['report'].get_action([], 'account.report_partnerledgerother', data=data)
         return self.env['report'].get_action([], 'account.report_partnerledger', data=data)

@@ -145,7 +145,7 @@ class account_common_report(models.TransientModel):
         data = {}
         data['ids'] = self._context.get('active_ids', [])
         data['model'] = self._context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(self.ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'])[0]
+        data['form'] = self.read(['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'])[0]
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]

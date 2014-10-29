@@ -21,7 +21,7 @@ class account_vat_declaration(models.TransientModel):
         datas = {
          'ids': self._context.get('active_ids', []),
          'model': 'account.tax.code',
-         'form': self.read(self.ids)[0]
+         'form': self.read()[0]
         }
 
         for field in datas['form'].keys():
