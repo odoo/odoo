@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_restart_sequence" model="ir.ui.view">
+            <field name="name">account.sequence.restart.form</field>
+            <field name="model">account.sequence.restart</field>
+            <field name="arch" type="xml">
+                <form string="Restart Sequences">
+                    <field name="journal_ids"/>
+                    <footer>
+                        <button string="Restart" name="restart_sequences" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_restart_sequences" model="ir.actions.act_window">
+            <field name="name">Restart Sequences</field>
+            <field name="res_model">account.sequence.restart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_restart_sequence"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
