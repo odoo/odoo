@@ -2,7 +2,7 @@
 import time
 from lxml import etree
 
-from openerp import models, api, _
+from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 from openerp.osv.orm import setup_modifiers
 

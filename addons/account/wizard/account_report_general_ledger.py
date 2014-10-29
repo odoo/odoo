@@ -1,4 +1,4 @@
-from openerp import models, api
+from openerp import models, fields, api
 
 
 class account_report_general_ledger(models.TransientModel):

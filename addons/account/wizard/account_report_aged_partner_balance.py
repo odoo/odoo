@@ -1,7 +1,8 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import models, api, _
+
+from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
 
@@ -10,10 +11,10 @@ class account_aged_trial_balance(models.TransientModel):
     _name = 'account.aged.trial.balance'
     _description = 'Account Aged Trial balance Report'
 
-    period_length = fields.integer('Period Length (days)', required=True, default=30)
-    direction_selection = fields.selection([('past','Past'), ('future','Future')],
+    period_length = fields.Integer(string='Period Length (days)', required=True, default=30)
+    direction_selection = fields.Selection([('past','Past'), ('future','Future')],
         string='Analysis Direction', required=True, default='past')
-    journal_ids = fields.many2many('account.journal', string='Journals', required=True, default='movement')
+    journal_ids = fields.Many2many('account.journal', string='Journals', required=True, default='movement')
 
     @api.multi
     def _print_report(self, data):

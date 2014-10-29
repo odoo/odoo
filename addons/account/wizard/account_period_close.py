@@ -1,4 +1,4 @@
-from openerp import models, api, _
+from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
 class account_period_close(models.TransientModel):
@@ -28,4 +28,3 @@ class account_period_close(models.TransientModel):
                     self.invalidate_cache()
 
         return {'type': 'ir.actions.act_window_close'}
-

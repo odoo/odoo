@@ -1,4 +1,4 @@
-from openerp import models, api
+from openerp import models, fields, api
 
 class account_move_line_unreconcile_select(models.TransientModel):
     _name = "account.move.line.unreconcile.select"
@@ -18,4 +18,3 @@ class account_move_line_unreconcile_select(models.TransientModel):
                 'res_model': 'account.move.line',
                 'type': 'ir.actions.act_window'
         }
-

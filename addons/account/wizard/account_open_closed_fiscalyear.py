@@ -1,4 +1,4 @@
-from openerp import models, api, _
+from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
 class account_open_closed_fiscalyear(models.TransientModel):
@@ -19,4 +19,3 @@ class account_open_closed_fiscalyear(models.TransientModel):
             self._cr.execute('delete from account_move where id IN %s', (tuple(ids_move.ids),))
             self.invalidate_cache()
         return {'type': 'ir.actions.act_window_close'}
-

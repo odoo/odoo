@@ -1,5 +1,5 @@
 
-from openerp import models, api, _
+from openerp import models, fields, api, _
 
 class account_move_line_reconcile_select(models.TransientModel):
     _name = "account.move.line.reconcile.select"

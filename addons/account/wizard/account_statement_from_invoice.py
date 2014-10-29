@@ -8,7 +8,7 @@ class account_statement_from_invoice_lines(models.TransientModel):
     _name = "account.statement.from.invoice.lines"
     _description = "Entries by Statement from Invoices"
 
-    line_ids = fields.many2many('account.move.line', string='Invoices')
+    line_ids = fields.Many2many('account.move.line', string='Invoices')
 
     @api.multi
     def populate_statement(self):

@@ -1,4 +1,4 @@
-from openerp import models, api
+from openerp import models, fields, api
 
 
 class account_partner_balance(models.TransientModel):
@@ -18,3 +18,4 @@ class account_partner_balance(models.TransientModel):
         data = self.pre_print_report(data)
         data['form'].update(self.read(['display_partner'])[0])
         return self.env['report'].get_action([], 'account.report_partnerbalance', data=data)
+
