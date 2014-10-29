@@ -1,83 +1,77 @@
-from openerp.osv import fields, osv
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
 
-class CashBox(osv.osv_memory):
+class CashBox(models.TransientModel):
     _register = False
-    _columns = {
-        'name' : fields.char('Reason', required=True),
-        # Attention, we don't set a domain, because there is a journal_type key 
-        # in the context of the action
-        'amount' : fields.float('Amount',
-                                digits_compute = dp.get_precision('Account'),
-                                required=True),
-    }
 
-    def run(self, cr, uid, ids, context=None):
-        if not context:
-            context = dict()
 
-        active_model = context.get('active_model', False) or False
-        active_ids = context.get('active_ids', []) or []
+    name = fields.Char(string='Reason', required=True)
+    # Attention, we don't set a domain, because there is a journal_type key 
+    # in the context of the action
+    amount = fields.Float(string='Amount', digits = dp.get_precision('Account'), required=True)
 
-        records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
 
-        return self._run(cr, uid, ids, records, context=context)
+    @api.multi
+    def run(self):
+        active_model = self._context.get('active_model', False) or False
+        active_ids = self._context.get('active_ids', []) or []
 
-    def _run(self, cr, uid, ids, records, context=None):
-        for box in self.browse(cr, uid, ids, context=context):
+        records = self.env[active_model].browse(active_ids)
+
+        return self._run(records)
+
+    @api.multi
+    def _run(self, records):
+        for box in self:
             for record in records:
                 if not record.journal_id:
-                    raise osv.except_osv(_('Error!'),
-                                         _("Please check that the field 'Journal' is set on the Bank Statement"))
+                    raise Warning(_("Please check that the field 'Journal' is set on the Bank Statement"))
                     
                 if not record.journal_id.internal_account_id:
-                    raise osv.except_osv(_('Error!'),
-                                         _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
+                    raise Warning(_("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
 
-                self._create_bank_statement_line(cr, uid, box, record, context=context)
+                box._create_bank_statement_line(record)
 
         return {}
 
-    def _create_bank_statement_line(self, cr, uid, box, record, context=None):
-        values = self._compute_values_for_statement_line(cr, uid, box, record, context=context)
-        return self.pool.get('account.bank.statement.line').create(cr, uid, values, context=context)
+    @api.one
+    def _create_bank_statement_line(self, record):
+        values = self._compute_values_for_statement_line(record)
+        return self.env['account.bank.statement.line'].create(values)
 
 
 class CashBoxIn(CashBox):
     _name = 'cash.box.in'
 
-    _columns = CashBox._columns.copy()
-    _columns.update({
-        'ref': fields.char('Reference'),
-    })
+    ref = fields.Char('Reference')
 
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+    @api.one
+    def _compute_values_for_statement_line(self, record):
         if not record.journal_id.internal_account_id.id:
-            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+            raise Warning(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
-            'amount': box.amount or 0.0,
+            'amount': self.amount or 0.0,
             'account_id': record.journal_id.internal_account_id.id,
-            'ref': '%s' % (box.ref or ''),
-            'name': box.name,
+            'ref': '%s' % (self.ref or ''),
+            'name': self.name,
         }
 
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
 
-    _columns = CashBox._columns.copy()
-
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+    @api.one
+    def _compute_values_for_statement_line(self, record):
         if not record.journal_id.internal_account_id.id:
-            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
-        amount = box.amount or 0.0
+            raise Warning(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
+        amount = self.amount or 0.0
         return {
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
             'amount': -amount if amount > 0.0 else amount,
             'account_id': record.journal_id.internal_account_id.id,
-            'name': box.name,
+            'name': self.name,
         }
