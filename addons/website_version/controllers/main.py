@@ -18,16 +18,15 @@ class TableExporter(http.Controller):
         return 0
 
     @http.route(['/website_version/create_snapshot'], type = 'json', auth = "user", website = True)
-    def create_snapshot(self,name,copy):
+    def create_snapshot(self,name,snapshot_id):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         if name == "":
             name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        snapshot_id = context.get('snapshot_id')
         iuv = request.registry['ir.ui.view']
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
         new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
-        if snapshot_id and copy:
+        if snapshot_id:
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
         request.session['snapshot_id'] = new_snapshot_id
         request.context['snapshot_id'] = new_snapshot_id

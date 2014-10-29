@@ -4,13 +4,22 @@
     <t t-name="all_versions">
         <t t-foreach="snapshots" t-as="item">
             <li class="snapshot dropdown-submenu" t-att-data-snapshot_id="item.id">
-                <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
+                <!-- <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right">
+                    <i class="fa fa-trash-o fa-fw"></i>
+                </a> -->
                 <t t-if="item.bold == 0 ">
-                    <a href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
+                    <a tabindex="-1" href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
                 </t>
                 <t t-if="item.bold == 1 ">
-                    <a href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id"> <b><t t-esc="item.name"></t></b> </a>
+                    <a tabindex="-1" href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id"> <b><t 
+                        t-esc="item.name"></t></b> 
+                    </a>
                 </t>
+                <ul class="dropdown-menu">
+                    <li> <a  href="#" data-action="duplicate_version">duplicate as new version</a></li>
+                    <li> <a  href="#" data-action="delete_snapshot">delete</a></li>
+                    <li> <a  href="#" data-action="publish_version">publish as master</a></li>
+                </ul>
             </li>
         </t>
     </t>

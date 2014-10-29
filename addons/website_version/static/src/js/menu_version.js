@@ -39,7 +39,9 @@
             return this._super();
         },
         
-        create_snapshot: function() {
+        duplicate_version: function(event) {
+            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            console.log(snapshot_id);
             var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
@@ -54,7 +56,7 @@
                 default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
-                openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'copy': 1 }).then(function (result) {
+                openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'snapshot_id': snapshot_id}).then(function (result) {
 
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
@@ -83,7 +85,8 @@
         },
 
         delete_snapshot: function(event) {
-            var snapshot_id = $(event.currentTarget).parent().data("snapshot_id");
+            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            console.log(snapshot_id);
             openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     if (result){
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete this version because it is in a running experiment"}));
@@ -106,7 +109,8 @@
         },
 
         publish_version: function(event) {
-            var snapshot_id = $(event.currentTarget).data("snapshot_id");
+            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            console.log(snapshot_id);
             openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been published."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});

@@ -26,7 +26,7 @@
                     default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
                 }).then(function (name) {
                     var context = website.get_context();
-                    openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'copy': 0 }).then(function (result) {
+                    openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'snapshot_id': 0 }).then(function (result) {
                         $('html').data('snapshot_id', result);
                         
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
