@@ -3,7 +3,7 @@
 
     <t t-name="all_versions">
         <t t-foreach="snapshots" t-as="item">
-            <li class="snapshot" t-att-data-snapshot_id="item.id">
+            <li class="snapshot dropdown-submenu" t-att-data-snapshot_id="item.id">
                 <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
                 <t t-if="item.bold == 0 ">
                     <a href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
@@ -16,10 +16,22 @@
     </t>
 
     <t t-extend="website.editorbar">
-        <t t-jquery=".navbar-header form button" t-operation="after">
-            <span id="master_edit">
-                <a href="#" id="master_edit_button" data-action="save_as_draft" class="btn btn-link btn-xs">Save as Draft</a>
-            </span>
+        <t t-jquery=".navbar-header form button" t-operation="replace">
+            <div class="btn-group">
+                <button type="button" data-action="save" class="btn btn-primary btn-xs">Save</button>
+                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" id="master_edit_button" data-action="save_as_draft" 
+                        class="btn btn-link btn-xs">Save as New Version</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- <a href="#" id="master_edit_button" data-action="save_as_draft" class="btn btn-link btn-xs">Save as Draft</a>
+            or -->
             
         </t>
     </t>
@@ -68,7 +80,7 @@
                                 <div class="col-sm-3"></div>
                                 <div class="checkbox col-sm-8">
                                     <label>
-                                        <input type="checkbox" checked="checked" disabled="disabled"/> Original
+                                        <input type="checkbox" checked="checked" disabled="disabled"/> Master
                                     </label>
                                 </div>
                             </div>

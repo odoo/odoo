@@ -36,7 +36,12 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/website_version/static/src/js/menu_version.js"></script>
                 <script type="text/javascript" src="/website_version/static/src/js/save_as_draft.js"></script>
-                <script type="text/javascript" src="/website_version/static/src/js/website_version.tour.js"></script>
+                <script type="text/javascript" src="/website_version/static/src/js/website_version.tour.versioning.js"></script>
+            </xpath>
+        </template>
+        <template id="assets_common_ab_testing" name="website_ab_testing assets" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_version/static/src/js/website_version.tour.ab_testing.js"></script>
             </xpath>
         </template>
 
