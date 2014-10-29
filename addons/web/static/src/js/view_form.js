@@ -42,15 +42,15 @@ instance.web.form.FieldManagerMixin = {
     Gives new values for the fields contained in the view. The new values could not be setted
     right after the call to this method. Setting new values can trigger on_changes.
 
-    @param (dict) values A dictonnary with key = field name and value = new value.
-    @return (Deferred) Is resolved after all the values are setted.
+    @param {Object} values A dictonary with key = field name and value = new value.
+    @return {$.Deferred} Is resolved after all the values are setted.
     */
     set_values: function(values) {},
     /**
     Computes an OpenERP domain.
 
-    @param (list) expression An OpenERP domain.
-    @return (boolean) The computed value of the domain.
+    @param {Array} expression An OpenERP domain.
+    @return {boolean} The computed value of the domain.
     */
     compute_domain: function(expression) {},
     /**
@@ -58,7 +58,7 @@ instance.web.form.FieldManagerMixin = {
     the field are only supposed to use this context to evualuate their own, they should not
     extend it.
 
-    @return (CompoundContext) An OpenERP context.
+    @return {CompoundContext} An OpenERP context.
     */
     build_eval_context: function() {},
 };
@@ -85,8 +85,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {instance.web.Session} session the current openerp session
      * @param {instance.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
-     * @param {Object} options
-     *                  - resize_textareas : [true|false|max_height]
      *
      * @property {instance.web.Registry} registry=instance.web.form.widgets widgets registry for this form view instance
      */
@@ -103,6 +101,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.fields_order = [];
         this.datarecord = {};
         this._onchange_specs = {};
+        this.onchanges_defs = [];
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
@@ -119,6 +118,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
         this.save_list = [];
+        this.render_value_defs = [];
         this.reload_mutex = new $.Mutex();
         this.__clicked_inside = false;
         this.__blur_timeout = null;
@@ -255,7 +255,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            this.do_show({ reload: warm });
+            this.do_show();
         }
     },
     /**
@@ -302,6 +302,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 opacity: '1',
                 filter: 'alpha(opacity = 100)'
             });
+            instance.web.bus.trigger('form_view_shown', self);
         });
     },
     do_hide: function () {
@@ -422,7 +423,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 $el.removeAttr("disabled");
             });
         });
-        this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
         this.$pager.toggle(this.dataset.ids.length > 1);
@@ -507,7 +507,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 def = self.alive(new instance.web.Model(self.dataset.model).call(
                     "onchange", [ids, values, trigger_field_name, onchange_specs, context]));
             }
-            return def.then(function(response) {
+            var onchange_def = def.then(function(response) {
                 if (widget && widget.field['change_default']) {
                     var fieldname = widget.name;
                     var value_;
@@ -543,6 +543,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).then(function(response) {
                 return self.on_processed_onchange(response);
             });
+            this.onchanges_defs.push(onchange_def);
+            return onchange_def;
         } catch(e) {
             console.error(e);
             instance.webclient.crashmanager.show_message(e);
@@ -583,7 +585,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.mutating_mutex.exec(function() {
             function iterate() {
-                var defs = [];
+                var start = $.Deferred();
+                start.resolve();
+                start = _.reduce(self.onchanges_defs, function(memo, d){
+                    return memo.then(function(){
+                        return d;
+                    }, function(){
+                        return d;
+                    });
+                }, start);
+                var defs = [start];
                 _.each(self.fields, function(field) {
                     defs.push(field.commit_value());
                 });
@@ -642,6 +653,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * if the current record is not yet saved. It will then stay in create mode.
      */
     to_edit_mode: function() {
+        this.onchanges_defs = [];
         this._actualize_mode("edit");
     },
     /**
@@ -661,6 +673,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else if (mode === "create") {
             mode = "edit";
         }
+        this.render_value_defs = [];
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
@@ -705,18 +718,22 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (menu) {
                     menu.do_reload_needaction();
                 }
+                instance.web.bus.trigger('form_view_saved', self);
             });
         }).always(function(){
             $(e.target).attr("disabled", false);
         });
     },
     on_button_cancel: function(event) {
+        var self = this;
         if (this.can_be_discarded()) {
             if (this.get('actual_mode') === 'create') {
                 this.trigger('history_back');
             } else {
                 this.to_view_mode();
-                this.trigger('load_record', this.datarecord);
+                $.when.apply(null, this.render_value_defs).then(function(){
+                    self.trigger('load_record', self.datarecord);
+                });
             }
         }
         this.trigger('on_button_cancel');
@@ -790,11 +807,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
-        return this._process_operations().then(function() {
+        return self._process_operations().then(function() {
             if (save_obj.error)
                 return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
-        }).done(function() {
+        }).done(function(result) {
             self.$el.removeClass('oe_form_dirty');
         });
     },
@@ -2226,7 +2243,10 @@ instance.web.form.ReinitializeWidgetMixin =  {
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
     reinitialize: function() {
         instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
-        this.render_value();
+        var res = this.render_value();
+        if (this.view && this.view.render_value_defs){
+            this.view.render_value_defs.push(res);
+        }
     },
 });
 
@@ -2335,26 +2355,31 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.states = self.prepare_dropdown_selection();;
+        this.record_id = this.view.datarecord.id;
+        this.states = this.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_kanban_selection.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_kanban_selection: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            self.record_id = self.view.datarecord.id;
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
     },
@@ -2386,27 +2411,34 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
     },
     render_value: function() {
         var self = this;
-        this.record_id = self.view.datarecord.id;
-        this.priorities = self.prepare_priority();
+        this.record_id = this.view.datarecord.id;
+        this.priorities = this.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
-        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+        this.$el.find('li').on('click', this.set_priority.bind(this));
     },
-    do_action: function(e) {
+    /* setting the value: in view mode, perform an asynchronous call and reload
+    the form view; in edit mode, use set_value to save the new value that will
+    be written when saving the record. */
+    set_priority: function (ev) {
         var self = this;
-        var li = $(e.target).closest( "li" );
+        var li = $(ev.target).closest('li');
         if (li.length) {
-            var value = {};
-            value[self.name] = String(li.data('value'));
-            if (self.record_id) {
-                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-            } else {
-                return self.view.on_button_save().done(function(result) {
-                    if (result) {
-                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                    }
-                });
+            var value = String(li.data('value'));
+            if (this.view.get('actual_mode') == 'view') {
+                var write_values = {}
+                write_values[self.name] = value;
+                return this.view.dataset._model.call(
+                    'write', [
+                        [self.record_id],
+                        write_values,
+                        self.view.dataset.get_context()
+                    ]).done(self.reload_record.bind(self));
+            }
+            else {
+                return this.set_value(value);
             }
         }
+
     },
     reload_record: function() {
         this.view.reload();
@@ -2513,13 +2545,9 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this._super.apply(this, arguments);
         this.on("change:effective_readonly", this, function () {
             this.display_field();
-            this.render_value();
         });
         this.display_field();
         return this._super();
-    },
-    render_value: function() {
-        this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
     },
     set_value: function(value_) {
         var self = this;
@@ -2535,7 +2563,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
-                $('button span', self.$el).text(' Change selection');
+                if (self.get('effective_readonly')) {
+                    $('button span', self.$el).text(' See selection');
+                }
+                else {
+                    $('button span', self.$el).text(' Change selection');
+                }
             });
         } else {
             $('.oe_domain_count', this.$el).text('0 record selected');
@@ -2549,8 +2582,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
         this.pop.select_element(
-            model, {title: 'Select records...'},
-            [], this.build_context());
+            model, {
+                title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
+                readonly: this.get('effective_readonly'),
+                disable_multiple_selection: this.get('effective_readonly'),
+                no_create: this.get('effective_readonly'),
+            }, [], this.build_context());
         this.pop.on("elements_selected", self, function(element_ids) {
             if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
                 var search_data = this.pop.searchview.build_search_data();
@@ -2576,10 +2613,10 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
 
 instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
-    jqueryui_object: 'datetimepicker',
     type_of_date: "datetime",
     events: {
-        'change .oe_datepicker_master': 'change_datetime',
+        'dp.change .oe_datepicker_main': 'change_datetime',
+        'dp.show .oe_datepicker_main': 'set_datetime_default',
         'keypress .oe_datepicker_master': 'change_datetime',
     },
     init: function(parent) {
@@ -2588,81 +2625,31 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
+        var l10n = _t.database.parameters;
+        var options = {
+            pickTime: true,
+            useSeconds: true,
+            startDate: new moment({ y: 1900 }),
+            endDate: new moment().add(200, "y"),
+            calendarWeeks: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down'
+               },
+            language : moment.locale(),
+            format : instance.web.convert_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+        };
         this.$input = this.$el.find('input.oe_datepicker_master');
-        this.$input_picker = this.$el.find('input.oe_datepicker_container');
-
-        $.datepicker.setDefaults({
-            clearText: _t('Clear'),
-            clearStatus: _t('Erase the current date'),
-            closeText: _t('Done'),
-            closeStatus: _t('Close without change'),
-            prevText: _t('<Prev'),
-            prevStatus: _t('Show the previous month'),
-            nextText: _t('Next>'),
-            nextStatus: _t('Show the next month'),
-            currentText: _t('Today'),
-            currentStatus: _t('Show the current month'),
-            monthNames: Date.CultureInfo.monthNames,
-            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
-            monthStatus: _t('Show a different month'),
-            yearStatus: _t('Show a different year'),
-            weekHeader: _t('Wk'),
-            weekStatus: _t('Week of the year'),
-            dayNames: Date.CultureInfo.dayNames,
-            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
-            dayNamesMin: Date.CultureInfo.shortestDayNames,
-            dayStatus: _t('Set DD as first week day'),
-            dateStatus: _t('Select D, M d'),
-            firstDay: Date.CultureInfo.firstDayOfWeek,
-            initStatus: _t('Select a date'),
-            isRTL: false
-        });
-        $.timepicker.setDefaults({
-            timeOnlyTitle: _t('Choose Time'),
-            timeText: _t('Time'),
-            hourText: _t('Hour'),
-            minuteText: _t('Minute'),
-            secondText: _t('Second'),
-            currentText: _t('Now'),
-            closeText: _t('Done')
-        });
-
-        this.picker({
-            onClose: this.on_picker_select,
-            onSelect: this.on_picker_select,
-            changeMonth: true,
-            changeYear: true,
-            showWeek: true,
-            showButtonPanel: true,
-            firstDay: Date.CultureInfo.firstDayOfWeek
-        });
-        // Some clicks in the datepicker dialog are not stopped by the
-        // datepicker and "bubble through", unexpectedly triggering the bus's
-        // click event. Prevent that.
-        this.picker('widget').click(function (e) { e.stopPropagation(); });
-
-        this.$el.find('img.oe_datepicker_trigger').click(function() {
-            if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
-                self.$input.focus();
-                return;
-            }
-            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
-            self.$input_picker.show();
-            self.picker('show');
-            self.$input_picker.hide();
-        });
+        if (this.type_of_date === 'date') {
+            options['pickTime'] = false;
+            options['useSeconds'] = false;
+            options['format'] = instance.web.convert_to_moment_format(l10n.date_format);
+        }
+        this.picker = this.$('.oe_datepicker_main').datetimepicker(options);
         this.set_readonly(false);
         this.set({'value': false});
-    },
-    picker: function() {
-        return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
-    },
-    on_picker_select: function(text, instance_) {
-        var date = this.picker('getDate');
-        this.$input
-            .val(date ? this.format_client(date) : '')
-            .change()
-            .focus();
     },
     set_value: function(value_) {
         this.set({'value': value_});
@@ -2673,12 +2660,11 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     },
     set_value_from_ui_: function() {
         var value_ = this.$input.val() || false;
-        this.set({'value': this.parse_client(value_)});
+        this.set_value(this.parse_client(value_));
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
         this.$input.prop('readonly', this.readonly);
-        this.$el.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid_: function() {
         var value_ = this.$input.val();
@@ -2699,6 +2685,17 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
+    set_datetime_default: function(){
+        //when opening datetimepicker the date and time by default should be the one from
+        //the input field if any or the current day otherwise
+        if (this.type_of_date === 'datetime') {
+            value = new moment().second(0);
+            if (this.$input.val().length !== 0 && this.is_valid_()){
+                var value = this.$input.val();
+            }
+            this.$('.oe_datepicker_main').data('DateTimePicker').setValue(value);
+        }
+    },
     change_datetime: function(e) {
         if ((e.type !== "keypress" || e.which === 13) && this.is_valid_()) {
             this.set_value_from_ui_();
@@ -2711,7 +2708,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
 });
 
 instance.web.DateWidget = instance.web.DateTimeWidget.extend({
-    jqueryui_object: 'datepicker',
     type_of_date: "date"
 });
 
@@ -2873,7 +2869,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || '100%');
+            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3160,9 +3156,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this._super(field_manager, node);
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
+        this.uniqueId = _.uniqueId("radio");
     },
     initialize_content: function () {
-        this.uniqueId = _.uniqueId("radio");
         this.on("change:effective_readonly", this, this.render_value);
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
         this.get_selection();
@@ -3339,7 +3335,7 @@ instance.web.form.CompletionFieldMixin = {
                 });
             }
             // create...
-            if (!(self.options && self.options.no_create)){
+            if (!(self.options && (self.options.no_create || self.options.no_create_edit))){
                 values.push({
                     label: _t("Create and Edit..."),
                     action: function() {
@@ -3428,9 +3424,14 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
         this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
-            self.getParent()._quick_create(self.$("input").val());
-            self.destroy();
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
+            if (self.$("input").val() != ''){
+                self.getParent()._quick_create(self.$("input").val());
+                self.destroy();
+            } else{
+                e.preventDefault();
+                self.$("input").focus();
+            }
         });
         this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
             self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
@@ -3614,7 +3615,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed && (self.options.no_create === false || self.options.no_create === undefined)) {
+            if (used && self.get("value") === false && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
@@ -3643,10 +3644,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             focusout: anyoneLoosesFocus,
             focus: function () { self.trigger('focused'); },
             autocompleteopen: function () { ignore_blur = true; },
-            autocompleteclose: function () { ignore_blur = false; },
+            autocompleteclose: function () { setTimeout(function() {ignore_blur = false;},0); },
             blur: function () {
                 // autocomplete open
-                if (ignore_blur) { return; }
+                if (ignore_blur) { $(this).focus(); return; }
                 if (_(self.getChildren()).any(function (child) {
                     return child instanceof instance.web.form.AbstractFormPopup;
                 })) { return; }
@@ -3969,7 +3970,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.form_last_update = $.Deferred();
@@ -4139,14 +4139,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         /**
          * Returns the current active view if any.
          */
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            return {
-                type: this.viewmanager.active_view,
-                controller: this.viewmanager.views[this.viewmanager.active_view].controller
-            };
-        }
+        return (this.viewmanager && this.viewmanager.active_view);
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4238,12 +4231,12 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     save_any_view: function() {
         var view = this.get_active_view();
         if (view) {
-            if (this.viewmanager.active_view === "form") {
+            if (this.viewmanager.active_view.type === "form") {
                 if (view.controller.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
                 return $.when(view.controller.save());
-            } else if (this.viewmanager.active_view === "list") {
+            } else if (this.viewmanager.active_view.type === "list") {
                 return $.when(view.controller.ensure_saved());
             }
         }
@@ -4254,7 +4247,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (!view){
             return true;
         }
-        switch (this.viewmanager.active_view) {
+        switch (this.viewmanager.active_view.type) {
         case 'form':
             return _(view.controller.fields).chain()
                 .invoke('is_valid')
@@ -4271,10 +4264,9 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
     template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
         this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
-        this.registry = this.registry.extend({
+        this.registry = instance.web.views.extend({
             list: 'instance.web.form.One2ManyListView',
             form: 'instance.web.form.One2ManyFormView',
-            kanban: 'instance.web.form.One2ManyKanbanView',
         });
         this.__ignore_blur = false;
     },
@@ -4503,9 +4495,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             window.confirm = confirm;
         }
     },
-    reload_record: function (record) {
-        // Evict record.id from cache to ensure it will be reloaded correctly
-        this.dataset.evict_record(record.get('id'));
+    reload_record: function (record, options) {
+        if (!options || !options['do_not_evict']) {
+            // Evict record.id from cache to ensure it will be reloaded correctly
+            this.dataset.evict_record(record.get('id'));
+        }
 
         return this._super(record);
     }
@@ -4541,13 +4535,6 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
         }
     }
 });
-
-var lazy_build_o2m_kanban_view = function() {
-    if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
-        return;
-    instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-    });
-};
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
@@ -4712,9 +4699,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             self.render_tag(data);
         }
         if (! values || values.length > 0) {
-            this._display_orderer.add(self.get_render_data(values)).done(handle_names);
-        }
-        else{
+            return this._display_orderer.add(self.get_render_data(values)).done(handle_names);
+        } else {
             handle_names([]);
         }
     },
@@ -5142,8 +5128,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.domain = domain || [];
         this.context = context || {};
         this.options = options;
-        _.defaults(this.options, {
-        });
+        _.defaults(this.options, {});
     },
     init_dataset: function() {
         var self = this;
@@ -5288,22 +5273,20 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.display_popup();
     },
     start: function() {
-        var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            instance.web.pyeval.eval_domains_and_contexts({
+            var context = instance.web.pyeval.sync_eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
-            }).done(function (results) {
-                var search_defaults = {};
-                _.each(results.context, function (value_, key) {
-                    var match = /^search_default_(.*)$/.exec(key);
-                    if (match) {
-                        search_defaults[match[1]] = value_;
-                    }
-                });
-                self.setup_search_view(search_defaults);
+            }).context;
+            var search_defaults = {};
+            _.each(context, function (value_, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value_;
+                }
             });
+            this.setup_search_view(search_defaults);
         } else { // "form"
             this.new_object();
         }
@@ -5313,12 +5296,9 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
-        if (this.searchview_drawer) {
-            this.searchview_drawer.destroy();
-        }
+        var $buttons = this.$('.oe-search-options');
         this.searchview = new instance.web.SearchView(this,
-                this.dataset, false,  search_defaults);
-        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
+                this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5328,7 +5308,8 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.on("search_view_loaded", self, function() {
+        this.searchview.appendTo(this.$(".oe_popup_search")).done(function() {
+            self.searchview.toggle_visibility(true);
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
@@ -5363,8 +5344,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.new_object();
                 });
             });
-        });
-        this.searchview.appendTo(this.$(".oe_popup_search"));
+        });        
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -5702,6 +5682,20 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.render_value();
         this.set_filename('');
+    },
+    set_value: function(value_){
+        var changed = value_ !== this.get_value();
+        this._super.apply(this, arguments);
+        // By default, on binary images read, the server returns the binary size
+        // This is possible that two images have the exact same size
+        // Therefore we trigger the change in case the image value hasn't changed
+        // So the image is re-rendered correctly
+        if (!changed){
+            this.trigger("change:value", this, {
+                oldValue: value_,
+                newValue: value_
+            });
+        }
     }
 });
 
