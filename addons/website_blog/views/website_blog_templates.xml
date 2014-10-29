@@ -131,11 +131,7 @@
                 </div>
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
-
-                  <img class="img-circle pull-right mt16"
-                    t-att-src="website.image_url(blog_post.author_id, 'image_small')"
-                    style="width: 50px;"/>
-
+                  <span t-field="blog_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
                   <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
                       <h2 t-field="blog_post.name" class="mb4"/>
                   </a>

@@ -6174,7 +6174,11 @@ button.close {
     display: none !important;
   }
 }
+* {
+  box-sizing: border-box;
+}
 body {
+  overflow: auto;
   position: relative;
 }
 .document-super {
@@ -6643,20 +6647,11 @@ div.section > h2 {
  *
  * Generated via Pygments
  */
-.highlight {
-  padding: 9px 14px;
-  margin-bottom: 14px;
-  background-color: #f7f7f9 !important;
-  border: 1px solid #e1e1e8;
-  border-radius: 4px;
-}
 .highlight pre {
-  color: #333;
-  padding: 0 45px 0 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  border: 0;
+  padding: 4px;
+  font-size: 75%;
+  word-break: normal;
+  word-wrap: normal;
 }
 /*
  * ZeroClipboard styles
@@ -6664,6 +6659,11 @@ div.section > h2 {
 .zero-clipboard {
   position: relative;
   display: none;
+}
+@media (min-width: 768px) {
+  .zero-clipboard {
+    display: block;
+  }
 }
 .btn-clipboard {
   position: absolute;
@@ -6683,11 +6683,6 @@ div.section > h2 {
   color: #fff;
   background-color: #a24689;
   border-color: #a24689;
-}
-@media (min-width: 768px) {
-  .zero-clipboard {
-    display: block;
-  }
 }
 img.align-center {
   display: block;
@@ -6710,10 +6705,98 @@ td.field-body > ul {
   margin: 0;
   padding: 0;
 }
-pre {
-  word-break: normal;
-  word-wrap: normal;
-}
 .descclassname {
   opacity: 0.5;
+}
+.stripe .section {
+  margin-bottom: 2em;
+}
+@media (min-width: 992px) {
+  .stripe .section > *,
+  .stripe .section > .force-left {
+    width: 49%;
+    float: left;
+    clear: left;
+  }
+  .stripe .section > .force-right,
+  .stripe .section > [class*=highlight] {
+    float: none;
+    clear: none;
+    margin-left: 51%;
+  }
+  .stripe .section > h1,
+  .stripe .section > h2,
+  .stripe .section > h3,
+  .stripe .section > h4,
+  .stripe .section > h5,
+  .stripe .section > h6 {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  .stripe .section > h1,
+  .stripe .section > h2,
+  .stripe .section > h3,
+  .stripe .section > h4,
+  .stripe .section > h5,
+  .stripe .section > h6,
+  .stripe .section > .section {
+    position: relative;
+    width: auto;
+    float: none;
+    clear: both;
+  }
+  .stripe .bodywrapper {
+    position: relative;
+  }
+  .stripe .bodywrapper:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    content: "";
+    width: 0;
+    border-left: 1px solid #777777;
+  }
+}
+.stripe .switcher {
+  color: white;
+  width: auto !important;
+  float: none !important;
+  position: fixed;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  right: 0.5em;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 5;
+}
+.stripe .switcher li {
+  background-color: #0f131a;
+  padding: 0.4em 1em;
+  border: 1px solid #333;
+  border-left-width: 0;
+  cursor: pointer;
+}
+.stripe .switcher li:first-child {
+  border-left-width: 1px;
+  border-radius: 5px 0 0 5px;
+}
+.stripe .switcher li:last-child {
+  border-radius: 0 5px 5px 0;
+}
+.stripe .switcher li:hover {
+  background-color: #222;
+}
+.stripe .switcher li.active {
+  background-color: #333;
+}
+.stripe [class*=only-],
+.stripe .switchable > .highlight {
+  display: none;
+}
+.stripe .only-python,
+.stripe .highlight-python > .highlight {
+  display: block;
 }

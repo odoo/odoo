@@ -616,7 +616,7 @@ class website(osv.osv):
             response.data = data
         else:
             size = (max_w, max_h)
-            img = image_resize_and_sharpen(image, size)
+            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
             image_save_for_web(img, response.stream, format=image.format)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)

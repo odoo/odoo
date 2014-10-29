@@ -1472,10 +1472,11 @@
             this.$target.transfo({
                 hide: true,
                 callback: function () {
-                    var pos = $(this).data("transfo").$center.offset();
+                    var center = $(this).data("transfo").$markup.find('.transfo-scaler-mc').offset();
+                    var $option = self.$overlay.find('.btn-group:first');
                     self.$overlay.css({
-                        'top': pos.top,
-                        'left': pos.left,
+                        'top': center.top - $option.height()/2,
+                        'left': center.left,
                         'position': 'absolute',
                     });
                     self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");

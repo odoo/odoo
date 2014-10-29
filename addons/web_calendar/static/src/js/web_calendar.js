@@ -832,7 +832,7 @@ openerp.web_calendar = function(instance) {
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);
-                pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
+                pop.show_element(this.dataset.model, parseInt(id), this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
                     view_id: +this.open_popup_action,
                     res_id: id,
