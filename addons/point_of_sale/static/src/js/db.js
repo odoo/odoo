@@ -368,7 +368,7 @@ function openerp_pos_db(instance, module){
             }
             var results = [];
             for(var i = 0; i < this.limit; i++){
-                r = re.exec(this.category_search_string[category_id]);
+                var r = re.exec(this.category_search_string[category_id]);
                 if(r){
                     var id = Number(r[1]);
                     results.push(this.get_product_by_id(id));
