@@ -1,52 +1,29 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
-class account_fiscalyear_close(osv.osv_memory):
+class account_fiscalyear_close(models.TransientModel):
     """
     Closes Account Fiscalyear and Generate Opening entries for New Fiscalyear
     """
     _name = "account.fiscalyear.close"
     _description = "Fiscalyear Close"
-    _columns = {
-       'fy_id': fields.many2one('account.fiscalyear', \
-                                 'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
-       'fy2_id': fields.many2one('account.fiscalyear', \
-                                 'New Fiscal Year', required=True),
-       'journal_id': fields.many2one('account.journal', 'Opening Entries Journal', domain="[('type','=','situation')]", required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.'),
-       'period_id': fields.many2one('account.period', 'Opening Entries Period', required=True),
-       'report_name': fields.char('Name of new entries', required=True, help="Give name of the new entries"),
-    }
-    _defaults = {
-        'report_name': lambda self, cr, uid, context: _('End of Fiscal Year Entry'),
-    }
 
-    def data_save(self, cr, uid, ids, context=None):
+    fy_id = fields.Many2one('account.fiscalyear', \
+                             string='Fiscal Year to close', required=True, help="Select a Fiscal year to close")
+    fy2_id = fields.Many2one('account.fiscalyear', \
+                             string='New Fiscal Year', required=True)
+    journal_id = fields.Many2one('account.journal', string='Opening Entries Journal', domain=[('type', '=', 'situation')], required=True,
+        help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.')
+    period_id = fields.Many2one('account.period', string='Opening Entries Period', required=True)
+    report_name = fields.Char(string='Name of new entries', required=True, help="Give name of the new entries",
+        default=lambda self: _('End of Fiscal Year Entry'))
+
+    @api.multi
+    def data_save(self):
         """
         This function close account fiscalyear and create entries in new fiscalyear
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Account fiscalyear close state’s IDs
 
         """
         def _reconcile_fy_closing(cr, uid, ids, context=None):
@@ -59,64 +36,56 @@ class account_fiscalyear_close(osv.osv_memory):
             #check that the reconcilation concern journal entries from only one company
             cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
             if len(cr.fetchall()) > 1:
-                raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
-            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
-            cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+                raise Warning(_('The entries to reconcile should belong to the same company.'))
+            r_id = self.env['account.move.reconcile'].create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
+            cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id.id, tuple(ids),))
             obj_acc_move_line.invalidate_cache(cr, uid, ['reconcile_id'], ids, context=context)
             return r_id
 
-        obj_acc_period = self.pool.get('account.period')
-        obj_acc_fiscalyear = self.pool.get('account.fiscalyear')
-        obj_acc_journal = self.pool.get('account.journal')
-        obj_acc_move = self.pool.get('account.move')
-        obj_acc_move_line = self.pool.get('account.move.line')
-        obj_acc_account = self.pool.get('account.account')
-        obj_acc_journal_period = self.pool.get('account.journal.period')
-        currency_obj = self.pool.get('res.currency')
+        obj_acc_fiscalyear = self.env['account.fiscalyear']
+        obj_acc_move = self.env['account.move']
+        obj_acc_move_line = self.env['account.move.line']
+        obj_acc_journal_period = self.env['account.journal.period']
 
-        data = self.browse(cr, uid, ids, context=context)
+        data = self.browse()
 
-        if context is None:
-            context = {}
         fy_id = data[0].fy_id.id
 
+        cr = self._cr
         cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0].fy2_id.id),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
         cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         if not fy_period_set or not fy2_period_set:
-            raise osv.except_osv(_('User Error!'), _('The periods to generate opening entries cannot be found.'))
+            raise Warning(_('The periods to generate opening entries cannot be found.'))
 
-        period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
-        new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].fy2_id.id, context=context)
-        old_fyear = obj_acc_fiscalyear.browse(cr, uid, fy_id, context=context)
+        period = self.env['account.period'].browse(data[0].period_id.id)
+        new_fyear = obj_acc_fiscalyear.browse(data[0].fy2_id.id)
+        old_fyear = obj_acc_fiscalyear.browse(fy_id)
 
         new_journal = data[0].journal_id.id
-        new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
+        new_journal = self.env['account.journal'].browse(new_journal)
         company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
-            raise osv.except_osv(_('User Error!'),
-                    _('The journal must have default credit and debit account.'))
+            raise Warning(_('The journal must have default credit and debit account.'))
         if (not new_journal.centralisation) or new_journal.entry_posted:
-            raise osv.except_osv(_('User Error!'),
-                    _('The journal must have centralized counterpart without the Skipping draft state option checked.'))
+            raise Warning(_('The journal must have centralized counterpart without the Skipping draft state option checked.'))
 
         #delete existing move and move lines if any
-        move_ids = obj_acc_move.search(cr, uid, [
-            ('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
+        move_ids = obj_acc_move.search([('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
         if move_ids:
-            move_line_ids = obj_acc_move_line.search(cr, uid, [('move_id', 'in', move_ids)])
-            obj_acc_move_line._remove_move_reconcile(cr, uid, move_line_ids, opening_reconciliation=True, context=context)
-            obj_acc_move_line.unlink(cr, uid, move_line_ids, context=context)
-            obj_acc_move.unlink(cr, uid, move_ids, context=context)
+            move_line_ids = obj_acc_move_line.search([('move_id', 'in', move_ids.ids)])
+            obj_acc_move_line._remove_move_reconcile(move_line_ids.ids, opening_reconciliation=True)
+            obj_acc_move_line.unlink(move_line_ids.ids)
+            obj_acc_move.unlink(move_ids.ids)
 
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
         fy_ids = ','.join([str(x['id']) for x in result])
-        query_line = obj_acc_move_line._query_get(cr, uid,
-                obj='account_move_line', context={'fiscalyear': fy_ids})
+        ctx = {'fiscalyear': fy_ids}
+        query_line = obj_acc_move_line.with_context(ctx)._query_get(obj='account_move_line')
         #create the opening move
         vals = {
             'name': '/',
@@ -125,7 +94,7 @@ class account_fiscalyear_close(osv.osv_memory):
             'date': period.date_start,
             'journal_id': new_journal.id,
         }
-        move_id = obj_acc_move.create(cr, uid, vals, context=context)
+        move_id = obj_acc_move.create(vals)
 
         #1. report of the accounts with defferal method == 'unreconciled'
         cr.execute('''
@@ -152,7 +121,7 @@ class account_fiscalyear_close(osv.osv_memory):
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + '''
-                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
+                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
 
             #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
@@ -175,8 +144,8 @@ class account_fiscalyear_close(osv.osv_memory):
                        AND b.period_id IN ('''+fy_period_set+''')
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
-                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
-            self.invalidate_cache(cr, uid, context=context)
+                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
+            self.invalidate_cache()
 
         #2. report of the accounts with defferal method == 'detail'
         cr.execute('''
@@ -204,8 +173,8 @@ class account_fiscalyear_close(osv.osv_memory):
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + ''')
-                     ''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
-            self.invalidate_cache(cr, uid, context=context)
+                     ''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
+            self.invalidate_cache()
 
         #3. report of the accounts with defferal method == 'balance'
         cr.execute('''
@@ -225,9 +194,10 @@ class account_fiscalyear_close(osv.osv_memory):
         """
         query_2nd_part = ""
         query_2nd_part_args = []
-        for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
-            company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
-            if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
+        ctx = {'fiscalyear': fy_id}
+        for account in self.env['account.account'].with_context(ctx).browse(account_ids):
+            company_currency_id = self.env.user.company_id.currency_id
+            if not company_currency_id.is_zero(abs(account.balance)):
                 if query_2nd_part:
                     query_2nd_part += ','
                 query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -235,7 +205,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        account.balance < 0 and -account.balance or 0.0,
                        data[0].report_name,
                        period.date_start,
-                       move_id,
+                       move_id.id,
                        new_journal.id,
                        period.id,
                        account.id,
@@ -245,22 +215,21 @@ class account_fiscalyear_close(osv.osv_memory):
                        'draft')
         if query_2nd_part:
             cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
-            self.invalidate_cache(cr, uid, context=context)
+            self.invalidate_cache()
 
         #validate and centralize the opening move
-        obj_acc_move.validate(cr, uid, [move_id], context=context)
+        move_id.validate()
 
         #reconcile all the move.line of the opening move
-        ids = obj_acc_move_line.search(cr, uid, [('journal_id', '=', new_journal.id),
-            ('period_id.fiscalyear_id','=',new_fyear.id)])
+        ids = obj_acc_move_line.search([('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
         if ids:
-            reconcile_id = _reconcile_fy_closing(cr, uid, ids, context=context)
+            reconcile_id = _reconcile_fy_closing(self._cr, self._uid, ids.ids, context=self._context)
             #set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance
-            self.pool.get('account.move.reconcile').write(cr, uid, [reconcile_id], {'create_date': new_fyear.date_start}, context=context)
+            reconcile_id.write({'create_date': new_fyear.date_start})
 
         #create the journal.period object and link it to the old fiscalyear
         new_period = data[0].period_id.id
-        ids = obj_acc_journal_period.search(cr, uid, [('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
+        ids = obj_acc_journal_period.search([('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
         if not ids:
             ids = [obj_acc_journal_period.create(cr, uid, {
                    'name': (new_journal.name or '') + ':' + (period.code or ''),
@@ -269,8 +238,8 @@ class account_fiscalyear_close(osv.osv_memory):
                })]
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_id = %s ' \
-                    'WHERE id = %s', (ids[0], old_fyear.id))
-        obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_id'], [old_fyear.id], context=context)
+                    'WHERE id = %s', (ids.ids[0], old_fyear.id))
+        obj_acc_fiscalyear.invalidate_cache(['end_journal_id'], [old_fyear.id])
 
         return {'type': 'ir.actions.act_window_close'}
 
