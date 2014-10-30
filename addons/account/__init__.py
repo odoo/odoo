@@ -19,9 +19,24 @@
 #
 ##############################################################################
 
-import models
 import wizard
 import report
 import edi
+
+import partner
+import account
+import installer
+import account_invoice
+import account_bank_statement
+import account_bank
+import account_cash_statement
+import account_move_line
+import account_analytic_line
+import account_financial_report
+import product
+import ir_sequence
+import company
+import res_currency
+import res_config
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
