@@ -157,6 +157,8 @@
             <field name="priority">50</field>
             <field name="arch" type="xml">
                 <search string="Membership Partners">
+                    <field name="name" string="Members"/>
+                    <field name="category_id"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
                     <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
@@ -181,6 +183,14 @@
             <field name="res_model">res.partner</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                  Click to add a new Member
+                </p><p>
+                 Odoo helps you easily track all activities related to a member: 
+                 Current Membership Status, Discussions and History of Membership, etc.
+                </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -266,7 +276,7 @@
         </record>
 
         <!-- MEMBERSHIP/REPORTING -->
-        <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
+        <menuitem name="Association" id="base.menu_report_association" parent="base.menu_reporting" sequence="23"/>
 
     </data>
 </openerp>
