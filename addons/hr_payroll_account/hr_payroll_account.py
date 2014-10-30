@@ -26,6 +26,37 @@ from openerp.osv import fields, osv
 from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
 
+class hr_payslip_line(osv.osv):
+    '''
+    Payslip Line
+    '''
+    _inherit = 'hr.payslip.line'
+
+    def _get_partner_id(self, cr, uid, ids, field_name, arg, context=None):
+        """
+        Get partner_id of slip line to use in account_move_line
+            and adds the ability to inherit it
+        """
+        res = {}
+        for payslip_line in self.browse(cr, uid, ids, context=context):
+            default_partner_id = payslip_line.slip_id.employee_id.\
+                address_home_id and  payslip_line.slip_id.employee_id.\
+                address_home_id.id or False
+            partner_id = payslip_line.salary_rule_id.register_id.partner_id\
+                and payslip_line.salary_rule_id.register_id.partner_id.id\
+                or default_partner_id
+            res[payslip_line.id] = (payslip_line.salary_rule_id.register_id.\
+                partner_id or payslip_line.salary_rule_id.account_debit.type\
+                in ('receivable', 'payable'))\
+                and partner_id or False
+        return res
+
+
+    _columns = {
+        'partner_id': fields.function(_get_partner_id, type='many2one',
+                        relation='res.partner', string='Partner'),
+    }
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -93,7 +124,6 @@ class hr_payslip(osv.osv):
             else:
                 period_id = slip.period_id.id
 
-            default_partner_id = slip.employee_id.address_home_id.id
             name = _('Payslip of %s') % (slip.employee_id.name)
             move = {
                 'narration': name,
@@ -106,7 +136,6 @@ class hr_payslip(osv.osv):
                 amt = slip.credit_note and -line.total or line.total
                 if float_is_zero(amt, precision_digits=precision):
                     continue
-                partner_id = line.salary_rule_id.register_id.partner_id and line.salary_rule_id.register_id.partner_id.id or default_partner_id
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
 
@@ -115,7 +144,7 @@ class hr_payslip(osv.osv):
                     debit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_debit.type in ('receivable', 'payable')) and partner_id or False,
+                    'partner_id': line.partner_id and line.partner_id.id or False,
                     'account_id': debit_account_id,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
