@@ -24,6 +24,7 @@ import time
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import Warning
 
 class account_cashbox_line(models.Model):
     """ Cash Box Details """
@@ -210,7 +211,7 @@ class account_cash_statement(models.Model):
         for statement in self:
             vals = {}
             if not self._user_allow(statement.id):
-                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
+                raise Warning(_('You do not have rights to open this %s journal!') % (statement.journal_id.name, ))
 
             if statement.name and statement.name == '/':
                 context = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
@@ -254,12 +255,12 @@ class account_cash_statement(models.Model):
                 account = obj.journal_id.loss_account_id
                 name = _('Loss')
                 if not obj.journal_id.loss_account_id:
-                    raise osv.except_osv(_('Error!'), _('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
+                    raise Warning(_('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
             else: # obj.difference > 0.0
                 account = obj.journal_id.profit_account_id
                 name = _('Profit')
                 if not obj.journal_id.profit_account_id:
-                    raise osv.except_osv(_('Error!'), _('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
+                    raise Warning(_('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
 
             values = {
                 'statement_id' : obj.id,
