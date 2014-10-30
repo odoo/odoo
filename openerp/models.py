@@ -178,7 +178,12 @@ def get_pg_type(f, type_override=None):
     if field_type in FIELDS_TO_PGTYPES:
         pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
-        if f.digits:
+        # Explicit support for "falsy" digits (0, False) to indicate a
+        # NUMERIC field with no fixed precision. The values will be saved
+        # in the database with all significant digits.
+        # FLOAT8 type is still the default when there is no precision because
+        # it is faster for most operations (sums, etc.)
+        if f.digits is not None:
             pg_type = ('numeric', 'NUMERIC')
         else:
             pg_type = ('float8', 'DOUBLE PRECISION')
@@ -470,7 +475,7 @@ class BaseModel(object):
         # basic setup of field
         field.set_class_name(cls, name)
 
-        if field.store:
+        if field.store or field.column:
             cls._columns[name] = field.to_column()
         else:
             # remove potential column that may be overridden by field
@@ -1649,7 +1654,7 @@ class BaseModel(object):
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
+        """ search(args[, offset=0][, limit=None][, order=None])
 
         Searches for records based on the ``args``
         :ref:`search domain <reference/orm/domains>`.
@@ -1659,9 +1664,6 @@ class BaseModel(object):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
-        :param bool count: if ``True``, the call should return the number of
-                           records matching ``args`` rather than the records
-                           themselves.
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
@@ -2972,13 +2974,17 @@ class BaseModel(object):
     def _setup_fields(self, partial=False):
         """ Setup the fields (dependency triggers, etc). """
         for field in self._fields.itervalues():
-            if partial and field.manual and \
-                    field.relational and \
-                    (field.comodel_name not in self.pool or \
-                     (field.type == 'one2many' and field.inverse_name not in self.pool[field.comodel_name]._fields)):
-                # do not set up manual fields that refer to unknown models
-                continue
-            field.setup(self.env)
+            try:
+                field.setup(self.env)
+            except Exception:
+                if not partial:
+                    raise
+
+        # update columns (fields may have changed), and column_infos
+        for name, field in self._fields.iteritems():
+            if field.column:
+                self._columns[name] = field.to_column()
+        self._inherits_reload()
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
@@ -3647,7 +3653,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
@@ -3948,7 +3954,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val

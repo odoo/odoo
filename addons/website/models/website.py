@@ -591,7 +591,7 @@ class website(osv.osv):
             response.data = data
         else:
             size = (max_w, max_h)
-            img = image_resize_and_sharpen(image, size)
+            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
             image_save_for_web(img, response.stream, format=image.format)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)
@@ -778,7 +778,7 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)

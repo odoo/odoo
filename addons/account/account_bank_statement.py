@@ -383,12 +383,17 @@ class account_bank_statement(osv.osv):
         return {'value': res}
 
     def unlink(self, cr, uid, ids, context=None):
+        statement_line_obj = self.pool['account.bank.statement.line']
         for item in self.browse(cr, uid, ids, context=context):
             if item.state != 'draft':
                 raise osv.except_osv(
                     _('Invalid Action!'), 
                     _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
                 )
+            # Explicitly unlink bank statement lines
+            # so it will check that the related journal entries have
+            # been deleted first
+            statement_line_obj.unlink(cr, uid, [line.id for line in item.line_ids], context=context)
         return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
@@ -513,16 +518,24 @@ class account_bank_statement_line(osv.osv):
 
         return data
 
-    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line. """
+    def _domain_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
         if excluded_ids is None:
             excluded_ids = []
+        domain = [('ref', '=', st_line.name),
+                  ('reconcile_id', '=', False),
+                  ('state', '=', 'valid'),
+                  ('account_id.reconcile', '=', True),
+                  ('id', 'not in', excluded_ids)]
+        return domain
+
+    def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
+        """ Returns move lines that constitute the best guess to reconcile a statement line. """
         mv_line_pool = self.pool.get('account.move.line')
 
         # Look for structured communication
         if st_line.name:
-            structured_com_match_domain = [('ref', '=', st_line.name),('reconcile_id', '=', False),('state', '=', 'valid'),('account_id.reconcile', '=', True),('id', 'not in', excluded_ids)]
-            match_id = mv_line_pool.search(cr, uid, structured_com_match_domain, offset=0, limit=1, context=context)
+            domain = self._domain_reconciliation_proposition(cr, uid, st_line, excluded_ids=excluded_ids, context=context)
+            match_id = mv_line_pool.search(cr, uid, domain, offset=0, limit=1, context=context)
             if match_id:
                 mv_line_br = mv_line_pool.browse(cr, uid, match_id, context=context)
                 target_currency = st_line.currency_id or st_line.journal_id.currency or st_line.journal_id.company_id.currency_id
@@ -572,22 +585,15 @@ class account_bank_statement_line(osv.osv):
         st_line = self.browse(cr, uid, st_line_id, context=context)
         return self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids, str, offset, limit, count, additional_domain, context=context)
 
-    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
-        """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
-
-            :param st_line: the browse record of the statement line
-            :param integers list excluded_ids: ids of move lines that should not be fetched
-            :param boolean count: just return the number of records
-            :param tuples list additional_domain: additional domain restrictions
-        """
+    def _domain_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, additional_domain=None, context=None):
         if excluded_ids is None:
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-        mv_line_pool = self.pool.get('account.move.line')
-
         # Make domain
-        domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid'), ('account_id.reconcile', '=', True)]
+        domain = additional_domain + [('reconcile_id', '=', False),
+                                      ('state', '=', 'valid'),
+                                      ('account_id.reconcile', '=', True)]
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id)]
         if excluded_ids:
@@ -600,7 +606,19 @@ class account_bank_statement_line(osv.osv):
             if str != '/':
                 domain.insert(-1, '|', )
                 domain.append(('name', 'ilike', str))
+        return domain
 
+    def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
+        """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
+
+            :param st_line: the browse record of the statement line
+            :param integers list excluded_ids: ids of move lines that should not be fetched
+            :param boolean count: just return the number of records
+            :param tuples list additional_domain: additional domain restrictions
+        """
+        mv_line_pool = self.pool.get('account.move.line')
+        domain = self._domain_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, context=context)
+        
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_lines = []
         reconcile_partial_ids = []
@@ -796,7 +814,7 @@ class account_bank_statement_line(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'bank_account_id': fields.many2one('res.partner.bank','Bank Account'),
         'account_id': fields.many2one('account.account', 'Account', help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"),
-        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='cascade'),
+        'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True, ondelete='restrict'),
         'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'partner_name': fields.char('Partner Name', help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."),
         'ref': fields.char('Reference'),

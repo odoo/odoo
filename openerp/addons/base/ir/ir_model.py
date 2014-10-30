@@ -781,7 +781,7 @@ class ir_model_access(osv.osv):
             _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise openerp.exceptions.AccessError(msg % msg_params)
-        return r or False
+        return bool(r)
 
     __cache_clearing_methods = []
 

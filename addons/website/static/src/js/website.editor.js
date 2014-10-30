@@ -1379,11 +1379,17 @@
                 this.changed($(e.target));
             },
             'click button.filepicker': function () {
-                this.$('input[type=file]').click();
+                var filepicker = this.$('input[type=file]');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
             },
             'click .js_disable_optimization': function () {
                 this.$('input[name="disable_optimization"]').val('1');
-                this.$('button.filepicker').click();
+                var filepicker = this.$('button.filepicker');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',

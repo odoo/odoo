@@ -10,10 +10,10 @@ class test_inherits(common.TransactionCase):
         # to verify the purpose of the inheritance computing of the class
         # in the openerp.osv.orm._build_model.
         mother = self.env['test.inherit.mother']
-        daugther = self.env['test.inherit.daughter']
+        daughter = self.env['test.inherit.daughter']
 
         self.assertIn('field_in_mother', mother._fields)
-        self.assertIn('field_in_mother', daugther._fields)
+        self.assertIn('field_in_mother', daughter._fields)
 
     def test_field_extension(self):
         """ check the extension of a field in an inherited model """
@@ -27,10 +27,10 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
         self.assertEqual(mother._defaults.get('name'), "Bar")
 
-        # the field daugther.template_id should inherit
+        # the field daughter.template_id should inherit
         # model_name='test.inherit.mother', string='Template', required=True
-        daugther = self.env['test.inherit.daughter']
-        field = daugther._fields['template_id']
+        daughter = self.env['test.inherit.daughter']
+        field = daughter._fields['template_id']
         self.assertEqual(field.comodel_name, 'test.inherit.mother')
         self.assertEqual(field.string, "Template")
         self.assertTrue(field.required)

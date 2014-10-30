@@ -110,10 +110,21 @@ class pos_config(osv.osv):
                 return False
         return True
 
+    def _check_company_payment(self, cr, uid, ids, context=None):
+        for config in self.browse(cr, uid, ids, context=context):
+            journal_ids = [j.id for j in config.journal_ids]
+            if self.pool['account.journal'].search(cr, uid, [
+                    ('id', 'in', journal_ids),
+                    ('company_id', '!=', config.company_id.id)
+                ], count=True, context=context):
+                return False
+        return True
+
     _constraints = [
         (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
         (_check_company_location, "The company of the stock location is different than the one of point of sale", ['company_id', 'stock_location_id']),
         (_check_company_journal, "The company of the sale journal is different than the one of point of sale", ['company_id', 'journal_id']),
+        (_check_company_payment, "The company of a payment method is different than the one of point of sale", ['company_id', 'journal_ids']),
     ]
 
     def name_get(self, cr, uid, ids, context=None):

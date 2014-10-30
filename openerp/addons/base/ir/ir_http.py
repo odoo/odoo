@@ -85,7 +85,7 @@ class ir_http(osv.AbstractModel):
                 except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
-                    request.session.logout()
+                    request.session.logout(keep_db=True)
             getattr(self, "_auth_method_%s" % auth_method)()
         except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
             raise

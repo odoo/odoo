@@ -1267,7 +1267,7 @@ class stock_picking(osv.osv):
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': remaining_qty,
-            'name': _('Extra Move: ') + op.product_id.name,
+            'name': _('Extra Move: ') + product.name,
             'state': 'draft',
             }
         return res
