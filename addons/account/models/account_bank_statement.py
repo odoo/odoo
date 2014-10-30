@@ -30,7 +30,6 @@ from openerp.report import report_sxw
 class account_bank_statement(models.Model):
 
     @api.model
-    @api.returns('self')
     def create(self, vals):
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._default_journal_id().id)
@@ -55,7 +54,7 @@ class account_bank_statement(models.Model):
         journal_type = context.get('journal_type', False)
         company_id = self.env['res.company']._company_default_get('account.bank.statement')
         if journal_type:
-            Journals = JournalObj.search([('type', '=', journal_type), ('company_id', '=', company_id)])
+            Journals = JournalObj.search([('type', '=', journal_type), ('company_id', '=', company_id)], limit=1)
             if Journals:
                 return Journals[0]
         return False
@@ -167,11 +166,11 @@ class account_bank_statement(models.Model):
         """
         res = {}
 
-        ctx = self._context.copy()
-        ctx.update({'company_id': company_id})
+        ctx = dict(self._context or {})
+        ctx['company_id'] = company_id
         pids = self.env['account.period'].with_context(ctx).find(dt=date)
         if pids:
-            res.update({'period_id': pids[0]})
+            res['period_id'] = pids[0]
             context = dict(self._context, period_id=pids[0])
 
         return {
@@ -301,7 +300,7 @@ class account_bank_statement(models.Model):
     def check_status_condition(self, state, journal_type='bank'):
         return state in ('draft','open')
 
-    @api.model
+    @api.multi
     def button_confirm_bank(self):
         for st in self:
             j_type = st.journal_id.type
@@ -395,7 +394,7 @@ class account_bank_statement(models.Model):
     def number_of_lines_reconciled(self):
         return self.env['account.bank.statement.line'].search_count([('statement_id', 'in', self.ids), ('journal_entry_id', '!=', False)])
 
-    @api.model
+    @api.multi
     def link_bank_to_partner(self):
         for statement in self:
             for st_line in statement.line_ids:
@@ -660,7 +659,7 @@ class account_bank_statement_line(models.Model):
             if st_line.currency_id == company_currency:
                 amount = st_line.amount_currency
             else:
-                ctx = self._context.copy()
+                ctx = dict(self._context or {})
                 ctx['date'] = st_line.date
                 amount = currency_obj.with_context(ctx).compute(st_line.statement_id.currency.id, company_currency.id, st_line.amount)
         else:
