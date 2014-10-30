@@ -19,10 +19,6 @@
 #
 ##############################################################################
 
-import wizard
-import report
-import edi
-
 import partner
 import account
 import installer
@@ -38,5 +34,9 @@ import ir_sequence
 import company
 import res_currency
 import res_config
+
+import wizard
+import report
+import edi
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
