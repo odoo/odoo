@@ -151,7 +151,7 @@ class product_product(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':
@@ -306,7 +306,7 @@ class product_template(osv.osv):
         for field, operator, value in domain:
             #to prevent sql injections
             assert field in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'), 'Invalid domain left operand'
-            assert operator in ('<', '>', '=', '<=', '>='), 'Invalid domain operator'
+            assert operator in ('<', '>', '=', '!=', '<=', '>='), 'Invalid domain operator'
             assert isinstance(value, (float, int)), 'Invalid domain right operand'
 
             if operator == '=':
@@ -421,16 +421,25 @@ class product_template(osv.osv):
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{}"
+        if len(ids) == 1 and len(products) == 1:
+            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{}"
         return result
 
 
     def action_view_stock_moves(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.act_product_stock_move_open', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{}"
+        if len(ids) == 1 and len(products) == 1:
+            ctx = "{'tree_view_ref':'stock.view_move_tree', \
+                  'default_product_id': %s, 'search_default_product_id': %s}" \
+                  % (products[0], products[0])
+            result['context'] = ctx
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{'tree_view_ref':'stock.view_move_tree'}"
         return result
 
 

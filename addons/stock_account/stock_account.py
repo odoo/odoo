@@ -164,8 +164,8 @@ class stock_quant(osv.osv):
         :returns: journal_id, source account, destination account, valuation account
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
-        product_obj = self.pool.get('product.product')
-        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
+        product_obj = self.pool.get('product.template')
+        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
         if move.location_id.valuation_out_account_id:
             acc_src = move.location_id.valuation_out_account_id.id
         else:
@@ -191,7 +191,10 @@ class stock_quant(osv.osv):
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
-            valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
+            if move.product_id.cost_method == 'average':
+                valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
+            else:
+                valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
@@ -257,8 +260,9 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, context=context)
+        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
+        return res
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''

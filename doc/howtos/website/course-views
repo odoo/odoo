@@ -1,0 +1,57 @@
+# HG changeset patch
+# Parent c687289c105fe855f799a1e5b498382edbd80cb3
+diff -r c687289c105f -r 1012f1736bb6 academy/views.xml
+--- a/academy/views.xml	Thu Aug 14 12:58:50 2014 +0200
++++ b/academy/views.xml	Thu Aug 14 13:00:19 2014 +0200
+@@ -18,9 +18,51 @@
+     </field>
+   </record>
+ 
++  <record id="action_academy_courses" model="ir.actions.act_window">
++    <field name="name">Academy courses</field>
++    <field name="res_model">academy.courses</field>
++  </record>
++  <record id="academy_course_search" model="ir.ui.view">
++    <field name="name">Academy courses: search</field>
++    <field name="model">academy.courses</field>
++    <field name="arch" type="xml">
++      <search>
++        <field name="name"/>
++        <field name="teacher_id"/>
++      </search>
++    </field>
++  </record>
++  <record id="academy_course_list" model="ir.ui.view">
++    <field name="name">Academy courses: list</field>
++    <field name="model">academy.courses</field>
++    <field name="arch" type="xml">
++      <tree string="Courses">
++        <field name="name"/>
++        <field name="teacher_id"/>
++      </tree>
++    </field>
++  </record>
++  <record id="academy_course_form" model="ir.ui.view">
++    <field name="name">Academy courses: form</field>
++    <field name="model">academy.courses</field>
++    <field name="arch" type="xml">
++      <form>
++        <sheet>
++          <label for="name"/>
++          <field name="name"/>
++          <label for="teacher_id"/>
++          <field name="teacher_id"/>
++        </sheet>
++      </form>
++    </field>
++  </record>
++
+   <menuitem sequence="0" id="menu_academy" name="Academy"/>
+   <menuitem id="menu_academy_content" parent="menu_academy"
+             name="Academy Content"/>
++  <menuitem id="menu_academy_content_courses"
++            parent="menu_academy_content"
++            action="action_academy_courses"/>
+   <menuitem id="menu_academy_content_teachers"
+             parent="menu_academy_content"
+             action="action_academy_teachers"/>

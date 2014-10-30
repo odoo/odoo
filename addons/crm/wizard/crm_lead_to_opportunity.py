@@ -21,7 +21,6 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import email_split
 import re
 
 class crm_lead2opportunity_partner(osv.osv_memory):
@@ -46,21 +45,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
         """
-        lead_obj = self.pool.get('crm.lead')
-        emails = set(email_split(email) + [email])
-        final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
-        partner_match_domain = []
-        for email in emails:
-            partner_match_domain.append(('email_from', '=ilike', email))
-        if partner_id:
-            partner_match_domain.append(('partner_id', '=', partner_id))
-        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
-        if not partner_match_domain:
-            return []
-        domain = partner_match_domain
-        if not include_lost:
-            domain += final_stage_domain
-        return lead_obj.search(cr, uid, domain)
+        return self.pool.get('crm.lead')._get_duplicated_leads_by_emails(cr, uid, partner_id, email, include_lost=include_lost, context=context)
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -243,7 +228,6 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
                 leads_with_duplicates.append(lead.id)
         return {'value': {'opportunity_ids': leads_with_duplicates}}
 
-
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):
         """
         When "massively" (more than one at a time) converting leads to
@@ -266,12 +250,15 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         if data.name == 'convert' and data.deduplicate:
             merged_lead_ids = []
             remaining_lead_ids = []
-            for lead in self.pool['crm.lead'].browse(cr, uid, context.get('active_ids', []), context=context):
-                duplicated_lead_ids = self._get_duplicated_leads(cr, uid, lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from)
-                if len(duplicated_lead_ids) > 1:
-                    lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, duplicated_lead_ids, False, False, context=context)
-                    merged_lead_ids.extend(duplicated_lead_ids)
-                    remaining_lead_ids.append(lead_id)
+            lead_selected = context.get('active_ids', [])
+            for lead_id in lead_selected:
+                if lead_id not in merged_lead_ids:
+                    lead = self.pool['crm.lead'].browse(cr, uid, lead_id, context=context)
+                    duplicated_lead_ids = self._get_duplicated_leads(cr, uid, lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from)
+                    if len(duplicated_lead_ids) > 1:
+                        lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, duplicated_lead_ids, False, False, context=context)
+                        merged_lead_ids.extend(duplicated_lead_ids)
+                        remaining_lead_ids.append(lead_id)
             active_ids = set(context.get('active_ids', []))
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)

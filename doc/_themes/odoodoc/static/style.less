@@ -1,0 +1,645 @@
+@import "bootstrap/less/bootstrap";
+@import url(http://fonts.googleapis.com/css?family=Lato);
+
+@icon-font-path: 'fonts/';
+@brand-primary: #a24689;
+@brand-dark: darken(@brand-primary, 6%);
+@brand-light: lighten(@brand-primary, 10%);
+@brand-text: saturate(lighten(@brand-primary, 46%), 5%);
+
+@headings-font-family: Lato, Arial, sans-serif;
+
+@navbar-margin-bottom: 0;
+
+@navbar-default-bg: white;
+@navbar-default-border: 0;
+
+// indent level for various items list e.g. dl, fields lists, ...
+@item-indent: 30px;
+
+* {
+  box-sizing: border-box;
+}
+body {
+  overflow: auto;
+  position: relative;
+}
+
+.document-super {
+  .container();
+}
+
+.document {
+  .make-row();
+}
+
+.documentwrapper {
+  .make-md-column(9);
+}
+.sphinxsidebar {
+  .make-md-column(3);
+}
+
+.btn-outline {
+  color: @brand-primary;
+  background-color: transparent;
+  border-color: @brand-primary;
+  &:hover, &:focus, &:active {
+    color: #fff;
+    background-color: @brand-primary;
+    border-color: @brand-primary;
+  }
+}
+
+
+.btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: @brand-text;
+  &:hover, &:focus, &:active {
+    color: @brand-primary;
+    text-shadow: none;
+    background-color: #fff;
+    border-color: #fff;
+  }
+}
+/*
+ * Main navigation
+ */
+.docs-nav {
+  .navbar-brand,
+  .navbar-nav > li > a {
+    position: relative;
+  }
+
+  .navbar-nav > li {
+    > a:hover:before, &.current a:before {
+      bottom: 10px;
+      opacity: 1;
+    }
+    > a:before {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      content: "";
+      right: 10px;
+      height: 3px;
+      background: @brand-primary;
+      opacity: 0;
+      .transition(all 0.3s ease-out);
+    }
+    > a:after {
+      content: " ";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 5px;
+      vertical-align: middle;
+      border-top: 4px solid @gray-light;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
+    }
+    .dropdown-menu > li.current > a.current {
+      background-color: @brand-primary;
+      color: white;
+    }
+  }
+  /* version switcher */
+  div.versions {
+    position: relative;
+    cursor: pointer;
+    font-size: 300%;
+    display: inline-block;
+
+    > a {
+      font-size: 40%;
+      margin: 0.2em;
+      color: #999;
+      font-family: Lato, Arial, sans-serif;
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// FIXME: protocol-relative urls for remote but absolute for local (file://)?
+.o_logo {
+  display: inline-block;
+  font-size: 300%;
+  .o_logo_main {
+    background-image: url(odoo_logo_rgb.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    color: rgba(255, 255, 255, 0);
+    text-decoration: none;
+  }
+  .o_logo_app {
+    text-decoration: none;
+    color: rgb(143, 143, 143);
+    font-family: Lato, Arial, sans-serif;
+    font-size: 50%;
+    margin: 0.2em;
+  }
+}
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.sphinxsidebarwrapper.affix {
+  position: static;
+}
+@media (min-width: @screen-sm-min) {
+  .sphinxsidebarwrapper {
+    padding-left: 20px;
+  }
+}
+
+/* Side navigation visibility changes */
+.sphinxsidebarwrapper {
+  > .nav { // root (contains document categories), always show
+    .nav {
+      // hide sub-everything by default
+      display: none;
+    }
+
+    li.active > .nav,
+    li.current > .nav {
+      // sub-items of a current or active li are shown
+      display: block;
+    }
+  }
+}
+
+/* Side navigation graphical styling */
+@nav-spacing: 20px;
+@nav-spacing-increment: 5px;
+@nav-hover-offset: 1px;
+@nav-hover: @nav-spacing - @nav-hover-offset;
+@nav-current-offset: 2px;
+@nav-current: @nav-spacing - @nav-current-offset;
+
+.sphinxsidebar {
+  z-index: 1;
+}
+.sphinxsidebarwrapper {
+  width: 100%;
+  font-size: 13px;
+  z-index: 1;
+
+  .hidden-xs();
+  .hidden-sm();
+  .hidden-print();
+
+  /* First level of nav */
+  > .nav {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .nav > li > a {
+    font-weight: bold;
+    padding-left: @nav-spacing;
+  }
+  .nav .nav > li > a {
+    font-size: 12px;
+    padding-left: @nav-spacing + @nav-spacing-increment;
+  }
+  .nav .nav .nav > li > a {
+    font-weight: normal;
+    padding-left: @nav-spacing + 2*@nav-spacing-increment;
+  }
+  .nav .nav .nav .nav > li > a {
+    font-size: 11px;
+    padding-left: @nav-spacing + 3*@nav-spacing-increment;
+  }
+
+  /* All levels of nav */
+  .nav {
+    > li > a {
+      display: block;
+      padding: 4px @nav-spacing;
+      color: #999;
+
+      &:hover, &:focus {
+        padding-left: @nav-hover;
+        color: @brand-primary;
+        text-decoration: none;
+        background-color: transparent;
+        border-left: @nav-hover-offset solid @brand-primary;
+      }
+    }
+
+    // before scrollspy is applied, need to use current for docs
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current;
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: transparent;
+      border-left: @nav-current-offset solid @brand-primary;
+    }
+  }
+  .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + @nav-spacing-increment;
+    }
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + @nav-spacing-increment;
+    }
+  }
+  .nav .nav .nav {
+    padding-bottom: 10px;
+
+    > li > a {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 2 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 2 * @nav-spacing-increment;
+      font-weight: bold;
+    }
+  }
+  .nav .nav .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 3 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 3 * @nav-spacing-increment;
+    }
+  }
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+  a {
+    font-size: 13px;
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.github {
+      padding-left: 15px;
+      position: relative;
+      &:before {
+        left: 0;
+        top: 1px;
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: url(github-link.png) left bottom / 13px no-repeat;
+      }
+      &:hover:before {
+        background-position: left top;
+      }
+    }
+  }
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: @screen-md-min) {
+  .sphinxsidebarwrapper {
+    .nav .nav > .active > ul {
+      display: block;
+    }
+    /* Widen the fixed sidebar */
+    &.affix, &.affix-bottom {
+      width: 213px;
+    }
+    &.affix {
+      position: fixed; /* Undo the static from mobile first approach */
+      top: 20px;
+    }
+    &.affix-bottom {
+      position: absolute; /* Undo the static from mobile first approach */
+    }
+    &.affix-bottom > .nav, &.affix > .nav {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+@media (min-width: @screen-lg-min) {
+  /* Widen the fixed sidebar again */
+  .sphinxsidebarwrapper.affix-bottom,
+  .sphinxsidebarwrapper.affix {
+    width: 263px;
+  }
+}
+
+/*
+ * Footer
+ *
+ * Separated section of content at the bottom of all pages, save the homepage.
+ */
+
+.footer {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 100px;
+  color: #777;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
+}
+.docs-footer-links {
+  padding-left: 0;
+  margin-top: 20px;
+  color: #999;
+}
+.docs-footer-links li {
+  display: inline;
+  padding: 0 2px;
+}
+.docs-footer-links li:first-child {
+  padding-left: 0;
+}
+
+@media (min-width: 768px) {
+  .footer p {
+    margin-bottom: 0;
+  }
+}
+
+// move [source] link to the right
+.viewcode-link {
+  font-weight: normal;
+  float: right;
+  display: none;
+}
+dt:hover > a > .viewcode-link {
+  display: inline;
+}
+
+// either that or overwrite visit_attribution/depart_attribution
+blockquote p.attribution:extend(blockquote footer) {}
+
+div.section > h1 {
+  .page-header();
+  font-size: floor((@font-size-base * 3.05));
+}
+
+div.section > h2 {
+  .page-header();
+  font-size: @font-size-h1;
+  padding-top: 20px;
+  margin-top: 0;
+}
+// ~docs-section
+.body > .section > .section {
+  margin-bottom: 60px;
+}
+
+.literal:extend(code) {}
+
+.admonition {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid @gray-lighter;
+  border-left-width: 5px;
+  border-radius: 3px;
+
+  .admonition-title:after {
+    content: ": ";
+  }
+  > .admonition-title,
+  // only "aphorisms" should have the same size as the admonition category
+  &.aphorism > .admonition-title + p,
+  &.exercise > .admonition-title + p {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    font-family: @headings-font-family;
+    font-weight: @headings-font-weight;
+    line-height: @headings-line-height;
+    color: @headings-color;
+
+    font-size: @font-size-h4;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  &.tip {
+    border-left-color: @brand-info;
+    > .admonition-title {
+      color: @brand-info;
+    }
+  }
+  &.warning {
+    border-left-color: @brand-warning;
+    > .admonition-title {
+      color: @brand-warning;
+    }
+  }
+  &.danger {
+    border-left-color: @brand-danger;
+    > .admonition-title {
+      color: @brand-danger;
+    }
+  }
+  &.exercise {
+    border-left-color: @gray-light;
+    > .admonition-title {
+      color: @gray;
+    }
+  }
+}
+
+/*
+ * Code snippets
+ *
+ * Generated via Pygments
+ */
+.highlight pre {
+  padding: 4px;
+
+  font-size: 75%;
+  // code block lines should not wrap
+  word-break: normal;
+  word-wrap: normal;
+}
+
+/*
+ * ZeroClipboard styles
+ */
+
+.zero-clipboard {
+  position: relative;
+  display: none;
+  @media (min-width: @screen-sm-min) {
+    display: block;
+  }
+}
+.btn-clipboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+}
+.btn-clipboard-hover {
+  color: #fff;
+  background-color: @brand-primary;
+  border-color: @brand-primary;
+}
+
+// rST styles
+img.align-center {
+  display: block;
+  margin: 0 auto;
+}
+
+dd {
+  // Reinstate dd indent, looks horrible and illegible otherwise
+  margin-left: @item-indent;
+}
+
+// By default there's (browser) padding on ``ul`` so lists of >1 field are
+// nicely separated from the section name (e.g. ``Parameters``) but single
+// fields/items are stuck to it and look horrible. Make everything neatly-ish
+// aligned. Other option: half and half so list bullets are aligned to text
+// instead of text to text
+td.field-body {
+  padding-left: @item-indent;
+  ul {
+    padding-left: @item-indent;
+  }
+  > ul {
+    padding-left: 0;
+  }
+}
+
+// naming collision, rST generates .container nodes with completely different
+// semantics so go away
+.section .container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+// lighten js namespace/class name
+.descclassname {
+  opacity: 0.5;
+}
+
+// STRIPE-STYLE PAGES
+.stripe {
+  .section {
+    margin-bottom: 2em;
+  }
+
+  // === columning only on medium+ ===
+  @media (min-width: @screen-md-min) {
+    // column 1
+    .section > *,
+    .section > .force-left {
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    // column 2
+    .section > .force-right,
+    .section > [class*=highlight] {
+      float: none;
+      clear: none;
+      margin-left: 51%;
+    }
+    // fullwidth elements
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6 {
+      background-color: fadeout(@body-bg, 30%);
+    }
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6, .section > .section {
+      position: relative;
+      width: auto;
+      float: none;
+      clear: both;
+    }
+
+    .bodywrapper {
+      position: relative;
+      // middle separator
+      &:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        width: 0;
+        border-left: 1px solid @gray-light;
+      }
+    }
+  }
+
+  .switcher {
+    color: white;
+    width: auto !important;
+    float: none !important;
+
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+
+    right: 0.5em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 5;
+
+    li {
+      background-color: #0f131a;
+      padding: 0.4em 1em;
+      border: 1px solid #333;
+      border-left-width: 0;
+      cursor: pointer;
+      &:first-child {
+        border-left-width: 1px;
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-child {
+        border-radius: 0 5px 5px 0;
+      }
+      &:hover {
+        background-color: #222;
+      }
+      &.active {
+        background-color: #333;
+      }
+    }
+  }
+
+  // === show/hide code snippets ===
+  [class*=only-],
+  .switchable > .highlight {
+    display: none;
+  }
+  // must be final rule of page
+  .only-python, .highlight-python > .highlight {
+    display: block;
+  }
+}

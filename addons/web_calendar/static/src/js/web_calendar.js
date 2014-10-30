@@ -21,6 +21,7 @@ openerp.web_calendar = function(instance) {
 
     function get_fc_defaultOptions() {
         shortTimeformat = Date.CultureInfo.formatPatterns.shortTime;
+        var dateFormat = Date.normalizeFormat(instance.web.strip_raw_chars(_t.database.parameters.date_format));
         return {
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
@@ -42,6 +43,16 @@ openerp.web_calendar = function(instance) {
                agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
                 // for all other views
                 '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
+            },
+            titleFormat: {
+                month: 'MMMM yyyy',
+                week: dateFormat + "{ '&#8212;'"+ dateFormat,
+                day: dateFormat,
+            },
+            columnFormat: {
+                month: 'ddd',
+                week: 'ddd ' + dateFormat,
+                day: 'dddd ' + dateFormat,
             },
             weekMode : 'liquid',
             aspectRatio: 1.8,
@@ -653,6 +664,13 @@ openerp.web_calendar = function(instance) {
                         domain: self.get_range_domain(domain, start, end),
                         context: context,
                     }).done(function(events) {
+                        if (self.dataset.index === null) {
+                            if (events.length) {
+                                self.dataset.index = 0;
+                            }
+                        } else if (self.dataset.index >= events.length) {
+                            self.dataset.index = events.length ? 0 : null;
+                        }
 
                         if (self.event_source !== current_event_source) {
                             console.log("Consecutive ``do_search`` called. Cancelling.");
@@ -802,7 +820,7 @@ openerp.web_calendar = function(instance) {
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);
-                pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
+                pop.show_element(this.dataset.model, parseInt(id), this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
                     view_id: +this.open_popup_action,
                     res_id: id,
@@ -1037,6 +1055,7 @@ openerp.web_calendar = function(instance) {
             var self = this;
             var def = $.Deferred();
             var defaults = {};
+            var created = false;
 
             _.each($.extend({}, this.data_template, data), function(val, field_name) {
                 defaults['default_' + field_name] = val;
@@ -1076,9 +1095,14 @@ openerp.web_calendar = function(instance) {
                 }
             });
             pop.on('create_completed', self, function(id) {
-                 self.trigger('slowadded');
+                created = true;
+                self.trigger('slowadded');
             });
             def.then(function() {
+                if (created) {
+                    var parent = self.getParent();
+                    parent.$calendar.fullCalendar('refetchEvents');
+                }
                 self.trigger('close');
             });
             return def;

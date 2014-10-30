@@ -22,6 +22,7 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
+from openerp.tools.float_utils import float_round as round
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -36,28 +37,21 @@ class account_invoice_line(osv.osv):
         company_currency = inv.company_id.currency_id.id
         def get_price(cr, uid, inv, company_currency, i_line, price_unit):
             cur_obj = self.pool.get('res.currency')
+            decimal_precision = self.pool.get('decimal.precision')
             if inv.currency_id.id != company_currency:
                 price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
             else:
                 price = price_unit * i_line.quantity
-            return price
+            return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
 
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id and i_line.product_id.valuation == 'real_time':
-                    if inv.type == 'out_invoice':
-                        # debit account dacc will be the output account
-                        # first check the product, if empty check the category
-                        dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-                        if not dacc:
-                            dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
-                    else:
-                        # = out_refund
-                        # debit account dacc will be the input account
-                        # first check the product, if empty check the category
-                        dacc = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
-                        if not dacc:
-                            dacc = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
+                    # debit account dacc will be the output account
+                    # first check the product, if empty check the category
+                    dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
+                    if not dacc:
+                        dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
                     # in both cases the credit account cacc will be the expense account
                     # first check the product, if empty check the category
                     cacc = i_line.product_id.property_account_expense and i_line.product_id.property_account_expense.id
@@ -100,46 +94,45 @@ class account_invoice_line(osv.osv):
                             # if not found on the product get the price difference account at the category
                             acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ and i_line.product_id.categ_id.property_account_creditor_price_difference_categ.id
                         a = None
-                        if inv.type == 'in_invoice':
-                            # oa will be the stock input account
-                            # first check the product, if empty check the category
-                            oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
-                            if not oa:
-                                oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
-                        else:
-                            # = in_refund
-                            # oa will be the stock output account
-                            # first check the product, if empty check the category
-                            oa = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-                            if not oa:
-                                oa = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
+
+                        # oa will be the stock input account
+                        # first check the product, if empty check the category
+                        oa = i_line.product_id.property_stock_account_input and i_line.product_id.property_stock_account_input.id
+                        if not oa:
+                            oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
                         if oa:
                             # get the fiscal position
                             fpos = i_line.invoice_id.fiscal_position or False
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                         diff_res = []
+                        decimal_precision = self.pool.get('decimal.precision')
+                        account_prec = decimal_precision.precision_get(cr, uid, 'Account')
                         # calculate and write down the possible price difference between invoice price and product price
                         for line in res:
-                            if a == line['account_id'] and i_line.product_id.id == line['product_id']:
+                            if line.get('invl_id', 0) == i_line.id and a == line['account_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
-                                if inv.currency_id.id != company_currency:
-                                    standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
                                 if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                                     #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                                     stock_move_obj = self.pool.get('stock.move')
                                     valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
                                     if valuation_stock_move:
                                         valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                                if inv.currency_id.id != company_currency:
+                                    valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                                 if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
-                                    price_diff = i_line.price_unit - valuation_price_unit
-                                    line.update({'price': valuation_price_unit * line['quantity']})
+                                    # price with discount and without tax included
+                                    price_unit = self.pool['account.tax'].compute_all(cr, uid, line['taxes'],
+                                        i_line.price_unit * (1-(i_line.discount or 0.0)/100.0), line['quantity'])['total']
+                                    price_line = round(valuation_price_unit * line['quantity'], account_prec)
+                                    price_diff = round(price_unit - price_line, account_prec)
+                                    line.update({'price': price_line})
                                     diff_res.append({
                                         'type': 'src',
                                         'name': i_line.name[:64],
-                                        'price_unit': price_diff,
+                                        'price_unit': round(price_diff / line['quantity'], account_prec),
                                         'quantity': line['quantity'],
-                                        'price': price_diff * line['quantity'],
+                                        'price': price_diff,
                                         'account_id': acc,
                                         'product_id': line['product_id'],
                                         'uos_id': line['uos_id'],
@@ -149,9 +142,9 @@ class account_invoice_line(osv.osv):
                         res += diff_res
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         fiscal_pool = self.pool.get('account.fiscal.position')
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context, company_id)
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, company_id, context)
         if not product:
             return res
         if type in ('in_invoice','in_refund'):

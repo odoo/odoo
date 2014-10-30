@@ -23,13 +23,14 @@
 
 """
 from collections import Mapping
-from contextlib import contextmanager
 import logging
+import os
 import threading
 
 import openerp
 from .. import SUPERUSER_ID
-from openerp.tools import assertion_report, lazy_property
+from openerp.tools import assertion_report, lazy_property, classproperty, config
+from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -259,11 +260,26 @@ class RegistryManager(object):
         registries (essentially database connection/model registry pairs).
 
     """
-    # Mapping between db name and model registry.
-    # Accessed through the methods below.
-    registries = {}
+    _registries = None
     _lock = threading.RLock()
     _saved_lock = None
+
+    @classproperty
+    def registries(cls):
+        if cls._registries is None:
+            size = config.get('registry_lru_size', None)
+            if not size:
+                # Size the LRU depending of the memory limits
+                if os.name != 'posix':
+                    # cannot specify the memory limit soft on windows...
+                    size = 42
+                else:
+                    # On average, a clean registry take 25MB of memory + cache
+                    avgsz = 30 * 1024 * 1024
+                    size = int(config['limit_memory_soft'] / avgsz)
+
+            cls._registries = LRU(size)
+        return cls._registries
 
     @classmethod
     def lock(cls):
@@ -415,10 +431,11 @@ class RegistryManager(object):
                     # One possible reason caches have been invalidated is the
                     # use of decimal_precision.write(), in which case we need
                     # to refresh fields.float columns.
-                    for model in registry.models.values():
-                        for column in model._columns.values():
-                            if hasattr(column, 'digits_change'):
-                                column.digits_change(cr)
+                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+                    for model in registry.values():
+                        for field in model._fields.values():
+                            if field.type == 'float':
+                                field._setup_digits(env)
                 registry.base_registry_signaling_sequence = r
                 registry.base_cache_signaling_sequence = c
             finally:

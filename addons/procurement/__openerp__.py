@@ -24,24 +24,29 @@
     'name' : 'Procurements',
     'version' : '1.0',
     'author' : 'OpenERP SA',
-    'website' : 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/manufacturing',
     'category' : 'Hidden/Dependency',
     'depends' : ['base', 'product'],
     'description': """
 This is the module for computing Procurements.
 ==============================================
 
-In the MRP process, procurements orders are created to launch manufacturing
-orders, purchase orders, stock allocations. Procurement orders are
-generated automatically by the system and unless there is a problem, the
-user will not be notified. In case of problems, the system will raise some
-procurement exceptions to inform the user about blocking problems that need
-to be resolved manually (like, missing BoM structure or missing supplier).
+This procurement module only depends on the product module and is not useful
+on itself.  Procurements represent needs that need to be solved by a procurement
+rule.  When a procurement is created, it is confirmed.  When a rule is found,
+it will be put in running state.  After, it will check if what needed to be done
+for the rule has been executed.  Then it will go to the done state.  A procurement
+can also go into exception, for example when it can not find a rule and it can be cancelled.
 
-The procurement order will schedule a proposal for automatic procurement
-for the product which needs replenishment. This procurement will start a
-task, either a purchase order form for the supplier, or a production order
-depending on the product's configuration.
+The mechanism will be extended by several modules.  The procurement rule of stock will
+create a move and the procurement will be fulfilled when the move is done.
+The procurement rule of sale_service will create a task.  Those of purchase or
+mrp will create a purchase order or a manufacturing order.
+
+The scheduler will check if it can assign a rule to confirmed procurements and if
+it can put running procurements to done.
+
+Procurements in exception should be checked manually and can be re-run.
     """,
     'data': [
         'security/ir.model.access.csv',

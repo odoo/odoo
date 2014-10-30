@@ -56,13 +56,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         return this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
-            self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
+            self.fields.__count = {field:'__count', type: 'integer', string:_t('Count')};
             self.groupby_fields = self.get_groupby_fields();
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
             self.pivot_options.row_groupby = self.create_field_values(self.pivot_options.row_groupby || []);
             self.pivot_options.col_groupby = self.create_field_values(self.pivot_options.col_groupby || []);
-            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Quantity'}]);
+            self.pivot_options.measures = self.create_field_values(self.pivot_options.measures || [{field:'__count', type: 'integer', string:'Count'}]);
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
             self.pivot.update_data().then(function () {
                 self.display_data();
@@ -153,41 +153,49 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // ----------------------------------------------------------------------
     // Configuration methods
     // ----------------------------------------------------------------------
-    set: function (domain, row_groupby, col_groupby) {
+    set: function (domain, row_groupby, col_groupby, measures_groupby) {
         if (!this.pivot) {
             this.pivot_options.domain = domain;
             this.pivot_options.row_groupby = row_groupby;
             this.pivot_options.col_groupby = col_groupby;
+            this.pivot_options.measures_groupby = measures_groupby;
             return;
         }
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
+            measures_gbs = this.create_field_values(measures_groupby),
             dom_changed = !_.isEqual(this.pivot.domain, domain),
             row_gb_changed = !_.isEqual(row_gbs, this.pivot.rows.groupby),
             col_gb_changed = !_.isEqual(col_gbs, this.pivot.cols.groupby),
+            measures_gb_changed = !_.isEqual(measures_gbs, this.pivot.measures),
             row_reduced = is_strict_beginning_of(row_gbs, this.pivot.rows.groupby),
-            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby);
+            col_reduced = is_strict_beginning_of(col_gbs, this.pivot.cols.groupby),
+            measures_reduced = is_strict_beginning_of(measures_gbs, this.pivot.measures);
 
-        if (!dom_changed && row_reduced && !col_gb_changed) {
+        if (!dom_changed && row_reduced && !col_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.display_data();
             return;
         }
-        if (!dom_changed && col_reduced && !row_gb_changed) {
+        if (!dom_changed && col_reduced && !row_gb_changed && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (!dom_changed && col_reduced && row_reduced) {
+        if (!dom_changed && col_reduced && row_reduced && !measures_gb_changed) {
             this.pivot.fold_with_depth(this.pivot.rows, row_gbs.length);
             this.pivot.fold_with_depth(this.pivot.cols, col_gbs.length);
             this.display_data();
             return;
         }
 
-        if (dom_changed || row_gb_changed || col_gb_changed) {
-            this.pivot.set(domain, row_gbs, col_gbs).then(this.proxy('display_data'));
+        if (dom_changed || row_gb_changed || col_gb_changed || measures_gb_changed) {
+            this.pivot.set(domain, row_gbs, col_gbs, measures_gbs).then(this.proxy('display_data'));
+        }
+
+        if (measures_gb_changed) {
+            this.put_measure_checkmarks();
         }
     },
 
@@ -233,6 +241,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     get_col_groupbys: function () {
         return _.pluck(this.pivot.cols.groupby, 'field');
+    },
+
+    get_current_measures: function () {
+        return _.pluck(this.pivot.measures, 'field');
     },
 
     // ----------------------------------------------------------------------
@@ -340,12 +352,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
         this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
         $(event.target).after(this.dropdown);
-        this.dropdown.css({position:'absolute',
-                           left:event.originalEvent.layerX,
-                           top:event.originalEvent.layerY});
-        this.$('.field-selection').next('.dropdown-menu').first().toggle();
-        
-        
+        this.dropdown.css({
+            position:'absolute',
+            left:event.originalEvent.layerX,
+        });
+        this.$('.field-selection').next('.dropdown-menu').first().toggle();        
     },
 
     field_selection: function (event) {
@@ -378,7 +389,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 var rows = self.build_rows(header.children);
                 var doc_fragment = $(document.createDocumentFragment());
                 rows.map(function (row) {
-                    doc_fragment.append(self.draw_row(row));
+                    doc_fragment.append(self.draw_row(row, 0));
                 });
                 self.$row_clicked.after(doc_fragment);
             } else {
@@ -583,41 +594,52 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Drawing the table
     // ----------------------------------------------------------------------
     draw_table: function () {
+        var custom_gbs = this.graph_view.get_custom_filter_groupbys(),
+            frozen_rows = custom_gbs.groupby.length,
+            frozen_cols = custom_gbs.col_groupby.length;
+
         var table = this.build_table();
         var doc_fragment = $(document.createDocumentFragment());
-        this.draw_headers(table.headers, doc_fragment);
+        this.draw_headers(table.headers, doc_fragment, frozen_cols);
         this.draw_measure_row(table.measure_row, doc_fragment);
-        this.draw_rows(table.rows, doc_fragment);
+        this.draw_rows(table.rows, doc_fragment, frozen_rows);
         this.table.append(doc_fragment);
     },
 
-    make_header_cell: function (header) {
+    make_header_cell: function (header, frozen) {
         var cell = (_.has(header, 'cells') ? $('<td>') : $('<th>'))
                         .addClass('graph_border')
                         .attr('rowspan', header.height)
                         .attr('colspan', header.width);
-        var $content = $('<span>').addClass('web_graph_click')
-                                 .attr('href','#')
+        var $content = $('<span>').attr('href','#')
                                  .text(' ' + (header.title || _t('Undefined')))
                                  .css('margin-left', header.indent*30 + 'px')
                                  .attr('data-id', header.id);
         if (_.has(header, 'expanded')) {
-            $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+            if (('indent' in header) && header.indent >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
+            if (!('indent' in header) && header.lvl >= frozen) {
+                $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+                $content.addClass('web_graph_click');
+            }
         } else {
             $content.css('font-weight', 'bold');
         }
         return cell.append($content);
     },
 
-    draw_headers: function (headers, doc_fragment) {
+    draw_headers: function (headers, doc_fragment, frozen_cols) {
         var make_cell = this.make_header_cell,
             $empty_cell = $('<th>').attr('rowspan', headers.length),
             $thead = $('<thead>');
 
-        _.each(headers, function (row) {
+        _.each(headers, function (row, lvl) {
             var $row = $('<tr>');
             _.each(row, function (header) {
-                $row.append(make_cell(header));
+                header.lvl = lvl;
+                $row.append(make_cell(header, frozen_cols));
             });
             $thead.append($row);
         });
@@ -627,7 +649,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
     
     draw_measure_row: function (measure_row) {
-        if (this.pivot.measures.length === 1) { return; }
         var $row = $('<tr>').append('<th>');
         _.each(measure_row, function (cell) {
             var $cell = $('<th>').addClass('measure_row').text(cell.text);
@@ -637,10 +658,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.$thead.append($row);
     },
     
-    draw_row: function (row) {
+    draw_row: function (row, frozen_rows) {
         var $row = $('<tr>')
             .attr('data-indent', row.indent)
-            .append(this.make_header_cell(row));
+            .append(this.make_header_cell(row, frozen_rows));
         
         var cells_length = row.cells.length;
         var cells_list = [];
@@ -661,13 +682,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return $row.append(cells_list.join(''));
     },
 
-    draw_rows: function (rows, doc_fragment) {
+    draw_rows: function (rows, doc_fragment, frozen_rows) {
         var rows_length = rows.length,
             $tbody = $('<tbody>');
 
         doc_fragment.append($tbody);
         for (var i = 0; i < rows_length; i++) {
-            $tbody.append(this.draw_row(rows[i]));
+            $tbody.append(this.draw_row(rows[i], frozen_rows));
         }
     },
 

@@ -1,975 +1,37 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* product
+# Chinese (Traditional) translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-05-10 18:26+0000\n"
-"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:56+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:27+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: product
-#: field:product.packaging,rows:0
-msgid "Number of Layers"
-msgstr "層數"
-
-#. module: product
-#: help:product.pricelist.item,base:0
-msgid "Base price for computation."
-msgstr "計算用之基礎價格"
-
-#. module: product
-#: help:product.product,seller_qty:0
-msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr "對主要供應商之最少採購量"
-
-#. module: product
-#: model:product.template,name:product.product_product_34_product_template
-msgid "Webcam"
-msgstr "網路攝影機"
-
-#. module: product
-#: field:product.product,incoming_qty:0
-msgid "Incoming"
-msgstr "內送"
-
-#. module: product
-#: view:product.product:0
-msgid "Product Name"
-msgstr "產品名稱"
-
-#. module: product
-#: view:product.template:0
-msgid "Second Unit of Measure"
-msgstr "次要量度單位"
-
-#. module: product
-#: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
-msgstr "會用此價目表取代預設者，來銷售給目前伙伴。"
-
-#. module: product
-#: field:product.product,seller_qty:0
-msgid "Supplier Quantity"
-msgstr "供應商數量"
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Fixed"
-msgstr "固定"
-
-#. module: product
-#: model:product.template,name:product.product_product_10_product_template
-msgid "Mouse, Optical"
-msgstr "光學滑鼠"
-
-#. module: product
-#: view:product.template:0
-msgid "Base Prices"
-msgstr "基本價格"
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "規則名稱"
-
-#. module: product
-#: help:product.template,list_price:0
-msgid ""
-"Base price to compute the customer price. Sometimes called the catalog price."
-msgstr "計算客戶價格的基礎價格。有時叫做目錄價格。"
-
-#. module: product
-#: model:product.template,name:product.product_product_3_product_template
-msgid "PC Assemble SC234"
-msgstr "PC 組裝 SC234"
-
-#. module: product
-#: help:product.product,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: field:product.template,product_variant_count:0
+msgid "# of Product Variants"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:179
-#: code:addons/product/product.py:208
+#: code:addons/product/product.py:725
+#: code:addons/product/product.py:1070
 #, python-format
-msgid "Warning!"
-msgstr "警告!"
+msgid "%s (copy)"
+msgstr "%s（副本）"
 
 #. module: product
-#: field:product.product,image_small:0
-msgid "Small-sized image"
-msgstr "小尺寸影像"
-
-#. module: product
-#: code:addons/product/product.py:176
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr "從產品的量度單位 %s 轉換至預設的量度單位 %s 是不可能的，因為它們分屬於不同類別！"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Average Price"
-msgstr "平均價格"
-
-#. module: product
-#: help:product.pricelist.item,name:0
-msgid "Explicit rule name for this pricelist line."
-msgstr "此價目表明細的明確規則名稱"
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
-
-#. module: product
-#: field:product.price_list,price_list:0
-msgid "PriceList"
-msgstr "價目表"
-
-#. module: product
-#: model:product.template,name:product.product_product_4_product_template
-msgid "PC Assemble SC349"
-msgstr "組裝之個人電腦 SC349"
-
-#. module: product
-#: help:product.product,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-
-#. module: product
-#: model:product.pricelist.version,name:product.ver0
-msgid "Default Public Pricelist Version"
-msgstr "預設公開價目表版本"
-
-#. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "標準價格"
-
-#. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
-msgid "Sale Pricelist"
-msgstr "銷售價目表"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,type:0
-msgid "Product Type"
-msgstr "產品類型"
-
-#. module: product
-#: code:addons/product/product.py:412
-#, python-format
-msgid "Products: "
-msgstr "產品： "
-
-#. module: product
-#: constraint:decimal.precision:0
-msgid ""
-"Error! You cannot define the decimal precision of 'Account' as greater than "
-"the rounding factor of the company's main currency"
-msgstr "錯誤！無法定義'帳戶'的小數精度，因為大於公司主要幣別之捨入因數。"
-
-#. module: product
-#: field:product.category,parent_id:0
-msgid "Parent Category"
-msgstr "上層類別"
-
-#. module: product
-#: model:product.template,description:product.product_product_33_product_template
-msgid "Headset for laptop PC with USB connector."
-msgstr "附有USB接頭，手提電腦用的耳機。"
-
-#. module: product
-#: model:product.category,name:product.product_category_all
-msgid "All products"
-msgstr "所有產品"
-
-#. module: product
-#: model:process.node,note:product.process_node_supplier0
-msgid "Supplier name, price, product code, ..."
-msgstr "供應商名稱、價格、產品代號等等"
-
-#. module: product
-#: constraint:res.currency:0
-msgid ""
-"Error! You cannot define a rounding factor for the company's main currency "
-"that is smaller than the decimal precision of 'Account'."
-msgstr "錯誤！無法定義公司主要幣別之捨入因數，因為小於'帳戶'的小數精度。"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this "
-"Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock "
-"Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods leaving the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' "
-"type."
-msgstr ""
-"計劃離廠的產品數量。\n"
-"以單一儲位來說，這包含運離此儲位的貨物，或是其任一子項產品。\n"
-"以單一倉庫來說，這包含運離此倉庫儲位的貨物，或是其任一子項產品。\n"
-"以單一工廠來說，這包含運離此工廠之倉庫儲位的貨物，或是其任一子項產品。\n"
-"除此之外，這包含運離任何有'內部'形態的儲位的貨物。"
-
-#. module: product
-#: model:product.template,description_sale:product.product_product_42_product_template
-msgid ""
-"Office Editing Software with word processing, spreadsheets, presentations, "
-"graphics, and databases..."
-msgstr "具有文書處理、試算表、簡報、圖表以及資料庫功能的辦公編輯軟體..."
-
-#. module: product
-#: field:product.product,seller_id:0
-msgid "Main Supplier"
-msgstr "主要供應商"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_ul_form_action
-#: model:ir.model,name:product.model_product_packaging
-#: model:ir.ui.menu,name:product.menu_product_ul_form_action
-#: view:product.packaging:0
-#: view:product.product:0
-#: view:product.ul:0
-msgid "Packaging"
-msgstr "包裝"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If unchecked, it will allow you to hide the product without removing it."
-msgstr "如未勾選，將允許將產品隱藏而不須移除。"
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,categ_id:0
-#: field:product.uom,category_id:0
-msgid "Category"
-msgstr "分類"
-
-#. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Laptop E5023"
-msgstr "攜帶型電腦 ES023"
-
-#. module: product
-#: help:product.packaging,ul_qty:0
-msgid "The number of packages by layer"
-msgstr "每層盒數"
-
-#. module: product
-#: model:product.template,name:product.product_product_30_product_template
-msgid "Pen drive, SP-4"
-msgstr "Pen drive, SP-4"
-
-#. module: product
-#: field:product.packaging,qty:0
-msgid "Quantity by Package"
-msgstr "盒數"
-
-#. module: product
-#: model:product.template,name:product.product_product_29_product_template
-msgid "Pen drive, SP-2"
-msgstr "Pen drive, SP-2"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,state:0
-msgid "Status"
-msgstr "狀態"
-
-#. module: product
-#: help:product.template,categ_id:0
-msgid "Select category for the current product"
-msgstr "為當前商品選取分類"
-
-#. module: product
-#: field:product.product,outgoing_qty:0
-msgid "Outgoing"
-msgstr "外送"
-
-#. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-msgid "Public Price"
-msgstr "公開價格"
-
-#. module: product
-#: field:product.price_list,qty5:0
-msgid "Quantity-5"
-msgstr "數目-5"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new packaging type.\n"
-"              </p><p>\n"
-"                The packaging type define the dimensions as well as the "
-"number\n"
-"                of products per package. This will ensure salesperson sell "
-"the\n"
-"                right number of products according to the package selected.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                點擊以新增新包裝類別。\n"
-"              </p><p>\n"
-"                包裝類別定義尺寸及每ㄧ包裝中的產品數量。\n"
-"                這將確保業務員根據所選的包裝，賣出正確數目的產品。\n"
-"              </p>\n"
-"            "
-
-#. module: product
-#: field:product.template,product_manager:0
-msgid "Product Manager"
-msgstr "產品經理"
-
-#. module: product
-#: model:product.template,name:product.product_product_7_product_template
-msgid "17” LCD Monitor"
-msgstr "17” LCD 螢幕"
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
-msgstr "供應商產品名稱"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price Search"
-msgstr "產品價格搜尋"
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,description_sale:0
-msgid "Sale Description"
-msgstr "銷售說明"
-
-#. module: product
-#: help:product.packaging,length:0
-msgid "The length of the package"
-msgstr "包裝盒長度"
-
-#. module: product
-#: field:product.product,message_summary:0
-msgid "Summary"
-msgstr "摘要"
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "淨重（公斤）"
-
-#. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-#: field:product.supplierinfo,qty:0
-msgid "Quantity"
-msgstr "數量"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr "根據價目表版本計算每單位產品價錢"
-
-#. module: product
-#: help:product.pricelist.item,product_id:0
-msgid ""
-"Specify a product if this rule only applies to one product. Keep empty "
-"otherwise."
-msgstr ""
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
-msgid "Weight"
-msgstr "重量"
-
-#. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in "
-"this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-
-#. module: product
-#: field:product.packaging,height:0
-msgid "Height"
-msgstr "高度"
-
-#. module: product
-#: view:product.product:0
-msgid "Procurements"
-msgstr "採購計劃"
-
-#. module: product
-#: model:res.groups,name:product.group_mrp_properties
-msgid "Manage Properties of Product"
-msgstr "管理產品屬性"
-
-#. module: product
-#: help:product.uom,factor:0
-msgid ""
-"How much bigger or smaller this unit is compared to the reference Unit of "
-"Measure for this category:\n"
-"1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "價目表.伙伴資訊"
-
-#. module: product
-#: field:product.price_list,qty2:0
-msgid "Quantity-2"
-msgstr "數量-2"
-
-#. module: product
-#: field:product.price_list,qty3:0
-msgid "Quantity-3"
-msgstr "數量-3"
-
-#. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "數量-1"
-
-#. module: product
-#: field:product.price_list,qty4:0
-msgid "Quantity-4"
-msgstr "數量-4"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "銷售&採購"
-
-#. module: product
-#: model:product.template,name:product.product_product_44_product_template
-msgid "GrapWorks Software"
-msgstr "GrapWorks 軟體"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_wtime
-msgid "Working Time"
-msgstr "工作時間"
-
-#. module: product
-#: model:product.template,name:product.product_product_42_product_template
-msgid "Office Suite"
-msgstr "辦公軟體套件"
-
-#. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "量度類型"
-
-#. module: product
-#: model:product.template,name:product.product_product_32_product_template
-msgid "Headset standard"
-msgstr "標準式耳機"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_day
-msgid "Day(s)"
-msgstr "日"
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with "
-"'internal' type."
-msgstr ""
-
-#. module: product
-#: constraint:product.template:0
-msgid ""
-"Error: The default Unit of Measure and the purchase Unit of Measure must be "
-"in the same category."
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "產品量度單位分類"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_box
-msgid "Box 20x20x40"
-msgstr "箱子 20x20x40"
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty"
-msgstr "保證"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "價目運算"
-
-#. module: product
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr "\"EAN13 條碼\"為無效編號。可使用\"內部編號\"欄位取代。"
-
-#. module: product
-#: model:res.groups,name:product.group_purchase_pricelist
-msgid "Purchase Pricelists"
-msgstr "採購價目表"
-
-#. module: product
-#: model:product.template,name:product.product_product_5_product_template
-msgid "PC Assemble + Custom (PC on Demand)"
-msgstr "PC Assemble + Custom (PC on Demand)"
-
-#. module: product
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
-msgstr "根據客戶需求的客製化攜帶型電腦。"
-
-#. module: product
-#: help:product.packaging,width:0
-msgid "The width of the package"
-msgstr "包裝盒寬度"
-
-#. module: product
-#: code:addons/product/product.py:361
-#, python-format
-msgid "Unit of Measure categories Mismatch!"
-msgstr "量度單位之類別不符！"
-
-#. module: product
-#: model:product.template,name:product.product_product_36_product_template
-msgid "Blank DVD-RW"
-msgstr "空白 DVD-RW"
-
-#. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr "檢視"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_template_action_tree
-msgid "Product Templates"
-msgstr "產品範本"
-
-#. module: product
-#: field:product.category,parent_left:0
-msgid "Left Parent"
-msgstr "左方的父項"
-
-#. module: product
-#: help:product.pricelist.item,price_max_margin:0
-msgid "Specify the maximum amount of margin over the base price."
-msgstr "請指定在基礎價格之上的最大差額。"
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr "錯誤！在價目表的項目中，不能指定主要價目表為其他價目表！"
-
-#. module: product
-#: view:product.price_list:0
-msgid "or"
-msgstr "或"
-
-#. module: product
-#: constraint:product.packaging:0
-msgid "Error: Invalid ean code"
-msgstr "錯誤：ean 碼無效"
-
-#. module: product
-#: field:product.pricelist.item,min_quantity:0
-msgid "Min. Quantity"
-msgstr "最小量"
-
-#. module: product
-#: model:product.template,name:product.product_product_12_product_template
-msgid "Mouse, Wireless"
-msgstr "無線滑鼠"
-
-#. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor Core i5 2.70 Ghz"
-msgstr "處理器 Core i5 2.70 Ghz"
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr "價目類型"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Max. Margin"
-msgstr "最大邊際利潤"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Base Price"
-msgstr "基本價格"
-
-#. module: product
-#: help:product.supplierinfo,name:0
-msgid "Supplier of this product"
-msgstr "此產品供應商"
-
-#. module: product
-#: help:product.pricelist.version,active:0
-msgid ""
-"When a version is duplicated it is set to non active, so that the dates do "
-"not overlaps with original version. You should change the dates and "
-"reactivate the pricelist"
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_18_product_template
-msgid "HDD SH-2"
-msgstr "HDD SH-2"
-
-#. module: product
-#: model:product.template,name:product.product_product_17_product_template
-msgid "HDD SH-1"
-msgstr "HDD SH-1"
-
-#. module: product
-#: field:product.supplierinfo,name:0
-#: field:product.template,seller_ids:0
-msgid "Supplier"
-msgstr "供應商"
-
-#. module: product
-#: help:product.template,cost_method:0
-msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year). \n"
-"Average Price: The cost price is recomputed at each incoming shipment."
-msgstr ""
-
-#. module: product
-#: field:product.product,qty_available:0
-msgid "Quantity On Hand"
-msgstr "在庫數量"
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "價目名稱"
-
-#. module: product
-#: help:product.product,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "如新訊息需要關注者，請勾選。"
-
-#. module: product
-#: field:product.product,ean13:0
-msgid "EAN13 Barcode"
-msgstr "EAN13 條碼"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_product_price_list
-#: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
-#: field:product.pricelist.version,pricelist_id:0
-msgid "Price List"
-msgstr "價目表"
-
-#. module: product
-#: field:product.product,virtual_available:0
-msgid "Forecasted Quantity"
-msgstr "預測數量"
-
-#. module: product
-#: view:product.product:0
-msgid "Purchase"
-msgstr "採購"
-
-#. module: product
-#: model:product.template,name:product.product_product_33_product_template
-msgid "Headset USB"
-msgstr "USB 耳機"
-
-#. module: product
-#: view:product.template:0
-msgid "Suppliers"
-msgstr "供應商"
-
-#. module: product
-#: model:res.groups,name:product.group_sale_pricelist
-msgid "Sales Pricelists"
-msgstr "銷售價目表"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "New Price ="
-msgstr "新價目 ="
-
-#. module: product
-#: model:product.category,name:product.product_category_7
-msgid "Accessories"
-msgstr "附件"
-
-#. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "產品供應商"
-
-#. module: product
-#: model:product.template,name:product.product_product_28_product_template
-msgid "External Hard disk"
-msgstr "外接硬碟"
-
-#. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
-msgstr ""
-
-#. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
-msgstr "下級分類"
-
-#. module: product
-#: field:product.pricelist.version,date_end:0
-msgid "End Date"
-msgstr "結束日期"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_litre
-msgid "Liter(s)"
-msgstr "公升"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Print"
-msgstr "列印"
-
-#. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-#: field:product.uom,uom_type:0
-msgid "Type"
-msgstr "類型"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_main
-msgid "Pricelists"
-msgstr "價目表"
-
-#. module: product
-#: field:product.product,partner_ref:0
-msgid "Customer ref"
-msgstr "客戶參照"
-
-#. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "Key"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_pricelist
-#: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "價目表"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_hour
-msgid "Hour(s)"
-msgstr "小時"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "開發中"
-
-#. module: product
-#: model:ir.model,name:product.model_res_partner
-msgid "Partner"
-msgstr "伙伴"
-
-#. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
-msgstr "一或多家供應商可以被聯結至一個產品。所有資訊都在產品表單中。"
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
-msgid "Price Rounding"
-msgstr "價格四捨五入"
-
-#. module: product
-#: model:product.template,name:product.product_product_1_product_template
-msgid "On Site Monitoring"
-msgstr "到場監督"
-
-#. module: product
-#: view:product.template:0
-msgid "days"
-msgstr "天"
-
-#. module: product
-#: model:process.node,name:product.process_node_supplier0
-#: view:product.supplierinfo:0
-msgid "Supplier Information"
-msgstr "供應商資訊"
-
-#. module: product
-#: model:ir.model,name:product.model_res_currency
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
-#: field:product.pricelist,currency_id:0
-msgid "Currency"
-msgstr "貨幣"
-
-#. module: product
-#: model:product.template,name:product.product_product_46_product_template
-msgid "Datacard"
-msgstr "資料卡"
-
-#. module: product
-#: help:product.template,uos_coeff:0
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale\n"
-" uos = uom * coeff"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:0
-msgid "Product Categories"
-msgstr "產品分類"
-
-#. module: product
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "採購&地點"
-
-#. module: product
-#: model:product.template,name:product.product_product_20_product_template
-msgid "Motherboard I9P57"
-msgstr "主機板 I9P57"
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "包裝盒總重"
-
-#. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "運輸單位代號"
-
-#. module: product
-#: view:product.price.type:0
-msgid "Products Price Type"
-msgstr "產品價目類型"
-
-#. module: product
-#: field:product.product,message_is_follower:0
-msgid "Is a Follower"
-msgstr "為關注者"
-
-#. module: product
-#: field:product.product,price_extra:0
-msgid "Variant Price Extra"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "產品供應商資訊"
-
-#. module: product
-#: help:product.uom,factor_inv:0
-msgid ""
-"How many times this Unit of Measure is bigger than the reference Unit of "
-"Measure in this category:\n"
-"1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,description_purchase:0
-msgid "Purchase Description"
-msgstr "採購說明"
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "兩個價目表版本不能重疊！"
-
-#. module: product
-#: help:product.pricelist.item,min_quantity:0
-msgid ""
-"Specify the minimum quantity that needs to be bought/sold for the rule to "
-"apply."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "First valid date for the version."
-msgstr "此版本的第一個有效日期"
-
-#. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
+#: model:product.attribute.value,name:product.product_attribute_value_1
+msgid "16 GB"
 msgstr ""
 
 #. module: product
@@ -982,502 +44,17 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "可庫存貨品"
-
-#. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "代號"
-
-#. module: product
-#: model:product.template,name:product.product_product_27_product_template
-msgid "Laptop Customized"
-msgstr "客製化的攜帶型電腦"
-
-#. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "寄送單位"
-
-#. module: product
-#: model:product.template,name:product.product_product_35_product_template
-msgid "Blank CD"
-msgstr "空白光碟"
-
-#. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "伙伴資訊"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:product.template,description:product.product_product_25_product_template
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
-"              </p><p>\n"
-"                You must define a product for everything you sell, whether "
-"it's\n"
-"                a physical product, a consumable or a service you offer to\n"
-"                customers.\n"
-"              </p><p>\n"
-"                The product form contains information to simplify the sale\n"
-"                process: price, notes in the quotation, accounting data,\n"
-"                procurement methods, etc.\n"
-"              </p>\n"
-"            "
+"17\" Monitor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
+"QWERTY keyboard"
 msgstr ""
-
-#. module: product
-#: view:product.price_list:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: product
-#: model:product.template,description:product.product_product_37_product_template
-msgid "All in one hi-speed printer with fax and scanner."
-msgstr "具有傳真及掃描的高速印表機"
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product Unit of Measure if not empty, in the default unit of measure of the "
-"product otherwise."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "資訊"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "產品表列價格項"
-
-#. module: product
-#: view:product.packaging:0
-msgid "Other Info"
-msgstr "其他資訊"
-
-#. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr "價目表項"
-
-#. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "單價"
-
-#. module: product
-#: field:product.category,parent_right:0
-msgid "Right Parent"
-msgstr "右方父項"
-
-#. module: product
-#: field:product.product,price:0
-msgid "Price"
-msgstr "價格"
-
-#. module: product
-#: field:product.pricelist.item,price_surcharge:0
-msgid "Price Surcharge"
-msgstr "附加價格"
-
-#. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "內部編號"
-
-#. module: product
-#: model:product.template,name:product.product_product_8_product_template
-msgid "USB Keyboard, QWERTY"
-msgstr "USB 鍵盤, QWERTY"
-
-#. module: product
-#: model:product.category,name:product.product_category_9
-msgid "Softwares"
-msgstr "軟體"
-
-#. module: product
-#: field:product.product,packaging:0
-msgid "Logistical Units"
-msgstr "物流單位"
-
-#. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom.categ,name:0
-msgid "Name"
-msgstr "名稱"
-
-#. module: product
-#: model:product.category,name:product.product_category_4
-msgid "Computers"
-msgstr "電腦"
-
-#. module: product
-#: help:product.product,message_ids:0
-msgid "Messages and communication history"
-msgstr "訊息及聯絡歷史"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr "公斤"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "廢棄"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr "公里"
-
-#. module: product
-#: field:product.template,standard_price:0
-msgid "Cost"
-msgstr "成本"
-
-#. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr "請指定排序以便顯示產品類別表。"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_dozen
-msgid "Dozen(s)"
-msgstr "打"
-
-#. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
-msgid "Ratio"
-msgstr "比率"
-
-#. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "寬度"
-
-#. module: product
-#: help:product.price.type,field:0
-msgid "Associated field in the product form."
-msgstr "產品表格中相關欄位。"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,uom_id:0
-#: field:product.uom,name:0
-msgid "Unit of Measure"
-msgstr "量度單位"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Printing Date"
-msgstr "列印日期"
-
-#. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "銷售單位"
-
-#. module: product
-#: field:product.product,message_unread:0
-msgid "Unread Messages"
-msgstr "未讀郵件"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Unit of Measure Categories"
-msgstr "度量單位類別"
-
-#. module: product
-#: help:product.product,seller_id:0
-msgid "Main Supplier who has highest priority in Supplier List."
-msgstr "於供應商清單有最高優先次序之主要供應商"
-
-#. module: product
-#: model:product.category,name:product.product_category_5
-#: view:product.product:0
-msgid "Services"
-msgstr "服務"
-
-#. module: product
-#: help:product.product,ean13:0
-msgid "International Article Number used for product identification."
-msgstr "用於產品識別的國際商品號碼(International Article Number)"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"<p>\n"
-"                Here is a list of all your products classified by category. "
-"You\n"
-"                can click a category to get the list of all products linked "
-"to\n"
-"                this category or to a child of this category.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:361
-#, python-format
-msgid ""
-"New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
-"as of old Unit of Measure '%s'. If you need to change the unit of measure, "
-"you may deactivate this product from the 'Procurements' tab and create a new "
-"one."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_puchased
-#: model:ir.actions.act_window,name:product.product_normal_action_sell
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_products
-#: model:ir.ui.menu,name:product.prod_config_main
-#: view:product.product:0
-msgid "Products"
-msgstr "產品"
-
-#. module: product
-#: model:product.template,description:product.product_product_32_product_template
-msgid ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
-"Hands free headset for laptop PC with in-line microphone and headphone plug."
-
-#. module: product
-#: help:product.packaging,rows:0
-msgid "The number of layers on a pallet or box"
-msgstr "卡板或箱子層數"
-
-#. module: product
-#: help:product.pricelist.item,price_min_margin:0
-msgid "Specify the minimum amount of margin over the base price."
-msgstr "請指定在基本價格之上的最少差額。"
-
-#. module: product
-#: field:product.template,weight_net:0
-msgid "Net Weight"
-msgstr "淨重"
-
-#. module: product
-#: view:product.packaging:0
-#: view:product.product:0
-msgid "Pallet Dimension"
-msgstr "卡板尺寸"
-
-#. module: product
-#: help:product.product,image:0
-msgid ""
-"This field holds the image used as image for the product, limited to "
-"1024x1024px."
-msgstr "此欄位保存產品的影像，限制在 1024x1024px。"
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Specify a product category if this rule only applies to products belonging "
-"to this category or its children categories. Keep empty otherwise."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "Inventory"
-msgstr "庫存"
-
-#. module: product
-#: field:product.product,seller_info_id:0
-msgid "Supplier Info"
-msgstr "供應商資訊"
-
-#. module: product
-#: code:addons/product/product.py:732
-#, python-format
-msgid "%s (copy)"
-msgstr "%s（副本）"
-
-#. module: product
-#: model:product.template,name:product.product_product_2_product_template
-msgid "On Site Assistance"
-msgstr "到場支援"
-
-#. module: product
-#: model:product.template,name:product.product_product_39_product_template
-msgid "Toner Cartridge"
-msgstr "碳粉匣"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "量度單位"
-
-#. module: product
-#: field:product.supplierinfo,min_qty:0
-msgid "Minimal Quantity"
-msgstr "最小量"
-
-#. module: product
-#: help:product.supplierinfo,product_code:0
-msgid ""
-"This supplier's product code will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_43_product_template
-msgid "Zed+ Antivirus"
-msgstr "Zed+ 防毒軟體"
-
-#. module: product
-#: field:product.pricelist.item,price_version_id:0
-msgid "Price List Version"
-msgstr "價格表版本"
-
-#. module: product
-#: help:product.pricelist.item,sequence:0
-msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
-"item is found."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: selection:product.template,type:0
-msgid "Consumable"
-msgstr "消耗品"
-
-#. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr ""
-
-#. module: product
-#: help:product.template,weight:0
-msgid "The gross weight in Kg."
-msgstr "毛重（公斤）"
-
-#. module: product
-#: model:product.template,name:product.product_product_37_product_template
-msgid "Printer, All-in-one"
-msgstr "All-in-one 印表機"
-
-#. module: product
-#: view:product.template:0
-msgid "Procurement"
-msgstr "採購"
-
-#. module: product
-#: model:product.template,name:product.product_product_23_product_template
-msgid "Processor AMD 8-Core"
-msgstr "AMD 八核心處理器"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weights"
-msgstr "重量"
-
-#. module: product
-#: view:product.product:0
-msgid "Description for Quotations"
-msgstr "報價說明"
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
-msgid ""
-"This price will be considered as a price for the supplier Unit of Measure if "
-"any or the default Unit of Measure of the product otherwise"
-msgstr ""
-
-#. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase Unit of Measure"
-msgstr "採購量度單位"
-
-#. module: product
-#: view:product.product:0
-msgid "Group by..."
-msgstr "分類方式..."
-
-#. module: product
-#: field:product.product,image_medium:0
-msgid "Medium-sized image"
-msgstr "中尺寸影像"
-
-#. module: product
-#: selection:product.ul,type:0
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "單位"
-
-#. module: product
-#: field:product.pricelist.version,date_start:0
-msgid "Start Date"
-msgstr "開始日期"
-
-#. module: product
-#: model:product.template,name:product.product_product_38_product_template
-msgid "Ink Cartridge"
-msgstr "墨水匣"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr "公分"
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom
-msgid "Product Unit of Measure"
-msgstr "產品量度單位"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a pricelist version.\n"
-"              </p><p>\n"
-"                There can be more than one version of a pricelist, each of\n"
-"                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
-"                etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: product
-#: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr "採購單預設量度單位。須與預設單位相同分類。"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price"
-msgstr "產品價格"
+"17\" Monitor\n"
+"4GB RAM\n"
+"Standard-1294P Processor\n"
+"QWERTY keyboard"
 
 #. module: product
 #: model:product.template,description:product.product_product_26_product_template
@@ -1493,115 +70,51 @@ msgstr ""
 "QWERTY keyboard"
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "捨入精度"
-
-#. module: product
-#: view:product.product:0
-msgid "Consumable products"
-msgstr "消耗性產品"
-
-#. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "Motherboard A20Z7"
-msgstr "主機板 A20Z7"
-
-#. module: product
-#: model:product.template,description:product.product_product_1_product_template
-#: model:product.template,description_sale:product.product_product_1_product_template
-msgid "This type of service include basic monitoring of products."
-msgstr "此類型的服務包含對產品的基本監督。"
-
-#. module: product
-#: help:product.pricelist.version,date_end:0
-msgid "Last valid date for the version."
-msgstr "此版本的最後一個有效日期。"
-
-#. module: product
-#: model:product.template,name:product.product_product_19_product_template
-msgid "HDD on Demand"
-msgstr "HDD on Demand"
-
-#. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "活躍"
-
-#. module: product
-#: field:product.product,price_margin:0
-msgid "Variant Price Margin"
+#: model:product.attribute.value,name:product.product_attribute_value_5
+msgid "2.4 GHz"
 msgstr ""
 
 #. module: product
-#: field:product.pricelist,name:0
-msgid "Pricelist Name"
-msgstr "價目表名稱"
+#: model:product.template,description_sale:product.product_product_8_product_template
+msgid ""
+"2.7GHz quad-core Intel Core i5\n"
+"                Turbo Boost up to 3.2GHz\n"
+"                8GB (two 4GB) memory\n"
+"                1TB hard drive1\n"
+"                Intel Iris Pro graphics\n"
+"            "
+msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
-msgid "Saleable"
-msgstr "可銷售的"
+#: model:product.attribute.value,name:product.product_attribute_value_2
+msgid "32 GB"
+msgstr ""
 
 #. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "量度單位轉換比例不能為0！"
+#: model:product.template,description_sale:product.product_product_4_product_template
+#: model:product.template,description_sale:product.product_product_4b_product_template
+#: model:product.template,description_sale:product.product_product_4c_product_template
+#: model:product.template,description_sale:product.product_product_4d_product_template
+msgid ""
+"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
+msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_24_product_template
-msgid "Graphics Card"
-msgstr "顯示卡"
-
-#. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "包裝單位 EAN 碼"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "This comes from the product form."
-msgstr "來自產品表單。"
-
-#. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "包裝空盒重量"
-
-#. module: product
-#: model:product.template,name:product.product_product_41_product_template
-msgid "Windows Home Server 2011"
-msgstr "Windows Home Server 2011"
-
-#. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "產品欄位"
-
-#. module: product
-#: model:product.template,description:product.product_product_5_product_template
-msgid "Custom computer assembled on order based on customer's requirement."
-msgstr "根據客戶需求及訂單裝配的客製化電腦。"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-#: model:ir.ui.menu,name:product.menu_product_price_type
-msgid "Price Types"
-msgstr "價格類別"
-
-#. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
-msgstr "所有庫存操作之預設量度單位"
-
-#. module: product
-#: view:product.product:0
-msgid "Sales"
-msgstr "銷售"
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new Logistic Unit\n"
+"              </p><p>\n"
+"                The logistic unit defines the container used for the "
+"package.  \n"
+"                It has a type (e.g. pallet, box, ...) and you can specify "
+"its \n"
+"                size. \n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1619,567 +132,30 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
-"Measure if any or in the default Unit of Measure of the product otherrwise."
-msgstr ""
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Smaller than the reference Unit of Measure"
-msgstr "小於參照用之量度單位"
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "公開價目表"
-
-#. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr "供應商產品代號"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr "如未勾選，將允許隱藏價目表而非移除之。"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pallet"
-msgstr "卡板"
-
-#. module: product
-#: field:product.packaging,ul_qty:0
-msgid "Package by layer"
-msgstr "每層包裝盒"
-
-#. module: product
-#: model:ir.model,name:product.model_product_product
-#: model:process.node,name:product.process_node_product0
-#: model:process.process,name:product.process_process_productprocess0
-#: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,product_id:0
-#: model:res.request.link,name:product.req_link_product
-msgid "Product"
-msgstr "產品"
-
-#. module: product
-#: view:product.product:0
-msgid "Price:"
-msgstr "價格："
-
-#. module: product
-#: field:product.template,weight:0
-msgid "Gross Weight"
-msgstr "毛重"
-
-#. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "可以卡板或箱子放入之產品總數"
-
-#. module: product
-#: field:product.product,variants:0
-msgid "Variants"
-msgstr "變動"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "各分類產品"
-
-#. module: product
-#: model:product.template,name:product.product_product_16_product_template
-msgid "Computer Case"
-msgstr "機箱"
-
-#. module: product
-#: model:product.template,name:product.product_product_9_product_template
-msgid "USB Keyboard, AZERTY"
-msgstr "USB 鍵盤, AZERTY"
-
-#. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr "指定產品供應商表列的優先順序"
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr "錯誤！最少差額應少於對大差額。"
-
-#. module: product
-#: model:res.groups,name:product.group_uos
-msgid "Manage Secondary Unit of Measure"
-msgstr "管理次要量度單位"
-
-#. module: product
-#: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
-"of Measure that cannot be further split, such as a piece."
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "捨入方法"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-msgid "Products Labels"
-msgstr "產品標籤"
-
-#. module: product
-#: model:product.ul,name:product.product_ul_big_box
-msgid "Box 30x40x60"
-msgstr "箱子 30x40x60"
-
-#. module: product
-#: model:product.template,name:product.product_product_47_product_template
-msgid "Switch, 24 ports"
-msgstr "Switch, 24 ports"
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Bigger than the reference Unit of Measure"
-msgstr "大於所參照的量度單位"
-
-#. module: product
-#: model:product.template,name:product.product_product_consultant_product_template
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "服務"
-
-#. module: product
-#: view:product.template:0
-msgid "Internal Description"
-msgstr "內部描述"
-
-#. module: product
-#: model:product.template,name:product.product_product_48_product_template
-msgid "USB Adapter"
-msgstr "USB Adapter"
-
-#. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Sepcify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:208
-#, python-format
-msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr "無法變更現有量度單位的類別 '%s'."
-
-#. module: product
-#: help:product.packaging,height:0
-msgid "The height of the package"
-msgstr "包裝盒高度"
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "產品價格表"
-
-#. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
-msgid "Company"
-msgstr "公司"
-
-#. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Laptop S3450"
-msgstr "Laptop S3450"
-
-#. module: product
-#: view:product.product:0
-msgid "Default Unit of Measure"
-msgstr "預設量度單位"
-
-#. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "產品表格的夥伴部分"
-
-#. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "此類價目之名稱"
-
-#. module: product
-#: model:product.category,name:product.product_category_3
-msgid "Other Products"
-msgstr "其他產品"
-
-#. module: product
-#: model:product.template,description:product.product_product_9_product_template
-msgid "This product is configured with example of push/pull flows"
-msgstr ""
-
-#. module: product
-#: field:product.product,message_ids:0
-msgid "Messages"
-msgstr "訊息"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "Unit(s)"
-msgstr "單位"
-
-#. module: product
-#: code:addons/product/product.py:176
-#, python-format
-msgid "Error!"
-msgstr "錯誤!"
-
-#. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "長度"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr "長度／距離"
-
-#. module: product
-#: model:product.category,name:product.product_category_8
-msgid "Components"
-msgstr "組件"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-msgid "Pricelist Type"
-msgstr "價目表類型"
-
-#. module: product
-#: model:product.category,name:product.product_category_6
-msgid "External Devices"
-msgstr "外部裝置"
-
-#. module: product
-#: field:product.product,color:0
-msgid "Color Index"
-msgstr "顏色索引"
-
-#. module: product
-#: help:product.template,sale_ok:0
-msgid "Specify if the product can be selected in a sales order line."
-msgstr "若該產品可以在銷售訂單明細中被選擇者，請指明。"
-
-#. module: product
-#: view:product.product:0
-#: field:product.template,sale_ok:0
-msgid "Can be Sold"
-msgstr "可銷售"
-
-#. module: product
-#: field:product.template,produce_delay:0
-msgid "Manufacturing Lead Time"
-msgstr "製造前置時間"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
-msgid "Supplier Pricelist"
-msgstr "供應商價目表"
-
-#. module: product
-#: field:product.pricelist.item,base:0
-msgid "Based on"
-msgstr "基於"
-
-#. module: product
-#: model:product.category,name:product.product_category_10
-msgid "Raw Materials"
-msgstr "原材料"
-
-#. module: product
-#: model:product.template,name:product.product_product_13_product_template
-msgid "RAM SR5"
-msgstr "記憶體 SR5"
-
-#. module: product
-#: model:product.template,name:product.product_product_14_product_template
-msgid "RAM SR2"
-msgstr "記憶體 SR2"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+#: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
+"                Click to add a new unit of measure.\n"
 "              </p><p>\n"
-"                You must define a product for everything you purchase, "
-"whether\n"
-"                it's a physical product, a consumable or services you buy "
-"to\n"
-"                subcontractants.\n"
-"              </p><p>\n"
-"                The product form contains detailed information to improve "
-"the\n"
-"                purchase process: prices, procurement logistics, accounting "
-"data,\n"
-"                available suppliers, etc.\n"
+"                You must define a conversion rate between several Units of\n"
+"                Measure within the same category.\n"
 "              </p>\n"
 "            "
 msgstr ""
 
 #. module: product
-#: model:product.template,description_sale:product.product_product_44_product_template
-msgid "Full featured image editing software."
-msgstr "全功能影像編輯軟體"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
-msgid "Pricelist Version"
-msgstr "價目表版本"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "* ( 1 + "
-msgstr "* ( 1 + "
-
-#. module: product
-#: model:product.template,name:product.product_product_31_product_template
-msgid "Multimedia Speakers"
-msgstr "喇叭"
-
-#. module: product
-#: field:product.product,message_follower_ids:0
-msgid "Followers"
-msgstr "關注者"
-
-#. module: product
-#: view:product.product:0
-msgid "Sale Conditions"
-msgstr "銷售狀況"
-
-#. module: product
-#: view:product.packaging:0
-#: view:product.product:0
-msgid "Palletization"
-msgstr "貨盤化"
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Price List Name"
-msgstr "價目表名稱"
-
-#. module: product
-#: view:product.product:0
-msgid "Description for Suppliers"
-msgstr "供應商描述"
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery Lead Time"
-msgstr "交貨前置時間"
-
-#. module: product
-#: view:product.product:0
-msgid "months"
-msgstr "月"
-
-#. module: product
-#: help:product.uom,active:0
-msgid ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
-msgstr ""
-
-#. module: product
-#: field:product.product,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "供應商前置時間"
-
-#. module: product
-#: model:ir.model,name:product.model_decimal_precision
-msgid "decimal.precision"
-msgstr "decimal.precision"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "箱子"
-
-#. module: product
-#: help:product.pricelist.item,price_surcharge:0
-msgid ""
-"Specify the fixed amount to add or substract(if negative) to the amount "
-"calculated with the discount."
-msgstr ""
-
-#. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods stored in the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' "
-"type."
-msgstr ""
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Consumable: Will not imply stock management for this product. \n"
-"Stockable product: Will imply stock management for this product."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new product.\n"
+"                Click to add a pricelist version.\n"
 "              </p><p>\n"
-"                You must define a product for everything you buy or sell,\n"
-"                whether it's a physical product, a consumable or service.\n"
+"                There can be more than one version of a pricelist, each of\n"
+"                these must be valid during a certain period of time. Some\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer "
+"Sales,\n"
+"                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "Context..."
-msgstr ""
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Type of Package"
-msgstr "包裝盒類型"
-
-#. module: product
-#: help:product.category,type:0
-msgid ""
-"A category of the view type is a virtual category that can be used as the "
-"parent of another category to create a hierarchical structure."
-msgstr ""
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "包裝"
-
-#. module: product
-#: help:product.pricelist.item,product_tmpl_id:0
-msgid ""
-"Specify a template if this rule only applies to one product template. Keep "
-"empty otherwise."
-msgstr ""
-
-#. module: product
-#: model:product.template,description:product.product_product_2_product_template
-msgid ""
-"This type of service include assistance for security questions, system "
-"configuration requirements, implementation or special needs."
-msgstr ""
-
-#. module: product
-#: field:product.product,image:0
-msgid "Image"
-msgstr "影像"
-
-#. module: product
-#: view:product.uom.categ:0
-msgid "Units of Measure categories"
-msgstr "量度單位分類"
-
-#. module: product
-#: model:product.template,description_sale:product.product_product_4_product_template
-msgid ""
-"19\" LCD Monitor\n"
-"Processor Core i5 2.70 Ghz\n"
-"2GB RAM\n"
-"HDD SH-1"
-msgstr ""
-"19\" LCD Monitor\n"
-"Processor Core i5 2.70 Ghz\n"
-"2GB RAM\n"
-"HDD SH-1"
-
-#. module: product
-#: view:product.template:0
-msgid "Descriptions"
-msgstr "說明"
-
-#. module: product
-#: model:res.groups,name:product.group_stock_packaging
-msgid "Manage Product Packaging"
-msgstr "管理產品包裝"
-
-#. module: product
-#: model:product.category,name:product.product_category_2
-msgid "Internal"
-msgstr "內部"
-
-#. module: product
-#: model:product.template,name:product.product_product_45_product_template
-msgid "Router R430"
-msgstr "路由器 R430"
-
-#. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
-
-#. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
-msgid "Normal"
-msgstr "普通"
-
-#. module: product
-#: code:addons/product/pricelist.py:179
-#, python-format
-msgid ""
-"At least one pricelist has no active version !\n"
-"Please create or activate one."
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Max. Price Margin"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "最小邊際利潤"
-
-#. module: product
-#: help:product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
 msgstr ""
 
 #. module: product
@@ -2206,176 +182,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "變數"
-
-#. module: product
-#: field:product.template,rental:0
-msgid "Can be Rent"
-msgstr "可租"
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-msgid "Cost Price"
-msgstr "成本價"
-
-#. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Min. Price Margin"
-msgstr ""
-
-#. module: product
-#: model:res.groups,name:product.group_uom
-msgid "Manage Multiple Units of Measure"
-msgstr "管理多種量度單位"
-
-#. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
-msgstr "包裝盒總重，卡板或箱子"
-
-#. module: product
-#: view:product.uom:0
-msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr "如: 1 * (this unit) = ratio * (reference unit)"
-
-#. module: product
-#: model:product.template,description:product.product_product_25_product_template
-msgid ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY keyboard"
-msgstr ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY keyboard"
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
-msgid "Sequence"
-msgstr "序列"
-
-#. module: product
-#: help:product.template,produce_delay:0
-msgid ""
-"Average delay in days to produce this product. In the case of multi-level "
-"BOM, the manufacturing lead times of the components will be added."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_assembly_product_template
-msgid "Assembly Service Cost"
-msgstr "組裝服務成本"
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_item
-msgid "Pricelist item"
-msgstr "價目表項"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new unit of measure.\n"
-"              </p><p>\n"
-"                You must define a conversion rate between several Units of\n"
-"                Measure within the same category.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_11_product_template
-msgid "Mouse, Laser"
-msgstr "雷射滑鼠"
-
-#. module: product
-#: view:product.template:0
-msgid "Delays"
-msgstr "延遲"
-
-#. module: product
-#: field:product.category,type:0
-msgid "Category Type"
-msgstr "分類類型"
-
-#. module: product
-#: model:process.node,note:product.process_node_product0
-msgid "Creation of the product"
-msgstr "產品建立"
-
-#. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
-#: field:product.template,description:0
-msgid "Description"
-msgstr "說明"
-
-#. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid " ) + "
-msgstr " ) + "
-
-#. module: product
-#: field:product.template,volume:0
-#: model:product.uom.categ,name:product.product_uom_categ_vol
-msgid "Volume"
-msgstr "體積"
-
-#. module: product
-#: help:product.product,image_small:0
-msgid ""
-"Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-
-#. module: product
-#: model:product.template,name:product.product_product_40_product_template
-msgid "Windows 7 Professional"
-msgstr "Windows 7 Professional"
-
-#. module: product
-#: selection:product.uom,uom_type:0
-msgid "Reference Unit of Measure for this category"
-msgstr "此類別之參照用量度單位"
-
-#. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier Unit of Measure"
-msgstr "供應商量度單位"
-
-#. module: product
-#: view:product.product:0
-msgid "Product Variant"
-msgstr "產品系列"
-
-#. module: product
-#: model:product.template,name:product.product_product_6_product_template
-msgid "15” LCD Monitor"
-msgstr "15” LCD 螢幕"
-
-#. module: product
-#: code:addons/product/pricelist.py:379
-#: field:product.pricelist.item,base_pricelist_id:0
-#, python-format
-msgid "Other Pricelist"
-msgstr "其他價目表"
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -2397,29 +203,592 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_template
-#: field:product.pricelist.item,product_tmpl_id:0
-#: field:product.product,product_tmpl_id:0
-#: view:product.template:0
-msgid "Product Template"
-msgstr "產品範本"
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new product.\n"
+"              </p><p>\n"
+"                You must define a product for everything you buy or sell,\n"
+"                whether it's a physical product, a consumable or service.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: product
-#: field:product.template,cost_method:0
-#: model:res.groups,name:product.group_costing_method
-msgid "Costing Method"
-msgstr "成本計算方法"
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new product.\n"
+"              </p><p>\n"
+"                You must define a product for everything you sell, whether "
+"it's\n"
+"                a physical product, a consumable or a service you offer to\n"
+"                customers.\n"
+"              </p><p>\n"
+"                The product form contains information to simplify the sale\n"
+"                process: price, notes in the quotation, accounting data,\n"
+"                procurement methods, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-msgid "Product Category"
-msgstr "產品分類"
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"<p>\n"
+"                Here is a list of all your products classified by category. "
+"You\n"
+"                can click a category to get the list of all products linked "
+"to\n"
+"                this category or to a child of this category.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_19_product_template
-msgid "On demand hard-disk having capacity based on requirement."
-msgstr "On demand hard-disk having capacity based on requirement."
+#: help:product.category,type:0
+msgid ""
+"A category of the view type is a virtual category that can be used as the "
+"parent of another category to create a hierarchical structure."
+msgstr ""
+
+#. module: product
+#: help:product.template,description_sale:0
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: product
+#: help:product.template,description_purchase:0
+msgid ""
+"A description of the Product that you want to communicate to your suppliers. "
+"This description will be copied to every Purchase Order, Receipt and "
+"Supplier Invoice/Refund."
+msgstr ""
+
+#. module: product
+#: help:product.template,description:0
+msgid ""
+"A precise description of the Product, used only for internal information "
+"purposes."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_7
+msgid "Accessories"
+msgstr "附件"
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.template,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "活躍"
+
+#. module: product
+#: model:product.category,name:product.product_category_all
+msgid "All"
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_37_product_template
+msgid "All in one hi-speed printer with fax and scanner."
+msgstr "具有傳真及掃描的高速印表機"
+
+#. module: product
+#: model:product.category,name:product.accessories
+msgid "Apple Accessories"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_7_product_template
+msgid "Apple In-Ear Headphones"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.apple
+msgid "Apple Products"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_9_product_template
+msgid "Apple Wireless Keyboard"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_assembly_product_template
+msgid "Assembly Service Cost"
+msgstr "組裝服務成本"
+
+#. module: product
+#: help:product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
+msgstr "指定產品供應商表列的優先順序"
+
+#. module: product
+#: help:product.price.type,field:0
+msgid "Associated field in the product form."
+msgstr "產品表格中相關欄位。"
+
+#. module: product
+#: code:addons/product/pricelist.py:208
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
+
+#. module: product
+#: field:product.attribute.line,attribute_id:0
+#: field:product.attribute.value,attribute_id:0
+msgid "Attribute"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.value,price_extra:0
+msgid "Attribute Price Extra"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.value,price_ids:0
+msgid "Attribute Prices"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.variants_action
+#: model:ir.ui.menu,name:product.menu_variants_action
+msgid "Attribute Values"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.attribute_action
+#: model:ir.ui.menu,name:product.menu_attribute_action
+#: field:product.product,attribute_value_ids:0
+msgid "Attributes"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Base Price"
+msgstr "基本價格"
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "Base price for computation."
+msgstr "計算用之基礎價格"
+
+#. module: product
+#: help:product.template,list_price:0
+msgid ""
+"Base price to compute the customer price. Sometimes called the catalog price."
+msgstr "計算客戶價格的基礎價格。有時叫做目錄價格。"
+
+#. module: product
+#: field:product.pricelist.item,base:0
+msgid "Based on"
+msgstr "基於"
+
+#. module: product
+#: field:product.product,image:0
+msgid "Big-sized image"
+msgstr ""
+
+#. module: product
+#: field:product.uom,factor_inv:0
+msgid "Bigger Ratio"
+msgstr ""
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Bigger than the reference Unit of Measure"
+msgstr "大於所參照的量度單位"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_4
+msgid "Black"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_35_product_template
+msgid "Blank CD"
+msgstr "空白光碟"
+
+#. module: product
+#: model:product.template,name:product.product_product_36_product_template
+msgid "Blank DVD-RW"
+msgstr "空白 DVD-RW"
+
+#. module: product
+#: model:product.template,name:product.product_product_5b_product_template
+msgid "Bose Mini Bluetooth Speaker"
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_5b_product_template
+msgid "Bose's smallest portable Bluetooth speaker"
+msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Box"
+msgstr "箱子"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_box
+msgid "Box 20x20x40"
+msgstr "箱子 20x20x40"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_big_box
+msgid "Box 30x40x60"
+msgstr "箱子 30x40x60"
+
+#. module: product
+#: help:product.uom,active:0
+msgid ""
+"By unchecking the active field you can disable a unit of measure without "
+"deleting it."
+msgstr ""
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Calculate Product Price per Unit Based on Pricelist Version."
+msgstr "根據價目表版本計算每單位產品價錢"
+
+#. module: product
+#: field:product.template,rental:0
+msgid "Can be Rent"
+msgstr "可租"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: field:product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr "可銷售"
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Cancel"
+msgstr "取消"
+
+#. module: product
+#: code:addons/product/product.py:210
+#, python-format
+msgid "Cannot change the category of existing Unit of Measure '%s'."
+msgstr "無法變更現有量度單位的類別 '%s'."
+
+#. module: product
+#: model:product.public.category,name:product.case
+msgid "Case"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Category"
+msgstr "分類"
+
+#. module: product
+#: field:product.category,type:0
+msgid "Category Type"
+msgstr "分類類型"
+
+#. module: product
+#: field:product.category,child_id:0
+msgid "Child Categories"
+msgstr "下級分類"
+
+#. module: product
+#: field:product.packaging,code:0
+msgid "Code"
+msgstr "代號"
+
+#. module: product
+#: help:product.template,uos_coeff:0
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale\n"
+" uos = uom * coeff"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_2
+msgid "Color"
+msgstr ""
+
+#. module: product
+#: field:product.template,color:0
+msgid "Color Index"
+msgstr "顏色索引"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_6_product_template
+msgid ""
+"Color: White\n"
+"Capacity: 16GB\n"
+"Connectivity: Wifi\n"
+"Beautiful 7.9-inch display\n"
+"Over 375,000 apps3\n"
+"Ultrafast wireless\n"
+"iOS7\n"
+"            "
+msgstr ""
+
+#. module: product
+#: field:product.pricelist,company_id:0
+#: field:product.pricelist.item,company_id:0
+#: field:product.pricelist.version,company_id:0
+#: field:product.supplierinfo,company_id:0
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: product
+#: model:product.category,name:product.product_category_8
+#: model:product.public.category,name:product.Components
+msgid "Components"
+msgstr "組件"
+
+#. module: product
+#: model:product.template,name:product.product_product_16_product_template
+msgid "Computer Case"
+msgstr "機箱"
+
+#. module: product
+#: model:product.public.category,name:product.Computer_all_in_one
+msgid "Computer all-in-one"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_4
+#: model:product.public.category,name:product.computers
+#: model:product.public.category,name:product.sub_computers
+msgid "Computers"
+msgstr "電腦"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Configurations"
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: selection:product.template,type:0
+msgid "Consumable"
+msgstr "消耗品"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Consumable products"
+msgstr "消耗性產品"
+
+#. module: product
+#: help:product.template,type:0
+msgid ""
+"Consumable: Will not imply stock management for this product. \n"
+"Stockable product: Will imply stock management for this product."
+msgstr ""
+
+#. module: product
+#: help:product.uom,category_id:0
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:178
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr "從產品的量度單位 %s 轉換至預設的量度單位 %s 是不可能的，因為它們分屬於不同類別！"
+
+#. module: product
+#: model:product.price.type,name:product.standard_price
+#: field:product.template,standard_price:0
+msgid "Cost Price"
+msgstr "成本價"
+
+#. module: product
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product template used for standard stock valuation in "
+"accounting and used as a base price on purchase orders."
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,create_uid:0
+#: field:product.attribute,create_uid:0
+#: field:product.attribute.line,create_uid:0
+#: field:product.attribute.price,create_uid:0
+#: field:product.attribute.value,create_uid:0
+#: field:product.category,create_uid:0
+#: field:product.packaging,create_uid:0
+#: field:product.price.history,create_uid:0
+#: field:product.price.type,create_uid:0
+#: field:product.price_list,create_uid:0
+#: field:product.pricelist,create_uid:0
+#: field:product.pricelist.item,create_uid:0
+#: field:product.pricelist.type,create_uid:0
+#: field:product.pricelist.version,create_uid:0
+#: field:product.product,create_uid:0
+#: field:product.supplierinfo,create_uid:0
+#: field:product.template,create_uid:0
+#: field:product.ul,create_uid:0
+#: field:product.uom,create_uid:0
+#: field:product.uom.categ,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,create_date:0
+#: field:product.attribute,create_date:0
+#: field:product.attribute.line,create_date:0
+#: field:product.attribute.price,create_date:0
+#: field:product.attribute.value,create_date:0
+#: field:product.category,create_date:0
+#: field:product.packaging,create_date:0
+#: field:product.price.history,create_date:0
+#: field:product.price.type,create_date:0
+#: field:product.price_list,create_date:0
+#: field:product.pricelist,create_date:0
+#: field:product.pricelist.item,create_date:0
+#: field:product.pricelist.type,create_date:0
+#: field:product.pricelist.version,create_date:0
+#: field:product.product,create_date:0
+#: field:product.supplierinfo,create_date:0
+#: field:product.template,create_date:0
+#: field:product.ul,create_date:0
+#: field:product.uom,create_date:0
+#: field:product.uom.categ,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_res_currency
+#: field:product.price.type,currency_id:0
+#: field:product.pricelist,currency_id:0
+#: view:website:product.report_pricelist
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: product
+#: model:product.template,description:product.product_product_27_product_template
+msgid "Custom Laptop based on customer's requirement."
+msgstr "根據客戶需求的客製化攜帶型電腦。"
+
+#. module: product
+#: model:product.template,description:product.product_product_5_product_template
+#: model:product.template,description:product.product_product_5b_product_template
+msgid "Custom computer assembled on order based on customer's requirement."
+msgstr "根據客戶需求及訂單裝配的客製化電腦。"
+
+#. module: product
+#: field:product.product,partner_ref:0
+msgid "Customer ref"
+msgstr "客戶參照"
+
+#. module: product
+#: model:product.template,name:product.product_product_46_product_template
+msgid "Datacard"
+msgstr "資料卡"
+
+#. module: product
+#: help:product.product,message_last_post:0
+#: help:product.template,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_day
+msgid "Day(s)"
+msgstr "日"
+
+#. module: product
+#: model:product.pricelist.version,name:product.ver0
+msgid "Default Public Pricelist Version"
+msgstr "預設公開價目表版本"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Default Unit of Measure"
+msgstr "預設量度單位"
+
+#. module: product
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr "所有庫存操作之預設量度單位"
+
+#. module: product
+#: help:product.template,uom_po_id:0
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr "採購單預設量度單位。須與預設單位相同分類。"
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Lead Time"
+msgstr "交貨前置時間"
+
+#. module: product
+#: field:pricelist.partnerinfo,name:0
+#: field:product.packaging,name:0
+#: field:product.template,description:0
+#: view:website:product.report_pricelist
+msgid "Description"
+msgstr "說明"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Description for Quotations"
+msgstr "報價說明"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Description for Suppliers"
+msgstr "供應商描述"
+
+#. module: product
+#: help:product.attribute.value,sequence:0
+msgid "Determine the display order"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.devices
+msgid "Devices"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen(s)"
+msgstr "打"
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
+#: field:product.product,ean13:0
+#: field:product.template,ean13:0
+msgid "EAN13 Barcode"
+msgstr "EAN13 條碼"
+
+#. module: product
+#: field:product.ul,weight:0
+msgid "Empty Package Weight"
+msgstr "包裝空盒重量"
+
+#. module: product
+#: field:product.pricelist.version,date_end:0
+msgid "End Date"
+msgstr "結束日期"
 
 #. module: product
 #: selection:product.template,state:0
@@ -2427,16 +796,988 @@ msgid "End of Lifecycle"
 msgstr "生命週期的結束"
 
 #. module: product
-#: model:product.template,name:product.product_product_15_product_template
-msgid "RAM SR3"
-msgstr "記憶體 SR3"
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr "錯誤！無法建立遞迴性分類。"
 
 #. module: product
-#: help:product.product,packaging:0
+#: code:addons/product/product.py:178
+#, python-format
+msgid "Error!"
+msgstr "錯誤!"
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid "Error! The minimum margin should be lower than the maximum margin."
+msgstr "錯誤！最少差額應少於對大差額。"
+
+#. module: product
+#: constraint:product.pricelist.item:0
+msgid ""
+"Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
+msgstr "錯誤！在價目表的項目中，不能指定主要價目表為其他價目表！"
+
+#. module: product
+#: constraint:res.currency:0
+msgid ""
+"Error! You cannot define a rounding factor for the company's main currency "
+"that is smaller than the decimal precision of 'Account'."
+msgstr "錯誤！無法定義公司主要幣別之捨入因數，因為小於'帳戶'的小數精度。"
+
+#. module: product
+#: constraint:decimal.precision:0
+msgid ""
+"Error! You cannot define the decimal precision of 'Account' as greater than "
+"the rounding factor of the company's main currency"
+msgstr "錯誤！無法定義'帳戶'的小數精度，因為大於公司主要幣別之捨入因數。"
+
+#. module: product
+#: constraint:product.packaging:0
+msgid "Error: Invalid ean code"
+msgstr "錯誤：ean 碼無效"
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,name:0
+msgid "Explicit rule name for this pricelist line."
+msgstr "此價目表明細的明確規則名稱"
+
+#. module: product
+#: model:product.category,name:product.product_category_6
+msgid "External Devices"
+msgstr "外部裝置"
+
+#. module: product
+#: model:product.public.category,name:product.External_Hard_Drive
+msgid "External Hard Drive"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_28_product_template
+msgid "External Hard disk"
+msgstr "外接硬碟"
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "First valid date for the version."
+msgstr "此版本的第一個有效日期"
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Fixed"
+msgstr "固定"
+
+#. module: product
+#: field:product.product,message_follower_ids:0
+#: field:product.template,message_follower_ids:0
+msgid "Followers"
+msgstr "關注者"
+
+#. module: product
+#: help:product.pricelist.item,min_quantity:0
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"minimum quantity specified in this field."
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_7_product_template
+msgid ""
+"Frequency: 5Hz to 21kHz\n"
+"Impedance: 23 ohms\n"
+"Sensitivity: 109 dB SPL/mW\n"
+"Drivers: two-way balanced armature\n"
+"Cable length: 1065 mm\n"
+"Weight: 0.4 ounce\n"
+"            "
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_44_product_template
+msgid "Full featured image editing software."
+msgstr "全功能影像編輯軟體"
+
+#. module: product
+#: help:product.template,packaging_ids:0
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+
+#. module: product
+#: help:product.packaging,sequence:0
+msgid "Gives the sequence order when displaying a list of packaging."
+msgstr ""
+
+#. module: product
+#: help:product.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr "請指定排序以便顯示產品類別表。"
+
+#. module: product
+#: model:product.template,name:product.product_product_44_product_template
+msgid "GrapWorks Software"
+msgstr "GrapWorks 軟體"
+
+#. module: product
+#: model:product.public.category,name:product.graphics_card
+#: model:product.template,name:product.product_product_24_product_template
+msgid "Graphics Card"
+msgstr "顯示卡"
+
+#. module: product
+#: field:product.template,weight:0
+msgid "Gross Weight"
+msgstr "毛重"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+msgid "Group by..."
+msgstr "分類方式..."
+
+#. module: product
+#: model:product.template,name:product.product_product_17_product_template
+msgid "HDD SH-1"
+msgstr "HDD SH-1"
+
+#. module: product
+#: model:product.template,name:product.product_product_18_product_template
+msgid "HDD SH-2"
+msgstr "HDD SH-2"
+
+#. module: product
+#: model:product.template,name:product.product_product_19_product_template
+msgid "HDD on Demand"
+msgstr "HDD on Demand"
+
+#. module: product
+#: model:product.template,description:product.product_product_32_product_template
+msgid ""
+"Hands free headset for laptop PC with in-line microphone and headphone plug."
+msgstr ""
+"Hands free headset for laptop PC with in-line microphone and headphone plug."
+
+#. module: product
+#: model:product.public.category,name:product.HDD
+msgid "Hard Drive"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.Headset
+msgid "Headset"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_33_product_template
+msgid "Headset USB"
+msgstr "USB 耳機"
+
+#. module: product
+#: model:product.template,description:product.product_product_33_product_template
+msgid "Headset for laptop PC with USB connector."
+msgstr "附有USB接頭，手提電腦用的耳機。"
+
+#. module: product
+#: model:product.template,name:product.product_product_32_product_template
+msgid "Headset standard"
+msgstr "標準式耳機"
+
+#. module: product
+#: field:product.ul,height:0
+msgid "Height"
+msgstr "高度"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_11_product_template
+#: model:product.template,description_sale:product.product_product_11b_product_template
+msgid ""
+"Height: 3.01 inches\n"
+"Width:  1.56 inches\n"
+"Depth:  0.21 inch\n"
+"Weight: 1.1 ounces"
+msgstr ""
+
+#. module: product
+#: field:product.price.history,datetime:0
+msgid "Historization Time"
+msgstr ""
+
+#. module: product
+#: field:product.price.history,cost:0
+msgid "Historized Cost"
+msgstr ""
+
+#. module: product
+#: help:product.product,message_summary:0
+#: help:product.template,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_hour
+msgid "Hour(s)"
+msgstr "小時"
+
+#. module: product
+#: help:product.uom,factor_inv:0
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category:\n"
+"1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+
+#. module: product
+#: help:product.uom,factor:0
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category:\n"
+"1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,id:0
+#: field:product.attribute,id:0
+#: field:product.attribute.line,id:0
+#: field:product.attribute.price,id:0
+#: field:product.attribute.value,id:0
+#: field:product.category,id:0
+#: field:product.packaging,id:0
+#: field:product.price.history,id:0
+#: field:product.price.type,id:0
+#: field:product.price_list,id:0
+#: field:product.pricelist,id:0
+#: field:product.pricelist.item,id:0
+#: field:product.pricelist.type,id:0
+#: field:product.pricelist.version,id:0
+#: field:product.product,id:0
+#: field:product.supplierinfo,id:0
+#: field:product.template,id:0
+#: field:product.ul,id:0
+#: field:product.uom,id:0
+#: field:product.uom.categ,id:0
+#: field:report.product.report_pricelist,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product
+#: help:product.product,message_unread:0
+#: help:product.template,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如新訊息需要關注者，請勾選。"
+
+#. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr "如未勾選，將允許隱藏價目表而非移除之。"
+
+#. module: product
+#: help:product.product,active:0
+#: help:product.template,active:0
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "如未勾選，將允許將產品隱藏而不須移除。"
+
+#. module: product
+#: model:product.category,name:product.imac
+msgid "Imac"
+msgstr ""
+
+#. module: product
+#: field:product.template,image:0
+msgid "Image"
+msgstr "影像"
+
+#. module: product
+#: help:product.product,image:0
+msgid ""
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+
+#. module: product
+#: help:product.product,image_medium:0
+msgid ""
+"Image of the product variant (Medium-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: product
+#: help:product.product,image_small:0
+msgid ""
+"Image of the product variant (Small-sized image of product template if "
+"false)."
+msgstr ""
+
+#. module: product
+#: selection:product.template,state:0
+msgid "In Development"
+msgstr "開發中"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Information"
+msgstr "資訊"
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr "產品供應商資訊"
+
+#. module: product
+#: model:product.template,name:product.product_product_38_product_template
+msgid "Ink Cartridge"
+msgstr "墨水匣"
+
+#. module: product
+#: code:addons/product/product.py:385
+#, python-format
+msgid "Integrity Error!"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_2
+msgid "Internal"
+msgstr "內部"
+
+#. module: product
+#: field:product.template,categ_id:0
+msgid "Internal Category"
+msgstr ""
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+#: field:product.template,default_code:0
+msgid "Internal Reference"
+msgstr "內部編號"
+
+#. module: product
+#: help:product.product,ean13:0
+msgid "International Article Number used for product identification."
+msgstr "用於產品識別的國際商品號碼(International Article Number)"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Inventory"
+msgstr "庫存"
+
+#. module: product
+#: model:product.category,name:product.ipad
+msgid "Ipad"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.ipod
+msgid "Ipod"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_is_follower:0
+#: field:product.template,message_is_follower:0
+msgid "Is a Follower"
+msgstr "為關注者"
+
+#. module: product
+#: view:product.pricelist.version:product.product_pricelist_version_form_view
+msgid "Item List"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.type,key:0
+msgid "Key"
+msgstr "Key"
+
+#. module: product
+#: model:product.public.category,name:product.Keyboard_Mouse
+msgid "Keyboard / Mouse"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_27_product_template
+msgid "Laptop Customized"
+msgstr "客製化的攜帶型電腦"
+
+#. module: product
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Laptop E5023"
+msgstr "攜帶型電腦 ES023"
+
+#. module: product
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Laptop S3450"
+msgstr "Laptop S3450"
+
+#. module: product
+#: model:product.public.category,name:product.laptops
+msgid "Laptops"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_last_post:0
+#: field:product.template,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,write_uid:0
+#: field:product.attribute,write_uid:0
+#: field:product.attribute.line,write_uid:0
+#: field:product.attribute.price,write_uid:0
+#: field:product.attribute.value,write_uid:0
+#: field:product.category,write_uid:0
+#: field:product.packaging,write_uid:0
+#: field:product.price.history,write_uid:0
+#: field:product.price.type,write_uid:0
+#: field:product.price_list,write_uid:0
+#: field:product.pricelist,write_uid:0
+#: field:product.pricelist.item,write_uid:0
+#: field:product.pricelist.type,write_uid:0
+#: field:product.pricelist.version,write_uid:0
+#: field:product.product,write_uid:0
+#: field:product.supplierinfo,write_uid:0
+#: field:product.template,write_uid:0
+#: field:product.ul,write_uid:0
+#: field:product.uom,write_uid:0
+#: field:product.uom.categ,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,write_date:0
+#: field:product.attribute,write_date:0
+#: field:product.attribute.line,write_date:0
+#: field:product.attribute.price,write_date:0
+#: field:product.attribute.value,write_date:0
+#: field:product.category,write_date:0
+#: field:product.packaging,write_date:0
+#: field:product.price.history,write_date:0
+#: field:product.price.type,write_date:0
+#: field:product.price_list,write_date:0
+#: field:product.pricelist,write_date:0
+#: field:product.pricelist.item,write_date:0
+#: field:product.pricelist.type,write_date:0
+#: field:product.pricelist.version,write_date:0
+#: field:product.product,write_date:0
+#: field:product.supplierinfo,write_date:0
+#: field:product.template,write_date:0
+#: field:product.ul,write_date:0
+#: field:product.uom,write_date:0
+#: field:product.uom.categ,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_end:0
+msgid "Last valid date for the version."
+msgstr "此版本的最後一個有效日期。"
+
+#. module: product
+#: help:product.supplierinfo,delay:0
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
+#: field:product.category,parent_left:0
+msgid "Left Parent"
+msgstr "左方的父項"
+
+#. module: product
+#: field:product.ul,length:0
+msgid "Length"
+msgstr "長度"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr "長度／距離"
+
+#. module: product
+#: view:product.template:product.product_template_only_form_view
+msgid "List of Variants"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_litre
+msgid "Liter(s)"
+msgstr "公升"
+
+#. module: product
+#: model:ir.model,name:product.model_product_ul
+msgid "Logistic Unit"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_ul_form_action
+#: model:ir.ui.menu,name:product.menu_product_ul_form_action
+#: view:product.ul:product.product_ul_form_view
+#: view:product.ul:product.product_ul_tree
+msgid "Logistic Units"
+msgstr ""
+
+#. module: product
+#: field:product.template,packaging_ids:0
+msgid "Logistical Units"
+msgstr "物流單位"
+
+#. module: product
+#: field:product.template,seller_id:0
+msgid "Main Supplier"
+msgstr "主要供應商"
+
+#. module: product
+#: help:product.template,seller_id:0
+msgid "Main Supplier who has highest priority in Supplier List."
+msgstr "於供應商清單有最高優先次序之主要供應商"
+
+#. module: product
+#: model:res.groups,name:product.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "管理多種量度單位"
+
+#. module: product
+#: model:res.groups,name:product.group_stock_packaging
+msgid "Manage Product Packaging"
+msgstr "管理產品包裝"
+
+#. module: product
+#: model:res.groups,name:product.group_mrp_properties
+msgid "Manage Properties of Product"
+msgstr "管理產品屬性"
+
+#. module: product
+#: model:res.groups,name:product.group_uos
+msgid "Manage Secondary Unit of Measure"
+msgstr "管理次要量度單位"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Max. Margin"
+msgstr "最大邊際利潤"
+
+#. module: product
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Max. Price Margin"
+msgstr ""
+
+#. module: product
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "量度類型"
+
+#. module: product
+#: field:product.product,image_medium:0
+#: field:product.template,image_medium:0
+msgid "Medium-sized image"
+msgstr "中尺寸影像"
+
+#. module: product
+#: help:product.template,image_medium:0
+msgid ""
+"Medium-sized image of the product. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved, only when the image exceeds "
+"one of those sizes. Use this field in form views or some kanban views."
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_1
+#: model:product.public.category,name:product.Memory
+msgid "Memory"
+msgstr ""
+
+#. module: product
+#: field:product.product,message_ids:0
+#: field:product.template,message_ids:0
+msgid "Messages"
+msgstr "訊息"
+
+#. module: product
+#: help:product.product,message_ids:0
+#: help:product.template,message_ids:0
+msgid "Messages and communication history"
+msgstr "訊息及聯絡歷史"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Min. Margin"
+msgstr "最小邊際利潤"
+
+#. module: product
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Min. Price Margin"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,min_quantity:0
+msgid "Min. Quantity"
+msgstr "最小量"
+
+#. module: product
+#: field:product.supplierinfo,min_qty:0
+msgid "Minimal Quantity"
+msgstr "最小量"
+
+#. module: product
+#: model:product.public.category,name:product.Modem_Router
+msgid "Modem & Router"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.motherboard
+msgid "Motherboard"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_21_product_template
+msgid "Motherboard A20Z7"
+msgstr "主機板 A20Z7"
+
+#. module: product
+#: model:product.template,name:product.product_product_20_product_template
+msgid "Motherboard I9P57"
+msgstr "主機板 I9P57"
+
+#. module: product
+#: model:product.template,name:product.product_product_10_product_template
+msgid "Mouse, Optical"
+msgstr "光學滑鼠"
+
+#. module: product
+#: model:product.template,name:product.product_product_12_product_template
+msgid "Mouse, Wireless"
+msgstr "無線滑鼠"
+
+#. module: product
+#: model:product.template,name:product.product_product_31_product_template
+msgid "Multimedia Speakers"
+msgstr "喇叭"
+
+#. module: product
+#: field:product.attribute,name:0
+#: field:product.category,complete_name:0
+#: field:product.category,name:0
+#: field:product.pricelist.type,name:0
+#: field:product.pricelist.version,name:0
+#: field:product.template,name:0
+#: field:product.ul,name:0
+#: field:product.uom.categ,name:0
+msgid "Name"
+msgstr "名稱"
+
+#. module: product
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr "此類價目之名稱"
+
+#. module: product
+#: field:product.template,weight_net:0
+msgid "Net Weight"
+msgstr "淨重"
+
+#. module: product
+#: model:product.public.category,name:product.network
+msgid "Network"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "New Price ="
+msgstr "新價目 ="
+
+#. module: product
+#: code:addons/product/product.py:705
+#, python-format
+msgid ""
+"New Unit of Measure '%s' must belong to same Unit of Measure category '%s' "
+"as of old Unit of Measure '%s'. If you need to change the unit of measure, "
+"you may deactivate this product from the 'Procurements' tab and create a new "
+"one."
+msgstr ""
+
+#. module: product
+#: selection:product.category,type:0
+#: selection:product.template,state:0
+msgid "Normal"
+msgstr "普通"
+
+#. module: product
+#: field:product.packaging,rows:0
+msgid "Number of Layers"
+msgstr "層數"
+
+#. module: product
+#: selection:product.template,state:0
+msgid "Obsolete"
+msgstr "廢棄"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_42_product_template
+msgid ""
+"Office Editing Software with word processing, spreadsheets, presentations, "
+"graphics, and databases..."
+msgstr "具有文書處理、試算表、簡報、圖表以及資料庫功能的辦公編輯軟體..."
+
+#. module: product
+#: model:product.template,name:product.product_product_42_product_template
+msgid "Office Suite"
+msgstr "辦公軟體套件"
+
+#. module: product
+#: model:product.template,name:product.product_product_2_product_template
+msgid "On Site Assistance"
+msgstr "到場支援"
+
+#. module: product
+#: model:product.template,name:product.product_product_1_product_template
+msgid "On Site Monitoring"
+msgstr "到場監督"
+
+#. module: product
+#: model:product.template,description:product.product_product_19_product_template
+msgid "On demand hard-disk having capacity based on requirement."
+msgstr "On demand hard-disk having capacity based on requirement."
+
+#. module: product
+#: field:product.template,is_product_variant:0
+msgid "Only one product variant"
+msgstr ""
+
+#. module: product
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+msgid "Other Info"
+msgstr "其他資訊"
+
+#. module: product
+#: code:addons/product/pricelist.py:391
+#: field:product.pricelist.item,base_pricelist_id:0
+#, python-format
+msgid "Other Pricelist"
+msgstr "其他價目表"
+
+#. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Other Products"
+msgstr "其他產品"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "PC Assemble + Custom (PC on Demand) "
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_3_product_template
+msgid "PC Assemble SC234"
+msgstr "PC 組裝 SC234"
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "包裝"
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Package Logistic Unit"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ul_qty:0
+msgid "Package by layer"
+msgstr "每層包裝盒"
+
+#. module: product
+#: model:ir.model,name:product.model_product_packaging
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+#: view:product.packaging:product.product_packaging_tree_view
+#: view:product.packaging:product.product_packaging_tree_view_product
+#: view:product.template:product.product_template_form_view
+msgid "Packaging"
+msgstr "包裝"
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pallet"
+msgstr "卡板"
+
+#. module: product
+#: field:product.packaging,ul_container:0
+msgid "Pallet Logistic Unit"
+msgstr ""
+
+#. module: product
+#: view:product.packaging:product.product_packaging_form_view
+#: view:product.packaging:product.product_packaging_form_view_without_product
+msgid "Palletization"
+msgstr "貨盤化"
+
+#. module: product
+#: field:product.category,parent_id:0
+msgid "Parent Category"
+msgstr "上層類別"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Partner"
+msgstr "伙伴"
+
+#. module: product
+#: field:pricelist.partnerinfo,suppinfo_id:0
+msgid "Partner Information"
+msgstr "伙伴資訊"
+
+#. module: product
+#: model:product.public.category,name:product.Pen_Drive
+msgid "Pen Drive"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_29_product_template
+msgid "Pen drive, SP-2"
+msgstr "Pen drive, SP-2"
+
+#. module: product
+#: model:product.template,name:product.product_product_30_product_template
+msgid "Pen drive, SP-4"
+msgstr "Pen drive, SP-4"
+
+#. module: product
+#: field:product.product,price:0
+#: field:product.template,price:0
+msgid "Price"
+msgstr "價格"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Price Computation"
+msgstr "價目運算"
+
+#. module: product
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "價格折扣"
+
+#. module: product
+#: field:product.attribute.price,price_extra:0
+msgid "Price Extra"
+msgstr ""
+
+#. module: product
+#: help:product.attribute.value,price_extra:0
+msgid ""
+"Price Extra: Extra price for the variant with this attribute value on sale "
+"price. eg. 200 price extra, 1000 + 200 = 1200."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: view:product.price_list:product.view_product_price_list
+#: field:product.pricelist.version,pricelist_id:0
+#: view:website:product.report_pricelist
+msgid "Price List"
+msgstr "價目表"
+
+#. module: product
+#: field:product.pricelist.version,items_id:0
+msgid "Price List Items"
+msgstr "價目表項"
+
+#. module: product
+#: view:website:product.report_pricelist
+msgid "Price List Name"
+msgstr "價目表名稱"
+
+#. module: product
+#: field:product.pricelist.item,price_version_id:0
+msgid "Price List Version"
+msgstr "價格表版本"
+
+#. module: product
+#: field:product.price.type,name:0
+msgid "Price Name"
+msgstr "價目名稱"
+
+#. module: product
+#: field:product.pricelist.item,price_round:0
+msgid "Price Rounding"
+msgstr "價格四捨五入"
+
+#. module: product
+#: field:product.pricelist.item,price_surcharge:0
+msgid "Price Surcharge"
+msgstr "附加價格"
+
+#. module: product
+#: model:ir.model,name:product.model_product_price_type
+msgid "Price Type"
+msgstr "價目類型"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr "價格類別"
+
+#. module: product
+#: view:product.product:product.product_kanban_view
+#: view:product.template:product.product_template_kanban_view
+msgid "Price:"
+msgstr "價格："
+
+#. module: product
+#: field:product.price_list,price_list:0
+msgid "PriceList"
+msgstr "價目表"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.action_report_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+#: field:product.template,pricelist_id:0
+msgid "Pricelist"
+msgstr "價目表"
+
+#. module: product
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
+msgstr "價目表名稱"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_type
+#: field:product.pricelist,type:0
+msgid "Pricelist Type"
+msgstr "價目表類型"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist:product.product_pricelist_view
+#: view:product.pricelist.version:product.product_pricelist_version_form_view
+#: view:product.pricelist.version:product.product_pricelist_version_tree_view
+msgid "Pricelist Version"
+msgstr "價目表版本"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2444,6 +1785,425 @@ msgstr ""
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
 msgstr "價目表板本"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "價目表項"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
+#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
+#: model:ir.ui.menu,name:product.menu_product_pricelist_main
+msgid "Pricelists"
+msgstr "價目表"
+
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "Pricelists are managed on"
+msgstr ""
+
+#. module: product
+#: view:product.price_list:product.view_product_price_list
+msgid "Print"
+msgstr "列印"
+
+#. module: product
+#: view:website:product.report_pricelist
+msgid "Print date"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.printer
+msgid "Printer"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_37_product_template
+msgid "Printer, All-in-one"
+msgstr "All-in-one 印表機"
+
+#. module: product
+#: model:product.public.category,name:product.processor
+msgid "Processor"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_23_product_template
+msgid "Processor AMD 8-Core"
+msgstr "AMD 八核心處理器"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor Core i5 2.70 Ghz"
+msgstr "處理器 Core i5 2.70 Ghz"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Procurements"
+msgstr "採購計劃"
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: field:product.packaging,product_tmpl_id:0
+#: field:product.pricelist.item,product_id:0
+#: view:product.product:product.product_search_form_view
+#: view:product.template:product.product_template_form_view
+#: view:product.template:product.product_template_search_view
+#: view:product.template:product.product_template_tree_view
+#: model:res.request.link,name:product.req_link_product
+msgid "Product"
+msgstr "產品"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute
+msgid "Product Attribute"
+msgstr ""
+
+#. module: product
+#: field:product.attribute.line,value_ids:0
+#: field:product.attribute.price,value_id:0
+msgid "Product Attribute Value"
+msgstr ""
+
+#. module: product
+#: field:product.template,attribute_line_ids:0
+msgid "Product Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
+#: view:product.category:product.product_category_form_view
+#: view:product.category:product.product_category_list_view
+#: view:product.category:product.product_category_search_view
+#: view:product.category:product.product_category_tree_view
+msgid "Product Categories"
+msgstr "產品分類"
+
+#. module: product
+#: model:ir.ui.menu,name:product.prod_config_main
+msgid "Product Categories & Attributes"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: field:product.pricelist.item,categ_id:0
+#: field:product.uom,category_id:0
+msgid "Product Category"
+msgstr "產品分類"
+
+#. module: product
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "產品欄位"
+
+#. module: product
+#: field:product.template,product_manager:0
+msgid "Product Manager"
+msgstr "產品經理"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Product Name"
+msgstr "產品名稱"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template
+#: field:product.attribute.line,product_tmpl_id:0
+#: field:product.attribute.price,product_tmpl_id:0
+#: field:product.price.history,product_template_id:0
+#: field:product.pricelist.item,product_tmpl_id:0
+#: view:product.product:product.product_search_form_view
+#: field:product.product,product_tmpl_id:0
+#: field:product.supplierinfo,product_tmpl_id:0
+#: view:product.template:product.product_template_only_form_view
+msgid "Product Template"
+msgstr "產品範本"
+
+#. module: product
+#: field:product.template,type:0
+msgid "Product Type"
+msgstr "產品類型"
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom
+msgid "Product Unit of Measure"
+msgstr "產品量度單位"
+
+#. module: product
+#: view:product.product:product.product_normal_form_view
+#: view:product.template:product.product_template_search_view
+msgid "Product Variant"
+msgstr "產品系列"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:product.product_product_tree_view
+msgid "Product Variants"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "產品量度單位分類"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.ui.menu,name:product.menu_product_template_action
+#: field:product.template,product_variant_ids:0
+msgid "Products"
+msgstr "產品"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+msgid "Products Labels"
+msgstr "產品標籤"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+#: view:product.pricelist.item:product.product_pricelist_item_tree_view
+msgid "Products Listprices Items"
+msgstr "產品表列價格項"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view_search
+msgid "Products Price"
+msgstr "產品價格"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view
+#: view:product.pricelist:product.product_pricelist_view_tree
+msgid "Products Price List"
+msgstr "產品價格表"
+
+#. module: product
+#: view:product.pricelist:product.product_pricelist_view_search
+msgid "Products Price Search"
+msgstr "產品價格搜尋"
+
+#. module: product
+#: view:product.price.type:product.product_price_type_view
+msgid "Products Price Type"
+msgstr "產品價目類型"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action
+#: model:ir.ui.menu,name:product.menu_products_category
+msgid "Products by Category"
+msgstr "各分類產品"
+
+#. module: product
+#: code:addons/product/product.py:809
+#, python-format
+msgid "Products: "
+msgstr "產品： "
+
+#. module: product
+#: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
+#: field:product.template,lst_price:0
+msgid "Public Price"
+msgstr "公開價格"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "公開價目表"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Purchase"
+msgstr "採購"
+
+#. module: product
+#: field:product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr "採購說明"
+
+#. module: product
+#: model:res.groups,name:product.group_purchase_pricelist
+msgid "Purchase Pricelists"
+msgstr "採購價目表"
+
+#. module: product
+#: field:product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr "採購量度單位"
+
+#. module: product
+#: field:pricelist.partnerinfo,min_quantity:0
+#: field:product.supplierinfo,qty:0
+msgid "Quantity"
+msgstr "數量"
+
+#. module: product
+#: field:product.packaging,qty:0
+msgid "Quantity by Package"
+msgstr "盒數"
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "數量-1"
+
+#. module: product
+#: field:product.price_list,qty2:0
+msgid "Quantity-2"
+msgstr "數量-2"
+
+#. module: product
+#: field:product.price_list,qty3:0
+msgid "Quantity-3"
+msgstr "數量-3"
+
+#. module: product
+#: field:product.price_list,qty4:0
+msgid "Quantity-4"
+msgstr "數量-4"
+
+#. module: product
+#: field:product.price_list,qty5:0
+msgid "Quantity-5"
+msgstr "數目-5"
+
+#. module: product
+#: model:product.template,name:product.product_product_14_product_template
+msgid "RAM SR2"
+msgstr "記憶體 SR2"
+
+#. module: product
+#: model:product.template,name:product.product_product_15_product_template
+msgid "RAM SR3"
+msgstr "記憶體 SR3"
+
+#. module: product
+#: model:product.template,name:product.product_product_13_product_template
+msgid "RAM SR5"
+msgstr "記憶體 SR5"
+
+#. module: product
+#: field:product.uom,factor:0
+msgid "Ratio"
+msgstr "比率"
+
+#. module: product
+#: model:product.category,name:product.product_category_10
+msgid "Raw Materials"
+msgstr "原材料"
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Reference Unit of Measure for this category"
+msgstr "此類別之參照用量度單位"
+
+#. module: product
+#: field:product.category,parent_right:0
+msgid "Right Parent"
+msgstr "右方父項"
+
+#. module: product
+#: view:product.pricelist.item:product.product_pricelist_item_form_view
+msgid "Rounding Method"
+msgstr "捨入方法"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "捨入精度"
+
+#. module: product
+#: model:product.template,name:product.product_product_45_product_template
+msgid "Router R430"
+msgstr "路由器 R430"
+
+#. module: product
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
+msgstr "規則名稱"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Sale Conditions"
+msgstr "銷售狀況"
+
+#. module: product
+#: field:product.template,description_sale:0
+msgid "Sale Description"
+msgstr "銷售說明"
+
+#. module: product
+#: field:product.template,list_price:0
+msgid "Sale Price"
+msgstr "售價"
+
+#. module: product
+#: model:product.pricelist.type,name:product.pricelist_type_sale
+#: field:res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr "銷售價目表"
+
+#. module: product
+#: model:product.category,name:product.product_category_1
+msgid "Saleable"
+msgstr "可銷售的"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Sales"
+msgstr "銷售"
+
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "銷售&採購"
+
+#. module: product
+#: model:res.groups,name:product.group_sale_pricelist
+msgid "Sales Pricelists"
+msgstr "銷售價目表"
+
+#. module: product
+#: model:product.public.category,name:product.Screen
+msgid "Screen"
+msgstr ""
+
+#. module: product
+#: help:product.template,categ_id:0
+msgid "Select category for the current product"
+msgstr "為當前商品選取分類"
+
+#. module: product
+#: field:product.attribute.value,sequence:0
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+#: field:product.supplierinfo,sequence:0
+msgid "Sequence"
+msgstr "序列"
+
+#. module: product
+#: model:product.public.category,name:product.server
+msgid "Server"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "服務"
+
+#. module: product
+#: model:product.category,name:product.product_category_5
+#: model:product.public.category,name:product.services
+#: view:product.template:product.product_template_search_view
+msgid "Services"
+msgstr "服務"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2454,39 +2214,279 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,list_price:0
-msgid "Sale Price"
-msgstr "售價"
+#: field:product.product,image_small:0
+#: field:product.template,image_small:0
+msgid "Small-sized image"
+msgstr "小尺寸影像"
 
 #. module: product
-#: help:product.uom,category_id:0
+#: help:product.template,image_small:0
 msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
+"Small-sized image of the product. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: product
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr "錯誤！無法建立遞迴性分類。"
+#: selection:product.uom,uom_type:0
+msgid "Smaller than the reference Unit of Measure"
+msgstr "小於參照用之量度單位"
 
 #. module: product
-#: help:product.product,image_medium:0
+#: model:product.category,name:product.product_category_9
+#: model:product.public.category,name:product.Software
+msgid "Software"
+msgstr ""
+
+#. module: product
+#: model:product.public.category,name:product.Speakers
+msgid "Speakers"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
 msgid ""
-"Medium-sized image of the product. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved, only when the image exceeds "
-"one of those sizes. Use this field in form views or some kanban views."
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
 msgstr ""
 
 #. module: product
-#: view:product.uom:0
-msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+#: help:product.pricelist.item,product_id:0
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,qty:0
-msgid "This is a quantity which is converted into Default Unit of Measure."
+#: help:product.pricelist.item,product_tmpl_id:0
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
 msgstr ""
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+
+#. module: product
+#: help:product.template,sale_ok:0
+msgid "Specify if the product can be selected in a sales order line."
+msgstr "若該產品可以在銷售訂單明細中被選擇者，請指明。"
+
+#. module: product
+#: help:product.pricelist.item,price_surcharge:0
+msgid ""
+"Specify the fixed amount to add or substract(if negative) to the amount "
+"calculated with the discount."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_max_margin:0
+msgid "Specify the maximum amount of margin over the base price."
+msgstr "請指定在基礎價格之上的最大差額。"
+
+#. module: product
+#: help:product.pricelist.item,price_min_margin:0
+msgid "Specify the minimum amount of margin over the base price."
+msgstr "請指定在基本價格之上的最少差額。"
+
+#. module: product
+#: field:product.pricelist.version,date_start:0
+msgid "Start Date"
+msgstr "開始日期"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+#: field:product.template,state:0
+msgid "Status"
+msgstr "狀態"
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "可庫存貨品"
+
+#. module: product
+#: field:product.product,message_summary:0
+#: field:product.template,message_summary:0
+msgid "Summary"
+msgstr "摘要"
+
+#. module: product
+#: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
+msgid "Supplier"
+msgstr "供應商"
+
+#. module: product
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+#: view:product.supplierinfo:product.product_supplierinfo_tree_view
+msgid "Supplier Information"
+msgstr "供應商資訊"
+
+#. module: product
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr "供應商前置時間"
+
+#. module: product
+#: field:product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr "供應商價目表"
+
+#. module: product
+#: code:addons/product/pricelist.py:392
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr "供應商產品代號"
+
+#. module: product
+#: field:product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
+msgstr "供應商產品名稱"
+
+#. module: product
+#: field:product.template,seller_qty:0
+msgid "Supplier Quantity"
+msgstr "供應商數量"
+
+#. module: product
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier Unit of Measure"
+msgstr "供應商量度單位"
+
+#. module: product
+#: help:product.supplierinfo,name:0
+msgid "Supplier of this product"
+msgstr "此產品供應商"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Suppliers"
+msgstr "供應商"
+
+#. module: product
+#: model:product.public.category,name:product.Switch
+msgid "Switch"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_47_product_template
+msgid "Switch, 24 ports"
+msgstr "Switch, 24 ports"
+
+#. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr "包裝單位 EAN 碼"
+
+#. module: product
+#: help:product.packaging,code:0
+msgid "The code of the transport unit."
+msgstr "運輸單位代號"
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "量度單位轉換比例不能為0！"
+
+#. module: product
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
+msgstr ""
+
+#. module: product
+#: help:product.template,weight:0
+msgid "The gross weight in Kg."
+msgstr "毛重（公斤）"
+
+#. module: product
+#: help:product.ul,height:0
+msgid "The height of the package"
+msgstr "包裝盒高度"
+
+#. module: product
+#: help:product.ul,length:0
+msgid "The length of the package"
+msgstr "包裝盒長度"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product Unit of Measure if not empty, in the default unit of measure of the "
+"product otherwise."
+msgstr ""
+
+#. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier Unit of "
+"Measure if any or in the default Unit of Measure of the product otherrwise."
+msgstr ""
+
+#. module: product
+#: help:product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr "淨重（公斤）"
+
+#. module: product
+#: help:product.packaging,rows:0
+msgid "The number of layers on a pallet or box"
+msgstr "卡板或箱子層數"
+
+#. module: product
+#: help:product.packaging,ul_qty:0
+msgid "The number of packages by layer"
+msgstr "每層盒數"
+
+#. module: product
+#: code:addons/product/product.py:385
+#, python-format
+msgid ""
+"The operation cannot be completed:\n"
+"You trying to delete an attribute value with a reference on a product "
+"variant."
+msgstr ""
+
+#. module: product
+#: view:product.supplierinfo:product.product_supplierinfo_form_view
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_9_product_template
+msgid ""
+"The sleek aluminium Apple Wireless Keyboard.\n"
+"            "
+msgstr ""
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "可以卡板或箱子放入之產品總數"
 
 #. module: product
 #: help:product.template,volume:0
@@ -2494,300 +2494,465 @@ msgid "The volume in m3."
 msgstr "體積（立方公尺）"
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "價格折扣"
+#: help:product.packaging,weight:0
+msgid "The weight of a full package, pallet or box."
+msgstr "包裝盒總重，卡板或箱子"
 
-#~ msgid "Customer Price"
-#~ msgstr "客户价格"
+#. module: product
+#: help:product.ul,width:0
+msgid "The width of the package"
+msgstr "包裝盒寬度"
 
-#~ msgid "Net weight"
-#~ msgstr "淨重"
+#. module: product
+#: sql_constraint:product.attribute.value:0
+msgid "This attribute value already exists !"
+msgstr ""
 
-#~ msgid "Virtual Stock"
-#~ msgstr "虛擬庫存"
+#. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr "來自產品表單。"
 
-#~ msgid "Day"
-#~ msgstr "日"
+#. module: product
+#: help:product.product,image_variant:0
+msgid ""
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
+msgstr ""
 
+#. module: product
+#: help:product.template,image:0
+msgid ""
+"This field holds the image used as image for the product, limited to "
+"1024x1024px."
+msgstr "此欄位保存產品的影像，限制在 1024x1024px。"
+
+#. module: product
+#: help:product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Unit of Measure."
+msgstr ""
+
+#. module: product
+#: help:product.product,price_extra:0
+msgid "This is le sum of the extra price of all attributes"
+msgstr ""
+
+#. module: product
+#: help:product.template,seller_qty:0
+msgid "This is minimum quantity to purchase from Main Supplier."
+msgstr "對主要供應商之最少採購量"
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid ""
+"This is the average delay in days between the purchase order confirmation "
+"and the receipts for this product and for the default supplier. It is used "
+"by the scheduler to order requests based on reordering delays."
+msgstr ""
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "This note will be displayed on requests for quotation..."
+msgstr ""
+
+#. module: product
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier Unit of Measure if "
+"any or the default Unit of Measure of the product otherwise"
+msgstr ""
+
+#. module: product
+#: help:res.partner,property_product_pricelist:0
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr "會用此價目表取代預設者，來銷售給目前伙伴。"
+
+#. module: product
+#: model:product.template,description:product.product_product_9_product_template
+msgid "This product is configured with example of push/pull flows"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,product_code:0
+msgid ""
+"This supplier's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,product_name:0
+msgid ""
+"This supplier's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_2_product_template
+msgid ""
+"This type of service include assistance for security questions, system "
+"configuration requirements, implementation or special needs."
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_1_product_template
+#: model:product.template,description_sale:product.product_product_1_product_template
+msgid "This type of service include basic monitoring of products."
+msgstr "此類型的服務包含對產品的基本監督。"
+
+#. module: product
+#: model:product.template,name:product.product_product_39_product_template
+msgid "Toner Cartridge"
+msgstr "碳粉匣"
+
+#. module: product
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
+msgstr "包裝盒總重"
+
+#. module: product
+#: view:product.template:product.product_template_search_view
+#: field:product.ul,type:0
+#: field:product.uom,uom_type:0
+msgid "Type"
+msgstr "類型"
+
+#. module: product
+#: model:product.template,name:product.product_product_48_product_template
+msgid "USB Adapter"
+msgstr "USB Adapter"
+
+#. module: product
+#: selection:product.ul,type:0
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "單位"
+
+#. module: product
+#: field:pricelist.partnerinfo,price:0
+msgid "Unit Price"
+msgstr "單價"
+
+#. module: product
+#: view:product.template:product.product_template_form_view
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
+msgid "Unit of Measure"
+msgstr "量度單位"
+
+#. module: product
+#: field:product.template,uos_coeff:0
+msgid "Unit of Measure -> UOS Coeff"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "度量單位類別"
+
+#. module: product
+#: code:addons/product/product.py:705
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告！"
+msgid "Unit of Measure categories Mismatch!"
+msgstr "量度單位之類別不符！"
 
-#~ msgid ""
-#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-#~ "Item!"
-#~ msgstr "錯誤！不能於價目表項目將主要價目表指派為其他價目表！"
+#. module: product
+#: field:product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr "銷售單位"
 
-#~ msgid "Reference"
-#~ msgstr "參照"
+#. module: product
+#: model:product.uom,name:product.product_uom_unit
+msgid "Unit(s)"
+msgstr "單位"
 
-#~ msgid "Units of Measure Categories"
-#~ msgstr "量度分類單位"
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:product.product_uom_form_view
+#: view:product.uom:product.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "量度單位"
 
-#~ msgid "Keyboard"
-#~ msgstr "鍵盤"
+#. module: product
+#: view:product.uom.categ:product.product_uom_categ_form_view
+msgid "Units of Measure categories"
+msgstr "量度單位分類"
 
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "處理器 AMD Athlon XP 1800+"
+#. module: product
+#: field:product.product,message_unread:0
+#: field:product.template,message_unread:0
+msgid "Unread Messages"
+msgstr "未讀郵件"
 
-#~ msgid "Sellable"
-#~ msgstr "可售"
+#. module: product
+#: help:product.pricelist.type,key:0
+msgid ""
+"Used in the code to select specific prices based on the context. Keep "
+"unchanged."
+msgstr ""
 
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "主板 華碩 A7V8X-X"
+#. module: product
+#: field:product.attribute.value,name:0
+msgid "Value"
+msgstr ""
 
-#~ msgid "UOM"
-#~ msgstr "量度單位"
+#. module: product
+#: field:product.attribute,value_ids:0
+msgid "Values"
+msgstr ""
 
-#~ msgid "Miscelleanous"
-#~ msgstr "雜項"
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Variable"
+msgstr "變數"
 
-#~ msgid "Worker"
-#~ msgstr "工人"
+#. module: product
+#: field:product.product,price_extra:0
+msgid "Variant Extra Price"
+msgstr ""
 
-#~ msgid ""
-#~ "Set a template if this rule only apply to a template of product. Keep empty "
-#~ "for all products"
-#~ msgstr "如此規則只適用於產品範本則設定範本。其他產品則留空"
+#. module: product
+#: field:product.product,image_variant:0
+msgid "Variant Image"
+msgstr ""
 
-#~ msgid "UoM"
-#~ msgstr "量度單位"
+#. module: product
+#: view:product.template:product.product_template_only_form_view
+msgid "Variant Prices"
+msgstr ""
 
-#~ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-#~ msgstr "  例子：1 * (本單位) = 比例 * (參照單位)"
+#. module: product
+#: model:ir.actions.act_window,name:product.variants_template_action
+#: view:product.attribute:product.attribute_tree_view
+#: view:product.attribute.value:product.variants_template_tree_view
+#: view:product.attribute.value:product.variants_tree_view
+msgid "Variant Values"
+msgstr ""
 
-#~ msgid "Wood 2mm"
-#~ msgstr "木才 2mm"
+#. module: product
+#: field:product.attribute.value,product_ids:0
+#: view:product.template:product.product_template_kanban_view
+#: view:product.template:product.product_template_only_form_view
+msgid "Variants"
+msgstr "變動"
 
-#~ msgid ""
-#~ "The rule only applies if the partner buys/sells more than this quantity."
-#~ msgstr "當伙伴購買或銷售多於此數量規則始適用"
+#. module: product
+#: model:product.public.category,name:product.video_acquisition
+msgid "Video Acquisition"
+msgstr ""
 
-#~ msgid ""
-#~ "Future stock for this product according to the selected locations or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr "選取地點（如未選取地點則為內部）此產品未來庫存。計算方法：外送 + 內送"
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr "檢視"
 
-#~ msgid "Reference UoM for this category"
-#~ msgstr "此分類參照量度單位"
+#. module: product
+#: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
+msgid "Volume"
+msgstr "體積"
 
-#~ msgid "IT components"
-#~ msgstr "資訊科技元件"
-
-#~ msgid "Medium PC"
-#~ msgstr "中等 PC"
-
-#~ msgid "Tells the user if he can use the product or not."
-#~ msgstr "告訴用戶其可用產品或否"
-
-#~ msgid "Ending date for this pricelist version to be valid."
-#~ msgstr "價目表版本有效期"
-
-#~ msgid "Storage Localisation"
-#~ msgstr "儲存本地化"
-
-#~ msgid "Metal Cleats"
-#~ msgstr "金屬楔子"
-
-#~ msgid ""
-#~ "Choose here the Unit of Measure in which the prices and quantities are "
-#~ "expressed below."
-#~ msgstr "在此選擇之價目與數量量度單位顯示於下。"
-
-#~ msgid "Codes"
-#~ msgstr "代號"
-
-#~ msgid "High speed processor config"
-#~ msgstr "高速處理器配置"
-
-#~ msgid "Can be Purchased"
-#~ msgstr "可採購"
-
-#~ msgid "Restaurant Expenses"
-#~ msgstr "餐飲費"
-
-#~ msgid "Silent fan"
-#~ msgstr "靜音風扇"
-
-#~ msgid "Processor AMD Athlon XP 2200+"
-#~ msgstr "處理器 AMD Athlon XP 2200+"
-
-#~ msgid "Kit Keyboard + Mouse"
-#~ msgstr "Kit 鍵盤 + 滑鼠"
-
-#~ msgid "To Purchase"
-#~ msgstr "採購"
-
-#~ msgid "Side Panel"
-#~ msgstr "側板"
-
-#~ msgid "Hour"
-#~ msgstr "小時"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "雜項"
-
-#~ msgid "Ratio & Precision"
-#~ msgstr "比例&精度"
-
-#~ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-#~ msgstr "  例子：1 * (參照單位) = 比例 * (本單位)"
-
-#~ msgid "Regular case fan 80mm"
-#~ msgstr "普通機箱風扇 80mm"
-
-#~ msgid "Calculate Product Price per unit base on pricelist version."
-#~ msgstr "根據價目表版本計算每單位產品價錢"
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "產品&價目表"
-
-#~ msgid "To Sell"
-#~ msgstr "出賣"
-
-#~ msgid "Marketable Services"
-#~ msgstr "可行銷服務"
-
-#~ msgid "Bigger than the reference UoM"
-#~ msgstr "大於參照量度單位"
-
-#~ msgid "Mainboard ASUStek A7N8X"
-#~ msgstr "主板 華碩 A7N8X"
-
-#~ msgid "Stockable"
-#~ msgstr "可庫存"
-
-#~ msgid "Procurement Method"
-#~ msgstr "採購方法"
-
-#~ msgid "If Other Pricelist"
-#~ msgstr "如其他價目表"
-
-#~ msgid "The mode for computing the price for this rule."
-#~ msgstr "以此規則計算價格之模式"
-
+#. module: product
+#: code:addons/product/pricelist.py:208
+#: code:addons/product/product.py:210
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "錯誤！"
+msgid "Warning!"
+msgstr "警告!"
 
-#~ msgid "Partners"
-#~ msgstr "伙伴"
+#. module: product
+#: field:product.template,warranty:0
+msgid "Warranty"
+msgstr "保證"
 
-#, python-format
-#~ msgid " (copy)"
-#~ msgstr " （副本）"
+#. module: product
+#: model:product.template,name:product.product_product_34_product_template
+msgid "Webcam"
+msgstr "網路攝影機"
 
-#~ msgid "UoM Category"
-#~ msgstr "量度單位分類"
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "重量"
 
-#~ msgid "Rack"
-#~ msgstr "機架"
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "Weights"
+msgstr "重量"
 
-#~ msgid "Supply method"
-#~ msgstr "供應方法"
+#. module: product
+#: help:product.pricelist.version,active:0
+msgid ""
+"When a version is duplicated it is set to non active, so that the dates do "
+"not overlaps with original version. You should change the dates and "
+"reactivate the pricelist"
+msgstr ""
 
-#~ msgid "Regular processor config"
-#~ msgstr "普通處理器配置"
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_3
+msgid "White"
+msgstr ""
 
-#~ msgid "Real Stock"
-#~ msgstr "真實庫存"
+#. module: product
+#: model:product.attribute,name:product.product_attribute_3
+msgid "Wi-Fi"
+msgstr ""
 
-#~ msgid "Unit of Measure Properties"
-#~ msgstr "量度單位屬性"
+#. module: product
+#: field:product.ul,width:0
+msgid "Width"
+msgstr "寬度"
 
-#~ msgid "Buy"
-#~ msgstr "購買"
+#. module: product
+#: model:product.template,name:product.product_product_40_product_template
+msgid "Windows 7 Professional"
+msgstr "Windows 7 Professional"
 
-#~ msgid ""
-#~ "How many times this UoM is smaller than the reference UoM in this category:\n"
-#~ "1 * (reference unit) = ratio * (this unit)"
-#~ msgstr ""
-#~ "此分類之量度單位比參照量度單位小多少？\n"
-#~ "1 * (參照單位) = 比例 * (本單位)"
+#. module: product
+#: model:product.template,name:product.product_product_41_product_template
+msgid "Windows Home Server 2011"
+msgstr "Windows Home Server 2011"
 
-#~ msgid "Pricelists Types"
-#~ msgstr "價目表類型"
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_wtime
+msgid "Working Time"
+msgstr "工作時間"
 
-#~ msgid "Smaller than the reference UoM"
-#~ msgstr "小於參照量度單位"
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr "兩個價目表版本不能重疊！"
 
-#~ msgid "Marketable Products"
-#~ msgstr "可行銷產品"
+#. module: product
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr "\"EAN13 條碼\"為無效編號。可使用\"內部編號\"欄位取代。"
 
-#~ msgid "Misc"
-#~ msgstr "雜項"
+#. module: product
+#: model:product.template,name:product.product_product_43_product_template
+msgid "Zed+ Antivirus"
+msgstr "Zed+ 防毒軟體"
 
-#~ msgid "Default UOM"
-#~ msgstr "預設量度單位"
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "公分"
 
-#~ msgid "Produce"
-#~ msgstr "生產"
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "describe the product characteristics..."
+msgstr ""
 
-#~ msgid "Warranty (months)"
-#~ msgstr "保養期（月）"
+#. module: product
+#: view:product.uom:product.product_uom_form_view
+msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
 
-#~ msgid "Products Categories"
-#~ msgstr "產品分類"
+#. module: product
+#: view:product.uom:product.product_uom_form_view
+msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "如: 1 * (this unit) = ratio * (reference unit)"
 
-#~ msgid "Default Unit Of Measure"
-#~ msgstr "預設量度單位"
+#. module: product
+#: model:product.uom,name:product.product_uom_floz
+msgid "fl oz"
+msgstr ""
 
-#~ msgid "Prices Types"
-#~ msgstr "價目類型"
+#. module: product
+#: model:product.uom,name:product.product_uom_foot
+msgid "foot(ft)"
+msgstr ""
 
-#~ msgid "Supplier UoM"
-#~ msgstr "供應商量度單位"
+#. module: product
+#: model:product.uom,name:product.product_uom_gal
+msgid "gal(s)"
+msgstr ""
 
-#~ msgid "Starting date for this pricelist version to be valid."
-#~ msgstr "本價目表開始有效期"
+#. module: product
+#: model:product.template,name:product.product_product_8_product_template
+msgid "iMac"
+msgstr ""
 
-#~ msgid "Employee"
-#~ msgstr "員工"
+#. module: product
+#: model:product.template,name:product.product_product_6_product_template
+msgid "iPad Mini"
+msgstr ""
 
-#~ msgid "Rear Panel SHE200"
-#~ msgstr "後板 SHE200"
+#. module: product
+#: model:product.template,name:product.product_product_4_product_template
+#: model:product.template,name:product.product_product_4b_product_template
+#: model:product.template,name:product.product_product_4c_product_template
+#: model:product.template,name:product.product_product_4d_product_template
+msgid "iPad Retina Display"
+msgstr ""
 
-#~ msgid "This is a quantity which is converted into Default Uom."
-#~ msgstr "轉換至預設量度單位之量"
+#. module: product
+#: model:product.template,name:product.product_product_11_product_template
+#: model:product.template,name:product.product_product_11b_product_template
+msgid "iPod"
+msgstr ""
 
-#~ msgid "UoM Type"
-#~ msgstr "量度單位類型"
+#. module: product
+#: model:product.uom,name:product.product_uom_inch
+msgid "inch(es)"
+msgstr ""
 
-#~ msgid "Mouse"
-#~ msgstr "滑鼠"
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr "公斤"
 
-#~ msgid "Rear Panel SHE100"
-#~ msgstr "後板 SHE100"
+#. module: product
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr "公里"
 
-#~ msgid "Weigths"
-#~ msgstr "重量"
+#. module: product
+#: model:product.uom,name:product.product_uom_lb
+msgid "lb(s)"
+msgstr ""
 
-#~ msgid "Gross weight"
-#~ msgstr "毛重"
+#. module: product
+#: view:product.product:product.product_normal_form_view
+msgid "lst_price"
+msgstr ""
 
-#~ msgid "Assembly Section"
-#~ msgstr "裝配部"
+#. module: product
+#: model:product.uom,name:product.product_uom_mile
+msgid "mile(s)"
+msgstr ""
 
-#~ msgid "Sales Properties"
-#~ msgstr "銷售屬性"
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "months"
+msgstr "月"
 
-#~ msgid "Close"
-#~ msgstr "關閉"
+#. module: product
+#: view:product.template:product.product_template_form_view
+msgid "note to be displayed on quotations..."
+msgstr ""
 
-#~ msgid "tonne"
-#~ msgstr "公噸"
+#. module: product
+#: model:product.uom,name:product.product_uom_oz
+msgid "oz(s)"
+msgstr ""
 
-#~ msgid "Product Description"
-#~ msgstr "產品說明"
+#. module: product
+#: model:product.uom,name:product.product_uom_qt
+msgid "qt"
+msgstr ""
 
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uos = uom * coeff"
-#~ msgstr ""
-#~ "量度單位至UOS轉換系數\n"
-#~ " uos = uom * coeff"
+#. module: product
+#: view:res.partner:product.view_partner_property_form
+msgid "the parent company"
+msgstr ""
 
-#~ msgid "UOM -> UOS Coeff"
-#~ msgstr "UOM -> UOS 系數"
+#. module: product
+#: field:product.price.history,company_id:0
+msgid "unknown"
+msgstr ""

@@ -1,37 +1,60 @@
 # Italian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-13 20:57+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-02 12:33+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:50+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-03 06:26+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_gengo
-#: view:res.company:0
-msgid "Comments for Translator"
-msgstr "Commenti per traduttore"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add Gengo login Private Key..."
+msgstr "Aggiungi chiave privata login Gengo"
 
 #. module: base_gengo
-#: field:ir.translation,job_id:0
-msgid "Gengo Job ID"
-msgstr "Job ID Gengo"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add Gengo login Public Key..."
+msgstr "Aggiungi chiave pubblica login Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
-#, python-format
-msgid "This language is not supported by the Gengo translation services."
-msgstr "Questa lingua non è supportata dai servizi di traduzione Gengo"
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Add your comments here for translator...."
+msgstr "Aggiungi i commenti qui per i traduttori..."
+
+#. module: base_gengo
+#: field:res.company,gengo_auto_approve:0
+msgid "Auto Approve Translation ?"
+msgstr "Auto approvazione traduzione?"
+
+#. module: base_gengo
+#: selection:base.gengo.translations,sync_type:0
+msgid "Both"
+msgstr "Entrambe"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: base_gengo
+#: help:res.company,gengo_sandbox:0
+msgid ""
+"Check this box if you're using the sandbox mode of Gengo, mainly used for "
+"testing purpose."
+msgstr ""
+"Spuntare questo box se state utilizzando la modalità sandbox di Gengo, "
+"prevalentemente utilizzato per scopi di test."
 
 #. module: base_gengo
 #: field:res.company,gengo_comment:0
@@ -39,14 +62,108 @@ msgid "Comments"
 msgstr "Commenti"
 
 #. module: base_gengo
+#: field:ir.translation,gengo_comment:0
+msgid "Comments & Activity Linked to Gengo"
+msgstr "Commenti ed attività collegati a Gengo"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Comments for Translator"
+msgstr "Commenti per traduttore"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: base_gengo
+#: field:base.gengo.translations,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: base_gengo
+#: field:base.gengo.translations,create_date:0
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: base_gengo
+#: code:addons/base_gengo/ir_translation.py:76
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:102
+#, python-format
+msgid "Gengo Authentication Error"
+msgstr "Error autenticazione Gengo"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
+msgid "Gengo Comments & Activity..."
+msgstr "Commenti e attività Gengo"
+
+#. module: base_gengo
+#: field:ir.translation,order_id:0
+msgid "Gengo Order ID"
+msgstr "ID Ordine Gengo"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Gengo Parameters"
+msgstr "Parametri Gengo"
+
+#. module: base_gengo
 #: field:res.company,gengo_private_key:0
 msgid "Gengo Private Key"
 msgstr "Chiave privata Gengo"
 
 #. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"
+#: field:res.company,gengo_public_key:0
+msgid "Gengo Public Key"
+msgstr "Chiave pubblica Gengo"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Gengo Request Form"
+msgstr "Form richiesta Gengo"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
+msgid "Gengo Translation Service"
+msgstr "Servizio traduzione Gengo"
+
+#. module: base_gengo
+#: field:ir.translation,gengo_translation:0
+msgid "Gengo Translation Service Level"
+msgstr "Livello servizio traduzione Gengo"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:80
+#, python-format
+msgid ""
+"Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
+"authentication parameters under `Settings > Companies > Gengo Parameters`."
+msgstr ""
+"Manca la chiave pubblica e quella privata di Genco. Prego inserire i "
+"parametri di autenticazione sotto \"Impostazioni > Aziende > Paramtetri "
+"Gengo\"."
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:91
+#, python-format
+msgid ""
+"Gengo connection failed with this message:\n"
+"``%s``"
+msgstr ""
+"Connessione Gengo fallita con questo messaggio:\n"
+" ''%s''"
+
+#. module: base_gengo
+#: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
+#: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
+msgid "Gengo: Manual Request of Translation"
+msgstr "Gengo: Richiesta manuale di traduzione"
+
+#. module: base_gengo
+#: field:base.gengo.translations,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: base_gengo
 #: help:res.company,gengo_auto_approve:0
@@ -59,26 +176,103 @@ msgid "Language"
 msgstr "Lingua"
 
 #. module: base_gengo
-#: field:ir.translation,gengo_comment:0
-msgid "Comments & Activity Linked to Gengo"
-msgstr "Commenti ed attività collegati a Gengo"
+#: field:base.gengo.translations,write_uid:0
+msgid "Last Updated by"
+msgstr "Ultima modifica di"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:124
-#, python-format
-msgid "Gengo Sync Translation (Response)"
-msgstr "Sincro traduzione Gengo (risposta)"
+#: field:base.gengo.translations,write_date:0
+msgid "Last Updated on"
+msgstr "Ultima modifica il"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:72
-#, python-format
+#: field:base.gengo.translations,sync_limit:0
+msgid "No. of terms to sync"
+msgstr "Num. di termini da sincronizzare"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid ""
-"Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
-"authentication parameters under `Settings > Companies > Gengo Parameters`."
+"Note: If the translation state is 'In Progress', it means that the "
+"translation has to be approved to be uploaded in this system. You are "
+"supposed to do that directly by using your Gengo Account"
 msgstr ""
-"Manca la chiave pubblica e quella privata di Genco. Prego inserire i "
-"parametri di autenticazione sotto \"Impostazioni > Aziende > Paramtetri "
-"Gengo\"."
+"Nota: Se lo stato di traduzione è 'In esecuzione', questo significa che la "
+"traduzione deve essere approvata o caricata sul sistema. Si suppone venga "
+"fatto direttamente utilizzando il vostro account Gengo"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Private Key"
+msgstr "Chiave privata"
+
+#. module: base_gengo
+#: selection:ir.translation,gengo_translation:0
+msgid "Pro"
+msgstr "Pro"
+
+#. module: base_gengo
+#: view:res.company:base_gengo.view_company_inherit_base_gengo_form
+msgid "Public Key"
+msgstr "Chiave pubblica"
+
+#. module: base_gengo
+#: selection:base.gengo.translations,sync_type:0
+msgid "Receive Translation"
+msgstr "Ricevi traduzione"
+
+#. module: base_gengo
+#: field:res.company,gengo_sandbox:0
+msgid "Sandbox Mode"
+msgstr "Modo Sandbox"
+
+#. module: base_gengo
+#: view:base.gengo.translations:base_gengo.base_gengo_translation_wizard_from
+msgid "Send"
+msgstr "Invia"
+
+#. module: base_gengo
+#: selection:base.gengo.translations,sync_type:0
+msgid "Send New Terms"
+msgstr "Invia nuovi termini"
+
+#. module: base_gengo
+#: selection:ir.translation,gengo_translation:0
+msgid "Standard"
+msgstr "Standard"
+
+#. module: base_gengo
+#: field:base.gengo.translations,sync_type:0
+msgid "Sync Type"
+msgstr "Tipo sincronizzazione"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:112
+#, python-format
+msgid "Sync limit should between 1 to 200 for Gengo translation services."
+msgstr ""
+"Il limite di sincronizzazione dovrebbe essere tra 1 e 200 per il servizio di "
+"traduzione Gengo"
+
+#. module: base_gengo
+#: help:res.company,gengo_comment:0
+msgid ""
+"This comment will be automatically be enclosed in each an every request sent "
+"to Gengo"
+msgstr ""
+"Questo commento verrà automaticamente incluso in ognuna delle richieste "
+"inviate a Gengo"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:107
+#, python-format
+msgid "This language is not supported by the Gengo translation services."
+msgstr "Questa lingua non è supportata dai servizi di traduzione Gengo"
+
+#. module: base_gengo
+#: view:ir.translation:base_gengo.view_translation_search
+msgid "To Approve In Gengo"
+msgstr "Da approvare dentro Gengo"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -86,36 +280,21 @@ msgid "Translation By Machine"
 msgstr "Traduzione automatica"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:155
-#, python-format
-msgid ""
-"%s\n"
-"\n"
-"--\n"
-" Commented on %s by %s."
-msgstr ""
-"%s\n"
-"\n"
-"--\n"
-"Commentato su %s da %s."
-
-#. module: base_gengo
-#: field:ir.translation,gengo_translation:0
-msgid "Gengo Translation Service Level"
-msgstr ""
-
-#. module: base_gengo
-#: constraint:ir.translation:0
-msgid ""
-"The Gengo translation service selected is not supported for this language."
-msgstr ""
-"Il servizio di traduzione Gengo selezionato non è supportato per questa "
-"lingua"
+#: view:ir.translation:base_gengo.view_translation_search
+msgid "Translations"
+msgstr "Traduzioni"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
-msgid "Standard"
-msgstr "Standard"
+msgid "Ultra"
+msgstr "Ultra"
+
+#. module: base_gengo
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:107
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:112
+#, python-format
+msgid "Warning"
+msgstr "Attenzione"
 
 #. module: base_gengo
 #: help:ir.translation,gengo_translation:0
@@ -125,136 +304,3 @@ msgid ""
 msgstr ""
 "Potrete selezionare qui il livello di servizio che volete per una traduzione "
 "automatica utilizzando Gengo."
-
-#. module: base_gengo
-#: field:base.gengo.translations,restart_send_job:0
-msgid "Restart Sending Job"
-msgstr "Ripartenza lavoro di spedizione"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "To Approve In Gengo"
-msgstr "Da approvare dentro Gengo"
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Private Key"
-msgstr "Chiave privata"
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Public Key"
-msgstr "Chiave pubblica"
-
-#. module: base_gengo
-#: field:res.company,gengo_public_key:0
-msgid "Gengo Public Key"
-msgstr "Chiave pubblica Gengo"
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:123
-#, python-format
-msgid "Gengo Sync Translation (Request)"
-msgstr ""
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "Translations"
-msgstr "Traduzioni"
-
-#. module: base_gengo
-#: field:res.company,gengo_auto_approve:0
-msgid "Auto Approve Translation ?"
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
-#: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
-msgid "Gengo: Manual Request of Translation"
-msgstr ""
-
-#. module: base_gengo
-#: code:addons/base_gengo/ir_translation.py:62
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
-#, python-format
-msgid "Gengo Authentication Error"
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_company
-msgid "Companies"
-msgstr "Aziende"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid ""
-"Note: If the translation state is 'In Progress', it means that the "
-"translation has to be approved to be uploaded in this system. You are "
-"supposed to do that directly by using your Gengo Account"
-msgstr ""
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:82
-#, python-format
-msgid ""
-"Gengo connection failed with this message:\n"
-"``%s``"
-msgstr ""
-
-#. module: base_gengo
-#: view:res.company:0
-msgid "Gengo Parameters"
-msgstr ""
-
-#. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Send"
-msgstr "Invia"
-
-#. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
-msgid "Ultra"
-msgstr "Ultra"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: view:ir.translation:0
-msgid "Gengo Translation Service"
-msgstr ""
-
-#. module: base_gengo
-#: selection:ir.translation,gengo_translation:0
-msgid "Pro"
-msgstr "Pro"
-
-#. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Gengo Request Form"
-msgstr ""
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
-#, python-format
-msgid "Warning"
-msgstr "Attenzione"
-
-#. module: base_gengo
-#: help:res.company,gengo_comment:0
-msgid ""
-"This comment will be automatically be enclosed in each an every request sent "
-"to Gengo"
-msgstr ""
-
-#. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: base_gengo
-#: view:base.gengo.translations:0
-msgid "or"
-msgstr "o"

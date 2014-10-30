@@ -168,6 +168,9 @@ class product_pricelist(osv.osv):
     }
 
     def price_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
+        return dict((key, dict((key, price[0]) for key, price in value.items())) for key, value in self.price_rule_get_multi(cr, uid, ids, products_by_qty_by_partner, context=context).items())
+
+    def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
            @param ids:
            @param products_by_qty:
@@ -180,13 +183,16 @@ class product_pricelist(osv.osv):
             ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
         results = {}
         for pricelist in self.browse(cr, uid, ids, context=context):
-            subres = self._price_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
+            subres = self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
             for product_id,price in subres.items():
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
 
     def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+        return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
+
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
         date = context.get('date') or time.strftime('%Y-%m-%d')
 
@@ -243,6 +249,7 @@ class product_pricelist(osv.osv):
             uom_price_already_computed = False
             results[product.id] = 0.0
             price = False
+            rule_id = False
             for rule in items:
                 if rule.min_quantity and qty<rule.min_quantity:
                     continue
@@ -308,11 +315,17 @@ class product_pricelist(osv.osv):
                     price = price * (1.0+(rule.price_discount or 0.0))
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)
-                    price += (rule.price_surcharge or 0.0)
+                    if context.get('uom'):
+                        # compute price_surcharge based on reference uom
+                        factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
+                    else:
+                        factor = 1.0
+                    price += (rule.price_surcharge or 0.0) / factor
                     if rule.price_min_margin:
                         price = max(price, price_limit+rule.price_min_margin)
                     if rule.price_max_margin:
                         price = min(price, price_limit+rule.price_max_margin)
+                    rule_id = rule.id
                 break
 
             if price:
@@ -320,12 +333,15 @@ class product_pricelist(osv.osv):
                     uom = product.uos_id or product.uom_id
                     price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
 
-            results[product.id] = price
+            results[product.id] = (price, rule_id)
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
+        return dict((key, price[0]) for key, price in self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context).items())
+
+    def price_rule_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
-        res_multi = self.price_get_multi(cr, uid, ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
+        res_multi = self.price_rule_get_multi(cr, uid, ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
         res = res_multi[prod_id]
         return res
 
@@ -439,7 +455,7 @@ class product_pricelist_item(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
 
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="Specify the minimum quantity that needs to be bought/sold for the rule to apply."),
+        'min_quantity': fields.integer('Min. Quantity', required=True, help="For the rule to apply, bought/sold quantity must be greater than or equal to minimum quantity specified in this field."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),

@@ -1,94 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * board
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-04-06 06:15+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Language: Czech\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Vytvořit nástěnku"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "vytvořit"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Uspořádání se obnoví do výchozího stavu..."
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Vytvořit novou nástěnku"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Vyberte uspořádání nástěnky"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
-#, python-format
-msgid "Add"
-msgstr "Přidat"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
-#, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Opravdu chcete tuto položku odstranit?"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "Board"
-msgstr "Tabule"
-
-#. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Osobní nástěnka"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Název"
-
-#. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Vytvoření nástěnky"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Přidat na nástěnku"
+"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: board
 #. openerp-web
@@ -135,15 +62,58 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:70
 #, python-format
-msgid "Reset"
-msgstr "Obnovit uspořádání"
+msgid "Add"
+msgstr "Přidat"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Nadřazené menu"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
+#, python-format
+msgid "Add to Dashboard"
+msgstr "Přidat na nástěnku"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:136
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr "Opravdu chcete tuto položku odstranit?"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr "Tabule"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Vytvoření nástěnky"
+
+#. module: board
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr "Název"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:374
+#, python-format
+msgid "Can't find dashboard action"
+msgstr ""
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr "Změnit uspořádání"
 
 #. module: board
 #. openerp-web
@@ -154,27 +124,99 @@ msgstr "Můžete změnit uspořádání sestav na nástěnce..."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Vyberte uspořádání nástěnky"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:406
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr ""
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create"
+msgstr "vytvořit"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Vytvořit nástěnku"
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Vytvořit novou nástěnku"
+
+#. module: board
+#: field:board.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: board
+#: field:board.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:92
 #, python-format
 msgid "Edit Layout"
 msgstr "Upravit uspořádání"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
-msgid "Change Layout"
-msgstr "Změnit uspořádání"
+msgid "Filter added to dashboard"
+msgstr ""
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Zrušit"
+#: field:board.board,id:0
+#: field:board.create,id:0
+msgid "ID"
+msgstr ""
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "nebo"
+#: field:board.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: board
+#: field:board.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: board
+#: view:board.board:board.board_my_dash_view
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr "Osobní nástěnka"
+
+#. module: board
+#: field:board.create,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Nadřazené menu"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr "Obnovit uspořádání"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr "Uspořádání se obnoví do výchozího stavu..."
 
 #. module: board
 #. openerp-web
@@ -182,231 +224,3 @@ msgstr "nebo"
 #, python-format
 msgid "Title of new dashboard item"
 msgstr "Název nové položky nástěnky"
-
-#~ msgid "Configuration"
-#~ msgstr "Konfigurace"
-
-#~ msgid "Action Views"
-#~ msgstr "Zobrazení akcí"
-
-#~ msgid "Position"
-#~ msgstr "Pozice"
-
-#~ msgid "Right"
-#~ msgstr "Vpravo"
-
-#~ msgid "  Year  "
-#~ msgstr "  Rok  "
-
-#~ msgid "Author"
-#~ msgstr "Autor"
-
-#~ msgid "Note"
-#~ msgstr "Poznámka"
-
-#~ msgid "Group By..."
-#~ msgstr "Seskupit podle..."
-
-#~ msgid "Note Type"
-#~ msgstr "Typ poznámky"
-
-#~ msgid "Month"
-#~ msgstr "Měsíc"
-
-#~ msgid "March"
-#~ msgstr "Březen"
-
-#~ msgid "Note type"
-#~ msgstr "Typ poznámky"
-
-#~ msgid "June"
-#~ msgstr "Červen"
-
-#~ msgid "August"
-#~ msgstr "Srpen"
-
-#~ msgid "Menu Information"
-#~ msgstr "Informace nabídky"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "October"
-#~ msgstr "Říjen"
-
-#~ msgid "February"
-#~ msgstr "Únor"
-
-#~ msgid "Day"
-#~ msgstr "Den"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Rozšířené filtry..."
-
-#~ msgid "July"
-#~ msgstr "Červenec"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Měsíc-1    "
-
-#~ msgid "January"
-#~ msgstr "Leden"
-
-#~ msgid "November"
-#~ msgstr "Listopad"
-
-#~ msgid "April"
-#~ msgstr "Duben"
-
-#~ msgid "Model"
-#~ msgstr "Model"
-
-#~ msgid "Action"
-#~ msgstr "Akce"
-
-#~ msgid "Notes"
-#~ msgstr "Poznámky"
-
-#~ msgid "September"
-#~ msgstr "Září"
-
-#~ msgid "Latest Activities"
-#~ msgstr "Poslední aktivity"
-
-#~ msgid "Left"
-#~ msgstr "Vlevo"
-
-#~ msgid "Width"
-#~ msgstr "Šířka"
-
-#~ msgid "   Month   "
-#~ msgstr "   Měsíc   "
-
-#~ msgid "December"
-#~ msgstr "Prosinec"
-
-#~ msgid "Height"
-#~ msgstr "Výška"
-
-#~ msgid "Subject"
-#~ msgstr "Předmět"
-
-#~ msgid "May"
-#~ msgstr "Květen"
-
-#~ msgid "Year"
-#~ msgstr "Rok"
-
-#~ msgid "Object"
-#~ msgstr "Objekt"
-
-#~ msgid "Menu Create"
-#~ msgstr "Vytvořit nabídku"
-
-#~ msgid "Dashboard main module"
-#~ msgstr "Hlavní modul nástěnky"
-
-#~ msgid "Latest Connections"
-#~ msgstr "Poslední spojení"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "Chyba uživatele!"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Týdenní celkové činnosti"
-
-#~ msgid "Title"
-#~ msgstr "Titulek"
-
-#~ msgid "# of Entries"
-#~ msgstr "# z položek"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Otevřít nástěnku"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Měsíční činnosti dle dokumentu"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Analýza záznamu"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "Definice nástěnky"
-
-#~ msgid "User Connections"
-#~ msgstr "Spojení uživatele"
-
-#~ msgid "Creation Date"
-#~ msgstr "DAtum vytvoření"
-
-#~ msgid "Publish a note"
-#~ msgstr "Zveřejnit poznámku"
-
-#~ msgid "Log Report"
-#~ msgstr "Výkaz záznamu"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Vytvořit nabídku pro nástěnku"
-
-#~ msgid "Board Line"
-#~ msgstr "Řádek tabule"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr ""
-#~ "Dává pořadí posloupnosti                         , když zobrazuje řádky "
-#~ "tabule."
-
-#~ msgid "Dashboard"
-#~ msgstr "Nástěnka"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Základní modul pro nástěnky."
-
-#~ msgid "Menu Name"
-#~ msgstr "Jméno nabídky"
-
-#~ msgid "Board View"
-#~ msgstr "Zobrazení tabule"
-
-#~ msgid "Sequence"
-#~ msgstr "Posloupnost"
-
-#~ msgid "Create Menu"
-#~ msgstr "Vytvořit nabídku"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Vytvořit nabídku tabule"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Zobrazení nástěnky"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Prosíme vložte zobrazení nástěnky !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neplatné jméno modelu v definici akce."
-
-#~ msgid "Log created in last month"
-#~ msgstr "Záznam vytvořený minulý měsíc"
-
-#~ msgid "Log created in current year"
-#~ msgstr "Záznam vytvořený v tomto roce"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Nástěnka správy"
-
-#~ msgid "Log created in current month"
-#~ msgstr "Záznam vytvořený v tomto měsíci"
-
-#~ msgid "Configuration Overview"
-#~ msgstr "Přehled nastavení"
-
-#~ msgid "Home Page"
-#~ msgstr "Domovská stránka"
-
-#~ msgid "Users"
-#~ msgstr "Uživatelé"

@@ -1,128 +1,32 @@
 # German translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-19 14:45+0000\n"
-"Last-Translator: Ferdinand <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-17 09:25+0000\n"
+"Last-Translator: Heike Vocks (openbig.org) <heike.vocks@big-consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-19 08:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,validation_endpoint:0
-msgid "Validation URL"
-msgstr "Validierungs URL"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,auth_endpoint:0
-msgid "Authentication URL"
-msgstr "Authorisierungs URL"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,name:0
-msgid "Provider name"
-msgstr "Provider Name"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,scope:0
-msgid "Scope"
-msgstr "Gültigkeitsbereich"
-
-#. module: auth_oauth
-#: field:res.users,oauth_provider_id:0
-msgid "OAuth Provider"
-msgstr "OAuth Provider"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,css_class:0
-msgid "CSS class"
-msgstr "CSS Klasse"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,body:0
-msgid "Body"
-msgstr "Nachricht"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_res_users
-msgid "Users"
-msgstr "Benutzer"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,sequence:0
-msgid "unknown"
-msgstr "unbekannt"
-
-#. module: auth_oauth
-#: field:res.users,oauth_access_token:0
-msgid "OAuth Access Token"
-msgstr "OAuth Zugangstoken"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,client_id:0
-#: field:base.config.settings,auth_oauth_facebook_client_id:0
-#: field:base.config.settings,auth_oauth_google_client_id:0
-msgid "Client ID"
-msgstr "Client ID"
-
-#. module: auth_oauth
-#: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
-msgid "OAuth Providers"
-msgstr "OAuth Provider"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
-msgid "OAuth2 provider"
-msgstr "OAuth2 Provider"
-
-#. module: auth_oauth
-#: field:res.users,oauth_uid:0
-msgid "OAuth User ID"
-msgstr "OAuth User ID"
+#: code:addons/auth_oauth/controllers/main.py:99
+#, python-format
+msgid "Access Denied"
+msgstr "Zugriff verweigert"
 
 #. module: auth_oauth
 #: field:base.config.settings,auth_oauth_facebook_enabled:0
 msgid "Allow users to sign in with Facebook"
 msgstr "Erlaube Benutzer sich mit Facebook-Konto einzuloggen"
-
-#. module: auth_oauth
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID muss je Provider eindeutig sein"
-
-#. module: auth_oauth
-#: help:res.users,oauth_uid:0
-msgid "Oauth Provider user_id"
-msgstr "Oauth Provider user_id"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,data_endpoint:0
-msgid "Data URL"
-msgstr "Daten URL"
-
-#. module: auth_oauth
-#: view:auth.oauth.provider:0
-msgid "arch"
-msgstr "Arch"
-
-#. module: auth_oauth
-#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
-msgid "Providers"
-msgstr "Provider"
 
 #. module: auth_oauth
 #: field:base.config.settings,auth_oauth_google_enabled:0
@@ -133,3 +37,148 @@ msgstr "Erlaube Benutzer sich mit Google Konto einzuloggen"
 #: field:auth.oauth.provider,enabled:0
 msgid "Allowed"
 msgstr "Erlaubt"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,auth_endpoint:0
+msgid "Authentication URL"
+msgstr "Authorisierungs URL"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,body:0
+msgid "Body"
+msgstr "Nachricht"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,css_class:0
+msgid "CSS class"
+msgstr "CSS Klasse"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,client_id:0
+#: field:base.config.settings,auth_oauth_facebook_client_id:0
+#: field:base.config.settings,auth_oauth_google_client_id:0
+msgid "Client ID"
+msgstr "Client ID"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_uid:0
+msgid "Created by"
+msgstr "Erstellt durch"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,data_endpoint:0
+msgid "Data URL"
+msgstr "Daten URL"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: auth_oauth
+#: field:res.users,oauth_access_token:0
+msgid "OAuth Access Token"
+msgstr "OAuth Zugangstoken"
+
+#. module: auth_oauth
+#: field:res.users,oauth_provider_id:0
+msgid "OAuth Provider"
+msgstr "OAuth Provider"
+
+#. module: auth_oauth
+#: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+msgid "OAuth Providers"
+msgstr "OAuth Provider"
+
+#. module: auth_oauth
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr "OAuth UID muss je Provider eindeutig sein"
+
+#. module: auth_oauth
+#: field:res.users,oauth_uid:0
+msgid "OAuth User ID"
+msgstr "OAuth User ID"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
+msgid "OAuth2 provider"
+msgstr "OAuth2 Provider"
+
+#. module: auth_oauth
+#: view:res.users:auth_oauth.view_users_form
+msgid "Oauth"
+msgstr "Oauth"
+
+#. module: auth_oauth
+#: help:res.users,oauth_uid:0
+msgid "Oauth Provider user_id"
+msgstr "Oauth Provider user_id"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,name:0
+msgid "Provider name"
+msgstr "Provider Name"
+
+#. module: auth_oauth
+#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
+msgid "Providers"
+msgstr "Provider"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,scope:0
+msgid "Scope"
+msgstr "Gültigkeitsbereich"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
+#, python-format
+msgid "Sign up is not allowed on this database."
+msgstr "Anmeldungen nimmt diese Datenbank nicht mehr an"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_users
+msgid "Users"
+msgstr "Benutzer"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,validation_endpoint:0
+msgid "Validation URL"
+msgstr "Validierungs URL"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:101
+#, python-format
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Sie haben keinen Zugriff mehr auf die Datenbank, deren Einladungen "
+"mittlerweise ablaufen sind."
+
+#. module: auth_oauth
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_form
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_list
+msgid "arch"
+msgstr "Arch"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,sequence:0
+msgid "unknown"
+msgstr "unbekannt"

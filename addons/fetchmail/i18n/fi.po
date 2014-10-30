@@ -1,21 +1,57 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-08-04 10:18+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:08+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "Sähköpostien määrä"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "Saapuville sähköposteille tehtävät toimenpiteet"
+
+#. module: fetchmail
+#: field:fetchmail.server,active:0
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "Kehittynyt"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr ""
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: field:fetchmail.server,configuration:0
+msgid "Configuration"
+msgstr "Määritykset"
+
+#. module: fetchmail
+#: view:base.config.settings:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr "Konfiguroi saapuvan sähköpostin yhdyskäytävä"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -23,21 +59,10 @@ msgid "Confirmed"
 msgstr "Vahvistettu"
 
 #. module: fetchmail
-#: field:fetchmail.server,server:0
-msgid "Server Name"
-msgstr "Palvelimen nimi"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr "POP"
-
-#. module: fetchmail
-#: help:fetchmail.server,priority:0
-msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
-"Määrittelee toimintojen jäjrestyksen, pienempi arvo tarkoittaa suurempaa "
-"prioriteettia"
+#: code:addons/fetchmail/fetchmail.py:163
+#, python-format
+msgid "Connection test failed!"
+msgstr "Yhteystesti epäonnistui!"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -49,142 +74,33 @@ msgstr ""
 "POP3S=995)"
 
 #. module: fetchmail
-#: field:fetchmail.server,attach:0
-msgid "Keep Attachments"
-msgstr "Säilytä liitteet"
+#: field:fetchmail.server,object_id:0
+msgid "Create a New Record"
+msgstr "Luo uusi tietue"
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: fetchmail
-#: help:fetchmail.server,original:0
-msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
+#: field:fetchmail.config.settings,create_uid:0
+#: field:fetchmail.server,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: fetchmail
-#: view:base.config.settings:0
-msgid "Configure the incoming email gateway"
-msgstr "Konfiguroi saapuvan sähköpostin yhdyskäytävä"
+#: field:fetchmail.config.settings,create_date:0
+#: field:fetchmail.server,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: help:fetchmail.server,priority:0
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr ""
+"Määrittelee toimintojen jäjrestyksen, pienempi arvo tarkoittaa suurempaa "
+"prioriteettia"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Toimita nyt"
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Incoming Mail Servers"
-msgstr "Saapuvan sähköpostin palvelimet"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr "Palvelimen tyyppi IMAP."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP/IMAP Servers"
-msgstr "POP/IMAP-palvelimet"
-
-#. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "Local Server"
-msgstr "Paikallinen palvelin"
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "Status"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAP-palvelin"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Reset Confirmation"
-msgstr "Resetoi vahvistus"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "SSL"
-msgstr "SSL"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,date:0
-msgid "Last Fetch Date"
-msgstr "Edellinen noutopäivä"
-
-#. module: fetchmail
-#: help:fetchmail.server,action_id:0
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "# of emails"
-msgstr "Sähköpostien määrä"
-
-#. module: fetchmail
-#: field:fetchmail.server,original:0
-msgid "Keep Original"
-msgstr "Säilytä alkuperäinen"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-#: field:fetchmail.server,configuration:0
-msgid "Configuration"
-msgstr "Määritykset"
-
-#. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr "Skripti"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Incoming Mail Server"
-msgstr "Saapuvan sähköpostin palvelin"
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:163
-#, python-format
-msgid "Connection test failed!"
-msgstr "Yhteystesti epäonnistui!"
-
-#. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr "Käyttäjänimi"
-
-#. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
-msgstr "Sähköpostipalvelimen nimi tai IP osoite"
-
-#. module: fetchmail
-#: field:fetchmail.server,name:0
-msgid "Name"
-msgstr "Nimi"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
@@ -195,19 +111,84 @@ msgid ""
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Test & Confirm"
-msgstr "Testaa ja vahvista"
+#: help:fetchmail.server,server:0
+msgid "Hostname or IP of the mail server"
+msgstr "Sähköpostipalvelimen nimi tai IP osoite"
 
 #. module: fetchmail
-#: field:fetchmail.server,action_id:0
-msgid "Server Action"
-msgstr "Palvelintoiminto"
+#: field:fetchmail.config.settings,id:0
+#: field:fetchmail.server,id:0
+msgid "ID"
+msgstr ""
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP-palvelin"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "Jos SSL vaaditaan"
 
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
 msgstr "Saapuvan sähköpostin palvelin"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "Saapuvan sähköpostin palvelin"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "Saapuvan sähköpostin palvelimet"
+
+#. module: fetchmail
+#: field:fetchmail.server,attach:0
+msgid "Keep Attachments"
+msgstr "Säilytä liitteet"
+
+#. module: fetchmail
+#: field:fetchmail.server,original:0
+msgid "Keep Original"
+msgstr "Säilytä alkuperäinen"
+
+#. module: fetchmail
+#: field:fetchmail.server,date:0
+msgid "Last Fetch Date"
+msgstr "Edellinen noutopäivä"
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_uid:0
+#: field:fetchmail.server,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_date:0
+#: field:fetchmail.server,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "Paikallinen palvelin"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "Kirjautumistiedot"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -216,20 +197,20 @@ msgid "Messages"
 msgstr "Viestit"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Search Incoming Mail Servers"
-msgstr "Etsi saapuvan sähköpostin palvelimia"
+#: field:fetchmail.server,name:0
+msgid "Name"
+msgstr "Nimi"
 
 #. module: fetchmail
-#: field:fetchmail.server,active:0
-msgid "Active"
-msgstr "Aktiivinen"
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "Ei vahvistettu"
 
 #. module: fetchmail
-#: help:fetchmail.server,attach:0
+#: help:fetchmail.server,action_id:0
 msgid ""
-"Whether attachments should be downloaded. If not enabled, incoming emails "
-"will be stripped of any attachments before being processed"
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
 msgstr ""
 
 #. module: fetchmail
@@ -238,24 +219,24 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "Palvelimen prioriteetti"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
-msgid "IMAP Server"
-msgstr "IMAP-palvelin"
+msgid "POP Server"
+msgstr "POP palvelin"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "IMAP"
-msgstr "IMAP"
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAP-palvelin"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type POP."
-msgstr "Palvelimen tyyppi POP."
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP-palvelimet"
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -263,39 +244,9 @@ msgid "Password"
 msgstr "Salasana"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Actions to Perform on Incoming Mails"
-msgstr "Saapuville sähköposteille tehtävät toimenpiteet"
-
-#. module: fetchmail
-#: field:fetchmail.server,type:0
-msgid "Server Type"
-msgstr "Palvelimen tyyppi"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Login Information"
-msgstr "Kirjautumistiedot"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server Information"
-msgstr "Palvelimen tiedot"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "If SSL required."
-msgstr "Jos SSL vaaditaan"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced"
-msgstr "Kehittynyt"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server & Login"
-msgstr "Palvelin ja kirjautuminen"
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "Portti"
 
 #. module: fetchmail
 #: help:fetchmail.server,object_id:0
@@ -306,123 +257,96 @@ msgid ""
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,object_id:0
-msgid "Create a New Record"
-msgstr "Luo uusi tietue"
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "Resetoi vahvistus"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
-msgid "Not Confirmed"
-msgstr "Ei vahvistettu"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "POP Server"
-msgstr "POP palvelin"
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
-msgstr "Portti"
+#: field:fetchmail.server,script:0
+msgid "Script"
+msgstr "Skripti"
 
-#~ msgid "Type"
-#~ msgstr "Tyyppi"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "Etsi saapuvan sähköpostin palvelimia"
 
-#~ msgid "Confirm"
-#~ msgstr "Hyväksy"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "Palvelin ja kirjautuminen"
 
-#~ msgid "Group By..."
-#~ msgstr "Ryhmittely.."
+#. module: fetchmail
+#: field:fetchmail.server,action_id:0
+msgid "Server Action"
+msgstr "Palvelintoiminto"
 
-#~ msgid ""
-#~ "Warning! Record for selected Model can not be created\n"
-#~ "Please choose valid Model"
-#~ msgstr ""
-#~ "Varoitus! Tietoja valitulle mallille ei voitu luoda\n"
-#~ "Ole hyvä ja valitse voimassaoleva malli"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "Palvelimen tiedot"
 
-#~ msgid "State"
-#~ msgstr "Tila"
+#. module: fetchmail
+#: field:fetchmail.server,server:0
+msgid "Server Name"
+msgstr "Palvelimen nimi"
 
-#~ msgid "Date"
-#~ msgstr "Päiväys"
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "Palvelimen prioriteetti"
 
-#~ msgid "User"
-#~ msgstr "Käyttäjä"
+#. module: fetchmail
+#: field:fetchmail.server,type:0
+msgid "Server Type"
+msgstr "Palvelimen tyyppi"
 
-#~ msgid "User Name"
-#~ msgstr "Käyttäjätunnus"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "Palvelimen tyyppi IMAP."
 
-#~ msgid "Add Attachments ?"
-#~ msgstr "Lisää liitetiedostot ?"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "Palvelimen tyyppi POP."
 
-#~ msgid "Waiting for Verification"
-#~ msgstr "Odotetaan vahvistusta"
+#. module: fetchmail
+#: field:fetchmail.server,state:0
+msgid "Status"
+msgstr ""
 
-#~ msgid ""
-#~ "OpenObject Model. Generates a record of this model.\n"
-#~ "Select Object with message_new attrbutes."
-#~ msgstr ""
-#~ "OpenObject malli. Luo tiedot tästä mallista.\n"
-#~ "Valitse objekti jolla on attribuutit message_new. (uusi viesti)"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "Testaa ja vahvista"
 
-#~ msgid "Emails"
-#~ msgstr "Sähköpostit"
+#. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "Käyttäjänimi"
 
-#~ msgid "Description"
-#~ msgstr "Kuvaus"
+#. module: fetchmail
+#: help:fetchmail.server,original:0
+msgid ""
+"Whether a full original copy of each email should be kept for referenceand "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
 
-#~ msgid "Set to Draft"
-#~ msgstr "Aseta luonnokseksi"
-
-#~ msgid "Server"
-#~ msgstr "Palvelin"
-
-#~ msgid "Auto Reply?"
-#~ msgstr "Automaattivastaus?"
-
-#~ msgid "Search Email Servers"
-#~ msgstr "Hae sähköpostipalvelimia"
-
-#~ msgid "Mailgateway Message"
-#~ msgstr "sähköpostivälittäjän viesti"
-
-#~ msgid "Warning! Can't have duplicate server configuration!"
-#~ msgstr "Varoitus! Ei voi olla kahta palvelinkonfiguraatiota!"
-
-#~ msgid "Model"
-#~ msgstr "Malli"
-
-#~ msgid "Process Parameter"
-#~ msgstr "Prosessin parametri"
-
-#~ msgid "Priority between 0 to 10, select define the order of Processing"
-#~ msgstr "Prioriteetti välillä 0 ... 10. Määrittelee prosessointijärjestyksen"
-
-#~ msgid "Mail Server"
-#~ msgstr "Sähköpostipalvelin"
-
-#~ msgid "Email Server Action"
-#~ msgstr "Sähköpostipalvelimen toiminto"
-
-#~ msgid "Fetches mail with attachments if true."
-#~ msgstr "Syötää sähköposteja liitteineen jos tosi (true)."
-
-#~ msgid ""
-#~ "An Email Server Action. It will be run whenever an e-mail is fetched from "
-#~ "server."
-#~ msgstr ""
-#~ "Sähköpostipalvelimen toiminto. Suoritetaan kun sähköpostia haetaan "
-#~ "palvelimelta."
-
-#~ msgid "Fetch Emails"
-#~ msgstr "Hae sähköpostit"
-
-#~ msgid "Email Servers"
-#~ msgstr "sähköpostipalvelimet"
-
-#~ msgid "Email Message"
-#~ msgstr "Sähköpostiviesti"
-
-#~ msgid "Advanced options"
-#~ msgstr "Lisäasetukset"
+#. module: fetchmail
+#: help:fetchmail.server,attach:0
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr ""

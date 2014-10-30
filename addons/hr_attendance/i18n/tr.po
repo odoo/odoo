@@ -1,97 +1,75 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr_attendance
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 17:52+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_month
-msgid "Print Monthly Attendance Report"
-msgstr "Aylık Devamlılık Raporunu Yazdır"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) Bir eksi gecikme, çalışan şifrelendiğinden daha fazla çalışmış demektir."
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "İK Devamlılık Ara"
-
-#. module: hr_attendance
-#: field:hr.employee,last_sign:0
-msgid "Last Sign"
-msgstr "Son Giriş"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Devamlılık"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:34
-#, python-format
-msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr "Son giriş: %s,<br />%s.<br />Çıkış için tıklayın."
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "Hata! Giriş (Çıkış) Çıkışı (Giriş) izlemelidir"
-
-#. module: hr_attendance
-#: help:hr.action.reason,name:0
-msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Giriş/Çıkış nedenlerini belirler"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 "(*) Bir artı gecikme çalışanın kaydedilenden az çalıştığı anlamına gelir."
 
 #. module: hr_attendance
-#: view:hr.attendance.month:0
-msgid "Print Attendance Report Monthly"
-msgstr "Devamlılık Raporunu Aylık olara Yazdır"
+#: selection:hr.employee,state:0
+msgid "Absent"
+msgstr "Yok"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:120
-#, python-format
-msgid "Attendances by Week"
-msgstr "Haftalık Devamlılık"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Eylem"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Çıkış"
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Eylem Nedeni"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr "Gecikme"
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Eylem Türü"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Gruplandır İle..."
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
+msgstr "Katılım grubunu bütün kullanıcılara tahsis eder."
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Ekim"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Analysis Information"
+msgstr "Analiz Bilgisi"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: view:hr.attendance:hr_attendance.view_hr_attendance_graph
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Devamlılık"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
@@ -99,56 +77,32 @@ msgid "Attendance Access"
 msgstr "Katılım Erişimi"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign Out"
-msgstr "Çıkış"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
+msgid "Attendance Analysis"
+msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records are found for your selection!"
-msgstr "Seçiminiz için hiç kayıt bulunamadı!"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
+msgid "Attendance Error Report"
+msgstr "Devamlılık Hata Raporu"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Yazdır"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Attendance Errors:"
+msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
-#: model:ir.model,name:hr_attendance.model_hr_employee
-msgid "Employee"
-msgstr "Personel"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Devamlılık Nedenleri"
 
 #. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr "Tarih Kaydedildi"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign In"
-msgstr "Giriş"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Başlama Tarihi"
+#: view:hr.action.reason:hr_attendance.view_attendance_reason
+msgid "Attendance reasons"
+msgstr "Devamlılık nedenleri"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -158,87 +112,41 @@ msgid "Attendances"
 msgstr "Devam Süreleri"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Mart"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
-
-#. module: hr_attendance
-#: help:hr.config.settings,group_hr_attendance:0
-msgid "Allocates attendance group to all users."
-msgstr "Katılım grubunu bütün kullanıcılara tahsis eder."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Devam Durumum"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:190
-#, python-format
-msgid "Attendances by Month"
-msgstr "Aylık Devamlılık"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Haftaya göre Devamlılık"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Devamlılık Hata Raporunu yazdır"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Toplam periyod:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Neden"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Devamlılık Raporu Hatasını yazdır"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Bellow this delay, the error is considered to be voluntary"
 msgstr ""
-"Zaman İzleme işlevselliği Giriş/Çıkış eylerimden çalışan devamlılıklarının "
-"yönetilmesini amaçlar. Bu işlevi, OpenERP nin web hizmetleri özelliğini "
-"kullanarak bir yoklama cihazına da bağlayabilirsiniz."
+"Bunun altındaki gecikme, hatanın bilerek yapıldığı olarak kabul edilir"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Bugün"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Giriş Tarihi"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:35
+#, python-format
+msgid "Click to Sign In at %s."
+msgstr "%s te Giriş için tıklayın."
+
+#. module: hr_attendance
+#: field:hr.action.reason,create_uid:0
+#: field:hr.attendance,create_uid:0
+#: field:hr.attendance.error,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,create_date:0
+#: field:hr.attendance,create_date:0
+#: field:hr.attendance.error,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Current Month"
+msgstr ""
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -246,136 +154,92 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: hr_attendance
-#: field:hr.config.settings,group_hr_attendance:0
-msgid "Track attendances for all employees"
-msgstr "Devamlılığı bütün çalışanlar için izle"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Recorded"
+msgstr "Tarih Kaydedildi"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Temmuz"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Signed"
+msgstr "Giriş Tarihi"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Devamlılık Hata Raporu"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Gün"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Mevcut"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Yok"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "February"
-msgstr "Şubat"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Eylem Nedeni"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "Yıl"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Enaz Gecikme"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Personel Devam Kontrolü"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
+#: view:hr.action.reason:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
 msgstr "Devamlılık nedeni gir"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign in"
-msgstr "Giriş"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Delay"
+msgstr "Gecikme"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Analiz Bilgisi"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: field:hr.attendance,employee_id:0
+#: model:ir.model,name:hr_attendance.model_hr_employee
+msgid "Employee"
+msgstr "Personel"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-msgid "Attendances By Month"
-msgstr "Aylara göre Devamlılık"
+#: view:hr.attendance:hr_attendance.view_attendance_form
+#: view:hr.attendance:hr_attendance.view_attendance_tree
+#: view:hr.attendance:hr_attendance.view_attendance_who
+msgid "Employee attendances"
+msgstr "Personel Devam Kontrolü"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Ocak"
+#: field:hr.attendance.error,end_date:0
+msgid "Ending Date"
+msgstr "Bitiş Tarihi"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available !"
-msgstr "Hiç veri yok !"
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr "Hata! Giriş (Çıkış) Çıkışı (Giriş) izlemelidir"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "Nisan"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Devamlılık Raporun Haftalık Yazdır"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Devamlılık Hataları"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Eylem"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Zaman İzleme"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Devamlılık Nedenleri"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "Kasım"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Group By"
 msgstr ""
-"Bunun altındaki gecikme, hatanın bilerek yapıldığı olarak kabul edilir"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Hr Attendance Search"
+msgstr "İK Devamlılık Ara"
+
+#. module: hr_attendance
+#: field:hr.action.reason,id:0
+#: field:hr.attendance,id:0
+#: field:hr.attendance.error,id:0
+#: field:report.hr_attendance.report_attendanceerrors,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr "Son Giriş"
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_uid:0
+#: field:hr.attendance,write_uid:0
+#: field:hr.attendance.error,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_date:0
+#: field:hr.attendance,write_date:0
+#: field:hr.attendance.error,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:33
+#, python-format
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr "Son giriş: %s,<br />%s.<br />Çıkış için tıklayın."
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -383,88 +247,87 @@ msgid "Max. Delay (Min)"
 msgstr "Max. Gecikme Süresi"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Bitiş Tarihi"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Min Delay"
+msgstr "Enaz Gecikme"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "Eylül"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Month"
+msgstr "Ay"
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Devamlılık nedenleri"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "My Attendance"
+msgstr "Devam Durumum"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Haftalık Devamlılık Raporunu yazdır"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:36
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid "Click to Sign In at %s."
-msgstr "%s te Giriş için tıklayın."
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Eylem Türü"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Mayıs"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the HR Manager to correct attendances."
+msgid "No Data Available!"
 msgstr ""
-"Başka bir etkinliğin içinde olan bir tarihli %s yapmaya çalıştınız !\n"
-"Devamlılıkları düzeltmek için İK Yöneticisine danışın."
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Aralık"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
+#, python-format
+msgid "No records are found for your selection!"
+msgstr "Seçiminiz için hiç kayıt bulunamadı!"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid "Operation"
 msgstr "İşlem"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Bir eksi gecikme, çalışan şifrelendiğinden daha fazla çalışmış demektir."
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Mevcut"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "or"
-msgstr "ya da"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print"
+msgstr "Yazdır"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print Attendance Report Error"
+msgstr "Devamlılık Raporu Hatasını yazdır"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Devamlılık Hata Raporunu yazdır"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Neden"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign In"
+msgstr "Giriş"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign Out"
+msgstr "Çıkış"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Giriş"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign out"
+msgstr "Çıkış"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
@@ -472,182 +335,61 @@ msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Fazladan saatler için Giriş/Çıkış nedenlerini belirt"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+#. module: hr_attendance
+#: help:hr.action.reason,name:0
+msgid "Specifies the reason for Signing In/Signing Out."
+msgstr "Giriş/Çıkış nedenlerini belirler"
 
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+msgid "Starting Date"
+msgstr "Başlama Tarihi"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using Odoo's web service features."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Zaman İzleme"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Today"
+msgstr "Bugün"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Total period"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr "Devamlılığı bütün çalışanlar için izle"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Giriş / Çıkış"
+msgid "Warning"
+msgstr "Uyarı"
 
-#~ msgid "Employee's name"
-#~ msgstr "Personelin Adı"
+#. module: hr_attendance
+#: field:hr.attendance,worked_hours:0
+msgid "Worked Hours"
+msgstr ""
 
-#~ msgid "Print Timesheet"
-#~ msgstr "Zaman Tablosu Yazdır"
-
-#~ msgid "Print Attendance Error Report"
-#~ msgstr "Devam Kontrol Hata Raporunu Yazdır"
-
-#~ msgid "Print Timesheet by week"
-#~ msgstr "Haftalık Giriş-Çıkışı Yazdır"
-
-#~ msgid "Select a time span"
-#~ msgstr "Bir zaman aralığı seçiniz..."
-
-#~ msgid "Action reason"
-#~ msgstr "İşlem Nedeni"
-
-#~ msgid "Your last sign in"
-#~ msgstr "Son Girişiniz"
-
-#~ msgid "Print Timesheet by month"
-#~ msgstr "Aylık Giriş-Çıkışları Yazdır"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Personel Devam Kontrolü"
-
-#~ msgid "Print Attendance Report"
-#~ msgstr "Devam Kontrol Raporunu Yazdır"
-
-#~ msgid "Select a starting and a end date"
-#~ msgstr "Bir Başlangıç ve Bitiş Tarihi Seçin"
-
-#~ msgid "Current state"
-#~ msgstr "Mevcut durum"
-
-#~ msgid "Action's type"
-#~ msgstr "Eylem türü"
-
-#~ msgid "Your last sign out"
-#~ msgstr "Son çıkışınız"
-
-#~ msgid "Select a month"
-#~ msgstr "Ay seçin"
-
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Son seferde çıkış yapmadınız. Lütfen çıkış yaptığınız tarih ve saati girin."
-
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "Çıkış tarihi eski olmalı"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Hata ! Personelin yönetici olduğu bir bölümü seçemezsiniz."
-
-#~ msgid "Ok"
-#~ msgstr "Tamam"
-
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "Çıkış yapmak için izin iste"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "Giriş bir çıkıştan hemen sonra yapılmalı !"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Kullanıcı Hatası"
-
-#~ msgid "Employee attendance"
-#~ msgstr "Personel Devamlılığı"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "Giriş tarihi eski olmalı"
-
-#~ msgid "Employees name"
-#~ msgstr "Çalışanların adı"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module aims to manage employee's attendances.\n"
-#~ "    Keeps account of the attendances of the employees on the basis of the\n"
-#~ "    actions(Sign in/Sign out) performed by them.\n"
-#~ "       "
-#~ msgstr ""
-#~ "\n"
-#~ "    Bu modül personeli devamlılığının izlenmesini amaçlar.\n"
-#~ "    Çalışanlar tarafından yapılan eylemleri (Giriş/Çıkış) \n"
-#~ "    temel alarak Çalışanların devamlılığının hesabını tutar.\n"
-#~ "       "
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "Hiçbir Veri Yok"
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "Giriş Çıkış"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "Bir Çıkış, bir girişten hemen sonra olmalı"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr "Hata: Giriş (karşılığı Çıkış) çıkışı (karşılığı Giriş) izlemeli"
-
-#~ msgid "My Attendances"
-#~ msgstr "Devamlılığım"
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr "Çıkış İşlemi Giriş İşleminiz izlemeli"
-
-#~ msgid "Employee ID"
-#~ msgstr "Çalışan No"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Hata ! Yinelemeli Personel Sıradizini yaratamazsınız."
-
-#~ msgid "Empoyee ID"
-#~ msgstr "Çalışan No"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "Seçiminiz için hiçbir kayıt bulunamadı!"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Çalışanın Adı"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "Son seferde giriş yapmadınız. Lütfen giriş yaptığınız tarih ve saati girin."
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "hr.sign.in.out.ask"
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "Eğer çalışanlarınızın işe geldiğinde giriş ve gün sonunda da çıkış "
-#~ "yapmalarını isterseniz, OpenERP bu aracı kullanmanızı sağlar. Eğer her "
-#~ "çalışan bir kullanıcıya bağlanmışsa, bu eylem düğmesini kullanarak "
-#~ "zamanlarını girerler."
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "Giriş / Çıkış. Bazı firmalarda, çalışanlar işe geldiklerinde giriş yaparlar "
-#~ "ve günün sonunda tekrar çıkış yaparlar. Eğer her çalışan bir sistem "
-#~ "kullancısına bağlıysa, bu eylem düğmesini kullanarak zamanlarını girerler."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Bir başka olaya ait eski tarihli %s yapmaya çalıştınız !\n"
-#~ "Bu katılımı düzeltmek için yöneticiyle iletişim kurun."
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""
+"Başka bir etkinliğin içinde olan bir tarihli %s yapmaya çalıştınız !\n"
+"Devamlılıkları düzeltmek için İK Yöneticisine danışın."

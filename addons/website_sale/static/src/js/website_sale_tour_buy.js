@@ -8,6 +8,13 @@
         mode: 'test',
         steps: [
             {
+                title:  "search ipod",
+                element: 'form:has(input[name="search"]) a.a-submit',
+                onload: function() {
+                    $('input[name="search"]').val("ipod");
+                }
+            },
+            {
                 title:     "select ipod",
                 element:   '.oe_product_cart a:contains("iPod")',
             },
@@ -19,7 +26,7 @@
             {
                 title:     "click on add to cart",
                 waitFor:   'label:contains(32 GB) input[checked]',
-                element:   'form[action="/shop/cart/update"] .btn',
+                element:   'form[action^="/shop/cart/update"] .btn',
             },
             {
                 title:     "add suggested",
@@ -62,9 +69,9 @@
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
-                        $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.optenerp.com");
+                        $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
                     $("input[name='phone']").val("123");
-                    $("input[name='street']").val("123");
+                    $("input[name='street2']").val("123");
                     $("input[name='city']").val("123");
                     $("input[name='zip']").val("123");
                     $("select[name='country_id']").val("21");

@@ -6,7 +6,7 @@
             <field name="name">Blog Post: public: published only</field>
             <field name="model_id" ref="model_blog_post"/>
             <field name="domain_force">[('website_published', '=', True)]</field>
-            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
         </record>
 
     </data>

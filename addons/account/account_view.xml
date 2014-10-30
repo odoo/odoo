@@ -493,7 +493,7 @@
         <record id="action_bank_reconcile_bank_statements" model="ir.actions.client">
             <field name="name">Reconciliation on Bank Statements</field>
             <field name="tag">bank_statement_reconciliation_view</field>
-            <field name="context">{'statement_id': active_id}</field>
+            <field name="context">{'statement_ids': [active_id]}</field>
         </record>
         
         <record id="view_account_bank_statement_filter" model="ir.ui.view">

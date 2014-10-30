@@ -290,16 +290,82 @@
         <tr class='client-line' t-att-data-id='partner.id'>
             <td><t t-esc='partner.name' /></td>
             <td><t t-esc='partner.address' /></td>
+            <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
         </tr>
     </t>
 
+    <t t-name="ClientDetailsEdit">
+        <section class='client-details edit'>
+            <div class='client-picture'>
+                <t t-if='!partner.id'>
+                    <i class='fa fa-camera'></i>
+                </t>
+                <t t-if='partner.id'>
+                    <img t-att-src='widget.partner_icon_url(partner.id)' />
+                </t>
+                <input type='file' class='image-uploader'></input>   
+            </div>
+            <input class='detail client-name' name='name' t-att-value='partner.name' placeholder='Name'></input>
+            <div class='edit-buttons'>
+                <div class='button undo'><i class='fa fa-undo' /></div>
+                <div class='button save'><i class='fa fa-floppy-o' /></div>
+            </div>
+            <div class='client-details-box clearfix'>
+                <div class='client-details-left'>
+                    <div class='client-detail'>
+                        <span class='label'>Street</span>
+                        <input class='detail client-address-street' name='street'       t-att-value='partner.street' placeholder='Street'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>City</span>
+                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city' placeholder='City'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Postcode</span>
+                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip' placeholder='ZIP'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Country</span>
+                        <select class='detail client-address-country' name='country_id'>
+                            <option value=''>None</option>
+                            <t t-foreach='widget.pos.countries' t-as='country'>
+                                <option t-att-value='country.id' t-att-selected="partner_country_id ? ((country.id === partner.country_id[0]) ? true : undefined) : undefined"> 
+                                    <t t-esc='country.name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class='client-details-right'>
+                    <div class='client-detail'>
+                        <span class='label'>Email</span>
+                        <input class='detail client-email'  name='email'    type='email'    t-att-value='partner.email || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Phone</span>
+                        <input class='detail client-phone'  name='phone'    type='tel'      t-att-value='partner.phone || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Barcode</span>
+                        <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Tax ID</span>
+                        <input class='detail vat'           name='vat'     t-att-value='partner.vat || ""'></input>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
                 <img t-att-src='widget.partner_icon_url(partner.id)' />
-                <!--<img src='http://static.fjcdn.com/gifs/Aku_c019d6_2548127.gif' />-->
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
+            <div class='edit-buttons'>
+                <div class='button edit'><i class='fa fa-pencil-square' /></div>
+            </div>
             <div class='client-details-box clearfix'>
                 <div class='client-details-left'>
                     <div class='client-detail'>
@@ -307,11 +373,11 @@
                         <span class='detail client-address'><t t-esc='partner.address' /></span>
                     </div>
                     <div class='client-detail'>
-                        <span class='label'>email</span>
+                        <span class='label'>Email</span>
                         <span class='detail client-email'><t t-esc='partner.email' /></span>
                     </div>
                     <div class='client-detail'>
-                        <span class='label'>phone</span>
+                        <span class='label'>Phone</span>
                         <t t-if='partner.phone'>
                             <span class='detail client-phone'><t t-esc='partner.phone' /></span>
                         </t>
@@ -322,12 +388,21 @@
                 </div>
                 <div class='client-details-right'>
                     <div class='client-detail'>
-                        <span class='label'>ID</span>
+                        <span class='label'>Barcode</span>
                         <t t-if='partner.ean13'>
                             <span class='detail client-id'><t t-esc='partner.ean13'/></span>
                         </t>
                         <t t-if='!partner.ean13'>
                             <span class='detail client-id empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='client-detail'>
+                        <span class='label'>Tax ID</span>
+                        <t t-if='partner.vat'>
+                            <span class='detail vat'><t t-esc='partner.vat'/></span>
+                        </t>
+                        <t t-if='!partner.vat'>
+                            <span class='detail vat empty'>N/A</span>
                         </t>
                     </div>
                 </div>
@@ -348,6 +423,10 @@
                         <span class='search-clear'></span>
                     </span>
                     <span class='searchbox'></span>
+                    <span class='button new-customer'>
+                        <i class='fa fa-user'></i>
+                        <i class='fa fa-plus'></i>
+                    </span>
                     <span class='button next oe_hidden highlight'>
                         Select Customer
                         <i class='fa fa-angle-double-right'></i>
@@ -369,6 +448,7 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Address</th>
+                                                <th>Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody class='client-list-contents'>
@@ -572,55 +652,6 @@
         </receipt>
     </t>
 
-    <t t-name="ChooseReceiptPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-receipt">
-                <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
-                <div class = "button big-left receipt">
-                    Ticket
-                </div>
-                <div class = "button big-right invoice">
-                    Invoice
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorSessionPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-nosession">
-                <p class="message">Sorry, we could not create a session for this user.</p>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorNoClientPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-noclient">
-                <p class="message">An anonymous order cannot be invoiced</p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="ErrorInvoiceTransferPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-invoice">
-                <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
-                    in offline mode. Please check your internet connection and try again.</p>
-                <div class="footer">
-                    <div class="button">
-                        Ok
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
@@ -635,12 +666,26 @@
         </div>
     </t>
 
+    <t t-name="ErrorTracebackPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-error">
+                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
+                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorBarcodePopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-barcode">
                 <p class="message">Unknown Barcode
                     <br />
-                    <span class='barcode'></span>
+                    <span class='barcode'><t t-esc="widget.barcode" /></span>
                 </p>
                 <p class="comment">
                     The Point of Sale could not find any product, client, employee
@@ -672,6 +717,29 @@
         </div>
     </t>
 
+    <t t-name="UnsentOrdersPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-unsent-orders">
+                <p class="message">Unsent Orders</p>
+                <t t-if='widget.pos.db.get_orders().length === 0'>
+                    <p class='comment'>
+                        There are no unsent orders
+                    </p>
+                </t>
+                <t t-if='widget.pos.db.get_orders().length > 0'>
+                    <p class='comment traceback'>
+                        <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
+                    </p>
+                </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="Product">
         <span class='product' t-att-data-product-id="product.id">
             <div class="product-img">
@@ -688,7 +756,7 @@
                 </t>
             </div>
             <div class="product-name">
-                <t t-esc="product.name"/>
+                <t t-esc="product.display_name"/>
             </div>
         </span>
     </t>
@@ -696,7 +764,7 @@
     <t t-name="Orderline">
         <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
-                <t t-esc="line.get_product().name"/>
+                <t t-esc="line.get_product().display_name"/>
             </span>
             <span class="price">
                 <t t-esc="widget.format_currency(line.get_display_price())"/>
@@ -779,6 +847,12 @@
                     <li class="button reference">Reference</li>
                 </ul>
 
+                <p class="category">Unsent Orders</p>
+                <ul>
+                    <li class="button show_orders">Show All Unsent Orders</li>
+                    <li class="button delete_orders">Delete All Unsent Orders</li>
+                </ul>
+
                 <p class="category">Hardware Status</p>
                 <ul>
                     <li class="status weighting">Weighting</li>
@@ -857,7 +931,7 @@
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            User: <t t-esc="widget.pos.user.name"/><br />
+            User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <t t-if="widget.pos.config.receipt_header">
@@ -874,7 +948,7 @@
                 </colgroup>
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().name"/>
+                        <t t-esc="orderline.get_product().display_name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
@@ -899,7 +973,7 @@
                 </tr>
                 <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
                     <tr>
-                        <td><t t-esc="taxdetail.tax.name" /></td>
+                        <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(taxdetail.amount)" />
                         </td>

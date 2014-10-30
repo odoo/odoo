@@ -1108,6 +1108,8 @@ class expression(object):
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._all_columns \
             or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+        assert not isinstance(right, BaseModel), \
+            "Invalid value %r in domain term %r" % (right, leaf)
 
         table_alias = '"%s"' % (eleaf.generate_alias())
 

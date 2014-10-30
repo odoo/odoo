@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* account_sequence
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 13:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,50 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr ""
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr ""
-
-#. module: account_sequence
-#: help:account.move,internal_sequence_number:0
-#: help:account.move.line,internal_sequence_number:0
-msgid "Internal Sequence Number"
-msgstr ""
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr ""
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr ""
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
 msgstr ""
 
 #. module: account_sequence
@@ -68,13 +32,33 @@ msgid "Company"
 msgstr ""
 
 #. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
 msgstr ""
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move_line
-msgid "Journal Items"
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
 msgstr ""
 
 #. module: account_sequence
@@ -84,53 +68,14 @@ msgid "Internal Number"
 msgstr ""
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid "OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,name:0
-msgid "Name"
-msgstr ""
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr ""
 
 #. module: account_sequence
-#: help:account.sequence.installer,prefix:0
-msgid "Prefix value of the record for the sequence"
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,suffix:0
-msgid "Suffix"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr ""
-
-#. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid "This sequence will be used to maintain the internal number for the journal entries related to this journal."
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
 msgstr ""
 
 #. module: account_sequence
@@ -139,7 +84,82 @@ msgid "Journal"
 msgstr ""
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,name:0
+msgid "Name"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid "Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr ""
+
+#. module: account_sequence
+#: field:account.sequence.installer,suffix:0
+msgid "Suffix"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.journal,internal_sequence_id:0
+msgid "This sequence will be used to maintain the internal number for the journal entries related to this journal."
+msgstr ""
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
+msgstr ""
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
 msgstr ""
 

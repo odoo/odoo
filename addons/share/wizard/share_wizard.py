@@ -26,6 +26,7 @@ from openerp import SUPERUSER_ID
 
 import simplejson
 
+from openerp import api
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv import expression
@@ -82,6 +83,7 @@ class share_wizard(osv.TransientModel):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
+    @api.cr_uid_ids_context
     def share_url_template(self, cr, uid, _ids, context=None):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
@@ -103,7 +105,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = self.env.args
+        cr, uid, context = wizard.env.args
         if options is None:
             options = {}
 
@@ -892,8 +894,8 @@ class share_result_line(osv.osv_memory):
             data = dict(dbname=cr.dbname, login=this.login, password=this.password)
             if this.share_wizard_id and this.share_wizard_id.action_id:
                 data['action_id'] = this.share_wizard_id.action_id.id
-            ctx = dict(context, share_url_template_hash_arguments=['action_id'])
-            result[this.id] = this.share_wizard_id.share_url_template(context=ctx) % data
+            this = this.with_context(share_url_template_hash_arguments=['action_id'])
+            result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 
     _columns = {

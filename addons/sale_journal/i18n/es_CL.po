@@ -1,51 +1,50 @@
 # Spanish (Chile) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-10-18 17:32+0000\n"
-"Last-Translator: Francisco Reyes Acuña <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Chile) <es_CL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Nota"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Activo"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Ventas y Compras"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturando"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupado"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_journal
@@ -58,19 +57,15 @@ msgstr ""
 "eliminarlo."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Notas"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Método de facturación"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "LIsta de guías de despacho"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo de Factura"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -78,16 +73,6 @@ msgstr "LIsta de guías de despacho"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Tipos de factura"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "No agrupado"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Agrupado"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -102,28 +87,44 @@ msgstr ""
 "diaria, cada miércoles, mensual, etc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Facturando"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Tipo de Factura"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Método de facturación"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Activo"
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "No agrupado"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Notas"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -131,78 +132,22 @@ msgid "Partner"
 msgstr "Socio"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "LIsta de guías de despacho"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Ventas y Compras"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Pedido de Venta"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Método de facturación"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "¡La referencia del pedido debe ser única!"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "El tipo de diario utilizado para ventas y guías de despacho."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    El módulo de diario de ventas le permite categorizar sus ventas\n"
-#~ "    y entregas (guías de despacho) en diferentes diarios.\n"
-#~ "    Este módulo es muy útil para compañías grandes que\n"
-#~ "    trabajan por departamentos.\n"
-#~ "\n"
-#~ "    Puede usar los diarios para diferentes propósitos, algunos ejemplos:\n"
-#~ "    * aislar ventas de diferentes departamentos\n"
-#~ "    * diarios para entregas según camión o compañía de envío\n"
-#~ "\n"
-#~ "    Los diarios tienen un responsable y evolucionan entre diferentes "
-#~ "estados:\n"
-#~ "    * borrador, abierto, cancelado, hecho.\n"
-#~ "\n"
-#~ "    Se pueden procesar operaciones en lote en los diferentes diarios\n"
-#~ "    para confirmar todas las ventas a la vez, para validar o facturar "
-#~ "albaranes, ...\n"
-#~ "\n"
-#~ "    También soporta métodos de facturación en lote que pueden ser "
-#~ "configurados \n"
-#~ "    según empresa o pedido de venta, ejemplos:\n"
-#~ "    * facturación diaria,\n"
-#~ "    * facturación mensual, ...\n"
-#~ "\n"
-#~ "    Se proporcionan algunas estadísticas por diario.\n"
-#~ "    "
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Gestionar ventas y entregas por diario"

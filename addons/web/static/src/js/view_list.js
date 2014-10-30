@@ -167,7 +167,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {String} CSS style declaration
      */
     style_for: function (record) {
-        var style= '';
+        var len, style= '';
 
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
@@ -374,9 +374,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var $column = $(e.currentTarget);
         var col_name = $column.data('id');
         var field = this.fields_view.fields[col_name];
-        // test if the field is a function field with store=false, since it's impossible
-        // for the server to sort those fields we desactivate the feature
-        if (field && field.store === false) {
+        // test whether the field is sortable
+        if (field && !field.sortable) {
             return false;
         }
         this.dataset.sort(col_name);
@@ -522,7 +521,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         self.dataset.index = 0;
                     }
                 } else if (self.dataset.index >= self.records.length) {
-                    self.dataset.index = 0;
+                    self.dataset.index = self.records.length ? 0 : null;
                 }
 
                 self.compute_aggregates();

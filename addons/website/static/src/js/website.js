@@ -93,7 +93,7 @@
         options = _.extend({
             window_title: '',
             field_name: '',
-            default: '',
+            'default': '', // dict notation for IE<9
             init: function() {}
         }, options || {});
 
@@ -106,7 +106,7 @@
         var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
-        field.val(options.default);
+        field.val(options['default']); // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.is('select')) {
                 var select = field[0];
@@ -255,6 +255,22 @@
         if($.fn.placeholder) $('input, textarea').placeholder();
     });
 
+    /**
+     * Execute a function if the dom contains at least one element matched
+     * through the given jQuery selector. Will first wait for the dom to be ready.
+     *
+     * @param {String} selector A jQuery selector used to match the element(s)
+     * @param {Function} fn Callback to execute if at least one element has been matched
+     */
+    website.if_dom_contains = function(selector, fn) {
+        website.dom_ready.then(function () {
+            var elems = $(selector);
+            if (elems.length) {
+                fn(elems);
+            }
+        });
+    };
+
     var all_ready = null;
     /**
      * Returns a deferred resolved when the templates are loaded
@@ -266,8 +282,12 @@
                 return templates_def;
             }).then(function () {
                 // display button if they are at least one editable zone in the page (check the branding)
-                var editable = $('html').data('website-id') && !!$('[data-oe-model]').size();
-                $("#oe_editzone").toggle(editable);
+                if (!!$('[data-oe-model]').size()) {
+                    $("#oe_editzone").show();
+
+                    //backwards compatibility with 8.0RC1 templates - Drop next line in master!
+                    $("#oe_editzone button").show();
+                }
 
                 if ($('html').data('website-id')) {
                     website.id = $('html').data('website-id');
@@ -282,7 +302,7 @@
 
     website.inject_tour = function() {
         // if a tour is active inject tour js
-    }
+    };
 
     website.dom_ready.then(function () {
         /* ----- PUBLISHING STUFF ---- */

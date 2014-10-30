@@ -321,13 +321,14 @@
             var self = this;
             var snipped_event_flag;
             $("#wrapwrap").on('click', function (event) {
-                if (snipped_event_flag || !event.srcElement) {
+                var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
+                if (snipped_event_flag || !srcElement) {
                     return;
                 }
                 snipped_event_flag = true;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
-                var $target = $(event.srcElement);
+                var $target = $(srcElement);
 
                 if ($target.parents(".oe_overlay").length) {
                     return;
@@ -740,7 +741,7 @@
             var styles = this.$target.data("snippet-option-ids") || {};
             styles[snippet_id] = this;
             this.$target.data("snippet-option-ids", styles);
-            this.$overlay = this.$target.data('overlay');
+            this.$overlay = this.$target.data('overlay') || $('<div>');
             this['snippet-option-id'] = snippet_id;
             var $option = website.snippet.templateOptions[snippet_id].$el;
             this.$el = $option.find(">li").clone();
@@ -971,7 +972,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content>.row, [data-slide]').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();
@@ -1002,7 +1003,19 @@
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
-            var $clone = this.$target.find(".item.active").clone();
+            // clone the best candidate from template to use new features
+            var $snippets = this.BuildingBlock.$snippets.find('.oe_snippet_body.carousel');
+            var point = 0;
+            var selection;
+            var className = _.compact(this.$target.attr("class").split(" "));
+            $snippets.each(function () {
+                var len = _.intersection(_.compact(this.className.split(" ")), className).length;
+                if (len > point) {
+                    point = len;
+                    selection = this;
+                }
+            });
+            var $clone = $(selection).find('.item:first').clone();
 
             // insert
             $clone.removeClass('active').insertAfter($active);
@@ -1114,10 +1127,10 @@
             var self = this;
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
-
-            this.$target.find('.carousel-image, .carousel-inner .content > div').attr('contentEditable', 'true');
-            this.$target.find('.carousel-image').attr('attributeEditable', 'true');
             this._super();
+
+            /* Fix: backward compatibility saas-3 */
+            this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
         },
     });
 
@@ -1484,10 +1497,11 @@
             this.$target.transfo({
                 hide: true,
                 callback: function () {
-                    var pos = $(this).data("transfo").$center.offset();
+                    var center = $(this).data("transfo").$markup.find('.transfo-scaler-mc').offset();
+                    var $option = self.$overlay.find('.btn-group:first');
                     self.$overlay.css({
-                        'top': pos.top,
-                        'left': pos.left,
+                        'top': center.top - $option.height()/2,
+                        'left': center.left,
                         'position': 'absolute',
                     });
                     self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
@@ -1537,6 +1551,9 @@
                 new website.editor.MediaDialog(self, self.element).appendTo(document.body);
                 self.BuildingBlock.make_active(false);
             }
+            setTimeout(function () {
+                self.$target.find(".css_editable_mode_display").removeAttr("_moz_abspos");
+            },0);
         },
     });
 

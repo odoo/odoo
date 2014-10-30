@@ -26,12 +26,13 @@ from _common import ceiling
 
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
+from openerp.tools.float_utils import float_round
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -133,10 +134,10 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=(12,12),
+        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
             fnct_inv=_factor_inv_write,
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
@@ -178,7 +179,10 @@ class product_uom(osv.osv):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
-        amount = qty / from_unit.factor
+        # First round to the precision of the original unit, so that
+        # float representation errors do not bias the following ceil()
+        # e.g. with 1 / (1/12) we could get 12.0000048, ceiling to 13! 
+        amount = float_round(qty/from_unit.factor, precision_rounding=from_unit.rounding)
         if to_unit:
             amount = amount * to_unit.factor
             if round:
@@ -410,6 +414,7 @@ class product_template(osv.osv):
     _name = "product.template"
     _inherit = ['mail.thread']
     _description = "Product Template"
+    _order = "name"
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -553,7 +558,7 @@ class product_template(osv.osv):
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
@@ -579,7 +584,13 @@ class product_template(osv.osv):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
-            res[product.id] = product[ptype] or 0.0
+            # standard_price field can only be seen by users in base.group_user
+            # Thus, in order to compute the sale price from the cost price for users not in this group
+            # We fetch the standard price as the superuser
+            if ptype != 'standard_price':
+                res[product.id] = product[ptype] or 0.0
+            else:
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -764,6 +775,9 @@ class product_template(osv.osv):
         return super(product_template, self).name_get(cr, user, ids, context)
 
 
+
+
+
 class product_product(osv.osv):
     _name = "product.product"
     _description = "Product"
@@ -898,19 +912,20 @@ class product_product(osv.osv):
 
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes"),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
         'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True, ondelete='restrict'),
+        'is_product_variant': fields.function( _is_product_variant_impl, type='boolean', string='Is product variant'),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
@@ -937,6 +952,9 @@ class product_product(osv.osv):
         unlink_ids = []
         unlink_product_tmpl_ids = []
         for product in self.browse(cr, uid, ids, context=context):
+            # Check if product still exists, in case it has been unlinked by unlinking its template
+            if not product.exists():
+                continue
             tmpl_id = product.product_tmpl_id.id
             # Check if the product is last product of this template
             other_product_ids = self.search(cr, uid, [('product_tmpl_id', '=', tmpl_id), ('id', '!=', product.id)], context=context)
@@ -979,12 +997,16 @@ class product_product(osv.osv):
 
         def _name_get(d):
             name = d.get('name','')
-            code = d.get('default_code',False)
+            code = context.get('display_default_code', True) and d.get('default_code',False) or False
             if code:
                 name = '[%s] %s' % (code,name)
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
+        if partner_id:
+            partner_ids = [partner_id, self.pool['res.partner'].browse(cr, user, partner_id, context=context).commercial_partner_id.id]
+        else:
+            partner_ids = []
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -996,13 +1018,14 @@ class product_product(osv.osv):
             variant = ", ".join([v.name for v in product.attribute_value_ids])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
-            if partner_id:
-                sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if partner_ids:
+                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
+                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
                     mydict = {
                               'id': product.id,
-                              'name': s.product_name or name,
+                              'name': seller_variant or name,
                               'default_code': s.product_code or product.default_code,
                               }
                     result.append(_name_get(mydict))
@@ -1019,10 +1042,13 @@ class product_product(osv.osv):
         if not args:
             args = []
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not ids:
+            positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
+            ids = []
+            if operator in positive_operators:
+                ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+                if not ids:
+                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+            if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
@@ -1033,7 +1059,9 @@ class product_product(osv.osv):
                     limit2 = (limit - len(ids)) if limit else False
                     ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
                 ids = list(ids)
-            if not ids:
+            elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
+                ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
+            if not ids and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
@@ -1084,6 +1112,39 @@ class product_product(osv.osv):
             context = {}
         ctx = dict(context or {}, create_product_product=True)
         return super(product_product, self).create(cr, uid, vals, context=ctx)
+
+
+
+    def need_procurement(self, cr, uid, ids, context=None):
+        return False
+
+    def _compute_uos_qty(self, cr, uid, ids, uom, qty, uos, context=None):
+        '''
+        Computes product's invoicing quantity in UoS from quantity in UoM.
+        Takes into account the
+        :param uom: Source unit
+        :param qty: Source quantity
+        :param uos: Target UoS unit.
+        '''
+        if not uom or not qty or not uos:
+            return qty
+        uom_obj = self.pool['product.uom']
+        product_id = ids[0] if isinstance(ids, (list, tuple)) else ids
+        product = self.browse(cr, uid, product_id, context=context)
+        if isinstance(uos, (int, long)):
+            uos = uom_obj.browse(cr, uid, uos, context=context)
+        if isinstance(uom, (int, long)):
+            uom = uom_obj.browse(cr, uid, uom, context=context)
+        if product.uos_id:  # Product has UoS defined
+            # We cannot convert directly between units even if the units are of the same category
+            # as we need to apply the conversion coefficient which is valid only between quantities
+            # in product's default UoM/UoS
+            qty_default_uom = uom_obj._compute_qty_obj(cr, uid, uom, qty, product.uom_id)  # qty in product's default UoM
+            qty_default_uos = qty_default_uom * product.uos_coeff
+            return uom_obj._compute_qty_obj(cr, uid, product.uos_id, qty_default_uos, uos)
+        else:
+            return uom_obj._compute_qty_obj(cr, uid, uom, qty, uos)
+
 
 
 class product_packaging(osv.osv):
@@ -1178,45 +1239,7 @@ class product_supplierinfo(osv.osv):
         'delay': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
     }
-    def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):
-        """
-        Calculate price from supplier pricelist.
-        @param supplier_ids: Ids of res.partner object.
-        @param product_id: Id of product.
-        @param product_qty: specify quantity to purchase.
-        """
-        if type(supplier_ids) in (int,long,):
-            supplier_ids = [supplier_ids]
-        res = {}
-        product_pool = self.pool.get('product.product')
-        partner_pool = self.pool.get('res.partner')
-        pricelist_pool = self.pool.get('product.pricelist')
-        currency_pool = self.pool.get('res.currency')
-        currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        # Compute price from standard price of product
-        product_price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
-        product = product_pool.browse(cr, uid, product_id, context=context)
-        for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
-            price = product_price
-            # Compute price from Purchase pricelist of supplier
-            pricelist_id = supplier.property_product_pricelist_purchase.id
-            if pricelist_id:
-                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty, context=context).setdefault(pricelist_id, 0)
-                price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 
-            # Compute price from supplier pricelist which are in Supplier Information
-            supplier_info_ids = self.search(cr, uid, [('name','=',supplier.id),('product_tmpl_id','=',product.product_tmpl_id.id)])
-            if supplier_info_ids:
-                cr.execute('SELECT * ' \
-                    'FROM pricelist_partnerinfo ' \
-                    'WHERE suppinfo_id IN %s' \
-                    'AND min_quantity <= %s ' \
-                    'ORDER BY min_quantity DESC LIMIT 1', (tuple(supplier_info_ids),product_qty,))
-                res2 = cr.dictfetchone()
-                if res2:
-                    price = res2['price']
-            res[supplier.id] = price
-        return res
     _order = 'sequence'
 
 

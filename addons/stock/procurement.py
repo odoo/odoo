@@ -26,6 +26,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 from openerp import SUPERUSER_ID
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+from psycopg2 import OperationalError
 import openerp
 
 class procurement_group(osv.osv):
@@ -175,7 +176,7 @@ class procurement_order(osv.osv):
             'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.rule_id.partner_address_id.id or (procurement.group_id and procurement.group_id.partner_id.id) or False,
             'location_id': procurement.rule_id.location_src_id.id,
-            'location_dest_id': procurement.rule_id.location_id.id,
+            'location_dest_id': procurement.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'procurement_id': procurement.id,
             'rule_id': procurement.rule_id.id,
@@ -204,12 +205,14 @@ class procurement_order(osv.osv):
             return True
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
-    def run(self, cr, uid, ids, context=None):
-        res = super(procurement_order, self).run(cr, uid, ids, context=context)
+    def run(self, cr, uid, ids, autocommit=False, context=None):
+        new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
+        res = super(procurement_order, self).run(cr, uid, new_ids, autocommit=autocommit, context=context)
+
         #after all the procurements are run, check if some created a draft stock move that needs to be confirmed
         #(we do that in batch because it fasts the picking assignation and the picking state computation)
         move_to_confirm_ids = []
-        for procurement in self.browse(cr, uid, ids, context=context):
+        for procurement in self.browse(cr, uid, new_ids, context=context):
             if procurement.state == "running" and procurement.rule_id and procurement.rule_id.action == "move":
                 move_to_confirm_ids += [m.id for m in procurement.move_ids if m.state == 'draft']
         if move_to_confirm_ids:
@@ -222,6 +225,9 @@ class procurement_order(osv.osv):
         '''
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
+            # In case Phantom BoM splits only into procurements
+            if not procurement.move_ids:
+                return True
             cancel_test_list = [x.state == 'cancel' for x in procurement.move_ids]
             done_cancel_test_list = [x.state in ('done', 'cancel') for x in procurement.move_ids]
             at_least_one_cancel = any(cancel_test_list)
@@ -297,7 +303,7 @@ class procurement_order(osv.osv):
         return {}
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
-        date_planned = start_date
+        date_planned = start_date + relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
@@ -335,36 +341,51 @@ class procurement_order(osv.osv):
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
 
         procurement_obj = self.pool.get('procurement.order')
-        offset = 0
-        ids = [1]
         dom = company_id and [('company_id', '=', company_id)] or []
-        while ids:
-            ids = orderpoint_obj.search(cr, uid, dom, offset=offset, limit=100)
+        orderpoint_ids = orderpoint_obj.search(cr, uid, dom)
+        prev_ids = []
+        while orderpoint_ids:
+            ids = orderpoint_ids[:100]
+            del orderpoint_ids[:100]
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                prods = self._product_virtual_get(cr, uid, op)
-                if prods is None:
-                    continue
-                if prods < op.product_min_qty:
-                    qty = max(op.product_min_qty, op.product_max_qty) - prods
-
-                    reste = qty % op.qty_multiple
-                    if reste > 0:
-                        qty += op.qty_multiple - reste
-
-                    if qty <= 0:
+                try:
+                    prods = self._product_virtual_get(cr, uid, op)
+                    if prods is None:
                         continue
+                    if prods < op.product_min_qty:
+                        qty = max(op.product_min_qty, op.product_max_qty) - prods
 
-                    qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
+                        reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
+                        if reste > 0:
+                            qty += op.qty_multiple - reste
 
-                    if qty > 0:
-                        proc_id = procurement_obj.create(cr, uid,
-                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
-                                                         context=context)
-                        self.check(cr, uid, [proc_id])
-                        self.run(cr, uid, [proc_id])
-            offset += len(ids)
+                        if qty <= 0:
+                            continue
+
+                        qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
+
+                        if qty > 0:
+                            proc_id = procurement_obj.create(cr, uid,
+                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                             context=context)
+                            self.check(cr, uid, [proc_id])
+                            self.run(cr, uid, [proc_id])
+                    if use_new_cursor:
+                        cr.commit()
+                except OperationalError:
+                    if use_new_cursor:
+                        orderpoint_ids.append(op.id)
+                        cr.rollback()
+                        continue
+                    else:
+                        raise
             if use_new_cursor:
                 cr.commit()
+            if prev_ids == ids:
+                break
+            else:
+                prev_ids = ids
+
         if use_new_cursor:
             cr.commit()
             cr.close()

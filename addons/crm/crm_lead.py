@@ -29,7 +29,8 @@ from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
-from openerp.tools import email_re
+from openerp.tools import email_re, email_split
+
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -68,7 +69,7 @@ class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority,date_action,id desc"
+    _order = "priority desc,date_action,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'crm.tracking.mixin']
 
     _track = {
@@ -90,11 +91,11 @@ class crm_lead(format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def _get_default_section_id(self, cr, uid, context=None):
+    def _get_default_section_id(self, cr, uid, user_id=False, context=None):
         """ Gives default section by checking if present in the context """
         section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
         if not section_id:
-            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+            section_id = self.pool.get('res.users').browse(cr, uid, user_id or uid, context).default_section_id.id or False
         return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
@@ -159,6 +160,10 @@ class crm_lead(format_address, osv.osv):
         return result, fold
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context and context.get('opportunity_id'):
+            action = self._get_formview_action(cr, user, context['opportunity_id'], context=context)
+            if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
+                view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
         res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
@@ -229,10 +234,12 @@ class crm_lead(format_address, osv.osv):
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_open', type="float", store=True),
+        'day_open': fields.function(_compute_day, string='Days to Assign',
+                                    multi='day_open', type="float",
+                                    store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
+        'day_close': fields.function(_compute_day, string='Days to Close',
+                                     multi='day_open', type="float",
+                                     store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing
@@ -277,7 +284,7 @@ class crm_lead(format_address, osv.osv):
         'type': 'lead',
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
@@ -322,7 +329,7 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = self._get_default_section_id(cr, uid, context=context) or False
+        section_id = self._get_default_section_id(cr, uid, user_id=user_id, context=context) or False
         if user_id and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
@@ -578,10 +585,49 @@ class crm_lead(format_address, osv.osv):
                 values = {'res_id': opportunity_id,}
                 for attachment_in_first in first_attachments:
                     if attachment.name == attachment_in_first.name:
-                        name = "%s (%s)" % (attachment.name, count,),
+                        values['name'] = "%s (%s)" % (attachment.name, count,),
                 count+=1
                 attachment.write(values)
         return True
+
+    def _merge_opportunity_phonecalls(self, cr, uid, opportunity_id, opportunities, context=None):
+        phonecall_obj = self.pool['crm.phonecall']
+        for opportunity in opportunities:
+            for phonecall_id in phonecall_obj.search(cr, uid, [('opportunity_id', '=', opportunity.id)], context=context):
+                phonecall_obj.write(cr, uid, phonecall_id, {'opportunity_id': opportunity_id}, context=context)
+        return True
+
+    def get_duplicated_leads(self, cr, uid, ids, partner_id, include_lost=False, context=None):
+        """
+        Search for opportunities that have the same partner and that arent done or cancelled
+        """
+        lead = self.browse(cr, uid, ids[0], context=context)
+        email = lead.partner_id and lead.partner_id.email or lead.email_from
+        return self.pool['crm.lead']._get_duplicated_leads_by_emails(cr, uid, partner_id, email, include_lost=include_lost, context=context)
+
+    def _get_duplicated_leads_by_emails(self, cr, uid, partner_id, email, include_lost=False, context=None):
+        """
+        Search for opportunities that have   the same partner and that arent done or cancelled
+        """
+        final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
+        partner_match_domain = []
+        for email in set(email_split(email) + [email]):
+            partner_match_domain.append(('email_from', '=ilike', email))
+        if partner_id:
+            partner_match_domain.append(('partner_id', '=', partner_id))
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
+        if not partner_match_domain:
+            return []
+        domain = partner_match_domain
+        if not include_lost:
+            domain += final_stage_domain
+        return self.search(cr, uid, domain, context=context)
+
+    def merge_dependences(self, cr, uid, highest, opportunities, context=None):
+        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_history(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_attachments(cr, uid, highest, opportunities, context=context)
+        self._merge_opportunity_phonecalls(cr, uid, highest, opportunities, context=context)
 
     def merge_opportunity(self, cr, uid, ids, user_id=False, section_id=False, context=None):
         """
@@ -625,14 +671,12 @@ class crm_lead(format_address, osv.osv):
         if section_id:
             merged_data['section_id'] = section_id
 
-        # Merge messages and attachements into the first opportunity
-        self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
-        self._merge_opportunity_attachments(cr, uid, highest.id, tail_opportunities, context=context)
-
         # Merge notifications about loss of information
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, highest.id, opportunities, context=context)
+
+        self.merge_dependences(cr, uid, highest.id, tail_opportunities, context=context)
+
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
             section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
@@ -658,7 +702,6 @@ class crm_lead(format_address, osv.osv):
             'probability': lead.probability,
             'name': lead.name,
             'partner_id': customer and customer.id or False,
-            'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
@@ -887,6 +930,8 @@ class crm_lead(format_address, osv.osv):
             context['default_type'] = vals.get('type')
         if vals.get('section_id') and not context.get('default_section_id'):
             context['default_section_id'] = vals.get('section_id')
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -896,7 +941,9 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # stage change with new stage: update probability
+        if vals.get('user_id'):
+            vals['date_open'] = fields.datetime.now()
+        # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
@@ -910,7 +957,7 @@ class crm_lead(format_address, osv.osv):
         lead = self.browse(cr, uid, id, context=context)
         local_context = dict(context)
         local_context.setdefault('default_type', lead.type)
-        local_context.setdefault('default_section_id', lead.section_id)
+        local_context.setdefault('default_section_id', lead.section_id.id)
         if lead.type == 'opportunity':
             default['date_open'] = fields.datetime.now()
         else:

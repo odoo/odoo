@@ -31,7 +31,7 @@ Use for update your text memo in real time with the following user that you invi
 
 """,
     'author': 'OpenERP SA',
-    'website': 'http://openerp.com',
+    'website': 'https://www.odoo.com/page/notes',
     'summary': 'Sticky memos, Collaborative',
     'depends': [
         'mail',

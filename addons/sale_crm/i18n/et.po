@@ -1,56 +1,35 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_crm
+# Estonian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-17 18:59+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr ""
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Tühista"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr ""
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr ""
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr ""
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
+#: field:sale.order,medium_id:0
+msgid "Channel"
 msgstr ""
 
 #. module: sale_crm
@@ -60,21 +39,25 @@ msgid ""
 msgstr ""
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Loo pakkumine"
+
+#. module: sale_crm
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Pakkumine"
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -82,61 +65,25 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
+#: field:crm.make.sale,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
+msgid "Insufficient Data!"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
 msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Pood"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
 msgstr ""
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr ""
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr ""
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Loo pakkumine"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -144,9 +91,39 @@ msgid "Make Quotation"
 msgstr "Loo pakkumine"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Tühista"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Pakkumine"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -154,110 +131,35 @@ msgid "Sales Order"
 msgstr "Müügikorraldus"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
+#: field:sale.order,source_id:0
+msgid "Source"
 msgstr ""
 
-#~ msgid "Create"
-#~ msgstr "Loo"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
 
-#~ msgid "Your action"
-#~ msgstr "Sinu toiming"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
 
-#~ msgid "Direct Delivery"
-#~ msgstr "Otsetarne"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
 
-#~ msgid "User Responsible"
-#~ msgstr "Kasutaja vastutada"
-
-#~ msgid "Products"
-#~ msgstr "Tooted"
-
-#~ msgid "Close Case"
-#~ msgstr "Sule juhtum"
-
-#~ msgid "Make Case"
-#~ msgstr "Loo juhtum"
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Võimaluse hinnakiri"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Lepingu hinnakiri"
-
-#~ msgid "Case Description"
-#~ msgstr "Juhtumi kirjeldus"
-
-#~ msgid "Case Section"
-#~ msgstr "Juhtumi Jaotis"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Muuda võimalus noteeringuks"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Pakkimise poliitika"
-
-#~ msgid "Create Quote"
-#~ msgstr "Loo noteering"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Võimalus läheb noteeringuks"
-
-#~ msgid "Analytic account"
-#~ msgstr "Analüütiline konto"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Lepingu maht (hinnakiri)"
-
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Võimaluste analüüs"
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "KSH võimaluste noteering"
-
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Kasuta seda partnerit, kui juhtumil puudub partner"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "KSH võimalus"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Analüütiline konto"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "KSH võimalus võib viia noteeringuni"
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Võimaluse muutmine hinnakirjaks"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Võimaluse noteering"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Võimaluse muutmine noteeringuks"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Muuda noteeringuks"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr "Märgi see, et sulgeda juhtum pärast müügikorralduse loomist."
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Kajasta kliendiga sõlmitud lepingut"
-
-#~ msgid "All at once"
-#~ msgstr "Kõik korraga"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Andmed ebapiisavad!"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Kliendil pole aadressi määratud!"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Müügi kliendisuhete halduse võimalused"
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr ""

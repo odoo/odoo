@@ -1,0 +1,14 @@
+# HG changeset patch
+# Parent c706c2ec28328a65a8aee6a7ba7d06896468c1e3
+diff -r c706c2ec2832 -r f85b481451bb academy/templates.xml
+--- a/academy/templates.xml	Thu Aug 14 16:08:10 2014 +0200
++++ b/academy/templates.xml	Thu Aug 14 16:30:49 2014 +0200
+@@ -34,4 +34,8 @@
+       <attribute name="t-if">product.price &gt; 0</attribute>
+     </xpath>
+   </template>
++
++  <record id="website_sale.products_categories" model="ir.ui.view">
++    <field name="active" eval="True"/>
++  </record>
+ </data></openerp>

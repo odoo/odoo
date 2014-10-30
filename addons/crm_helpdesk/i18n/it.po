@@ -1,101 +1,75 @@
 # Italian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-15 12:07+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-03 06:56+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:39+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-04 06:49+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk.report,delay_close:0
-msgid "Delay to Close"
-msgstr "Ritardo chiusura"
+#: field:crm.helpdesk.report,email:0
+msgid "# Emails"
+msgstr "# E-mail"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
-msgid "# of Cases"
-msgstr "# di casi"
+msgid "# of Requests"
+msgstr "# di richieste"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: view:crm.helpdesk.report:0
-msgid "Group By..."
-msgstr "Raggruppa per..."
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new request. \n"
+"              </p><p>\n"
+"                Helpdesk and Support allow you to track your interventions.\n"
+"              </p><p>\n"
+"                Use the Odoo Issues system to manage your support\n"
+"                activities. Issues can be connected to the email gateway: "
+"new\n"
+"                emails may create issues, each of them automatically gets "
+"the\n"
+"                history of the conversation with the customer.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Click per creare una nuova richiesta.\n"
+"</p><p>\n"
+"L'helpdesk e il supporto permettono di tracciare i vostri interventi.\n"
+"</p><p>\n"
+"Utilizzare il sistema di gestione problematiche di ODOO per le attività di \n"
+"supporto. I problemi possono essere collegati ad un server di posta: \n"
+"Nuove mail possono creare problemi, ognuna di esse automaticamente\n"
+"fornisce lo storico della conversazione con il cliente.\n"
+"</p>\n"
+"            "
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,email_from:0
-msgid "Destination email for email gateway"
-msgstr "Destinatario email dal server di posta"
+#: field:crm.helpdesk,active:0
+msgid "Active"
+msgstr "Attivo"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "March"
-msgstr "Marzo"
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "All pending Helpdesk Request"
+msgstr "Tutte le richieste help desk in attesa"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,message_unread:0
-msgid "Unread Messages"
-msgstr "Messaggi non letti"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,company_id:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,company_id:0
-msgid "Company"
-msgstr "Azienda"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,email_cc:0
-msgid "Watchers Emails"
-msgstr "Email osservatori"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Salesperson"
-msgstr "Commerciale"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
-msgid "Highest"
-msgstr "Massimo"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,day:0
-msgid "Day"
-msgstr "Giorno"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Date of helpdesk requests"
-msgstr "Data richiesta help deskt"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Notes"
-msgstr "Note"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,message_ids:0
-msgid "Messages"
-msgstr "Messaggi"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "My company"
-msgstr "La mia azienda"
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Assigned to Me or My Sales Team(s)"
+msgstr "Assegnata a me o al mio(ei) team di vendita"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,state:0
@@ -104,226 +78,14 @@ msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Se spuntato i nuovi messaggi richiederanno la vostra attenzione"
-
-#. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
-#: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
-msgid "Helpdesk Analysis"
-msgstr "Analisi Helpdesk"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,date_closed:0
-msgid "Close Date"
-msgstr "Data chiusura"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,ref:0
-msgid "Reference"
-msgstr "Riferimento"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,date_action_next:0
-msgid "Next Action"
-msgstr "Prossima azione"
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Helpdesk Supports"
-msgstr "Supporti helpdesk"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Extra Info"
-msgstr "Informazioni extra"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,partner_id:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Estimates"
-msgstr "Stime"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk.report,section_id:0
-msgid "Section"
-msgstr "Sezione"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,priority:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,priority:0
-msgid "Priority"
-msgstr "Priorità"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,message_follower_ids:0
-msgid "Followers"
-msgstr "Followers"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
-#: view:crm.helpdesk.report:0
-msgid "New"
-msgstr "Nuovo"
-
-#. module: crm_helpdesk
-#: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
-msgid "Helpdesk report after Sales Services"
-msgstr "Report helpdesk dopo servizi di vendite"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,email_from:0
-msgid "Email"
-msgstr "Email"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,channel_id:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,channel_id:0
-msgid "Channel"
-msgstr "Canale"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
-msgid "Lowest"
-msgstr "Minore"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "# Mails"
-msgstr "# E-Mail"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "My Sales Team(s)"
-msgstr "I Miei Team di Vendita"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,create_date:0
-#: field:crm.helpdesk.report,create_date:0
-msgid "Creation Date"
-msgstr "Data di creazione"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Reset to Draft"
-msgstr "Reimposta a \"bozza\""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,date_deadline:0
-#: field:crm.helpdesk.report,date_deadline:0
-msgid "Deadline"
-msgstr "Scadenza"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "July"
-msgstr "Luglio"
-
-#. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.crm_helpdesk_categ_action
-msgid "Helpdesk Categories"
-msgstr "Categorie Helpdesk"
-
-#. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_crm_case_helpdesk-act
 msgid "Categories"
 msgstr "Categorie"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "New Helpdesk Request"
-msgstr "Nuova richiesta help desk"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Dates"
-msgstr "Date"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Month of helpdesk requests"
-msgstr "Mede delle richeiste help desk"
-
-#. module: crm_helpdesk
-#: code:addons/crm_helpdesk/crm_helpdesk.py:104
-#, python-format
-msgid "No Subject"
-msgstr "Nessun Oggetto"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid ""
-"Helpdesk requests that are assigned to me or to one of the sale teams I "
-"manage"
-msgstr ""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "#Helpdesk"
-msgstr "# Helpdesk"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "All pending Helpdesk Request"
-msgstr "Tutte le richieste help desk in attesa"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Year of helpdesk requests"
-msgstr "Le vostre richieste help desk"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "September"
-msgstr "Settembre"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "December"
-msgstr "Dicembre"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,month:0
-msgid "Month"
-msgstr "Mese"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,write_date:0
-msgid "Update Date"
-msgstr "Data Aggiornamento"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Query"
-msgstr "Query"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,ref2:0
-msgid "Reference 2"
-msgstr "Riferimento 2"
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Categorization"
+msgstr "Categorizzazione"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,categ_id:0
@@ -332,14 +94,404 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Responsible User"
-msgstr "Utente responsabile"
+#: field:crm.helpdesk,channel_id:0
+#: field:crm.helpdesk.report,channel_id:0
+msgid "Channel"
+msgstr "Canale"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,date_closed:0
+msgid "Close Date"
+msgstr "Data chiusura"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,date_closed:0
+#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: selection:crm.helpdesk.report,state:0
+msgid "Closed"
+msgstr "Chiuso"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Communication"
+msgstr "Comunicazione"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,channel_id:0
+msgid "Communication channel."
+msgstr "Canale di comunicazione"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,company_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,company_id:0
+msgid "Company"
+msgstr "Azienda"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid ""
+"Create and manage helpdesk categories to better manage and classify your "
+"support requests."
+msgstr ""
+"Crea e gestisce categorie di helpdesk per meglio amministrare e classificare "
+"le richieste di supporto."
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,create_date:0
+#: field:crm.helpdesk.report,create_date:0
+msgid "Creation Date"
+msgstr "Data di creazione"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: field:crm.helpdesk,date:0
+#: field:crm.helpdesk.report,date:0
+msgid "Date"
+msgstr "Data"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Data dell'ultimo messaggio postato per questo record"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Dates"
+msgstr "Date"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,date_deadline:0
+#: field:crm.helpdesk.report,date_deadline:0
+msgid "Deadline"
+msgstr "Scadenza"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk.report,delay_close:0
+msgid "Delay to Close"
+msgstr "Ritardo chiusura"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,description:0
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,email_from:0
+msgid "Destination email for email gateway"
+msgstr "Destinatario email dal server di posta"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk.report,state:0
+msgid "Draft"
+msgstr "Bozza"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,duration:0
+msgid "Duration"
+msgstr "Durata"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,email_from:0
+msgid "Email"
+msgstr "Email"
+
+#. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:117
+#, python-format
+msgid "Error!"
+msgstr "Errore!"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Escalate"
+msgstr "Intensificare"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Estimates"
+msgstr "Stime"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Extended Filters..."
+msgstr "Filtri estesi..."
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Extra Info"
+msgstr "Informazioni extra"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_follower_ids:0
+msgid "Followers"
+msgstr "Followers"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "General"
+msgstr "Generale"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Group By"
+msgstr "Raggruppa per"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid ""
+"Have a general overview of all support requests by sorting them with "
+"specific criteria such as the processing time, number of requests answered, "
+"emails sent and costs."
+msgstr ""
+"Avere una panoramica generale delle richieste di supporto ordinandole per un "
+"criterio specifico come il tempo per processarlo, il numero di richieste con "
+"risposta, le e-mail inviate e i costi."
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_graph
+#: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
+#: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
+msgid "Helpdesk"
+msgstr "Helpdesk"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
+#: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
+msgid "Helpdesk Analysis"
+msgstr "Analisi Helpdesk"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,name:crm_helpdesk.crm_helpdesk_categ_action
+msgid "Helpdesk Categories"
+msgstr "Categorie Helpdesk"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,name:crm_helpdesk.crm_case_helpdesk_act111
+msgid "Helpdesk Requests"
+msgstr "Richieste Helpdesk"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
 msgid "Helpdesk Support"
 msgstr "Supporto Helpdesk"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+msgid "Helpdesk Support Tree"
+msgstr "Albero Gestione supporto helpdesk"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_helpdesk_calendar_view
+msgid "Helpdesk Supports"
+msgstr "Supporti helpdesk"
+
+#. module: crm_helpdesk
+#: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
+msgid "Helpdesk and Support"
+msgstr "Helpdesk e supporto"
+
+#. module: crm_helpdesk
+#: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
+msgid "Helpdesk report after Sales Services"
+msgstr "Report helpdesk dopo servizi di vendite"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid ""
+"Helpdesk requests that are assigned to me or to one of the sale teams I "
+"manage"
+msgstr ""
+"Richieste di helpdesk che sono assegnate a me o ad uno del team di vendita "
+"che gestisco"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,priority:0
+#: selection:crm.helpdesk.report,priority:0
+msgid "High"
+msgstr "Alto"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk.report,priority:0
+msgid "Highest"
+msgstr "Massimo"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Integra il sommario messaggi (numero di messaggi, ...). Questo riepilogo è "
+"direttamente in formato HTML per essere inserito nelle viste Kanban."
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,id:0
+#: field:crm.helpdesk.report,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Se spuntato i nuovi messaggi richiederanno la vostra attenzione"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,state:0
+msgid "In Progress"
+msgstr "In Corso"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_is_follower:0
+msgid "Is a Follower"
+msgstr "E' un Follower"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,date_action_last:0
+msgid "Last Action"
+msgstr "Ultima azione"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_last_post:0
+msgid "Last Message Date"
+msgstr "Data Ultimo Messaggio"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,write_uid:0
+msgid "Last Updated by"
+msgstr "Ultima modifica di"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,priority:0
+#: selection:crm.helpdesk.report,priority:0
+msgid "Low"
+msgstr "Basso"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk.report,priority:0
+msgid "Lowest"
+msgstr "Minore"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_ids:0
+msgid "Messages"
+msgstr "Messaggi"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_ids:0
+msgid "Messages and communication history"
+msgstr "Storico messaggi e comunicazioni"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Misc"
+msgstr "Varie"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Month"
+msgstr "Mese"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Month of helpdesk requests"
+msgstr "Mede delle richeiste help desk"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "My Case(s)"
+msgstr "I miei casi(o)"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "My Company"
+msgstr "La mia azienda"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "My Sales Team(s)"
+msgstr "I Miei Team di Vendita"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "New"
+msgstr "Nuovo"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "New Helpdesk Request"
+msgstr "Nuova richiesta help desk"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,date_action_next:0
+msgid "Next Action"
+msgstr "Prossima azione"
+
+#. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:134
+#, python-format
+msgid "No Subject"
+msgstr "Nessun Oggetto"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,priority:0
+#: selection:crm.helpdesk.report,priority:0
+msgid "Normal"
+msgstr "Normale"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "Notes"
+msgstr "Note"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: selection:crm.helpdesk.report,state:0
+msgid "Open"
+msgstr "Apri"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Open Helpdesk Request"
+msgstr "Apri richiesta helpdesk"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Scadenza superata"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,partner_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Pending"
+msgstr "In sospeso"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,planned_cost:0
@@ -348,9 +500,130 @@ msgid "Planned Costs"
 msgstr "Costi pianificati"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,channel_id:0
-msgid "Communication channel."
-msgstr "Canale di comunicazione"
+#: field:crm.helpdesk,planned_revenue:0
+msgid "Planned Revenue"
+msgstr "Entrate pianificate"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,priority:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,priority:0
+msgid "Priority"
+msgstr "Priorità"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,probability:0
+msgid "Probability (%)"
+msgstr "Probabilità (%)"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_tree_view_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Query"
+msgstr "Query"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,ref:0
+msgid "Reference"
+msgstr "Riferimento"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,ref2:0
+msgid "Reference 2"
+msgstr "Riferimento 2"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.crm_case_form_view_helpdesk
+msgid "References"
+msgstr "Riferimenti"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Request Date by Month"
+msgstr "Data richieste per mese"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Request Month"
+msgstr "Mese richieste"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,user_id:0
+msgid "Responsible"
+msgstr "Responsabile"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Responsible User"
+msgstr "Utente responsabile"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
+"Responsabile del team di vendite. Definisci l'utente responsabile ed un "
+"account email per in gateway email."
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,section_id:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Sales Team"
+msgstr "Team di vendita"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Salesperson"
+msgstr "Commerciale"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+msgid "Search"
+msgstr "Cerca"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+msgid "Search Helpdesk"
+msgstr "Ricerca Helpdesk"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk.report,section_id:0
+msgid "Section"
+msgstr "Sezione"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:crm_helpdesk.view_crm_case_helpdesk_filter
+#: field:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:crm_helpdesk.view_report_crm_helpdesk_filter
+#: field:crm.helpdesk.report,state:0
+msgid "Status"
+msgstr "Stato"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_summary:0
+msgid "Summary"
+msgstr "Riepilogo"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                        "
+"          \n"
+"If the case is in progress the status is set to 'Open'.                      "
+"            \n"
+"When the case is over, the status is set to 'Done'.                          "
+"        \n"
+"If the case needs to be reviewed then the status is set to 'Pending'."
+msgstr ""
+"Lo stato è impostato a 'bozza' quando il caso viene creato.\n"
+"Se il caso è in stato di avanzamento e impostato su 'aperto'.\n"
+"Quando il caso è terminato lo stato è 'fatto'.\n"
+"Se il caso necessita di essere revisionato lo stato è impostato a 'pendente'."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,email_cc:0
@@ -364,97 +637,14 @@ msgstr ""
 "indirizzi con una virgola"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Search Helpdesk"
-msgstr "Ricerca Helpdesk"
+#: field:crm.helpdesk,message_unread:0
+msgid "Unread Messages"
+msgstr "Messaggi non letti"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,state:0
-msgid "Draft"
-msgstr "Bozza"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
-msgid "Low"
-msgstr "Basso"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
-#: view:crm.helpdesk.report:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Closed"
-msgstr "Chiuso"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Pending"
-msgstr "In sospeso"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,state:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,state:0
-msgid "Status"
-msgstr "Stato"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "August"
-msgstr "Agosto"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
-msgid "Normal"
-msgstr "Normale"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Escalate"
-msgstr "Intensificare"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "June"
-msgstr "Giugno"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: crm_helpdesk
-#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new request. \n"
-"              </p><p>\n"
-"                Helpdesk and Support allow you to track your interventions.\n"
-"              </p><p>\n"
-"                Use the OpenERP Issues system to manage your support\n"
-"                activities. Issues can be connected to the email gateway: "
-"new\n"
-"                emails may create issues, each of them automatically gets "
-"the\n"
-"                history of the conversation with the customer.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Entrate pianificate"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,message_is_follower:0
-msgid "Is a Follower"
-msgstr "E' un Follower"
+#: field:crm.helpdesk,write_date:0
+msgid "Update Date"
+msgstr "Data Aggiornamento"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,user_id:0
@@ -462,359 +652,32 @@ msgid "User"
 msgstr "Utente"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,active:0
-msgid "Active"
-msgstr "Attivo"
+#: field:crm.helpdesk,email_cc:0
+msgid "Watchers Emails"
+msgstr "Email osservatori"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "November"
-msgstr "Novembre"
+#: field:crm.helpdesk,website_message_ids:0
+msgid "Website Messages"
+msgstr "Messaggi sito"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Extended Filters..."
-msgstr "Filtri estesi..."
+#: help:crm.helpdesk,website_message_ids:0
+msgid "Website communication history"
+msgstr "Storico comunicazione sito"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.crm_case_helpdesk_act111
-msgid "Helpdesk Requests"
-msgstr "Richieste Helpdesk"
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,section_id:0
+#: code:addons/crm_helpdesk/crm_helpdesk.py:117
+#, python-format
 msgid ""
-"Responsible sales team. Define Responsible user and Email account for mail "
-"gateway."
+"You can not escalate, you are already at the top level regarding your sales-"
+"team category."
 msgstr ""
+"Non potete avanzare, siete al livello massimo relativo alla categoria del "
+"vostro team di vendita"
 
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "October"
-msgstr "Ottobre"
+#~ msgid "# of Cases"
+#~ msgstr "# di casi"
 
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "January"
-msgstr "Gennaio"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,message_summary:0
-msgid "Summary"
-msgstr "Riepilogo"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,date:0
-msgid "Date"
-msgstr "Data"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Misc"
-msgstr "Varie"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "My Company"
-msgstr "La mia azienda"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "General"
-msgstr "Generale"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "References"
-msgstr "Riferimenti"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication"
-msgstr "Comunicazione"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Close"
-msgstr "Chiuso"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: view:crm.helpdesk.report:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Open"
-msgstr "Apri"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Helpdesk Support Tree"
-msgstr ""
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,state:0
-msgid "In Progress"
-msgstr "In Corso"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Categorization"
-msgstr "Categorizzazione"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
-#: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
-msgid "Helpdesk"
-msgstr "Helpdesk"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,user_id:0
-msgid "Responsible"
-msgstr "Responsabile"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Search"
-msgstr "Cerca"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Scadenza superata"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,description:0
-msgid "Description"
-msgstr "Descrizione"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "May"
-msgstr "Maggio"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,probability:0
-msgid "Probability (%)"
-msgstr "Probabilità (%)"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk.report,email:0
-msgid "# Emails"
-msgstr "# E-mail"
-
-#. module: crm_helpdesk
-#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
-msgid ""
-"Have a general overview of all support requests by sorting them with "
-"specific criteria such as the processing time, number of requests answered, "
-"emails sent and costs."
-msgstr ""
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "February"
-msgstr "Febbraio"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,name:0
-msgid "Year"
-msgstr "Anno"
-
-#. module: crm_helpdesk
-#: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
-msgid "Helpdesk and Support"
-msgstr "Helpdesk e supporto"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "April"
-msgstr "Aprile"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "My Case(s)"
-msgstr "I miei casi(o)"
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,state:0
-msgid ""
-"The status is set to 'Draft', when a case is created.                        "
-"          \n"
-"If the case is in progress the status is set to 'Open'.                      "
-"            \n"
-"When the case is over, the status is set to 'Done'.                          "
-"        \n"
-"If the case needs to be reviewed then the status is set to 'Pending'."
-msgstr ""
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,message_ids:0
-msgid "Messages and communication history"
-msgstr "Storico messaggi e comunicazioni"
-
-#. module: crm_helpdesk
-#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
-msgid ""
-"Create and manage helpdesk categories to better manage and classify your "
-"support requests."
-msgstr ""
-"Crea e gestisce categorie di helpdesk per meglio amministrare e classificare "
-"le richieste di supporto."
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Request Date"
-msgstr "Data richiesta"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Open Helpdesk Request"
-msgstr "Apri richiesta helpdesk"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk,priority:0
-#: selection:crm.helpdesk.report,priority:0
-msgid "High"
-msgstr "Alto"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,section_id:0
-#: view:crm.helpdesk.report:0
-msgid "Sales Team"
-msgstr "Team di vendita"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,date_action_last:0
-msgid "Last Action"
-msgstr "Ultima azione"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Assigned to Me or My Sales Team(s)"
-msgstr "Assegnata a me o al mio(ei) team di vendita"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,duration:0
-msgid "Duration"
-msgstr "Durata"
-
-#~ msgid "Today"
-#~ msgstr "Oggi"
-
-#~ msgid "   Month   "
-#~ msgstr "   Mese   "
-
-#~ msgid "Send New Email"
-#~ msgstr "Invia nuova e-mail"
-
-#~ msgid "  Year  "
-#~ msgstr "  Anno  "
-
-#~ msgid "Salesman"
-#~ msgstr "Commerciale"
-
-#~ msgid "7 Days"
-#~ msgstr "7 Giorni"
-
-#~ msgid "Helpdesk Management"
-#~ msgstr "Gestione Helpdesk"
-
-#~ msgid "CRM Helpdesk"
-#~ msgstr "CRM Helpdesk"
-
-#~ msgid "Attachments"
-#~ msgstr "Allegati"
-
-#~ msgid "Done"
-#~ msgstr "Completato"
-
-#~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "Lo stato è impostato a \"Bozza\", quando il caso è creato.                   "
-#~ "           \n"
-#~ "Se il caso è \"in corso\", lo stato è impostato su \"Aperto\".               "
-#~ "               \n"
-#~ "Quando il caso è finito, lo stato è impostato a \"Completato\"               "
-#~ "             \n"
-#~ "Se il caso ha bisogno di essere rivisto allora lo stato è impostato a \"In "
-#~ "sospeso\"."
-
-#~ msgid "Details"
-#~ msgstr "Dettagli"
-
-#~ msgid ""
-#~ "The channels represent the different communication  modes available with the "
-#~ "customer."
-#~ msgstr ""
-#~ "I Canali rappresentano i differenti modi di comunicazione disponibili con i "
-#~ "clienti."
-
-#~ msgid "Partner Contact"
-#~ msgstr "Contatto del partner"
-
-#~ msgid "Add Internal Note"
-#~ msgstr "Aggiungi nota interna"
-
-#~ msgid "Won"
-#~ msgstr "Vinto"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mese-1    "
-
-#~ msgid "These people will receive email."
-#~ msgstr "Queste persone riceveranno email."
-
-#~ msgid "Global CC"
-#~ msgstr "CC globale"
-
-#~ msgid "History"
-#~ msgstr "Storico"
-
-#~ msgid "Current"
-#~ msgstr "Attuale"
-
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "Send Reminder"
-#~ msgstr "Invia Promemoria"
-
-#~ msgid "Reply"
-#~ msgstr "Rispondi"
-
-#~ msgid "Communication & History"
-#~ msgstr "Comunicazioni & Storico"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                                 Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Team di vendita a cui il caso appartiene. Definisce un utente responsabile "
-#~ "ed una mail per il server di posta."
-
-#~ msgid "Lost"
-#~ msgstr "Perso"
-
-#~ msgid "History Information"
-#~ msgstr "Storico Informazioni"
+#~ msgid "My company"
+#~ msgstr "La mia azienda"

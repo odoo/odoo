@@ -1,21 +1,21 @@
 # Chinese (Traditional) translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-12-29 16:03+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_margin
 #: field:sale.order.line,purchase_price:0
@@ -23,9 +23,11 @@ msgid "Cost Price"
 msgstr "成本價"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_order
-msgid "Sales Order"
-msgstr "銷售訂單"
+#: help:sale.order,margin:0
+msgid ""
+"It gives profitability by calculating the difference between the Unit Price "
+"and the cost price."
+msgstr "獲利由計算單價與成本價的差異得之"
 
 #. module: sale_margin
 #: field:sale.order,margin:0
@@ -34,13 +36,11 @@ msgid "Margin"
 msgstr "毛利"
 
 #. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "銷售訂單細項"
-
-#. module: sale_margin
-#: help:sale.order,margin:0
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost price."
-msgstr "獲利由計算單價與成本價的差異得之"

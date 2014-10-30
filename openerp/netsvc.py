@@ -80,7 +80,7 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] or ct_db
         if not dbname:
             return
-        with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname).cursor() as cr:
+        with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -160,7 +160,7 @@ def init_logger():
             elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
-                handler = logging.handlers.FileHandler(logf)
+                handler = logging.FileHandler(logf)
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)

@@ -222,6 +222,7 @@
 
                     <field name="pay_now" invisible="1"/>
                     <field name="type" invisible="True"/>
+                    <field name="payment_rate_currency_id" invisible="1"/>
                     <group>
                         <group>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />

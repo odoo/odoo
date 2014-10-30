@@ -55,6 +55,19 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+    }
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
@@ -1633,7 +1646,7 @@ class account_move_reconcile(osv.osv):
         return True
 
     _constraints = [
-        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id', 'line_partial_ids']),
     ]
     
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
@@ -1647,7 +1660,8 @@ class account_move_reconcile(osv.osv):
         if not total:
             self.pool.get('account.move.line').write(cr, uid,
                 map(lambda x: x.id, rec.line_partial_ids),
-                {'reconcile_id': rec.id }
+                {'reconcile_id': rec.id },
+                context=context
             )
         return True
 
@@ -3390,9 +3404,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
         if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)

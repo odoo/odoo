@@ -22,14 +22,13 @@
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
     "author" : "OpenERP S.A.",
+    'website': 'https://www.odoo.com',
     "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
     "category" : "Generic Modules/Inventory Control",
     "description": """
 Product extension. This module adds:
-  * Last purchase order for each product supplier 
-  * New functional field: Available stock (real+outgoing stock)
-  * Computes standard price from the BoM of the product (optional for each product)
-  * Standard price is shown in the BoM and it can be computed with a wizard 
+  * Computes standard price from the BoM of the product with a button on the product variant based
+    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.
 """,
     "init_xml" : [],
     "demo_xml" : [],

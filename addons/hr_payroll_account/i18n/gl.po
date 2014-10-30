@@ -1,38 +1,26 @@
 # Galician translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-24 00:22+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr ""
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr ""
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -41,30 +29,10 @@ msgid "Accounting Entry"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Forzar período"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "Deixe en branco para usar o período da data de validación da nómina"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
+msgid "Adjustment Entry"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -74,14 +42,31 @@ msgid "Analytic Account"
 msgstr "Conta analítica"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr ""
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr ""
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "Forzar período"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -89,22 +74,9 @@ msgid "Generate payslips for all selected employees"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr ""
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr ""
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr ""
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Deixe en branco para usar o período da data de validación da nómina"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -112,10 +84,14 @@ msgid "Pay Slip"
 msgstr "Nómina"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr ""
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Adjustment Entry"
+msgid "Payslip of %s"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -125,149 +101,21 @@ msgstr ""
 msgid "Salary Journal"
 msgstr ""
 
-#~ msgid "Expense Journal"
-#~ msgstr "Diario de gastos"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr ""
 
-#~ msgid "Other Informations"
-#~ msgstr "Outra información"
-
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Conta analítica para análisis de nóminas"
-
-#~ msgid "Period"
-#~ msgstr "Período"
-
-#~ msgid "Employee"
-#~ msgstr "Empregado"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Diario bancario"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "Liña de rexistro de contribución"
-
-#~ msgid "Contribution Register"
-#~ msgstr "Rexistro de Contribución"
-
-#~ msgid "Salary Account"
-#~ msgstr "Conta de nómina"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Movementos contables"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr "Conta de gastos para rexistrar gastos salariaies"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "Información contable"
-
-#~ msgid "Description"
-#~ msgstr "Descrición"
-
-#~ msgid "Account Move Link to Pay Slip"
-#~ msgstr "Asento contable enlazado á folla de pago"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Rexistro de nóminas"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr ""
-#~ "Por favor, confirme que todas as facturas de gastos aparecen para o seu "
-#~ "reembolso"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr ""
 
-#~ msgid "Bank Account"
-#~ msgstr "Conta bancaria"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "Contabilidade de nóminas de recursos humanos."
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
 #, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "Por favor defina o exercicio fiscal para un contrato en concreto"
-
-#~ msgid "Account Lines"
-#~ msgstr "Liñas de conta"
-
-#~ msgid "Name"
-#~ msgstr "Nome"
-
-#~ msgid "Account"
-#~ msgstr "Conta"
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "Recibos contables"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Coidado !"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "Recibos contables"
-
-#~ msgid "General Account"
-#~ msgstr "Conta Xeral"
-
-#~ msgid "Expense Entries"
-#~ msgstr "Entradas de gastos"
-
-#~ msgid "Employee Account"
-#~ msgstr "Conta do empregado"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Total por empregado"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Nota de aviso bancario"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Erro! Non pode seleccionar un departamento para o cal o empregado é o "
-#~ "director."
-
-#, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "Por favor, configure a conta a cobrar dos terceiros!"
-
-#~ msgid "Sequence"
-#~ msgstr "Secuencia"
-
-#~ msgid "Leave Type"
-#~ msgstr "Tipo de ausencia"
-
-#~ msgid "Total By Company"
-#~ msgstr "Total por compañía"
-
-#~ msgid "Year"
-#~ msgstr "Ano"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Liñas de pago"
-
-#~ msgid "Payslip Line"
-#~ msgstr "Liña de nómina"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Erro! Non pode crear a Xerarquía recursiva dos Empregados"
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "Conta a pagar do empregado"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Estrutura salarial"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "Non foi definido o ano fiscal para a nómina %s"
-
-#~ msgid "Accounting Details"
-#~ msgstr "Detalles de contabilidade"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "Non se definiu o período para a nómina de data %s"
-
-#, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "Por favor, configure a conta de pago dos partners!"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr ""

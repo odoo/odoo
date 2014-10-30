@@ -1,254 +1,32 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* hr_timesheet
+# Mongolian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 17:58+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:57+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:13+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid ""
-"<p>\n"
-"                No activity yet on this contract.\n"
-"              </p><p>\n"
-"                In OpenERP, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to "
-"analyse\n"
-"                your margins easily.\n"
-"              </p><p>\n"
-"                Costs will be created automatically when you register "
-"supplier\n"
-"                invoices, expenses or timesheets.\n"
-"              </p><p>\n"
-"                Revenues will be created automatically when you create "
-"customer\n"
-"                invoices. Customer invoices can be created based on sale "
-"orders\n"
-"                (fixed price invoices), on timesheets (based on the work "
-"done) or\n"
-"                on expenses (e.g. reinvoicing of travel costs).\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Энэ гэрээнд одоогоор үйл ажиллагаа алга байна.\n"
-"              </p><p>\n"
-"                OpenERP-д гэрээ болон төсөл нь шинжилгээний дансыг ашиглаж \n"
-"                хэрэгждэг. Иймд өртөг болон орлогыг хөтлөж зөрүүг шинжлэх \n"
-"                боломжтой.\n"
-"              </p><p>\n"
-"                Өртөг нь нийлүүлэгчийн нэхэмжлэл, зардал, цагийн хуудсыг "
-"бөглөхөд автоматаар хөтлөгдөнө.\n"
-"              </p><p>\n"
-"                Орлого нь захиалагчийн нэхэмжлэл үүсгэхэд автоматаар "
-"хөтлөгдөнө. \n"
-"                Захиалагчийн нэхэмжлэл нь борлуулалтын захиалгаас үүсч болно "
-"\n"
-"                (нэхэмжлэлийн тодорхой үнэ), цагийн хуудсын хийсэн ажлаас "
-"үүсч \n"
-"                болно (хийсэн ажил дээр суурилж), зардлаас үүсч болно (замын "
-"\n"
-"                зардлыг нэхэмжлэх гм).\n"
-"              </p>\n"
-"            "
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "(Keep empty for current time)"
+msgstr "(Өнөөдрийн энэ цаг бол хоосон үлдээ)"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Wed"
-msgstr "Лха"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "(Keep empty for current_time)"
-msgstr "(Энэ өдрийн энэ цаг бол хоосон үлдээ)"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Group By..."
-msgstr "Бүлэглэх..."
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
-msgid ""
-"Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the "
-"analytic account. This feature allows to record at the same time the "
-"attendance and the timesheet."
-msgstr ""
-"Ажилтан янз бүрийн төслүүд дээр ажилласан цагаа бүртгэнэ. Төсөл нь "
-"шинжилгээний данс бөгөөд энэ шинжилгээний дансанд төсөл дээр ажилласан "
-"цагаар өртөг үүсгэнэ. Энэ функц нь ирц ба цаг бүртгэлийг 1 зэрэг бүртгэх "
-"боломж олгоно."
-
-#. module: hr_timesheet
-#: field:hr.employee,uom_id:0
-msgid "Unit of Measure"
-msgstr "Хэмжих нэгж"
-
-#. module: hr_timesheet
-#: field:hr.employee,journal_id:0
-msgid "Analytic Journal"
-msgstr "Шинжилгээний журнал"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Stop Working"
-msgstr "Ажиллахаа зогсоох"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
-msgid "Employee Timesheet"
-msgstr "Ажилтны цагийн хуудас"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
-msgid "Timesheet"
-msgstr "Цагийн хуудас"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
-#, python-format
-msgid "Please define employee for this user!"
-msgstr "Энэ хэрэглэгчид ажилчинг тодорхойлно уу!"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Mon"
-msgstr "Дав"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in"
-msgstr "Нэвтрэх"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Fri"
-msgstr "Баа"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-msgid "Timesheet Activities"
-msgstr "Цагийн хуудсын үйл ажиллагаанууд"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,analytic_amount:0
-msgid "Minimum Analytic Amount"
-msgstr "Хамгийн бага шинжилгээний дүн"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
-msgstr "Ажилтаны сарын цагийн хуудас"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Work done in the last period"
-msgstr "Сүүлийн мөчлөгт ажил дууссан"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,name:0
-#: field:hr.sign.out.project,name:0
-msgid "Employees name"
-msgstr "Ажилтны нэр"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,account_id:0
-msgid "Project / Analytic Account"
-msgstr "Төсөл / Шинжилгээний Данс"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
-msgid "Print Employees Timesheet"
-msgstr "Ажилтны цагийн хуудасыг хэвлэх"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
-#, python-format
-msgid "Please define employee for your user."
-msgstr "Хэрэглэгчдээ ажилчныг тодорхойлно уу."
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs & Revenues"
-msgstr "Өртөг ба Орлого"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Tue"
-msgstr "Мяг"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Шинжилгээний Данс"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Costs and Revenues"
-msgstr "Өртөг болон Орлого"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
-#, python-format
-msgid "Warning!"
-msgstr "Анхааруулга!"
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,partner_id:0
-msgid "Partner"
-msgstr "Харилцагч"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Sat"
-msgstr "Бя"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Sun"
-msgstr "Ня"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Sum"
-msgstr "Нийлбэр"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Analytic account"
-msgstr "Шинжилгээний данс"
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "(local time on the server side)"
+msgstr "(Сервер дээрх орон нутгийн цаг)"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -277,163 +55,52 @@ msgstr ""
 "            "
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-msgid "Print"
-msgstr "Хэвлэх"
-
-#. module: hr_timesheet
-#: help:account.analytic.account,use_timesheets:0
-msgid "Check this field if this project manages timesheets"
-msgstr "Хэрвээ энэ төслийн цагийн хуудасыг удирдвал энэ талбарыг шалга"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Monthly Employees Timesheet"
-msgstr "Ажилтны сарын цагийн хуудас"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "July"
-msgstr "7 сар"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,date:0
-#: field:hr.sign.out.project,date_start:0
-msgid "Starting Date"
-msgstr "Эхлэх огноо"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#, python-format
-msgid "Please define cost unit for this employee."
-msgstr "Энэ ажилтны өртөгийн нэгжийг тодорхойлно уу."
-
-#. module: hr_timesheet
-#: help:hr.employee,product_id:0
-msgid "Specifies employee's designation as a product with type 'service'."
-msgstr "Ажилтны албан тушаалыг 'Үйлчилгээ' төрлийн бараа шиг тодорхойлно."
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:188
-#, python-format
+#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
 msgid ""
-"No analytic account is defined on the project.\n"
-"Please set one or we cannot automatically fill the timesheet."
+"<p>\n"
+"                No activity yet on this contract.\n"
+"              </p><p>\n"
+"                In Odoo, contracts and projects are implemented using\n"
+"                analytic account. So, you can track costs and revenues to "
+"analyse\n"
+"                your margins easily.\n"
+"              </p><p>\n"
+"                Costs will be created automatically when you register "
+"supplier\n"
+"                invoices, expenses or timesheets.\n"
+"              </p><p>\n"
+"                Revenues will be created automatically when you create "
+"customer\n"
+"                invoices. Customer invoices can be created based on sale "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs).\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Энэ төсөл дээр шинжилгээний данс тодорхойлогдоогүй байна.\n"
-"Тодорхойлохгүй бол цагийн хуудсыг автоматаар бөглөх боломжгүй."
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total cost"
-msgstr "Нийт өртөг"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:186
-#, python-format
-msgid ""
-"No 'Analytic Journal' is defined for employee %s \n"
-"Define an employee for the selected user and assign an 'Analytic Journal'!"
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Absent"
 msgstr ""
-"%s ажилчинд 'Шинжилгээний Журнал' тодорхойлогдоогүй байна \n"
-"Сонгосон хэрэглэгчид ажилчин тодорхойлж 'Шинжилгээний Журнал'-г онооно!"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "September"
-msgstr "9 сар"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Accounting"
+msgstr "Санхүүгийн бүртгэл"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "12 сар"
+#: field:hr.timesheet.report,account_id:0
+#: model:ir.model,name:hr_timesheet.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Шинжилгээний Данс"
 
 #. module: hr_timesheet
-#: field:hr.analytical.timesheet.users,employee_ids:0
-msgid "employees"
-msgstr "Ажилчид"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,month:0
-#: field:hr.analytical.timesheet.users,month:0
-msgid "Month"
-msgstr "Сар"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,info:0
-msgid "Work Description"
-msgstr "Ажлын тухай тайлбар"
-
-#. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "or"
-msgstr "эсвэл"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Timesheet by Employee"
-msgstr "Ажилтны цагийн хуудас"
-
-#. module: hr_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
-msgid "Employee timesheet"
-msgstr "Ажилтны цагийн хуудас"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
-msgid "Sign in / Sign out by project"
-msgstr "Нэвтрэх, гарах үйлдлийг төслөөр харах"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
-msgid "Define your Analytic Structure"
-msgstr "Шинжилгээний Бүтэцээ Тодорхойлно уу"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
-#: view:hr.sign.in.project:0
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "Нэвтрэх / Гарах"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(Keep empty for current time)"
-msgstr "(Өнөөдрийн энэ цаг бол хоосон үлдээ)"
-
-#. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:0
-msgid "Timesheets"
-msgstr "Цагийн хуудас"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
-msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In OpenERP, analytic accounts are also used to "
-"track customer contracts."
-msgstr ""
-"Өртөг, орлогыг шинжлэх өөрийн шаардлагаас хамааруулан өөрийн шинжилгээний "
-"бүтцийг тодорхойлох хэрэгтэй. OpenERP-д шинжилгээний данс нь захиалагчийн "
-"гэрээг хөтлөж, хянахад мөн хэрэглэгддэг."
+#: field:hr.employee,journal_id:0
+msgid "Analytic Journal"
+msgstr "Шинжилгээний журнал"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -441,32 +108,72 @@ msgid "Analytic Line"
 msgstr "Шинжилгээний мөр"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "August"
-msgstr "8 сар"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Analytic account"
+msgstr "Шинжилгээний данс"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:155
-#, python-format
-msgid ""
-"No analytic journal defined for '%s'.\n"
-"You should assign an analytic journal on the employee form."
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Change Work"
+msgstr "Ажлыг өөрчлөх"
+
+#. module: hr_timesheet
+#: help:account.analytic.account,use_timesheets:0
+msgid "Check this field if this project manages timesheets"
+msgstr "Хэрвээ энэ төслийн цагийн хуудасыг удирдвал энэ талбарыг шалга"
+
+#. module: hr_timesheet
+#: field:hr.sign.out.project,date:0
+msgid "Closing Date"
+msgstr "Хаагдах огноо"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,company_id:0
+msgid "Company"
 msgstr ""
-"'%s'-д шинжилгээний журнал алга байна.\n"
-"Ажичлны маягт дээр шинжилгээний журналыг оноох нь зүйтэй."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "June"
-msgstr "6 сар"
+#: field:hr.timesheet.report,cost:0
+msgid "Cost"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
+msgid "Cost/Revenue"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
+msgid "Costs & Revenues"
+msgstr "Өртөг ба Орлого"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_uid:0
+#: field:hr.sign.in.project,create_uid:0
+#: field:hr.sign.out.project,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,create_date:0
+#: field:hr.sign.in.project,create_date:0
+#: field:hr.sign.out.project,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,server_date:0
+#: field:hr.sign.out.project,server_date:0
+msgid "Current Date"
+msgstr "Өнөөдөр"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -475,59 +182,30 @@ msgid "Current Status"
 msgstr "Одоогийн төлөв"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
+#: field:hr.timesheet.report,date:0
 msgid "Date"
 msgstr "Огноо"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "November"
-msgstr "11 сар"
+#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
+msgid "Define your Analytic Structure"
+msgstr "Шинжилгээний Бүтэцээ Тодорхойлно уу"
 
 #. module: hr_timesheet
-#: field:hr.sign.out.project,date:0
-msgid "Closing Date"
-msgstr "Хаагдах огноо"
+#: field:hr.timesheet.report,name:0
+msgid "Description"
+msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "October"
-msgstr "10 сар"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Duration"
+msgstr "Үргэлжлэх хугацаа"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "January"
-msgstr "1 сар"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:44
-#: code:addons/hr_timesheet/report/users_timesheet.py:77
-#, python-format
-msgid "Thu"
-msgstr "Пүр"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Sign In/Out by Project"
-msgstr "Нэвтэрсэн, гарсан үйлдлийг төслөөр харах"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
-msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr "Ажилтны цаг бүртгэл, өөрийн цаг бүртгэлийг хэвлэх"
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+msgid "Employee"
+msgstr "Ажилтан"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
@@ -536,44 +214,21 @@ msgid "Employee ID"
 msgstr "Ажилтны дугаар"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Period"
-msgstr "Мөчлөг"
+#: code:addons/hr_timesheet/hr_timesheet.py:152
+#, python-format
+msgid ""
+"Employee is not created for this user. Please create one from configuration "
+"panel."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "General Information"
-msgstr "Ерөнхий мэдээлэл"
+#: field:hr.sign.in.project,name:0
+#: field:hr.sign.out.project,name:0
+msgid "Employee's Name"
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-#: view:hr.analytical.timesheet.users:0
-#: view:hr.sign.in.project:0
-#: view:hr.sign.out.project:0
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet_users:0
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
-#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
-msgid "Employees Timesheet"
-msgstr "Ажилчдын цагийн хуудас"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Information"
-msgstr "Мэдээлэл"
-
-#. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,employee_id:0
-#: model:ir.model,name:hr_timesheet.model_hr_employee
-msgid "Employee"
-msgstr "Ажилтан"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 msgid ""
 "Employees can encode their time spent on the different projects they are "
 "assigned on. A  project is an analytic account and the time spent on a "
@@ -586,45 +241,164 @@ msgstr ""
 "бичих боломжийг олгоно."
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,server_date:0
-#: field:hr.sign.out.project,server_date:0
-msgid "Current Date"
-msgstr "Өнөөдөр"
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
+"Ажилтан янз бүрийн төслүүд дээр ажилласан цагаа бүртгэнэ. Төсөл нь "
+"шинжилгээний данс бөгөөд энэ шинжилгээний дансанд төсөл дээр ажилласан "
+"цагаар өртөг үүсгэнэ. Энэ функц нь ирц ба цаг бүртгэлийг 1 зэрэг бүртгэх "
+"боломж олгоно."
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Цагийн хуудасны мөр"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Extended Filters..."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
+#: field:hr.timesheet.report,general_account_id:0
+msgid "General Account"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "General Information"
+msgstr "Ерөнхий мэдээлэл"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:153
+#, python-format
+msgid "Go to the configuration panel"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group By"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Group by month of date"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,id:0
+#: field:hr.sign.in.project,id:0
+#: field:hr.sign.out.project,id:0
+#: field:hr.timesheet.report,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_timesheet
+#: help:hr.employee,product_id:0
+msgid ""
+"If you want to reinvoice working time of employees, link this employee to a "
+"service to determinate the cost price of the job."
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+msgid "Information"
+msgstr "Мэдээлэл"
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,journal_id:0
+msgid "Journal"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_uid:0
+#: field:hr.sign.in.project,write_uid:0
+#: field:hr.sign.out.project,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,write_date:0
+#: field:hr.sign.in.project,write_date:0
+#: field:hr.sign.out.project,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.out.project,analytic_amount:0
+msgid "Minimum Analytic Amount"
+msgstr "Хамгийн бага шинжилгээний дүн"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "Month"
+msgstr "Сар"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:189
+#, python-format
+msgid ""
+"No 'Analytic Journal' is defined for employee %s \n"
+"Define an employee for the selected user and assign an 'Analytic Journal'!"
+msgstr ""
+"%s ажилчинд 'Шинжилгээний Журнал' тодорхойлогдоогүй байна \n"
+"Сонгосон хэрэглэгчид ажилчин тодорхойлж 'Шинжилгээний Журнал'-г онооно!"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:191
+#, python-format
+msgid ""
+"No analytic account is defined on the project.\n"
+"Please set one or we cannot automatically fill the timesheet."
+msgstr ""
+"Энэ төсөл дээр шинжилгээний данс тодорхойлогдоогүй байна.\n"
+"Тодорхойлохгүй бол цагийн хуудсыг автоматаар бөглөх боломжгүй."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:158
+#, python-format
+msgid ""
+"No analytic journal defined for '%s'.\n"
+"You should assign an analytic journal on the employee form."
+msgstr ""
+"'%s'-д шинжилгээний журнал алга байна.\n"
+"Ажичлны маягт дээр шинжилгээний журналыг оноох нь зүйтэй."
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,partner_id:0
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
+#, python-format
+msgid "Please define cost unit for this employee."
+msgstr "Энэ ажилтны өртөгийн нэгжийг тодорхойлно уу."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
+#, python-format
+msgid "Please define employee for your user."
+msgstr "Хэрэглэгчдээ ажилчныг тодорхойлно уу."
+
+#. module: hr_timesheet
+#: selection:hr.sign.in.project,state:0
+#: selection:hr.sign.out.project,state:0
+msgid "Present"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: field:hr.employee,product_id:0
+#: field:hr.timesheet.report,product_id:0
 msgid "Product"
 msgstr "Бараа"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Users"
-msgstr "Хэрэглэгчид"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "May"
-msgstr "5 сар"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "Нийт цаг"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "(local time on the server side)"
-msgstr "(Сервер дээрх орон нутгийн цаг)"
+#: field:hr.sign.out.project,account_id:0
+msgid "Project / Analytic Account"
+msgstr "Төсөл / Шинжилгээний Данс"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
@@ -632,13 +406,11 @@ msgid "Sign In By Project"
 msgstr "Нэвтрэх үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "February"
-msgstr "2 сар"
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Sign In/Out by Project"
+msgstr "Нэвтэрсэн, гарсан үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
@@ -646,270 +418,159 @@ msgid "Sign Out By Project"
 msgstr "Гарсан үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:150
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Sign in"
+msgstr "Нэвтрэх"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
-msgid ""
-"Please create an employee for this user, using the menu: Human Resources > "
-"Employees."
+msgid "Sign in / Sign out"
+msgstr "Нэвтрэх / Гарах"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
+msgid "Sign in / Sign out by Project"
 msgstr ""
-"Энэ хэрэглэгчид ажилчин үүсгэнэ үү, дараах менюг ашиглана: Хүний нөөц > "
-"Ажилчид"
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.users:0
-msgid "Employees"
-msgstr "Ажилтнууд"
+#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
+msgid "Start Working"
+msgstr "Ажиллаж эхлэх"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "March"
-msgstr "3 сар"
+#: field:hr.sign.in.project,date:0
+#: field:hr.sign.out.project,date_start:0
+msgid "Starting Date"
+msgstr "Эхлэх огноо"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:41
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "April"
-msgstr "4 сар"
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Stop Working"
+msgstr "Ажиллахаа зогсоох"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "This Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.timesheet.report,quantity:0
+msgid "Time"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
+msgid "Timesheet"
+msgstr "Цагийн хуудас"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
+msgid "Timesheet Accounts"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
+msgid "Timesheet Activities"
+msgstr "Цагийн хуудсын үйл ажиллагаанууд"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
+msgid "Timesheet Analysis"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Цагийн хуудасны мөр"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet by Month"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
+#: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
+msgid "Timesheets"
+msgstr "Цагийн хуудас"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Total cost"
+msgstr "Нийт өртөг"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+msgid "Total time"
+msgstr "Нийт цаг"
+
+#. module: hr_timesheet
+#: field:hr.employee,uom_id:0
+msgid "Unit of Measure"
+msgstr "Хэмжих нэгж"
+
+#. module: hr_timesheet
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: field:hr.timesheet.report,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
 #, python-format
 msgid "User Error!"
 msgstr "Хэрэглэгчийн алдаа!"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Start Working"
-msgstr "Ажиллаж эхлэх"
+#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+msgid "Users"
+msgstr "Хэрэглэгчид"
 
 #. module: hr_timesheet
-#: field:hr.analytical.timesheet.employee,year:0
-#: field:hr.analytical.timesheet.users,year:0
-msgid "Year"
-msgstr "Жил"
+#: code:addons/hr_timesheet/hr_timesheet.py:158
+#: code:addons/hr_timesheet/hr_timesheet.py:189
+#: code:addons/hr_timesheet/hr_timesheet.py:191
+#, python-format
+msgid "Warning!"
+msgstr "Анхааруулга!"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Duration"
-msgstr "Үргэлжлэх хугацаа"
+#: field:hr.sign.out.project,info:0
+msgid "Work Description"
+msgstr "Ажлын тухай тайлбар"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Accounting"
-msgstr "Санхүүгийн бүртгэл"
+#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
+msgid "Work done in the last period"
+msgstr "Сүүлийн мөчлөгт ажил дууссан"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-msgid "Total"
-msgstr "Нийт"
+#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
+msgid ""
+"You should create an analytic account structure depending on your needs to "
+"analyse costs and revenues. In Odoo, analytic accounts are also used to "
+"track customer contracts."
+msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Change Work"
-msgstr "Ажлыг өөрчлөх"
-
-#~ msgid "User"
-#~ msgstr "Хэрэглэгч"
-
-#~ msgid "Day"
-#~ msgstr "Өдөр"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
-
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Таны хэрэглэгчид ажилтан харгалзаагүй байна !"
-
-#~ msgid "Service on Timesheet"
-#~ msgstr "Цаг бүртгэлд үндэслэсэн үйлчилгээ"
-
-#~ msgid "Today"
-#~ msgstr "Өнөөдөр"
-
-#~ msgid "Work done stats"
-#~ msgstr "Ажил дууссан төлөв"
-
-#, python-format
-#~ msgid "No cost unit defined for this employee !"
-#~ msgstr "Энэ ажилтны мэдээлэлд өртөг тодорхойлоглоогүй байна !"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Хэрэглэгчийн алдаа"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "Анхааруулга"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "Хүний нөөц (Цаг бүртгэлийг хөтлөх)"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Анхааруулга"
-
-#~ msgid "Current state"
-#~ msgstr "Одоогийн төлөв"
-
-#~ msgid "Sign In/Out By Project"
-#~ msgstr "Нэвтэрсэн, гарсан үйлдлийг төслөөр харах"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Цаг бүртгэлийн мөрүүд"
-
-#~ msgid "Categories"
-#~ msgstr "Ангиллууд"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
-
-#~ msgid "Stats by month"
-#~ msgstr "Төлөвийг сараар харах"
-
-#~ msgid "To be invoiced"
-#~ msgstr "Нэхэмжлэл үүсгэх"
-
-#~ msgid "Print My Timesheet"
-#~ msgstr "Өөрийн цаг бүртгэлийг хэвлэх"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Өөрийн цаг бүртгэл"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic account defined on the project.\n"
-#~ "Please set one or we can not automatically fill the timesheet."
-#~ msgstr ""
-#~ "Энэ төсөлд аналитик данс байхгүй байна.\n"
-#~ "1 аналитик данс олгохгүй бол цаг бүртгэлийг автоматаар бөглөх боломжгүй."
-
-#~ msgid "Analysis stats"
-#~ msgstr "Шинжилгээ, статистик"
-
-#~ msgid "Key dates"
-#~ msgstr "Түлхүүр(чухал) огноо"
-
-#~ msgid "Anlytic account"
-#~ msgstr "Аналитик данс"
-
-#~ msgid "Analysis summary"
-#~ msgstr "Шинжилгээний товчоо"
-
-#~ msgid "This wizard will print monthly timesheet"
-#~ msgstr "Энэ дэлгэцийн оролт нь сарын цаг бүртгэлийг хэвлэнэ."
-
-#~ msgid "Working Hours"
-#~ msgstr "Ажилласан цаг"
-
-#~ msgid "Invoicing"
-#~ msgstr "Нэхэмжилж байгаа"
-
-#~ msgid "Analytic line"
-#~ msgstr "Аналитик мөр"
-
-#, python-format
-#~ msgid ""
-#~ "Analytic journal is not defined for employee %s \n"
-#~ "Define an employee for the selected user and assign an analytic journal!"
-#~ msgstr ""
-#~ "Энэ ажилтны аналитик журнал тодорхойлогдоогүй байна.%s\n"
-#~ "Сонгосон хэрэглэгчийн ажилтан ба ажилтны аналитик дансыг олгоно уу!"
-
-#~ msgid "Stats by user"
-#~ msgstr "Статистикийг хэрэглэгчээр харах"
-
-#, python-format
-#~ msgid "No employee defined for this user"
-#~ msgstr "Энэ хэрэглэгчид харгалзах ажилтныг тодорхойлоогүй байна."
-
-#~ msgid "Partner Id"
-#~ msgstr "Харилцагчийн дугаар"
-
-#~ msgid "Choose your month"
-#~ msgstr "Сарыг сонгоноу уу"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-#~ "болохгүй!"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
-
-#~ msgid "Sign in status"
-#~ msgstr "Нэвтэрсэн төлөв"
-
-#~ msgid "Current Server Date"
-#~ msgstr "Серверийн одоогийн огноо"
-
-#~ msgid "Hour"
-#~ msgstr "Цаг"
-
-#~ msgid "Working Hours of The Day"
-#~ msgstr "Өдрийн ажлын цаг"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн архитектур алдаатай байна!"
-
-#~ msgid "Choose Users"
-#~ msgstr "Хэрэглэгчдийг сонгоно уу!"
-
-#~ msgid "Employee's name"
-#~ msgstr "Ажилтны нэр"
-
-#~ msgid "Consultancy - Senior Developer"
-#~ msgstr "Зөвлөхийн үйлчилгээ -  Ахлах хөгжүүлэгч"
-
-#~ msgid "My Working Hours"
-#~ msgstr "Миний ажлын цаг"
-
-#~ msgid "Timesheet line"
-#~ msgstr "Цаг бүртгэлийн мөр"
-
-#~ msgid "My Working Hours of The Day"
-#~ msgstr "Миний өдрийн ажлын цаг"
-
-#~ msgid "Timesheet Process"
-#~ msgstr "Цаг бүртгэлийг боловсруулах"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Алдаа: Буруу зураасан код"
-
-#~ msgid "Working Time"
-#~ msgstr "Ажлын цаг"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Алдаа! Ажилтны рекурс иерархийг үүсгэж болохгүй"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Алдаа! Ажилтан нь менежер байх хэлтсийг сонгож болохгүй."
-
-#~ msgid ""
-#~ "Through this menu you can register and follow your workings hours by project "
-#~ "every day."
-#~ msgstr ""
-#~ "Энэ менюны тусламжтай өөрийн ажлын цагийг төслөөр өдөр тутам бүртгэж, дагаж "
-#~ "явах боломжтой."
-
-#~ msgid "Invoice Analysis"
-#~ msgstr "Нэхэмжлэлийн Шинжилгээ"
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr "Батласан/хийгдсэн бичлэгийг цагийн хуудаст өөрчлөх боломжгүй !"
-
-#~ msgid "UoM"
-#~ msgstr "Х.Н"
+#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+msgid "month"
+msgstr ""

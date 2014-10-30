@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools, SUPERUSER_ID
+from openerp import tools
 from openerp.osv import osv, fields
 
 
@@ -54,6 +54,8 @@ class mail_compose_message(osv.TransientModel):
                     res.get('model'), res.get('res_id'), context=context
                 )['value']
             )
+        if fields is not None:
+            [res.pop(field, None) for field in res.keys() if field not in fields]
         return res
 
     _columns = {
@@ -96,7 +98,7 @@ class mail_compose_message(osv.TransientModel):
                 values['mail_server_id'] = template.mail_server_id.id
             if template.user_signature and 'body_html' in values:
                 signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -113,7 +115,9 @@ class mail_compose_message(osv.TransientModel):
                 }
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
+            default_context = dict(context, default_composition_mode=composition_mode, default_model=model, default_res_id=res_id)
+            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

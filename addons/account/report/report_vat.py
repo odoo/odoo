@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from functools import partial
 from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
@@ -53,7 +54,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             'get_codes': self._get_codes,
             'get_general': self._get_general,
             'get_currency': self._get_currency,
-            'get_lines': self._get_lines,
+            'get_lines': partial(self._get_lines, context=context),
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
@@ -81,7 +82,6 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         i = 0
         top_result = []
         while i < len(res):
-
             res_dict = { 'code': res[i][1].code,
                 'name': res[i][1].name,
                 'debit': 0,
@@ -172,6 +172,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         return res
 
     def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
+        if context is None:
+            context = {}
+
         if account_list is None:
             account_list = []
         if period_list is None:
@@ -182,11 +185,11 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
             sum_tax_add = 0
             for period_ind in period_list:
-                for code in obj_tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
+                context2 = dict(context, period_id=period_ind, based_on=based_on)
+                for code in obj_tc.browse(self.cr, self.uid, ids, context=context2):
                     sum_tax_add = sum_tax_add + code.sum_period
 
             code.sum_period = sum_tax_add
-
             res.append((account[0], code))
         return res
 

@@ -880,7 +880,7 @@ openerp.mail = function (session) {
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
                 self.id = false;
                 // insert the message on dom after this message
-                self.parent_thread.switch_new_message( data, self.$el );
+                self.parent_thread.switch_new_message(data, self.$el);
                 self.animated_destroy(200);
             });
 
@@ -970,8 +970,8 @@ openerp.mail = function (session) {
 
         on_expand: function (event) {
             event.stopPropagation();
-            this.$('.oe_msg_body_short:first').toggle();
-            this.$('.oe_msg_body_long:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body:first > .oe_msg_body_long:first').toggle();
             return false;
         },
 
@@ -1405,7 +1405,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids === false ? undefined : ids, 
+                    ids === false ? undefined : ids && ids.slice(0, this.options.fetch_limit),
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1415,7 +1415,8 @@ openerp.mail = function (session) {
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
-                    this.context.default_parent_id || undefined
+                    this.context.default_parent_id || undefined,
+                    this.options.fetch_limit,
                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
                 ).done(this.proxy('message_fetch_set_read'));
         },
@@ -1685,6 +1686,7 @@ openerp.mail = function (session) {
                 'compose_as_todo' : false,
                 'readonly' : false,
                 'emails_from_on_composer': true,
+                'fetch_limit': 30   // limit of chatter messages
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
@@ -1693,7 +1695,6 @@ openerp.mail = function (session) {
         start: function (options) {
             this._super.apply(this, arguments);
             this.message_render();
-            this.bind_events();
         },
         
         /**
@@ -1736,12 +1737,6 @@ openerp.mail = function (session) {
 
         },
 
-        bind_events: function () {
-            $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
-            $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
-            this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
-            window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
-        },
     });
 
 
@@ -1895,6 +1890,7 @@ openerp.mail = function (session) {
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
                 'emails_from_on_composer': false,
+                'fetch_limit': 1000   // allow inbox to load all children messages
             }, this.action.params);
         },
 

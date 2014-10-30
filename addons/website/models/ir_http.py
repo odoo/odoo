@@ -65,7 +65,7 @@ class ir_http(orm.AbstractModel):
                     import GeoIP
                     # updated database can be downloaded on MaxMind website
                     # http://dev.maxmind.com/geoip/legacy/install/city/
-                    geofile = config.get('geoip_database', '/usr/share/GeoIP/GeoLiteCity.dat')
+                    geofile = config.get('geoip_database')
                     if os.path.exists(geofile):
                         self.geo_ip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
                     else:
@@ -78,26 +78,50 @@ class ir_http(orm.AbstractModel):
             request.session['geoip'] = record
             
         if request.website_enabled:
-            if func:
-                self._authenticate(func.routing['auth'])
-            else:
-                self._auth_method_public()
-            request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
+            try:
+                if func:
+                    self._authenticate(func.routing['auth'])
+                else:
+                    self._auth_method_public()
+            except Exception as e:
+                return self._handle_exception(e)
+
+            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            langs = [lg[0] for lg in request.website.get_languages()]
+            path = request.httprequest.path.split('/')
             if first_pass:
-                request.lang = request.website.default_lang_code
+                if request.website_multilang:
+                    # If the url doesn't contains the lang and that it's the first connection, we to retreive the user preference if it exists.
+                    if not path[1] in langs and not request.httprequest.cookies.get('session_id'):
+                        if request.lang not in langs:
+                            # Try to find a similar lang. Eg: fr_BE and fr_FR
+                            short = request.lang.split('_')[0]
+                            langs_withshort = [lg[0] for lg in request.website.get_languages() if lg[0].startswith(short)]
+                            if len(langs_withshort):
+                                request.lang = langs_withshort[0]
+                            else:
+                                request.lang = request.website.default_lang_code
+                        # We redirect with the right language in url
+                        if request.lang != request.website.default_lang_code:
+                            path.insert(1, request.lang)
+                            path = '/'.join(path) or '/'
+                            return request.redirect(path + '?' + request.httprequest.query_string)
+                    else:
+                        request.lang = request.website.default_lang_code
+
             request.context['lang'] = request.lang
             if not func:
-                path = request.httprequest.path.split('/')
-                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
                     if request.lang == request.website.default_lang_code:
                         # If language is in the url and it is the default language, redirect
                         # to url without language so google doesn't see duplicate content
-                        return request.redirect(path + '?' + request.httprequest.query_string)
+                        return request.redirect(path + '?' + request.httprequest.query_string, code=301)
                     return self.reroute(path)
+            # bind modified context
+            request.website = request.website.with_context(request.context)
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):
@@ -137,7 +161,7 @@ class ir_http(orm.AbstractModel):
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string
-                return werkzeug.utils.redirect(path)
+                return werkzeug.utils.redirect(path, code=301)
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]

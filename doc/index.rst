@@ -1,63 +1,47 @@
-:orphan:
+============================
+odoo developer documentation
+============================
 
-========================================
-OpenERP Server Developers Documentation
-========================================
+Welcome to the Odoo developer documentation.
 
-Howto
-'''''
+This documentation is incomplete and may contain errors, if you wish to
+contribute, every page should have a :guilabel:`View on Github` link:
 
-.. toctree::
-    :maxdepth: 1
+.. image:: images/view-on-github.*
+    :align: center
 
-    howto/howto_website
+Through this link you can edit documents and submit changes for review using
+`github's web interface
+<https://help.github.com/articles/editing-files-in-your-repository/>`_.
+Contributions are welcome and appreciated.
 
-OpenERP Server
-''''''''''''''
+.. todo:: what's the documentation's license?
 
-.. toctree::
-   :maxdepth: 2
+The documentation is currently organized in four sections:
 
-   01_getting_started
-   02_architecture
-   03_module_dev
-   04_security
-   workflows
-   05_test_framework
-   06_misc
-   deployment-gunicorn
-   deployment-mod-wsgi
-   form-view-guidelines
-   ir_actions
+* :doc:`tutorials`, aimed at introducing the primary areas of developing Odoo
+  modules
+* :doc:`guides`, didactic documents covering more specific and specialized
+  areas of Odoo, trying to solve more specific problems
+* :doc:`reference`, which ought be the complete and canonical documentation
+  for Odoo subsystems
+* :doc:`modules`, documenting useful specialized modules and integration
+  methods (and currently empty)
 
-OpenERP Server API
-''''''''''''''''''
-
-.. toctree::
-   :maxdepth: 1
-
-   new_api
-   orm-methods
-   api_models
-   routing
-
-Changelog
-'''''''''
+.. hidden toctree w/o titlesonly otherwise the titlesonly "sticks" to
+   in-document toctrees and we can't have a toctree showing both "sibling"
+   pages and current document sections
 
 .. toctree::
-   :maxdepth: 1
+    :hidden:
 
-   changelog.rst
+    tutorials
+    guides
+    reference
+    modules
 
-Concepts
-''''''''
+.. ifconfig:: todo_include_todos
 
-.. glossary::
+    .. rubric:: Things to add and fix
 
-    Database ID
-
-        The primary key of a record in a PostgreSQL table (or a
-        virtual version thereof), usually varies from one database to
-        the next.
-
-    External ID
+    .. todolist::

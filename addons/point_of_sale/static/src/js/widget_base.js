@@ -33,9 +33,9 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                     amount = amount.toFixed(decimals);
                 }
                 if(this.currency.position === 'after'){
-                    return amount + ' ' + this.currency.symbol;
+                    return amount + ' ' + (this.currency.symbol || '');
                 }else{
-                    return this.currency.symbol + ' ' + amount;
+                    return (this.currency.symbol || '') + ' ' + amount;
                 }
             }
 
@@ -45,6 +45,10 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         },
         hide: function(){
             this.$el.addClass('oe_hidden');
+        },
+        format_pr: function(value,precision){
+            var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
+            return value.toFixed(decimals);
         },
     });
 

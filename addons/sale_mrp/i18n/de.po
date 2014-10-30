@@ -1,31 +1,22 @@
 # German translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-18 06:07+0000\n"
-"Last-Translator: Ferdinand <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-29 08:42+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Fertigungsauftrag"
-
-#. module: sale_mrp
-#: help:mrp.production,sale_name:0
-msgid "Indicate the name of sales order."
-msgstr "Anzeige der Verkaufs-Auftragsbezeichnung"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_mrp
 #: help:mrp.production,sale_ref:0
@@ -33,50 +24,41 @@ msgid "Indicate the Customer Reference from sales order."
 msgstr "Anzeige der Kundenreferenz aus dem Verkaufsauftrag"
 
 #. module: sale_mrp
-#: field:mrp.production,sale_ref:0
-msgid "Sale Reference"
-msgstr "Verkauf Referenze"
+#: help:mrp.production,sale_name:0
+msgid "Indicate the name of sales order."
+msgstr "Anzeige der Verkaufs-Auftragsbezeichnung"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Fertigungsauftrag"
+
+#. module: sale_mrp
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr "Merkmale"
 
 #. module: sale_mrp
 #: field:mrp.production,sale_name:0
 msgid "Sale Name"
 msgstr "Verkauf Bezeichnung"
 
-#~ msgid "Sales and MRP Management"
-#~ msgstr "Verkauf und Fertigungsplanung"
+#. module: sale_mrp
+#: field:mrp.production,sale_ref:0
+msgid "Sale Reference"
+msgstr "Verkauf Referenze"
 
-#~ msgid ""
-#~ "\n"
-#~ "    This module provides facility to the user to install mrp and sales "
-#~ "modules\n"
-#~ "    at a time. It is basically used when we want to keep track of "
-#~ "production\n"
-#~ "    orders generated from sales order.\n"
-#~ "    It adds sales name and sales Reference on production order\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Diese Anwendung ermöglicht eine parallele Anwendung der Module für die "
-#~ "Fertigung\n"
-#~ "    und den Vertrieb. Üblicherweise wird diese Anwendung genutzt, wenn die "
-#~ "Beziehung \n"
-#~ "    von Fertigungsaufträgen zu Verkaufsaufträgen jederzeitig rekapitulierbar "
-#~ "sein soll.\n"
-#~ "    Die Anwendung ergänzt zum Beispiel den Fertigungsauftrag durch die "
-#~ "Verkaufsauftragsnummer.\n"
-#~ "    "
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
 
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "Bestellmengen können nicht negativ oder '0' sein !"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Auftragsposition"
 
-#~ msgid "Sales Reference"
-#~ msgstr "Verkaufsreferenz"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referenz muss je Unternehmen eindeutig sein"
-
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "Die Bestellmenge muss positiv sein!"
-
-#~ msgid "Sales Name"
-#~ msgstr "Bezeichnung des Verkaufsauftrags"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr ""

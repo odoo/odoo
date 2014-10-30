@@ -487,7 +487,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     setup_global_completion: function () {
         var self = this;
-
         this.autocomplete = new instance.web.search.AutoComplete(this, {
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
@@ -1624,7 +1623,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: value, value: value}]
+                values: [{label: value, value: value, operator: 'ilike'}]
             },
             expand: this.expand.bind(this),
         }]);
@@ -1637,8 +1636,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             'contexts', [this.view.dataset.get_context()]);
         return this.model.call('name_search', [], {
             name: needle,
-            args: instance.web.pyeval.eval(
-                'domains', this.attrs.domain ? [this.attrs.domain] : [], context),
+            args: (typeof this.attrs.domain === 'string') ? [] : this.attrs.domain,
             limit: 8,
             context: context
         }).then(function (results) {
@@ -1672,9 +1670,13 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return facetValue.get('label');
     },
     make_domain: function (name, operator, facetValue) {
+        operator = facetValue.get('operator') || operator;
+
         switch(operator){
         case this.default_operator:
             return [[name, '=', facetValue.get('value')]];
+        case 'ilike':
+            return [[name, 'ilike', facetValue.get('value')]];
         case 'child_of':
             return [[name, 'child_of', facetValue.get('value')]];
         }
@@ -1963,7 +1965,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
                     context: this.view.dataset.context
                 }).done(function(data) {
                     self.fields = {
-                        id: { string: 'ID', type: 'id' }
+                        id: { string: 'ID', type: 'id', searchable: true }
                     };
                     _.each(data, function(field_def, field_name) {
                         if (field_def.selectable !== false && field_name != 'id') {
@@ -2037,7 +2039,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
+            .filter(function (field) { return !field.deprecated && field.searchable; })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
@@ -2364,7 +2366,7 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
             switch (ev.which) {
                 case $.ui.keyCode.TAB:
                 case $.ui.keyCode.ENTER:
-                    if (self.get_search_string().length) {
+                    if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }
                     break;
