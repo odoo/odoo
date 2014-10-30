@@ -108,11 +108,15 @@
 
         publish_version: function(event) {
             var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
-            openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                    self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been published."}));
-                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                    self.wizard.on('click','.confirm', function(){
-                        location.reload();
+            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish this version."}));
+                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                self.wizard.on('click','.confirm', function(){
+                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been published."}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                        self.wizard.on('click','.confirm', function(){
+                            location.reload();
+                        });
                     });
                 });
         },

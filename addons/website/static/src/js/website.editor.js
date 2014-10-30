@@ -527,6 +527,76 @@
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
+        saveB: function () {
+            var self = this;
+
+            observer.disconnect();
+            var editor = this.rte.editor;
+            var root = editor.element && editor.element.$;
+            try {
+                editor.destroy();
+            }
+            catch(err) {
+                // Hack to avoid the lost of all changes because ckeditor fails in destroy
+                console.log("Error in editor.destroy() : " + err.toString() + "\n  " + err.stack);
+            }
+            // FIXME: select editables then filter by dirty?
+            var defs = this.rte.fetch_editables(root)
+                .filter('.oe_dirty')
+                .removeAttr('contentEditable')
+                .removeClass('oe_dirty oe_editable cke_focus oe_carlos_danger')
+                .map(function () {
+                    var $el = $(this);
+                    // TODO: Add a queue with concurrency limit in webclient
+                    // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
+                    return self.saving_mutex.exec(function () {
+                        return self.saveElement($el)
+                            .then(undefined, function (thing, response) {
+                                // because ckeditor regenerates all the dom,
+                                // we can't just setup the popover here as
+                                // everything will be destroyed by the DOM
+                                // regeneration. Add markings instead, and
+                                // returns a new rejection with all relevant
+                                // info
+                                var id = _.uniqueId('carlos_danger_');
+                                $el.addClass('oe_dirty oe_carlos_danger');
+                                $el.addClass(id);
+                                return $.Deferred().reject({
+                                    id: id,
+                                    error: response.data,
+                                });
+                            });
+                    });
+                }).get();
+            return $.when.apply(null, defs).then(function () {
+                //website.reload();
+            }, function (failed) {
+                // If there were errors, re-enable edition
+                self.rte.start_edition(true).then(function () {
+                    // jquery's deferred being a pain in the ass
+                    if (!_.isArray(failed)) { failed = [failed]; }
+
+                    _(failed).each(function (failure) {
+                        var html = failure.error.exception_type === "except_osv";
+                        if (html) {
+                            var msg = $("<div/>").text(failure.error.message).html();
+                            var data = msg.substring(3,msg.length-2).split(/', u'/);
+                            failure.error.message = '<b>' + data[0] + '</b><br/>' + data[1];
+                        }
+                        $(root).find('.' + failure.id)
+                            .removeClass(failure.id)
+                            .popover({
+                                html: html,
+                                trigger: 'hover',
+                                content: failure.error.message,
+                                placement: 'auto top',
+                            })
+                            // Force-show popovers so users will notice them.
+                            .popover('show');
+                    });
+                });
+            });
+        },
         saveElement: function ($el) {
             var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
