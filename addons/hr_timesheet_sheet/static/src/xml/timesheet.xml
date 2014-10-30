@@ -210,7 +210,7 @@
                                     </t>
                                     <thead t-if="!widget.get('effective_readonly')" class="oe_timesheet_background_white">
                                         <tr>
-                                            <td colspan="6" t-if="_.isEmpty(days.account_group)">
+                                            <td colspan="6" t-if="_.isEmpty(days.account_group) and widget.parent.is_submitted_sheets">
                                                 <span class="oe_copy_accounts text-primary" colspan="5">
                                                     <a><h3 class="text-primary text-center">Copy over all rows from most recent timesheet.</h3></a>
                                                 </span>

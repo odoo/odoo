@@ -29,6 +29,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
+            this.is_submitted_sheets = false;
             this.mode = "week";
             // Original save function is overwritten in order to wait all running deferreds to be done before actually applying the save.
             this.view.original_save = _.bind(this.view.save, this.view);
@@ -134,6 +135,14 @@ openerp.hr_timesheet_sheet = function(instance) {
             var account_names;
             var default_get;
             var account_defaults;
+            //To check whether we have any submitted  timesheet, if yes then show copy/paste lines link
+            if (self.get('user_id')) {
+                this.render_drop.add(new instance.web.Model("hr_timesheet_sheet.sheet").call("search", [[['user_id','=',self.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<=', self.field_manager.get_field_value("date_from")]]]).then(function(result) {
+                    if (result.length) {
+                        self.is_submitted_sheets = true;
+                    }
+                }));
+            }
             return this.render_drop.add(new instance.web.Model("hr.analytic.timesheet").call("default_get", [
                 ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount'],
                 new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(result) {
@@ -156,7 +165,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                     return el;
                 })
                 .groupBy("account_id").value();
-                var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el) });
+                var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el); });
                 return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
                     new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
                     accounts = _(accounts).chain().map(function(lines, account_id) {
@@ -194,7 +203,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                         accounts = _.sortBy(accounts, function(el) {
                             return account_names[el.account];
                         });
-                    });;
+                    });
                 });
             })).then(function(result) {
                 // we put all the gathered data in self, then we render
@@ -428,7 +437,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
             so when we update input boxes of day mode it will not change main account's lines
             This method will synchronize data of accounts of main Timesheet widget 
         */
-        var self = this;
         _.each(this.parent.accounts, function(account) {
             if (account.account == updated_account.account_id) {
                 account.days[day_count].lines[0]['amount'] = updated_account.amount || 0;
@@ -446,7 +454,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         var dates;
         var days;
         var new_account_names;
-        var default_get = this.parent.default_get;
         dates = [];
         var start = this.parent.get("date_from");
         var end = this.parent.get("date_to");
@@ -577,7 +584,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
     },
     copy_accounts: function(e) {
         var self = this;
-        var index = this.get('count');
         (new instance.web.Model("hr_timesheet_sheet.sheet").call("search_read", {
            domain: [['user_id','=',self.parent.get('user_id')], ['state', '=', 'confirm'], ['date_from', '<=', self.parent.field_manager.get_field_value("date_from")]],
            fields: ['timesheet_ids'],
@@ -730,7 +736,6 @@ instance.hr_timesheet_sheet.DailyTimesheet = instance.web.Widget.extend({
         this.parent.unlink_sheets_records(initial_o2m_value, ops);
     },
     on_edit_account: function(e) {
-        var self = this;
         var day_count = this.get("count");
         var account_id = parseInt($(e.target).data('id'));
         var account_ids = _.keys(this.days[day_count].account_group);
