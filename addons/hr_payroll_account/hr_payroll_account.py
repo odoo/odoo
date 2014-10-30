@@ -46,9 +46,10 @@ class hr_payslip_line(osv.osv):
                 and payslip_line.salary_rule_id.register_id.partner_id.id\
                 or default_partner_id
             res[payslip_line.id] = (payslip_line.salary_rule_id.register_id.\
-                partner_id or payslip_line.salary_rule_id.account_debit.type\
-                in ('receivable', 'payable'))\
-                and partner_id or False
+                partner_id or (payslip_line.salary_rule_id.account_debit.type\
+                in ('receivable', 'payable') or
+                payslip_line.salary_rule_id.account_credit.type\
+                in ('receivable', 'payable'))) and partner_id or False
         return res
 
 
