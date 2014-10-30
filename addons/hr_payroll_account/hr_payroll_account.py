@@ -162,7 +162,7 @@ class hr_payslip(osv.osv):
                     credit_line = (0, 0, {
                     'name': line.name,
                     'date': timenow,
-                    'partner_id': (line.salary_rule_id.register_id.partner_id or line.salary_rule_id.account_credit.type in ('receivable', 'payable')) and partner_id or False,
+                    'partner_id': line.partner_id and line.partner_id.id or False,
                     'account_id': credit_account_id,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
