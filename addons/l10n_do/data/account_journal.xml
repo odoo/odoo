@@ -29,13 +29,6 @@
             <field name="sequence_id" ref="ir_sequence_cf_nota_debito"/>
             <field name="restart_sequence" eval="False" />
         </record>
-        <record id="account_journal_cf_nota_credito" model="account.journal">
-            <field name="name">Nota de Crédito Cliente</field>
-            <field name="code">NC-C</field>
-            <field name="type">sale_refund</field>
-            <field name="sequence_id" ref="ir_sequence_cf_nota_credito"/>
-            <field name="restart_sequence" eval="False" />
-        </record>
         <record id="account_journal_cf_proveedores_informales" model="account.journal">
             <field name="name">Registro de Proveedores Informales</field>
             <field name="code">RPI</field>

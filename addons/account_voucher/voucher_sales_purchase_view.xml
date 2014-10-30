@@ -11,7 +11,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -33,7 +33,7 @@
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','sale')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -83,7 +83,7 @@
                                  attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
+                            <field name="journal_id" domain="[('type','=','sale')]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
@@ -163,7 +163,7 @@
             <field name="name">Sales Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
+            <field name="domain">[('journal_id.type','=','sale'), ('type','=','sale')]</field>
             <field name="context">{'default_type': 'sale', 'type': 'sale'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
@@ -237,7 +237,7 @@
                             <field name="paid" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="journal_id"
-                                domain="[('type','in',['purchase','purchase_refund'])]"
+                                domain="[('type','=','purchase')]"
                                 widget="selection"
                                 on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
                                 groups="account.group_account_user"/>
@@ -319,7 +319,7 @@
             <field name="name">Purchase Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type','in',['purchase','purchase_refund']), ('type','=','purchase')]</field>
+            <field name="domain">[('journal_id.type','=','purchase'), ('type','=','purchase')]</field>
             <field name="context">{'default_type': 'purchase', 'type': 'purchase'}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>

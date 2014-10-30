@@ -58,9 +58,9 @@ class account_invoice_refund(osv.osv_memory):
                 context = {}
             inv_type = context.get('type', 'out_invoice')
             company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
-            type = (inv_type == 'out_invoice') and 'sale_refund' or \
+            type = (inv_type == 'out_invoice') and 'sale' or \
                    (inv_type == 'out_refund') and 'sale' or \
-                   (inv_type == 'in_invoice') and 'purchase_refund' or \
+                   (inv_type == 'in_invoice') and 'purchase' or \
                    (inv_type == 'in_refund') and 'purchase'
             journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
             return journal and journal[0] or False
@@ -97,9 +97,9 @@ class account_invoice_refund(osv.osv_memory):
         res = super(account_invoice_refund,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         type = context.get('type', 'out_invoice')
         company_id = user_obj.browse(cr, uid, uid, context=context).company_id.id
-        journal_type = (type == 'out_invoice') and 'sale_refund' or \
+        journal_type = (type == 'out_invoice') and 'sale' or \
                        (type == 'out_refund') and 'sale' or \
-                       (type == 'in_invoice') and 'purchase_refund' or \
+                       (type == 'in_invoice') and 'purchase' or \
                        (type == 'in_refund') and 'purchase'
         for field in res['fields']:
             if field == 'journal_id':

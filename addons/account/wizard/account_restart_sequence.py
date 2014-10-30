@@ -26,31 +26,24 @@ class account_restart_sequence(osv.osv_memory):
     """
         Restart Sequences
     """
+
+    def _get_journal_ids(self, cr, uid, context=None):
+        return self.pool.get('account.journal').search(cr, uid, [('restart_sequence', '=', 'True')])
+
     _name = "account.sequence.restart"
     _description = "Restart Sequences"
     _columns = {
         'journal_ids': fields.many2many('account.journal'),
     }
 
+    _defaults = {
+        'journal_ids': _get_journal_ids,
+    }
+
     def restart_sequences(self, cr, uid, ids, context=None):
         for form in self.read(cr, uid, ids, context=context):
             if form['journal_ids']:
-                for fy in self.pool.get('account.fiscalyear').browse(cr, uid, context['active_ids'], context=context):
-                    for journal in self.pool.get('account.journal').browse(cr, uid, form['journal_ids'], context=context):
-                        sequences = journal.refund_sequence and [journal.sequence_id.id, journal.refund_sequence_id.id] or [journal.sequence_id.id]
-                        for sequence in sequences:
-                            updates = {
-                                'name': journal.name + ' ' + fy.name,
-                                'fiscal_ids': [],
-                                'prefix': str(self.pool.get('ir.sequence').browse(cr, uid, sequence).prefix) + '/' + str(fy.code) + '/',
-                                }
-                            seq = self.pool.get('ir.sequence').copy(cr, uid, sequence, updates)
-                            seq_vals = {
-                                'sequence_id': seq,
-                                'sequence_main_id': sequence,
-                                'fiscalyear_id': fy.id,
-                            }
-                            self.pool.get('account.sequence.fiscalyear').create(cr, uid, seq_vals, context=context)
+                self.pool.get('account.fiscalyear').restart_sequences(cr, uid, context['active_ids'], form['journal_ids'], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

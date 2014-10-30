@@ -31,8 +31,8 @@ import openerp.addons.decimal_precision as dp
 TYPE2JOURNAL = {
     'out_invoice': 'sale',
     'in_invoice': 'purchase',
-    'out_refund': 'sale_refund',
-    'in_refund': 'purchase_refund',
+    'out_refund': 'sale',
+    'in_refund': 'purchase',
 }
 
 # mapping invoice type to refund type
@@ -278,7 +278,7 @@ class account_invoice(models.Model):
     journal_id = fields.Many2one('account.journal', string='Journal',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_journal,
-        domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale_refund'], 'in_refund': ['purchase_refund'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]")
+        domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale'], 'in_refund': ['purchase'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
@@ -1079,9 +1079,9 @@ class account_invoice(models.Model):
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
         elif invoice['type'] == 'in_invoice':
-            journal = self.env['account.journal'].search([('type', '=', 'purchase_refund')], limit=1)
+            journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
         else:
-            journal = self.env['account.journal'].search([('type', '=', 'sale_refund')], limit=1)
+            journal = self.env['account.journal'].search([('type', '=', 'sale')], limit=1)
         values['journal_id'] = journal.id
 
         values['type'] = TYPE2REFUND[invoice['type']]

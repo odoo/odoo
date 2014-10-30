@@ -727,7 +727,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance': fields.boolean('Opening With Last Closing Balance', help="For cash or bank journal, this option should be unchecked when the starting balance should always set to 0 for new documents."),
         'name': fields.char('Journal Name', required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
                                  " Select 'Purchase' for supplier invoices journals."\
                                  " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -959,6 +959,24 @@ class account_fiscalyear(osv.osv):
                 })
                 ds = ds + relativedelta(months=interval)
         return True
+
+    def restart_sequences(self, cr, uid, ids, journal_ids, context=None):
+        for fy in self.browse(cr, uid, ids, context=context):
+            for journal in self.pool.get('account.journal').browse(cr, uid, journal_ids, context=context):
+                sequences = journal.refund_sequence and [journal.sequence_id.id, journal.refund_sequence_id.id] or [journal.sequence_id.id]
+                for sequence in sequences:
+                    updates = {
+                        'name': journal.name + ' ' + fy.name,
+                        'fiscal_ids': [],
+                        'prefix': str(self.pool.get('ir.sequence').browse(cr, uid, sequence).prefix) + '/' + str(fy.code) + '/',
+                        }
+                    seq = self.pool.get('ir.sequence').copy(cr, uid, sequence, updates)
+                    seq_vals = {
+                        'sequence_id': seq,
+                        'sequence_main_id': sequence,
+                        'fiscalyear_id': fy.id,
+                    }
+                    self.pool.get('account.sequence.fiscalyear').create(cr, uid, seq_vals, context=context)
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
         res = self.finds(cr, uid, dt, exception, context=context)
@@ -2356,7 +2374,7 @@ class account_model(osv.osv):
                                                                 "\nPlease define partner on it!")%(line.name, model.name))
 
                     payment_term_id = False
-                    if model.journal_id.type in ('purchase', 'purchase_refund') and line.partner_id.property_supplier_payment_term:
+                    if model.journal_id.type == 'purchase' and line.partner_id.property_supplier_payment_term:
                         payment_term_id = line.partner_id.property_supplier_payment_term.id
                     elif line.partner_id.property_payment_term:
                         payment_term_id = line.partner_id.property_payment_term.id
@@ -3185,9 +3203,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             # Get the analytic journal
             data = False
             try:
-                if journal_type in ('sale', 'sale_refund'):
+                if journal_type == 'sale':
                     data = obj_data.get_object_reference(cr, uid, 'account', 'analytic_journal_sale')
-                elif journal_type in ('purchase', 'purchase_refund'):
+                elif journal_type == 'purchase':
                     data = obj_data.get_object_reference(cr, uid, 'account', 'exp')
                 elif journal_type == 'general':
                     pass
@@ -3198,9 +3216,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
             default_account = False
-            if journal_type in ('sale', 'sale_refund'):
+            if journal_type == 'sale' and type != 'debit':
                 default_account = acc_template_ref.get(template.property_account_income_categ.id)
-            elif journal_type in ('purchase', 'purchase_refund'):
+            elif journal_type == 'purchase' and type == 'debit':
                 default_account = acc_template_ref.get(template.property_account_expense_categ.id)
             elif journal_type == 'situation':
                 if type == 'debit':
@@ -3212,16 +3230,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
-            'sale_refund': _('Sales Refund Journal'),
-            'purchase_refund': _('Purchase Refund Journal'),
             'general': _('Miscellaneous Journal'),
             'situation': _('Opening Entries Journal'),
         }
         journal_codes = {
             'sale': _('SAJ'),
             'purchase': _('EXJ'),
-            'sale_refund': _('SCNJ'),
-            'purchase_refund': _('ECNJ'),
             'general': _('MISC'),
             'situation': _('OPEJ'),
         }
@@ -3231,7 +3245,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
 
         journal_data = []
-        for journal_type in ['sale', 'purchase', 'sale_refund', 'purchase_refund', 'general', 'situation']:
+        for journal_type in ['sale', 'purchase', 'general', 'situation']:
             vals = {
                 'type': journal_type,
                 'name': journal_names[journal_type],
@@ -3241,6 +3255,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
+                'refund_sequence': True,
             }
             journal_data.append(vals)
         return journal_data

@@ -52,9 +52,9 @@ class account_print_journal(osv.osv_memory):
         doc = etree.XML(res['arch'])
 
         if context.get('sale_purchase_only'):
-            domain ="[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
+            domain ="[('type', 'in', ('sale','purchase'))]"
         else:
-            domain ="[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
+            domain ="[('type', 'not in', ('sale','purchase'))]"
         nodes = doc.xpath("//field[@name='journal_ids']")
         for node in nodes:
             node.set('domain', domain)
