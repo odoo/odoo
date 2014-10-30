@@ -422,7 +422,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
             this.pad_table_to(11);
             //Add, Add Activity row prior to activities listview
-            var $row = $("<tr><td><span class='pt_add_activity'>+ Add Activity</span></td></tr>");
+            var $row = $("<tr><td><span class='pt_add_activity pt_pointer'>+ Add Activity</a></td></tr>");
             if(!this.$el.find(".pt_add_activity").length) {
                 $row.prependTo(this.$el.find(".activity_row:first").parent());
             }
@@ -478,7 +478,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return this.project_timesheet_model.get_pending_records();
         },
         get_total: function() {
-            return this.activity_list.get_total();
+            if(this.activity_list.get_total()) {
+                var duration = this.activity_list.get_total().split(":");
+                return _.str.sprintf("%sh %smin", duration[0], duration[1])
+            }
         },
         get_current_UTCDate: function() {
             var d = new Date();
@@ -550,6 +553,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.$el.find(".pt_duration").each(function() {
                     var el_hour = $(this).find("span.hours");
                     var el_minute = $(this).find("span.minutes");
+                    if(el_hour == 0 && el_minute == 0)
+                        self.$el.find(".pt_duration").css("color","#939392");
+                    else
+                        self.$el.find(".pt_duration").css("color","#A24689");
                     var minute = parseInt(el_minute.text());
                     if(minute >= 60) {
                         el_hour.text(_.str.sprintf("%02d", parseInt(el_hour.text()) + 1));

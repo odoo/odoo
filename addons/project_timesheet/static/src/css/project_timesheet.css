@@ -31,11 +31,15 @@ html, body {
 }
 .odoo_project_timesheet .pt_activity_header {
     background-color: #f2f2f2;
-    min-height: 15%;
+    height: 70px;
     position: relative;
     top: 0px;
 }
-.odoo_project_timesheet .pt_activity_header .pt_duration, .odoo_project_timesheet .pt_activity_header .pt_timer_button {
+.odoo_project_timesheet .pt_activity_header .pt_duration {
+    font-size: 35px;
+    color: #939392;
+}
+.odoo_project_timesheet .pt_activity_header .pt_timer_button {
     font-size: 35px;
     color: #a24689;
 }
@@ -98,18 +102,25 @@ html, body {
 }
 .odoo_project_timesheet .pt_footer {
     background-color: #a24689;
-    min-height: 10%;
+    height: 15px;
     position: relative;
     bottom: 0px;
     color: #FFFFFF;
+}
+.odoo_project_timesheet .pt_pointer {
+    cursor: pointer;
+}
+.odoo_project_timesheet .pt_pointer:hover {
+    text-decoration: underline;
 }
 .odoo_project_timesheet .pt_btn {
     background-color: #a24689;
     color: #FFFFFF;
     cursor: pointer;
 }
-.odoo_project_timesheet .pt_link {
+.odoo_project_timesheet .pt_btn_cancel {
     color: #a24689;
+    cursor: pointer;
 }
 .odoo_project_timesheet .pt_add_activity {
     color: #0066FF;
@@ -121,17 +132,15 @@ html, body {
     height: 35px;
     cursor: pointer;
 }
-.odoo_project_timesheet .pt_input_project, 
-.odoo_project_timesheet .pt_input_task,
-.odoo_project_timesheet .pt_duration,
-.odoo_project_timesheet .pt_description textarea {
-    min-width: 250px;
+.odoo_project_timesheet .pt_prev_week,.pt_next_week {
+    cursor: pointer;
 }
 .odoo_project_timesheet .pt_m2o_drop_down_button {
     position: relative;
 }
 .odoo_project_timesheet .pt_input_project, .odoo_project_timesheet .pt_input_task {
     background-color: #D2D2FF;
+    height: 34px !important;
 }
 .odoo_project_timesheet input.pt_required, .odoo_project_timesheet textarea.pt_required {
     background-color: #d2d2ff !important;
@@ -163,6 +172,9 @@ Jquery Textext related stuff
 }
 .odoo_project_timesheet .pt_m2o .text-core {
   min-height: 22px;
+}
+.odoo_project_timesheet .pt_m2o .text-core .text-arrow {
+  top: 5px !important;
 }
 .odoo_project_timesheet .pt_m2o .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;

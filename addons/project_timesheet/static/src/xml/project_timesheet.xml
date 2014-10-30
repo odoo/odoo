@@ -53,7 +53,10 @@
                             <div>
                                 <div>
                                     <strong><t t-esc="activity.project_id[1]"></t></strong>
-                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.unit_amount)"></t></span> <!-- call format_hour method of this screen -->
+                                    <t t-set="duration" t-value="widget.format_duration(activity.unit_amount)" />
+                                    <t t-if="duration != undefine">
+                                        <span class="pull-right pt_duration_line"><t t-esc="duration.split(':')[0] + 'h ' + duration.split(':')[1] + 'min'"></t></span> <!-- call format_hour method of this screen -->
+                                    </t>
                                 </div>
                                 <div class="pt_description_task">
                                     <t t-if="activity.task_id and activity.task_id.length" t-esc="activity.task_id[1]"></t>
@@ -79,27 +82,27 @@
                 </div>
                 <div class="pt_duration">
                     <div>Duration</div>
-                    <div class="input-group col-md-2">
+                    <div class="input-group col-md-12">
                       <input id="hours" class="form-control pt_input_hour"/>
                       <span class="input-group-addon">h</span>
-                      <input id="minutes" class="form-control col-md-offset-1 pt_input_minute"/>
+                      <input id="minutes" class="form-control pt_input_minute"/>
                       <span class="input-group-addon">min</span>
                     </div>
                 </div>
                 <div class="pt_description">
                   <div>Notes</div>
-                  <textarea id="name" class="pt_input_description"></textarea>
+                  <textarea id="name" class="form-control pt_input_description"></textarea>
                 </div>
                 <div class="pt_mt_5">
                   <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
                   <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Update Activity</button>
                   or
-                  <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                  <a class="pt_btn_cancel">Cancel</a>
                   <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
                 </div>
                 <hr/>
                 <div class="pt_activity_body">
-                    <h2>Quick Select</h2>
+                    <h4>Quick Select</h4>
                 </div>
               </div>
             </div>
@@ -160,7 +163,7 @@
                         <div class="pt_mt_5">
                             <button class="btn btn-default pt_btn pt_btn_add_activity">Add Account</button> 
                             or
-                            <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                            <a class="pt_btn_cancel">Cancel</a>
                         </div>
                         <div class="pt_mt_5">
                             <h5>Why create an online account ?</h5>
@@ -212,7 +215,7 @@
                         <div class="pt_mt_5">
                           <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
                           or
-                          <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                          <a class="pt_btn_cancel">Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -220,7 +223,7 @@
                     <h4>You are already login with <t t-esc="project_timesheet.session.origin" ></t>, You can directly synchronize your data</h4>
                     <button class="btn btn-default pt_btn pt_btn_synchronize_existing_account">Synchronize Now</button>
                     or
-                    <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    <a class="pt_btn_cancel">Cancel</a>
                 </div>
               </div>
             </div>
@@ -253,14 +256,14 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-4 col-xs-4 col-sm-4 pt_back">
-                                    <span class="glyphicon glyphicon-chevron-left"></span><span class="pt_pl_3">Back</span>
+                                    <span class="glyphicon glyphicon-chevron-left"></span><span class="pt_pl_3 pt_pointer">Back</span>
                                 </div>
-                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
-                                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center" t-if="widget.get_pending_lines()">
+                                    <span class="glyphicon glyphicon-flash"></span><span class="pt_pl_3 pt_pointer">Sync now</span>
                                     <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
                                 </div>
-                                <div class="col-md-4 col-xs-4 col-sm-4 pt_reporting_duration">
-                                    <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span>Reporting</span></a>
+                                <div t-att-class="widget.get_pending_lines() and 'col-md-4 col-xs-4 col-sm-4 pt_reporting_duration' or 'col-md-8 col-xs-8 col-sm-8 pt_reporting_duration'">
+                                    <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span class="pt_pl_3 pt_pointer">Reporting</span></a>
                                 </div>
                             </div>
                         </div>
@@ -295,13 +298,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
-                    <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3">Stats</span>
+                    <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3 pt_pointer">Stats</span>
                 </div>
-                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
-                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center" t-if="widget.get_pending_lines()">
+                    <span class="glyphicon glyphicon-flash"></span><span class="pt_pl_3 pt_pointer">Sync now</span>
                     <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
                 </div>
-                <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
+                <div t-att-class="widget.get_pending_lines() and 'col-md-4 col-xs-4 col-sm-4 pt_total_duration' or 'col-md-8 col-xs-8 col-sm-8 pt_total_duration'">
                     <span class="pull-right pt_total"></span>
                 </div>
             </div>
