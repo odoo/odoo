@@ -831,6 +831,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         var dialog = new instance.web.Dialog(this, {
                             title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
                             size: 'medium',
+                            buttons: {
+                                Ok: function() { this.parents('.modal').modal('hide');}
+                            },
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
                             format : instance.web.format_value
@@ -873,6 +876,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     new instance.web.Dialog(self, {
                         title: _.str.sprintf(_t("Model %s fields"),
                                              self.dataset.model),
+                        buttons: {
+                            Ok: function() { this.parents('.modal').modal('hide');}
+                        },
                         }, $root).open();
                 });
                 break;

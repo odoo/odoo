@@ -1480,21 +1480,13 @@
 </t>
 
 <t t-name="AbstractFormPopup.render">
-    <div class="container-fluid">
-        <div class="row oe-modal-header">
-            <div class="col-md-8 col-md-offset-4 oe_popup_search">
-            </div>
+    <div>
+        <div class="o-modal-header">
+            <div class="o-popup-search"/>
+            <div class="o-search-options oe-search-options"/>
         </div>
-        <div class="row oe-modal-header">
-            <div class="col-md-8 col-md-offset-4">
-                <div class="oe-search-options btn-group"/>
-                <div class="oe_popup_list_pager"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="oe_popup_list"/>
-        </div>
-        <div class="row oe_popup_form"></div>
+        <div class="oe_popup_list"/>
+        <div class="oe_popup_form"/>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
