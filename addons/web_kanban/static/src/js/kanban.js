@@ -208,7 +208,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             views: [[false, 'form']],
             type: 'ir.actions.act_window',
             target: "new",
-            context: self.dataset.get_context(),
+            context: self.dataset.get_context({'kanban_new': true}),
             flags: {
                 action_buttons: true,
             }
@@ -852,7 +852,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_action_delete: function() {
         var self = this;
         if (confirm(_t("Are you sure to remove this column ?"))) {
-            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.value]).done(function(r) {
+            (new instance.web.DataSet(
+                self,
+                self.view.group_by_field.relation,
+                new instance.web.CompoundContext(self.view.dataset.get_context())).unlink([self.value])).done(function(r) {
                 self.view.do_reload();
             });
         }

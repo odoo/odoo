@@ -39,7 +39,7 @@ class crm_team(osv.Model):
 
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
-        'stage_ids': fields.many2many('crm.stage', 'crm_stage_team_rel', 'team_id', 'stage_id', 'Stages'),
+        'stage_ids': fields.many2many('crm.stage', 'crm_team_stage_rel', 'team_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
         'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
@@ -57,24 +57,66 @@ class crm_team(osv.Model):
         return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(crm_team, self)._auto_init,
             'crm.lead', self._columns['alias_id'], 'name', alias_prefix='Lead+', alias_defaults={}, context=context)
 
-    def _get_stage_common(self, cr, uid, context):
-        ids = self.pool.get('crm.stage').search(cr, uid, [('case_default', '=', 1)], context=context)
-        return ids
+    def _get_default_stage_ids(self, cr, uid, context):
+        return self.pool.get('crm.stage').search(cr, uid, [('default', 'in', ['copy', 'link'])], context=context)
+
+    # compatibility, remove me in v9
+    _get_stage_common = _get_default_stage_ids
 
     _defaults = {
-        'stage_ids': _get_stage_common,
+        'stage_ids': _get_default_stage_ids,
         'use_leads': True,
         'use_opportunities': True,
     }
 
-    def create(self, cr, uid, vals, context=None):
+    def _manage_stages(self, cr, uid, m2m_command_stage_ids, context=None):
+        stage_ids = list()
+        stages = self.resolve_2many_commands(cr, uid, 'stage_ids', m2m_command_stage_ids, fields=[], context=context)
+        print stages
+        for stage in stages:
+            if stage.get('id') and stage['default'] in ['copy', 'specific']:
+                values = dict(stage, default='specific', team_ids=list())
+                for key in ['id', 'create_uid', 'create_date', '__last_update', 'write_uid', 'write_date']:
+                    values.pop(key, None)
+                stage_ids.append((0, 0, values))
+            elif stage.get('id'):
+                stage_ids.append((4, stage['id']))
+            else:
+                stage_ids.append((0, 0, stage))
+        return stage_ids
+
+    def _get_stage_ids_values(self, cr, uid, values, context=None):
+        stage_ids = values.get('stage_ids')
+        if not stage_ids:
+            stage_ids = self.default_get(cr, uid, ['stage_ids'], context=context).get('stage_ids', [])
+        return stage_ids
+
+    def create(self, cr, uid, values, context=None):
         if context is None:
             context = {}
         create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
-        team_id = super(crm_team, self).create(cr, uid, vals, context=create_context)
+        stage_ids = self._get_stage_ids_values(cr, uid, values, context=context)
+        if stage_ids:
+            stage_ids = self._manage_stages(cr, uid, stage_ids, context=context)
+            values['stage_ids'] = stage_ids
+        team_id = super(crm_team, self).create(cr, uid, values, context=create_context)
         team = self.browse(cr, uid, team_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [team.alias_id.id], {'alias_parent_thread_id': team_id, 'alias_defaults': {'team_id': team_id, 'type': 'lead'}}, context=context)
+        self.pool['mail.alias'].write(cr, uid, [team.alias_id.id], {'alias_parent_thread_id': team_id, 'alias_defaults': {'team_id': team_id, 'type': 'lead'}}, context=context)
+        # print prout
         return team_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        if context is None:
+            context = {}
+        print 'sale team write', values
+        stage_ids = self._get_stage_ids_values(cr, uid, values, context=context)
+        print '\t', stage_ids
+        if stage_ids:
+            stage_ids = self._manage_stages(cr, uid, stage_ids, context=context)
+            values['stage_ids'] = stage_ids
+        res = super(crm_team, self).write(cr, uid, ids, values, context=context)
+        # print prout
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.

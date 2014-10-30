@@ -148,7 +148,7 @@
                     <xpath expr="//page[@string='Team Members']" position="after">
                         <page string="Stages">
                             <separator string="Select Stages for this Sales Team"/>
-                                <field name="stage_ids"/>
+                                <field name="stage_ids" context="{'default_default': 'none'}"/>
                         </page>
                    </xpath>
                 </field>

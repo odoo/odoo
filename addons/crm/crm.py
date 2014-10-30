@@ -118,6 +118,15 @@ class crm_stage(osv.Model):
     _rec_name = 'name'
     _order = "sequence"
 
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(crm_stage, self).default_get(cr, uid, fields, context=context)
+        if res.get('team_ids'):
+            stages = self.resolve_2many_commands(cr, uid, 'team_ids', res['team_ids'], fields=['id'], context=context)
+            team_ids = [stage['id'] for stage in stages if stage.get('id')]
+            if team_ids and (not fields or 'default' in fields):
+                res['default'] = 'specific'
+        return res
+
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
@@ -126,8 +135,17 @@ class crm_stage(osv.Model):
         'requirements': fields.text('Requirements'),
         'team_ids': fields.many2many('crm.team', 'crm_team_stage_rel', 'stage_id', 'team_id', string='Teams',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'case_default': fields.boolean('Default to New Sales Team',
-                        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
+        'default': fields.selection([
+            ('none', 'Generic column for sales team'),  # shared, not default
+            ('link', 'Linked to each new sales team'),  # shared, default
+            ('specific', 'Specific to a sales team'),  # copied, not default - behavior of duplicated columns
+            ('copy', 'Duplicated to each new sales team')],  # copied, default - default behavior
+            string='Default',
+            help="Will allow you to display the stages (Kanban) as per the option selected:\n"
+                 "- Generic column for sales team: this column is shared through sales team, but is not proposed by default.\n"
+                 "- Linked to each new sales team:this column is shared through sales team, and will be proposed by default for each new sales team.\n"
+                 "- Specific to a sales team: this column specific to a sales team. If added in another sales team, it will be duplicated.\n"
+                 "- Copy to each new sales team: This column will be duplicated and the proposed for each new sales team.\n"),
         'legend_priority': fields.text(
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
@@ -139,13 +157,54 @@ class crm_stage(osv.Model):
                                  help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
+    def _get_default_team_ids(self, cr, uid, context=None):
+        team_id = self.pool['crm.lead']._resolve_team_id_from_context(cr, uid, context=context)
+        return team_id and [team_id] or []
+
     _defaults = {
         'sequence': 1,
         'probability': 0.0,
         'on_change': True,
-        'fold': False,
+        'team_ids': _get_default_team_ids,
+        'default': 'copy',
         'type': 'both',
-        'case_default': True,
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _update_default(self, cr, uid, ids, context=None):
+        for stage in self.browse(cr, uid, ids, context=context):
+            if stage.default == 'copy':
+                # create a duplicate for each sales team
+                for section in stage.team_ids:
+                    copied_stage_id = stage.copy(default={'default': 'specific', 'team_ids': []})
+                    section.write({'stage_ids': [(3, stage.id), (4, copied_stage_id.id)]})
+        return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        """ Override to implement the default specific behavior
+
+         - link: if a section if in the context, simply remove the link between
+           the stage and the section, do not delete the stage """
+        unlink_ids = set(ids)
+        ctx_team_id = self.pool['crm.lead']._resolve_team_id_from_context(cr, uid, context=context)
+        if ctx_team_id:
+            for stage in self.browse(cr, uid, ids, context=context):
+                if stage.default in ['none', 'link']:
+                    self.pool['crm.case.section'].write(cr, uid, [ctx_team_id], {'stage_ids': [(3, stage.id)]}, context=context)
+                    unlink_ids.remove(stage.id)
+        return super(crm_stage, self).unlink(cr, uid, list(unlink_ids), context=context)
+
+    def create(self, cr, uid, values, context=None):
+        """ Override to implement the default specific behavior
+
+         - copy: if the stage is created with team_ids values, duplicate the stage
+           for each section. Section content itself is not updated (aka leads,
+            opportunities, ...). """
+        new_id = super(crm_stage, self).create(cr, uid, values, context=context)
+        self._update_default(cr, uid, [new_id], context=context)
+        return new_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(crm_stage, self).write(cr, uid, ids, values, context=context)
+        if values.get('default') == 'copy':
+            self._update_default(cr, uid, ids, context=context)
+        return res

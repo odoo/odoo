@@ -133,20 +133,18 @@ class crm_lead(format_address, osv.osv):
             order = "%s desc" % order
         # retrieve team_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        search_domain = []
+        # - ORize with ('section_ids', '=', section_id) if section_id: add section columns
         team_id = self._resolve_team_id_from_context(cr, uid, context=context)
         if team_id:
-            search_domain += ['|', ('team_ids', '=', team_id)]
-            search_domain += [('id', 'in', ids)]
+            search_domain = ['|', ('id', 'in', ids), ('team_ids', '=', team_id)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain = [('id', 'in', ids)]
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
             search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
         # perform search
+        print search_domain
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
@@ -337,8 +335,7 @@ class crm_lead(format_address, osv.osv):
             - type: stage type must be the same or 'both'
             - team_id: if set, stages must belong to this team or
               be a default stage; if not set, stages must be default
-              stages
-        """
+              stages """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         if context is None:
@@ -358,13 +355,13 @@ class crm_lead(format_address, osv.osv):
                 team_ids.add(lead.team_id.id)
             if lead.type not in types:
                 types.append(lead.type)
-        # OR all team_ids and OR with case_default
+        # OR all team_ids and OR with default
         search_domain = []
         if team_ids:
             search_domain += [('|')] * len(team_ids)
             for team_id in team_ids:
                 search_domain.append(('team_ids', '=', team_id))
-        search_domain.append(('case_default', '=', True))
+        search_domain.append(('default', 'in', ['copy', 'link']))
         # AND with cases types
         if not avoid_add_type_term:
             search_domain.append(('type', 'in', types))
