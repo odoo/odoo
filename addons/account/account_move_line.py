@@ -245,6 +245,12 @@ class account_move_line(osv.osv):
             if context.get('line_id'):
                 for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'), context=context):
                     data['name'] = data.get('name') or move_line_dict.get('name')
+                    #get partner from exist line. The exist line return partner_id in tuple (e.g, (3,u'partner_name)).
+                    #so get the first key for id.
+                    if data.get('partner_id',False) == False and isinstance(move_line_dict.get('partner_id'), tuple):
+                        data['partner_id'] = move_line_dict.get('partner_id')[0]
+                    else:    
+                        data['partner_id'] = data.get('partner_id') or move_line_dict.get('partner_id')
                     data['partner_id'] = data.get('partner_id') or move_line_dict.get('partner_id')
                     total += move_line_dict.get('debit', 0.0) - move_line_dict.get('credit', 0.0)
             elif context.get('period_id'):
