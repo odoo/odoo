@@ -10,7 +10,7 @@ class account_tax_chart(models.TransientModel):
     period_id = fields.Many2one('account.period', string='Period',
         default=lambda self: self._get_period())
     target_move = fields.Selection([('posted', 'All Posted Entries'), ('all', 'All Entries'),],
-        string='Target Moves', required=True, default='posted'),
+        string='Target Moves', required=True, default='posted')
 
     @api.model
     def _get_period(self):
