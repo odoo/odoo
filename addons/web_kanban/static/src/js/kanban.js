@@ -33,8 +33,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             records : {}
         };
         this.groups = [];
-        this.aggregates = {};
-        this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = instance.session.debug;
         this.qweb.default_dict = _.clone(QWeb.default_dict);
@@ -101,28 +99,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             return false;
         return this._super(action);
     },
-    /*  add_qweb_template
-    *   select the nodes into the xml and send to extract_aggregates the nodes with TagName="field"
-    */
+    /*  add_qweb_template  */
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
             if (child.tag === "templates") {
                 this.transform_qweb_template(child);
                 this.qweb.add_template(instance.web.json_node_to_xml(child));
-                break;
-            } else if (child.tag === 'field') {
-                this.extract_aggregates(child);
-            }
-        }
-    },
-    /*  extract_aggregates
-    *   extract the agggregates from the nodes (TagName="field")
-    */
-    extract_aggregates: function(node) {
-        for (var j = 0, jj = this.group_operators.length; j < jj;  j++) {
-            if (node.attrs[this.group_operators[j]]) {
-                this.aggregates[node.attrs.name] = node.attrs[this.group_operators[j]];
                 break;
             }
         }
@@ -228,7 +211,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     },
                     value: new_record[0],
                     length: 0,
-                    aggregates: {},
                 };
                 var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
                 self.do_add_groups([new_group]).done(function() {
@@ -248,7 +230,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
-            var grouping_fields = self.group_by ? [self.group_by].concat(_.keys(self.aggregates)) : undefined;
+            var grouping_fields = self.group_by ? [self.group_by] : undefined;
             if (!_.isEmpty(grouping_fields)) {
                 // ensure group_by fields are read.
                 self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
@@ -509,7 +491,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
         record.$el.find('[title]').tooltip('destroy');
-        $(old_group.$el).add(new_group.$el).find('.oe_kanban_aggregates, .oe_kanban_group_length').hide();
+        $(old_group.$el).add(new_group.$el).find('.oe_kanban_group_length').hide();
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
             new_group.records.splice(new_index, 0, record);
@@ -628,7 +610,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.group = group;
         this.dataset = dataset;
         this.dataset_offset = 0;
-        this.aggregates = {};
         this.value = this.title = this.values = null;
         if (this.group) {
             this.values = group.values;
@@ -644,9 +625,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                     this.title = instance.web.format_value(group.get('value'), field, false);
                 } catch(e) {}
             }
-            _.each(this.view.aggregates, function(value, key) {
-                self.aggregates[value] = instance.web.format_value(group.get('aggregates')[key], {type: 'float'});
-            });
         }
 
         if (this.title === false) {
