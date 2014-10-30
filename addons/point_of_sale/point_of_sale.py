@@ -91,12 +91,7 @@ class pos_config(osv.osv):
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'barcode_product':  fields.char('Product Barcodes', size=64, help='The pattern that identifies product barcodes'),
-        'barcode_cashier':  fields.char('Cashier Barcodes', size=64, help='The pattern that identifies cashier login barcodes'),
-        'barcode_customer': fields.char('Customer Barcodes',size=64, help='The pattern that identifies customer\'s client card barcodes'),
-        'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
-        'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
-        'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required="True"),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -173,6 +168,13 @@ class pos_config(osv.osv):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         return company_id
 
+    def _get_default_nomenclature(self, cr, uid, context=None):
+        default_nom_obj = self.pool.get('barcode.nomenclature')
+        res = default_nom_obj.search(cr, uid, [('id', '=', 1)], limit=1, context=context)
+        if res and res[0]:
+            return default_nom_obj.browse(cr, uid, res[0], context=context).id
+        return False
+
     _defaults = {
         'uuid'  : _generate_uuid,
         'state' : POS_CONFIG_STATE[0][0],
@@ -183,12 +185,7 @@ class pos_config(osv.osv):
         'iface_print_auto': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
-        'barcode_product': '*', 
-        'barcode_cashier': '041*', 
-        'barcode_customer':'042*', 
-        'barcode_weight':  '21xxxxxNNDDD', 
-        'barcode_discount':'22xxxxxxxxNN', 
-        'barcode_price':   '23xxxxxNNNDD', 
+        'barcode_nomenclature_id': _get_default_nomenclature,
     }
 
     def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):

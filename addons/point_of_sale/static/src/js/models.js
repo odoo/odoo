@@ -26,7 +26,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos_widget = attributes.pos_widget;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
-            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy, patterns: {}});  // used to read barcodes
+            
+            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
+        
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -211,16 +213,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                                         self.config.iface_print_via_proxy  ||
                                         self.config.iface_scan_via_proxy   ||
                                         self.config.iface_cashdrawer;
-                
-                self.barcode_reader.add_barcode_patterns({
-                    'product':  self.config.barcode_product,
-                    'cashier':  self.config.barcode_cashier,
-                    'client':   self.config.barcode_customer,
-                    'weight':   self.config.barcode_weight,
-                    'discount': self.config.barcode_discount,
-                    'price':    self.config.barcode_price,
-                });
-
 
                 if (self.config.company_id[0] !== self.user.company_id[0]) {
                     throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
@@ -314,7 +306,44 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.cashregisters_by_id[self.cashregisters[i].id] = self.cashregisters[i];
                 }
             },
-        },{
+        }, {
+            model: 'barcode.nomenclature',
+            fields: ['name','rule_ids'],
+            domain: function(self){ return [] },
+            loaded: function(self,nomenclatures){
+                console.log("PUSH");
+                if (self.config.barcode_nomenclature_id) {
+                    for (var i = 0; i < nomenclatures.length; i++) {
+                        if (nomenclatures[i].id === self.config.barcode_nomenclature_id[0]) {
+                            self.nomenclature = nomenclatures[i];
+                        }
+                    }
+                }
+                self.nomenclature = self.nomenclature || null;
+                console.log(self.nomenclature);
+                console.log(self.attributes);
+            },
+        }, {
+            model: 'barcode.rule',
+            fields: ['name','sequence','type','pattern'],
+            domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
+            loaded: function(self,rules){
+                if (self.nomenclature) {
+                    console.log("PUSH2");
+                    rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
+                    self.nomenclature.rules = rules;
+                    for (var i = 0; i < rules.length; i++) {
+                        var pattern = rules[i].pattern;
+                        pattern = pattern.replace(/[x\*]/gi,'x');
+                        
+                        while (pattern.length < 12) {
+                            pattern += 'x';
+                        }
+                        rules[i].pattern = pattern;
+                    }
+                }
+            },
+        }, {
             label: 'fonts',
             loaded: function(self){
                 var fonts_loaded = new $.Deferred();

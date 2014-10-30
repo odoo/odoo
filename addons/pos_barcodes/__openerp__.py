@@ -38,12 +38,13 @@ This module unlocks several advanced barcode features for the point of sale:
 
 """,
     'author': 'OpenERP SA',
-    'depends': ['point_of_sale'],
+    'depends': [],
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [
+        'data/barcodes_data.xml',
         'barcodes_view.xml',
+        #'security/barcodes_security.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
     ],
     'installable': True,
     'auto_install': False,

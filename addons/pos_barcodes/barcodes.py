@@ -33,17 +33,16 @@ class barcode_nomenclature(osv.osv):
     _columns = {
         'name':             fields.char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature'),
         #'convert_to_ean13': fields.boolean('Convert to EAN-13',help='Numerical Barcodes shorter than EAN-13 will be automatically converted to EAN-13'),
-        'pos_config_ids':   fields.one2many('pos.config','barcode_nomenclature_id','Point of Sale', help='The Point of Sales using this barcode nomenclature'),
         'rule_ids':        fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
     }
 
 class barcode_rule(osv.osv):
     _name = 'barcode.rule'
-    _order = 'priority desc'
+    _order = 'sequence asc'
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
         'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
-        'priority': fields.float('Priority', help='Rules with a higher priority match first'),
+        'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
         #'encoding': fields.selection([('any','Any'),('ean13','EAN-13'),('ean8','EAN-8'),('codabar','Codabar'),('upca','UPC-A'),('upce','UPC-E')],'Encoding',help='This rule will apply only if the barcode is encoded with the specified encoding'),
         'type':     fields.selection([('product','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier')],'Type', required=True),
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
@@ -55,11 +54,3 @@ class barcode_rule(osv.osv):
         'pattern': '*',
         #'encoding': 'any',
     }
-
-class pos_config(osv.osv):
-    _inherit = 'pos.config'
-    _columns = {
-        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature'),
-    }
-            
-

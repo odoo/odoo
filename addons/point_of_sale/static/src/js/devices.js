@@ -456,58 +456,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.remote_active = 0;
 
             this.action_callback_stack = [];
-
-            this.add_barcode_patterns(attributes.patterns || {
-                'product':  ['xxxxxxxxxxxxx'],
-                'cashier':  ['041xxxxxxxxxx'],
-                'client':   ['042xxxxxxxxxx'],
-                'weight':   ['21xxxxxNNDDDx'],
-                'discount': ['22xxxxxxxxNNx'],
-                'price':    ['23xxxxxNNNDDx'],
-            });
-
-        },
-
-        add_barcode_patterns: function(patterns){
-            this.patterns = this.patterns || {};
-            for(var type in patterns){
-                this.patterns[type] = this.patterns[type] || [];
-
-                var patternlist = patterns[type];
-                if( typeof patternlist === 'string'){
-                    patternlist = patternlist.split(',');
-                }
-                for(var i = 0; i < patternlist.length; i++){
-                    var pattern = patternlist[i].trim().substring(0,12);
-                    if(!pattern.length){
-                        continue;
-                    }
-                    pattern = pattern.replace(/[x\*]/gi,'x');
-                    while(pattern.length < 12){
-                        pattern += 'x';
-                    }
-                    this.patterns[type].push(pattern);
-                }
-            }
-
-            this.sorted_patterns = [];
-            for (var type in this.patterns){
-                var patterns = this.patterns[type];
-                for(var i = 0; i < patterns.length; i++){
-                    var pattern = patterns[i];
-                    var score = 0;
-                    for(var j = 0; j < pattern.length; j++){
-                        if(pattern[j] != 'x'){
-                            score++;
-                        }
-                    }
-                    this.sorted_patterns.push({type:type, pattern:pattern,score:score});
-                }
-            }
-            this.sorted_patterns.sort(function(a,b){
-                return b.score - a.score;
-            });
-
         },
 
         save_callbacks: function(){
@@ -607,6 +555,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 base_code: ean,
                 value: 0,
             };
+            
+            if (!this.pos.nomenclature) {
+                return parse_result;
+            }
 
             if (!this.check_ean(ean)){
                 return parse_result;
@@ -659,13 +611,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 return self.sanitize_ean(base);
             }
 
-            var patterns = this.sorted_patterns;
+            var rules = this.pos.nomenclature.rules;
 
-            for(var i = 0; i < patterns.length; i++){
-                if(match_pattern(ean,patterns[i].pattern)){
-                    parse_result.type  = patterns[i].type;
-                    parse_result.value = get_value(ean,patterns[i].pattern);
-                    parse_result.base_code = get_basecode(ean,patterns[i].pattern);
+            for (var i = 0; i < rules.length; i++) {
+                if (match_pattern(ean,rules[i].pattern)) {
+                    parse_result.type      = rules[i].type;
+                    parse_result.value     = get_value(ean,rules[i].pattern);
+                    parse_result.base_code = get_basecode(ean,rules[i].pattern);
                     return parse_result;
                 }
             }

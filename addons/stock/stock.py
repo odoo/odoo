@@ -1437,6 +1437,7 @@ class stock_picking(osv.osv):
         return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)
 
     def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
+        print barcode_str
         '''This function is called each time there barcode scanner reads an input'''
         lot_obj = self.pool.get('stock.production.lot')
         package_obj = self.pool.get('stock.quant.package')

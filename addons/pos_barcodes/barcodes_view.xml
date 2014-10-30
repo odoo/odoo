@@ -1,22 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <record model="ir.ui.view" id="view_pos_config_form">
-            <field name="name">pos.config.form.view</field>
-            <field name="model">pos.config</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//group[@string='Barcode Types']" position="after">
-                    <group string="Barcode Nomenclature" col="4" >
-                        <field name="barcode_nomenclature_id" />
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <!--     BARCODE NOMENCLATURES     -->
-
         <record model="ir.ui.view" id="view_barcode_nomenclature_form">
             <field name="name">Barcode Nomenclatures</field>
             <field name="model">barcode.nomenclature</field>
@@ -31,7 +16,7 @@
                                 <field name="name" />
                                 <field name="type" />
                                 <field name="pattern" />
-                                <field name="priority" />
+                                <field name="sequence" />
                             </tree>
                         </field>
                     </sheet>
@@ -71,20 +56,12 @@
                 <form string="Barcode Rule">
                     <group col="4">
                         <field name="name" />
-                        <field name="priority" />
+                        <field name="sequence" />
                         <field name="type" />
                         <field name="pattern" />
                     </group>
                 </form>
             </field>
         </record>
-
-        <menuitem
-            parent="point_of_sale.menu_point_config_product"
-            action="action_barcode_nomenclature_form"
-            id="menu_barcode_nomenclature_all"
-            sequence="30"
-            groups="point_of_sale.group_pos_manager"/>
-
     </data>
 </openerp>
