@@ -86,8 +86,8 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'a[data-action="save_as_draft"]:contains("Save as New Version")',
-                element:   'a[data-action="save_as_draft"]:contains("Save as New Version")',
+                waitFor:   'a[data-action="save_as_new_version"]:contains("Save as New Version")',
+                element:   'a[data-action="save_as_new_version"]:contains("Save as New Version")',
                 placement: 'right',
                 title:     _t("Click here"),
                 popover:   { fixed: true },

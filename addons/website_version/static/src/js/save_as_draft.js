@@ -10,7 +10,7 @@
     website.EditorBar.include({
         start: function() {
             var self = this;
-            $('#master_edit_button').click(function() {
+            $('#save_as_new_version').click(function() {
                 var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
@@ -42,6 +42,22 @@
                 });
             
             });
+            // $('#save_and_publish').click(function() {
+                
+            //     var snapshot_id = $('html').data('snapshot_id');
+            //     self.save();
+            //     if (snapshot_id)
+            //     {
+            //         openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+            //             self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been saved and published."}));
+            //             self.wizard.appendTo($('body')).modal({"keyboard" :true});
+            //             self.wizard.on('click','.confirm', function(){
+            //                 location.reload();
+            //             });
+            //         });
+            //     }
+
+            // });
             return this._super();
         }
 
