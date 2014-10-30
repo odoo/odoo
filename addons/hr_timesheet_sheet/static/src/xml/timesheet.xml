@@ -227,8 +227,8 @@
                                         </td>
                                     </tr>
                                     <tr class="oe_timesheet_daily_footer">
-                                        <td t-if="widget.get('effective_readonly')" class="col-xs-8 col-md-8"/>
-                                        <td t-if="!widget.get('effective_readonly')" class="col-xs-8 col-md-8 oe_timesheet_daily_adding">
+                                        <td t-if="widget.get('effective_readonly')" class="col-xs-7 col-md-7"/>
+                                        <td t-if="!widget.get('effective_readonly')" class="col-xs-7 col-md-7 oe_timesheet_daily_adding">
                                             <a class="btn btn-primary btn-sm oe_timesheet_white">Add Line</a>
                                         </td>
                                         <td t-if="!(_.isEmpty(days.account_group))" class="col-xs-2 col-md-2">
@@ -236,7 +236,7 @@
                                                 <span class="oe_daily_total" t-att-data-day-total="widget.get('count')" />
                                             </h4>
                                         </td>
-                                        <td colspan="2" class="col-xs-2 col-md-2"/><t t-if="!widget.get('effective_readonly')"><td colspan="2" /></t>
+                                        <td colspan="2" class="col-xs-3 col-md-3"/><t t-if="!widget.get('effective_readonly')"><td colspan="2" /></t>
                                     </tr>
                                 </table>
                             </div>
