@@ -361,6 +361,27 @@ class ir_mail_server(osv.osv):
                 msg.attach(part)
         return msg
 
+    def _get_default_bounce_address(self, cr, uid, context=None):
+        '''Compute the default bounce address.
+
+        The default bounce address is used to set the envelop address if no
+        envelop address is provided in the message.  It is formed by properly
+        joining the parameters "mail.catchall.alias" and
+        "mail.catchall.domain".
+
+        If "mail.catchall.alias" is not set it defaults to "postmaster-odoo".
+
+        If "mail.catchall.domain" is not set, return None.
+
+        '''
+        get_param = self.pool['ir.config_parameter'].get_param
+        postmaster = get_param(cr, uid, 'mail.catchall.alias',
+                               default='postmaster-odoo',
+                               context=context,)
+        domain = get_param(cr, uid, 'mail.catchall.domain', context=context)
+        if postmaster and domain:
+            return '%s@%s' % (postmaster, domain)
+
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
                    context=None):
@@ -388,7 +409,20 @@ class ir_mail_server(osv.osv):
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
-        smtp_from = message['Return-Path'] or message['From']
+        # Use the default bounce address **only if** no Return-Path was
+        # provided by caller.  Caller may be using Variable Envelope Return
+        # Path (VERP) to detect no-longer valid email addresses.
+        smtp_from = message['Return-Path']
+        if not smtp_from:
+            smtp_from = self._get_default_bounce_address(cr, uid, context=context)
+        if not smtp_from:
+            # WARNING: Using a From address for the envelop may lead to some
+            # mails being dropped.  This is not common but there are reports
+            # of it happening.
+            smtp_from = message['From']
+        if smtp_from != message['From']:
+            del message['Sender']
+            message['Sender'] = smtp_from
         assert smtp_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
