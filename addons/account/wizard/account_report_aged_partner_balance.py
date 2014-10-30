@@ -14,7 +14,7 @@ class account_aged_trial_balance(models.TransientModel):
     period_length = fields.Integer(string='Period Length (days)', required=True, default=30)
     direction_selection = fields.Selection([('past','Past'), ('future','Future')],
         string='Analysis Direction', required=True, default='past')
-    journal_ids = fields.many2many('account.journal', 'account_aged_trial_balance_journal_rel', 'account_id', 'journal_id', string='Journals', required=True, default='movement')
+    journal_ids = fields.Many2many('account.journal', 'account_aged_trial_balance_journal_rel', 'account_id', 'journal_id', string='Journals', required=True, default='movement')
 
     @api.multi
     def _print_report(self, data):
