@@ -31,9 +31,6 @@ class sale_configuration(osv.TransientModel):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Generate invoices based on the sales order lines',
-            implied_group='sale.group_invoice_so_lines',
-            help="To allow your salesman to make invoices for sales order lines using the menu 'Lines to Invoice'."),
         'timesheet': fields.boolean('Prepare invoices based on timesheets',
             help='For modifying account analytic view to show important data to project manager of services companies.'
                  'You can also view the report of account analytic summary user-wise as well as month wise.\n'

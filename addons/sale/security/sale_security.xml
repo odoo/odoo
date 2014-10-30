@@ -24,11 +24,6 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="group_invoice_so_lines" model="res.groups">
-        <field name="name">Enable Invoicing Sales order lines</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
     <record id="group_delivery_invoice_address" model="res.groups">
         <field name="name">Addresses in Sales Orders</field>
         <field name="category_id" ref="base.module_category_hidden"/>
