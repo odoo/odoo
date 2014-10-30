@@ -85,13 +85,14 @@
 
         delete_snapshot: function(event) {
             var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
             openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     if (result){
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete this version because it is in a running experiment"}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete this version " + name + " because it is in a running experiment"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     }
                     else{
-                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete this version."}));
+                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete the version " + name + " ?"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
                             openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
@@ -108,7 +109,8 @@
 
         publish_version: function(event) {
             var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
-            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish this version."}));
+            var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
+            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish the version " + name + " ?"}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
                     openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
