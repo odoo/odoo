@@ -117,6 +117,7 @@ openerp_mail_followers = function(session, mail) {
                 view_mode: 'form',
                 view_type: 'form',
                 views: [[false, 'form']],
+                name: _t('Invite Follower'),
                 target: 'new',
                 context: {
                     'default_res_model': this.view.dataset.model,
