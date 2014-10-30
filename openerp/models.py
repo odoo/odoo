@@ -475,7 +475,7 @@ class BaseModel(object):
         # basic setup of field
         field.set_class_name(cls, name)
 
-        if field.store:
+        if field.store or field.column:
             cls._columns[name] = field.to_column()
         else:
             # remove potential column that may be overridden by field
@@ -2982,7 +2982,7 @@ class BaseModel(object):
 
         # update columns (fields may have changed), and column_infos
         for name, field in self._fields.iteritems():
-            if field.store:
+            if field.column:
                 self._columns[name] = field.to_column()
         self._inherits_reload()
 
@@ -3653,7 +3653,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
@@ -3954,7 +3954,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
