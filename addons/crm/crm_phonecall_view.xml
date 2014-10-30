@@ -122,11 +122,11 @@
                         </div>
                         <field name="team_id" colspan="1" widget="selection"
                                 groups="base.group_multi_salesteams"/>
-                        <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                        <field name="partner_id" on_change="1"/>
                         <field name="categ_id" widget="selection"/>
                         <field name="partner_mobile"/>
                         <field name="priority" widget="priority"/>
-                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)" context="{'opportunity_id': opportunity_id}"/>
+                        <field name="opportunity_id" on_change="1"/>
                     </group>
                     <field name="description" placeholder="Description..."/>
                 </sheet>
@@ -147,7 +147,7 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                    on_change="on_change_partner_id(partner_id)"/>
+                    on_change="1"/>
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
@@ -155,7 +155,7 @@
                     invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
-                <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
+                <field name="opportunity_id" invisible="1" on_change="1"/>
                 <button string="Schedule Other Call"
                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"

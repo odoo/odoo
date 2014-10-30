@@ -55,7 +55,7 @@
                     <filter string="Not Held" domain="[('state','=','pending')]"
                         help="Phone calls which are in pending state"/>
                     <separator/>
-                    <filter string="My Sales Team(s)" context="{'invisibteamion': False}" domain="[('team_id.user_id','=',uid)]"
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]"
                             help="Phone calls that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />

@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class crm_partner_binding(osv.osv_memory):
+class crm_partner_binding(models.TransientModel):
     """
     Handle the partner binding or generation in any CRM wizard that requires
     such feature, like the lead2opportunity wizard, or the
@@ -33,67 +32,62 @@ class crm_partner_binding(osv.osv_memory):
     """
     _name = 'crm.partner.binding'
     _description = 'Handle partner binding or generation in CRM wizards.'
-    _columns = {
-        'action': fields.selection([
-                ('exist', 'Link to an existing customer'),
-                ('create', 'Create a new customer'),
-                ('nothing', 'Do not link to a customer')
-            ], 'Related Customer', required=True),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
-    }
 
-    def _find_matching_partner(self, cr, uid, context=None):
+    action = fields.Selection([
+            ('exist', 'Link to an existing customer'),
+            ('create', 'Create a new customer'),
+            ('nothing', 'Do not link to a customer')
+        ], 'Related Customer', required=True)
+    partner_id = fields.Many2one('res.partner', 'Customer')
+
+    @api.multi
+    def _find_matching_partner(self):
         """
         Try to find a matching partner regarding the active model data, like
         the customer's name, email, phone number, etc.
 
         :return int partner_id if any, False otherwise
         """
-        if context is None:
-            context = {}
         partner_id = False
-        partner_obj = self.pool.get('res.partner')
+        partner_obj = self.env['res.partner']
 
         # The active model has to be a lead or a phonecall
-        if (context.get('active_model') == 'crm.lead') and context.get('active_id'):
-            active_model = self.pool.get('crm.lead').browse(cr, uid, context.get('active_id'), context=context)
-        elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
-            active_model = self.pool.get('crm.phonecall').browse(cr, uid, context.get('active_id'), context=context)
+        if (self._context.get('active_model') == 'crm.lead') and self._context.get('active_id'):
+            active_model = self.pool['crm.lead'].browse(self._cr, self._uid, self._context.get('active_id'), context=self._context)
+        elif (self._context.get('active_model') == 'crm.phonecall') and self._context.get('active_id'):
+            active_model = self.env['crm.phonecall'].browse(self._context.get('active_id'))
 
         # Find the best matching partner for the active model
         if (active_model):
-            partner_obj = self.pool.get('res.partner')
-
             # A partner is set already
             if active_model.partner_id:
                 partner_id = active_model.partner_id.id
+                
             # Search through the existing partners based on the lead's email
             elif active_model.email_from:
-                partner_ids = partner_obj.search(cr, uid, [('email', '=', active_model.email_from)], context=context)
+                partner_ids = partner_obj.search([('email', '=', active_model.email_from)])
                 if partner_ids:
-                    partner_id = partner_ids[0]
+                    partner_id = partner_ids[0].id
             # Search through the existing partners based on the lead's partner or contact name
             elif active_model.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', 'ilike', '%'+active_model.partner_name+'%')], context=context)
+                partner_ids = partner_obj.search([('name', 'ilike', '%'+active_model.partner_name+'%')])
                 if partner_ids:
-                    partner_id = partner_ids[0]
+                    partner_id = partner_ids[0].id
             elif active_model.contact_name:
-                partner_ids = partner_obj.search(cr, uid, [
-                        ('name', 'ilike', '%'+active_model.contact_name+'%')], context=context)
+                partner_ids = partner_obj.search([('name', 'ilike', '%'+active_model.contact_name+'%')])
                 if partner_ids:
-                    partner_id = partner_ids[0]
-
+                    partner_id = partner_ids[0].id
         return partner_id
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(crm_partner_binding, self).default_get(cr, uid, fields, context=context)
-        partner_id = self._find_matching_partner(cr, uid, context=context)
-
+    @api.model
+    def default_get(self, fields):
+        res = super(crm_partner_binding, self).default_get(fields)
+        partner_id = self._find_matching_partner()
         if 'action' in fields:
             res['action'] = partner_id and 'exist' or 'create'
         if 'partner_id' in fields:
             res['partner_id'] = partner_id
-
         return res
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="user_id" class="oe_inline"/>
                         <field name="team_id" class="oe_inline" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Select Leads/Opportunities">

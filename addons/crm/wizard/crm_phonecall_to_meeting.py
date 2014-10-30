@@ -19,16 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class crm_phonecall2meeting(osv.osv_memory):
+class crm_phonecall2meeting(models.TransientModel):
     """ Phonecall to Meeting """
 
     _name = 'crm.phonecall2meeting'
     _description = 'Phonecall To Meeting'
 
-    def action_cancel(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_cancel(self):
         """
         Closes Phonecall to Meeting form
         @param self: The object pointer
@@ -40,24 +40,23 @@ class crm_phonecall2meeting(osv.osv_memory):
         """
         return {'type':'ir.actions.act_window_close'}
 
-    def action_make_meeting(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_make_meeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current Phonecall
             @return : Dictionary value for created Meeting view
         """
         res = {}
-        phonecall_id = context and context.get('active_id', False) or False
+        phonecall_id = self._context and self._context.get('active_id', False) or False
         if phonecall_id:
-            phonecall = self.pool.get('crm.phonecall').browse(cr, uid, phonecall_id, context)
-            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+            phonecall = self.env['crm.phonecall'].browse(phonecall_id)
+            res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
             res['context'] = {
                 'default_phonecall_id': phonecall.id,
                 'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
-                'default_user_id': uid,
+                'default_user_id': self._uid,
                 'default_email_from': phonecall.email_from,
                 'default_state': 'open',
                 'default_name': phonecall.name,
             }
         return res
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

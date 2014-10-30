@@ -19,24 +19,26 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp import models, api, fields, _
 import logging
 _logger = logging.getLogger(__name__)
 
 
-class calendar_event(osv.Model):
+class calendar_event(models.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
-    _columns = {
-        'phonecall_id': fields.many2one('crm.phonecall', 'Phonecall'),
-        'opportunity_id': fields.many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
-    }
 
-    def create(self, cr, uid, vals, context=None):
-        res = super(calendar_event, self).create(cr, uid, vals, context=context)
-        obj = self.browse(cr, uid, res, context=context)
+    phonecall_id = fields.Many2one('crm.phonecall', 'Phonecall')
+    opportunity_id = fields.Many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]")
+
+    @api.model
+    def create(self, vals):
+        
+        obj = super(calendar_event, self).create(vals)
         if obj.opportunity_id:
-            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.start, obj.duration, context=context)
-        return res
+            
+            obj.opportunity_id.log_meeting(obj.name, obj.start, obj.duration)
+        
+        return obj
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
