@@ -805,13 +805,13 @@ class account_journal(osv.osv):
                     raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, vals, refunds=False, context=None):
+    def create_sequence(self, cr, uid, vals, refund=False, context=None):
         """ Create new no_gap entry sequence for every new Joural
         """
         # in account.journal code is actually the prefix of the sequence
         # whereas ir.sequence code is a key to lookup global sequences.
         prefix = vals['code'].upper()
-        if refunds:
+        if refund:
             prefix = prefix + 'R'
 
         seq = {
@@ -852,7 +852,7 @@ class account_journal(osv.osv):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context=context)})
         if 'refund_sequence' in vals and vals['refund_sequence']:
-            vals.update({'refund_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refunds=True, context=context)})
+            vals.update({'refund_sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, refund=True, context=context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):
