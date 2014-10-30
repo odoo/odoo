@@ -34,8 +34,8 @@
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
                  main_navbar=False, titles_only=False) }}
       {% if github_link %}
-        <p><a href="{{ github_link() }}" class="github">
-          View on GitHub
+        <p><a href="{{ github_link(mode='edit') }}" class="github">
+          Edit on GitHub
         </a></p>
       {% endif %}
     </div>
