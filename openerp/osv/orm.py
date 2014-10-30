@@ -30,7 +30,7 @@ class browse_null(object):
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
-    for attr in ('invisible', 'readonly', 'required'):
+    for attr in ('invisible', 'readonly', 'required','save_readonly'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
     for state, modifs in (field.get("states",{})).items():
@@ -59,7 +59,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
         else:
             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
-    for a in ('invisible', 'readonly', 'required'):
+    for a in ('invisible', 'readonly', 'required','save_readonly'):
         if node.get(a):
             v = bool(eval(node.get(a), {'context': context or {}}))
             if in_tree_view and a == 'invisible':
@@ -73,7 +73,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
 
 
 def simplify_modifiers(modifiers):
-    for a in ('invisible', 'readonly', 'required'):
+    for a in ('invisible', 'readonly', 'required', 'save_readonly'):
         if a in modifiers and not modifiers[a]:
             del modifiers[a]
 
