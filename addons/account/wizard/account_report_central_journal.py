@@ -6,7 +6,7 @@ class account_central_journal(models.TransientModel):
     _description = 'Account Central Journal'
     _inherit = "account.common.journal.report"
 
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_central_journal_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.multi
     def _print_report(self, data):

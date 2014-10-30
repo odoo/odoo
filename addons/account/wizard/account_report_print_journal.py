@@ -9,7 +9,7 @@ class account_print_journal(models.TransientModel):
 
     sort_selection = fields.Selection([('l.date', 'Date'), ('am.name', 'Journal Entry Number'),],
         string='Entries Sorted by', required=True, default='am.name')
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

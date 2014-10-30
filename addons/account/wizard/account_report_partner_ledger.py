@@ -17,7 +17,7 @@ class account_partner_ledger(models.TransientModel):
     page_split = fields.Boolean(string='One Partner Per Page', help='Display Ledger Report with One partner per page')
     amount_currency = fields.Boolean(string='With Currency',
         help="It adds the currency column on report if the currency differs from the company currency.")
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_partner_ledger_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.multi
     def onchange_filter(self, filter='filter_no', fiscalyear_id=False):

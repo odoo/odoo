@@ -6,8 +6,8 @@ class validate_account_move(models.TransientModel):
     _name = "validate.account.move"
     _description = "Validate Account Move"
 
-    journal_ids = fields.Many2many('account.journal', string='Journal', required=True)
-    period_ids = fields.Many2many('account.period', string='Period', required=True, domain=[('state','<>','done')])
+    journal_ids = fields.Many2many('account.journal', 'wizard_validate_account_move_journal', 'wizard_id', 'journal_id', string='Journal', required=True)
+    period_ids = fields.Many2many('account.period', 'wizard_validate_account_move_period', 'wizard_id', 'period_id', 'Period', string='Period', required=True, domain=[('state','<>','done')])
 
     @api.multi
     def validate_move(self):

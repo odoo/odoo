@@ -6,7 +6,7 @@ class account_balance_report(models.TransientModel):
     _name = 'account.balance.report'
     _description = 'Trial Balance Report'
 
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_balance_report_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.multi
     def _print_report(self, data):

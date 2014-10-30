@@ -14,7 +14,7 @@ class account_report_general_ledger(models.TransientModel):
         help="It adds the currency column on report if the currency differs from the company currency.")
     sortby = fields.Selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')],
         string='Sort by', required=True, default='sort_date')
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_report_general_ledger_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.multi
     def onchange_fiscalyear(self, fiscalyear=False):

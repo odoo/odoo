@@ -11,7 +11,7 @@ class account_partner_balance(models.TransientModel):
 
     display_partner = fields.Selection([('non-zero_balance', 'Display partners with balance is not equal to 0'), ('all', 'Display all partners')],
         default='non-zero_balance' ,string='Display Partners')
-    journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
+    journal_ids = fields.Many2many('account.journal', 'account_partner_balance_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
     @api.multi
     def _print_report(self, data):
