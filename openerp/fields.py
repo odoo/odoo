@@ -248,7 +248,7 @@ class Field(object):
 
     automatic = False           # whether the field is automatically created ("magic" field)
     inherited = False           # whether the field is inherited (_inherits)
-    column = None               # the column interfaced by the field
+    column = None               # the column corresponding to the field
     setup_done = False          # whether the field has been set up
 
     name = None                 # name of the field
@@ -313,6 +313,10 @@ class Field(object):
         if attrs.get('related'):
             # by default, related fields are not stored
             attrs['store'] = attrs.get('store', False)
+
+        # fix for function fields overridden by regular columns
+        if not isinstance(attrs.get('column'), (NoneType, fields.function)):
+            attrs.pop('store', None)
 
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
@@ -443,7 +447,7 @@ class Field(object):
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         self.inverse = self._inverse_related
-        if field._description_searchable(env):
+        if field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
@@ -575,30 +579,7 @@ class Field(object):
         return desc
 
     # properties used by get_description()
-
-    def _description_store(self, env):
-        if self.store:
-            # if the corresponding column is a function field, check the column
-            column = env[self.model_name]._columns.get(self.name)
-            return bool(getattr(column, 'store', True))
-        return False
-
-    def _description_searchable(self, env):
-        if self.store:
-            column = env[self.model_name]._columns.get(self.name)
-            return bool(getattr(column, 'store', True)) or \
-                   bool(getattr(column, '_fnct_search', False))
-        return bool(self.search)
-
-    def _description_sortable(self, env):
-        if self.store:
-            column = env[self.model_name]._columns.get(self.name)
-            return bool(getattr(column, 'store', True))
-        if self.inherited:
-            # self is sortable if the inherited field is itself sortable
-            return self.related_field._description_sortable(env)
-        return False
-
+    _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
@@ -609,6 +590,14 @@ class Field(object):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
+
+    @property
+    def _description_searchable(self):
+        return bool(self.store or self.search or (self.column and self.column._fnct_search))
+
+    @property
+    def _description_sortable(self):
+        return self.store or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -631,7 +620,7 @@ class Field(object):
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
-        assert self.store
+        assert self.store or self.column
 
         # determine column parameters
         _logger.debug("Create fields._column for Field %s", self)
@@ -645,13 +634,15 @@ class Field(object):
             # company-dependent fields are mapped to former property fields
             args['type'] = self.type
             args['relation'] = self.comodel_name
-            return fields.property(**args)
-
-        if self.column:
+            self.column = fields.property(**args)
+        elif self.column:
             # let the column provide a valid column for the given parameters
-            return self.column.new(**args)
+            self.column = self.column.new(**args)
+        else:
+            # create a fresh new column of the right type
+            self.column = getattr(fields, self.type)(**args)
 
-        return getattr(fields, self.type)(**args)
+        return self.column
 
     # properties used by to_column() to create a column instance
     _column_copy = property(attrgetter('copy'))
@@ -821,8 +812,8 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.store and not (self.depends and env.in_draft):
-            # this is a stored field
+        if self.column and not (self.depends and env.in_draft):
+            # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
@@ -979,9 +970,8 @@ class Float(Field):
         if self.digits:
             assert isinstance(self.digits, (tuple, list)) and len(self.digits) >= 2, \
                 "Float field %s with digits %r, expecting (total, decimal)" % (self, self.digits)
-        if self.store:
-            column = env[self.model_name]._columns[self.name]
-            column.digits_change(env.cr)
+        if self.column:
+            self.column.digits_change(env.cr)
 
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
@@ -1692,11 +1682,10 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if self.store and not self.relation:
-            model = env[self.model_name]
-            column = model._columns[self.name]
-            if not isinstance(column, fields.function):
-                self.relation, self.column1, self.column2 = column._sql_names(model)
+        if not self.relation:
+            if isinstance(self.column, fields.many2many):
+                self.relation, self.column1, self.column2 = \
+                    self.column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
@@ -1725,7 +1714,8 @@ class Id(Field):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
-        return fields.integer('ID')
+        self.column = fields.integer('ID')
+        return self.column
 
     def __get__(self, record, owner):
         if record is None:
