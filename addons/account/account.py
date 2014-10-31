@@ -961,6 +961,8 @@ class account_fiscalyear(osv.osv):
         return True
 
     def restart_sequences(self, cr, uid, ids, journal_ids, context=None):
+        seq_obj = self.pool.get('ir.sequence')
+        seq_fy_obj = self.pool.get('account.sequence.fiscalyear')
         for fy in self.browse(cr, uid, ids, context=context):
             for journal in self.pool.get('account.journal').browse(cr, uid, journal_ids, context=context):
                 sequences = journal.refund_sequence and [journal.sequence_id.id, journal.refund_sequence_id.id] or [journal.sequence_id.id]
@@ -968,15 +970,15 @@ class account_fiscalyear(osv.osv):
                     updates = {
                         'name': journal.name + ' ' + fy.name,
                         'fiscal_ids': [],
-                        'prefix': str(self.pool.get('ir.sequence').browse(cr, uid, sequence).prefix) + '/' + str(fy.code) + '/',
+                        'prefix': str(seq_obj.browse(cr, uid, sequence).prefix) + '/' + str(fy.code) + '/',
                         }
-                    seq = self.pool.get('ir.sequence').copy(cr, uid, sequence, updates)
+                    seq = seq_obj.copy(cr, uid, sequence, updates)
                     seq_vals = {
                         'sequence_id': seq,
                         'sequence_main_id': sequence,
                         'fiscalyear_id': fy.id,
                     }
-                    self.pool.get('account.sequence.fiscalyear').create(cr, uid, seq_vals, context=context)
+                    seq_fy_obj.create(cr, uid, seq_vals, context=context)
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
         res = self.finds(cr, uid, dt, exception, context=context)
