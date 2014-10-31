@@ -33,11 +33,15 @@
         <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">To Do</field>
+            <field name="legend_blocked">Not validated by the management team.</field>
+            <field name="legend_priority">Use the priority for tasks related to gold customers</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_stage_1" model="project.task.type">
             <field name="sequence">10</field>
             <field name="name">In Progress</field>
+            <field name="legend_blocked">Need functional or technical help</field>
+            <field name="legend_done">Buzz or set as done</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_stage_2" model="project.task.type">

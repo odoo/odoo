@@ -58,7 +58,10 @@
                             <field name="name" class="oe_inline"/>
                         </h1>
                         <div class="col-xs-1 text-right">
-                            <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                            <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"
+                                options='{
+                                "states_legend_field": "stage_id",
+                                "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </div>
                     </div>
                     <label for="categ_ids" class="oe_edit_only"/>
@@ -191,13 +194,12 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="stage_id"/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"Description": "description", "Use of stars": "legend_priority"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
-                    <field name="kanban_state"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-tooltip">
@@ -225,7 +227,8 @@
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="kanban_state" widget="kanban_state_selection"
+                                                options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                                             <field name="priority" widget="priority"/>
                                         </div>
                                     </div>
@@ -301,14 +304,16 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
-                    <field name="use_issues" class="oe_inline"
-                            on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                    <label for="use_issues"/>
+                    <div>
+                        <field name="use_issues" class="oe_inline"
+                                on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
+                        <label for="use_issues" class="oe_inline"/> labelled as <field name="label_issues" class="oe_inline"/>
+                    </div>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
                     <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', False)]}"
                         name="%(act_project_project_2_project_issue_all)d" icon="fa-bug">
-                        <field string="Issues" name="issue_count" widget="statinfo"/>
+                        <field string="Issues" name="issue_count" widget="statinfo" options="{'label_field': 'label_issues'}"/>
                     </button>
                 </xpath>
                 <xpath expr='//page[@name="project_stages"]' position="attributes">
@@ -335,7 +340,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
                     <a t-if="record.use_issues.raw_value" style="margin-right: -30px" class="pull-right"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <t t-raw="record.issue_ids.raw_value.length"/> Issues
+                        <t t-raw="record.issue_ids.raw_value.length"/> <field name="label_issues"/>
                         <field name="monthly_issues" widget="sparkline_bar" options="{'delayIn': '1000'}">
                             Closed Issues
                         </field>
