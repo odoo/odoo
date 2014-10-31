@@ -1131,3 +1131,17 @@ class account_move_line(models.Model):
             if journal.entry_posted and tmp:
                 move.with_context(context).button_validate()
         return result
+
+    @api.model
+    def list_periods(self):
+        periods = self.env['account.period'].search([])
+        return periods.name_get()
+
+    @api.model
+    def list_journals(self):
+        ng = dict(self.env['account.journal'].name_search('',[]))
+        ids = ng.keys()
+        result = []
+        for journal in self.env['account.journal'].browse(ids):
+            result.append((journal.id, ng[journal.id], journal.type, bool(journal.currency), bool(journal.analytic_journal_id)))
+        return result
