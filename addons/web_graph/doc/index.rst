@@ -103,7 +103,7 @@ The order is important: for example if two fields are grouped by row, then the f
 Date/datetime
 -------------
 
-Dates and datetimes are always a little tricky.  There is a special syntax for grouping them by intervals.
+Dates and datetimes are always a little tricky.  There is a special syntax for grouping them by intervals.  Most of the time, the interval can be specified as a suffix:
 
 * field_date:day, 
 * field_date:week, 
@@ -115,12 +115,17 @@ For example,
 
 .. code-block:: xml
 
+        <filter string="Week" context="{'group_by':'date_followup:week'}" help="Week"/>
+
+But to describe a graph view in xml, this would fail the xml validation ("date_followup:week" is not a valid field).  In that case, the graph view can be described with an "interval" attribute.  For example, 
+
+.. code-block:: xml
+
         <graph string="Leads Analysis" type="pivot" stacked="True">
-            <field name="date_deadline:week" type="row"/>
+            <field name="date_deadline" interval="week" type="row"/>
             <field name="stage_id" type="col"/>
             <field name="planned_revenue" type="measure"/>
         </graph>
-
 
 Example:
 --------
