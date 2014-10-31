@@ -139,6 +139,10 @@
         <field name="model">report.stock.inventory</field>
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
+                <filter string="Available" name="available" help="Products with Available Quantity greater than zero" icon="terp-accessories-archiver" domain="[('product_qty','&gt;',0.0)]"/>
+                <filter string="Out of Stock" name="unavailable" help="Products with Available Quantity equal to zero" icon="terp-dialog-close" domain="[('product_qty','=',0.0)]"/>
+                <filter string="Negative Stock" name="negative_stock" icon="terp-emblem-important" help="Products with Available Quantity lower than zero" domain="[('product_qty','&lt;',0.0)]"/>
+                <separator orientation="vertical"/>
                 <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
                     help="Analysis of current inventory (only moves that have already been processed)"/>
                 <filter string="Future" icon="terp-stock" domain="[('state','in',('assigned','done','waiting','confirmed'))]"
@@ -179,8 +183,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  eval="False"/>
-        <field name="context">{'contact_display': 'partner', 'search_default_real':1,
-'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'contact_display': 'partner', 'search_default_real':1, 'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1, 'search_default_group_product':1, 'search_default_available':1, 'group_by':[], 'group_by_no_leaf':1}</field>
         <field name="help">Inventory Analysis allows you to easily check and analyse your company stock levels. Sort and group by selection criteria in order to better analyse and manage your company  activities.</field>
     </record>
     <menuitem action="action_stock_inventory_report"
