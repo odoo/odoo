@@ -129,7 +129,7 @@ class hr_applicant(osv.Model):
             company_id = department.company_id.id if department and department.company_id else False
         if not company_id:
             company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
-        return company_id            
+        return company_id
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
@@ -234,6 +234,7 @@ class hr_applicant(osv.Model):
         'emp_id': fields.many2one('hr.employee', string='Employee', track_visibility='onchange', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
+        'employee_name': fields.related('emp_id', 'name', type='char', string='Employee Name'),
     }
 
     _defaults = {
@@ -250,6 +251,14 @@ class hr_applicant(osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
+
+    def action_get_created_employee(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)):
+            ids = ids and ids[0] or False
+        applicant = self.browse(cr, uid, ids, context=context)
+        action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'hr', 'open_view_employee_list', context=context)
+        action['res_id'] = applicant and applicant.emp_id.id or False
+        return action
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
