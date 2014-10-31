@@ -705,7 +705,6 @@
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" placeholder="A custom receipt header footage"/>
                         </group>
-                        <!--<group string="Barcode Nomenclature" col="4" groups='pos_barcodes.group_barcode_nomenclature'>-->
                         <group string="Barcode Nomenclature" col="4">
                             <field name="barcode_nomenclature_id" />
                         </group>
@@ -1002,8 +1001,7 @@
 
         <!-- Barcode Nomenclatures -->
         <menuitem parent="menu_point_config_product" action="pos_barcodes.action_barcode_nomenclature_form" id="menu_pos_barcode_nomenclature_all"
-            sequence="30"/> <!--groups="pos_barcodes.group_barcode_nomenclature"/>-->
-
+            sequence="30"/>
     </data>
 </openerp>
 

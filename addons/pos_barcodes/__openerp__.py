@@ -43,7 +43,6 @@ This module unlocks several advanced barcode features for the point of sale:
     'data': [
         'data/barcodes_data.xml',
         'barcodes_view.xml',
-        #'security/barcodes_security.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
