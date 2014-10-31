@@ -498,7 +498,7 @@ class project(osv.Model):
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
-        'issue_ids': fields.one2many('project.issue', 'project_id',
+        'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                      domain=[('date_closed', '!=', False)]),
         'monthly_issues': fields.function(_get_project_issue_data, type='char', readonly=True,
                                              string='Project Issue By Month')

@@ -5184,7 +5184,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
-        this.view_form.appendTo(this.$el.find(".oe_popup_form"));
+        this.view_form.appendTo(this.$(".oe_popup_form").show());
         this.view_form.on("form_view_loaded", self, function() {
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
             self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
@@ -5297,7 +5297,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
-        var $buttons = this.$('.oe-search-options');
+        var $buttons = this.$('.o-search-options');
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults, {$buttons: $buttons});
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
@@ -5309,7 +5309,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.appendTo(this.$(".oe_popup_search")).done(function() {
+        this.searchview.appendTo(this.$(".o-popup-search")).done(function() {
             self.searchview.toggle_visibility(true);
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
@@ -5324,7 +5324,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 e.cancel = true;
             });
             self.view_list.popup = self;
-            self.view_list.appendTo($(".oe_popup_list", self.$el)).then(function() {
+            self.view_list.appendTo(self.$(".oe_popup_list").show()).then(function() {
                 self.view_list.do_show();
             }).then(function() {
                 self.searchview.do_search();

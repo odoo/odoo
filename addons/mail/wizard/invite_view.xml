@@ -15,7 +15,7 @@
                                 placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
                         <field name="send_mail"/>
-                        <field name="message" attrs="{'invisible': [('send_mail','!=',True)]}"/>
+                        <field name="message" attrs="{'invisible': [('send_mail','!=',True)]}" class="test_message"/>
                     </group>
                     <footer>
                         <button string="Add Followers"

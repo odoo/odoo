@@ -1161,8 +1161,11 @@
 .openerp .oe_view_manager_inline > .oe-view-manager-header, .openerp .oe_view_manager_inlineview > .oe-view-manager-header {
   display: none;
 }
+.openerp .o-modal-header > div {
+  margin-left: 45%;
+}
 .openerp .oe_popup_form {
-  display: table;
+  display: none;
 }
 .openerp .oe_popup_form .oe_formview .oe_form_pager {
   display: none !important;
@@ -1404,6 +1407,7 @@
 .openerp .oe-search-options .searchview_extended_delete_prop {
   float: right;
   display: inline;
+  cursor: pointer;
 }
 .openerp .oe-search-options .searchview_extended_prop_value {
   width: -webkit-calc(100% - 20px);
@@ -1439,6 +1443,20 @@
   padding-left: 25px;
   padding-right: 10px;
   margin-bottom: 5px;
+}
+.openerp .oe-search-options .dropdown-menu li.oe-filter-condition .o-or-filter {
+  display: none;
+}
+.openerp .oe-search-options .dropdown-menu li.oe-filter-condition + li.oe-filter-condition {
+  margin-top: 10px;
+}
+.openerp .oe-search-options .dropdown-menu li.oe-filter-condition + li.oe-filter-condition .o-or-filter {
+  display: block;
+}
+.openerp .oe-search-options .dropdown-menu .o-or-filter {
+  position: absolute;
+  left: 5px;
+  top: 5px;
 }
 .openerp .oe-search-options a {
   display: inline-block;
@@ -3067,8 +3085,21 @@ body.oe_single_form .oe_single_form_container {
   font-size: 20px;
 }
 .modal .modal-body {
-  overflow-x: auto;
-  min-height: 200px;
+  overflow: auto;
+  padding: 0;
+}
+.modal .modal-body .oe_application {
+  width: 100%;
+}
+.modal .modal-body .oe_popup_list {
+  display: none;
+  min-height: 150px;
+}
+.modal .modal-body .oe-view-manager {
+  min-height: 150px;
+}
+.modal .modal-body .oe_form_sheetbg .oe_form_sheet {
+  padding: 0;
 }
 .modal .modal-footer {
   text-align: left;
@@ -3085,8 +3116,8 @@ body.oe_single_form .oe_single_form_container {
 
 @media (min-width: 768px) {
   .modal .modal-body {
-    max-height: -webkit-calc(100vh - 200px);
-    max-height: calc(100vh - 200px);
+    max-height: -webkit-calc(100vh - 170px);
+    max-height: calc(100vh - 170px);
   }
 }
 .ui-datepicker {

@@ -1231,7 +1231,7 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
     _columns = {
         'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
-        'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

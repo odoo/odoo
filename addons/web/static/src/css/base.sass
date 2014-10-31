@@ -1002,8 +1002,11 @@ $sheet-padding: 16px
 
         // }}}
     // FormPopup {{{
+    .o-modal-header
+        > div
+            margin-left: 45%
     .oe_popup_form 
-        display: table
+        display: none
         .oe_formview .oe_form_pager
             display: none !important
         // Customize label weight for popup wizard appear from another wizard according bootstrap3
@@ -1199,6 +1202,7 @@ $sheet-padding: 16px
         .searchview_extended_delete_prop
             float: right
             display: inline
+            cursor: pointer
         .searchview_extended_prop_value
             width: -webkit-calc(100% - 20px)
             width: calc(100% - 20px)
@@ -1227,6 +1231,16 @@ $sheet-padding: 16px
                 padding-left: 25px
                 padding-right: 10px
                 margin-bottom: 5px
+                .o-or-filter
+                    display: none
+            li.oe-filter-condition + li.oe-filter-condition
+                margin-top: 10px
+                .o-or-filter
+                    display: block
+            .o-or-filter
+                position: absolute
+                left: 5px
+                top: 5px
         a
             display: inline-block
 
@@ -2531,8 +2545,18 @@ body.oe_single_form
         height: 18px
         font-size: 20px
     .modal-body
-        overflow-x: auto
-        min-height: 200px
+        overflow: auto
+        padding: 0
+        .oe_application
+            width: 100%
+        .oe_popup_list
+            display: none
+            min-height: 150px
+        .oe-view-manager
+            min-height: 150px
+        .oe_form_sheetbg
+            .oe_form_sheet
+                padding: 0
     .modal-footer
         text-align: left
     .oe_button
@@ -2544,8 +2568,8 @@ body.oe_single_form
 
 @media (min-width: 768px)
     .modal .modal-body
-        max-height: -webkit-calc(100vh - 200px)
-        max-height: calc(100vh - 200px)
+        max-height: -webkit-calc(100vh - 170px)
+        max-height: calc(100vh - 170px)
 
 .ui-datepicker
     z-index: 1500 !important
