@@ -1248,7 +1248,7 @@ class stock_picking(osv.osv):
                 partial_data = partial_datas.get('move%s'%(move.id), {})
                 product_qty = partial_data.get('product_qty',0.0)
                 move_product_qty[move.id] = product_qty
-                product_uom = partial_data.get('product_uom',False)
+                product_uom = partial_data.get('product_uom', move.product_uom.id)
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id')
