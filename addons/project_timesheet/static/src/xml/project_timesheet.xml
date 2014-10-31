@@ -95,7 +95,7 @@
                 </div>
                 <div class="pt_mt_5">
                   <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
-                  <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Update Activity</button>
+                  <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Modify Activity</button>
                   or
                   <a class="pt_btn_cancel">Cancel</a>
                   <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
@@ -258,12 +258,12 @@
                                 <div class="col-md-4 col-xs-4 col-sm-4 pt_back">
                                     <span class="glyphicon glyphicon-chevron-left"></span><span class="pt_pl_3 pt_pointer">Back</span>
                                 </div>
-                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center" t-if="widget.get_pending_lines()">
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
                                     <span class="glyphicon glyphicon-flash"></span><span class="pt_pl_3 pt_pointer">Sync now</span>
-                                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
+                                    <span class="pt_pending_lines badge" t-if="widget.get_pending_lines()"><t t-esc="widget.get_pending_lines()"></t></span>
                                 </div>
-                                <div t-att-class="widget.get_pending_lines() and 'col-md-4 col-xs-4 col-sm-4 pt_reporting_duration' or 'col-md-8 col-xs-8 col-sm-8 pt_reporting_duration'">
-                                    <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span class="pt_pl_3 pt_pointer">Reporting</span></a>
+                                <div t-attf-class="col-md-4 col-xs-4 col-sm-4 pt_reporting_duration">
+                                    <a href="http://www.odoo.com" class="pull-right" target="_blank"><span class="glyphicon glyphicon-print"></span><span class="pt_pl_3 pt_pointer">Reporting</span></a>
                                 </div>
                             </div>
                         </div>
@@ -300,11 +300,11 @@
                 <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
                     <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3 pt_pointer">Stats</span>
                 </div>
-                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center" t-if="widget.get_pending_lines()">
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
                     <span class="glyphicon glyphicon-flash"></span><span class="pt_pl_3 pt_pointer">Sync now</span>
-                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
+                    <span class="pt_pending_lines badge" t-if="widget.get_pending_lines()"><t t-esc="widget.get_pending_lines()"></t></span>
                 </div>
-                <div t-att-class="widget.get_pending_lines() and 'col-md-4 col-xs-4 col-sm-4 pt_total_duration' or 'col-md-8 col-xs-8 col-sm-8 pt_total_duration'">
+                <div t-attf-class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
                     <span class="pull-right pt_total"></span>
                 </div>
             </div>

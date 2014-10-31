@@ -434,7 +434,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
             });
             this.$el.find(".pt_stat").on("click", function() {
-                self.project_timesheet_widget.screen_selector.set_current_screen("stat");
+                self.project_timesheet_widget.screen_selector.set_current_screen("stat", {}, {}, false, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
@@ -480,10 +480,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return this.project_timesheet_model.get_pending_records();
         },
         get_total: function() {
-            if(this.activity_list.get_total()) {
-                var duration = this.activity_list.get_total().split(":");
-                return _.str.sprintf("%sh %smin", duration[0], duration[1]);
-            }
+            var duration = this.activity_list.get_total().split(":");
+            return _.str.sprintf("%sh %smin", duration[0], duration[1]);
         },
         get_current_UTCDate: function() {
             var d = new Date();
@@ -917,18 +915,17 @@ function odoo_project_timesheet_screens(project_timesheet) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
+        },
+        show: function() {
+            var self = this;
+            this._super();
             this.$el.find(".pt_back").on("click", function() {
+                console.log("Insife backkkk ");
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
             });
-            this.$el.find(".pt_reporting_duration").on("click", function() {
-                
-            });
-        },
-        show: function() {
-            this._super();
             this.bar_chart = this.prepare_graph();
             this.graph_data = this.prepare_data();
             console.log("graph_data is ::: ", this.graph_data);
@@ -938,10 +935,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         hide: function() {
             this._super();
+            console.log("this.bar_chart is :: ", this.bar_chart);
             if (this.bar_chart) {
                 this.bar_chart.clearAll();
                 this.bar_chart.clearCanvas();
+                this.bar_chart = {};
                 this.$(".dhx_chart_legend").remove(); //Hack: forcefully remove legend also when graph is navigate is we are going to redraw whole graph again
+                console.log("Inside iffff ", this.bar_chart);
             }
         },
         prepare_graph: function() {
@@ -1029,11 +1029,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return week_wise_activities;
         },
         draw_chart: function(chart, graph_data) {
+            console.log("Inside draw_chart ::: ");
             var week_total = 0;
             var table_data = {};
             _.each(graph_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
-            this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], formatted_value[1]));
+            this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], (formatted_value[1] || 0)));
             var project_groups = _.groupBy(graph_data, function(record) {
                 return record.project_id[0];
             });
