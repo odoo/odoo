@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
@@ -39,16 +20,11 @@ class account_analytic_line(models.Model):
     amount_currency = fields.Float(related='move_id.amount_currency', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
+# Commented the code because 'company_id' field is not there and its comes from inherited model. Here field inheritance is not supported
+# company_id = fields.Many2one(default=lambda self: self.env['res.company']._company_default_get('account.analytic.line')) 
 #     _defaults = {
 #         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
 #     }
-
-    @api.multi
-    def _check_company(self):
-        for line in self:
-            if line.move_id and not line.account_id.company_id.id == line.move_id.account_id.company_id.id:
-                return False
-        return True
 
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
@@ -138,6 +114,3 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
