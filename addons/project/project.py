@@ -44,6 +44,18 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
+        'legend_priority': fields.text(
+            'Priority Management Explanation', translate=True,
+            help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
+        'legend_blocked': fields.char(
+            'Kanban Blocked Explanation', translate=True,
+            help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.'),
+        'legend_done': fields.char(
+            'Kanban Valid Explanation', translate=True,
+            help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.'),
+        'legend_normal': fields.char(
+            'Kanban Ongoing Explanation', translate=True,
+            help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -280,6 +292,7 @@ class project(osv.osv):
             help="Link this project to an analytic account if you need financial management on projects. "
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
+        'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
@@ -347,6 +360,7 @@ class project(osv.osv):
     _defaults = {
         'active': True,
         'type': 'contract',
+        'label_tasks': 'Tasks',
         'state': 'open',
         'sequence': 10,
         'type_ids': _get_type_common,
@@ -1230,7 +1244,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks', help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 

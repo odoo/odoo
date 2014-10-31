@@ -6233,7 +6233,12 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
             value: this.get("value") || 0,
         };
         if (! this.node.attrs.nolabel) {
-            options.text = this.string
+            if(this.options.label_field && this.view.datarecord[this.options.label_field]) {
+                options.text = this.view.datarecord[this.options.label_field];
+            }
+            else {
+                options.text = this.string;
+            }
         }
         this.$el.html(QWeb.render("StatInfo", options));
     },

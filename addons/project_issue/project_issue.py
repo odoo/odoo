@@ -548,8 +548,13 @@ class account_analytic_account(osv.Model):
 class project_project(osv.Model):
     _inherit = 'project.project'
 
+    _columns = {
+        'label_issues': fields.char('Use Issues as', help="Customize the issues label, for example to call them cases."),
+    }
+
     _defaults = {
-        'use_issues': True
+        'use_issues': True,
+        'label_issues': 'Issues',
     }
 
     def _check_create_write_values(self, cr, uid, vals, context=None):
