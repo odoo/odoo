@@ -10,7 +10,6 @@ class account_fiscal_position(models.Model):
     _description = 'Fiscal Position'
     _order = 'sequence'
 
-
     sequence = fields.Integer(string='Sequence')
     name = fields.Char(string='Fiscal Position', required=True)
     active = fields.Boolean(string='Active', default=True,
@@ -25,7 +24,6 @@ class account_fiscal_position(models.Model):
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")
-
 
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
@@ -109,12 +107,10 @@ class account_fiscal_position_tax(models.Model):
     _description = 'Taxes Fiscal Position'
     _rec_name = 'position_id'
 
-
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     tax_src_id = fields.Many2one('account.tax', string='Tax Source', required=True)
     tax_dest_id = fields.Many2one('account.tax', string='Replacement Tax')
-
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -135,7 +131,6 @@ class account_fiscal_position_account(models.Model):
         domain=[('type','<>','view'), ('deprecated', '=', False)], required=True)
     account_dest_id = fields.Many2one('account.account', string='Account Destination',
         domain=[('type','<>','view'), ('deprecated', '=', False)], required=True)
-
 
     _sql_constraints = [
         ('account_src_dest_uniq',
@@ -289,7 +284,6 @@ class res_partner(models.Model):
              'This can be achieved in 2 different ways: either the last unreconciled debit/credit '
              'entry of this partner was reconciled, either the user pressed the button '
              '"Nothing more to reconcile" during the manual reconciliation process.')
-
 
     @api.model
     def _commercial_fields(self):

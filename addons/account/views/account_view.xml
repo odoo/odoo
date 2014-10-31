@@ -1937,7 +1937,7 @@
                     <field name="complete_tax_set" invisible="1"/>
                     <group col="1">
                         <group attrs="{'invisible': [('only_one_chart_template','=',True)]}">
-                            <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
+                            <field name="chart_template_id" widget="selection" domain="[('visible','=', True)]"/>
                         </group>
                         <group>
                             <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
@@ -1945,7 +1945,7 @@
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
-                                <field name="sale_tax_rate" class="oe_inline" on_change="onchange_tax_rate(sale_tax_rate)"/> %%
+                                <field name="sale_tax_rate" class="oe_inline"/> %%
                             </div>
                             <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
                             <label for="purchase_tax_rate" string="Purchase Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>

@@ -2293,33 +2293,34 @@ class wizard_multi_charts_accounts(models.TransientModel):
         return result
 
     @api.multi
-    def onchange_tax_rate(self, rate=False):
-        return {'value': {'purchase_tax_rate': rate or False}}
+    @api.onchange('sale_tax_rate')
+    def onchange_tax_rate(self):
+        return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
 
     @api.multi
-    def onchange_chart_template_id(self, chart_template_id=False):
+    @api.onchange('chart_template_id')
+    def onchange_chart_template_id(self):
         res = {}
         tax_templ_obj = self.env['account.tax.template']
         res['value'] = {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}
-        if chart_template_id:
-            data = self.env['account.chart.template'].browse(chart_template_id)
-            currency_id = data.currency_id and data.currency_id.id or self.env.user.company_id.currency_id.id
-            res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
-            if data.complete_tax_set:
+        if self.chart_template_id:
+            currency_id = self.chart_template_id.currency_id and self.chart_template_id.currency_id.id or self.env.user.company_id.currency_id.id
+            res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set, 'currency_id': currency_id})
+            if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                chart_ids = self._get_chart_parent_ids(data)
-                base_tax_domain = [("chart_template_id", "in", chart_ids), ('parent_id', '=', False)]
+                chart_ids = self.chart_template_id._get_chart_parent_ids()
+                base_tax_domain = [('chart_template_id', 'in', chart_ids), ('parent_id', '=', False)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale', 'all'))]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('purchase', 'all'))]
-                sale_tax_ids = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc")
-                purchase_tax_ids = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc")
-                res['value'].update({'sale_tax': sale_tax_ids.ids and sale_tax_ids.ids[0] or False,
-                                     'purchase_tax': purchase_tax_ids.ids and purchase_tax_ids.ids[0] or False})
+                sale_taxes = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
+                purchase_taxes = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
+                res['value']['sale_tax'] = sale_taxes.ids and sale_taxes.ids[0] or False
+                res['value']['purchase_tax'] = purchase_taxes.ids and purchase_taxes.ids[0] or False
                 res.setdefault('domain', {})
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
-            if data.code_digits:
-               res['value'].update({'code_digits': data.code_digits})
+            if self.chart_template_id.code_digits:
+               res['value']['code_digits'] = self.chart_template_id.code_digits
         return res
 
     @api.model

@@ -18,6 +18,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 _logger = logging.getLogger(__name__)
 
+
 class account_installer(models.TransientModel):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
@@ -102,9 +103,10 @@ class account_installer(models.TransientModel):
         return res
 
     @api.multi
-    def on_change_start_date(self, start_date=False):
-        if start_date:
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    @api.onchange('date_start')
+    def on_change_start_date(self):
+        if self.date_start:
+            start_date = datetime.datetime.strptime(self.date_start, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}

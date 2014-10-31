@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api
 
+
 class ir_sequence_fiscalyear(models.Model):
     _name = 'account.sequence.fiscalyear'
     _rec_name = "sequence_main_id"
