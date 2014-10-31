@@ -13,9 +13,7 @@
         <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
         <link href="/website/static/src/css/website.css" rel="stylesheet"/>
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <style type="text/css">
-            <t t-call="report.style"/>
-        </style>
+        <t t-call="report.style"/>
     </xpath>
     <!-- Remove conflicting style -->
     <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
@@ -29,18 +27,20 @@
 </template>
 
 <template id="style">
-    body {
-        color: #000 !important;
-    }
-    .border-black td {
-        border-top: 1px solid black !important;
-    }
-    .table-condensed > thead > tr > th {
-        border-bottom: 1px solid black !important;
-    }
-    .zero_min_height {
-        min-height: 0px !important;
-    }
+    <style type="text/css">
+        body {
+            color: #000 !important;
+        }
+        .border-black td {
+            border-top: 1px solid black !important;
+        }
+        .table-condensed > thead > tr > th {
+            border-bottom: 1px solid black !important;
+        }
+        .zero_min_height {
+            min-height: 0px !important;
+        }
+    </style>
 </template>
 
 <template id="external_layout">
