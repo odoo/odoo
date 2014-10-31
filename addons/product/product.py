@@ -286,7 +286,7 @@ class product_category(osv.osv):
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'sequence, name'
-    _order = 'parent_left'
+    _order = 'sequence asc, parent_left'
 
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
@@ -422,7 +422,7 @@ class product_template(osv.osv):
     _name = "product.template"
     _inherit = ['mail.thread']
     _description = "Product Template"
-    _order = "name"
+    _order = "categ_id, name"
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)

@@ -103,7 +103,7 @@ class product_public_category(osv.osv):
 
 class product_template(osv.Model):
     _inherit = ["product.template", "website.seo.metadata"]
-    _order = 'website_published desc, website_sequence desc, name'
+    _order = 'website_published desc, website_sequence asc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
 
