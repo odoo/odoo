@@ -22,6 +22,9 @@ function odoo_project_timesheet_db(project_timesheet) {
             //To save data in localstorage
             localStorage[name] = JSON.stringify(data);
         },
+        clear: function(name) {
+            localStorage.removeItem(name);
+        },
         get_activities: function() {
             return this.load("activities", []);
         },
@@ -45,9 +48,10 @@ function odoo_project_timesheet_db(project_timesheet) {
             var activities = this.load("activities", []);
             // if the order was already stored, we overwrite its data
             for(var i = 0, len = activities.length; i < len; i++) {
-                if(activities[i].id === activity_id){
-                    activities[i] = activity;
-                    this.save('activities',activities);
+                if(activities[i].id === activity_id) {
+                    if (!activities[i].command)
+                        activities[i] = activity;
+                        this.save('activities',activities);
                     return activity_id;
                 }
             }

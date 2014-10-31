@@ -416,7 +416,7 @@ class hr_analytic_timesheet(osv.Model):
 
         def replace_virtual_id(field, virtual_id, real_id):
             for record in datas:
-                if record.get(field) and record[field][0] == virtual_id:
+                if record.get(field) and isinstance(record.get(field), list) and record[field][0] == virtual_id:
                     record[field][0] = real_id
 
         for record in datas:
@@ -437,9 +437,10 @@ class hr_analytic_timesheet(osv.Model):
                     missing_project_id.append(project_id)
                     continue
                 if record['task_id']:
+                    print "\n\nrecord is >>> ", record
                     if pattern.match(str(record['task_id'][0])):
                         project_id = record['project_id'][0]
-                        task_id = task_obj.create(cr, uid, {'name': record['task_id'][1]}, context=context)
+                        task_id = task_obj.create(cr, uid, {'name': record['task_id'][1], 'project_id': project_id}, context=context)
                         replace_virtual_id('task_id', record['task_id'][0], task_id)
                     else:
                         task_id = record['task_id'][0]
@@ -504,6 +505,8 @@ class hr_analytic_timesheet(osv.Model):
                     #TO Implement, logic of Link
                     pass
             except Exception, e:
+                print "\n\neeeeeeee is >>> ", e
+                #raise e
                 fail_records.append(record)
                 cr.execute('ROLLBACK TO SAVEPOINT sync_record')
             finally:

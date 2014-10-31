@@ -115,16 +115,21 @@ function odoo_project_timesheet_models(project_timesheet) {
             }
             //If we have stored session then replace project_timesheet.session with new Session object with stored session origin
             if (!_.isEmpty(project_timesheet.session)) {
-                callback_function = function (){
+                callback_function = function () {
                     //Important Note: check_session_id may replace session_id each time when server_origin is different then origin,
                     //so we will update the localstorage session
                     self.project_timesheet_db.save("session", project_timesheet.session);
                     console.log("Here we go, you can do rpc, we having session ID.");
                 };
-                this.def = project_timesheet.session.check_session_id();
+                //this.def = project_timesheet.session.check_session_id();
+                this.def = project_timesheet.session.session_reload();
             } else {
-                callback_function = function (){
+                callback_function = function () {
+                    //TODO: To check we should clear activitie here or not ?
+                    //Check Scenario: Login with db1, open project timesheet interface, do some entries, logout from that database from backend view and login with other db, still old db localstorage will be there
+                    //self.project_timesheet_db.clear('activities');
                     project_timesheet.session = session;
+                    self.project_timesheet_db.save("session", project_timesheet.session);
                 };
                 //If we do not have previous stored session then try to check whether we having session with window origin (say for example session with localhost:9000)
                 console.log("Inside elseeee, we do not have old session stored with origin in db");
@@ -141,12 +146,12 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.def.done(function() {
                 callback_function();
                 self.load_server_data().done(function() {
-                    self.ready.resolve();
                     self.load_stored_data();
+                    self.ready.resolve();
                 });
             }).fail(function() {
-                self.ready.reject();
                 self.load_stored_data();
+                self.ready.reject();
             });
         },
         //TODO: Change name, save_activity or set_activity, this method is used in different context, like it is also used for set delete activity(rewrite)

@@ -427,6 +427,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 $row.prependTo(this.$el.find(".activity_row:first").parent());
             }
 
+            this.is_available_timer_activity();
             this.$el.find(".pt_timer_button button").off("click").on("click", this.on_timer);
             //When Cancel is clicked it should move user to Activity List screen
             this.$el.find(".pt_add_activity").on("click", function() {
@@ -451,6 +452,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if (this.task_m2o) {
                 this.task_m2o.destroy();
             }
+            if (this.intervalTimer) { clearInterval(this.intervalTimer);}
             this._super();
         },
         pad_table_to: function(count) {
@@ -491,6 +493,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var difference = moment.duration(moment(new_date).diff(moment(old_date))).asHours();
             console.log("difference is ::: ", difference);
             return parseFloat(difference.toFixed(2));
+        },
+        is_available_timer_activity: function() {
+            console.log("Inside is_available_timer_activity ::: ");
         },
         //TODO: Save timer Current time when Start Timer is clicked in localstoprage as a separate entry
         //When Activity list screen is displayed at that time read localstorage entry time and set timer value
@@ -659,7 +664,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     activities_collection.remove(activity_model);
                     this.project_timesheet_db.remove_activity(project_activity_data);
                 } else {
-                    task_activity.command = 2;
+                    activity_model.command = 2;
                     project_activity_data.command = 2;
                     this.project_timesheet_db.add_activity(project_activity_data);
                 }
@@ -670,8 +675,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             $form_data.val('');
-            this.$el.find(".pt_activity_body h2").removeClass("o_hidden");
-            this.$el.find(".pt_btn_add_activity").removeClass("o_hidden");
+            this.$el.find(".pt_activity_body h4,.pt_btn_add_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_remove_activity").addClass("o_hidden");
             if(!this.$el.find(".pt_btn_edit_activity").hasClass("o_hidden")) {
                 this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
@@ -754,10 +758,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.mode = "edit";
             this.current_id = screen_data['id'];
             this.$el.find(".pt_activity_body table").remove();
-            this.$el.find(".pt_activity_body h2").addClass("o_hidden");
+            this.$el.find(".pt_activity_body h4").addClass("o_hidden");
             self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
-            self.$el.find(".pt_btn_edit_activity").toggleClass("o_hidden");
-            self.$el.find(".pt_btn_add_activity").toggleClass("o_hidden");
+            self.$el.find(".pt_btn_edit_activity,.pt_btn_add_activity").toggleClass("o_hidden");
             this.task_m2o.set({"effective_readonly": true});
             this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
@@ -899,10 +902,22 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_reporting_duration").on("click", function() {
                 
             });
+        },
+        show: function() {
+            this._super();
             this.bar_chart = this.prepare_graph();
-            this.graph_data = this.prepare_data(); //This should be in show method, do not prepare data in start
+            this.graph_data = this.prepare_data();
+            console.log("graph_data is ::: ", this.graph_data);
             if (this.graph_data.length && this.graph_data[this.week_index].length) {
                 this.draw_chart(this.bar_chart, this.graph_data[this.week_index]);
+            }
+        },
+        hide: function() {
+            this._super();
+            if (this.bar_chart) {
+                this.bar_chart.clearAll();
+                this.bar_chart.clearCanvas();
+                this.$(".dhx_chart_legend").remove(); //Hack: forcefully remove legend also when graph is navigate is we are going to redraw whole graph again
             }
         },
         prepare_graph: function() {
@@ -910,13 +925,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var bar_chart =  new dhtmlXChart({
                 view: "stackedBar",
                 container: "pt_chart",
-                value: "#hours#",
-                label: "#hours#"+"h",
+                value: "#unit_amount#",
+                label: "#unit_amount#"+"h",
                 color: "#a24689",
                 width: 25,
                 //gradient:"falling",
                 tooltip: {
-                    template:"#hours#"+"h", 
+                    template:"#unit_amount#"+"h", 
                 },
                 xAxis: {
                     title: "Days",
