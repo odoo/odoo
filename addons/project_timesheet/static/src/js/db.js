@@ -107,7 +107,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             });
             this.save("timer_activity", current_timer_activity);
         },
-        flush_data: function() {
+        flush_activities: function() {
             this.save('activities',[]);
         },
         initialize_unique_id: function() {

@@ -9,13 +9,13 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.project_id = options.project_id || null;
             this.name = options.name || null; //Actually description field
             this.unit_amount = options.unit_amount || null;
-            this.command = options.command || 0;
+            this.command = options.command;
         },
         export_as_JSON: function() {
             return {
                 id: this.id,
-                date: this.date,
-                name: this.name,
+                date: this.date || project_timesheet.datetime_to_str(new moment()._d),
+                name: this.name || '/',
                 unit_amount: this.unit_amount,
                 command: this.command,
                 task_id: this.task_id,
@@ -274,26 +274,27 @@ function odoo_project_timesheet_models(project_timesheet) {
             project_timesheet.blockUI();
             var activity_collection = this.get('activities');
             var activity_models = activity_collection.models;
-            console.log("activity_models are ::: ", activity_models);
             for (var i = 0; i < activity_models.length; i++) {
                 records.push(activity_models[i].export_as_JSON());
             }
-            self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records]).then(function(result) {
+            var momObj = new moment();
+            var end_date = project_timesheet.datetime_to_str(momObj._d);
+            var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
+            var load_data_domain = [["date", ">=", start_date], ["date", "<=", end_date]];
+            self.defs.push(new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("sync_data", [records, load_data_domain]).then(function(result) {
                 console.log("After Sync data ::: ", result);
                 self.sync_complete(result);
             }).always(function() {
                 project_timesheet.unblockUI();
             }));
             return $.when.apply($, this.defs).then(function(){
-                //Load latest data of 30 days
-                return self.load_server_data();
+                self.load_stored_data();
             });
         },
-        //TO REMOVE: Server sync_data will return latest 30 days record as well as fail record
         sync_complete: function(sync_result) {
-            //TO Implement: this method will flush localstorage data once it has been sync
-            //this.project_timesheet_db.flush_data();
-            //this.project_timesheet_db.add_activities(sync_result.activities);
+            //This method will flush localstorage data once it has been sync
+            this.project_timesheet_db.flush_activities();
+            this.project_timesheet_db.add_activities(sync_result.activities);
         },
         get_pending_records: function() {
            return this.project_timesheet_db.get_pending_records();

@@ -482,7 +482,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         get_total: function() {
             if(this.activity_list.get_total()) {
                 var duration = this.activity_list.get_total().split(":");
-                return _.str.sprintf("%sh %smin", duration[0], duration[1])
+                return _.str.sprintf("%sh %smin", duration[0], duration[1]);
             }
         },
         get_current_UTCDate: function() {
@@ -491,11 +491,35 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         get_date_diff: function(new_date, old_date) {
             var difference = moment.duration(moment(new_date).diff(moment(old_date))).asHours();
-            console.log("difference is ::: ", difference);
             return parseFloat(difference.toFixed(2));
         },
         is_available_timer_activity: function() {
-            console.log("Inside is_available_timer_activity ::: ");
+            var time_activity = this.project_timesheet_db.get_current_timer_activity();
+            console.log("Inside is_available_timer_activity ::: ", time_activity);
+            if (time_activity && time_activity['date']) {
+                this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
+                var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['date'])));
+                console.log("difference is ::: ", durationObj, durationObj.asHours(), durationObj.asMinutes(), durationObj.asSeconds());
+                var hours = durationObj.asHours().toString().split('.')[0],
+                    minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
+                    seconds = (durationObj.asSeconds() % 60).toString().split(".")[0];
+                console.log("Hours, Minute and Seconds are ::: ", hours, minutes, seconds);
+                this.$el.find(".pt_duration span.hours").text(hours);
+                this.$el.find(".pt_duration span.minutes").text(minutes);
+                this.$el.find(".pt_duration span.seconds").text(seconds);
+                this.start_interval();
+                this.initialize_timer();
+                if (time_activity.project_id) {
+                    var field_val = time_activity['project_id'];
+                    this.project_m2o.set({display_string: field_val[1], value: field_val[0]});
+                    this.project_m2o.display_string(field_val);
+                }
+                if (time_activity.task_id) {
+                    var field_val = time_activity['task_id'];
+                    this.task_m2o.set({display_string: field_val[1], value: field_val[0]});
+                    this.task_m2o.display_string(field_val);
+                }
+            }
         },
         //TODO: Save timer Current time when Start Timer is clicked in localstoprage as a separate entry
         //When Activity list screen is displayed at that time read localstorage entry time and set timer value
@@ -570,7 +594,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     el_minute.text(_.str.sprintf("%02d", minute));
                     var el_second = $(this).find("span.seconds");
                     var seconds = parseInt(el_second.text()) + 1;
-                    if(seconds > 60) {
+                    if(seconds >= 60) {
                         el_minute.text(_.str.sprintf("%02d", parseInt(el_minute.text()) + 1));
                         seconds = 0;
                     }
@@ -857,7 +881,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_sync: function() {
             var self = this;
-            this.project_timesheet_model.save_to_server().then(function() {
+            this.project_timesheet_model.save_to_server().then(function() { //May be user always
                 console.log("Inside save to server completed ::: ");
                 //TODO: Show dialog sync related detail
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);

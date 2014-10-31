@@ -391,12 +391,13 @@ class hr_analytic_timesheet(osv.Model):
         print "\n\project_analytic_lines are ::: ", project_analytic_lines
         return project_analytic_lines
 
-    def sync_data(self, cr, uid, datas, context=None):
+    def sync_data(self, cr, uid, datas, load_data_domain, context=None):
         """
         This method synchronized the data given by Project Timesheet UI,
         the method will call sync_project and sync_project will in turn call sync_task and sync_task in turn will call sync_activities
         """
         print "\n\ndatas are inside hr_analytic_timesheet ::: ", datas
+        result = {}
         if not context:
             context = {}
         user_related_details = {}
@@ -437,7 +438,7 @@ class hr_analytic_timesheet(osv.Model):
                     missing_project_id.append(project_id)
                     continue
                 if record['task_id']:
-                    print "\n\nrecord is >>> ", record
+                    #print "\n\nrecord is >>> ", record
                     if pattern.match(str(record['task_id'][0])):
                         project_id = record['project_id'][0]
                         task_id = task_obj.create(cr, uid, {'name': record['task_id'][1], 'project_id': project_id}, context=context)
@@ -475,11 +476,12 @@ class hr_analytic_timesheet(osv.Model):
                     vals_line['amount'] = 0.0
                     vals_line['product_uom_id'] = user_related_details['product_uom_id']
                 else:
+                    print "\n\nNo account_id found, adding it into failed record"
                     fail_records.append(current_record)
                     continue
     
                 record.pop('project_id')
-                if record['command'] == 0:
+                if record.get('command') == 0:
                     context = dict(context, recompute=True)
                     timeline_id = self.create(cr, uid, vals_line, context=context) #Handle fail, if fail add into failed record
                     # Compute based on pricetype
@@ -488,32 +490,35 @@ class hr_analytic_timesheet(osv.Model):
                     if amount_unit and 'amount' in amount_unit.get('value',{}):
                         updv = { 'amount': amount_unit['value']['amount'] }
                         self.write(cr, uid, [timeline_id], updv, context=context)
-                elif record['command'] == 1:
-                    id = reocrd.id
+                elif record.get('command') == 1:
+                    id = record.get('id')
                     record.pop('id')
+                    line = self.browse(cr, uid, id, context=context)
                     # Compute based on pricetype
-                    amount_unit = self.on_change_unit_amount(cr, uid, line_id.id,
-                        prod_id=prod_id, company_id=False,
+                    amount_unit = self.on_change_unit_amount(cr, uid, id,
+                        prod_id=vals_line.get('product_id', line.product_id.id), company_id=False,
                         unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
     
                     if amount_unit and 'amount' in amount_unit.get('value',{}):
                         vals_line['amount'] = amount_unit['value']['amount']
                     self.write(cr, uid, id, vals_line, context=context) #Handle fail and MissingError, if fail add into failed record
-                elif record['command'] == 2:
-                    self.delete(cr, uid, record.id, context=context) #Handle fail and MissingError, if fail add into failed record
-                elif record['command'] == 4:
+                elif record.get('command') == 2:
+                    self.delete(cr, uid, record.get('id'), context=context) #Handle fail and MissingError, if fail add into failed record
+                elif record.get('command') == 4:
                     #TO Implement, logic of Link
                     pass
             except Exception, e:
                 print "\n\neeeeeeee is >>> ", e
                 #raise e
-                fail_records.append(record)
+                fail_records.append(current_record)
                 cr.execute('ROLLBACK TO SAVEPOINT sync_record')
             finally:
                 cr.execute('RELEASE SAVEPOINT sync_record')
 
         print "\n\nfail_records is ::: ", fail_records
-        result = self.load_data(cr, uid, context=context)
+        res = self.load_data(cr, uid, load_data_domain, context=context)
+        res += fail_records
+        result['activities'] = res
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
