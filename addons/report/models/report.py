@@ -215,17 +215,17 @@ class Report(osv.Model):
             for node in root.xpath("//html/head/style"):
                 css += node.text
 
-            for node in root.xpath("//div[@class='header']"):
+            for node in root.xpath("//div[contains(@class, 'header')]"):
                 body = lxml.html.tostring(node)
                 header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
-            for node in root.xpath("//div[@class='footer']"):
+            for node in root.xpath("//div[contains(@class, 'footer')]"):
                 body = lxml.html.tostring(node)
                 footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
-            for node in root.xpath("//div[@class='page']"):
+            for node in root.xpath("//div[contains(@class, 'page')]"):
                 # Previously, we marked some reports to be saved in attachment via their ids, so we
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
