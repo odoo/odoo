@@ -828,9 +828,9 @@ class account_journal(osv.osv):
             domain = [('company_id', '=', vals['company_id'])]
         ids = self.pool.get('account.fiscalyear').search(cr, uid, domain)
         seq_obj = self.pool.get('ir.sequence')
-        main_seq = self.pool.get('ir.sequence').create(cr, uid, seq)
+        main_seq = seq_obj.create(cr, uid, seq)
 
-        if 'restart_sequence' in vals and vals['restart_sequence']:
+        if vals.get('restart_sequence', False):
             seq_fiscalyear_obj = self.pool.get('account.sequence.fiscalyear')
 
             # Creating all the sequences for the fiscal years
