@@ -1447,7 +1447,7 @@ class Many2one(_Relational):
             return value.id
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return value.id
+        return value and value.id or False
 
     def convert_to_onchange(self, value):
         return value.id
