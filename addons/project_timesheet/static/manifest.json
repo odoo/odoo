@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Odoo extension for Project Timesheet",
+  "version": "9.0",
+  //"default_locale": "en",
+  "description": "This extension will allows users to create Project Timesheet entries in speedy way, user can do entries offline also, once they done with their entries they can sync their data with their Odoo instance",
+  "icons": {
+    "48" : "static/src/img/logo.png"
+  },
+  "background": {
+     "scripts": ["static/src/js/background.js"],
+     "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "static/src/img/logo.png"
+    //"default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  //"content_scripts": [
+  // {
+  //    "matches": ["http://*/*", "https://*/"],
+  //    "css": ["static/lib/bootstrap/css/bootstrap.css", "static/src/css/project_timesheet.css"],
+  //    "js": ["static/lib/underscore/underscore.js", "static/lib/underscore/underscore.string.js", "static/lib/jquery/jquery.js", "static/lib/jquery.placeholder/jquery.placeholder.js", "static/lib/datejs/core.js", "static/lib/bootstrap/js/bootstrap.js", "static/lib/backbone/backbone.js", "static/lib/qweb/qweb2.js", "static/src/js/openerpframework.js", "static/src/js/project_timesheet.js"]
+  //  }
+  //],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

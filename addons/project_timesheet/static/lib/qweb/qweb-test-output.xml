@@ -1,0 +1,23 @@
+<templates>
+    <!-- esc, evaluates and returns @t-esc after having xml-escaped it -->
+    <t t-name="esc-literal">
+        <t t-esc="'ok'"/>
+    </t>
+    <t t-name="esc-variable">
+        <t t-esc="ok"/>
+    </t>
+    <t t-name="esc-toescape">
+        <t t-esc="ok"/>
+    </t>
+
+    <!-- raw, evaluates and returns @t-raw directly (no escaping) -->
+    <t t-name="raw-literal">
+        <t t-raw="'ok'"/>
+    </t>
+    <t t-name="raw-variable">
+        <t t-raw="ok"/>
+    </t>
+    <t t-name="raw-notescaped">
+        <t t-raw="ok"/>
+    </t>
+</templates>

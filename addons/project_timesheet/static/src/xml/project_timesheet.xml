@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+    <t t-name="ProjectTimesheet">
+        <div class="container-fluid pt_application">
+            <div class="row screens"></div>
+        </div>
+    </t>
+
+    <t t-name="ActivityScreen">
+        <table class="table table-responsive activity_screen" style="height: 100%;">
+            <tbody>
+            <tr>
+                <td class="pt_activity_header">
+                    <div class="row">
+                        <div class="pt_duration col-md-8 col-xs-8">
+                            <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
+                        </div>
+                        <div class="pt_timer_button col-md-4 col-xs-4">
+                            <button class="btn btn-primary pull-right pt_timer_start">START</button>
+                            <button class="btn btn-primary pull-right pt_timer_stop o_hidden">STOP</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="project_m2o"></div>
+                        <div class="task_m2o"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pt_activity_col">
+                    <div class="pt_activity_body">
+                        
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pt_footer">
+                    <t t-call="Footer"></t>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="ActivityList">
+        <table class="table table-responsive table-striped">
+            <tbody>
+                <t t-foreach="activities" t-as="activity">
+                    <tr class="activity_row" t-att-data-activity_id="activity.id">
+                        <td>
+                            <div>
+                                <div>
+                                    <strong><t t-esc="activity.project_id[1]"></t></strong>
+                                    <span class="pull-right pt_duration_line"><t t-esc="widget.format_duration(activity.hours)"></t></span> <!-- call format_hour method of this screen -->
+                                </div>
+                                <div class="pt_description_task">
+                                    <t t-esc="activity.task_id[1]"></t>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="AddActivityScreen">
+        <div class="content_area" style="height: 100%;">
+            <div class="container-fluid" style="height: 100%;">
+              <div class="row well" style="min-height: 100%;">
+                  <h4><strong>Add an Activity</strong></h4>
+                <div>
+                    <div class="project_m2o"></div>
+                </div>
+                <div>
+                    <div class="task_m2o"></div>
+                </div>
+                <div class="pt_duration">
+                    <div>Duration</div>
+                    <div class="input-group col-md-2">
+                      <input id="hours" class="form-control pt_input_hour"/>
+                      <span class="input-group-addon">h</span>
+                      <input id="minutes" class="form-control col-md-offset-1 pt_input_minute"/>
+                      <span class="input-group-addon">min</span>
+                    </div>
+                </div>
+                <div class="pt_description">
+                  <div>Notes</div>
+                  <textarea id="name" class="pt_input_description"></textarea>
+                </div>
+                <div class="pt_mt_5">
+                  <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
+                  <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Update Activity</button>
+                  or
+                  <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                  <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
+                </div>
+                <hr/>
+                <div class="pt_activity_body">
+                    <h2>Quick Select</h2>
+                </div>
+              </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="Throbber">
+        <div>
+            <div class="oe_blockui_spin" style="height: 50px">
+            </div>
+            <br />
+            <div class="oe_throbber_message" style="color:white"></div>
+        </div>
+    </t>
+
+    <t t-name="FieldMany2One">
+        <t>
+            <div class="pt_m2o">
+                <div>
+                    <t t-esc="widget.label"></t>
+                </div>
+                <!--
+                <div class="input-group col-md-2">
+                    <input type="text"
+                        t-att-id="widget.id_for_input"
+                        t-attf-class="form-control #{widget.classname}"
+                        t-att-placeholder="widget.placeholder"/>
+                    <span class="input-group-addon pt_m2o_drop_down_button">
+                        <img src="static/src/img/down-arrow.png" draggable="false"/>
+                    </span>
+                </di
+                -->
+                <textarea rows="1"
+                    t-att-id="widget.id_for_input"
+                    t-attf-class="form-control #{widget.classname}"
+                    t-att-placeholder="widget.placeholder"></textarea>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="SyncScreen">
+        <div class="content_area" style="height: 100%;">
+            <div class="container-fluid" style="height: 100%;">
+              <div class="row well" style="height: 100%;">
+                <h4><strong>Synchronize your tasks online</strong></h4>
+                <div>
+                    <input type="radio" name="pt_radio" id="pt_new_user"/> <span>I'm a new Odoo user</span>
+                </div>
+                <div>
+                    <input type="radio" name="pt_radio" id="pt_existing_user" checked="true"/> <span>I already have an account</span>
+                </div>
+                <hr/>
+                <div class="o_new_account">
+                    <div>
+                        Choose an address
+                    </div>
+                    <div class="input-group">
+                        <input class="form-control o_input_new_address"/>
+                        <span class="input-group-addon o_new_address_suffix">.odoo.com</span>
+                    </div>
+                    <div class="pt_mt_5">
+                        <button class="btn btn-default pt_btn pt_btn_add_activity">Add Account</button> 
+                        or
+                        <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    </div>
+                    <div class="pt_mt_5">
+                        <h5>Why create an online account ?</h5>
+                        <div>
+                            <ul>
+                                <li>It's free</li>
+                                <li>Backup &amp; synchronize your tasks entries</li>
+                                <li>Create bills &amp; invoices</li>
+                                <li>Manage multiple users</li>
+                                <li>Modify rules (ex: time increment)</li>
+                                <li>Analyze detailed statistics and create reports</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <a href="https://www.odoo.com/page/project-management" target="_blank">Discover all the features of Odoo Project</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_existing_account o_active">
+                    <div>Enter your address</div>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle pt_button_protocol" data-toggle="dropdown"><span>http://</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#" class="pt_select_protocol">http://</a></li>
+                              <li><a href="#" class="pt_select_protocol">https://</a></li>
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control pt_input_server_address" placeholder="Your Server Address"/>
+                    </div>
+                    <div>
+                        <div>Database</div>
+                        <div>
+                            <input type="text" class="pt_input_db"/>
+                        </div>
+                    </div>
+                    <div>
+                        <div>User Name</div>
+                        <div>
+                            <input type="text" class="pt_input_username"/>
+                        </div>
+                    </div>
+                    <div>
+                        <div>Password</div>
+                        <div>
+                            <input type="password" class="pt_input_password"/>
+                        </div>
+                    </div>
+                    <div class="pt_mt_5">
+                      <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
+                      or
+                      <a class="btn pt_link pt_btn_cancel">Cancel</a>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="StatisticScreen">
+        <table class="table table-responsive stat_screen" style="height: 100%;">
+            <tbody>
+                <tr>
+                    <td class="pt_stat_header">
+                        <div class="row">
+          
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="pt_stat_body">
+                        <div>
+                            <span>Heyyy, here there will be statistical graph...</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="pt_footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_back">
+                                    <span class="glyphicon glyphicon-chevron-left"></span><span class="pt_pl_3">Back</span>
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
+                                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
+                                </div>
+                                <div class="col-md-4 col-xs-4 col-sm-4 pt_reporting_duration">
+                                    <a class="glyphicon glyphicon-print pull-right" href="http://www.odoo.com" target="_blank"><span>Reporting</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="Footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_stat">
+                    <span class="glyphicon glyphicon-dashboard"></span><span class="pt_pl_3">Stats</span>
+                </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_sync text-center">
+                    <span class="glyphicon glyphicon-plane"></span><span class="pt_pl_3">Sync now</span>
+                    <span class="pt_pending_lines badge"><t t-esc="widget.get_pending_lines()"></t></span>
+                </div>
+                <div class="col-md-4 col-xs-4 col-sm-4 pt_total_duration">
+                    <span class="pull-right pt_total"></span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ProjectTimesheetDialog">
+        <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title"><t t-raw="title"/></h3>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    </t>
+    <t t-name="WidgetButton">
+        <span t-if="widget.pre_text"> <t t-esc="widget.pre_text"/> </span>
+        <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button ' + (widget.node.attrs.class ? widget.node.attrs.class : '')"
+            t-att-style="widget.node.attrs.style"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-accesskey="widget.node.attrs.accesskey">
+            <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
+            <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
+            <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
+            <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
+        </button>
+        <span t-if="widget.post_text"> <t t-esc="widget.post_text"/> </span>
+    </t>
+    <t t-name="ProjectTimesheet.warning">
+        <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
+        <tr>
+            <td>
+                <p>
+                    <t t-js="d">
+                        var message = d.message ? d.message : d.error.data.message;
+                        d.html_error = context.engine.tools.html_escape(message)
+                            .replace(/\n/g, '<br/>');
+                    </t>
+                    <t t-raw="html_error"/>
+                </p>
+            </td>
+        </tr>
+        </table>
+    </t>
+    <t t-name="ProjectTimesheet.error">
+        <div class="oe_error_detail">
+            <pre><t t-esc="error.message"/></pre>
+            <hr/>
+            <pre><t t-esc="error.data.debug"/></pre>
+        </div>
+    </t>
+</templates>
