@@ -1,0 +1,18 @@
+<template id="share">
+    <t t-name="share_buttons">
+        <div class="row clearfix">
+            <div class="col-xs-4 col-xs-offset-8">
+                <div class="css_editable_mode_hidden">
+                    <div t-attf-id="#{id}" class="collapse oe_comment_grey">
+                        <t t-foreach="medias" t-as="media">
+                            <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share" t-attf-data-media="#{media}"	>
+                                <span class="fa fa-square fa-stack-2x"></span>
+                                <span t-attf-class="odoo_share_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

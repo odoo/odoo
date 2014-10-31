@@ -1,3 +1,44 @@
+(function () {
+    'use strict';
+
+    var _t = openerp._t,
+    website = openerp.website;
+    website.add_template_file('/website_forum/static/src/xml/website_forum.xml');
+
+    website.ShareButtons = openerp.Widget.extend({
+        template: 'share_buttons',
+        init: function () {
+            this.medias = arguments[0];
+            this.share_link = arguments[1];
+            this.target = 'share_buttons' + this.share_link.attr('id');
+            this.share_link.data({'toggle' : 'popover', 'container' : 'body', 'placement' : 'bottom', 'target' : '#' + this.target});
+            this._super.apply(this, arguments);
+        },
+        config: function () {
+            // Code
+        },
+        renderElement: function() {
+            this.$el.append(openerp.qweb.render(this.template, {medias: this.medias, id: this.target}));
+            this.share_link.popover({
+                html: true,
+                content: function() {
+                             return $($(this).data("target")).html();
+                         }
+            });
+        },
+        parse: function () {
+            // Code
+        }
+    });
+
+    website.ready().done(function() {
+        $(document.body).find('.share_buttons').each( function(i) {
+            $(this).attr("id", "share" + i);
+            new website.ShareButtons($(this).data('medias'), $(this)).insertAfter(this);
+        });
+    });
+} ());
+
 $(document).ready(function () {
     if ($('.website_forum').length){
         $('.karma_required').on('click', function (ev) {

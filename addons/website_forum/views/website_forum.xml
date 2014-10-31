@@ -631,6 +631,10 @@
                                     Comment
                                 </a>
                             </li>
+                            <li>
+                                <a style="cursor: pointer" class="share_buttons" data-medias='["twitter", "facebook", "linkedin", "google-plus"]'>Share</a>
+                                <a style="cursor: pointer" class="share_buttons" data-medias='["twitter", "facebook", "linkedin"]'>Share</a>
+                            </li>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
