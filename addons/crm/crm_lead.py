@@ -135,16 +135,16 @@ class crm_lead(format_address, osv.osv):
             order = "%s desc" % order
         # retrieve section_id from the context and write the domain
         # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
+        # - OR ('default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('section_ids', '=', section_id), ('fold', '=', False) if section_id: add section columns that are not folded
         search_domain = []
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
             search_domain += ['|', ('section_ids', '=', section_id)]
-            search_domain += [('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += ['|', ('default', '=', 'none')]
         # retrieve type from the context (if set: choose 'type' or 'both')
+        search_domain += [('id', 'in', ids)]
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
             search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
@@ -363,13 +363,13 @@ class crm_lead(format_address, osv.osv):
                 section_ids.add(lead.section_id.id)
             if lead.type not in types:
                 types.append(lead.type)
-        # OR all section_ids and OR with case_default
+        # OR all section_ids and OR with default
         search_domain = []
         if section_ids:
             search_domain += [('|')] * len(section_ids)
             for section_id in section_ids:
                 search_domain.append(('section_ids', '=', section_id))
-        search_domain.append(('case_default', '=', True))
+        search_domain.append(('default', '=', 'link'))
         # AND with cases types
         if not avoid_add_type_term:
             search_domain.append(('type', 'in', types))

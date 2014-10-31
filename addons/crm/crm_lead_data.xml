@@ -5,7 +5,7 @@
         <!-- Crm stages -->
         <record model="crm.case.stage" id="stage_lead1">
             <field name="name">New</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="probability">0</field>
             <field name="on_change">1</field>
             <field name="sequence">1</field>
@@ -13,7 +13,7 @@
         </record>
         <record model="crm.case.stage" id="stage_lead2">
             <field name="name">Dead</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="fold">1</field>
             <field name="probability">0</field>
             <field name="on_change">1</field>
@@ -22,7 +22,7 @@
         </record>
         <record model="crm.case.stage" id="stage_lead3">
             <field name="name">Qualification</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="probability">20</field>
             <field name="on_change">1</field>
             <field name="sequence">40</field>
@@ -30,21 +30,21 @@
         </record>
         <record model="crm.case.stage" id="stage_lead4">
             <field name="name">Proposition</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="probability">40</field>
             <field name="sequence">50</field>
             <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead5">
             <field name="name">Negotiation</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="probability">60</field>
             <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead6">
             <field name="name">Won</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="fold">1</field>
             <field name="probability">100</field>
             <field name="on_change">1</field>
@@ -53,7 +53,7 @@
         </record>
         <record model="crm.case.stage" id="stage_lead7">
             <field name="name">Lost</field>
-            <field name="case_default">1</field>
+            <field name="default">link</field>
             <field name="fold">1</field>
             <field name="probability">0</field>
             <field name="on_change">1</field>

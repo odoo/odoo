@@ -41,8 +41,10 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
-        'case_default': fields.boolean('Default for New Projects',
-                        help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
+        'default': fields.selection([('none', 'Used in tasks and issues'), ('copy', 'Copy to each new Project'), ('link', 'Link to each new Project')], 'Default', help="Will allow you to display the stages (Kanban) as per the option selected:\n"
+                    "- Used in tasks and issues: This column will be available in tasks and issues. It will not be linked to new project by default.\n" 
+                    "- Copy to each new Project: This column will be duplicated and the copy will be linked to every new project.\n"
+                    "- Link to each new Project: The column will be available for all projects by default.\n"),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
@@ -53,14 +55,53 @@ class project_task_type(osv.osv):
         project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
         if project_id:
             return [project_id]
-        return None
+        return False
 
     _defaults = {
         'sequence': 1,
         'project_ids': _get_default_project_ids,
+        'default': 'copy',
     }
+
     _order = 'sequence'
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        project_id = self._get_default_project_ids(cr, uid, ctx=context)
+        if vals.get('default') == 'copy' and project_id:
+            vals.update({'project_ids': False})
+            type_id = super(project_task_type, self).create(cr, uid, vals, context=context)
+            context.update({'default_project_id': False})
+            type_id = self.copy(cr, uid, type_id, default={'default': 'none', 'project_ids': [[6, False, project_id]]}, context=context)
+        else:
+            type_id = super(project_task_type, self).create(cr, uid, vals, context=context)
+        return type_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None: context = {}
+        project_id = self._get_default_project_ids(cr, uid, ctx=context)
+        project_obj = self.pool.get('project.project')
+        if vals.get('default') == 'copy' and project_id:
+            for stage in self.browse(cr, uid, ids, context=context):
+                new_stage_id = self.copy(cr, uid, stage.id, vals, context=context)
+                project_obj.write(cr, uid, project_id, {'type_ids': [(3, stage.id),(4, new_stage_id),]}, context=context)
+                self._update_tasks(cr, uid, project_id, stage.id, new_stage_id, context=context)
+                return True
+        elif vals.get('default') == 'copy':
+            for stage in self.browse(cr, uid, ids, context=context):
+                values = vals.copy()
+                if stage.project_ids:
+                    self.copy(cr, uid, stage.id, values, context=context)
+                    values.update({'default': 'none'})
+                super(project_task_type, self).write(cr, uid, stage.id, values, context=context)
+            return True
+        return super(project_task_type, self).write(cr, uid, ids, vals, context=context)
+
+    def _update_tasks(self, cr, uid, project_id, old_stage_id, new_stage_id, context=None):
+        if context is None: context = {}
+        task_obj = self.pool.get('project.task')
+        task_ids = task_obj.search(cr, uid, [('stage_id', '=', old_stage_id),('project_id', 'in', project_id)], context=context)
+        return task_obj.write(cr, uid, task_ids, {'stage_id': new_stage_id}, context=context)
 
 class project(osv.osv):
     _name = "project.project"
@@ -173,8 +214,7 @@ class project(osv.osv):
         analytic_account_to_delete = set()
         for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
-                raise osv.except_osv(_('Invalid Action!'),
-                                     _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
+                raise osv.except_osv(_('Invalid Action!'),_('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
             if proj.analytic_account_id and not proj.analytic_account_id.line_ids:
@@ -340,7 +380,7 @@ class project(osv.osv):
      }
 
     def _get_type_common(self, cr, uid, context):
-        ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
+        ids = self.pool.get('project.task.type').search(cr, uid, ['|', ('default','=','link'),('default','=','copy')], context=context)
         return ids
 
     _order = "sequence, id"
@@ -580,6 +620,35 @@ def Project():
                     }, context=context)
         return True
 
+    def _compute_stages(self, cr, uid, ids, context=None):
+        new_ids = []
+        stage_type_obj = self.pool.get('project.task.type')
+        stage_ids = stage_type_obj.search_read(cr, uid, domain=[('id', 'in', ids), ('default', '=', 'copy')], fields=['id'], context=context)
+        for stage in stage_ids:
+            new_ids.append(stage_type_obj.copy(cr, uid, stage['id'], default={'default': 'none'}, context=context))
+            ids.remove(stage['id'])
+        return new_ids + ids
+
+    def _copy_stages(self, cr, uid, stage_ids, context=None):
+        """ 
+            :param many2many stage_ids: a list of tuples is expected.
+                   [[6, 0, Ids], (6, 0, Ids)]
+                   [(4,Id), (4,Id), (4,Id)]
+        """
+        index = 0
+        stages = stage_ids
+        link_ids = [id[1] for id in stage_ids if id[0]==4]
+        link_ids = self._compute_stages(cr, uid, link_ids, context=context)
+        for counter, stage in enumerate(stage_ids):
+            if stage[0] == 4:
+                stages[counter] = (4, link_ids[index])
+                index += 1
+            if stage[0] == 6:
+                ids = self._compute_stages(cr, uid, stage[2], context=context)
+                if isinstance(stage, tuple): stages[counter] = (6, 0, ids)
+                if isinstance(stage, list): stages[0][2] = ids
+        return stages
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -587,13 +656,14 @@ def Project():
         create_context = dict(context, project_creation_in_progress=True,
                               alias_model_name=vals.get('alias_model', 'project.task'),
                               alias_parent_model_name=self._name)
-
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
 
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
         if ir_values:
             vals['alias_name'] = vals.get('alias_name') or vals.get('name')
+        if vals.get('type_ids'):
+            vals['type_ids'] = self._copy_stages(cr, uid, vals['type_ids'], context=context)
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
         values = {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}
@@ -602,11 +672,12 @@ def Project():
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
+        if vals.get('type_ids'):
+            vals['type_ids'] = self._copy_stages(cr, uid, vals['type_ids'], context=context)
         if vals.get('alias_model'):
             model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
             vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
-
 
 class task(osv.osv):
     _name = "project.task"
@@ -673,6 +744,8 @@ class task(osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
             search_domain += ['|', ('project_ids', '=', project_id)]
+        else:
+            search_domain += ['|', ('default', '=', 'none')]
         search_domain += [('id', 'in', ids)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -1058,7 +1131,6 @@ class task(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         context = dict(context or {})
-
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
