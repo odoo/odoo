@@ -177,6 +177,7 @@ class Users(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
     __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
+    __login_cache = defaultdict(dict)           # {dbname: {uid: login, login: uid}}
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
@@ -372,6 +373,9 @@ class Users(models.Model):
             db = self._cr.dbname
             for id in self.ids:
                 self.__uid_cache[db].pop(id, None)
+                logins = self.__login_cache[db]
+                # pop uid -> get login -> pop login
+                logins.pop(logins.pop(id, None), None)
 
         return res
 
@@ -382,6 +386,8 @@ class Users(models.Model):
         db = self._cr.dbname
         for id in self.ids:
             self.__uid_cache[db].pop(id, None)
+            # pop uid -> get login -> pop login
+            logins.pop(logins.pop(id, None), None)
         return super(Users, self).unlink()
 
     @api.model
@@ -449,19 +455,23 @@ class Users(models.Model):
     def _login(cls, db, login, password):
         if not password:
             return False
-        user_id = False
+        user_id = cls.__login_cache[db].get(login)
+        if user_id and cls.__uid_cache[db].get(user_id) == password:
+            return user_id
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 user = self.search([('login', '=', login)])
-                if user:
-                    user_id = user.id
-                    user.sudo(user_id).check_credentials(password)
-                    user.sudo(user_id)._update_last_login()
+                if not user:
+                    return False
+                user_id = user.id
+                u = user.sudo(user_id)
+                u._check(password)
+                u._update_last_login()
+                return user_id
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
-            user_id = False
-        return user_id
+            return False
 
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
@@ -499,13 +509,13 @@ class Users(models.Model):
         db = cls.pool.db_name
         if cls.__uid_cache[db].get(uid) == passwd:
             return
-        cr = cls.pool.cursor()
-        try:
+        with cls.pool.cursor() as cr:
             self = api.Environment(cr, uid, {})[cls._name]
-            self.check_credentials(passwd)
-            cls.__uid_cache[db][uid] = passwd
-        finally:
-            cr.close()
+            self._check(passwd)
+
+    def _check(self, password):
+        self.check_credentials(password)
+        self.__uid_cache[self.env.cr.dbname][self.id] = password
 
     @api.model
     def change_password(self, old_passwd, new_passwd):

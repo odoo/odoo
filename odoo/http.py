@@ -1365,9 +1365,19 @@ class Root(object):
             httprequest.session.context["lang"] = lang
 
     def get_request(self, httprequest):
-        # deduce type of request
         if httprequest.args.get('jsonp'):
             return JsonRequest(httprequest)
+
+        try:
+            func, _ = self.nodb_routing_map.bind_to_environ(httprequest.environ).match()
+        except werkzeug.exceptions.HTTPException as e:
+            pass
+        else:
+            # can dispatch JSON requests to HTTP handler
+            if func.routing['type'] == 'http':
+                return HttpRequest(httprequest)
+
+        # deduce type of request
         if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
