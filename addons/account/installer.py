@@ -91,14 +91,15 @@ class account_installer(models.TransientModel):
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(account_installer, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
+        CompanyObj = self.env['res.company']
         # display in the widget selection only the companies that haven't been configured yet
         unconfigured_cmp = self.get_unconfigured_cmp()
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = [('id', 'in', [cmp.id for cmp in unconfigured_cmp])]
+                res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in unconfigured_cmp]
+                    cmp_select = [(line.id, line.name) for line in CompanyObj.browse(unconfigured_cmp)]
                     res['fields'][field]['selection'] = cmp_select
         return res
 
