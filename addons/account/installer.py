@@ -78,7 +78,7 @@ class account_installer(models.TransientModel):
         company_ids = self.env['res.company'].search([])
         self._cr.execute("SELECT company_id FROM account_account WHERE deprecated = 't' AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in self._cr.fetchall()]
-        return list(set(company_ids)-set(configured_cmp))
+        return list(set(company_ids.ids) - set(configured_cmp))
 
     @api.model
     def check_unconfigured_cmp(self):

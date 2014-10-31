@@ -143,20 +143,6 @@ class account_config_settings(models.TransientModel):
         string="Loss Exchange Rate Account",
         domain="[('type', '=', 'other'), ('deprecated', '=', False)]")
 
-
-    @api.multi
-    def onchange_company_id(self, company_id):
-        res = super(account_config_settings, self).onchange_company_id(company_id)
-        if company_id:
-            company = self.env['res.company'].browse(company_id)
-            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False, 
-                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False})
-        else: 
-            res['value'].update({'income_currency_exchange_account_id': False, 
-                                 'expense_currency_exchange_account_id': False})
-        return res
-
-
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
@@ -211,26 +197,26 @@ class account_config_settings(models.TransientModel):
         return rec
 
     @api.multi
+    @api.onchange('company_id')
     def onchange_company_id(self, company_id):
         # update related fields
         values = {}
         values['currency_id'] = False
-        if company_id:
-            company = self.env['res.company'].browse(company_id)
-            has_chart_of_accounts = company_id not in self.env['account.installer'].get_unconfigured_cmp()
+        if self.company_id:
+            has_chart_of_accounts = self.company_id.id not in self.env['account.installer'].get_unconfigured_cmp()
             fiscalyear_count = self.env['account.fiscalyear'].search_count(
                 [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
-                 ('company_id', '=', company_id)])
-            date_start, date_stop, period = self._get_default_fiscalyear_data(company_id)
+                 ('company_id', '=', self.company_id.id)])
+            date_start, date_stop, period = self._get_default_fiscalyear_data(self.company_id.id)
             values = {
-                'expects_chart_of_accounts': company.expects_chart_of_accounts,
-                'currency_id': company.currency_id.id,
-                'paypal_account': company.paypal_account,
-                'company_footer': company.rml_footer,
+                'expects_chart_of_accounts': self.company_id.expects_chart_of_accounts,
+                'currency_id': self.company_id.currency_id.id,
+                'paypal_account': self.company_id.paypal_account,
+                'company_footer': self.company_id.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
                 'has_fiscal_year': bool(fiscalyear_count),
                 'chart_template_id': False,
-                'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+                'tax_calculation_rounding_method': self.company_id.tax_calculation_rounding_method,
                 'date_start': date_start,
                 'date_stop': date_stop,
                 'period': period,
@@ -239,8 +225,8 @@ class account_config_settings(models.TransientModel):
             for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
                 for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
                     values[journal_type + suffix] = False
-
-            for journal in self.env['account.journal'].search([('company_id', '=', company_id)]):
+            journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
+            for journal in journals:
                 if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
                     values.update({
                         journal.type + '_journal_id': journal.id,
@@ -249,12 +235,18 @@ class account_config_settings(models.TransientModel):
                     })
             # update taxes
             ir_values = self.env['ir.values']
-            taxes_id = ir_values.get_default('product.product', 'taxes_id', company_id=company_id)
-            supplier_taxes_id = ir_values.get_default('product.product', 'supplier_taxes_id', company_id=company_id)
+            taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
+            supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
             values.update({
                 'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
                 'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
             })
+            # update gain/loss exchange rate accounts
+            values.update({
+                'income_currency_exchange_account_id': self.company_id.income_currency_exchange_account_id and self.company_id.income_currency_exchange_account_id.id or False,
+                'expense_currency_exchange_account_id': self.company_id.expense_currency_exchange_account_id and self.company_id.expense_currency_exchange_account_id.id or False
+            })
+
         return {'value': values}
 
     @api.multi
