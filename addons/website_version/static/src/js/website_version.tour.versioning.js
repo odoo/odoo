@@ -137,6 +137,12 @@
                 popover:   { fixed: true },
             },
             {
+                title:     _t("Confirm Yes"),
+                waitFor:   '.modal button[type="button"]:contains("Yes")',
+                element:   '.modal button[type="button"]:contains("Yes")',
+                popover:   { fixed: true },
+            },
+            {
                 title:     _t("Confirm"),
                 waitFor:   '.modal button[type="button"]:contains("Ok")',
                 element:   '.modal button[type="button"]:contains("Ok")',
