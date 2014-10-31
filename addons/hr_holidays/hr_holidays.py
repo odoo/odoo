@@ -200,7 +200,7 @@ class hr_holidays(osv.osv):
                                        help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)'),
         'double_validation': fields.related('holiday_status_id', 'double_validation', type='boolean', relation='hr.holidays.status', string='Apply Double Validation'),
         'can_reset': fields.function(
-            _get_can_reset,
+            _get_can_reset, string="Can reset",
             type='boolean'),
     }
     _defaults = {

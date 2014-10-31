@@ -292,7 +292,7 @@ class res_partner(osv.Model, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'has_image': fields.function(_has_image, type="boolean"),
+        'has_image': fields.function(_has_image, string="Has image", type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),

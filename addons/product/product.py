@@ -1237,7 +1237,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
-        'company_id':fields.many2one('res.company','Company',select=1),
+        'company_id':fields.many2one('res.company', string='Company',select=1),
     }
     _defaults = {
         'min_qty': 0.0,
