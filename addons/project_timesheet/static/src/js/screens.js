@@ -563,7 +563,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 var activity = this.project_timesheet_db.load("timer_activity");
                 //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
                 activity['id'] = this.project_timesheet_db.get_unique_id();
-                var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date);
+                var hours = this.get_date_diff(this.get_current_UTCDate(), activity.date) || 0.01;
                 activity['unit_amount'] = hours;
                 activity['command'] = 0; //By default command = 0, activity which is to_create
                 this.project_timesheet_model.add_activity(activity);
