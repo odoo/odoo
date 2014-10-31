@@ -25,10 +25,10 @@
                         <field invisible="1" name="general_account_id"/>
                     </xpath>
                     <xpath expr="//label[@for='unit_amount']" position="before">
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                        <field name="product_id"/>
                     </xpath>
                     <xpath expr="//field[@name='unit_amount']" position="after">
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                        <field name="product_uom_id" class="oe_inline"/>
                     </xpath>
                     <xpath expr="//group[@name='product_info']" position="after">
                         <group string="General Accounting">
@@ -53,10 +53,10 @@
                         <field name="journal_id" invisible="context.get('to_invoice', False)"/>
                     </xpath>
                     <xpath expr="//field[@name='amount']" position="after">
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
+                        <field name="product_id" invisible="not context.get('to_invoice', False)"/>
                     </xpath>
                     <xpath expr="//field[@name='unit_amount']" position="after">
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
+                        <field name="product_uom_id" invisible="not context.get('to_invoice', False)"/>
                     </xpath>
                     <xpath expr="//field[@name='account_id']" position="after">
                         <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
