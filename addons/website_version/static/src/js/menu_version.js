@@ -91,15 +91,15 @@
             }
             openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
                     if (result){
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete this version " + name + " because it is in a running experiment"}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete the " + name + " version because it is in a running experiment"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     }
                     else{
-                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete the version " + name + " ?"}));
+                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete the " + name + " version ?"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
                             openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been deleted."}));
+                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been deleted."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                                 self.wizard.on('click','.confirm', function(){
                                     location.reload();
@@ -116,11 +116,11 @@
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
-            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish the version " + name + " ?"}));
+            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
                     openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The version "+result+" has been published."}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
                             location.reload();
@@ -164,7 +164,7 @@
                     if(check){
                         openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
 
-                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your experiment " + name + " is created. Now you can manage this experiment by clicking on Manage Experiments."}));
+                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is created. Now you can manage this experiment by clicking on Manage Experiments."}));
                             self.wizard.appendTo($('body')).modal({"keyboard" :true});
                             self.wizard.on('click','.confirm', function(){
                                 location.reload();
@@ -197,7 +197,7 @@
                     if(check){
                         openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
                             if (result){
-                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your experiment " + name + " is launched. Now you can check its statistics by clicking on Statistics."}));
+                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is launched. Now you can check its statistics by clicking on Statistics."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                                 self.wizard.on('click','.confirm', function(){
                                     location.reload();
@@ -205,7 +205,7 @@
 
                             }
                             else{
-                                self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your experiment " + name + " cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.</p>");
+                                self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your " + name + " experiment cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.</p>");
                             }
                         });
                     }

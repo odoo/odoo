@@ -527,7 +527,7 @@
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
-        saveB: function () {
+        save_without_reload: function () {
             var self = this;
 
             observer.disconnect();
