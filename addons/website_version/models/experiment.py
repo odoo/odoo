@@ -48,6 +48,33 @@ class Experiment(osv.Model):
     _name = "website_version.experiment"
     _inherit = ['mail.thread']
 
+    def _get_version_number(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for exp in self.browse(cr, uid, ids, context=context):
+            result[exp.id] = 0
+            for exp_snap in exp.experiment_snapshot_ids:
+                    result[exp.id] += 1
+            #For master
+            result[exp.id] += 1
+        return result
+
+    _columns = {
+        'name': fields.char(string="Title", size=256, required=True),
+        'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
+        'website_id': fields.many2one('website',string="Website", required=True),
+        'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
+        'objectives': fields.many2one('website_version.goals',string="Objective", required=True),
+        'color': fields.integer('Color Index'),
+        'version_number' : fields.function(_get_version_number,type='integer'),
+        'sequence': fields.integer('Sequence', required=True, help="Test."),
+        'google_id': fields.char(string="Google_id", size=256),
+    }
+
+    _defaults = {
+        'state': 'draft',
+        'sequence': 1,
+    }
+
     def create(self, cr, uid, vals, context=None):
         exp={}
         exp['name'] = vals['name']
@@ -133,17 +160,6 @@ class Experiment(osv.Model):
             self.pool['google.management'].delete_an_experiment(cr, uid, exp.google_id, exp.website_id.id, context=context)
         return super(Experiment, self).unlink(cr, uid, ids, context=context)
 
-
-    def _get_version_number(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        for exp in self.browse(cr, uid, ids, context=context):
-            result[exp.id] = 0
-            for exp_snap in exp.experiment_snapshot_ids:
-                    result[exp.id] += 1
-            #For master
-            result[exp.id] += 1
-        return result
-
     def update_goals(self,cr,uid,ids,context=None):
         gm_obj = self.pool['google.management']
         goals_obj = self.pool['website_version.goals']
@@ -155,23 +171,6 @@ class Experiment(osv.Model):
             if not goals_obj.search(cr, uid, [('name','=',y['name'])],context=context):
                 vals ={'name':y['name'], 'google_ref':'ga:goal'+y['id']+'Completions'}
                 goals_obj.create(cr, uid, vals, context=None)
-    
-    _columns = {
-        'name': fields.char(string="Title", size=256, required=True),
-        'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
-        'website_id': fields.many2one('website',string="Website", required=True),
-        'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
-        'objectives': fields.many2one('website_version.goals',string="Objective", required=True),
-        'color': fields.integer('Color Index'),
-        'version_number' : fields.function(_get_version_number,type='integer'),
-        'sequence': fields.integer('Sequence', required=True, help="Test."),
-        'google_id': fields.char(string="Google_id", size=256),
-    }
-
-    _defaults = {
-        'state': 'draft',
-        'sequence': 1,
-    }
 
     def _check_view(self, cr, uid, ids, context=None):
         #No overlap for running experiments
