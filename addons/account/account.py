@@ -3,7 +3,6 @@
 import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
 import time
 
 import openerp
@@ -15,7 +14,7 @@ from openerp.tools.float_utils import float_round as round
 import openerp.addons.decimal_precision as dp
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, RedirectWarning
 
 _logger = logging.getLogger(__name__)
 
@@ -691,7 +690,7 @@ class account_fiscalyear(models.Model):
             if exception:
                 action = self.env.ref('account.action_account_fiscalyear')
                 msg = _('No accounting period is covering this date: %s.') % dt
-                raise openerp.exceptions.RedirectWarning(msg, action, _(' Configure Fiscal Year Now'))
+                raise RedirectWarning(msg, action, _(' Configure Fiscal Year Now'))
             else:
                 return []
         # Temporary not returning 'recs' itself because it breaks other methods where it is called.
@@ -766,7 +765,7 @@ class account_period(models.Model):
         if not result:
             action = self.env.ref('account.action_account_period')
             msg = _('No accounting period is covering this date: %s.') % dt
-            raise openerp.exceptions.RedirectWarning(msg, action, _('Configure Periods Now'))
+            raise RedirectWarning(msg, action, _('Configure Periods Now'))
         return result.ids
 
     @api.multi

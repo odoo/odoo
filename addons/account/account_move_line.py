@@ -5,11 +5,11 @@ from datetime import datetime
 
 from openerp import workflow
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, RedirectWarning
 import openerp.addons.decimal_precision as dp
 from openerp import tools
 from openerp.report import report_sxw
-import openerp
+
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -354,7 +354,7 @@ class account_move_line(models.Model):
             if not jids:
                 model, action_id = self.env['ir.model.data'].get_object_reference('account', 'action_account_journal_form')
                 msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % context.get('journal_type').replace('_', ' ').title()
-                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             journal_id = jids[0]
         return journal_id
 

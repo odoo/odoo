@@ -7,7 +7,6 @@ from dateutil.relativedelta import relativedelta
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp.tools.translate import _
 from openerp import models, fields, api, _
 
 class account_config_settings(models.TransientModel):

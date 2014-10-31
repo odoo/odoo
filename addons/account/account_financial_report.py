@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import time
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from operator import itemgetter
-
 from openerp import models, fields, api, _
-import openerp.addons.decimal_precision as dp
 
 # ---------------------------------------------------------
 # Account Financial Report
