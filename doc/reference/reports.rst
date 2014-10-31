@@ -67,7 +67,7 @@ render_html method.  Classically, this method returns a call to the original
             docargs = {
                 'doc_ids': self._ids,
                 'doc_model': report.model,
-                'docs': self.env[report.model].browse(self._ids),
+                'docs': self,
             }
             return report_obj.render('<<module.reportname>>', docargs)
 
