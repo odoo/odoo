@@ -58,14 +58,19 @@ class TableExporter(http.Controller):
         v = view.browse(cr,uid,[int(view_id)],context=context)
         snap = request.registry['website_version.snapshot']
         website_id = request.website.id
-        ids = snap.search(cr, uid, [('website_id','=',website_id),'|','|',('view_ids.key','=',v.key),('view_ids','=',False),('view_ids.key','=','website.footer_default')],context=context)
+        ids = snap.search(cr, uid, [('website_id','=',website_id),'|',('view_ids.key','=',v.key),('view_ids.key','=','website.footer_default')],context=context)
         result = snap.read(cr, uid, ids,['id','name'],context=context)
         snap_id = request.context.get('snapshot_id')
+        check = False
         for x in result:
             if x['id'] == snap_id:
                 x['bold'] = 1
+                check = True
             else:
                 x['bold'] = 0 
+        #To always show in the menu the current version
+        if not check and snap_id:
+            result.append({'id':snap_id, 'name':snap.browse(cr, uid, [snap_id],context=context)[0].name, 'bold':1})
         return result
 
     @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
