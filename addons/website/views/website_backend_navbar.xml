@@ -5,7 +5,7 @@
 <template id="user_navbar" inherit_id="website.layout" groups="base.group_user">
 <xpath expr="//body/div['id=wrawrap']" position="before">
 <t t-if="website and menu_data">
-    <nav id="oe_main_menu_navbar" class="navbar navbar-inverse hidden-xs" role="navigation">
+    <nav id="oe_main_menu_navbar" class="navbar navbar-inverse navbar-fixed-top hidden-xs" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe_applications">
                 <span class="icon-bar"></span>
