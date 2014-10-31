@@ -16,32 +16,29 @@ class account_bank_statement(models.Model):
             journal_id = vals.get('journal_id', self._default_journal_id().id)
             vals['name'] = self._compute_default_statement_name(journal_id)
         if 'line_ids' in vals:
-            for idx, line in enumerate(vals['line_ids']):
-                line[2]['sequence'] = idx + 1
+            for index, line in enumerate(vals['line_ids']):
+                line[2]['sequence'] = index + 1
         return super(account_bank_statement, self).create(vals)
 
     @api.multi
     def write(self, vals):
         res = super(account_bank_statement, self).write(vals)
         for statement in self:
-            for idx, line in enumerate(statement.line_ids):
-                line.write({'sequence': idx + 1})
+            for index, line in enumerate(statement.line_ids):
+                line.sequence = index + 1
         return res
 
     @api.model
     def _default_journal_id(self):
-        context = dict(self._context or {})
-        JournalObj = self.env['account.journal']
-        journal_type = context.get('journal_type', False)
+        journal_type = self._context.get('journal_type', False)
         company_id = self.env['res.company']._company_default_get('account.bank.statement')
+        Journal = False
         if journal_type:
-            Journals = JournalObj.search([('type', '=', journal_type), ('company_id', '=', company_id)], limit=1)
-            if Journals:
-                return Journals[0]
-        return False
+            Journal = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)], limit=1)
+        return Journal
 
     @api.multi
-    @api.depends('line_ids','move_line_ids','balance_start', 'line_ids.amount')
+    @api.depends('line_ids', 'move_line_ids', 'balance_start', 'line_ids.amount')
     def _end_balance(self):
         for statement in self:
             total = statement.balance_start
@@ -67,23 +64,13 @@ class account_bank_statement(models.Model):
     @api.multi
     @api.depends('journal_id')
     def _currency(self):
-#         res = {}
-#         res_currency_obj = self.pool.get('res.currency')
-        default_currency = self.env.user.company_id.currency_id
         for statement in self:
-            currency = statement.journal_id.currency
-            if not currency:
-                currency = default_currency
-#             res[statement.id] = currency.id
-            statement.currency = currency.id
-#         currency_names = {}
-#         for currency_id, currency_name in res_currency_obj.name_get(cursor,
-#                 user, [x for x in res.values()], context=context):
-#             currency_names[currency_id] = currency_name
-#         for statement_id in res.keys():
-#             currency_id = res[statement_id]
-#             res[statement_id] = (currency_id, currency_names[currency_id])
-#         return res
+            currency = statement.journal_id.currency or self.env.user.company_id.currency_id
+            currency_name = currency.name_get()
+            # TODO: simplified old code as it was useless but not getting significance
+            # of this name get and passing tuple. we can set directly 
+            # statement.currency = currency.id
+            statement.currency = (currency.id, currency_name[0][1])
 
     @api.multi
     @api.depends('line_ids.journal_entry_id')
@@ -137,27 +124,22 @@ class account_bank_statement(models.Model):
     @api.one
     @api.constrains('journal_id', 'period_id')
     def _check_company_id(self):
-        if self.company_id.id != self.period_id.company_id.id:
+        if self.company_id != self.period_id.company_id:
             raise Warning(_('The journal and period chosen have to belong to the same company.'))
 
     @api.multi
-    def onchange_date(self, date, company_id):
+    @api.onchange('date')
+    def onchange_date(self):
         """
             Find the correct period to use for the given date and company_id, return it and set it in the context
         """
-        res = {}
-
         ctx = dict(self._context or {})
         ctx['company_id'] = company_id
-        pids = self.env['account.period'].with_context(ctx).find(dt=date)
-        if pids:
-            res['period_id'] = pids[0]
-            context = dict(self._context, period_id=pids[0])
-
-        return {
-            'value': res,
-            'context': context,
-        }
+        period_id = self.env['account.period'].with_context(ctx).find(dt=date)
+        if period_id:
+            self.period_id = pids[0]
+            #todo: update period_id in context
+            #context = dict(self._context, period_id=pids[0])
 
     @api.multi
     def button_dummy(self):
@@ -218,16 +200,16 @@ class account_bank_statement(models.Model):
         partner_id = self._get_counter_part_partner(st_line)
         debit = ((amount > 0) and amount) or 0.0
         credit = ((amount < 0) and -amount) or 0.0
-        cur_id = False
-        amt_cur = False
+        currency_id = False
+        amount_currency = False
         if st_line.statement_id.currency.id != company_currency_id:
-            amt_cur = st_line.amount
-            cur_id = st_line.statement_id.currency.id
+            amount_currency = st_line.amount
+            currency_id = st_line.statement_id.currency.id
         elif st_line.currency_id and st_line.amount_currency:
-            amt_cur = st_line.amount_currency
-            cur_id = st_line.currency_id.id
+            amount_currency = st_line.amount_currency
+            currency_id = st_line.currency_id.id
         return self._prepare_move_line_vals(st_line, move_id, debit, credit,
-            amount_currency=amt_cur, currency_id=cur_id, account_id=account_id,
+            amount_currency=amount_currency, currency_id=currency_id, account_id=account_id,
             partner_id=partner_id)
 
     @api.model
@@ -248,16 +230,14 @@ class account_bank_statement(models.Model):
            :param int/long partner_id: ID of the partner to put on the move line
            :return: dict of value to create() the account.move.line
         """
-        acc_id = account_id or st_line.account_id.id
         cur_id = currency_id or st_line.statement_id.currency.id
-        par_id = partner_id or (((st_line.partner_id) and st_line.partner_id.id) or False)
         return {
             'name': st_line.name,
             'date': st_line.date,
             'ref': st_line.ref,
             'move_id': move_id,
-            'partner_id': par_id,
-            'account_id': acc_id,
+            'partner_id': partner_id or (((st_line.partner_id) and st_line.partner_id.id) or False),
+            'account_id': account_id or st_line.account_id.id,
             'credit': credit,
             'debit': debit,
             'statement_id': st_line.statement_id.id,

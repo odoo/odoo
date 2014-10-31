@@ -575,7 +575,7 @@
                             <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>
-                                <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
+                                <field name="date" class="oe_inline"/>
                                 <field name="period_id" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
@@ -2093,7 +2093,7 @@
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
                         <group>
-                            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
+                            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
                             <field name="currency" invisible="1"/>
