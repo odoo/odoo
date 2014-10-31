@@ -533,11 +533,8 @@ class product_product(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
-        result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
-        for el in template_ids:
-            result.add(el)
-        return list(result)
+        return list(set(template_ids))
 
     _defaults = {
         'active': lambda *a: 1,
