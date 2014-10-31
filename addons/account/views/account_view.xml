@@ -572,7 +572,7 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>
                                 <field name="date" on_change="onchange_date(date, company_id)" class="oe_inline"/>
@@ -1202,7 +1202,7 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="partner_id"/>
                     <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
@@ -1383,7 +1383,7 @@
                                     <group col="6" colspan="4">
                                         <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
+                                        <field name="partner_id"/>
 
                                         <field name="journal_id"/>
                                         <field name="period_id"/>
@@ -2088,7 +2088,7 @@
                     <h1><field name="name" class="oe_inline" attrs="{'invisible':[('name','=','/')]}"/></h1>
                     <group>
                         <group>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
+                            <field name="journal_id" widget="selection" domain="[('type', '=', 'cash')]" />
                             <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" string="Responsible"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
@@ -2131,7 +2131,7 @@
                                     <field name="opening_details_ids" colspan="2" nolabel="1">
                                         <tree string="Opening Cashbox Lines" editable="bottom">
                                             <field name="pieces"/>
-                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
+                                            <field name="number_opening"/>
                                             <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                         </tree>
                                     </field>
@@ -2141,7 +2141,7 @@
                                         <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
                                             <tree string="Opening Cashbox Lines" editable="bottom">
                                                 <field name="pieces"/>
-                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)"/>
+                                                <field name="number_opening"/>
                                                 <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
@@ -2150,7 +2150,7 @@
                                         <field name="closing_details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '=', 'confirm')]}">
                                             <tree string="Closing Cashbox Lines" editable="bottom">
                                                 <field name="pieces" readonly="1" />
-                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
+                                                <field name="number_closing"/>
                                                 <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                             </tree>
                                         </field>

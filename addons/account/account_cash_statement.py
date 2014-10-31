@@ -22,14 +22,16 @@ class account_cashbox_line(models.Model):
             line.subtotal_closing = line.pieces * line.number_closing
 
     @api.multi
-    def on_change_sub_opening(self, pieces, number):
+    @api.onchange('number_opening')
+    def on_change_sub_opening(self):
         """ Compute the subtotal for the opening """
-        return {'value' : {'subtotal_opening' : (pieces * number) or 0.0 }}
+        self.subtotal_opening = (self.pieces * self.number_opening) or 0.0
 
     @api.multi
-    def on_change_sub_closing(self, pieces, number):
+    @api.onchange('number_closing')
+    def on_change_sub_closing(self):
         """ Compute the subtotal for the closing """
-        return {'value' : {'subtotal_closing' : (pieces * number) or 0.0 }}
+        self.subtotal_closing = (self.pieces * self.number_closing) or 0.0
 
     pieces = fields.Float(string='Unit of Currency', digits=dp.get_precision('Account'))
     number_opening = fields.Integer(string='Number of Units', help='Opening Unit Numbers')
@@ -100,21 +102,22 @@ class account_cash_statement(models.Model):
                     statement.last_closing_balance = self.browse(statement_ids[0]).balance_end_real
 
     @api.multi
-    def onchange_journal_id(self, journal_id):
-        result = super(account_cash_statement, self).onchange_journal_id(journal_id)
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        result = super(account_cash_statement, self).onchange_journal_id()
 
-        if journal_id:
-            statement_ids = self.search(
-                    [('journal_id', '=', journal_id),('state', '=', 'confirm')],
+        if self.journal_id:
+            statement = self.search(
+                    [('journal_id', '=', self.journal_id.id), ('state', '=', 'confirm')],
                     order='create_date desc',
                     limit=1,
             )
-            opening_details_ids = self._get_cash_open_box_lines(journal_id)
+            opening_details_ids = self._get_cash_open_box_lines(self.journal_id.id)
             if opening_details_ids:
                 result['value']['opening_details_ids'] = opening_details_ids
 
-            if statement_ids:
-                result.setdefault('value', {}).update({'last_closing_balance' : self.browse(statement_ids[0]).balance_end_real})
+            if statement:
+                result.setdefault('value', {}).update({'last_closing_balance' : statement.balance_end_real})
 
         return result
 

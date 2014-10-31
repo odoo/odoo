@@ -433,6 +433,7 @@ class account_move_line(models.Model):
                 raise Warning(_('You cannot provide a secondary currency if it is the same than the company one.'))
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
+    #Not used in account module itself. Need to check in other modules.
     @api.multi
     def onchange_currency(self, account_id, amount, currency_id, date=False, journal=False):
         if (not currency_id) or (not account_id):
@@ -455,47 +456,46 @@ class account_move_line(models.Model):
         return result
 
     @api.multi
-    def onchange_partner_id(self, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
-        fiscal_pos_obj = self.env['account.fiscal.position']
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
         val = {}
         val['date_maturity'] = False
 
-        if not partner_id:
+        if not self.partner_id:
             return {'value':val}
+        date = self.date
         if not date:
             date = datetime.now().strftime('%Y-%m-%d')
-        jt = False
-        if journal:
-            jt = self.env['account.journal'].browse(journal).type
-        part = self.env['res.partner'].browse(partner_id)
+        jt = self.journal_id.type
 
         payment_term_id = False
-        if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
-            payment_term_id = part.property_supplier_payment_term.id
-        elif jt and part.property_payment_term:
-            payment_term_id = part.property_payment_term.id
+        if jt and jt in ('purchase', 'purchase_refund') and self.partner_id.property_supplier_payment_term:
+            payment_term_id = self.partner_id.property_supplier_payment_term.id
+        elif jt and self.partner_id.property_payment_term:
+            payment_term_id = self.partner_id.property_payment_term.id
         if payment_term_id:
             res = self.env['account.payment.term'].compute(payment_term_id, 100, date)
             if res:
                 val['date_maturity'] = res[0][0]
-        if not account_id:
-            id1 = part.property_account_payable.id
-            id2 =  part.property_account_receivable.id
+        if not self.account_id:
+            id1 = self.partner_id.property_account_payable.id
+            id2 =  self.partner_id.property_account_receivable.id
             if jt:
                 if jt in ('sale', 'purchase_refund'):
-                    val['account_id'] = fiscal_pos_obj.map_account(part and part.property_account_position or False, id2)
+                    val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id2)
                 elif jt in ('purchase', 'sale_refund'):
-                    val['account_id'] = fiscal_pos_obj.map_account(part and part.property_account_position or False, id1)
+                    val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id1)
                 elif jt in ('general', 'bank', 'cash'):
-                    if part.customer:
-                        val['account_id'] = fiscal_pos_obj.map_account(part and part.property_account_position or False, id2)
-                    elif part.supplier:
-                        val['account_id'] = fiscal_pos_obj.map_account(part and part.property_account_position or False, id1)
+                    if self.partner_id.customer:
+                        val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id2)
+                    elif self.partner_id.supplier:
+                        val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id1)
                 if val.get('account_id', False):
-                    d = self.onchange_account_id(account_id=val['account_id'], partner_id=part.id)
+                    d = self.onchange_account_id(account_id = val['account_id'], partner_id = self.partner_id.id)
                     val.update(d['value'])
         return {'value':val}
 
+    # Need some guidance to get rid of this
     @api.multi
     def onchange_account_id(self, account_id=False, partner_id=False):
         val = {}
@@ -831,16 +831,17 @@ class account_move_line(models.Model):
         return False
 
     @api.multi
-    def onchange_date(self, date):
+    @api.onchange('date')
+    def onchange_date(self):
         """
         Returns a dict that contains new values and context
         @param date: latest value from user input for field date
         """
         res = {}
-        pids = self.env['account.period'].find(date)
+        pids = self.env['account.period'].find(self.date)
         if pids:
-            res.update({'period_id':pids[0]})
-            context = dict(self._context, period_id=pids[0])
+            res['period_id'] = pids[0]
+            context = dict(self._context, period_id = pids[0])
         return {
             'value':res,
             'context':context,
