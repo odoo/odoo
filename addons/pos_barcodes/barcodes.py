@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import re
 
 import openerp
 from openerp import tools
@@ -35,6 +36,99 @@ class barcode_nomenclature(osv.osv):
         #'convert_to_ean13': fields.boolean('Convert to EAN-13',help='Numerical Barcodes shorter than EAN-13 will be automatically converted to EAN-13'),
         'rule_ids':        fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
     }
+
+    # returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
+    def ean_checksum(self, ean):
+        code = list(ean)
+        if len(code) != 13:
+            return -1
+
+        oddsum = evensum = total = 0
+        code = code[:-1] # Remove checksum
+        for i in range(len(code)):
+            if i % 2 == 0:
+                evensum += int(code[i])
+            else:
+                oddsum += int(code[i])
+        total = oddsum * 3 + evensum
+        return int((10 - total % 10) % 10)
+        
+    # Returns true if the ean is a valid EAN codebar number by checking the control digit.
+    # ean must be a string
+    def check_ean(self, ean):
+        return re.match(re.compile('\d+$'), ean) and (self.ean_checksum(ean) == int(ean[len(ean)-1]))
+
+    # Returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
+    def sanitize_ean(self, ean):
+        ean = ean[0:13]
+        ean = ean + (13-len(ean))*'0'
+        return ean[0:12] + str(self.ean_checksum(ean))
+
+    # Attempts to interpret an ean (string encoding an ean)
+    # It will check its validity then return an object containing various
+    # information about the ean.
+    # most importantly : 
+    #  - code    : the ean
+    #  - type   : the type of the ean: 
+    #     'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'error'
+    #  - value  : if the id encodes a numerical value, it will be put there
+    #  - base_code : the ean code with all the encoding parts set to zero; the one put on
+    #                the product in the backend
+    def parse_ean(self, ean):
+        parse_result = {'encoding': 'ean13', 'type': 'error', 'code': ean, 'base_code': ean, 'value': 0}
+
+        rules = []
+        for rule in self.rule_ids:
+            rules.append({'type': rule.type, 'sequence': rule.sequence, 'pattern': rule.pattern})
+        
+        if not self.check_ean(ean):
+            return parse_result
+
+        def is_number(char):
+            n = ord(char)
+            return n >= 48 and n <= 57
+
+        def match_pattern(ean,pattern):
+            for i in range(len(pattern)):
+                p = pattern[i]
+                e = ean[i]
+                if is_number(p) and p != e:
+                    return False
+            return True
+
+        def get_value(ean,pattern):
+            value = 0
+            decimals = 0
+            for i in range(len(pattern)):
+                p = pattern[i]
+                v = int(ean[i])
+                if p == 'N':
+                    value *= 10
+                    value += v
+                elif p == 'D':  #FIXME precision ....
+                    decimals += 1
+                    value += v * pow(10,-decimals)
+            return value
+
+        def get_basecode(ean,pattern):
+            base = ''
+            for i in range(len(pattern)):
+                p = pattern[i]
+                v = ean[i]
+                if p == '*' or is_number(p):
+                    base += v
+                else:
+                    base += '0'
+            return self.sanitize_ean(base)
+
+        for rule in rules:
+            if match_pattern(ean, rule['pattern']):
+                parse_result['type'] = rule['type']
+                parse_result['value'] = get_value(ean, rule['pattern'])
+                parse_result['base_code'] = get_basecode(ean, rule['pattern'])
+                return parse_result
+
+        return parse_result
 
 class barcode_rule(osv.osv):
     _name = 'barcode.rule'

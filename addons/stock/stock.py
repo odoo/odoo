@@ -818,7 +818,15 @@ class stock_picking(osv.osv):
                   'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
                   'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
               }),
+        'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcode Nomenclature', help='A barcode nomenclature', required="True"),
     }
+
+    def _get_default_nomenclature(self, cr, uid, context=None):
+        nom_obj = self.pool.get('barcode.nomenclature')
+        res = nom_obj.search(cr, uid, [], limit=1, context=context)
+        if res and res[0]:
+            return nom_obj.browse(cr, uid, res[0], context=context).id
+        return False
 
     _defaults = {
         'name': '/',
@@ -828,6 +836,7 @@ class stock_picking(osv.osv):
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c),
         'recompute_pack_op': True,
+        'barcode_nomenclature_id': _get_default_nomenclature,
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -1437,7 +1446,6 @@ class stock_picking(osv.osv):
         return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)
 
     def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
-        print barcode_str
         '''This function is called each time there barcode scanner reads an input'''
         lot_obj = self.pool.get('stock.production.lot')
         package_obj = self.pool.get('stock.quant.package')
@@ -1445,6 +1453,26 @@ class stock_picking(osv.osv):
         stock_operation_obj = self.pool.get('stock.pack.operation')
         stock_location_obj = self.pool.get('stock.location')
         answer = {'filter_loc': False, 'operation_id': False}
+
+        # Barcode Nomenclatures
+        this_picking = self.search(cr, uid, [('id', '=', picking_id)], context=context)
+        rec = self.browse(cr, uid, this_picking, context=context)
+        if not rec:
+            return answer # TODO: return specific error?
+        else:
+            barcode_nom = rec.barcode_nomenclature_id
+        parse_result = barcode_nom.parse_ean(barcode_str)
+
+        #check if the barcode is a weighted barcode
+        if parse_result['type'] == 'weight':
+            matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', parse_result['base_code']), ('default_code', '=', barcode_str)], context=context)
+            if matching_product_ids:
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, weight=parse_result['value'], increment=True, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            else:
+                print "Weighted barcode but product not found" #TODO: what to do here?
+
         #check if the barcode correspond to a location
         matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
         if matching_location_ids:
@@ -3917,11 +3945,12 @@ class stock_pack_operation(osv.osv):
             new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
         self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
-    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, increment=True, context=None):
-        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
+    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, weight=1, increment=True, context=None):
+        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+weight) otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
         context can receive a key 'current_package_id' with the package to consider for this operation
+        weight is used for weighted products for which quantity != 1 (not per unit but e.g. per kg)
         returns True
         '''
         if context is None:
@@ -3942,10 +3971,11 @@ class stock_pack_operation(osv.osv):
             op_obj = self.browse(cr, uid, operation_id, context=context)
             qty = op_obj.qty_done
             if increment:
-                qty += 1
+                qty += weight
             else:
-                qty -= 1 if qty >= 1 else 0
-                if qty == 0 and op_obj.product_qty == 0:
+                qty -= 1 #if qty >= 1 else 0
+                #if qty == 0 and op_obj.product_qty == 0:
+                if qty < 0 and op_obj.product_qty == 0:
                     #we have a line with 0 qty set, so delete it
                     self.unlink(cr, uid, [operation_id], context=context)
                     return False
@@ -3959,7 +3989,7 @@ class stock_pack_operation(osv.osv):
                 'product_qty': 0,
                 'location_id': picking.location_id.id, 
                 'location_dest_id': picking.location_dest_id.id,
-                'qty_done': 1,
+                'qty_done': weight,
                 }
             for key in domain:
                 var_name, dummy, value = key

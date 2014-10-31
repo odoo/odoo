@@ -311,7 +311,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             fields: ['name','rule_ids'],
             domain: function(self){ return [] },
             loaded: function(self,nomenclatures){
-                console.log("PUSH");
                 if (self.config.barcode_nomenclature_id) {
                     for (var i = 0; i < nomenclatures.length; i++) {
                         if (nomenclatures[i].id === self.config.barcode_nomenclature_id[0]) {
@@ -320,8 +319,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                 }
                 self.nomenclature = self.nomenclature || null;
-                console.log(self.nomenclature);
-                console.log(self.attributes);
             },
         }, {
             model: 'barcode.rule',
@@ -329,7 +326,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
             loaded: function(self,rules){
                 if (self.nomenclature) {
-                    console.log("PUSH2");
                     rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
                     self.nomenclature.rules = rules;
                     for (var i = 0; i < rules.length; i++) {

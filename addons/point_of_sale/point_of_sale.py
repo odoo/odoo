@@ -169,10 +169,10 @@ class pos_config(osv.osv):
         return company_id
 
     def _get_default_nomenclature(self, cr, uid, context=None):
-        default_nom_obj = self.pool.get('barcode.nomenclature')
-        res = default_nom_obj.search(cr, uid, [('id', '=', 1)], limit=1, context=context)
+        nom_obj = self.pool.get('barcode.nomenclature')
+        res = nom_obj.search(cr, uid, [], limit=1, context=context)
         if res and res[0]:
-            return default_nom_obj.browse(cr, uid, res[0], context=context).id
+            return nom_obj.browse(cr, uid, res[0], context=context).id
         return False
 
     _defaults = {
