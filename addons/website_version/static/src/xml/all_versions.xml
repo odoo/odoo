@@ -3,7 +3,7 @@
 
     <t t-name="all_versions">
         <t t-foreach="snapshots" t-as="item">
-            <li class="snapshot dropdown-submenu" t-att-data-snapshot_id="item.id">
+            <li class="snapshot dropdown-submenu version" t-att-data-snapshot_id="item.id">
                 <!-- <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right">
                     <i class="fa fa-trash-o fa-fw"></i>
                 </a> -->
@@ -34,10 +34,10 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#" id="save_as_new_version" data-action="save_as_new_version" 
-                        class="btn btn-link btn-xs">Save as New Version</a>
+                        class="btn btn-link btn-xs version">Save as New Version</a>
                     </li>
                     <li><a href="#" id="save_and_publish" data-action="save_and_publish" 
-                        class="btn btn-link btn-xs">Save and Publish</a>
+                        class="btn btn-link btn-xs version">Save and Publish</a>
                     </li>
                 </ul>
             </div>
