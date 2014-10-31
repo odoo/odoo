@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-29 14:47+0700\n"
+"Last-Translator: \n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2014-09-24 09:11+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Generator: Poedit 1.6.7\n"
+"Language: vi\n"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -30,9 +31,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click để tạo yêu cầu nghỉ mới.\n"
+"              </p><p>\n"
+"                Khi bạn đã lưu đề xuất nghỉ phép, nó sẽ được gửi\n"
+"                tới quản lý của bạn để duyệt. Nên chắc chắn nó được nhập "
+"đúng\n"
+"                loại (như nghỉ dưỡng bệnh, nghỉ luật định, nghỉ bệnh) và "
+"chích xác\n"
+"                số ngày nghỉ liên quan.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
+#, fuzzy
 msgid ""
 "<p>\n"
 "               You can assign remaining Legal Leaves for each employee, "
@@ -41,71 +54,77 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p>\n"
+"               Bạn có thể gán số ngày phép hợp lệ còn lại cho mỗi nhân viên, "
+"FERP\n"
+"               sẽ tự động tạo và xác nhận đề xuất chế độ phép.\n"
+"             </p>\n"
+"\t    "
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr "Hoạt động"
+msgstr "Kích hoạt"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 msgid "Add a reason..."
-msgstr ""
+msgstr "Lí do..."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
 msgid "Allocate Leaves for Employees"
-msgstr ""
+msgstr "Lập chế độ phép cho nhân viên"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_holiday_allocation_tree
 msgid "Allocated Days"
-msgstr ""
+msgstr "Số ngày cấp"
 
 #. module: hr_holidays
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Allocation"
-msgstr ""
+msgstr "Cấp và đưa ra"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Mode"
-msgstr ""
+msgstr "Nghĩ theo quy định"
 
 #. module: hr_holidays
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr ""
+msgstr "Nghĩ theo yêu cầu"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_holiday_allocation_tree
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "Cần duyệt"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "Yêu cầu đã duyệt"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:507
 #, python-format
 msgid "Allocation for %s"
-msgstr ""
+msgstr "Cấp và đưa ra cho %s"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to Override Limit"
-msgstr ""
+msgstr "Cho phép nghĩ quá số ngày đã thiết lập"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Phân tích từ"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
@@ -116,7 +135,7 @@ msgstr "Thực hiện Xét duyệt Hai lần"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_evaluation_report_graph
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Phân tích đánh giá"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
@@ -125,8 +144,7 @@ msgid "Approve"
 msgstr "Chấp thuận"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
@@ -136,7 +154,7 @@ msgstr "Được chấp thuận"
 #. module: hr_holidays
 #: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
 msgid "Assign Leaves"
-msgstr ""
+msgstr "Phép đã cấp"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -152,7 +170,7 @@ msgstr "Xanh dương"
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Approved and Confirmed"
-msgstr ""
+msgstr "Duyệt và xác nhận"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -167,14 +185,17 @@ msgstr "Theo Người lao động"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
-msgstr ""
+msgstr "Theo từ khóa nhân viên"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
+#, fuzzy
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
+"Theo nhân viên: Yêu cầu nghỉ phép cho từng nhân viên riêng lẻ, Theo thẻ nhân "
+"viên: yêu cầu nghỉ phép nhóm theo loại nhân viên"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
@@ -183,8 +204,7 @@ msgid "Cancel"
 msgstr "Hủy bỏ"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Bị hủy bỏ"
 
@@ -200,16 +220,19 @@ msgstr "Nhóm Người lao động"
 
 #. module: hr_holidays
 #: help:hr.holidays,type:0
+#, fuzzy
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
+"Chọn 'yêu cầu nghỉ' nếu bạn muốn tăng số ngày nghỉ hiện tại cho nhân viên"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
+#, fuzzy
 msgid "Color"
-msgstr ""
+msgstr "Màu sắc"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -218,8 +241,9 @@ msgstr "Màu trong Báo cáo"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
+#, fuzzy
 msgid "Compensatory Days"
-msgstr ""
+msgstr "Số ngày nghỉ bù"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.edit_holiday_new
@@ -233,35 +257,38 @@ msgid "Confirmed"
 msgstr "Đã xác nhận"
 
 #. module: hr_holidays
-#: field:hr.holidays,create_uid:0
-#: field:hr.holidays.status,create_uid:0
+#: field:hr.holidays,create_uid:0 field:hr.holidays.status,create_uid:0
 #: field:hr.holidays.summary.dept,create_uid:0
 #: field:hr.holidays.summary.employee,create_uid:0
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Đã tạo"
 
 #. module: hr_holidays
-#: field:hr.holidays,create_date:0
-#: field:hr.holidays.status,create_date:0
+#: field:hr.holidays,create_date:0 field:hr.holidays.status,create_date:0
 #: field:hr.holidays.summary.dept,create_date:0
 #: field:hr.holidays.summary.employee,create_date:0
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Đã tạo"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
+#, fuzzy
 msgid "Current Leave Status"
-msgstr ""
+msgstr "Trạng thái phép hiện tại"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_id:0
+#, fuzzy
 msgid "Current Leave Type"
-msgstr ""
+msgstr "Loại nghỉ hiện tai"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_last_post:0
+#, fuzzy
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi."
 
 #. module: hr_holidays
 #: field:hr.holidays,department_id:0
@@ -287,7 +314,7 @@ msgstr "Các chi tiết"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 msgid "Duration"
-msgstr ""
+msgstr "Khoảng thời gian"
 
 #. module: hr_holidays
 #: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
@@ -296,14 +323,14 @@ msgstr ""
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
-msgstr "Người lao động"
+msgstr "Nhân viên"
 
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Nhãn đánh dấu NV"
 
-#. module: hr_holidays
+#. module: hr_hodays
 #: field:hr.holidays.summary.employee,emp:0
 msgid "Employee(s)"
 msgstr "Người lao động"
@@ -315,26 +342,29 @@ msgstr "Ngày kết thúc"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
-#, python-format
+#, fuzzy, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Lỗi"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#, fuzzy
 msgid ""
 "Filters only on allocations and requests that belong to an holiday type that "
 "is 'active' (active field is True)"
-msgstr ""
+msgstr "Chỉ lọc trên nghỉ phép và yêu cầu thuộc loại nghỉ được có hiệu lực"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
+#, fuzzy
 msgid "First Approval"
-msgstr ""
+msgstr "Duyệt lần đầu"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_follower_ids:0
+#, fuzzy
 msgid "Followers"
-msgstr ""
+msgstr "Người theo dõi của"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,date_from:0
@@ -345,109 +375,126 @@ msgstr "Từ"
 #. module: hr_holidays
 #: field:hr.employee,leave_date_from:0
 msgid "From Date"
-msgstr ""
+msgstr "Từ ngày"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "Group By"
-msgstr ""
+msgstr "Nhóm lại"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
+#, fuzzy
 msgid "HR Leaves Summary Report By Department"
-msgstr ""
+msgstr "Báo cáo tổng hợp phép theo phòng ban"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
+#, fuzzy
 msgid "HR Leaves Summary Report By Employee"
-msgstr ""
+msgstr "Báo cáo tổng hợp ngày phép theo từng nhân viên"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_summary:0
+#, fuzzy
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Giữ tổng hợp nội dung chat (số lượng tin nhắn, ...). Tổng hợp này có định "
+"dạng HTML để nhập vào Kaban views"
 
 #. module: hr_holidays
-#: field:hr.holidays,id:0
-#: field:hr.holidays.remaining.leaves.user,id:0
-#: field:hr.holidays.status,id:0
-#: field:hr.holidays.summary.dept,id:0
+#: field:hr.holidays,id:0 field:hr.holidays.remaining.leaves.user,id:0
+#: field:hr.holidays.status,id:0 field:hr.holidays.summary.dept,id:0
 #: field:hr.holidays.summary.employee,id:0
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID:"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_unread:0
+#, fuzzy
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Nếu chọn, tin nhắn mới gây chú ý của bân"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
+#, fuzzy
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
 msgstr ""
+"Bỏ đánh dấu trường hiệu lực, nó sẽ giấu loại phép này đi mà không cần xóa "
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
+#, fuzzy
 msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
 msgstr ""
+"Nếu bạn chọn ô này, hệ thống sẽ cho phép nhân viên lấy thêm ngày phép có sẵn "
+"theo loại này và đưa vào phần \"số ngày phép còn lại\" trong phần quản lý "
+"nhân viên."
 
 #. module: hr_holidays
 #: field:hr.holidays,message_is_follower:0
+#, fuzzy
 msgid "Is a Follower"
-msgstr ""
+msgstr "Là một người theo dõi"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Ivory"
-msgstr ""
+msgstr "Ngà"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_last_post:0
+#, fuzzy
 msgid "Last Message Date"
-msgstr ""
+msgstr "Ngày thông điệp gần nhất"
 
 #. module: hr_holidays
-#: field:hr.holidays,write_uid:0
-#: field:hr.holidays.status,write_uid:0
+#: field:hr.holidays,write_uid:0 field:hr.holidays.status,write_uid:0
 #: field:hr.holidays.summary.dept,write_uid:0
 #: field:hr.holidays.summary.employee,write_uid:0
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: hr_holidays
-#: field:hr.holidays,write_date:0
-#: field:hr.holidays.status,write_date:0
+#: field:hr.holidays,write_date:0 field:hr.holidays.status,write_date:0
 #: field:hr.holidays.summary.dept,write_date:0
 #: field:hr.holidays.summary.employee,write_date:0
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Lavender"
-msgstr ""
+msgstr "Tím oải hương"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
+#, fuzzy
 msgid "Leave"
-msgstr ""
+msgstr "Phép"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
+#, fuzzy
 msgid "Leave Detail"
-msgstr ""
+msgstr "Chi tiết nghỉ phép"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_leave_request_to_meeting
 msgid "Leave Meetings"
-msgstr ""
+msgstr "Họp nghĩ phép"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:373
@@ -459,21 +506,20 @@ msgstr ""
 #: field:resource.calendar.leaves,holiday_id:0
 #, python-format
 msgid "Leave Request"
-msgstr "Yêu cầu Nghỉ"
+msgstr "Yêu cầu nghỉ"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_holiday
 msgid "Leave Requests"
-msgstr "Các yêu cầu Nghỉ"
+msgstr "Các yêu cầu nghỉ"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr ""
+msgstr "Các đơn đã được duyệt"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: field:hr.holidays,holiday_status_id:0
+#: xsl:holidays.summary:0 field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
 #: view:hr.holidays.status:hr_holidays.view_holiday_status_normal_tree
@@ -490,7 +536,7 @@ msgstr "Loại nghỉ"
 #: view:hr.holidays.status:hr_holidays.view_hr_holidays_status_search
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 msgid "Leave Types"
-msgstr ""
+msgstr "Các kiểu nghỉ"
 
 #. module: hr_holidays
 #: view:hr.employee:hr_holidays.view_employee_form_leave_inherit
@@ -502,14 +548,16 @@ msgstr "Ngày nghỉ"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,leaves_taken:0
+#, fuzzy
 msgid "Leaves Already Taken"
-msgstr ""
+msgstr "Phép đã nghỉ"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
+#, fuzzy
 msgid "Leaves Analysis"
-msgstr ""
+msgstr "Phân tích phép"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
@@ -517,8 +565,7 @@ msgid "Leaves Management"
 msgstr "Quản lý Ngày nghỉ"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-#: view:hr.holidays:hr_holidays.view_holiday_graph
+#: xsl:holidays.summary:0 view:hr.holidays:hr_holidays.view_holiday_graph
 #: view:hr.holidays:hr_holidays.view_holiday_simple
 #: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -526,12 +573,12 @@ msgstr "Quản lý Ngày nghỉ"
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "Báo cáo tổng hợp"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leaves Types"
-msgstr ""
+msgstr "Các kiểu nghỉ phép"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
@@ -544,27 +591,31 @@ msgstr "Ngày nghỉ theo Phòng ban"
 #: view:hr.holidays.remaining.leaves.user:hr_holidays.view_hr_holidays_remaining_leaves_user_graph
 #: view:hr.holidays.remaining.leaves.user:hr_holidays.view_hr_holidays_remaining_leaves_user_tree
 msgid "Leaves by Type"
-msgstr ""
+msgstr "Các loại nghỉ phép"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
+#, fuzzy
 msgid "Legal Leaves 2014"
-msgstr ""
+msgstr "Phép theo luật 2012"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Blue"
-msgstr ""
+msgstr "Xanh dương nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Coral"
-msgstr ""
+msgstr "Trắng san hô nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Cyan"
-msgstr ""
+msgstr "Xanh lơ nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -573,23 +624,27 @@ msgstr "Xanh lá nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Pink"
-msgstr ""
+msgstr "Hồng nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Salmon"
-msgstr ""
+msgstr "Hồng cá hồi nhạt"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Light Yellow"
-msgstr ""
+msgstr "Vàng sáng"
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
+#, fuzzy
 msgid "Linked Requests"
-msgstr ""
+msgstr "Yêu cầu đã liên kết"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -603,19 +658,20 @@ msgstr "Người quản lý"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
+#, fuzzy
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Cho phép tối đa"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
+#, fuzzy
 msgid "Maximum Leaves Allowed - Leaves Already Taken"
-msgstr ""
+msgstr "Số ngày nghỉ tối đa được phép - số ngày đã nghỉ"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,virtual_remaining_leaves:0
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr ""
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgstr "Ngày phép tối đa được phép - Ngày phép đã lấy - Ngày phép chờ duyệt"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0
@@ -624,18 +680,21 @@ msgstr "Cuộc họp"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,categ_id:0
+#, fuzzy
 msgid "Meeting Type"
-msgstr ""
+msgstr "Loại họp"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_ids:0
+#, fuzzy
 msgid "Messages"
-msgstr ""
+msgstr "Ti nhắn"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_ids:0
+#, fuzzy
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Lịch sử tin nhắn và liên lạc"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
@@ -646,32 +705,33 @@ msgstr "Các thứ khác"
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 #: view:hr.holidays:hr_holidays.view_holiday
 msgid "Mode"
-msgstr ""
+msgstr "Theo quy định"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Month"
-msgstr ""
+msgstr "Tháng"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "My Department Leaves"
-msgstr ""
+msgstr "Nhóm lại theo phòn ban"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#, fuzzy
 msgid "My Leave Requests"
-msgstr ""
+msgstr "Yêu cầu nghỉ phép"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "My Requests"
-msgstr ""
+msgstr "Các yêu cầu bản thân đã gửi (hoặc chưa)"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
-msgstr ""
+msgstr "Mới"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_holiday
@@ -682,10 +742,13 @@ msgstr "Số ngày"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
+#, fuzzy
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
 msgstr ""
+"Khi ngày nghỉ được xác nhận, FERP sẽ tự động tạo một cuộc họp tương tứng của "
+"loại nghỉ ngày trên lịch"
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
@@ -696,12 +759,12 @@ msgstr "Cha"
 #: view:hr.holidays.summary.dept:hr_holidays.view_hr_holidays_summary_dept
 #: view:hr.holidays.summary.employee:hr_holidays.view_hr_holidays_summary_employee
 msgid "Print"
-msgstr "In"
+msgstr "In ra"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
 msgid "Reasons"
-msgstr ""
+msgstr "Các lý do"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -715,8 +778,7 @@ msgid "Refuse"
 msgstr "Từ chối"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Đã từ chối"
@@ -737,7 +799,7 @@ msgstr "Số ngày nghỉ còn lại"
 #: view:hr.employee:hr_holidays.hr_holidays_leaves_assign_tree_view
 #: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
-msgstr ""
+msgstr "Số ngày nghỉ còn lại"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
@@ -751,35 +813,37 @@ msgstr "Loại Yêu cầu"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved
+#, fuzzy
 msgid "Request approved"
-msgstr ""
+msgstr "Chấp thuận yêu cầu"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:472
-#, python-format
+#, fuzzy, python-format
 msgid "Request approved, waiting second validation."
-msgstr ""
+msgstr "Yêu cầu <b>duyệt</b>, đợi duyệt lần 2"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+#, fuzzy
 msgid "Request confirmed and waiting approval"
-msgstr ""
+msgstr "Yêu cầu đã được duyệt, đợi xác nhận"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
 msgid "Request refused"
-msgstr ""
+msgstr "Yêu cầu bị từ chối"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
 msgid "Requests to Approve"
-msgstr ""
+msgstr "Gửi yêu cầu duyệt đơn"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Đưa về nháp"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
@@ -789,23 +853,22 @@ msgstr "Tìm kiếm Ngày nghỉ"
 #. module: hr_holidays
 #: view:hr.holidays.status:hr_holidays.view_holidays_status_filter
 msgid "Search Leave Type"
-msgstr ""
+msgstr "Tìm kiếm kiểu nghỉ"
 
 #. module: hr_holidays
-#: field:hr.holidays,manager_id2:0
-#: selection:hr.holidays,state:0
+#: field:hr.holidays,manager_id2:0 selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "Chấp thuận Lần 2"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
-msgstr ""
+msgstr "Lựa chọn kiểu nghỉ"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "nghỉ ốm"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_from:0
@@ -815,27 +878,27 @@ msgstr "Ngày bắt đầu"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "Start Month"
-msgstr ""
+msgstr "Bắt đầu của tháng"
 
 #. module: hr_holidays
 #: field:hr.holidays,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tình trạng"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Gửi cho quản lý"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Sum"
-msgstr ""
+msgstr "Tổng"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Tóm tắt"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -843,10 +906,12 @@ msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
 msgstr ""
+"Nhân viên hoặc danh mục nhân viên của đề xuất này bị thiếu. Vui lòng kiểm "
+"tra người dùng đăng nhập của bạn có liên kết đến một nhân viên không?"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:502
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
 "there is only one leave type with the option 'Allow to Override Limit' "
@@ -856,16 +921,24 @@ msgid ""
 "Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
 "the employees if the configuration does not allow to use this field."
 msgstr ""
+"Tính năng phía sau trường 'Phép luật định còn lại' chỉ có thể được dùng khi "
+"chỉ có một loại phép có tùy chọn 'Cho phép vượt giới hạn' không được chọn. "
+"(% tìm thấy). Nếu không, việc cập nhật sẽ không rõ ràng do không thể quyết "
+"định loại nghỉ phép mà cập nhật này phải thực hiện. \n"
+"Bạn có thể thích dùng menu cổ điển 'Đề xuất nghỉ phép' và 'Đề xuất chế độ "
+"phép' ở 'Nhân sự \\ Nghỉ phép' để quản lý ngày phép của nhân viên nếu cấu "
+"hình không cho phép dùng trường này"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
+#, fuzzy
 msgid "The number of days must be greater than 0."
-msgstr ""
+msgstr "Số ngày phải lớn hơn 0"
 
 #. module: hr_holidays
 #: constraint:hr.holidays:0
 msgid "The number of remaining leaves is not sufficient for this leave type"
-msgstr ""
+msgstr "Số ngày phép còn lại không đủ cho loại phép này."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:452
@@ -874,81 +947,99 @@ msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
 msgstr ""
+"Số ngày phép còn lại không đủ cho loại phép này.\n"
+"Vui lòng xác thực cùng với ngày phép đang chờ duyệt."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:285
-#: code:addons/hr_holidays/hr_holidays.py:310
-#: sql_constraint:hr.holidays:0
-#, python-format
+#: code:addons/hr_holidays/hr_holidays.py:310 sql_constraint:hr.holidays:0
+#, fuzzy, python-format
 msgid "The start date must be anterior to the end date."
-msgstr ""
+msgstr "ngày bắt đầu phải trước ngày kết thúc"
 
 #. module: hr_holidays
 #: help:hr.holidays,state:0
+#, fuzzy
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.         "
-"   \n"
-"The status is 'To Approve', when holiday request is confirmed by user.       "
-"     \n"
-"The status is 'Refused', when holiday request is refused by manager.         "
-"   \n"
+"The status is set to 'To Submit', when a holiday request is "
+"created.            \n"
+"The status is 'To Approve', when holiday request is confirmed by "
+"user.            \n"
+"The status is 'Refused', when holiday request is refused by "
+"manager.            \n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"Trạng thái chuyển sang 'Gửi duyệt', khi một đơn xin nghỉ phép được tạo.\t\n"
+"Trạng thái chuyển sang 'Duyệt', khi một đơn xin nghỉ phép được duyệt bởi "
+"người dùng.\t\n"
+"Trạng thái chuyển sang 'Từ chối', khi đơn xin nghỉ phép bị từ chối bởi quản "
+"lý.\t\n"
+"Trạng thái chuyển sang 'Đã duyệt', khi đơn xin nghỉ phép được duyệt bởi quản "
+"lý."
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
+#, fuzzy
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr ""
+msgstr "Vùng này tự động điền bởi người xác nhận nghỉ phép"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
+#, fuzzy
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
 msgstr ""
+"Vùng này được tự động tạo bởi người xác nhận lần 2 (Nếu loại phép này cần "
+"duyệt 2 lần)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,color_name:0
+#, fuzzy
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
 msgstr ""
+"Màu này được sử dụng trong tổng hợp phép và đặt trong Báo cáo\\ Nghỉ phép "
+"theo phòng ban"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
+#, fuzzy
 msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
-msgstr ""
+msgstr "Giá trị này được tạo bởi tổng hợp các yêu cầu phép với giá trị âm"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
+#, fuzzy
 msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
-msgstr ""
+msgstr "Giá trị này được tạo bởi tổng các ngày nghỉ với giá trị dương"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 #: selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
-msgstr ""
+msgstr "Đang duyệt"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "To Confirm"
-msgstr ""
+msgstr "Đang xác nhận"
 
 #. module: hr_holidays
 #: field:hr.employee,leave_date_to:0
 msgid "To Date"
-msgstr ""
+msgstr "Đến ngày"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "To Submit"
-msgstr ""
+msgstr "Đang xác nhận"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
@@ -957,11 +1048,14 @@ msgstr "Tổng số ngày nghỉ theo loại"
 
 #. module: hr_holidays
 #: help:hr.employee,remaining_leaves:0
+#, fuzzy
 msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
 msgstr ""
+"Tổng số phép hợp lệ được phân bổ cho nhân viên này, thay đổi giá trị để tạo "
+"yêu cầu nghỉ. Tổng dựa trên tất cả loại phép không cần ghi đè nó"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
@@ -971,12 +1065,12 @@ msgstr "Loại"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Không tính vào lương"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Các tin chưa đọc"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -987,12 +1081,13 @@ msgstr "Người sử dụng"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 msgid "Validate"
-msgstr ""
+msgstr "Kiểm tra (xác nhận)"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#, fuzzy
 msgid "Validated"
-msgstr ""
+msgstr "Xác nhận"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:hr_holidays.edit_holiday_status_form
@@ -1006,8 +1101,9 @@ msgstr "Tím sẫm"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,virtual_remaining_leaves:0
+#, fuzzy
 msgid "Virtual Remaining Leaves"
-msgstr ""
+msgstr "Số ngày nghỉ còn lại"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -1033,74 +1129,81 @@ msgstr "Cảnh báo!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
+#, fuzzy
 msgid "Wheat"
-msgstr ""
+msgstr "Vàng lúa mỳ"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
+#, fuzzy
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr ""
+msgstr "Khi được chọn, Yêu cầu nghỉ phép cho loại này yêu cầu duyệt 2 lần"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+#, fuzzy
 msgid "Year"
-msgstr ""
+msgstr "năm"
 
 #. module: hr_holidays
 #: constraint:hr.holidays:0
+#, fuzzy
 msgid "You can not have 2 leaves that overlaps on same day!"
-msgstr ""
+msgstr "Bạn không thể có 2 lần phép trùng ngày nhau!"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:274
-#, python-format
+#, fuzzy, python-format
 msgid "You cannot delete a leave which is in %s state."
-msgstr ""
+msgstr "Bạn không thể xóa một ngày phép đang trong trạng thái %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:509
 #, python-format
 msgid "You cannot reduce validated allocation requests"
-msgstr ""
+msgstr "Bạn không thể giảm đề xuất chế độ phép đã duyệt"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:329
 #: code:addons/hr_holidays/hr_holidays.py:334
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
 msgstr ""
+"Bạn không thể sửa một yêu cầu nghỉ đã được duyệt. Liên hệ với quản lý nhân sự"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
-#, python-format
+#, fuzzy, python-format
 msgid "You have to select at least one Department. And try again."
-msgstr ""
+msgstr "Bạn phải chọn ít nhất một phòng ban. Và thử lại"
 
 #. module: hr_holidays
 #: view:hr.employee:hr_holidays.view_employee_form_leave_inherit
 #: view:hr.holidays:hr_holidays.edit_holiday_new
 msgid "days"
-msgstr ""
+msgstr "ngày (s)"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
+#, fuzzy
 msgid "leaves."
-msgstr ""
+msgstr "Các phép"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "của"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "đến"
 
 #. module: hr_holidays
 #: field:hr.holidays,can_reset:0
+#, fuzzy
 msgid "unknown"
-msgstr ""
+msgstr "không biết"

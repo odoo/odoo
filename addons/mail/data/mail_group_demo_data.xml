@@ -4,33 +4,33 @@
 
         <!-- Discussion groups, done in 2 steps to remove creator from followers -->
         <record model="mail.group" id="group_best_sales_practices">
-            <field name="name">Best Sales Practices</field>
-            <field name="description">Discussion about best sales practices and deals.</field>
+            <field name="name">Thực hành bán hàng</field>
+            <field name="description">Thực hành bán hàng, trao đổi và thảo luận</field>
         </record>
         <record model="mail.group" id="group_best_sales_practices">
             <field name="message_follower_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
         </record>
         <record model="mail.group" id="group_board">
-            <field name="name">Board meetings</field>
-            <field name="description">Board meetings, budgets, strategic plans</field>
+            <field name="name">Hội đồng quản trị</field>
+            <field name="description">Nơi họp hôị đồng quản trị</field>
         </record>
         <record model="mail.group" id="group_board">
             <field name="message_follower_ids" eval="[(6, 0, [])]"/>
         </record>
         <record model="mail.group" id="group_rd">
-            <field name="name">R&amp;D</field>
-            <field name="description">Research and development discussion group</field>
+            <field name="name">Nghiên cứu &amp; Phát triển</field>
+            <field name="description">Nghiên cứu và phát triển sản phẩm</field>
         </record>
         <record model="mail.group" id="group_hr_policies">
-            <field name="name">HR Policies</field>
-            <field name="description">Company cars, holidays and other advantages</field>
+            <field name="name">Nhân sự</field>
+            <field name="description">Nhóm quản lý nhân sự</field>
         </record>
         <record model="mail.group" id="group_rd">
             <field name="message_follower_ids" eval="[(6, 0, [])]"/>
         </record>
         <record model="mail.group" id="group_support">
-            <field name="name">Support</field>
-            <field name="description">Support team</field>
+            <field name="name">Hỗ trợ khách hàng</field>
+            <field name="description">Hỗ trợ khách hàng</field>
         </record>
 
         <!-- Best sales practices messages -->

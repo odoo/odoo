@@ -71,7 +71,7 @@ Generic Payroll system.
     'test': [
         'test/payslip.yml',
     ],
-    'demo': ['hr_payroll_demo.xml'],
+    # 'demo': ['hr_payroll_demo.xml'],
     'installable': True,
     'auto_install': False,
     'application': False,

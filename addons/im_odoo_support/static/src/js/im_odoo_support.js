@@ -100,36 +100,36 @@
     });
 
     // display support contact button (in chat user list, if installed) and in dropdown user menu.
-    if(openerp.im_chat){
-        openerp.im_chat.InstantMessaging.include({
-            start: function(){
-                this._super.apply(this, arguments);
-                var user = {
-                    "id" : -1,
-                    "name": _t('Odoo Support'),
-                    "im_status": 'online',
-                    "image_url": "/im_odoo_support/static/img/odoo_o_small.png"
-                };
-                var widget = new openerp.im_chat.UserWidget(self, user);
-                widget.prependTo(self.$(".oe_im_users"));
-                widget.$el.addClass('odoo_support_contact');
-                this.support_user = widget;
-
-                $(window).trigger('odoo_support_ready_to_bind','im_contact');
-            },
-            search_users_status: function(e){
-                var self = this;
-                this._super.apply(this, arguments).then(function(res){
-                    if(self.$('.oe_im_searchbox').val().length === 0 || _t("Odoo Support").toLowerCase().indexOf(self.$('.oe_im_searchbox').val().toLowerCase()) != -1){
-                        self.support_user.$el.show();
-                    }else{
-                        self.support_user.$el.hide();
-                    }
-                    return res;
-                });
-            }
-        });
-    }
+//    if(openerp.im_chat){
+//        openerp.im_chat.InstantMessaging.include({
+//            start: function(){
+//                this._super.apply(this, arguments);
+//                var user = {
+//                    "id" : -1,
+//                    "name": _t('Odoo Support'),
+//                    "im_status": 'online',
+//                    "image_url": "/im_odoo_support/static/img/odoo_o_small.png"
+//                };
+//                var widget = new openerp.im_chat.UserWidget(self, user);
+//                widget.prependTo(self.$(".oe_im_users"));
+//                widget.$el.addClass('odoo_support_contact');
+//                this.support_user = widget;
+//
+//                $(window).trigger('odoo_support_ready_to_bind','im_contact');
+//            },
+//            search_users_status: function(e){
+//                var self = this;
+//                this._super.apply(this, arguments).then(function(res){
+//                    if(self.$('.oe_im_searchbox').val().length === 0 || _t("Odoo Support").toLowerCase().indexOf(self.$('.oe_im_searchbox').val().toLowerCase()) != -1){
+//                        self.support_user.$el.show();
+//                    }else{
+//                        self.support_user.$el.hide();
+//                    }
+//                    return res;
+//                });
+//            }
+//        });
+//    }
 
     openerp.web.UserMenu.include({
         do_update: function(){

@@ -6,26 +6,26 @@
             <field name="name">Demo User</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">demo@yourcompany.example.com</field>
-            <field name="street">Avenue des Dessus-de-Lives, 2</field>
-            <field name="city">Namur (Loyers)</field>
-            <field name="zip">5101</field>
+            <field name="email">demo@feosco.com</field>
+            <field name="street">128 Phan Đăng Lưu, quận Phú Nhuận</field>
+            <field name="city">Hồ Chí Minh</field>
+            <field name="zip">760000</field>
             <field name="country_id" ref="be"/>
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="name">YourCompany</field>
-            <field name="street">1725 Slough Ave.</field>
-            <field name="city">Scranton</field>
-            <field name="zip">18540</field>
-            <field name="phone">+1 555 123 8069</field>
-            <field name="email">info@yourcompany.example.com</field>
-            <field name="website">www.example.com</field>
-            <field name="image" type="base64" file="base/static/img/main_partner-image.png"/>
+            <field name="name">FEOSCO Company</field>
+            <field name="street">128 Phan Đăng Lưu, quận Phú Nhuận</field>
+            <field name="city">Hồ Chí Minh</field>
+            <field name="zip">760000</field>
+            <field name="phone">+84 822 409 250</field>
+            <field name="email">webmaster@feosco.com</field>
+            <field name="website">www.feosco.com</field>
+            <field name="image" type="base64" file="base/static/img/feosco.png"/>
         </record>
 
         <record id="main_company" model="res.company">
-            <field name="name">YourCompany</field>
+            <field name="name">FEOSCO</field>
         </record>
 
 
@@ -41,8 +41,8 @@ Mr Demo</field>
         </record>
 
         <record model="res.partner" id="base.partner_root">
-            <field name="email">admin@yourcompany.example.com</field>
-            <field name="tz">Europe/Brussels</field>
+            <field name="email">webmaster@feosco.com</field>
+            <field name="tz">Asia/Ho_Chi_Minh</field>
             <field name="image" type="base64" file="base/static/img/partner_root-image.jpg"/>
         </record>
 

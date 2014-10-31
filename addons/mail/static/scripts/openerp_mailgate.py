@@ -135,10 +135,10 @@ def configure_parser():
                       help="Admin email for error notifications.",
                       default=None)
     parser.add_option("-d", "--dbname", dest="dbname",
-                      help="Odoo database name (default: %default)",
+                      help="FEOSCO database name (default: %default)",
                       default=config.OPENERP_DEFAULT_DATABASE)
     parser.add_option("--host", dest="host",
-                      help="Odoo Server hostname",
+                      help="FEOSCO Server hostname",
                       default=config.OPENERP_HOSTNAME)
     parser.add_option("--port", dest="port",
                       help="Odoo Server XML-RPC port number",
