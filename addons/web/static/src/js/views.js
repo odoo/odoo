@@ -34,15 +34,22 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * widget: typically, widgets added are instance.web.ViewManager.  The action manager
      *      uses this list of widget to handle the breadcrumbs.
      * action: new action
-     * clear_breadcrumbs: boolean, if true, current widgets are destroyed
+     * options.on_reverse_breadcrumb: will be called when breadcrumb is selected
+     * options.clear_breadcrumbs: boolean, if true, current widgets are destroyed
+     * options.replace_breadcrumb: boolean, if true, replace current breadcrumb
      */
-    push_widget: function(widget, action, clear_breadcrumbs) {
+    push_widget: function(widget, action, options) {
         var self = this,
+            to_destroy,
+            options = options || {},
             old_widget = this.inner_widget;
 
-        if (clear_breadcrumbs) {
-            var to_destroy = this.widgets;
+        if (options.clear_breadcrumbs) {
+            to_destroy = this.widgets;
             this.widgets = [];
+        } else if (options.replace_breadcrumb) {
+            to_destroy = _.last(this.widgets);
+            this.widgets = _.initial(this.widgets);
         }
         if (widget instanceof instance.web.Widget) {
             var title = widget.get('title') || action.display_name || action.name;
@@ -56,12 +63,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 destroy: function () {},
             });
         }
+        _.last(this.widgets).__on_reverse_breadcrumb = options.on_reverse_breadcrumb;
         this.inner_action = action;
         this.inner_widget = widget;
         return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
             (action.target !== 'inline') && (!action.flags.headless) && widget.$header && widget.$header.show();
             old_widget && old_widget.$el.hide();
-            if (clear_breadcrumbs) {
+            if (options.clear_breadcrumbs) {
                 self.clear_widgets(to_destroy)
             }
         });
@@ -93,18 +101,18 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
     },
+    get_widgets: function () {
+        return this.widgets.slice(0);
+    },
     history_back: function() {
         var widget = _.last(this.widgets);
         if (widget instanceof instance.web.ViewManager) {
             var nbr_views = widget.view_stack.length;
             if (nbr_views > 1) {
-                this.select_widget(widget, nbr_views - 2);
-            } else if (this.widgets.length > 1) {
-                widget = this.widgets[this.widgets.length -2];
-                nbr_views = widget.view_stack.length;
-                this.select_view(widget, nbr_views - 2)
-            }
-        } else if (this.widgets.length > 1) {
+                return this.select_widget(widget, nbr_views - 2);
+            } 
+        } 
+        if (this.widgets.length > 1) {
             widget = this.widgets[this.widgets.length - 2];
             var index = widget.view_stack && widget.view_stack.length - 1;
             this.select_widget(widget, index);
@@ -119,12 +127,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
             def = $.when(widget.select_view && widget.select_view(index));
 
         def.done(function () {
+            if (widget.__on_reverse_breadcrumb) {
+                widget.__on_reverse_breadcrumb();
+            }
             _.each(self.widgets.splice(widget_index + 1), function (w) {
                 w.destroy();
             });
             self.inner_widget = _.last(self.widgets);
             self.inner_widget.display_breadcrumbs && self.inner_widget.display_breadcrumbs();
-            self.inner_widget.$el.show();
+            self.inner_widget.do_show && self.inner_widget.do_show();
         });
     },
     clear_widgets: function(widgets) {
@@ -260,6 +271,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @param {Number|String|Object} Can be either an action id, a client action or an action descriptor.
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
+     * @param {Boolean} [options.replace_breadcrumb=false] Replace the current breadcrumb with the action
      * @param {Function} [options.on_reverse_breadcrumb] Callback to be executed whenever an anterior breadcrumb item is clicked on.
      * @param {Function} [options.hide_breadcrumb] Do not display this widget's title in the breadcrumb
      * @param {Function} [options.on_close] Callback to be executed when the dialog is closed (only relevant for target=new actions)
@@ -402,7 +414,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_widget(widget, executor.action, options.clear_breadcrumbs);
+        return this.push_widget(widget, executor.action, options);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
