@@ -212,8 +212,8 @@ class Report(osv.Model):
         try:
             root = lxml.html.fromstring(html)
 
-            for node in root.xpath("//html/head/style"):
-                css += node.text
+            for node in root.xpath("//html/head/style|//html/head/link"):
+                css += lxml.html.tostring(node)
 
             for node in root.xpath("//div[contains(@class, 'header')]"):
                 body = lxml.html.tostring(node)
