@@ -198,7 +198,7 @@ class account_config_settings(models.TransientModel):
 
     @api.multi
     @api.onchange('company_id')
-    def onchange_company_id(self, company_id):
+    def onchange_company_id(self):
         # update related fields
         values = {}
         values['currency_id'] = False
@@ -250,45 +250,48 @@ class account_config_settings(models.TransientModel):
         return {'value': values}
 
     @api.multi
-    def onchange_chart_template_id(self, chart_template_id):
+    @api.onchange('chart_template_id')
+    def onchange_chart_template_id(self):
         tax_templ_obj = self.env['account.tax.template']
         res = {'value': {
             'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False,
             'sale_tax_rate': 15, 'purchase_tax_rate': 15,
         }}
-        if chart_template_id:
+        if self.chart_template_id:
             # update complete_tax_set, sale_tax and purchase_tax
-            chart_template = self.env['account.chart.template'].browse(chart_template_id)
-            res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
-            if chart_template.complete_tax_set:
+            res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set})
+            if self.chart_template_id.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))],
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('sale','all'))],
                     order="sequence, id desc")
                 purchase_tax_ids = tax_templ_obj.search(
-                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))],
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('purchase','all'))],
                     order="sequence, id desc")
                 res['value']['sale_tax'] = sale_tax_ids and sale_tax_ids[0] or False
                 res['value']['purchase_tax'] = purchase_tax_ids and purchase_tax_ids[0] or False
-            if chart_template.code_digits:
-                res['value']['code_digits'] = chart_template.code_digits
+            if self.chart_template_id.code_digits:
+                res['value']['code_digits'] = self.chart_template_id.code_digits
         return res
 
     @api.multi
-    def onchange_tax_rate(self, rate):
-        return {'value': {'purchase_tax_rate': rate or False}}
+    @api.onchange('sale_tax_rate')
+    def onchange_tax_rate(self):
+        return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
 
     @api.multi
-    def onchange_multi_currency(self, group_multi_currency):
+    @api.onchange('group_multi_currency')
+    def onchange_multi_currency(self):
         res = {}
-        if not group_multi_currency:
+        if not self.group_multi_currency:
             res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
         return res
-    
+
     @api.multi
-    def onchange_start_date(self, start_date):
-        if start_date:
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    @api.onchange('date_start')
+    def onchange_start_date(self):
+        if self.start_date:
+            start_date = datetime.datetime.strptime(self.start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
@@ -361,17 +364,18 @@ class account_config_settings(models.TransientModel):
 
     @api.model
     def get_default_dp(self, fields):
-        dp = self.env['ir.model.data'].get_object('product','decimal_account')
+        dp = self.env['ir.model.data'].get_object('product', 'decimal_account')
         return {'decimal_precision': dp.digits}
 
     @api.multi
     def set_default_dp(self):
-        dp = self.env['ir.model.data'].get_object('product','decimal_account')
+        dp = self.env['ir.model.data'].get_object('product', 'decimal_account')
         dp.write({'digits': self.decimal_precision})
 
     @api.multi
-    def onchange_analytic_accounting(self, analytic_accounting):
-        if analytic_accounting:
+    @api.onchange('group_analytic_accounting')
+    def onchange_analytic_accounting(self):
+        if self.group_analytic_accounting:
             return {'value': {
                 'module_account_accountant': True,
                 }}

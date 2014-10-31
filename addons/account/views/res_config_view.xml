@@ -50,7 +50,6 @@
                                 <field name="chart_template_id"
                                     widget="selection"
                                     domain="[('visible','=', True)]"
-                                    on_change="onchange_chart_template_id(chart_template_id)"
                                     class="oe_inline"/>
                                 <button string="Install more chart templates"
                                     icon="gtk-go-forward"
@@ -76,7 +75,7 @@
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="sale_tax_rate"/>
-                                <field name="sale_tax_rate" on_change="onchange_tax_rate(sale_tax_rate)"/>
+                                <field name="sale_tax_rate"/>
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="purchase_tax_rate"/>
@@ -91,7 +90,6 @@
                             <div>
                                 <label for="date_start" string="Date Range"/>
                                 <field name="date_start"
-                                    on_change="onchange_start_date(date_start)"
                                     class="oe_inline"/> -
                                 <field name="date_stop" class="oe_inline"/>
                             </div>
@@ -120,7 +118,7 @@
                         <label for="id" string="Features"/>
                         <div>
                             <div name="group_multi_currency">
-                                <field name="group_multi_currency" class="oe_inline" on_change="onchange_multi_currency(group_multi_currency)"/>
+                                <field name="group_multi_currency" class="oe_inline"/>
                                 <label for="group_multi_currency"/>
                                 <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
                                     <group>
@@ -136,7 +134,7 @@
                                 <label for="module_account_accountant"/>
                             </div>
                             <div>
-                                <field name="group_analytic_accounting" class="oe_inline" on_change="onchange_analytic_accounting(group_analytic_accounting, context)"/>
+                                <field name="group_analytic_accounting" class="oe_inline"/>
                                 <label for="group_analytic_accounting"/>
                             </div>
                             <div>
