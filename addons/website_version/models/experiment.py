@@ -26,7 +26,7 @@ class Experiment_snapshot(osv.Model):
     _columns = {
         'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ,ondelete='cascade'),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True,ondelete='cascade'),
-        'frequency': fields.selection([('10','Once'),('50','Twice'),('80','More')], 'Frequency'),
+        'frequency': fields.selection([('10','Less'),('50','Medium'),('80','More')], 'Frequency'),
         'google_index': fields.function(_get_index,type='integer', string='Google_index'),
     }
 
@@ -73,6 +73,8 @@ class Experiment(osv.Model):
         #some write operation doesn't need to synchronise with Google (frequency or sequence)
         if name or state or exp_snaps or obj_metric:
             for exp in self.browse(cr, uid, ids, context=context):
+                if exp.state == 'ended':
+                    raise Warning("You cannot modify an ended experiment.")
                 #temp is the data to send to Googe
                 temp={}
                 if name:
@@ -82,7 +84,7 @@ class Experiment(osv.Model):
                 if state:
                     current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
                     if len(current[1]["variations"]) == 1:
-                        raise Warning("You must define at least one variation in your experiment.")
+                        raise Warning("You must define at least one version in your experiment.")
                     if not current[1].get("objectiveMetric"):
                         raise Warning("You must define at least one goal for this experiment in your Google Analytics account before moving its state.")
                     if current[1]["status"] == 'RUNNING' and state == 'draft' :
@@ -100,6 +102,8 @@ class Experiment(osv.Model):
                         raise Warning("You cannot modify the objective of an ended or running experiment.")
                     temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
                 if exp_snaps:
+                    if exp.state == 'running':
+                        raise Warning("You cannot modify a running experiment.")
                     index = 0
                     temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
                     for exp_s in exp.experiment_snapshot_ids:

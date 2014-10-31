@@ -49,7 +49,7 @@
     </t>
 
     <t t-name="experiment_menu">
-        <li class="experiment"><a href="#" data-action="manage_experiment">Manage Experiments</a></li>
+        <li class="experiment"><a href="#" data-action="manage_experiment">Manage A/B tests</a></li>
         <li class="experiment"><a href="#" data-action="statistics">Statistics</a></li>
     </t>
 
@@ -64,7 +64,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Create an experiment</h4>
+                <h4 class="modal-title">Launch A/B tests</h4>
               </div>
                 <div class="modal-body">
                     <t t-if="snapshots.length != 0 and config == 1">  
@@ -140,7 +140,6 @@
                 </t>
                 <t t-if= "config == 0">
                     <button type="button" class="btn btn-primary configure">Configure</button>
-                    <button type="button" class="btn btn-primary ga_tuto">GA tutoriel</button>
                 </t>
                 <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
               </div>

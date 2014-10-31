@@ -164,7 +164,7 @@
                     if(check){
                         openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
 
-                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is created. Now you can manage this experiment by clicking on Manage Experiments."}));
+                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is created. Now you can manage this experiment by clicking on Manage A/B tests."}));
                             self.wizard.appendTo($('body')).modal({"keyboard" :true});
                             self.wizard.on('click','.confirm', function(){
                                 location.reload();
