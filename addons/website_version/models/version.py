@@ -24,6 +24,8 @@ class ViewVersion(osv.Model):
             ids=[ids]
         
         snapshot_id=context.get('snapshot_id')
+        # if 827 in ids:
+        #     from pudb import set_trace; set_trace()
 
         if snapshot_id and not context.get('mykey') and not toggle:
             ctx = dict(context, mykey=True)
