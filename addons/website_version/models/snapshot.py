@@ -15,7 +15,7 @@ class Snapshot(osv.Model):
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'You cannot have multiple snapshots with the same name!'),
+        ('name_uniq', 'unique(name, website_id)', 'You cannot have multiple snapshots with the same name in the same domain!'),
     ]
 
     def unlink(self, cr, uid, ids, context=None):

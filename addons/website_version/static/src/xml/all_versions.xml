@@ -72,7 +72,7 @@
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">Experiment Name</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control form-field-label name "/>
+                                    <input type="text" class="form-control form-field-label name " id="required_field"/>
                                 </div>
 
                             </div>
@@ -118,7 +118,33 @@
                     </t>
 
                     <t t-if= "config == 0">
-                        <div>
+                        <form id="productForm" class="form-horizontal" role="form">              
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">GA Key</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label ga_key" id="required_field"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">View ID</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label view_id " id="required_field"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">Client ID</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label client_id " id="required_field"/>
+                                </div>
+                            </div>
+                            <div class="form-group form-group">
+                                <label class="col-sm-3 control-label">Client Secret</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-field-label client_secret " id="required_field"/>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="configure_ab">
                             <p>You must configure your account.</p>
                         </div>
                     </t>
@@ -139,7 +165,16 @@
                     </div>
                 </t>
                 <t t-if= "config == 0">
-                    <button type="button" class="btn btn-primary configure">Configure</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary validate">Validate</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" class="btn btn-link btn-xs configure">Configure</a></li>
+                        </ul>
+                    </div>
                 </t>
                 <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
               </div>

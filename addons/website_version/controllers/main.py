@@ -136,6 +136,15 @@ class TableExporter(http.Controller):
             "url": url
         }
 
+    @http.route(['/website_version/set_google_access'], type = 'json', auth = "public", website = True)
+    def set_google_access(self, ga_key, view_id, client_id, client_secret):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        website_id = context.get('website_id')
+        request.registry['website'].write(cr, uid, [website_id], {'google_analytics_key':ga_key, 'google_analytics_view_id':view_id}, context=context)
+        icp = request.registry['ir.config_parameter']
+        icp.set_param(cr, uid, 'google_management_client_id', client_id or '', groups=['base.group_system'], context=context)
+        icp.set_param(cr, uid, 'google_management_client_secret', client_secret or '', groups=['base.group_system'], context=context)
+
 
     @http.route(['/website_version/all_snapshots_all_goals'], type = 'json', auth = "public", website = True)
     def get_all_snapshots_all_goals(self, view_id):

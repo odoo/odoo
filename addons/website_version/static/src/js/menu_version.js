@@ -214,6 +214,22 @@
                     var website_id = $('html').attr('data-website-id');
                     window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
                 });
+                self.wizard.on('click','.validate', function(){
+                    var website_id = $('html').attr('data-website-id');
+                    var ga_key = $('.ga_key').val();
+                    var view_id = $('.view_id').val();
+                    var client_id = $('.client_id').val();
+                    var client_secret = $('.client_secret').val();
+                    if(ga_key.length == 0 || view_id.length == 0 || client_id.length == 0 || client_secret.length == 0){
+                        self.wizard.find(".configure_ab").after("<p class='message' style='color : red'> *You must fill all the fields.</p>");
+                    }
+                    else{
+                        openerp.jsonRpc( '/website_version/set_google_access', 'call', {'ga_key':ga_key, 'view_id':view_id, 'client_id':client_id, 'client_secret':client_secret}).then(function (result) {
+                            var website_id = $('html').attr('data-website-id');
+                            window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
+                        });
+                    }
+                });
             });
         },
 
