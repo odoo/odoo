@@ -5,8 +5,10 @@ from openerp import models, fields, api, _
 class bank(models.Model):
     _inherit = "res.partner.bank"
 
-    journal_id = fields.Many2one('account.journal', string='Account Journal', help="This journal will be created automatically for this bank account when you save the record")
-    currency_id = fields.Many2one('res.currency', related='journal_id.currency', string='Currency', readonly=True, help="Currency of the related account journal.")
+    journal_id = fields.Many2one('account.journal', string='Account Journal', 
+        help="This journal will be created automatically for this bank account when you save the record")
+    currency_id = fields.Many2one('res.currency', related='journal_id.currency', string='Currency',
+        readonly=True, help="Currency of the related account journal.")
 
     @api.model
     def create(self, data):
@@ -46,15 +48,15 @@ class bank(models.Model):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
+                account = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
                 # No liquidity account exists, no template available
-                if not ids: continue
+                if not account: continue
 
-                ref_acc_bank = ids
+                ref_acc_bank = account
                 while True:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
-                    ids = AccountObj.search([('code', '=', new_code), ('company_id', '=', bank.company_id.id)], limit=1)
-                    if not ids:
+                    account = AccountObj.search([('code', '=', new_code), ('company_id', '=', bank.company_id.id)], limit=1)
+                    if not account:
                         break
                     current_num += 1
                 name = self._prepare_name(bank)
@@ -71,8 +73,8 @@ class bank(models.Model):
                 new_code = 1
                 while True:
                     code = _('BNK')+str(new_code)
-                    ids = JournalObj.search([('code','=',code)], limit=1)
-                    if not ids:
+                    account = JournalObj.search([('code','=',code)], limit=1)
+                    if not account:
                         break
                     new_code += 1
 
@@ -86,7 +88,6 @@ class bank(models.Model):
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
                 }
-                journal_id = JournalObj.create(vals_journal)
 
-                bank.write({'journal_id': journal_id})
+                bank.journal_id = JournalObj.create(vals_journal)
         return True
