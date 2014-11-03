@@ -24,7 +24,7 @@ class account_move_bank_reconcile(models.TransientModel):
         if not account_id:
              raise Warning(_('You have to define the bank account in the journal definition for reconciliation.'))
         return {
-            'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),
+            'domain': "[('journal_id', '=', %d), ('account_id', '=' ,%d), ('state', '!=', 'draft')]" % (data['journal_id'], account_id),
             'name': _('Standard Encoding'),
             'view_type': 'form',
             'view_mode': 'tree,form',

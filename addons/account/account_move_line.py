@@ -60,16 +60,16 @@ class account_move_line(models.Model):
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(context['period_from'], context['period_to'])
         if context.get('periods', False):
             if initial_bal:
-                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
                 periods = fiscalperiod_obj.search([('id', 'in', context['periods'])], order='date_start', limit=1)
                 if periods:
                     ids = ','.join([str(x) for x in context['periods']])
-                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, periods.date_start, ids, where_move_state, where_move_lines_by_date)
+                    query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, periods.date_start, ids, where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
-                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
+                query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
-            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+            query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
 
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
@@ -249,7 +249,7 @@ class account_move_line(models.Model):
     debit = fields.Float(string='Debit', digits=dp.get_precision('Account'), default=0.0)
     credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
-        ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed'), ('deprecated', '=', False)],
+        ondelete="cascade", domain=[('type', '!=', 'view'), ('type', '!=', 'closed'), ('deprecated', '=', False)],
         default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
         help="The move of this entry line.", index=True, required=True)
@@ -605,7 +605,7 @@ class account_move_line(models.Model):
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
-                    AND l.state <> 'draft'
+                    AND l.state != 'draft'
                     GROUP BY l.partner_id, p.last_reconciliation_date
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
@@ -686,7 +686,7 @@ class account_move_line(models.Model):
                 raise Warning(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
         for line in unrec_lines:
-            if line.state <> 'valid':
+            if line.state != 'valid':
                 raise Warning(_('Entry "%s" is not valid !') % line.name)
             credit += line['credit']
             debit += line['debit']
@@ -959,7 +959,7 @@ class account_move_line(models.Model):
         done = {}
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
+            if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
                 raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
                 raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)

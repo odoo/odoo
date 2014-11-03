@@ -51,7 +51,7 @@ class account_cash_statement(models.Model):
             if (statement.journal_id.type not in ('cash',)):
                 continue
             if not statement.journal_id.cash_control:
-                if statement.balance_end_real <> statement.balance_end:
+                if statement.balance_end_real != statement.balance_end:
                     statement.write({'balance_end_real' : statement.balance_end})
                 continue
             start = end = 0

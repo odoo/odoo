@@ -17,7 +17,7 @@ class account_move_line_reconcile_select(models.TransientModel):
          """
         data = self.read()[0]
         return {
-            'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],
+            'domain': "[('account_id', '=', %d), ('reconcile_id', '=', False), ('state', '!=', 'draft')]" % data['account_id'],
             'name': _('Reconciliation'),
             'view_type': 'form',
             'view_mode': 'tree,form',

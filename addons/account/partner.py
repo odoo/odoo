@@ -128,9 +128,9 @@ class account_fiscal_position_account(models.Model):
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     account_src_id = fields.Many2one('account.account', string='Account Source', 
-        domain=[('type','<>','view'), ('deprecated', '=', False)], required=True)
+        domain=[('type', '!=', 'view'), ('deprecated', '=', False)], required=True)
     account_dest_id = fields.Many2one('account.account', string='Account Destination',
-        domain=[('type','<>','view'), ('deprecated', '=', False)], required=True)
+        domain=[('type', '!=', 'view'), ('deprecated', '=', False)], required=True)
 
     _sql_constraints = [
         ('account_src_dest_uniq',
@@ -231,7 +231,7 @@ class res_partner(models.Model):
             AND p.id = %s
             AND l.reconcile_id IS NULL
             AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
-            AND l.state <> 'draft'
+            AND l.state != 'draft'
             GROUP BY l.partner_id''', (self.id,))
         res = self._cr.dictfetchone()
         if res:

@@ -491,7 +491,7 @@ class account_journal(models.Model):
         " Select 'General' for miscellaneous operations journals."\
         " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
     type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Type Controls',
-        domain=[('code', '<>', 'view'), ('code', '<>', 'closed')])
+        domain=[('code', '!=', 'view'), ('code', '!=', 'closed')])
     account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Account',
         domain=[('deprecated', '=', False)])
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
@@ -2241,8 +2241,8 @@ class account_fiscal_position_account_template(models.Model):
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account.template', string='Account Source', domain=[('type', '<>', 'view')], required=True)
-    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', domain=[('type', '<>', 'view')], required=True)
+    account_src_id = fields.Many2one('account.account.template', string='Account Source', domain=[('type', '!=', 'view')], required=True)
+    account_dest_id = fields.Many2one('account.account.template', string='Account Destination', domain=[('type', '!=', 'view')], required=True)
 
 
 # ---------------------------------------------------------
