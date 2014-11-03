@@ -289,9 +289,14 @@ class product_pricelist(osv.osv):
                                 price_tmp, round=False,
                                 context=context)
                 elif rule.base == -2:
-                    for seller in product.seller_ids:
-                        if (not partner) or (seller.name.id != partner):
+                    seller = False
+                    for seller_id in product.seller_ids:
+                        if (not partner) or (seller_id.name.id != partner):
                             continue
+                        seller = seller_id
+                    if not seller and product.seller_ids:
+                        seller = product.seller_ids[0]
+                    if seller:
                         qty_in_seller_uom = qty
                         from_uom = context.get('uom') or product.uom_id.id
                         seller_uom = seller.product_uom and seller.product_uom.id or False
