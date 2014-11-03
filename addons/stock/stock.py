@@ -3953,6 +3953,11 @@ class stock_pack_operation(osv.osv):
         weight is used for weighted products for which quantity != 1 (not per unit but e.g. per kg)
         returns True
         '''
+        print "Search and increment " + str(weight)
+        if increment:
+            print "INCREMENT"
+        else:
+            print "NOT INCREMENT"
         if context is None:
             context = {}
 
@@ -3973,12 +3978,12 @@ class stock_pack_operation(osv.osv):
             if increment:
                 qty += weight
             else:
-                qty -= 1 #if qty >= 1 else 0
-                #if qty == 0 and op_obj.product_qty == 0:
-                if qty < 0 and op_obj.product_qty == 0:
+                if qty == 0 and op_obj.product_qty == 0:
                     #we have a line with 0 qty set, so delete it
                     self.unlink(cr, uid, [operation_id], context=context)
                     return False
+                else:
+                    qty = max(0, qty-1) #if qty >= 1 else 0
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
