@@ -77,9 +77,9 @@ class account_fiscalyear_close(models.TransientModel):
         move_ids = obj_acc_move.search([('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
         if move_ids:
             move_line_ids = obj_acc_move_line.search([('move_id', 'in', move_ids.ids)])
-            obj_acc_move_line._remove_move_reconcile(move_line_ids.ids, opening_reconciliation=True)
-            obj_acc_move_line.unlink(move_line_ids.ids)
-            obj_acc_move.unlink(move_ids.ids)
+            move_line_ids._remove_move_reconcile(opening_reconciliation=True)
+            move_line_ids.unlink()
+            move_ids.unlink()
 
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()

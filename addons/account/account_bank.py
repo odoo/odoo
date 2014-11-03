@@ -46,14 +46,14 @@ class bank(models.Model):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)])
+                ids = AccountObj.search([('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], limit=1)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
-                ref_acc_bank = ids[0]
+                ref_acc_bank = ids
                 while True:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
-                    ids = AccountObj.search([('code', '=', new_code), ('company_id', '=', bank.company_id.id)])
+                    ids = AccountObj.search([('code', '=', new_code), ('company_id', '=', bank.company_id.id)], limit=1)
                     if not ids:
                         break
                     current_num += 1
@@ -71,7 +71,7 @@ class bank(models.Model):
                 new_code = 1
                 while True:
                     code = _('BNK')+str(new_code)
-                    ids = JournalObj.search([('code','=',code)])
+                    ids = JournalObj.search([('code','=',code)], limit=1)
                     if not ids:
                         break
                     new_code += 1

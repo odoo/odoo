@@ -43,9 +43,9 @@ class account_installer(models.TransientModel):
 
         # Looking for the module with the 'Account Charts' category
         category_name, category_id = self.env['ir.model.data'].get_object_reference('base', 'module_category_localization_account_charts')
-        ids = ModuleObj.search([('category_id', '=', category_id)])
-        if ids:
-            charts.update((m.name, m.shortdesc) for m in ids)
+        recs = ModuleObj.search([('category_id', '=', category_id)])
+        if recs:
+            charts.update((m.name, m.shortdesc) for m in recs)
 
         charts = sorted(charts.items(), key=itemgetter(1))
         charts.insert(0, ('configurable', _('Custom')))
@@ -122,8 +122,8 @@ class account_installer(models.TransientModel):
         fy_obj = self.env['account.fiscalyear']
         for res in self:
             if res.date_start and res.date_stop:
-                f_ids = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id.id)])
-                if not f_ids:
+                fiscal_year = fy_obj.search([('date_start', '<=', res.date_start), ('date_stop', '>=', res.date_stop), ('company_id', '=', res.company_id.id)], limit=1)
+                if not fiscal_year:
                     name = code = res.date_start[:4]
                     if int(name) != int(res.date_stop[:4]):
                         name = res.date_start[:4] + '-' + res.date_stop[:4]

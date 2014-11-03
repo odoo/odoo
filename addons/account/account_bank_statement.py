@@ -134,10 +134,10 @@ class account_bank_statement(models.Model):
             Find the correct period to use for the given date and company_id, return it and set it in the context
         """
         ctx = dict(self._context or {})
-        ctx['company_id'] = company_id
-        period_id = self.env['account.period'].with_context(ctx).find(dt=date)
+        ctx['company_id'] = self.company_id.id
+        period_id = self.env['account.period'].with_context(ctx).find(dt=self.date)
         if period_id:
-            self.period_id = pids[0]
+            self.period_id = period_id[0]
             #todo: update period_id in context
             #context = dict(self._context, period_id=pids[0])
 

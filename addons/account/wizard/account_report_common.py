@@ -17,8 +17,8 @@ class account_common_report(models.TransientModel):
             company_id = self.env['account.account'].browse(chart_account_id).company_id.id
             now = time.strftime('%Y-%m-%d')
             domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
-            fiscalyears = self.env['account.fiscalyear'].search(domain, limit=1)
-            res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyears and fiscalyears[0] or False}
+            fiscalyear = self.env['account.fiscalyear'].search(domain, limit=1)
+            res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyear and fiscalyear.id or False}
         return res
 
     chart_account_id = fields.Many2one('account.account', string='Chart of Account', 
@@ -99,8 +99,8 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def _get_account(self):
-        accounts = self.env['account.account'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
-        return accounts and accounts[0] or False
+        account = self.env['account.account'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return account
 
     @api.model
     def _get_fiscalyear(self):

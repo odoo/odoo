@@ -87,24 +87,23 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
 
     @api.multi
     def trans_rec_addendum(self):
-        if context is None:
-            context = {}
-        model_data_ids = self.env['ir.model.data'].search([('model','=','ir.ui.view'),('name','=','account_move_line_reconcile_writeoff')])
+        model_data_ids = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('name', '=', 'account_move_line_reconcile_writeoff')])
         resource_id = model_data_ids.read(fields=['res_id'])[0]['res_id']
         return {
             'name': _('Reconcile Writeoff'),
-            'context': context,
+            'context': self._context,
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move.line.reconcile.writeoff',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
 
     @api.multi
     def trans_rec_reconcile_partial(self):
-        self.env['account.move.line'].reconcile_partial(self._context['active_ids'], 'manual')
+        context = dict(self._context or {})
+        self.env['account.move.line'].reconcile_partial(context.get('active_ids', []) , 'manual')
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

@@ -77,10 +77,10 @@ class account_cash_statement(models.Model):
 
     @api.model
     def _get_company(self):
-        company_id = self.env.user.company_id
-        if not company_id:
-            company_ids = self.env['res.company'].search([])
-        return company_id or company_ids and company_ids[0] or False
+        company = self.env.user.company_id
+        if not company:
+            company = self.env['res.company'].search([], limit=1)
+        return company or False
 
     @api.multi
     @api.depends('balance_end_real', 'balance_end')
@@ -93,13 +93,13 @@ class account_cash_statement(models.Model):
     def _compute_last_closing_balance(self):
         for statement in self:
             if statement.state == 'draft':
-                statement_ids = self.search(
-                    [('journal_id', '=', statement.journal_id.id),('state', '=', 'confirm')],
+                statements = self.search(
+                    [('journal_id', '=', statement.journal_id.id), ('state', '=', 'confirm')],
                     order='create_date desc',
                     limit=1,
                 )
-                if statement_ids:
-                    statement.last_closing_balance = self.browse(statement_ids[0]).balance_end_real
+                if statements:
+                    statement.last_closing_balance = statements.balance_end_real
 
     @api.multi
     @api.onchange('journal_id')
@@ -145,8 +145,7 @@ class account_cash_statement(models.Model):
             if journal.with_last_closing_balance == True:
                 domain = [('journal_id', '=', journal.id),
                           ('state', '=', 'confirm')]
-                last_bank_statement_ids = self.search(domain, limit=1, order='create_date desc')
-                last_bank_statement = last_bank_statement_ids and last_bank_statement_ids[0] or False
+                last_bank_statement = self.search(domain, limit=1, order='create_date desc')
                 if last_bank_statement:
 
                     last_pieces = dict(

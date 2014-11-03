@@ -30,7 +30,7 @@ class account_invoice_refund(models.TransientModel):
                (inv_type == 'in_invoice') and 'purchase_refund' or \
                (inv_type == 'in_refund') and 'purchase'
         journal = self.env['account.journal'].search([('type', '=', type), ('company_id', '=', company_id)], limit=1)
-        return journal and journal[0] or False
+        return journal
 
     @api.model
     def _get_reason(self):

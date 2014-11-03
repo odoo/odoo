@@ -347,16 +347,15 @@ class account_move_line(models.Model):
         context = self._context
         if context.get('journal_id', False):
             return context['journal_id']
-        journal_id = False
+        journal = False
 
         if context.get('journal_type', False):
-            jids = self.env['account.journal'].search([('type','=', context.get('journal_type'))])
-            if not jids:
-                model, action_id = self.env['ir.model.data'].get_object_reference('account', 'action_account_journal_form')
+            journal = self.env['account.journal'].search([('type','=', context.get('journal_type'))], limit=1)
+            if not journal:
+                action_id = self.env.ref('account.action_account_journal_form')
                 msg = _("""Cannot find any account journal of "%s" type for this company, You should create one.\n Please go to Journal Configuration""") % context.get('journal_type').replace('_', ' ').title()
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
-            journal_id = jids[0]
-        return journal_id
+        return journal
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
@@ -617,9 +616,8 @@ class account_move_line(models.Model):
             return []
 
         # To apply the ir_rules
-        PartnerObj = self.env['res.partner']
-        ids = PartnerObj.search([('id', 'in', ids)])
-        return PartnerObj.name_get(ids)
+        partners = self.env['res.partner'].search([('id', 'in', ids)])
+        return partners.name_get()
 
     @api.multi
     def reconcile_partial(self, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
@@ -863,7 +861,7 @@ class account_move_line(models.Model):
         # Function remove move rencocile ids related with moves
         obj_move_rec = self.env['account.move.reconcile']
         unlink_ids = []
-        if not self.ids:
+        if not self:
             return True
         full_recs = filter(lambda x: x.reconcile_id, self)
         rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
@@ -872,14 +870,14 @@ class account_move_line(models.Model):
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
         all_moves = self.search(['|',('reconcile_id', 'in', unlink_ids),('reconcile_partial_id', 'in', unlink_ids)])
-        all_moves = list(set(all_moves) - set(self.ids))
+        all_moves = list(set(all_moves) - set(self))
         if unlink_ids:
             if opening_reconciliation:
                 raise Warning(_('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(unlink_ids)
             if len(all_moves) >= 2:
-                self.reconcile_partial(all_moves, 'auto')
+                all_moves.reconcile_partial()
         return True
 
     @api.multi

@@ -7,8 +7,8 @@ class account_vat_declaration(models.TransientModel):
 
     @api.model
     def _get_tax(self):
-        taxes = self.env['account.tax.code'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
-        return taxes and taxes[0] or False
+        tax = self.env['account.tax.code'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return tax
 
     based_on = fields.Selection([('invoices', 'Invoices'), ('payments', 'Payments'),],
         string='Based on', required=True, default='invoices')

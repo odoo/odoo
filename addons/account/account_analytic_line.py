@@ -141,7 +141,7 @@ class account_analytic_line(models.Model):
         else:
             pricetype = product_price_type_obj.search([('field','=','standard_price')], limit=1)
 
-        ctx = self._context.copy()
+        ctx = dict(self._context or {})
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
@@ -158,9 +158,10 @@ class account_analytic_line(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
+        context = (self._context or {})
         header = False
-        if self._context.get('account_id', False):
-            analytic_account = self.env['account.analytic.account'].search([('id','=',self._context['account_id'])], limit=1)
+        if context.get('account_id', False):
+            analytic_account = self.env['account.analytic.account'].search([('id', '=', context['account_id'])], limit=1)
             header = _('Entries: ') + (analytic_account.name or '')
         return header
 

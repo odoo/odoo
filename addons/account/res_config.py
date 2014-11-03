@@ -156,20 +156,19 @@ class account_config_settings(models.TransientModel):
         - if no fiscal year, use monthly, 1st jan, 31th dec of this year
         :return: (date_start, date_stop, period) at format DEFAULT_SERVER_DATETIME_FORMAT
         """
-        FiscalyearObj = self.env['account.fiscalyear']
-        fiscalyear_ids = FiscalyearObj.search(
+        FiscalYearObj = self.env['account.fiscalyear']
+        fiscalyear = FiscalYearObj.search(
                 [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
-                 ('company_id', '=', company_id)])
-        if fiscalyear_ids:
+                 ('company_id', '=', company_id)], limit=1)
+        if fiscalyear:
             # is in a current fiscal year, use this one
-            fiscalyear = fiscalyear_ids[0]
             if len(fiscalyear.period_ids) == 5:  # 4 periods of 3 months + opening period
                 period = '3months'
             else:
                 period = 'month'
             return (fiscalyear.date_start, fiscalyear.date_stop, period)
         else:
-            past_fiscalyear_ids = FiscalyearObj.search(
+            past_fiscalyear_ids = FiscalYearObj.search(
                 [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
             if past_fiscalyear_ids:
                 # use the latest fiscal, sorted by (start_date, id)
@@ -262,14 +261,14 @@ class account_config_settings(models.TransientModel):
             res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set})
             if self.chart_template_id.complete_tax_set:
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                sale_tax_ids = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('sale','all'))],
+                sale_tax = tax_templ_obj.search(
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('sale', 'all'))], limit=1,
                     order="sequence, id desc")
-                purchase_tax_ids = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('purchase','all'))],
+                purchase_tax = tax_templ_obj.search(
+                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', 'in', ('purchase', 'all'))], limit=1,
                     order="sequence, id desc")
-                res['value']['sale_tax'] = sale_tax_ids and sale_tax_ids[0] or False
-                res['value']['purchase_tax'] = purchase_tax_ids and purchase_tax_ids[0] or False
+                res['value']['sale_tax'] = sale_tax and sale_tax.id or False
+                res['value']['purchase_tax'] = purchase_tax and purchase_tax.id or False
             if self.chart_template_id.code_digits:
                 res['value']['code_digits'] = self.chart_template_id.code_digits
         return res

@@ -11,12 +11,10 @@ class validate_account_move(models.TransientModel):
 
     @api.multi
     def validate_move(self):
-        MoveObj = self.env['account.move']
-        data = self.read()[0]
-        ids_move = MoveObj.search([('state','=','draft'),('journal_id','in',tuple(data['journal_ids'])),('period_id','in',tuple(data['period_ids']))], order='date')
-        if not ids_move:
+        moves = self.env['account.move'].search([('state', '=', 'draft'), ('journal_id', 'in', self.journal_ids.ids), ('period_id', 'in', self.period_ids.ids)], order='date')
+        if not moves:
             raise Warning(_('Specified journals do not have any account move entries in draft state for the specified periods.'))
-        MoveObj.button_validate(ids_move.ids)
+        moves.button_validate()
         return {'type': 'ir.actions.act_window_close'}
 
 

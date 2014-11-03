@@ -25,11 +25,11 @@ class accounting_report(models.TransientModel):
     @api.model
     def _get_account_report(self):
         # TODO deprecate this it doesnt work in web
-        report_ids = []
+        report = False
         if context.get('active_id'):
             menu = self.env['ir.ui.menu'].browse(context.get('active_id')).name
-            report_ids = self.env['account.financial.report'].search([('name', 'ilike', menu)])
-        return report_ids and report_ids[0] or False
+            report = self.env['account.financial.report'].search([('name', 'ilike', menu)], limit=1)
+        return report
 
     @api.multi
     def _build_comparison_context(self, data):

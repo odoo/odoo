@@ -40,6 +40,6 @@ class product_template(models.Model):
     def write(self, vals):
         if 'uom_po_id' in vals:
             products = self.env['product.product'].search([('product_tmpl_id', 'in', ids)])
-            if self.env['account.move.line'].search([('product_id', 'in', [product.id for product in products])], limit=1):
+            if self.env['account.move.line'].search([('product_id', 'in', products.ids)], limit=1):
                 raise Warning(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
         return super(product_template, self).write(vals)

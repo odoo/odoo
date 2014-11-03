@@ -291,19 +291,19 @@ class account_account(models.Model):
         if self._context.get('config_invisible', True):
             return True
  
-        jids = self.env['account.journal'].search([('type','=','situation'),('centralisation','=',1),('company_id','=',self.company_id.id)], context=context)
-        if not jids:
+        journal = self.env['account.journal'].search([('type', '=', 'situation'), ('centralisation', '=', 1), ('company_id', '=', self.company_id.id)], limit=1)
+        if not journal:
             raise Warning(_("You need an Opening journal with centralisation checked to set the initial balance."))
  
-        pids = self.env['account.period'].search([('special','=',True),('company_id','=',self.company_id.id)])
-        if not pids:
+        period = self.env['account.period'].search([('special', '=', True), ('company_id', '=', self.company_id.id)], limit=1)
+        if not period:
             raise Warning(_("There is no opening/closing period defined, please create one to set the initial balance."))
  
         move_obj = self.env['account.move.line']
         move = move_obj.search([
-            ('journal_id','=',jids[0]),
-            ('period_id','=',pids[0]),
-            ('account_id','=', self.id),
+            ('journal_id', '=', journal.id),
+            ('period_id', '=', period.id),
+            ('account_id', '=', self.id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
         ])
@@ -316,8 +316,8 @@ class account_account(models.Model):
             move_id = move_obj.create({
                 'name': _('Opening Balance'),
                 'account_id': self.id,
-                'journal_id': jids[0],
-                'period_id': pids[0],
+                'journal_id': journal.id,
+                'period_id': period.id,
                 name: value,
                 nameinv: 0.0
             })
@@ -435,14 +435,14 @@ class account_account(models.Model):
 
     @api.multi
     def _check_moves(self, method):
-        if self.env['account.move.line'].search([('account_id', 'in', self.ids)]):
+        if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
             if method == 'write':
                 raise Warning(_('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
                 raise Warning(_('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
-        partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)])
+        partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
         if partner_prop_acc:
             raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
@@ -451,7 +451,7 @@ class account_account(models.Model):
     def write(self, vals):
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)])
+            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             if move_lines:
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(['company_id'])]:
@@ -550,7 +550,7 @@ class account_journal(models.Model):
     def write(self, vals):
         for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)])
+                move_lines = self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1)
                 if move_lines:
                     raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
@@ -741,8 +741,8 @@ class account_period(models.Model):
 
     @api.model
     def next(self, period, step):
-        periods = self.search([('date_start','>',period.date_start)])
-        if len(periods)>=step:
+        periods = self.search([('date_start', '>', period.date_start)])
+        if len(periods) >= step:
             return periods[step-1]
         return False
 
@@ -792,7 +792,7 @@ class account_period(models.Model):
     @api.multi
     def write(self, vals):
         if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('period_id', 'in', self.ids)])
+            move_lines = self.env['account.move.line'].search([('period_id', 'in', self.ids)], limit=1)
             if move_lines:
                 raise Warning(_('This journal already contains items for this period, therefore you cannot modify its company field.'))
         return super(account_period, self).write(vals)
@@ -1898,7 +1898,7 @@ class account_account_template(models.Model):
 
         company_name = self.env['res.company'].browse(company_id).name
         template = self.env['account.chart.template'].browse(chart_template_id)
-        acc_template = self.search([('nocreate','!=',True), '|', ('chart_template_id','=', chart_template_id), ('chart_template_id','=', False)], order='id')
+        acc_template = self.search([('nocreate', '!=', True), '|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', '=', False)], order='id')
         for account_template in acc_template:
             tax_ids = []
             for tax in account_template.tax_ids:
@@ -1942,11 +1942,11 @@ class account_add_tmpl_wizard(models.TransientModel):
         if not tids or not tids[0]['parent_id']:
             return False
         ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
-        accounts = None
+        account = False
         if not ptids or not ptids[0]['code']:
             raise Warning(_('There is no parent code for the template account.'))
-            accounts = self.env['account.account'].search([('code', '=', ptids[0]['code'])])
-        return accounts.ids and accounts.ids[0] or False
+            accounts = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
+        return account
 
     cparent_id = fields.Many2one('account.account', string='Parent target', default=lambda self: self._get_def_cparent(),
         help="Creates an account with the selected template under this existing parent.", required=True, domain=[('deprecated', '=', False)])
@@ -2024,7 +2024,7 @@ class account_tax_code_template(models.Model):
                 'sequence': tax_code_template.sequence,
             }
             #check if this tax code already exists
-            rec_list = obj_tax_code.search([('name', '=', vals['name']),('code', '=', vals['code']), ('company_id', '=', vals['company_id'])])
+            rec_list = obj_tax_code.search([('name', '=', vals['name']), ('code', '=', vals['code']), ('company_id', '=', vals['company_id'])], limit=1)
             if not rec_list:
                 #if not yet, create it
                 new_tax_code = obj_tax_code.create(vals)
@@ -2355,13 +2355,13 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 res.update({'only_one_chart_template': len(chart_templates) == 1,
                             'chart_template_id': chart_id})
             if 'sale_tax' in fields:
-                sale_tax_ids = tax_templ_obj.search([("chart_template_id", "in", chart_hierarchy_ids),
-                                                              ('type_tax_use', 'in', ('sale', 'all'))], order="sequence")
-                res.update({'sale_tax': sale_tax_ids.ids and sale_tax_ids.ids[0] or False})
+                sale_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
+                                                              ('type_tax_use', 'in', ('sale', 'all'))], limit=1, order='sequence')
+                res.update({'sale_tax': sale_tax and sale_tax.id or False})
             if 'purchase_tax' in fields:
-                purchase_tax_ids = tax_templ_obj.search([("chart_template_id", "in", chart_hierarchy_ids),
-                                                                  ('type_tax_use', 'in', ('purchase', 'all'))], order="sequence")
-                res.update({'purchase_tax': purchase_tax_ids.ids and purchase_tax_ids.ids[0] or False})
+                purchase_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
+                                                                  ('type_tax_use', 'in', ('purchase', 'all'))], limit=1, order='sequence')
+                res.update({'purchase_tax': purchase_tax and purchase_tax.id or False})
         res.update({
             'purchase_tax_rate': 15.0,
             'sale_tax_rate': 15.0,
@@ -2394,10 +2394,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
         """
         This method used for checking journals already created or not. If not then create new journal.
         """
-        JournalObj = self.env['account.journal']
-        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company_id)])
+        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company_id)], limit=1)
         if not rec_list:
-            JournalObj.create(vals_journal)
+            self.env['account.journal'].create(vals_journal)
         return True
 
     @api.model
@@ -2503,11 +2502,11 @@ class wizard_multi_charts_accounts(models.TransientModel):
             account = getattr(template, record[0])
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
-                fields = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])])
+                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
                     'name': record[0],
                     'company_id': company_id,
-                    'fields_id': fields.ids[0],
+                    'fields_id': field.id,
                     'value': value,
                 }
                 property_ids = PropertyObj.search([('name','=', record[0]), ('company_id', '=', company_id)])
@@ -2696,7 +2695,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         for num in xrange(current_num, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)])
+            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)], limit=1)
             if not Journals:
                 break
         else:
@@ -2779,8 +2778,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
             # Seek the next available number for the account code
             while True:
                 new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
-                Accounts = AccountObj.search([('code', '=', new_code), ('company_id', '=', company_id)])
-                if not Accounts:
+                Account = AccountObj.search([('code', '=', new_code), ('company_id', '=', company_id)], limit=1)
+                if not Account:
                     break
                 else:
                     current_num += 1
