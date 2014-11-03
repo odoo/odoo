@@ -8,10 +8,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
                     <button name="open_quotation" string="Preview Quotation" type="object" class="oe_highlight"
-                        attrs="{'invisible': ['|',('template_id','=',False),('state','=','draft')]}"/>
+                        attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','=','draft'),('quote_viewed','=',True)]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_button_confirm']" position="before">
-                    <button name="open_quotation" string="Preview Quotation" type="object" attrs="{'invisible': ['|',('template_id','=',False),('state','!=','draft')]}"/>
+                    <button name="open_quotation" string="Preview Quotation" type="object" 
+                        attrs="{'invisible': ['|','&amp;',('template_id','=',False),('state','!=','draft'),('quote_viewed','=',False)]}"/>
                 </xpath>
                 <xpath expr="//header/button[@name='action_quotation_send'][1]" position="replace">
                     <button name="action_quotation_send" string="Send by Email" type="object"
@@ -57,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Sale Quotation Template">
                     <sheet>
-                        <button string="Edit Template" type="object" name="open_template" class="oe_link oe_right"/>
+                        <button string="Edit Template" type="object" name="open_template" class="oe_highlight oe_right"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>

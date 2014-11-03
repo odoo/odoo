@@ -120,7 +120,9 @@
   </template>
 
   <template id="chatter">
-      <h1 class="page-header hidden-print">History</h1>
+      <section>
+          <h1 class="page-header hidden-print">History</h1>
+      </section>
       <ul class="media-list hidden-print" id="comments-list">
           <t t-foreach="quotation.message_ids" t-as="message">
               <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
@@ -252,16 +254,18 @@
                           any question.
                       </div>
                       <a id="introduction"/>
-                      <h1 class="page-header mt16">
-                          <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
-                          <span t-if="quotation.state not in ('draft','sent','cancel')">Your Order</span>
-                          <em t-esc="quotation.name"/>
-                          <small t-field="quotation.state"/>
+                      <div class="page-header mt16">
+                          <h1 class="visible-md-inline visible-lg-inline visible-sm-inline visible-xs-inline">
+                              <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
+                              <span t-if="quotation.state not in ('draft','sent','cancel')">Your Order</span>
+                              <em t-esc="quotation.name"/>
+                          </h1>
+                          <span t-field="quotation.state" class="quote-state"/>
                           <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden">
-                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Update Quote</a>
+                              <a class=" btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)" t-if="quotation.state not in ('manual')">Update Quote</a>
+                              <a class=" btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)" t-if="quotation.state in ('manual')">Back to Sale Order</a>
                           </div>
-                      </h1>
-
+                      </div>
                       <div class="modal fade" id="modelaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content">
