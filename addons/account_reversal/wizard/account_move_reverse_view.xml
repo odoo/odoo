@@ -36,12 +36,5 @@
             <field name="target">new</field>
         </record>
 
-        <record id="ir_account_move_reverse" model="ir.values">
-            <field name="name">Reverse Entries</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">account.move</field>
-            <field name="value" eval="'ir.actions.act_window,%d'%act_account_move_reverse" />
-        </record>
-
     </data>
 </openerp>

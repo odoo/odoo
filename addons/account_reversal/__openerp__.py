@@ -46,8 +46,8 @@ during the Akretion-Camptocamp code sprint of June 2011.
     'website': 'http://www.akretion.com/',
     'depends': ['account'],
     'data': [
+        'wizard/account_move_reverse_view.xml',
         'account_view.xml',
-        'wizard/account_move_reverse_view.xml'
         ],
     'installable': True,
     'active': False,

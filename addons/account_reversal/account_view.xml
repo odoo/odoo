@@ -14,6 +14,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_cancel']" position="after">
+                <button name="%(account_reversal.act_account_move_reverse)d" string="Reverse Entries" type="action" class="oe_highlight"/>
+            </xpath>
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="reversal_id" attrs="{'invisible': [('reversal_id', '=', False)]}"/>
             </xpath>
