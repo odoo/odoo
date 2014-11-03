@@ -13,6 +13,10 @@ function openerp_pos_db(instance, module){
             options = options || {};
             this.name = options.name || this.name;
             this.limit = options.limit || this.limit;
+            
+            if (options.uuid) {
+                this.name = this.name + '_' + options.uuid;
+            }
 
             //cache the data in memory to avoid roundtrips to the localstorage
             this.cache = {};
@@ -39,6 +43,15 @@ function openerp_pos_db(instance, module){
             this.packagings_by_product_tmpl_id = {};
             this.packagings_by_ean13 = {};
         },
+
+        /* 
+         * sets an uuid to prevent conflict in locally stored data between multiple databases running
+         * in the same browser at the same origin (Doing this is not advised !)
+         */
+        set_uuid: function(uuid){
+            this.name = this.name + '_' + uuid;
+        },
+
         /* returns the category object from its id. If you pass a list of id as parameters, you get
          * a list of category objects. 
          */  
@@ -302,7 +315,7 @@ function openerp_pos_db(instance, module){
             }
             var results = [];
             for(var i = 0; i < this.limit; i++){
-                r = re.exec(this.partner_search_string);
+                var r = re.exec(this.partner_search_string);
                 if(r){
                     var id = Number(r[1]);
                     results.push(this.get_partner_by_id(id));
@@ -378,6 +391,8 @@ function openerp_pos_db(instance, module){
             }
             return results;
         },
+
+        /* paid orders */
         add_order: function(order){
             var order_id = order.uid;
             var orders  = this.load('orders',[]);
@@ -416,6 +431,43 @@ function openerp_pos_db(instance, module){
                 }
             }
             return undefined;
+        },
+
+        /* working orders */
+        save_unpaid_order: function(order){
+            var order_id = order.uid;
+            var orders = this.load('unpaid_orders',[]);
+            var serialized = order.export_as_JSON();
+
+            for (var i = 0; i < orders.length; i++) {
+                if (orders[i].id === order_id){
+                    orders[i].data = serialized;
+                    this.save('unpaid_orders',orders);
+                    return order_id;
+                }
+            }
+
+            orders.push({id: order_id, data: serialized});
+            this.save('unpaid_orders',orders);
+            return order_id;
+        },
+        remove_unpaid_order: function(order){
+            var orders = this.load('unpaid_orders',[]);
+            orders = _.filter(orders, function(o){
+                return o.id !== order.uid;
+            });
+            this.save('unpaid_orders',orders);
+        },
+        remove_all_unpaid_orders: function(){
+            this.save('unpaid_orders',[]);
+        },
+        get_unpaid_orders: function(){
+            var saved = this.load('unpaid_orders',[]);
+            var orders = [];
+            for (var i = 0; i < saved.length; i++) {
+                orders.push(saved[i].data);
+            }
+            return orders;
         },
     });
 }

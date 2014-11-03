@@ -207,7 +207,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // what happens when a discount barcode is scanned : the default behavior
         // is to set the discount on the last order.
         barcode_discount_action: function(code){
-            var last_orderline = this.pos.get_order().getLastOrderline();
+            var last_orderline = this.pos.get_order().get_last_orderline();
             if(last_orderline){
                 last_orderline.set_discount(code.value)
             }
@@ -357,6 +357,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ConfirmPopupWidget = module.PopUpWidget.extend({
         template: 'ConfirmPopupWidget',
         show: function(options){
+            options = options || {};
             var self = this;
             this._super();
 
@@ -470,16 +471,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template: 'ErrorInvoiceTransferPopupWidget',
     });
 
-    module.UnsentOrdersPopupWidget = module.PopUpWidget.extend({
+    module.UnsentOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnsentOrdersPopupWidget',
-        show: function(options){
-            var self = this;
-            this._super(options);
-            this.renderElement();
-            this.$('.button.confirm').click(function(){
-                self.pos_widget.screen_selector.close_popup();
-            });
-        },
+    });
+
+    module.UnpaidOrdersPopupWidget = module.ConfirmPopupWidget.extend({
+        template: 'UnpaidOrdersPopupWidget',
     });
 
     module.ScaleScreenWidget = module.ScreenWidget.extend({
@@ -534,7 +531,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         order_product: function(){
-            this.pos.get_order().addProduct(this.get_product(),{ quantity: this.weight });
+            this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
         },
         get_product_name: function(){
             var product = this.get_product();
@@ -591,7 +588,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     if(product.to_weight && self.pos.config.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen('scale',{product: product});
                     }else{
-                        self.pos.get_order().addProduct(product);
+                        self.pos.get_order().add_product(product);
                     }
                 },
                 product_list: this.pos.db.get_product_by_category(0)
@@ -1068,8 +1065,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     widget:this,
                     order: order,
                     receipt: order.export_for_printing(),
-                    orderlines: order.get('orderLines').models,
-                    paymentlines: order.get('paymentLines').models,
+                    orderlines: order.get_orderlines(),
+                    paymentlines: order.get_paymentlines(),
                 }));
         },
     });
@@ -1188,10 +1185,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             return numpad;
         },
         click_delete_paymentline: function(cid){
-            var lines = this.pos.get_order().get('paymentLines').models;
+            var lines = this.pos.get_order().get_paymentlines();
             for ( var i = 0; i < lines.length; i++ ) {
                 if (lines[i].cid === cid) {
-                    this.pos.get_order().removePaymentline(lines[i]);
+                    this.pos.get_order().remove_paymentline(lines[i]);
                     this.reset_input();
                     this.render_paymentlines();
                     return;
@@ -1199,10 +1196,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         click_paymentline: function(cid){
-            var lines = this.pos.get_order().get('paymentLines').models;
+            var lines = this.pos.get_order().get_paymentlines();
             for ( var i = 0; i < lines.length; i++ ) {
                 if (lines[i].cid === cid) {
-                    this.pos.get_order().selectPaymentline(lines[i]);
+                    this.pos.get_order().select_paymentline(lines[i]);
                     this.reset_input();
                     this.render_paymentlines();
                     return;
@@ -1216,7 +1213,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 return;
             }
 
-            var lines = order.get('paymentLines').models;
+            var lines = order.get_paymentlines();
 
             this.$('.paymentlines-container').empty();
             var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
@@ -1243,7 +1240,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     break;
                 }
             }
-            this.pos.get_order().addPaymentline( cashregister );
+            this.pos.get_order().add_paymentline( cashregister );
             this.reset_input();
             this.render_paymentlines();
         },
@@ -1332,7 +1329,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var order = this.pos.get_order();
             if (!order) {
                 return;
-            } else if (order.isPaid()) {
+            } else if (order.is_paid()) {
                 self.$('.next').addClass('highlight');
             }else{
                 self.$('.next').removeClass('highlight');
@@ -1358,7 +1355,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             // FIXME: this check is there because the backend is unable to
             // process empty orders. This is not the right place to fix it.
-            if(order.get_orderlines().length === 0){
+            if (order.get_orderlines().length === 0) {
                 this.pos_widget.screen_selector.show_popup('error',{
                     'message': _t('Empty Order'),
                     'comment': _t('There must be at least one product in your order before it can be validated'),
@@ -1366,12 +1363,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 return;
             }
 
-            if (!order.isPaid() || this.invoicing) {
+            if (!order.is_paid() || this.invoicing) {
                 return;
             }
 
             // The exact amount must be paid if there is no cash payment method defined.
-            if (Math.abs(order.getTotalTaxIncluded() - order.getPaidTotal()) > 0.00001) {
+            if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
                 var cash = false;
                 for (var i = 0; i < this.pos.cashregisters.length; i++) {
                     cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
@@ -1385,7 +1382,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             }
 
-            if (order.isPaidWithCash() && this.pos.config.iface_cashdrawer) { 
+            if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+
                     this.pos.proxy.open_cashbox();
             }
 

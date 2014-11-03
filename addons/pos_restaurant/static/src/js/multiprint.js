@@ -54,26 +54,43 @@ function openerp_restaurant_multiprint(instance,module){
         },
     });
 
+    module.Orderline = module.Orderline.extend({
+        get_line_diff_hash: function(){
+            if (this.get_note()) {
+                return this.get_product().id + '|' + this.get_note();
+            } else {
+                return '' + this.get_product().id;
+            }
+        },
+    });
+
+    var _super_order = module.Order.prototype;
     module.Order = module.Order.extend({
         lineResume: function(){
             var resume = {};
-            this.get('orderLines').each(function(item){
-                var line = item.export_as_JSON();
-                if( typeof resume[line.product_id] === 'undefined'){
-                    resume[line.product_id] = line.qty;
-                }else{
-                    resume[line.product_id] += line.qty;
+
+            this.orderlines.each(function(line){
+                var line_hash = line.get_line_diff_hash();
+                var qty  = Number(line.get_quantity());
+                var note = line.get_note();
+                var product_id = line.get_product().id;
+
+                if (typeof resume[line_hash] === 'undefined') {
+                    resume[line_hash] = { qty: qty, note: note, product_id: product_id };
+                } else {
+                    resume[line_hash].qty += qty;
                 }
             });
             return resume;
         },
         saveChanges: function(){
-            this.old_resume = this.lineResume();
+            this.saved_resume = this.build_line_resume();
+            this.trigger('change',this);
         },
         computeChanges: function(categories){
-            var current = this.lineResume();
-            var old     = this.old_resume || {};
-            var json    = this.export_as_JSON();
+            var current_res = this.build_line_resume();
+            var old_res     = this.saved_resume || {};
+            var json        = this.export_as_JSON();
             var add = [];
             var rem = [];
 
@@ -173,6 +190,15 @@ function openerp_restaurant_multiprint(instance,module){
                 }
             }
             return false;
+        },
+        export_as_JSON: function(){
+            var json = _super_order.export_as_JSON.apply(this,arguments);
+            json.multiprint_resume = this.saved_resume;
+            return json;
+        },
+        init_from_JSON: function(json){
+            _super_order.init_from_JSON.apply(this,arguments);
+            this.saved_resume = json.multiprint_resume;
         },
     });
 

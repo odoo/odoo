@@ -111,7 +111,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 if(!self.editable){
                     return;
                 }
-                self.pos.get_order().selectLine(this.orderline);
+                self.pos.get_order().select_orderline(this.orderline);
                 self.pos_widget.numpad.state.reset();
             };
             this.client_change_handler = function(event){
@@ -144,20 +144,20 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     this.enable_numpad();
                 }else{
                     this.disable_numpad();
-                    order.deselectLine();
+                    order.deselect_orderline();
                 }
             }
         },
         set_value: function(val) {
         	var order = this.pos.get_order();
-        	if (this.editable && order.getSelectedLine()) {
+        	if (this.editable && order.get_selected_orderline()) {
                 var mode = this.numpad_state.get('mode');
                 if( mode === 'quantity'){
-                    order.getSelectedLine().set_quantity(val);
+                    order.get_selected_orderline().set_quantity(val);
                 }else if( mode === 'discount'){
-                    order.getSelectedLine().set_discount(val);
+                    order.get_selected_orderline().set_discount(val);
                 }else if( mode === 'price'){
-                    order.getSelectedLine().set_unit_price(val);
+                    order.get_selected_orderline().set_unit_price(val);
                 }
         	}
         },
@@ -167,27 +167,32 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.renderElement();
             }
         },
+        orderline_add: function(){
+            this.numpad_state.reset();
+            this.renderElement('and_scroll_to_bottom');
+        },
+        orderline_remove: function(line){
+            this.remove_orderline(line);
+            this.numpad_state.reset();
+            this.update_summary();
+        },
+        orderline_change: function(line){
+            this.rerender_orderline(line);
+            this.update_summary();
+        },
         bind_order_events: function() {
-
             var order = this.pos.get_order();
                 order.unbind('change:client', this.client_change_handler);
                 order.bind('change:client', this.client_change_handler);
 
-            var lines = order.get('orderLines');
-                lines.unbind();
-                lines.bind('add', function(){ 
-                        this.numpad_state.reset();
-                        this.renderElement(true);
-                    },this);
-                lines.bind('remove', function(line){
-                        this.remove_orderline(line);
-                        this.numpad_state.reset();
-                        this.update_summary();
-                    },this);
-                lines.bind('change', function(line){
-                        this.rerender_orderline(line);
-                        this.update_summary();
-                    },this);
+            var lines = order.orderlines;
+                lines.unbind('add',     this.orderline_add,    this);
+                lines.bind('add',       this.orderline_add,    this);
+                lines.unbind('remove',  this.orderline_remove, this);
+                lines.bind('remove',    this.orderline_remove, this); 
+                lines.unbind('change',  this.orderline_change, this);
+                lines.bind('change',    this.orderline_change, this);
+
         },
         render_orderline: function(orderline){
             var el_str  = openerp.qweb.render('Orderline',{widget:this, line:orderline}); 
@@ -201,7 +206,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return el_node;
         },
         remove_orderline: function(order_line){
-            if(this.pos.get_order().get('orderLines').length === 0){
+            if(this.pos.get_order().get_orderlines().length === 0){
                 this.renderElement();
             }else{
                 order_line.node.parentNode.removeChild(order_line.node);
@@ -225,7 +230,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if (!order) {
                 return;
             }
-            var orderlines = order.get('orderLines').models;
+            var orderlines = order.get_orderlines();
 
             var el_str  = openerp.qweb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
 
@@ -252,8 +257,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         update_summary: function(){
             var order = this.pos.get_order();
-            var total     = order ? order.getTotalTaxIncluded() : 0;
-            var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
+            var total     = order ? order.get_total_with_tax() : 0;
+            var taxes     = order ? total - order.get_total_without_tax() : 0;
 
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
@@ -481,7 +486,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(query){
                 var products = this.pos.db.search_product_in_category(category.id,query)
                 if(buy_result && products.length === 1){
-                        this.pos.get_order().addProduct(products[0]);
+                        this.pos.get_order().add_product(products[0]);
                         this.clear_search();
                 }else{
                     this.product_list_widget.set_product_list(products);
@@ -733,6 +738,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     },
                 });
             });
+            this.$('.button.show_unpaid_orders').click(function(){
+                self.pos.pos_widget.screen_selector.show_popup('unpaid-orders');
+            });
+            this.$('.button.delete_unpaid_orders').click(function(){
+                self.pos.pos_widget.screen_selector.show_popup('confirm',{
+                    message: _t('Delete Unpaid Orders ?'),
+                    comment: _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                    confirm: function(){
+                        self.pos.db.remove_all_unpaid_orders();
+                        window.location = '/';
+                    },
+                });
+            });
             _.each(this.eans, function(ean, name){
                 self.$('.button.'+name).click(function(){
                     self.$('input.ean').val(ean);
@@ -889,7 +907,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.renderElement();
                 
-                self.pos.add_new_order();
+                self.pos.load_orders();
+                self.pos.set_start_order();
 
                 self.build_widgets();
 
@@ -1019,6 +1038,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.unsent_orders_popup = new module.UnsentOrdersPopupWidget(this,{});
             this.unsent_orders_popup.appendTo(this.$el);
 
+            this.unpaid_orders_popup = new module.UnpaidOrdersPopupWidget(this,{});
+            this.unpaid_orders_popup.appendTo(this.$el);
+
             // --------  Misc ---------
 
             this.order_selector = new module.OrderSelectorWidget(this,{});
@@ -1091,6 +1113,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'fullscreen': this.fullscreen_popup,
                     'selection': this.selection_popup,
                     'unsent-orders': this.unsent_orders_popup,
+                    'unpaid-orders': this.unpaid_orders_popup,
                 },
                 default_screen: 'products',
                 default_mode: 'cashier',
@@ -1147,7 +1170,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
 
             var draft_order = _.find( self.pos.get('orders').models, function(order){
-                return order.get('orderLines').length !== 0 && order.get('paymentLines').length === 0;
+                return order.get_orderlines().length !== 0 && order.get_paymentlines().length === 0;
             });
             if(draft_order){
                 if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {

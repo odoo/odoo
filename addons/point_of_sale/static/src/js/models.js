@@ -199,11 +199,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             domain: function(self){ return [['state','=','opened'],['user_id','=',self.session.uid]]; },
             loaded: function(self,pos_sessions){
                 self.pos_session = pos_sessions[0]; 
-
-                var orders = self.db.get_orders();
-                for (var i = 0; i < orders.length; i++) {
-                    self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
-                }
             },
         },{
             model: 'pos.config',
@@ -226,8 +221,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     'price':    self.config.barcode_price,
                 });
 
+
                 if (self.config.company_id[0] !== self.user.company_id[0]) {
                     throw new Error(_t("Error: The Point of Sale User must belong to the same company as the Point of Sale. You are probably trying to load the point of sale as an administrator in a multi-company setup, with the administrator account set to the wrong company."));
+                }
+
+                self.db.set_uuid(self.config.uuid);
+
+                var orders = self.db.get_orders();
+                for (var i = 0; i < orders.length; i++) {
+                    self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
                 }
             },
         },{
@@ -472,10 +475,50 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         //creates a new empty order and sets it as the current order
         add_new_order: function(){
-            var order = new module.Order({pos:this});
+            var order = new module.Order({},{pos:this});
             this.get('orders').add(order);
             this.set('selectedOrder', order);
             return order;
+        },
+        // load the locally saved unpaid orders for this session.
+        load_orders: function(){
+            var jsons = this.db.get_unpaid_orders();
+            var orders = [];
+            var not_loaded_count = 0; 
+
+            for (var i = 0; i < jsons.length; i++) {
+                var json = jsons[i];
+                if (json.pos_session_id === this.pos_session.id) {
+                    orders.push(new module.Order({},{
+                        pos:  this,
+                        json: json,
+                    }));
+                } else {
+                    not_loaded_count += 1;
+                }
+            }
+
+            if (not_loaded_count) {
+                console.info('There are '+not_loaded_count+' locally saved unpaid orders belonging to another session');
+            }
+            
+            orders = orders.sort(function(a,b){
+                return a.sequence_number - b.sequence_number;
+            });
+
+            if (orders.length) {
+                this.get('orders').add(orders);
+            }
+        },
+
+        set_start_order: function(){
+            var orders = this.get('orders').models;
+            
+            if (orders.length && !this.get('selectedOrder')) {
+                this.set('selectedOrder',orders[0]);
+            } else {
+                this.add_new_order();
+            }
         },
 
         // return the current order
@@ -662,13 +705,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
 
             if(parsed_code.type === 'price'){
-                selectedOrder.addProduct(product, {price:parsed_code.value});
+                selectedOrder.add_product(product, {price:parsed_code.value});
             }else if(parsed_code.type === 'weight'){
-                selectedOrder.addProduct(product, {quantity:parsed_code.value, merge:false});
+                selectedOrder.add_product(product, {quantity:parsed_code.value, merge:false});
             }else if(parsed_code.type === 'discount'){
-                selectedOrder.addProduct(product, {discount:parsed_code.value, merge:false});
+                selectedOrder.add_product(product, {discount:parsed_code.value, merge:false});
             }else{
-                selectedOrder.addProduct(product);
+                selectedOrder.add_product(product);
             }
             return true;
         },
@@ -742,7 +785,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // rounded to zero
         set_quantity: function(quantity){
             if(quantity === 'remove'){
-                this.order.removeOrderline(this);
+                this.order.remove_orderline(this);
                 return;
             }else{
                 var quant = parseFloat(quantity) || 0;
@@ -987,7 +1030,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     module.PaymentlineCollection = Backbone.Collection.extend({
         model: module.Paymentline,
     });
-    
 
     // An order more or less represents the content of a client's shopping cart (the OrderLines) 
     // plus the associated payment information (the Paymentlines) 
@@ -997,30 +1039,49 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         initialize: function(attributes,options){
             Backbone.Model.prototype.initialize.apply(this, arguments);
             options  = options || {};
-            this.pos = attributes.pos; 
-            if (options.json) {
-                this.init_from_JSON(options.json);
-                return this;
-            }
-            this.sequence_number = this.pos.pos_session.sequence_number++;
-            this.uid =     this.generateUniqueId();
-            this.set({
-                creationDate:   new Date(),
-                orderLines:     new module.OrderlineCollection(),
-                paymentLines:   new module.PaymentlineCollection(),
-                name:           _t("Order ") + this.uid,
-                client:         null,
-            });
+
+            this.init_locked    = true;
+            this.pos            = options.pos; 
             this.selected_orderline   = undefined;
             this.selected_paymentline = undefined;
-            this.screen_data = {};  // see ScreenSelector
-            this.temporary = attributes.temporary || false;
-            this.to_invoice = false;
+            this.screen_data    = {};  // see ScreenSelector
+            this.temporary      = options.temporary || false;
+            this.creation_date  = new Date();
+            this.to_invoice     = false;
+            this.orderlines     = new module.OrderlineCollection();
+            this.paymentlines   = new module.PaymentlineCollection(); 
+            this.pos_session_id = this.pos.pos_session.id;
+
+            this.set({ client: null });
+
+            if (options.json) {
+                this.init_from_JSON(options.json);
+            } else {
+                this.sequence_number = this.pos.pos_session.sequence_number++;
+                this.uid  = this.generate_unique_id();
+                this.name = _t("Order ") + this.uid; 
+            }
+
+            this.on('change',              this.save_to_db, this);
+            this.orderlines.on('change',   this.save_to_db, this);
+            this.paymentlines.on('change', this.save_to_db, this);
+
+            this.init_locked = false;
+            this.save_to_db();
+
             return this;
+        },
+        save_to_db: function(){
+            if (!this.init_locked) {
+                this.pos.db.save_unpaid_order(this);
+            } 
         },
         init_from_JSON: function(json) {
             this.sequence_number = json.sequence_number;
+            this.pos.pos_session.sequence_number = Math.max(this.sequence_number+1,this.pos.pos_session.sequence_number);
+            this.session_id    = json.pos_session_id;
             this.uid = json.uid;
+            this.name = _t("Order ") + this.uid;
             if (json.partner_id) {
                 var client = this.pos.db.get_partner_by_id(json.partner_id);
                 if (!client) {
@@ -1029,279 +1090,58 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             } else {
                 var client = null;
             }
-            this.set({
-                creationDate: new Date(),
-                orderLines: new module.OrderlineCollection(),
-                paymentLines: new module.PaymentlineCollection(),
-                name: _t("Order ") + this.uid,
-                client: client,
-            });
-            this.selected_orderline = undefined;
-            this.selected_paymentline = undefined;
-            this.screen_data = {};
+            this.set_client(client);
+
             this.temporary = false;     // FIXME
             this.to_invoice = false;    // FIXME
 
             var orderlines = json.lines;
             for (var i = 0; i < orderlines.length; i++) {
                 var orderline = orderlines[i][2];
-                this.addOrderline(new module.Orderline({}, {pos: this.pos, order: this, json: orderline}));
+                this.add_orderline(new module.Orderline({}, {pos: this.pos, order: this, json: orderline}));
             }
 
             var paymentlines = json.statement_ids;
             for (var i = 0; i < paymentlines.length; i++) {
                 var paymentline = paymentlines[i][2];
-                this.get('paymentLines').add(new module.Paymentline({},{pos: this.pos, json: paymentline}));
+                this.paymentlines.add(new module.Paymentline({},{pos: this.pos, json: paymentline}));
             }
         },
-        is_empty: function(){
-            return (this.get('orderLines').models.length === 0);
+        export_as_JSON: function() {
+            var orderLines, paymentLines;
+            orderLines = [];
+            this.orderlines.each(_.bind( function(item) {
+                return orderLines.push([0, 0, item.export_as_JSON()]);
+            }, this));
+            paymentLines = [];
+            this.paymentlines.each(_.bind( function(item) {
+                return paymentLines.push([0, 0, item.export_as_JSON()]);
+            }, this));
+            return {
+                name: this.get_name(),
+                amount_paid: this.get_total_paid(),
+                amount_total: this.get_total_with_tax(),
+                amount_tax: this.get_total_tax(),
+                amount_return: this.get_change(),
+                lines: orderLines,
+                statement_ids: paymentLines,
+                pos_session_id: this.pos_session_id,
+                partner_id: this.get_client() ? this.get_client().id : false,
+                user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
+                uid: this.uid,
+                sequence_number: this.sequence_number,
+            };
         },
-
-        // Generates a public identification number for the order.
-        // The generated number must be unique and sequential. They are made 12 digit long
-        // to fit into EAN-13 barcodes, should it be needed 
-        generateUniqueId: function() {
-            function zero_pad(num,size){
-                var s = ""+num;
-                while (s.length < size) {
-                    s = "0" + s;
-                }
-                return s;
-            }
-            return zero_pad(this.pos.pos_session.id,5) +'-'+
-                   zero_pad(this.pos.pos_session.login_number,3) +'-'+
-                   zero_pad(this.sequence_number,4);
-        },
-        addOrderline: function(line){
-            if(line.order){
-                line.order.removeOrderline(line);
-            }
-            line.order = this;
-            this.get('orderLines').add(line);
-            this.selectLine(this.getLastOrderline());
-        },
-        addProduct: function(product, options){
-            options = options || {};
-            var attr = JSON.parse(JSON.stringify(product));
-            attr.pos = this.pos;
-            attr.order = this;
-            var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
-
-            if(options.quantity !== undefined){
-                line.set_quantity(options.quantity);
-            }
-            if(options.price !== undefined){
-                line.set_unit_price(options.price);
-            }
-            if(options.discount !== undefined){
-                line.set_discount(options.discount);
-            }
-
-            if(options.extras !== undefined){
-                for (var prop in options.extras) { 
-                    line[prop] = options.extras[prop];
-                }
-            }
-
-            var last_orderline = this.getLastOrderline();
-            if( last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false){
-                last_orderline.merge(line);
-            }else{
-                this.get('orderLines').add(line);
-            }
-            this.selectLine(this.getLastOrderline());
-        },
-        removeOrderline: function( line ){
-            this.get('orderLines').remove(line);
-            this.selectLine(this.getLastOrderline());
-        },
-        getOrderline: function(id){
-            var orderlines = this.get('orderLines').models;
-            for(var i = 0; i < orderlines.length; i++){
-                if(orderlines[i].id === id){
-                    return orderlines[i];
-                }
-            }
-            return null;
-        },
-        getLastOrderline: function(){
-            return this.get('orderLines').at(this.get('orderLines').length -1);
-        },
-        addPaymentline: function(cashregister) {
-            var paymentLines = this.get('paymentLines');
-            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos:this.pos});
-            if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
-                newPaymentline.set_amount( Math.max(this.getDueLeft(),0) );
-            }
-            paymentLines.add(newPaymentline);
-            this.selectPaymentline(newPaymentline);
-
-        },
-        removePaymentline: function(line){
-            if(this.selected_paymentline === line){
-                this.selectPaymentline(undefined);
-            }
-            this.get('paymentLines').remove(line);
-        },
-        getName: function() {
-            return this.get('name');
-        },
-        getSubtotal : function(){
-            return (this.get('orderLines')).reduce((function(sum, orderLine){
-                return sum + orderLine.get_display_price();
-            }), 0);
-        },
-        getTotalTaxIncluded: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.get_price_with_tax();
-            }), 0);
-        },
-        getDiscountTotal: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-            }), 0);
-        },
-        getTotalTaxExcluded: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.get_price_without_tax();
-            }), 0);
-        },
-        getTax: function() {
-            return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.get_tax();
-            }), 0);
-        },
-        getTaxDetails: function(){
-            var details = {};
-            var fulldetails = [];
-            var taxes_by_id = {};
-            
-            for(var i = 0; i < this.pos.taxes.length; i++){
-                taxes_by_id[this.pos.taxes[i].id] = this.pos.taxes[i];
-            }
-
-            this.get('orderLines').each(function(line){
-                var ldetails = line.get_tax_details();
-                for(var id in ldetails){
-                    if(ldetails.hasOwnProperty(id)){
-                        details[id] = (details[id] || 0) + ldetails[id];
-                    }
-                }
-            });
-            
-            for(var id in details){
-                if(details.hasOwnProperty(id)){
-                    fulldetails.push({amount: details[id], tax: taxes_by_id[id], name: taxes_by_id[id].name});
-                }
-            }
-
-            return fulldetails;
-        },
-        getPaidTotal: function() {
-            return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
-                return sum + paymentLine.get_amount();
-            }), 0);
-        },
-        getChange: function(paymentline) {
-            if (!paymentline) {
-                var change = this.getPaidTotal() - this.getTotalTaxIncluded();
-            } else {
-                var change = -this.getTotalTaxIncluded(); 
-                var lines  = this.get('paymentLines').models;
-                for (var i = 0; i < lines.length; i++) {
-                    change += lines[i].get_amount();
-                    if (lines[i] === paymentline) {
-                        break;
-                    }
-                }
-            }
-            return round_pr(Math.max(0,change), this.pos.currency.rounding);
-        },
-        getDueLeft: function(paymentline) {
-            if (!paymentline) {
-                var due = this.getTotalTaxIncluded() - this.getPaidTotal();
-            } else {
-                var due = this.getTotalTaxIncluded();
-                var lines = this.get('paymentLines').models;
-                for (var i = 0; i < lines.length; i++) {
-                    if (lines[i] === paymentline) {
-                        break;
-                    } else {
-                        due -= lines[i].get_amount();
-                    }
-                }
-            }
-            return round_pr(Math.max(0,due), this.pos.currency.rounding);
-        },
-        isPaid: function(){
-            return this.getDueLeft() === 0;
-        },
-        isPaidWithCash: function(){
-            return !!this.get('paymentLines').find( function(pl){
-                return pl.cashregister.journal.type === 'cash';
-            });
-        },
-        finalize: function(){
-            this.destroy();
-        },
-        // the client related to the current order.
-        set_client: function(client){
-            this.set('client',client);
-        },
-        get_client: function(){
-            return this.get('client');
-        },
-        get_client_name: function(){
-            var client = this.get('client');
-            return client ? client.name : "";
-        },
-        // the order also stores the screen status, as the PoS supports
-        // different active screens per order. This method is used to
-        // store the screen status.
-        set_screen_data: function(key,value){
-            if(arguments.length === 2){
-                this.screen_data[key] = value;
-            }else if(arguments.length === 1){
-                for(var key in arguments[0]){
-                    this.screen_data[key] = arguments[0][key];
-                }
-            }
-        },
-        set_to_invoice: function(to_invoice) {
-            this.to_invoice = to_invoice;
-        },
-        is_to_invoice: function(){
-            return this.to_invoice;
-        },
-        // remove all the paymentlines with zero money in it
-        clean_empty_paymentlines: function() {
-            var lines = this.get('paymentLines').models;
-            var empty = [];
-            for ( var i = 0; i < lines.length; i++) {
-                if (!lines[i].get_amount()) {
-                    empty.push(lines[i]);
-                }
-            }
-            for ( var i = 0; i < empty.length; i++) {
-                this.removePaymentline(empty[i]);
-            }
-        },
-        //see set_screen_data
-        get_screen_data: function(key){
-            return this.screen_data[key];
-        },
-        // exports a JSON for receipt printing
         export_for_printing: function(){
             var orderlines = [];
             var self = this;
 
-            this.get('orderLines').each(function(orderline){
+            this.orderlines.each(function(orderline){
                 orderlines.push(orderline.export_for_printing());
             });
 
             var paymentlines = [];
-            this.get('paymentLines').each(function(paymentline){
+            this.paymentlines.each(function(paymentline){
                 paymentlines.push(paymentline.export_for_printing());
             });
             var client  = this.get('client');
@@ -1331,15 +1171,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var receipt = {
                 orderlines: orderlines,
                 paymentlines: paymentlines,
-                subtotal: this.getSubtotal(),
-                total_with_tax: this.getTotalTaxIncluded(),
-                total_without_tax: this.getTotalTaxExcluded(),
-                total_tax: this.getTax(),
-                total_paid: this.getPaidTotal(),
-                total_discount: this.getDiscountTotal(),
-                tax_details: this.getTaxDetails(),
-                change: this.getChange(),
-                name : this.getName(),
+                subtotal: this.get_subtotal(),
+                total_with_tax: this.get_total_with_tax(),
+                total_without_tax: this.get_total_without_tax(),
+                total_tax: this.get_total_tax(),
+                total_paid: this.get_total_paid(),
+                total_discount: this.get_total_discount(),
+                tax_details: this.get_tax_details(),
+                change: this.get_change(),
+                name : this.get_name(),
                 client: client ? client.name : null ,
                 invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
@@ -1386,35 +1226,91 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             return receipt;
         },
-        export_as_JSON: function() {
-            var orderLines, paymentLines;
-            orderLines = [];
-            (this.get('orderLines')).each(_.bind( function(item) {
-                return orderLines.push([0, 0, item.export_as_JSON()]);
-            }, this));
-            paymentLines = [];
-            (this.get('paymentLines')).each(_.bind( function(item) {
-                return paymentLines.push([0, 0, item.export_as_JSON()]);
-            }, this));
-            return {
-                name: this.getName(),
-                amount_paid: this.getPaidTotal(),
-                amount_total: this.getTotalTaxIncluded(),
-                amount_tax: this.getTax(),
-                amount_return: this.getChange(),
-                lines: orderLines,
-                statement_ids: paymentLines,
-                pos_session_id: this.pos.pos_session.id,
-                partner_id: this.get_client() ? this.get_client().id : false,
-                user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
-                uid: this.uid,
-                sequence_number: this.sequence_number,
-            };
+        is_empty: function(){
+            return this.orderlines.models.length === 0;
         },
-        getSelectedLine: function(){
+        generate_unique_id: function() {
+            // Generates a public identification number for the order.
+            // The generated number must be unique and sequential. They are made 12 digit long
+            // to fit into EAN-13 barcodes, should it be needed 
+
+            function zero_pad(num,size){
+                var s = ""+num;
+                while (s.length < size) {
+                    s = "0" + s;
+                }
+                return s;
+            }
+            return zero_pad(this.pos.pos_session.id,5) +'-'+
+                   zero_pad(this.pos.pos_session.login_number,3) +'-'+
+                   zero_pad(this.sequence_number,4);
+        },
+        get_name: function() {
+            return this.name;
+        },
+        /* ---- Order Lines --- */
+        add_orderline: function(line){
+            if(line.order){
+                line.order.remove_orderline(line);
+            }
+            line.order = this;
+            this.orderlines.add(line);
+            this.select_orderline(this.get_last_orderline());
+        },
+        get_orderline: function(id){
+            var orderlines = this.orderlines.models;
+            for(var i = 0; i < orderlines.length; i++){
+                if(orderlines[i].id === id){
+                    return orderlines[i];
+                }
+            }
+            return null;
+        },
+        get_orderlines: function(){
+            return this.orderlines.models;
+        },
+        get_last_orderline: function(){
+            return this.orderlines.at(this.orderlines.length -1);
+        },
+        remove_orderline: function( line ){
+            this.orderlines.remove(line);
+            this.select_orderline(this.get_last_orderline());
+        },
+        add_product: function(product, options){
+            options = options || {};
+            var attr = JSON.parse(JSON.stringify(product));
+            attr.pos = this.pos;
+            attr.order = this;
+            var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
+
+            if(options.quantity !== undefined){
+                line.set_quantity(options.quantity);
+            }
+            if(options.price !== undefined){
+                line.set_unit_price(options.price);
+            }
+            if(options.discount !== undefined){
+                line.set_discount(options.discount);
+            }
+
+            if(options.extras !== undefined){
+                for (var prop in options.extras) { 
+                    line[prop] = options.extras[prop];
+                }
+            }
+
+            var last_orderline = this.get_last_orderline();
+            if( last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false){
+                last_orderline.merge(line);
+            }else{
+                this.orderlines.add(line);
+            }
+            this.select_orderline(this.get_last_orderline());
+        },
+        get_selected_orderline: function(){
             return this.selected_orderline;
         },
-        selectLine: function(line){
+        select_orderline: function(line){
             if(line){
                 if(line !== this.selected_orderline){
                     if(this.selected_orderline){
@@ -1427,13 +1323,44 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.selected_orderline = undefined;
             }
         },
-        deselectLine: function(){
+        deselect_orderline: function(){
             if(this.selected_orderline){
                 this.selected_orderline.set_selected(false);
                 this.selected_orderline = undefined;
             }
         },
-        selectPaymentline: function(line){
+        /* ---- Payment Lines --- */
+        add_paymentline: function(cashregister) {
+            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos: this.pos});
+            if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
+                newPaymentline.set_amount( Math.max(this.get_due(),0) );
+            }
+            this.paymentlines.add(newPaymentline);
+            this.select_paymentline(newPaymentline);
+
+        },
+        get_paymentlines: function(){
+            return this.paymentlines.models;
+        },
+        remove_paymentline: function(line){
+            if(this.selected_paymentline === line){
+                this.select_paymentline(undefined);
+            }
+            this.paymentlines.remove(line);
+        },
+        clean_empty_paymentlines: function() {
+            var lines = this.paymentlines.models;
+            var empty = [];
+            for ( var i = 0; i < lines.length; i++) {
+                if (!lines[i].get_amount()) {
+                    empty.push(lines[i]);
+                }
+            }
+            for ( var i = 0; i < empty.length; i++) {
+                this.remove_paymentline(empty[i]);
+            }
+        },
+        select_paymentline: function(line){
             if(line !== this.selected_paymentline){
                 if(this.selected_paymentline){
                     this.selected_paymentline.set_selected(false);
@@ -1444,6 +1371,145 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }
                 this.trigger('change:selected_paymentline',this.selected_paymentline);
             }
+        },
+        /* ---- Payment Status --- */
+        get_subtotal : function(){
+            return this.orderlines.reduce((function(sum, orderLine){
+                return sum + orderLine.get_display_price();
+            }), 0);
+        },
+        get_total_with_tax: function() {
+            return this.orderlines.reduce((function(sum, orderLine) {
+                return sum + orderLine.get_price_with_tax();
+            }), 0);
+        },
+        get_total_without_tax: function() {
+            return this.orderlines.reduce((function(sum, orderLine) {
+                return sum + orderLine.get_price_without_tax();
+            }), 0);
+        },
+        get_total_discount: function() {
+            return this.orderlines.reduce((function(sum, orderLine) {
+                return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            }), 0);
+        },
+        get_total_tax: function() {
+            return this.orderlines.reduce((function(sum, orderLine) {
+                return sum + orderLine.get_tax();
+            }), 0);
+        },
+        get_total_paid: function() {
+            return this.paymentlines.reduce((function(sum, paymentLine) {
+                return sum + paymentLine.get_amount();
+            }), 0);
+        },
+        get_tax_details: function(){
+            var details = {};
+            var fulldetails = [];
+            var taxes_by_id = {};
+            
+            for(var i = 0; i < this.pos.taxes.length; i++){
+                taxes_by_id[this.pos.taxes[i].id] = this.pos.taxes[i];
+            }
+
+            this.orderlines.each(function(line){
+                var ldetails = line.get_tax_details();
+                for(var id in ldetails){
+                    if(ldetails.hasOwnProperty(id)){
+                        details[id] = (details[id] || 0) + ldetails[id];
+                    }
+                }
+            });
+            
+            for(var id in details){
+                if(details.hasOwnProperty(id)){
+                    fulldetails.push({amount: details[id], tax: taxes_by_id[id], name: taxes_by_id[id].name});
+                }
+            }
+
+            return fulldetails;
+        },
+        get_change: function(paymentline) {
+            if (!paymentline) {
+                var change = this.get_total_paid() - this.get_total_with_tax();
+            } else {
+                var change = -this.get_total_with_tax(); 
+                var lines  = this.paymentlines.models;
+                for (var i = 0; i < lines.length; i++) {
+                    change += lines[i].get_amount();
+                    if (lines[i] === paymentline) {
+                        break;
+                    }
+                }
+            }
+            return round_pr(Math.max(0,change), this.pos.currency.rounding);
+        },
+        get_due: function(paymentline) {
+            if (!paymentline) {
+                var due = this.get_total_with_tax() - this.get_total_paid();
+            } else {
+                var due = this.get_total_with_tax();
+                var lines = this.paymentlines.models;
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i] === paymentline) {
+                        break;
+                    } else {
+                        due -= lines[i].get_amount();
+                    }
+                }
+            }
+            return round_pr(Math.max(0,due), this.pos.currency.rounding);
+        },
+        is_paid: function(){
+            return this.get_due() === 0;
+        },
+        is_paid_with_cash: function(){
+            return !!this.paymentlines.find( function(pl){
+                return pl.cashregister.journal.type === 'cash';
+            });
+        },
+        finalize: function(){
+            this.destroy();
+        },
+        destroy: function(args){
+            Backbone.Model.prototype.destroy.apply(this,arguments);
+            this.pos.db.remove_unpaid_order(this);
+        },
+        /* ---- Invoice --- */
+        set_to_invoice: function(to_invoice) {
+            this.to_invoice = to_invoice;
+        },
+        is_to_invoice: function(){
+            return this.to_invoice;
+        },
+        /* ---- Client / Customer --- */
+        // the client related to the current order.
+        set_client: function(client){
+            this.set('client',client);
+        },
+        get_client: function(){
+            return this.get('client');
+        },
+        get_client_name: function(){
+            var client = this.get('client');
+            return client ? client.name : "";
+        },
+        /* ---- Screen Status --- */
+        // the order also stores the screen status, as the PoS supports
+        // different active screens per order. This method is used to
+        // store the screen status.
+        set_screen_data: function(key,value){
+            if(arguments.length === 2){
+                this.screen_data[key] = value;
+            }else if(arguments.length === 1){
+                for(var key in arguments[0]){
+                    this.screen_data[key] = arguments[0][key];
+                }
+            }
+        },
+        //see set_screen_data
+        get_screen_data: function(key){
+            return this.screen_data[key];
         },
     });
 

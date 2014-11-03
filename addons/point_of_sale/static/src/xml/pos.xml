@@ -454,7 +454,7 @@
         <t t-if="!paymentlines.length">
             <div class='paymentlines-empty'>
                 <div class='total'>
-                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                 </div>
                 <div class='message'>
                     Please select a payment method. 
@@ -484,17 +484,17 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered edit'> 
                                     <t t-esc='widget.inputbuffer' />
                                     <!-- <t t-esc='line.get_amount()' /> -->
                                 </td>
-                                <t t-if='order.getChange(line)'>
+                                <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' > 
-                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                     </td>
                                 </t>
-                                <t t-if='!order.getChange(line)'>
+                                <t t-if='!order.get_change(line)'>
                                     <td class='col-change' ></td>
                                 </t>
                                     
@@ -504,11 +504,11 @@
                         </t>
                         <t t-if='!line.selected'>
                             <tr class='paymentline' t-att-data-cid='line.cid'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
                                 <td class='col-change'> 
-                                    <t t-if='order.getChange(line)'>
-                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                    <t t-if='order.get_change(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                      </t>
                                 </td>
                                 <td class='col-name'> <t t-esc='line.name' /> </td>
@@ -982,6 +982,29 @@
         </div>
     </t>
 
+    <t t-name="UnpaidOrdersPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-unpaid-orders">
+                <p class="message">Unpaid Orders</p>
+                <t t-if='widget.pos.db.get_unpaid_orders().length === 0'>
+                    <p class='comment'>
+                        There are no unpaid orders
+                    </p>
+                </t>
+                <t t-if='widget.pos.db.get_unpaid_orders().length > 0'>
+                    <p class='comment traceback'>
+                        <t t-esc='JSON.stringify(widget.pos.db.get_unpaid_orders(),null,2)' />
+                    </p>
+                </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="SelectionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-selection">
@@ -1114,6 +1137,11 @@
                     <li class="button show_orders">Show All Unsent Orders</li>
                     <li class="button delete_orders">Delete All Unsent Orders</li>
                 </ul>
+                <p class="category">Unpaid Orders</p>
+                <ul>
+                    <li class="button show_unpaid_orders">Show All Unpaid Orders</li>
+                    <li class="button delete_unpaid_orders">Delete All Unpaid Orders</li>
+                </ul>
 
                 <p class="category">Hardware Status</p>
                 <ul>
@@ -1167,7 +1195,7 @@
                             <t t-if="order.get_client()">
                                 <i class='fa fa-user'/>
                             </t>
-                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + order.get('creationDate').toString('t')"/>
+                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + order.creation_date.toString('t')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>
@@ -1198,7 +1226,7 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.get('name')"/></div>
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
@@ -1239,10 +1267,10 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                        <t t-esc="widget.format_currency(order.get_subtotal())"/>
                     </td>
                 </tr>
-                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
                     <tr>
                         <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
@@ -1253,13 +1281,13 @@
                 <tr>
                     <td>Discount:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                        <t t-esc="widget.format_currency(order.get_total_discount())"/>
                     </td>
                 </tr>
                 <tr class="emph">
                     <td>Total:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                     </td>
                 </tr>
             </table>
@@ -1277,7 +1305,7 @@
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getChange())"/>
+                    <t t-esc="widget.format_currency(order.get_change())"/>
                     </td></tr>
             </table>
             <t t-if="receipt.footer">

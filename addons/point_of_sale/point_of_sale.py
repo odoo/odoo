@@ -21,6 +21,7 @@
 
 import logging
 import time
+import uuid
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -81,6 +82,7 @@ class pos_config(osv.osv):
         'proxy_ip':       fields.char('IP Address', help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty', size=45),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True, copy=False),
+        'uuid'  : fields.char('uuid', readonly=True, help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data'),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
             help="This sequence is automatically created by Odoo but you can change it "\
                 "to customize the reference numbers of your orders.", copy=False),
@@ -146,6 +148,8 @@ class pos_config(osv.osv):
             session = record.session_ids[0]
             result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
+    def _generate_uuid(self, cr, uid, context=None):
+        return str(uuid.uuid1())
 
     def _default_sale_journal(self, cr, uid, context=None):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
@@ -169,6 +173,7 @@ class pos_config(osv.osv):
         return company_id
 
     _defaults = {
+        'uuid'  : _generate_uuid,
         'state' : POS_CONFIG_STATE[0][0],
         'journal_id': _default_sale_journal,
         'group_by' : True,

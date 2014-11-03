@@ -57,21 +57,44 @@ openerp.pos_loyalty = function(instance){
                 domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
                 loaded: function(self,rewards){
                     self.loyalty.rewards = rewards; 
+                    self.loyalty.rewards_by_id = {};
+                    for (var i = 0; i < rewards.length;i++) {
+                        self.loyalty.rewards_by_id[rewards[i].id] = rewards[i];
+                    }
                 },
             });
         }
     }
+
+    var _super_orderline = module.Orderline;
+    module.Orderline = module.Orderline.extend({
+        get_reward: function(){
+            return this.pos.loyalty.rewards_by_id[this.reward_id];
+        },
+        set_reward: function(reward){
+            this.reward_id = reward.id;
+        },
+        export_as_JSON: function(){
+            var json = _super_orderline.prototype.export_as_JSON.apply(this,arguments);
+            json.reward_id = this.reward_id;
+            return json;
+        },
+        init_from_JSON: function(json){
+            _super_orderline.prototype.init_from_JSON.apply(this,arguments);
+            this.reward_id = json.reward_id;
+        },
+    });
 
     var _super = module.Order;
     module.Order = module.Order.extend({
 
         /* The total of points won, excluding the points spent on rewards */
         get_won_points: function(){
-            if (!this.pos.loyalty || !this.get('client')) {
+            if (!this.pos.loyalty || !this.get_client()) {
                 return 0;
             }
             
-            var orderLines = this.get('orderLines').models;
+            var orderLines = this.get_orderlines();
             var rounding   = this.pos.loyalty.rounding;
             
             var product_sold = 0;
@@ -84,7 +107,7 @@ openerp.pos_loyalty = function(instance){
                 var rules  = this.pos.loyalty.rules_by_product_id[product.id] || [];
                 var overriden = false;
 
-                if (line.reward) {  // Reward products are ignored
+                if (line.get_reward()) {  // Reward products are ignored
                     continue;
                 }
                 
@@ -114,7 +137,11 @@ openerp.pos_loyalty = function(instance){
                                 break;
                             }
                         }
+                        var _category = category;
                         category = this.pos.db.get_category_by_id(this.pos.db.get_category_parent_id(category.id));
+                        if (_category === category) {
+                            break;
+                        }
                     }
                 }
 
@@ -133,20 +160,21 @@ openerp.pos_loyalty = function(instance){
 
         /* The total number of points spent on rewards */
         get_spent_points: function() {
-            if (!this.pos.loyalty || !this.get('client')) {
+            if (!this.pos.loyalty || !this.get_client()) {
                 return 0;
             } else {
-                var lines    = this.get('orderLines').models;
+                var lines    = this.get_orderlines();
                 var rounding = this.pos.loyalty.rounding;
                 var points   = 0;
 
                 for (var i = 0; i < lines.length; i++) {
                     var line = lines[i];
-                    if (line.reward) {
-                        if (line.reward.type === 'gift') {
-                            points += round_pr(line.get_quantity() * line.reward.point_cost, rounding);
-                        } else if (line.reward.type === 'discount') {
-                            points += round_pr(-line.get_price_with_tax() * line.reward.point_cost, rounding);
+                    var reward = line.get_reward();
+                    if (reward) {
+                        if (reward.type === 'gift') {
+                            points += round_pr(line.get_quantity() * reward.point_cost, rounding);
+                        } else if (reward.type === 'discount') {
+                            points += round_pr(-line.get_price_with_tax() * reward.point_cost, rounding);
                         }
                     }
                 }
@@ -156,7 +184,7 @@ openerp.pos_loyalty = function(instance){
 
         /* The total number of points lost or won after the order is validated */
         get_new_points: function() {
-            if (!this.pos.loyalty || !this.get('client')) {
+            if (!this.pos.loyalty || !this.get_client()) {
                 return 0;
             } else { 
                 return round_pr(this.get_won_points() - this.get_spent_points(), this.pos.loyalty.rounding);
@@ -165,30 +193,30 @@ openerp.pos_loyalty = function(instance){
 
         /* The total number of points that the customer will have after this order is validated */
         get_new_total_points: function() {
-            if (!this.pos.loyalty || !this.get('client')) {
+            if (!this.pos.loyalty || !this.get_client()) {
                 return 0;
             } else { 
-                return round_pr(this.get('client').loyalty_points + this.get_new_points(), this.pos.loyalty.rounding);
+                return round_pr(this.get_client().loyalty_points + this.get_new_points(), this.pos.loyalty.rounding);
             }
         },
 
         /* The number of loyalty points currently owned by the customer */
         get_current_points: function(){
-            return this.get('client') ? this.get('client').loyalty_points : 0;
+            return this.get_client() ? this.get_client().loyalty_points : 0;
         },
 
         /* The total number of points spendable on rewards */
         get_spendable_points: function(){
-            if (!this.pos.loyalty || !this.get('client')) {
+            if (!this.pos.loyalty || !this.get_client()) {
                 return 0;
             } else {
-                return round_pr(this.get('client').loyalty_points - this.get_spent_points(), this.pos.loyalty.rounding);
+                return round_pr(this.get_client().loyalty_points - this.get_spent_points(), this.pos.loyalty.rounding);
             }
         },
 
         /* The list of rewards that the current customer can get */
         get_available_rewards: function(){
-            var client = this.get('client');
+            var client = this.get_client();
             if (!client) {
                 return [];
             } 
@@ -207,7 +235,7 @@ openerp.pos_loyalty = function(instance){
         },
 
         apply_reward: function(reward){
-            var client = this.get('client');
+            var client = this.get_client();
             if (!client) {
                 return;
             } else if (reward.type === 'gift') {
@@ -220,11 +248,11 @@ openerp.pos_loyalty = function(instance){
                     return;
                 }
 
-                var line = this.addProduct(product, { 
+                var line = this.add_product(product, { 
                     price: 0, 
                     quantity: 1, 
                     merge: false, 
-                    extras: { reward: reward },
+                    extras: { reward_id: reward.id },
                 });
 
             } else if (reward.type === 'discount') {
@@ -232,7 +260,7 @@ openerp.pos_loyalty = function(instance){
                 var lrounding = this.pos.loyalty.rounding;
                 var crounding = this.pos.currency.rounding;
                 var spendable = this.get_spendable_points();
-                var order_total = this.getTotalTaxIncluded();
+                var order_total = this.get_total_with_tax();
                 var discount    = round_pr(order_total * reward.discount,crounding);
 
                 if ( round_pr(discount * reward.point_cost,lrounding) > spendable ) { 
@@ -248,17 +276,17 @@ openerp.pos_loyalty = function(instance){
                     return;
                 }
 
-                var line = this.addProduct(product, { 
+                var line = this.add_product(product, { 
                     price: -discount, 
                     quantity: 1, 
                     merge: false,
-                    extras: { reward: reward },
+                    extras: { reward_id: reward.id },
                 });
             }
         },
             
         validate: function(){
-            var client = this.get('client');
+            var client = this.get_client();
             if ( client ) {
                 client.loyalty_points = this.get_new_total_points();
             }
@@ -279,8 +307,8 @@ openerp.pos_loyalty = function(instance){
     module.PosWidget.include({
         loyalty_reward_click: function(){
             var self = this;
-            var order  = this.pos.get('selectedOrder');
-            var client = order.get('client'); 
+            var order  = this.pos.get_order();
+            var client = order.get_client(); 
             if (!client) {
                 this.screen_selector.set_current_screen('clientlist');
                 return;

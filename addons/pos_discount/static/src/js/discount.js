@@ -17,11 +17,11 @@ openerp.pos_discount = function(instance){
             var discount = $(QWeb.render('DiscountButton'));
 
             discount.click(function(){
-                var order    = self.pos.get('selectedOrder');
+                var order    = self.pos.get_order();
                 var product  = self.pos.db.get_product_by_id(self.pos.config.discount_product_id[0]);
-                var discount = - self.pos.config.discount_pc/ 100.0 * order.getTotalTaxIncluded();
+                var discount = - self.pos.config.discount_pc/ 100.0 * order.get_total_tax_included();
                 if( discount < 0 ){
-                    order.addProduct(product, { price: discount });
+                    order.add_product(product, { price: discount });
                 }
             });
 

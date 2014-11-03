@@ -15,7 +15,7 @@ function openerp_restaurant_floors(instance,module){
                 self.floors_by_id[floors[i].id] = floors[i];
             }
             // Ignore floorplan features if no floor specified, or feature deactivated
-            self.config.iface_floorplan = self.config.iface_floorplan && self.floors.length;
+            self.config.iface_floorplan = self.config.iface_floorplan && !!self.floors.length;
         },
     });
 
@@ -25,7 +25,9 @@ function openerp_restaurant_floors(instance,module){
         model: 'restaurant.table',
         fields: ['name','width','height','position_h','position_v','shape','floor_id','color'],
         loaded: function(self,tables){
+            self.tables_by_id = {};
             for (var i = 0; i < tables.length; i++) {
+                self.tables_by_id[tables[i].id] = tables[i];
                 var floor = self.floors_by_id[tables[i].floor_id[0]];
                 if (floor) {
                     floor.tables.push(tables[i]);
@@ -318,9 +320,11 @@ function openerp_restaurant_floors(instance,module){
             if (this.editing) { 
                 this.toggle_editing();
             }
+            this.pos_widget.order_selector.show();
         },
         show: function(){
             this._super();
+            this.pos_widget.order_selector.hide();
             for (var i = 0; i < this.table_widgets.length; i++) { 
                 this.table_widgets[i].renderElement();
             }
@@ -592,14 +596,24 @@ function openerp_restaurant_floors(instance,module){
     var _super_order = module.Order.prototype;
     module.Order = module.Order.extend({
         initialize: function(attr) {
-            _super_order.initialize.call(this,attr);
-            this.table = this.pos.table;
+            _super_order.initialize.apply(this,arguments);
+            if (!this.table) {
+                this.table = this.pos.table;
+            }
+            this.save_to_db();
         },
         export_as_JSON: function() {
             var json = _super_order.export_as_JSON.apply(this,arguments);
-            json.table = this.table.name;
-            json.floor = this.table ? this.table.floor.name : false; 
+            json.table     = this.table ? this.table.name : undefined;
+            json.table_id  = this.table ? this.table.id : false;
+            json.floor     = this.table ? this.table.floor.name : false; 
+            json.floor_id  = this.table ? this.table.floor.id : false;
             return json;
+        },
+        init_from_JSON: function(json) {
+            _super_order.init_from_JSON.apply(this,arguments);
+            this.table = this.pos.tables_by_id[json.table_id];
+            this.floor = this.table ? this.pos.floors_by_id[json.floor_id] : undefined;
         },
     });
 
@@ -608,6 +622,12 @@ function openerp_restaurant_floors(instance,module){
     module.OrderSelectorWidget.include({
         floor_button_click_handler: function(){
             this.pos.set_table(null);
+        },
+        hide: function(){
+            this.$el.addClass('oe_invisible');
+        },
+        show: function(){
+            this.$el.removeClass('oe_invisible');
         },
         renderElement: function(){
             var self = this;
@@ -656,6 +676,14 @@ function openerp_restaurant_floors(instance,module){
             }
         },
 
+        // if we have tables, we do not load a default order, as the default order will be
+        // set when the user selects a table.
+        set_start_order: function() {
+            if (!this.config.iface_floorplan) {
+                _super_posmodel.set_start_order.apply(this,arguments);
+            }
+        },
+
         // we need to prevent the creation of orders when there is no
         // table selected.
         add_new_order: function() {
@@ -670,11 +698,14 @@ function openerp_restaurant_floors(instance,module){
             }
         },
 
+
         // get the list of unpaid orders (associated to the current table)
         get_order_list: function() {    
             var orders = _super_posmodel.get_order_list.call(this);  
-            if (!this.table || !this.config.iface_floorplan) {
+            if (!this.config.iface_floorplan) {
                 return orders;
+            } else if (!this.table) {
+                return [];
             } else {
                 var t_orders = [];
                 for (var i = 0; i < orders.length; i++) {

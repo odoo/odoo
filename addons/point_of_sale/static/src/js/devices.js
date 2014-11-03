@@ -374,10 +374,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         scale_read: function(){
             var self = this;
             var ret = new $.Deferred();
-            console.log('scale_read');
             this.message('scale_read',{})
                 .then(function(weight){
-                    console.log(weight)
                     ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
                 }, function(){ //failed to read weight
                     ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
