@@ -712,7 +712,8 @@ class product_template(osv.osv):
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+                    if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids])], context=context):
+                        raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
