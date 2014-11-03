@@ -68,5 +68,11 @@ class NewWebsite(osv.Model):
             request.context['experiment_id'] = 1
         return website
 
+    def save_ab_config(self,cr,uid,ids,context=None):
+        website_id = context.get('active_id')
+        google_analytics_key = context.get('google_analytics_key')
+        google_analytics_view_id = context.get('google_analytics_view_id')
+        self.write(cr, uid, [website_id], {'google_analytics_key':google_analytics_key, 'google_analytics_view_id':google_analytics_view_id}, context=context)
+
 
 

@@ -19,6 +19,7 @@ OpenERP Website CMS
         'views/res_config.xml',
         # 'data/demo.xml',
         'data/data.xml',
+        'wizard/ab_settings.xml',
     ],
     'demo': [],
     'qweb': ['static/src/xml/*.xml'],
