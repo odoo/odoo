@@ -25,7 +25,7 @@
 			this.notLock = 0;
 			
     		this.fields = {all:{},required:{}};
-
+            debugger;
     		new openerp.Model(new openerp.Session(),"website.form")
     		.call("get_authorized_fields", [this.ref], {context: website.get_context()}).then(function(data) {
     			var i = 0;
@@ -75,8 +75,8 @@
         			var mail = self.wizard.find('.form-action-mailto textarea').val();
         			if(self.wizard.find('select').val() != 'mail.mail') DefferedForm.resolve();
     				else if(mail.length > 0) {
-    					new openerp.Model(new openerp.Session(),"website.form")
-    					.call("insert_partner",[mail], {context: website.get_context()}).then(function(id) {
+    					new openerp.Model(new openerp.Session(),"res.partner")
+    					.call("find_or_create",[mail], {context: website.get_context()}).then(function(id) {
     						console.log(id);
     						if(id) {
     							var hidden_email = self.$target.find('.hidden_email_website_form_editor');
@@ -123,39 +123,32 @@
             var DefFormPopUp = $.Deferred();
             
             new openerp.Model(new openerp.Session(),"website.form")
-    		.call("get_options_list", {context: website.get_context()}).then(function(options_list) {
+    		.call("search_read", [[],['model_name','name']], {context: website.get_context()})
+
+            .then(function(options_list) {
+                console.log(options_list);
     			var options = '';
     			$.each(options_list, function(i,elem) {
-    				options += '<option value="'+elem.model+'">'+elem.name+'</option>';
+    				options += '<option value="'+elem.model_name+'">'+elem.name+'</option>';
     			});
     			
     			self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
 				self.wizard.appendTo('body').modal({"keyboard" :true});
                 self.loadData();
 				
-                /*			
-    			new openerp.Model(new openerp.Session(),"website.form")
-    			.call("get_partners", {context: website.get_context()}).then(function(tlist) {
-    				var plist = [];
-    				$.each(tlist, function(i,elem) {if(elem) plist.push(elem);});
-    				console.log(plist);
-	    			self.wizard.find('.form-action-mailto').find('textarea')
-	    			.textext({ plugins : 'autocomplete'})
-	        		.bind('getSuggestions', function(e, data) {
-	        			var list = plist,
-					 	textext  = $(e.target).textext()[0],
-	                	query 	 = (data ? data.query : '') || '';
-						$(this).trigger('setSuggestions', { result : textext.itemManager().filter(list, query) });
-	        		});
-	       		});
-                */
-                
                 self.wizard.find('.form-action-mailto').find('textarea')
-                    .textext({ plugins : 'autocomplete arrow'})
+                    .textext({  plugins: 'autocomplete arrow',
+                                ext: {
+                                    itemManager: {
+                                        itemToString: function(item) {
+                                            return item.email;
+                                        }
+                                    }
+                                }})
                     .bind('getSuggestions', function(e,data) {
                         var _this = this;
-                        new openerp.Model(new openerp.Session(),"website.form")
-                        .call("get_partners",[$(this).val()], { context: website.get_context()}).then(function(tlist) {
+                        new openerp.Model(new openerp.Session(),"res.partner")
+                        .call("search_read",[[['email', '=like', $(this).val()+'%']],['email']], { limit: 5, context: website.get_context()}).then(function(tlist) {
                             $(_this).trigger('setSuggestions', {result: tlist});
                         });
                     });
@@ -887,7 +880,6 @@
     			if(required_error != '') required_error += ', ';
     			if(!present)  required_error += model.fields.all[name].label;
     		});
-            debugger;
     		if(required_error) {
     			var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ') + required_error;
     			$('main form').prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));

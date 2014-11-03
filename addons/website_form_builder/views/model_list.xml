@@ -24,11 +24,11 @@
                     <sheet string="Allow a new model for the Form Builder">
                         <group col="4">
                             <field name="model"/>
-                            <field name="metadata_field_ref"/>
+                            <field name="metadata_field_ref" domain="[('ir.model.fields')]"/>
                             <field name="name" colspan="4"/>
                         </group>
                         <group col="4">
-                            <field name="blacklist_field_ids" widget="many2many_tags" colspan="4" domain="[('model', '=', model)]"/>
+                            <field name="blacklist_field_ids" widget="many2many_tags" colspan="4" domain="[('model', '=', model_name)]"/>
                         </group>
                     </sheet>
                 </form>
