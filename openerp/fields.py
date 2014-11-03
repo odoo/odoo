@@ -125,6 +125,9 @@ class Field(object):
             ``one2many`` and computed fields, including property fields and
             related fields)
 
+        :param string oldname: the previous name of this field, so that ORM can rename
+            it automatically at migration
+
         .. _field-computed:
 
         .. rubric:: Computed fields
