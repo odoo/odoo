@@ -2282,6 +2282,7 @@ class stock_move(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
         """
+        print "Action done"
         context = context or {}
         picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
@@ -3945,19 +3946,14 @@ class stock_pack_operation(osv.osv):
             new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
         self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
-    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, weight=1, increment=True, context=None):
-        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+weight) otherwise create it
+    def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False, visible_op_ids=False, weight=-1, increment=True, context=None):
+        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+weight if weight != -1, +1 otherwise) otherwise create it
 
         :param domain: list of tuple directly reusable as a domain
         context can receive a key 'current_package_id' with the package to consider for this operation
-        weight is used for weighted products for which quantity != 1 (not per unit but e.g. per kg)
+        weight is used for weighted products for which quantity != 1 (not per unit but e.g. per kg). Weight == -1 when buttons - or + are pressed.
         returns True
         '''
-        print "Search and increment " + str(weight)
-        if increment:
-            print "INCREMENT"
-        else:
-            print "NOT INCREMENT"
         if context is None:
             context = {}
 
@@ -3976,7 +3972,13 @@ class stock_pack_operation(osv.osv):
             op_obj = self.browse(cr, uid, operation_id, context=context)
             qty = op_obj.qty_done
             if increment:
-                qty += weight
+                if weight == -1: # button + pressed
+                    if op_obj.product_qty != qty:
+                        qty = min(qty+1, op_obj.product_qty);
+                    else:
+                        qty += 1
+                else: # Weigth scanned
+                    qty += weight;
             else:
                 if qty == 0 and op_obj.product_qty == 0:
                     #we have a line with 0 qty set, so delete it
