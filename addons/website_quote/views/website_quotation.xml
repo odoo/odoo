@@ -11,10 +11,8 @@
   </template>
 
   <template id="pricing" name="Price">
-      <section>
-          <h1 class="page-header">Pricing</h1>
-      </section>
       <section id="quote">
+          <h1 class="page-header">Pricing</h1>
           <table class="table">
               <thead>
                   <tr>
@@ -24,12 +22,13 @@
                       <th></th>
                       <th class="text-right">Unit Price</th>
                       <th class="text-right">Price</th>
+                      <th></th>
                   </tr>
               </thead>
               <tbody>
                   <tr t-foreach="quotation.order_line" t-as="line">
                       <td>
-                          <div t-field="line.name"/>
+                          <span t-field="line.name"/>
                       </td>
                       <td>
                           <div id="quote_qty">
@@ -94,11 +93,11 @@
               </tbody>
           </table>
       </section>
-      <t t-call="website_quote.quotation_toolbar"/>
       <section id="terms" class="container" t-if="quotation.note">
           <h2 class="page-header">Terms &amp; Conditions</h2>
           <p t-field="quotation.note"/>
       </section>
+      <t t-call="website_quote.quotation_toolbar"/>
   </template>
 
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
@@ -120,22 +119,24 @@
   </template>
 
   <template id="chatter">
-      <h1 class="page-header hidden-print">History</h1>
-      <ul class="media-list hidden-print" id="comments-list">
-          <t t-foreach="quotation.message_ids" t-as="message">
-              <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
-                  <div class="media-body">
-                      <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+      <section id="discussion" class="hidden-print">
+          <h1 class="page-header">History</h1>
+          <ul class="media-list" id="comments-list">
+              <t t-foreach="quotation.message_ids" t-as="message">
+                  <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
                       <div class="media-body">
-                          <h5 class="media-heading">
-                              <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                          </h5>
-                          <div t-field="message.body"/>
+                          <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                          <div class="media-body">
+                              <h5 class="media-heading">
+                                  <span t-raw="message.author_id.name"/> <small>on <span t-raw="message.date"/></small>
+                              </h5>
+                              <div t-raw="message.body"/>
+                          </div>
                       </div>
-                  </div>
-              </li>
-          </t>
-      </ul>
+                  </li>
+              </t>
+          </ul>
+      </section>
   </template>
 
   <!-- Options:Quotation Chatter: user can reply -->
@@ -156,27 +157,29 @@
 
   <template id="quotation_toolbar">
       <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept">
+          <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modalaccept">
               Accept
           </a>
           <a class="btn btn-info fa fa-comment" type="submit" href="#discussion">
               Feedback
           </a>
-          <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
+          <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modaldecline">
               Reject
           </a>
       </div>
   </template>
+
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
       <t t-call="website.layout">
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
               <div class="row mt16">
-                  <div class="col-md-3">
+                <!-- Sidebar -->
+                  <div class="col-md-3 hidden-print">
                       <div class="bs-sidebar">
-                          <div class="text-center hidden-print" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a t-if="order_valid" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modelaccept">
+                          <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
+                              <a t-if="order_valid" class="btn btn-primary btn-block fa fa-check" data-toggle="modal" data-target="#modalaccept">
                                   Accept Order
                               </a>
                               <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block">
@@ -187,7 +190,7 @@
                                   <a type="submit" href="#discussion">
                                       Ask Changes
                                   </a> or
-                                  <a data-toggle="modal" data-target="#modeldecline">
+                                  <a data-toggle="modal" data-target="#modaldecline">
                                       Reject
                                   </a>
                               </div>
@@ -195,7 +198,7 @@
                           <hr class="mt0 mb0"/>
                           <t t-call="website_quote.navigation_menu"/>
                           <hr class="mt0 mb0"/>
-                          <div t-if="order_valid" class="text-center hidden-print">
+                          <div t-if="order_valid" class="text-center">
                               <input type="hidden" t-att-value="quotation.validity_date" id="validity_date"/>
                               <div class="mt8" t-if="days_valid &gt; 0">
                                   <strong>This offer expires in</strong>
@@ -236,6 +239,7 @@
                          </div>
                       </div>
                   </div>
+                  <!-- Page content -->
                   <div class="col-md-9">
 
                       <div class="alert alert-success alert-dismissable" t-if="message==1">
@@ -254,7 +258,7 @@
                       </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
-                      <div class="modal fade" id="modelaccept" role="dialog" aria-hidden="true">
+                      <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content">
                             <div class="modal-header">
@@ -282,7 +286,7 @@
                         </div>
                       </div>
 
-                      <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
+                      <div class="modal fade" id="modaldecline" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <div class="modal-header">
@@ -304,7 +308,7 @@
                       </div>
 
                       <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'">
-                          <button type="button" class="close hidden-print" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
 
@@ -313,7 +317,6 @@
                       <!--
                         DO NOT include the chatter in the so_quotation_content, since chatter template required website, which is not given to render a report
                       -->
-                      <a id="discussion"/>
                       <t t-call="website_quote.chatter"/>
                   </div><!-- //col-md-9 -->
               </div>
@@ -323,20 +326,26 @@
   </template>
 
 
-  <!-- Quotation content : intro, informations, chatter, order lines, remarks, descriptions .... -->
+  <!--
+      Quotation content : intro, informations, order lines, remarks, descriptions ....
+      This template should contains all the printable element of the SO. This is the
+      template rendered in PDF with the report engine.
+  -->
   <template id="so_quotation_content" name="Quotation Content">
       <!-- Intro -->
-      <a id="introduction"/>
-      <h1 class="page-header mt16">
-          <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
-          <span t-if="quotation.state not in ('draft','sent','cancel')">Your Order</span>
-          <em t-esc="quotation.name"/>
-          <small t-field="quotation.state"/>
-          <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
-              <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
-              <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Update Quote</a>
-          </div>
-      </h1>
+      <div id="introduction" class="page-header mt16">
+        <h1>
+            <t t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</t>
+            <t t-if="quotation.state not in ('draft','sent','cancel')">Your Order</t>
+            <em t-esc="quotation.name"/>
+            <small t-field="quotation.state"/>
+            <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
+                  <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
+                  <a t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Update Quote</a>
+                  <a t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sale Order</a>
+            </div>
+        </h1>
+      </div>
       <!-- Informations -->
       <div class="row mt32">
           <div class="col-md-6 col-xs-6">
@@ -397,28 +406,22 @@
               </div>
           </div>
       </div>
-
-      <a id="offer"/>
+      <!-- Descriptions -->
       <div t-field="quotation.website_description" class="oe_no_empty"/>
-
       <t t-foreach="quotation.order_line" t-as="line">
           <a t-att-id="line.id"/>
           <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty hidden-print'" t-field="line.website_description"/>
       </t>
-
       <div class="oe_structure"/>
-
-      <a id="pricing"/>
+      <!-- Pricing -->
       <t t-call="website_quote.pricing"/>
-
-      <a id="options"/>
+      <!-- Options -->
       <t t-call="website_quote.optional_products"/>
-
   </template>
 
 
   <template id="navigation_menu">
-    <div class="hidden-print navspy" t-ignore="true" role="complementary">
+    <div class="navspy" t-ignore="true" role="complementary">
         <ul class="nav bs-sidenav" data-id="quote_sidebar">
             <li><a href="#introduction">Introduction</a></li>
         </ul>
@@ -441,11 +444,8 @@
   </template>
 
   <template id="optional_products">
-    <div class="container mt32" t-if="quotation.options">
-        <section>
+        <section t-if="quotation.options" id="options">
             <h1 class="page-header">Options</h1>
-        </section>
-        <section id="options">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -453,6 +453,7 @@
                         <th>Description</th>
                         <th></th>
                         <th class="text-right">Price</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -480,9 +481,9 @@
                                     </div>
                                 </strong>
                             </td>
-                            <td class="pull-right" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
-                                    <span class="fa fa-shopping-cart"/>
+                            <td>
+                                <a t-if="quotation.state in ['draft', 'sent']" t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                    <span class="fa fa-shopping-cart" title="Buy the product"/>
                                 </a>
                             </td>
                         </t>
@@ -490,7 +491,6 @@
                 </tbody>
             </table>
         </section>
-    </div>
   </template>
 
   <!-- Template to edit the quotation template with the website editor -->
@@ -499,9 +499,9 @@
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
                 <div class="row mt16">
-                    <div class="col-md-3">
+                    <div class="col-md-3 hidden-print">
                         <div class="bs-sidebar">
-                            <div class="hidden-print navspy" role="complementary" t-ignore="True">
+                            <div class="navspy" role="complementary" t-ignore="True">
                                 <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
                             </div>
                         </div>
@@ -540,7 +540,7 @@
                             <div t-field="option_line.website_description" class="oe_no_empty"/>
                         </t>
                         <section id="terms" class="container" t-if="template.note">
-                            <h1 class="page-header" t-ignore="True">Terms &amp; Conditions</h1>
+                            <h1 t-ignore="True">Terms &amp; Conditions</h1>
                             <p t-field="template.note"/>
                         </section>
                     </div>
