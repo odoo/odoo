@@ -108,6 +108,8 @@ class account_invoice(models.Model):
         'state', 'currency_id', 'invoice_line.price_subtotal',
         'move_id.line_id.account_id.type',
         'move_id.line_id.amount_residual',
+        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
+        'move_id.line_id.reconcile_id',
         'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
         'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
