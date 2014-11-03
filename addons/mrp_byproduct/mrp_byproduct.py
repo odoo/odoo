@@ -84,6 +84,7 @@ class mrp_production(osv.osv):
         """ Confirms production order and calculates quantity based on subproduct_type.
         @return: Newly generated picking Id.
         """
+        move_obj = self.pool.get('stock.move')
         picking_id = super(mrp_production,self).action_confirm(cr, uid, ids, context=context)
         product_uom_obj = self.pool.get('product.uom')
         for production in self.browse(cr, uid, ids):
@@ -113,10 +114,11 @@ class mrp_production(osv.osv):
                     'location_id': source,
                     'location_dest_id': production.location_dest_id.id,
                     'move_dest_id': production.move_prod_id.id,
-                    'state': 'waiting',
                     'production_id': production.id
                 }
-                self.pool.get('stock.move').create(cr, uid, data)
+                move_id = move_obj.create(cr, uid, data, context=context)
+                move_obj.action_confirm(cr, uid, [move_id], context=context)
+
         return picking_id
 
     def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):

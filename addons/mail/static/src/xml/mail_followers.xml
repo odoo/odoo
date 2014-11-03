@@ -35,8 +35,8 @@
         Template used to display a partner following the record
         -->
     <div t-name="mail.followers.partner" class='oe_partner'>
-        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
-        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name"><t t-esc="record.name"/></a>
+        <img class="oe_mail_thumbnail oe_mail_frame" t-att-src="record.avatar_url"/>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name" t-att-data-partner="record.id"><t t-esc="record.name"/></a>
         <span t-if="record.is_editable and (widget.records_length &gt; 1)" class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" t-att-data-id="record.id">&amp;</span>
         <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
     </div>

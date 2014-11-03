@@ -17,8 +17,6 @@ import unittest2
 import urllib2
 import xmlrpclib
 from datetime import datetime, timedelta
-from shutil import rmtree
-from tempfile import mkdtemp
 
 import werkzeug
 
@@ -47,7 +45,8 @@ def at_install(flag):
     whether the test should (``True``) or should not (``False``) run during
     module installation.
 
-    By default, tests are run at install.
+    By default, tests are run right after installing the module, before
+    starting the installation of the next module.
     """
     def decorator(obj):
         obj.at_install = flag
@@ -59,7 +58,8 @@ def post_install(flag):
     specifying whether the test should or should not run after a set of
     module installations.
 
-    By default, tests are *not* run after installation.
+    By default, tests are *not* run after installation of all modules in the
+    current installation set.
     """
     def decorator(obj):
         obj.post_install = flag
@@ -78,10 +78,13 @@ class BaseCase(unittest2.TestCase):
         return self.registry.cursor()
 
     def ref(self, xid):
-        """ Returns database ID corresponding to a given identifier.
+        """ Returns database ID for the provided :term:`external identifier`,
+        shortcut for ``get_object_reference``
 
-            :param xid: fully-qualified record identifier, in the form ``module.identifier``
-            :raise: ValueError if not found
+        :param xid: fully-qualified :term:`external identifier`, in the form
+                    :samp:`{module}.{identifier}`
+        :raise: ValueError if not found
+        :returns: registered id
         """
         assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
         module, xid = xid.split('.')
@@ -89,10 +92,13 @@ class BaseCase(unittest2.TestCase):
         return id
 
     def browse_ref(self, xid):
-        """ Returns a browsable record for the given identifier.
+        """ Returns a record object for the provided
+        :term:`external identifier`
 
-            :param xid: fully-qualified record identifier, in the form ``module.identifier``
-            :raise: ValueError if not found
+        :param xid: fully-qualified :term:`external identifier`, in the form
+                    :samp:`{module}.{identifier}`
+        :raise: ValueError if not found
+        :returns: :class:`~openerp.models.BaseModel`
         """
         assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
         module, xid = xid.split('.')
@@ -100,15 +106,17 @@ class BaseCase(unittest2.TestCase):
 
 
 class TransactionCase(BaseCase):
-    """
-    Subclass of BaseCase with a single transaction, rolled-back at the end of
-    each test (method).
+    """ TestCase in which each test method is run in its own transaction,
+    and with its own cursor. The transaction is rolled back and the cursor
+    is closed after each test.
     """
 
     def setUp(self):
         self.registry = RegistryManager.get(DB)
+        #: current transaction's cursor
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
+        #: :class:`~openerp.api.Environment` for the current test case
         self.env = api.Environment(self.cr, self.uid, {})
 
     def tearDown(self):
@@ -117,9 +125,9 @@ class TransactionCase(BaseCase):
 
 
 class SingleTransactionCase(BaseCase):
-    """
-    Subclass of BaseCase with a single transaction for the whole class,
-    rolled-back after all the tests.
+    """ TestCase in which all test methods are run in the same transaction,
+    the transaction is started with the first test method and rolled back at
+    the end of the last.
     """
 
     @classmethod
@@ -155,7 +163,7 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
     https_response = http_response
 
 class HttpCase(TransactionCase):
-    """ Transactionnal HTTP TestCase with url_open and phantomjs helpers.
+    """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
 
     def __init__(self, methodName='runTest'):

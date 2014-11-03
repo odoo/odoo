@@ -24,6 +24,7 @@ from lxml import etree
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -317,16 +318,26 @@ class account_invoice(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
         context = self._context
+
+        def get_view_id(xid, name):
+            try:
+                return self.env['ir.model.data'].xmlid_to_res_id('account.' + xid, raise_if_not_found=True)
+            except ValueError:
+                try:
+                    return self.env['ir.ui.view'].search([('name', '=', name)], limit=1).id
+                except Exception:
+                    return False    # view not found
+
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             partner = self.env['res.partner'].browse(context['active_ids'])[0]
             if not view_type:
-                view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.tree')]).id
+                view_id = get_view_id('invoice_tree', 'account.invoice.tree')
                 view_type = 'tree'
             elif view_type == 'form':
                 if partner.supplier and not partner.customer:
-                    view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.supplier.form')]).id
+                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form')
                 elif partner.customer and not partner.supplier:
-                    view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.form')]).id
+                    view_id = get_view_id('invoice_form', 'account.invoice.form')
 
         res = super(account_invoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
@@ -705,6 +716,7 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
         else:
             tax_key = []
+            precision = self.env['decimal.precision'].precision_get('Account')
             for tax in self.tax_line:
                 if tax.manual:
                     continue
@@ -713,7 +725,7 @@ class account_invoice(models.Model):
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
                     raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:

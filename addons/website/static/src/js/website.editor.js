@@ -308,7 +308,6 @@
 
             this.$('#website-top-edit').hide();
             this.$('#website-top-view').show();
-            this.$buttons.edit.show();
 
             var $edit_button = this.$buttons.edit
                     .prop('disabled', website.no_editor);
@@ -750,6 +749,7 @@
             var def = $.Deferred();
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
+                $("[data-oe-type=selection]").attr("contenteditable",false);
                 editor.setReadOnly(false);
                 // ckeditor set root to editable, disable it (only inner
                 // sections are editable)
@@ -819,15 +819,9 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
+                .not('[data-oe-type = "selection"]')
                 .not('link, script')
-                .not('.oe_snippet_editor')
-                .filter(function () {
-                    var $this = $(this);
-                    // keep view sections and fields which are *not* in
-                    // view sections for top-level editables
-                    return $this.data('oe-model') === 'ir.ui.view'
-                       || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
-                });
+                .not('.oe_snippet_editor');
         },
 
         _current_editor: function () {
@@ -1017,17 +1011,17 @@
             var classes = (style && style.length ? "btn " : "") + style + " " + size;
 
             if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-                def.resolve('mailto:' + val, false, label);
+                def.resolve('mailto:' + val, false, label, classes);
             } else if ($e.val() && $e.val().length && $e.hasClass('page')) {
                 var data = $e.select2('data');
                 if (!data.create) {
-                    def.resolve(data.id, false, data.text);
+                    def.resolve(data.id, false, label || data.text, classes);
                 } else {
                     // Create the page, get the URL back
                     $.get(_.str.sprintf(
                             '/website/add/%s?noredirect=1', encodeURI(data.id)))
                         .then(function (response) {
-                            def.resolve(response, false, data.id);
+                            def.resolve(response, false, data.id, classes);
                         });
                 }
             } else {
@@ -1385,11 +1379,17 @@
                 this.changed($(e.target));
             },
             'click button.filepicker': function () {
-                this.$('input[type=file]').click();
+                var filepicker = this.$('input[type=file]');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
             },
             'click .js_disable_optimization': function () {
                 this.$('input[name="disable_optimization"]').val('1');
-                this.$('button.filepicker').click();
+                var filepicker = this.$('button.filepicker');
+                if (!_.isEmpty(filepicker)){
+                    filepicker[0].click();
+                }
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
@@ -1930,9 +1930,10 @@
                     return false;
                 }
                 switch(m.type) {
-                case 'attributes': // ignore .cke_focus being added or removed
-                    // ignore id modification
-                    if (m.attributeName === 'id') { return false; }
+                case 'attributes':
+                    // ignore special attributes and .cke_focus class being added or removed
+                    var ignored_attrs = ['id', 'contenteditable', 'attributeeditable']
+                    if (_.contains(ignored_attrs, m.attributeName)) { return false; }
                     // if attribute is not a class, can't be .cke_focus change
                     if (m.attributeName !== 'class') { return true; }
 

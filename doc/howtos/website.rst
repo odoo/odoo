@@ -500,18 +500,17 @@ Altering view architectures is done in 3 steps:
 
 The second thing we will change is making the product categories sidebar
 visible by default: :menuselection:`Customize --> Product Categories` lets
-you toggle a tree of product categories (used to filter the main dispay) on
+you toggle a tree of product categories (used to filter the main display) on
 and off.
 
-This is done via the *optional application* of extension templates: an
-extension template (such as the one we've just created) can be
-"always applied", "optional and enabled" or "optional and disabled". The
-latter two will display the view in the :guilabel:`Customize` menu with a
-check box, allowing administrators to enable or disable them (and easily
-customize their website pages).
+This is done via the ``customize_show`` and ``active`` fields of extension 
+templates: an extension template (such as the one we've just created) can be 
+*customize_show=True*. This choice will display the view in the :guilabel:`Customize` 
+menu with a check box, allowing administrators to activate or disable them 
+(and easily customize their website pages).
 
 We simply need to modify the *Product Categories* record and set its default
-to ``enabled``:
+to *active="True"*:
 
 .. patch::
 

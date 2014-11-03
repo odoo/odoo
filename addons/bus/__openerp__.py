@@ -10,4 +10,6 @@
         'views/bus.xml',
         'security/ir.model.access.csv',
     ],
+    'installable': True,
+    'auto_install': True,
 }

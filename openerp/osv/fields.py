@@ -42,6 +42,7 @@ import logging
 import pytz
 import re
 import xmlrpclib
+from operator import itemgetter
 from psycopg2 import Binary
 
 import openerp
@@ -82,7 +83,28 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
     _deprecated = False
-    copy = True # whether the field is copied by BaseModel.copy()
+
+    copy = True                 # whether value is copied by BaseModel.copy()
+    string = None
+    help = ""
+    required = False
+    readonly = False
+    _domain = []
+    _context = {}
+    states = None
+    priority = 0
+    change_default = False
+    size = None
+    ondelete = None
+    translate = False
+    select = False
+    manual = False
+    write = False
+    read = False
+    selectable = True
+    group_operator = False
+    groups = False              # CSV list of ext IDs of groups
+    deprecated = False          # Optional deprecation warning
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
         """
@@ -91,37 +113,48 @@ class _column(object):
         It corresponds to the 'state' column in ir_model_fields.
 
         """
-        if domain is None:
-            domain = []
-        if context is None:
-            context = {}
-        self.states = states or {}
-        self.string = string
-        self.readonly = readonly
-        self.required = required
-        self.size = size
-        self.help = args.get('help', '')
-        self.priority = priority
-        self.change_default = change_default
-        self.ondelete = ondelete.lower() if ondelete else None # defaults to 'set null' in ORM
-        self.translate = translate
-        self._domain = domain
-        self._context = context
-        self.write = False
-        self.read = False
-        self.select = select
-        self.manual = manual
-        self.selectable = True
-        self.group_operator = args.get('group_operator', False)
-        self.groups = False  # CSV list of ext IDs of groups that can access this field
-        self.deprecated = False # Optional deprecation warning
-        for a in args:
-            setattr(self, a, args[a])
+        args0 = {
+            'string': string,
+            'required': required,
+            'readonly': readonly,
+            '_domain': domain,
+            '_context': context,
+            'states': states,
+            'priority': priority,
+            'change_default': change_default,
+            'size': size,
+            'ondelete': ondelete.lower() if ondelete else None,
+            'translate': translate,
+            'select': select,
+            'manual': manual,
+        }
+        for key, val in args0.iteritems():
+            if val:
+                setattr(self, key, val)
+
+        self._args = args
+        for key, val in args.iteritems():
+            setattr(self, key, val)
 
         # prefetch only if self._classic_write, not self.groups, and not
         # self.deprecated
         if not self._classic_write or self.deprecated:
             self._prefetch = False
+
+    def new(self, **args):
+        """ return a column like `self` with the given parameters """
+        # memory optimization: reuse self whenever possible; you can reduce the
+        # average memory usage per registry by 10 megabytes!
+        return self if self.same_parameters(args) else type(self)(**args)
+
+    def same_parameters(self, args):
+        dummy = object()
+        return all(
+            # either both are falsy, or they are equal
+            (not val1 and not val) or (val1 == val)
+            for key, val in args.iteritems()
+            for val1 in [getattr(self, key, getattr(self, '_' + key, dummy))]
+        )
 
     def to_field(self):
         """ convert column `self` to a new-style field """
@@ -130,9 +163,11 @@ class _column(object):
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
-        items = [
-            ('_origin', self),                  # field interfaces self
+        base_items = [
+            ('column', self),                   # field interfaces self
             ('copy', self.copy),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
@@ -141,15 +176,15 @@ class _column(object):
             ('required', self.required),
             ('states', self.states),
             ('groups', self.groups),
+            ('change_default', self.change_default),
+            ('deprecated', self.deprecated),
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
-            ('change_default', self.change_default),
-            ('deprecated', self.deprecated),
-        ]
-        return dict(item for item in items if item[1])
+        ])
+        return dict(base_items + truthy_items + self._args.items())
 
     def restart(self):
         pass
@@ -313,6 +348,10 @@ class float(_column):
         self.digits = digits
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
+
+    def new(self, **args):
+        # float columns are database-dependent, so always recreate them
+        return type(self)(**args)
 
     def to_field_args(self):
         args = super(float, self).to_field_args()
@@ -596,6 +635,8 @@ class many2one(_column):
     _symbol_c = '%s'
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
+
+    ondelete = 'set null'
 
     def __init__(self, obj, string='unknown', auto_join=False, **args):
         _column.__init__(self, string=string, **args)
@@ -1244,8 +1285,14 @@ class function(_column):
                 self._symbol_f = type_class._symbol_f
                 self._symbol_set = type_class._symbol_set
 
+    def new(self, **args):
+        # HACK: function fields are tricky to recreate, simply return a copy
+        import copy
+        return copy.copy(self)
+
     def to_field_args(self):
         args = super(function, self).to_field_args()
+        args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self.digits_compute or self.digits
         elif self._type in ('selection', 'reference'):

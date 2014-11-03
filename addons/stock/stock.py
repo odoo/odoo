@@ -1255,6 +1255,23 @@ class stock_picking(osv.osv):
             if picking.pack_operation_ids:
                 self.recompute_remaining_qty(cr, uid, picking, context=context)
 
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Creates an extra move when there is no corresponding original move to be copied
+        """
+        picking = op.picking_id
+        res = {
+            'picking_id': picking.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': remaining_qty,
+            'name': _('Extra Move: ') + product.name,
+            'state': 'draft',
+            }
+        return res
+
     def _create_extra_moves(self, cr, uid, picking, context=None):
         '''This function creates move lines on a picking, at the time of do_transfer, based on
         unexpected product transfers (or exceeding quantities) found in the pack operations.
@@ -1266,16 +1283,7 @@ class stock_picking(osv.osv):
             for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
                 if remaining_qty > 0:
                     product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-                    vals = {
-                        'picking_id': picking.id,
-                        'location_id': picking.location_id.id,
-                        'location_dest_id': picking.location_dest_id.id,
-                        'product_id': product_id,
-                        'product_uom': product.uom_id.id,
-                        'product_uom_qty': remaining_qty,
-                        'name': _('Extra Move: ') + product.name,
-                        'state': 'draft',
-                    }
+                    vals = self._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
                     moves.append(move_obj.create(cr, uid, vals, context=context))
         if moves:
             move_obj.action_confirm(cr, uid, moves, context=context)
@@ -1787,7 +1795,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or "/")
         group_id = move.group_id and move.group_id.id or False
         if move.rule_id:
             if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:

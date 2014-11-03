@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
 import werkzeug.urls
 import werkzeug.wrappers
-import re
 import simplejson
 
 from openerp import tools
@@ -13,7 +11,6 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
-from openerp.tools.translate import _
 
 controllers = controllers()
 
@@ -35,18 +32,49 @@ class WebsiteForum(http.Controller):
 
     def _prepare_forum_values(self, forum=None, **kwargs):
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
-        values = {'user': user,
-                  'is_public_user': user.id == request.website.user_id.id,
-                  'notifications': self._get_notifications(),
-                  'header': kwargs.get('header', dict()),
-                  'searches': kwargs.get('searches', dict()),
-                  }
+        values = {
+            'user': user,
+            'is_public_user': user.id == request.website.user_id.id,
+            'notifications': self._get_notifications(),
+            'header': kwargs.get('header', dict()),
+            'searches': kwargs.get('searches', dict()),
+            'validation_email_sent': request.session.get('validation_email_sent', False),
+            'validation_email_done': request.session.get('validation_email_done', False),
+        }
         if forum:
             values['forum'] = forum
         elif kwargs.get('forum_id'):
             values['forum'] = request.registry['forum.forum'].browse(request.cr, request.uid, kwargs.pop('forum_id'), context=request.context)
         values.update(kwargs)
         return values
+
+    # User and validation
+    # --------------------------------------------------
+
+    @http.route('/forum/send_validation_email', type='json', auth='user', website=True)
+    def send_validation_email(self, forum_id=None, **kwargs):
+        request.registry['res.users'].send_forum_validation_email(request.cr, request.uid, request.uid, forum_id=forum_id, context=request.context)
+        request.session['validation_email_sent'] = True
+        return True
+
+    @http.route('/forum/validate_email', type='http', auth='public', website=True)
+    def validate_email(self, token, id, email, forum_id=None, **kwargs):
+        if forum_id:
+            try:
+                forum_id = int(forum_id)
+            except ValueError:
+                forum_id = None
+        done = request.registry['res.users'].process_forum_validation_token(request.cr, request.uid, token, int(id), email, forum_id=forum_id, context=request.context)
+        if done:
+            request.session['validation_email_done'] = True
+        if forum_id:
+            return request.redirect("/forum/%s" % int(forum_id))
+        return request.redirect('/forum')
+
+    @http.route('/forum/validate_email/close', type='json', auth='public', website=True)
+    def validate_email_done(self):
+        request.session['validation_email_done'] = False
+        return True
 
     # Forum
     # --------------------------------------------------

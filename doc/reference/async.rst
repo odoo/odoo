@@ -1,3 +1,7 @@
+:orphan:
+
+.. _reference/async:
+
 Asynchronous Operations
 =======================
 
@@ -12,15 +16,8 @@ As a result, performing long-running synchronous network requests or
 other types of complex and expensive accesses is frowned upon and
 asynchronous APIs are used instead.
 
-Asynchronous code rarely comes naturally, especially for developers
-used to synchronous server-side code (in Python, Java or C#) where the
-code will just block until the deed is gone. This is increased further
-when asynchronous programming is not a first-class concept and is
-instead implemented on top of callbacks-based programming, which is
-the case in javascript.
-
 The goal of this guide is to provide some tools to deal with
-asynchronous systems, and warn against systematic issues or dangers.
+asynchronous systems, and warn against systemic issues or dangers.
 
 Deferreds
 ---------
@@ -38,7 +35,7 @@ error callbacks.
 
 A great advantage of deferreds over simply passing callback functions
 directly to asynchronous methods is the ability to :ref:`compose them
-<deferred-composition>`.
+<reference/async/composition>`.
 
 Using deferreds
 ~~~~~~~~~~~~~~~
@@ -68,7 +65,7 @@ Building deferreds
 ~~~~~~~~~~~~~~~~~~
 
 After using asynchronous APIs may come the time to build them: for
-`mocks`_, to compose deferreds from multiple source in a complex
+mocks_, to compose deferreds from multiple source in a complex
 manner, in order to let the current operations repaint the screen or
 give other events the time to unfold, ...
 
@@ -108,7 +105,7 @@ succeeded). These methods should simply be called when the
 asynchronous operation has ended, to notify anybody interested in its
 result(s).
 
-.. _deferred-composition:
+.. _reference/async/composition:
 
 Composing deferreds
 ~~~~~~~~~~~~~~~~~~~
@@ -128,7 +125,7 @@ Deferred multiplexing
 `````````````````````
 
 The most common reason for multiplexing deferred is simply performing
-2+ asynchronous operations and wanting to wait until all of them are
+multiple asynchronous operations and wanting to wait until all of them are
 done before moving on (and executing more stuff).
 
 The jQuery multiplexing function for promises is :js:func:`when`.
@@ -140,7 +137,7 @@ The jQuery multiplexing function for promises is :js:func:`when`.
 This function can take any number of promises [#]_ and will return a
 promise.
 
-This returned promise will be resolved when *all* multiplexed promises
+The returned promise will be resolved when *all* multiplexed promises
 are resolved, and will be rejected as soon as one of the multiplexed
 promises is rejected (it behaves like Python's ``all()``, but with
 promise objects instead of boolean-ish).
@@ -195,8 +192,8 @@ unwieldy.
 
 But :js:func:`~Deferred.then` also allows handling this kind of
 chains: it returns a new promise object, not the one it was called
-with, and the return values of the callbacks is actually important to
-it: whichever callback is called,
+with, and the return values of the callbacks is important to this behavior:
+whichever callback is called,
 
 * If the callback is not set (not provided or left to null), the
   resolution or rejection value(s) is simply forwarded to
@@ -239,7 +236,6 @@ promise-based APIs, in order to filter their resolution value counts
 for instance (to take advantage of :js:func:`when` 's special
 treatment of single-value promises).
 
-
 jQuery.Deferred API
 ~~~~~~~~~~~~~~~~~~~
 
@@ -267,9 +263,7 @@ jQuery.Deferred API
         chain.
 
         :param doneCallback: function called when the deferred is resolved
-        :type doneCallback: Function
         :param failCallback: function called when the deferred is rejected
-        :type failCallback: Function
         :returns: the deferred object on which it was called
         :rtype: :js:class:`Deferred`
 
@@ -277,6 +271,9 @@ jQuery.Deferred API
 
         Attaches a new success callback to the deferred, shortcut for
         ``deferred.then(doneCallback)``.
+
+        .. note:: a difference is the result of :js:func:`Deferred.done`'s
+                  is ignored rather than forwarded through the chain
 
         This is a jQuery extension to `CommonJS Promises/A`_ providing
         little value over calling :js:func:`~Deferred.then` directly,

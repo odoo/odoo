@@ -28,6 +28,7 @@ from openerp.exceptions import Warning
 class event_type(models.Model):
     """ Event Type """
     _name = 'event.type'
+    _description = 'Event Type'
 
     name = fields.Char(string='Event Type', required=True)
     default_reply_to = fields.Char(string='Default Reply-To',
@@ -45,6 +46,7 @@ class event_type(models.Model):
 class event_event(models.Model):
     """Event"""
     _name = 'event.event'
+    _description = 'Event'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_begin'
 
@@ -137,6 +139,11 @@ class event_event(models.Model):
         else:
             self.date_end_located = False
 
+    @api.one
+    @api.depends('address_id')
+    def _compute_country(self):
+        self.country_id = self.address_id.country_id
+
     date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
@@ -161,8 +168,8 @@ class event_event(models.Model):
     address_id = fields.Many2one('res.partner', string='Location',
         default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]})
-    country_id = fields.Many2one('res.country', string='Country', related='address_id.country_id',
-        store=True, readonly=False, states={'done': [('readonly', True)]})
+    country_id = fields.Many2one('res.country', string='Country',
+        store=True, compute='_compute_country')
     description = fields.Html(string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', change_default=True,

@@ -263,6 +263,8 @@
     					if(messages.length != NBR_LIMIT_HISTORY){
                             self.loading_history = false;
                         }
+                    }else{
+                        self.loading_history = false;
                     }
                 });
             }
@@ -479,7 +481,6 @@
             this.calc_box();
 
             this.on("change:current_search", this, this.search_users_status);
-            this.search_users_status();
 
             // add a drag & drop listener
             self.c_manager.on("im_session_activated", self, function(conv) {

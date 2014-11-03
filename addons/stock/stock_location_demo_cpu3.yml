@@ -18,9 +18,3 @@
     name: Gate B
     usage: internal
     location_id: location_dispatch_zone
-- 
-  !record {model: stock.location.path, id: push_pick}:
-    name: Pick List
-    location_from_id: stock.stock_location_output
-    location_dest_id: location_pack_zone
-    picking_type_id: stock.picking_type_internal

@@ -21,15 +21,13 @@
 
 """ High-level objects for fields. """
 
-from copy import copy
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
+from types import NoneType
 import logging
 import pytz
 import xmlrpclib
-
-from types import NoneType
 
 from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -67,18 +65,6 @@ def resolve_all_mro(cls, name, reverse=False):
     for klass in klasses:
         if name in klass.__dict__:
             yield klass.__dict__[name]
-
-
-def default_compute(field, value):
-    """ Return a compute function for the given default `value`; `value` is
-        either a constant, or a unary function returning the default value.
-    """
-    name = field.name
-    func = value if callable(value) else lambda rec: value
-    def compute(recs):
-        for rec in recs:
-            rec[name] = func(rec)
-    return compute
 
 
 class MetaField(type):
@@ -261,7 +247,9 @@ class Field(object):
     _free_attrs = None          # list of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
-    _origin = None              # the column or field interfaced by self, if any
+    inherited = False           # whether the field is inherited (_inherits)
+    column = None               # the column corresponding to the field
+    setup_done = False          # whether the field has been set up
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -273,7 +261,7 @@ class Field(object):
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
     manual = False              # whether the field is a custom field
-    copyable = True             # whether the field is copied over by BaseModel.copy()
+    copy = True                 # whether the field is copied over by BaseModel.copy()
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
@@ -282,7 +270,7 @@ class Field(object):
     related = None              # sequence of field names, for related fields
     related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value
+    default = None              # default(recs) returns the default value
 
     string = None               # field label
     help = None                 # field tooltip
@@ -298,14 +286,9 @@ class Field(object):
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._free_attrs = []
 
-    def copy(self, **kwargs):
-        """ copy(item) -> test
-
-        make a copy of `self`, possibly modified with parameters `kwargs` """
-        field = copy(self)
-        field._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        field._free_attrs = list(self._free_attrs)
-        return field
+    def new(self, **kwargs):
+        """ Return a field of the same type as `self`, with its own parameters. """
+        return type(self)(**kwargs)
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of `self`. """
@@ -330,19 +313,61 @@ class Field(object):
         if attrs.get('related'):
             # by default, related fields are not stored
             attrs['store'] = attrs.get('store', False)
-        if 'copy' in attrs:
-            # attribute is copyable because there is also a copy() method
-            attrs['copyable'] = attrs.pop('copy')
+
+        # fix for function fields overridden by regular columns
+        if not isinstance(attrs.get('column'), (NoneType, fields.function)):
+            attrs.pop('store', None)
 
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
                 self._free_attrs.append(attr)
             setattr(self, attr, value)
 
-        if not self.string:
+        if not self.string and not self.related:
+            # related fields get their string from their parent field
             self.string = name.replace('_', ' ').capitalize()
 
+        # determine self.default and cls._defaults in a consistent way
+        self._determine_default(cls, name)
+
         self.reset()
+
+    def _determine_default(self, cls, name):
+        """ Retrieve the default value for `self` in the hierarchy of `cls`, and
+            determine `self.default` and `cls._defaults` accordingly.
+        """
+        self.default = None
+
+        # traverse the class hierarchy upwards, and take the first field
+        # definition with a default or _defaults for self
+        for klass in cls.__mro__:
+            field = klass.__dict__.get(name, self)
+            if not isinstance(field, type(self)):
+                return      # klass contains another value overridden by self
+
+            if 'default' in field._attrs:
+                # take the default in field, and adapt it for cls._defaults
+                value = field._attrs['default']
+                if callable(value):
+                    self.default = value
+                    cls._defaults[name] = lambda model, cr, uid, context: \
+                        self.convert_to_write(value(model.browse(cr, uid, [], context)))
+                else:
+                    self.default = lambda recs: value
+                    cls._defaults[name] = value
+                return
+
+            defaults = klass.__dict__.get('_defaults') or {}
+            if name in defaults:
+                # take the value from _defaults, and adapt it for self.default
+                value = defaults[name]
+                value_func = value if callable(value) else lambda *args: value
+                self.default = lambda recs: self.convert_to_cache(
+                    value_func(recs._model, recs._cr, recs._uid, recs._context),
+                    recs, validate=False,
+                )
+                cls._defaults[name] = value
+                return
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -357,7 +382,7 @@ class Field(object):
 
     def reset(self):
         """ Prepare `self` for a new setup. """
-        self._setup_done = False
+        self.setup_done = False
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
         # invalidates the cache of each `field`, and registers the records to
@@ -370,9 +395,9 @@ class Field(object):
             and other properties). This method is idempotent: it has no effect
             if `self` has already been set up.
         """
-        if not self._setup_done:
-            self._setup_done = True
+        if not self.setup_done:
             self._setup(env)
+            self.setup_done = True
 
     def _setup(self, env):
         """ Do the actual setup of `self`. """
@@ -403,12 +428,16 @@ class Field(object):
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
-        # determine the related field, and make sure it is set up
+        # determine the chain of fields, and make sure they are all set up
         recs = env[self.model_name]
-        for name in self.related[:-1]:
+        fields = []
+        for name in self.related:
+            field = recs._fields[name]
+            field.setup(env)
             recs = recs[name]
-        field = self.related_field = recs._fields[self.related[-1]]
-        field.setup(env)
+            fields.append(field)
+
+        self.related_field = field
 
         # check type consistency
         if self.type != field.type:
@@ -418,13 +447,18 @@ class Field(object):
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         self.inverse = self._inverse_related
-        if field._description_searchable(env):
+        if field._description_searchable:
+            # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
+
+        # special case for required: check if all fields are required
+        if not self.store and not self.required:
+            self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
@@ -454,6 +488,7 @@ class Field(object):
         return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
+    _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
@@ -469,10 +504,6 @@ class Field(object):
 
         def make_depends(deps):
             return tuple(deps(recs) if callable(deps) else deps)
-
-        # transform self.default into self.compute
-        if self.default is not None and self.compute is None:
-            self.compute = default_compute(self, self.default)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
@@ -548,21 +579,7 @@ class Field(object):
         return desc
 
     # properties used by get_description()
-
-    def _description_store(self, env):
-        if self.store:
-            # if the corresponding column is a function field, check the column
-            column = env[self.model_name]._columns.get(self.name)
-            return bool(getattr(column, 'store', True))
-        return False
-
-    def _description_searchable(self, env):
-        if self.store:
-            column = env[self.model_name]._columns.get(self.name)
-            return bool(getattr(column, 'store', True)) or \
-                   bool(getattr(column, '_fnct_search', False))
-        return bool(self.search)
-
+    _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
@@ -573,6 +590,14 @@ class Field(object):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
+
+    @property
+    def _description_searchable(self):
+        return bool(self.store or self.search or (self.column and self.column._fnct_search))
+
+    @property
+    def _description_sortable(self):
+        return self.store or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -595,11 +620,9 @@ class Field(object):
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
-        assert self.store
-        if self._origin:
-            assert isinstance(self._origin, fields._column)
-            return self._origin
+        assert self.store or self.column
 
+        # determine column parameters
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
@@ -611,12 +634,18 @@ class Field(object):
             # company-dependent fields are mapped to former property fields
             args['type'] = self.type
             args['relation'] = self.comodel_name
-            return fields.property(**args)
+            self.column = fields.property(**args)
+        elif self.column:
+            # let the column provide a valid column for the given parameters
+            self.column = self.column.new(**args)
+        else:
+            # create a fresh new column of the right type
+            self.column = getattr(fields, self.type)(**args)
 
-        return getattr(fields, self.type)(**args)
+        return self.column
 
     # properties used by to_column() to create a column instance
-    _column_copy = property(attrgetter('copyable'))
+    _column_copy = property(attrgetter('copy'))
     _column_select = property(attrgetter('index'))
     _column_manual = property(attrgetter('manual'))
     _column_string = property(attrgetter('string'))
@@ -714,8 +743,8 @@ class Field(object):
             # normal record -> read or compute value for this field
             self.determine_value(record)
         else:
-            # new record -> compute default value for this field
-            record.add_default_value(self)
+            # draft record -> compute the value or let it be null
+            self.determine_draft_value(record)
 
         # the result should be in cache now
         return record._cache[self]
@@ -758,11 +787,9 @@ class Field(object):
 
     def _compute_value(self, records):
         """ Invoke the compute method on `records`. """
-        # mark the computed fields failed in cache, so that access before
-        # computation raises an exception
-        exc = Warning("Field %s is accessed before being computed." % self)
+        # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
-            records._cache[field] = FailedValue(exc)
+            records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
         self.compute(records)
         for field in self.computed_fields:
@@ -785,8 +812,8 @@ class Field(object):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.store and not (self.depends and env.in_draft):
-            # this is a stored field
+        if self.column and not (self.depends and env.in_draft):
+            # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
@@ -822,8 +849,8 @@ class Field(object):
             # this is a non-stored non-computed field
             record._cache[self] = self.null(env)
 
-    def determine_default(self, record):
-        """ determine the default value of field `self` on `record` """
+    def determine_draft_value(self, record):
+        """ Determine the value of `self` for the given draft `record`. """
         if self.compute:
             self._compute_value(record)
         else:
@@ -940,9 +967,11 @@ class Float(Field):
     def _setup_digits(self, env):
         """ Setup the digits for `self` and its corresponding column """
         self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
-        if self.store:
-            column = env[self.model_name]._columns[self.name]
-            column.digits_change(env.cr)
+        if self.digits:
+            assert isinstance(self.digits, (tuple, list)) and len(self.digits) >= 2, \
+                "Float field %s with digits %r, expecting (total, decimal)" % (self, self.digits)
+        if self.column:
+            self.column.digits_change(env.cr)
 
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
@@ -981,6 +1010,11 @@ class Char(_String):
     """
     type = 'char'
     size = None
+
+    def _setup(self, env):
+        super(Char, self)._setup(env)
+        assert isinstance(self.size, (NoneType, int)), \
+            "Char field %s with non-integer size %r" % (self, self.size)
 
     _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
@@ -1176,18 +1210,21 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def _setup(self, env):
+        super(Selection, self)._setup(env)
+        assert self.selection is not None, "Field %s without selection" % self
+
     def _setup_related(self, env):
         super(Selection, self)._setup_related(env)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
-    def _setup_regular(self, env):
-        super(Selection, self)._setup_regular(env)
-        # determine selection (applying extensions)
-        cls = type(env[self.model_name])
+    def set_class_name(self, cls, name):
+        super(Selection, self).set_class_name(cls, name)
+        # determine selection (applying 'selection_add' extensions)
         selection = None
-        for field in resolve_all_mro(cls, self.name, reverse=True):
+        for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by `set_class_name`.
@@ -1214,7 +1251,7 @@ class Selection(Field):
             name = "%s,%s" % (self.model_name, self.name)
             translate = partial(
                 env['ir.translation']._get_source, name, 'selection', env.lang)
-            return [(value, translate(label)) for value, label in selection]
+            return [(value, translate(label) if label else label) for value, label in selection]
         else:
             return selection
 
@@ -1256,10 +1293,15 @@ class Selection(Field):
 
 class Reference(Selection):
     type = 'reference'
-    size = 128
+    size = None
 
     def __init__(self, selection=None, string=None, **kwargs):
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
+
+    def _setup(self, env):
+        super(Reference, self)._setup(env)
+        assert isinstance(self.size, (NoneType, int)), \
+            "Reference field %s with non-integer size %r" % (self, self.size)
 
     _related_size = property(attrgetter('size'))
 
@@ -1292,6 +1334,22 @@ class _Relational(Field):
     relational = True
     domain = None                       # domain for searching values
     context = None                      # context for searching values
+
+    def _setup(self, env):
+        super(_Relational, self)._setup(env)
+        assert self.comodel_name in env.registry, \
+            "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
+
+    @property
+    def _related_domain(self):
+        if callable(self.domain):
+            # will be called with another model than self's
+            return lambda recs: self.domain(recs.env[self.model_name])
+        else:
+            # maybe not correct if domain is a string...
+            return self.domain
+
+    _related_context = property(attrgetter('context'))
 
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
@@ -1348,13 +1406,11 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_regular(self, env):
-        super(Many2one, self)._setup_regular(env)
-
-        # self.inverse_fields is populated by the corresponding One2many field
-
+    def set_class_name(self, cls, name):
+        super(Many2one, self).set_class_name(cls, name)
         # determine self.delegate
-        self.delegate = self.name in env[self.model_name]._inherits.values()
+        if not self.delegate:
+            self.delegate = name in cls._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
@@ -1401,15 +1457,6 @@ class Many2one(_Relational):
 
     def convert_to_display_name(self, value):
         return ustr(value.display_name)
-
-    def determine_default(self, record):
-        super(Many2one, self).determine_default(record)
-        if self.delegate:
-            # special case: fields that implement inheritance between models
-            value = record[self.name]
-            if not value:
-                # the default value cannot be null, use a new record instead
-                record[self.name] = record.env[self.comodel_name].new()
 
 
 class UnionUpdate(SpecialValue):
@@ -1555,7 +1602,7 @@ class One2many(_RelationalMulti):
     inverse_name = None                 # name of the inverse field
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    copyable = False                    # o2m are not copied by default
+    copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
@@ -1635,11 +1682,10 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if self.store and not self.relation:
-            model = env[self.model_name]
-            column = model._columns[self.name]
-            if not isinstance(column, fields.function):
-                self.relation, self.column1, self.column2 = column._sql_names(model)
+        if not self.relation:
+            if isinstance(self.column, fields.many2many):
+                self.relation, self.column1, self.column2 = \
+                    self.column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
@@ -1668,11 +1714,8 @@ class Id(Field):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
-        """ to_column() -> fields._column
-
-        Whatever
-        """
-        return fields.integer('ID')
+        self.column = fields.integer('ID')
+        return self.column
 
     def __get__(self, record, owner):
         if record is None:
