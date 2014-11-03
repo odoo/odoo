@@ -72,6 +72,7 @@ sub-folders are conventional and not strictly necessary.
     currently empty, will hold the CSS_ for pet store content
 ``oepetstore/static/xml/petstore.xml``
     Mostly empty, will hold :ref:`reference/qweb` templates
+    This is also where the script tag lies which will load petstore.js
 ``oepetstore/static/js/petstore.js``
     The most important (and interesting) part, contains the logic of the
     application (or at least its web-browser side) as javascript. It should
