@@ -87,11 +87,9 @@
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group name="general">
+                                    <group name="general" col="4">
                                         <field name="standard_price"/>
-                                    </group>
-                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
-                                        <field name="uom_po_id"/>
+                                        <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
                                 <separator string="Suppliers"/>

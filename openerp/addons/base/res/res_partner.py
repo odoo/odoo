@@ -561,7 +561,7 @@ class res_partner(osv.Model, format_address):
                 'res_model': 'res.partner',
                 'view_mode': 'form',
                 'res_id': partner.commercial_partner_id.id,
-                'target': 'new',
+                'target': 'current',
                 'flags': {'form': {'action_buttons': True}}}
 
     def open_parent(self, cr, uid, ids, context=None):

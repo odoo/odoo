@@ -17,6 +17,9 @@
                              <label for="task_work"/>
                          </div>
                      </xpath>
+                     <group name="default_options" position="attributes">
+                        <attribute name="invisible">0</attribute>
+                     </group>
                      <xpath expr="//div[@name='div_default_options']" position="inside">
                          <div attrs="{'invisible':[('group_invoice_deli_orders','=',False)],'required': [('group_invoice_deli_orders','=',True)]}">
                              <field name="default_order_policy" class="oe_inline"/>
