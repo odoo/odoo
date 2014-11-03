@@ -32,9 +32,15 @@
     });
 
     website.ready().done(function() {
+        var share = $(document.body).find('#share_config');
+        if(share.length) {
+            var config = share.data("medias");
+            // JSH Note: Think something to first config and then render the widget.
+        }
         $(document.body).find('.share_buttons').each( function(i) {
-            $(this).attr("id", "share" + i);
-            new website.ShareButtons($(this).data('medias'), $(this)).insertAfter(this);
+            // JSH Note: This for replacing id with other tag to reduce conflict
+            $(this).attr({"id": "share" + i, "style": "cursor: pointer"});
+            new website.ShareButtons($(this)).insertAfter(this);
         });
     });
 } ());

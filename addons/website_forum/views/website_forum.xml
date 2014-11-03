@@ -570,6 +570,8 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
+        <!-- JSH Note: Following div is for configuring the social network widget-->
+        <div id="share_config" data-medias='{"twitter": {"height": 600, "width":700}, "facebook": {"height": 600, "width":700}, "linkedin": {"height": 600, "width":700}, "google-plus": {"height": 600, "width":700}}' />
         <div t-attf-class="row question">
             <div class="col-md-2 hidden-xs text-center">
                 <t t-call="website_forum.vote">
@@ -632,8 +634,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a style="cursor: pointer" class="share_buttons" data-medias='["twitter", "facebook", "linkedin", "google-plus"]'>Share</a>
-                                <a style="cursor: pointer" class="share_buttons" data-medias='["twitter", "facebook", "linkedin"]'>Share</a>
+                              <!--<a class="share_buttons" data-share='{"twitter": {"text": "test", "url": ""}, "facebook": {"text": "", "url": ""}, "linkedin": {"text": "test", "url":""}, "google-plus": {"text": "text", "url": ""}}'>Share</a>-->
+                                <a class="share_buttons">Share</a>
                             </li>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
