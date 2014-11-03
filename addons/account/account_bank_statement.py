@@ -437,7 +437,7 @@ class account_bank_statement_line(models.Model):
             'amount_currency_str': amount_currency_str, # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
-        if self.partner_id.id:
+        if self.partner_id:
             if amount > 0:
                 data['open_balance_account_id'] = self.partner_id.property_account_receivable.id
             else:
@@ -512,7 +512,7 @@ class account_bank_statement_line(models.Model):
 
         # Make domain
         domain = additional_domain + [('reconcile_id', '=', False), ('state', '=', 'valid')]
-        if self.partner_id.id:
+        if self.partner_id:
             domain += [('partner_id', '=', self.partner_id.id),
                 '|', ('account_id.type', '=', 'receivable'),
                 ('account_id.type', '=', 'payable')]

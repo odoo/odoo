@@ -187,17 +187,16 @@ class account_move_line(models.Model):
                 self.with_context(c)._query_get(obj='l2') + \
                 ") WHERE l1.id IN %s GROUP BY l1.id"
 
-        self._cr.execute(sql, [tuple(ids)])
+        self._cr.execute(sql, [tuple(self.ids)])
         return dict(self._cr.fetchall())
 
     @api.multi
+    @api.depends('ref', 'move_id')
     def name_get(self):
-        if not self.ids:
-            return []
         result = []
         for line in self:
             if line.ref:
-                result.append((line.id, (line.move_id.name or '')+' ('+line.ref+')'))
+                result.append((line.id, (line.move_id.name or '') + '(' + line.ref + ')'))
             else:
                 result.append((line.id, line.move_id.name))
         return result
@@ -307,7 +306,7 @@ class account_move_line(models.Model):
     @api.model
     def _get_date(self):
         dt = time.strftime('%Y-%m-%d')
-        context = self._context
+        context = dict(self._context or {})
         if context.get('journal_id') and context.get('period_id'):
             self._cr.execute('SELECT date FROM account_move_line ' \
                     'WHERE journal_id = %s AND period_id = %s ' \
@@ -323,28 +322,29 @@ class account_move_line(models.Model):
 
     @api.model
     def _get_currency(self):
-        if not self._context.get('journal_id', False):
+        context = dict(self._context or {})
+        if not context.get('journal_id', False):
             return False
-        cur = self.env['account.journal'].browse(self._context['journal_id']).currency
-        return cur and cur.id or False
+        cur = self.env['account.journal'].browse(context['journal_id']).currency
+        return cur
 
     @api.model
     def _get_period(self):
         """
         Return  default account period value
         """
-        context = self._context
+        context = dict(self._context or {})
         if context.get('period_id', False):
             return context['period_id']
-        period_ids = self.env['account.period'].find()
-        return period_ids and period_ids[0] or False
+        periods = self.env['account.period'].find()
+        return periods and periods[0] or False
 
     @api.model
     def _get_journal(self):
         """
         Return journal based on the journal type
         """
-        context = self._context
+        context = dict(self._context or {})
         if context.get('journal_id', False):
             return context['journal_id']
         journal = False
@@ -536,7 +536,7 @@ class account_move_line(models.Model):
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
         """
-        if not self.ids:
+        if not self:
             return []
         CurrencyObj = self.env['res.currency']
         company_currency = self.env.user.company_id.currency_id
@@ -837,7 +837,7 @@ class account_move_line(models.Model):
         pids = self.env['account.period'].find(self.date)
         if pids:
             res['period_id'] = pids[0]
-            context = dict(self._context, period_id = pids[0])
+            context = dict(self._context or {}, period_id = pids[0])
         return {
             'value':res,
             'context':context,
