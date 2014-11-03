@@ -251,7 +251,11 @@ class product_pricelist(osv.osv):
             price = False
             rule_id = False
             for rule in items:
-                if rule.min_quantity and qty<rule.min_quantity:
+                if 'uom' in context:
+                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
+                else:
+                    qty_in_product_uom = qty
+                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
