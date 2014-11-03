@@ -1,0 +1,171 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* account_reversal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-18 17:51+0000\n"
+"PO-Revision-Date: 2013-10-18 17:39+0000\n"
+"Last-Translator: Guewen Baconnier @ Camptocamp <Unknown>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2014-07-01 06:13+0000\n"
+"X-Generator: Launchpad (build 17082)\n"
+
+#. module: account_reversal
+#: field:account.move.reverse,move_line_prefix:0
+msgid "Items Name Prefix"
+msgstr "Préfixe pour les écritures comptables d'extourne"
+
+#. module: account_reversal
+#: field:account.move.reverse,period_id:0
+msgid "Reversal Period"
+msgstr "Période des extournes"
+
+#. module: account_reversal
+#: view:account.move.reverse:0
+#: model:ir.actions.act_window,name:account_reversal.act_account_move_reverse
+msgid "Reverse Entries"
+msgstr "Créer les pièces comptables d'extourne"
+
+#. module: account_reversal
+#: help:account.move.reverse,move_line_prefix:0
+msgid ""
+"Prefix that will be added to the name of the journal item to be reversed to "
+"create the name of the reversal journal item (a space is added after the "
+"prefix)."
+msgstr ""
+"Préfixe qui sera ajouté au libellé des écritures comptables originales pour "
+"créer le libellé des écritures comptables d'extourne (un espace est ajouté "
+"après le préfixe)."
+
+#. module: account_reversal
+#: help:account.move.reverse,period_id:0
+msgid "If empty, take the period of the date."
+msgstr ""
+"Si laissé vide, utilise la période correspondant à la date de la pièce "
+"comptable"
+
+#. module: account_reversal
+#: help:account.move,to_be_reversed:0
+msgid "Check this box if your entry has to bereversed at the end of period."
+msgstr ""
+
+#. module: account_reversal
+#: field:account.move.reverse,journal_id:0
+msgid "Reversal Journal"
+msgstr "Journal des extournes"
+
+#. module: account_reversal
+#: view:account.move:0
+#: field:account.move,to_be_reversed:0
+msgid "To Be Reversed"
+msgstr "Extourne nécessaire"
+
+#. module: account_reversal
+#: help:account.move.reverse,journal_id:0
+msgid "If empty, uses the journal of the journal entry to be reversed."
+msgstr ""
+"Si laissé vide, le journal de la pièce comptable à extourner sera conservé"
+
+#. module: account_reversal
+#: view:account.move.reverse:0
+msgid ""
+"This will create reversal for all selected entries whether checked 'to be "
+"reversed' or not."
+msgstr ""
+
+#. module: account_reversal
+#: model:ir.model,name:account_reversal.model_account_move_reverse
+msgid "Create reversal of account moves"
+msgstr "Créer des pièces comptables d'extourne"
+
+#. module: account_reversal
+#: code:addons/account_reversal/wizard/account_move_reverse.py:95
+#, python-format
+msgid "Reversal Entries"
+msgstr "Extournes de pièces comptables"
+
+#. module: account_reversal
+#: view:account.move.reverse:0
+msgid "Create reversal journal entries"
+msgstr "Créer des pièces comptables d'extourne"
+
+#. module: account_reversal
+#: field:account.move,reversal_id:0
+msgid "Reversal Entry"
+msgstr "Extourne de pièce comptable"
+
+#. module: account_reversal
+#: help:account.move.reverse,date:0
+msgid ""
+"Enter the date of the reversal account entries. By default, OpenERP proposes "
+"the first day of the next period."
+msgstr ""
+"Entrer la date des pièces comptables d'extourne. Par défaut, OpenERP propose "
+"le premier jour de la période comptable suivante."
+
+#. module: account_reversal
+#: help:account.move.reverse,move_prefix:0
+msgid ""
+"Prefix that will be added to the 'Ref' of the journal entry to be reversed "
+"to create the 'Ref' of the reversal journal entry (no space added after the "
+"prefix)."
+msgstr ""
+"Préfixe qui sera ajouté aux références des pièces comptables originales pour "
+"créer les références des pièces d'extourne (pas d'espace ajouté après le "
+"préfixe)."
+
+#. module: account_reversal
+#: model:ir.model,name:account_reversal.model_account_move
+msgid "Account Entry"
+msgstr "Pièce comptable"
+
+#. module: account_reversal
+#: view:account.move:0
+#: model:ir.actions.act_window,name:account_reversal.action_move_to_be_reversed
+#: model:ir.ui.menu,name:account_reversal.menu_move_to_be_reversed
+msgid "Journal Entries to be Reversed"
+msgstr "Pièces comptables à extourner"
+
+#. module: account_reversal
+#: field:account.move.reverse,date:0
+msgid "Reversal Date"
+msgstr "Date des extournes"
+
+#. module: account_reversal
+#: field:account.move.reverse,move_prefix:0
+msgid "Entries Ref. Prefix"
+msgstr "Préfixe pour les références des pièces comptables d'extourne"
+
+#. module: account_reversal
+#: view:account.move.reverse:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_reversal
+#: view:account.move.reverse:0
+msgid "or"
+msgstr ""
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Vous ne pouvez pas créer plus d'une écriture par période sur un journal "
+#~ "centralisé"
+
+#~ msgid ""
+#~ "This will create reversal for all selected entries whether checked \"to be "
+#~ "reversed\" or not."
+#~ msgstr ""
+#~ "Ceci va créer les extournes de pièces comptables pour toutes les pièces "
+#~ "sélectionnées"
+
+#~ msgid "Check this box if your entry has to be reversed at the end of period."
+#~ msgstr ""
+#~ "Cochez cette case si votre pièce comptable doit être extournée à la fin de "
+#~ "la période."

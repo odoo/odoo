@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_move_reverse" model="ir.ui.view">
+            <field name="name">account.move.reverse.form</field>
+            <field name="model">account.move.reverse</field>
+            <field name="arch" type="xml">
+                <form string="Create reversal journal entries" version="7.0">
+                    <label string="This will create reversal for all selected entries whether checked 'to be reversed' or not."/>
+                    <group>
+                        <field name="date"/>
+                        <field name="period_id"/>
+                        <field name="journal_id"/>
+                        <newline/>
+                        <field name="move_prefix" />
+                        <field name="move_line_prefix" />
+                    </group>
+
+                    <footer>
+                        <button name="action_reverse" string="Reverse Entries"
+                            type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_account_move_reverse" model="ir.actions.act_window">
+            <field name="name">Reverse Entries</field>
+            <field name="res_model">account.move.reverse</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_move_reverse"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="ir_account_move_reverse" model="ir.values">
+            <field name="name">Reverse Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">account.move</field>
+            <field name="value" eval="'ir.actions.act_window,%d'%act_account_move_reverse" />
+            <field name="object" eval="True" />
+        </record>
+
+    </data>
+</openerp>

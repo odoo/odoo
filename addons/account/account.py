@@ -1011,6 +1011,13 @@ class account_period(osv.osv):
         (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
     ]
 
+    @api.v8
+    @api.one
+    def next(self, step):
+        id = self._model.next(self._cr, self._uid, self, step, context=self._context)
+        return self.browse(id)
+
+    @api.v7
     @api.returns('self')
     def next(self, cr, uid, period, step, context=None):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
