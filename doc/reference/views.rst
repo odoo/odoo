@@ -443,8 +443,7 @@ following attributes:
 
 ``name`` (required)
   the name of a field to use in a graph view. If used for grouping (rather
-  than aggregating), can be augmented with a
-  :ref:`reference/views/graph/functions`
+  than aggregating)
 
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
@@ -459,21 +458,15 @@ following attributes:
   ``measure``
     field to aggregate within a group
 
+``interval``
+  on date and datetime fields, groups by the specified interval (``day``,
+  ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
+  specific datetime (fixed second resolution) or date (fixed day resolution).
+
 .. warning::
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
-
-.. _reference/views/graph/functions:
-
-Grouping function
------------------
-
-Field names in graph views can be postfixed with a grouping function using the
-form :samp:`{field_name}:{function}`. As of 8.0, only date and datetime fields
-support grouping functions. The available grouping functions are ``day``,
-``week``, ``month``, ``quarter`` and ``year``. By default, date and datetime
-fields are grouped month-wise.
 
 .. _reference/views/kanban:
 
