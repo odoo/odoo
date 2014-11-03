@@ -10,7 +10,7 @@
             <field name="model">product.template</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <field name="name" string="Product"/>
+                    <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
@@ -150,9 +150,6 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                   <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
-                </field>
                 <field name="product_variant_ids" position="replace">
                     <field name="attribute_value_ids"/>
                 </field>
