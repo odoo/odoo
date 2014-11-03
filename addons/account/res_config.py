@@ -195,7 +195,6 @@ class account_config_settings(models.TransientModel):
         rec.write(vals)
         return rec
 
-    @api.multi
     @api.onchange('company_id')
     def onchange_company_id(self):
         # update related fields
@@ -248,7 +247,6 @@ class account_config_settings(models.TransientModel):
 
         return {'value': values}
 
-    @api.multi
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):
         tax_templ_obj = self.env['account.tax.template']
@@ -273,12 +271,10 @@ class account_config_settings(models.TransientModel):
                 res['value']['code_digits'] = self.chart_template_id.code_digits
         return res
 
-    @api.multi
     @api.onchange('sale_tax_rate')
     def onchange_tax_rate(self):
         return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
 
-    @api.multi
     @api.onchange('group_multi_currency')
     def onchange_multi_currency(self):
         res = {}
@@ -286,7 +282,6 @@ class account_config_settings(models.TransientModel):
             res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
         return res
 
-    @api.multi
     @api.onchange('date_start')
     def onchange_start_date(self):
         if self.start_date:
@@ -371,7 +366,6 @@ class account_config_settings(models.TransientModel):
         dp = self.env['ir.model.data'].get_object('product', 'decimal_account')
         dp.write({'digits': self.decimal_precision})
 
-    @api.multi
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:

@@ -127,7 +127,6 @@ class account_bank_statement(models.Model):
         if self.company_id != self.period_id.company_id:
             raise Warning(_('The journal and period chosen have to belong to the same company.'))
 
-    @api.multi
     @api.onchange('date')
     def onchange_date(self):
         """

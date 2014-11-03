@@ -2292,12 +2292,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
             result.append(chart_template.id)
         return result
 
-    @api.multi
     @api.onchange('sale_tax_rate')
     def onchange_tax_rate(self):
         return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
 
-    @api.multi
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):
         res = {}

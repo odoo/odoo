@@ -103,7 +103,6 @@ class account_installer(models.TransientModel):
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    @api.multi
     @api.onchange('date_start')
     def on_change_start_date(self):
         if self.date_start:

@@ -103,7 +103,6 @@ class account_analytic_line(models.Model):
         }
 
     @api.v8
-    @api.multi
     @api.onchange('product_id','product_uom_id')
     def on_change_unit_amount(self):
         product_price_type_obj = self.env['product.price.type']

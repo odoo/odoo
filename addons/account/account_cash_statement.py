@@ -21,13 +21,11 @@ class account_cashbox_line(models.Model):
             line.subtotal_opening = line.pieces * line.number_opening
             line.subtotal_closing = line.pieces * line.number_closing
 
-    @api.multi
     @api.onchange('number_opening')
     def on_change_sub_opening(self):
         """ Compute the subtotal for the opening """
         self.subtotal_opening = (self.pieces * self.number_opening) or 0.0
 
-    @api.multi
     @api.onchange('number_closing')
     def on_change_sub_closing(self):
         """ Compute the subtotal for the closing """
@@ -101,7 +99,6 @@ class account_cash_statement(models.Model):
                 if statements:
                     statement.last_closing_balance = statements.balance_end_real
 
-    @api.multi
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         result = super(account_cash_statement, self).onchange_journal_id()

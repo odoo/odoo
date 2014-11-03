@@ -454,7 +454,6 @@ class account_move_line(models.Model):
         }
         return result
 
-    @api.multi
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         val = {}
@@ -828,7 +827,6 @@ class account_move_line(models.Model):
             return j + (p and (':' + p) or '')
         return False
 
-    @api.multi
     @api.onchange('date')
     def onchange_date(self):
         """
