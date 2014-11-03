@@ -565,7 +565,7 @@ class project_project(osv.Model):
         if use_tasks and not use_issues:
             values['alias_model'] = 'project.task'
         elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issues'
+            values['alias_model'] = 'project.issue'
         return {'value': values}
 
     def create(self, cr, uid, vals, context=None):
