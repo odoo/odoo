@@ -827,7 +827,9 @@ class test_mail(TestMail):
         self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
 
         # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
-        self.mail_group._track = {
+        cls = type(self.mail_group)
+        self.assertNotIn('_track', cls.__dict__)
+        cls._track = {
             'public': {
                 'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj.public == 'private',
             },
@@ -839,12 +841,16 @@ class test_mail(TestMail):
                 'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
             },
         }
-        public_col = self.mail_group._columns.get('public')
-        name_col = self.mail_group._columns.get('name')
-        group_public_col = self.mail_group._columns.get('group_public_id')
-        public_col.track_visibility = 'onchange'
-        name_col.track_visibility = 'always'
-        group_public_col.track_visibility = 'onchange'
+        visibility = {'public': 'onchange', 'name': 'always', 'group_public_id': 'onchange'}
+        for key in visibility:
+            self.assertFalse(hasattr(getattr(cls, key), 'track_visibility'))
+            getattr(cls, key).track_visibility = visibility[key]
+
+        @self.addCleanup
+        def cleanup():
+            delattr(cls, '_track')
+            for key in visibility:
+                del getattr(cls, key).track_visibility
 
         # Test: change name -> always tracked, not related to a subtype
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public'})
@@ -903,9 +909,3 @@ class test_mail(TestMail):
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'description': 'Dummy'})
         self.group_pigs.refresh()
         self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: No message should have been produced')
-
-        # Data: removed changes
-        public_col.track_visibility = None
-        name_col.track_visibility = None
-        group_public_col.track_visibility = None
-        self.mail_group._track = {}

@@ -727,8 +727,8 @@ form: module.record_id""" % (xml_id,)
             f_ref = field.get("ref",'').encode('utf-8')
             f_search = field.get("search",'').encode('utf-8')
             f_model = field.get("model",'').encode('utf-8')
-            if not f_model and model._all_columns.get(f_name):
-                f_model = model._all_columns[f_name].column._obj
+            if not f_model and f_name in model._fields:
+                f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'').encode('utf-8') or 'id'
             f_val = False
 
@@ -739,26 +739,24 @@ form: module.record_id""" % (xml_id,)
                 # browse the objects searched
                 s = f_obj.browse(cr, self.uid, f_obj.search(cr, self.uid, q))
                 # column definitions of the "local" object
-                _cols = self.pool[rec_model]._all_columns
+                _fields = self.pool[rec_model]._fields
                 # if the current field is many2many
-                if (f_name in _cols) and _cols[f_name].column._type=='many2many':
+                if (f_name in _fields) and _fields[f_name].type == 'many2many':
                     f_val = [(6, 0, map(lambda x: x[f_use], s))]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
                     f_val = s[0][f_use]
             elif f_ref:
-                if f_name in model._all_columns \
-                          and model._all_columns[f_name].column._type == 'reference':
+                if f_name in model._fields and model._fields[f_name].type == 'reference':
                     val = self.model_id_get(cr, f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
                     f_val = self.id_get(cr, f_ref)
             else:
                 f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
-                if f_name in model._all_columns:
-                    import openerp.osv as osv
-                    if isinstance(model._all_columns[f_name].column, osv.fields.integer):
+                if f_name in model._fields:
+                    if model._fields[f_name].type == 'integer':
                         f_val = int(f_val)
             res[f_name] = f_val
 
