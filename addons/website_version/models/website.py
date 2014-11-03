@@ -14,10 +14,6 @@ class NewWebsite(osv.Model):
         'google_management_authorization': fields.char('Google authorization')
     }
 
-    def get_experiment_number(self,cr,uid,context=None):
-        exp_run_ids = request.registry['website_version.experiment'].search(cr, uid, [('website_id','=',context.get('website_id'))], context=context)
-        return len(exp_run_ids)
-
     def get_current_snapshot(self,cr,uid,context=None):
         snap = request.registry['website_version.snapshot']
         snapshot_id=request.context.get('snapshot_id')
@@ -33,10 +29,10 @@ class NewWebsite(osv.Model):
 
         exp_ids = self.pool["website_version.experiment"].search(cr, uid, [('state','=','running'),('website_id.id','=',website.id)], context=context)
         exps = self.pool["website_version.experiment"].browse(cr, uid, exp_ids, context=context)
-        if not 'EXP' in request.httprequest.cookies:
-            EXP = request.context.get('EXP', {})
+        if not 'website_version_experiment' in request.httprequest.cookies:
+            EXP = request.context.get('website_version_experiment', {})
         else:
-            EXP = json.loads(request.httprequest.cookies.get('EXP'))
+            EXP = json.loads(request.httprequest.cookies.get('website_version_experiment'))
         for exp in exps:
             if not str(exp.google_id) in EXP:
                 result=[]
@@ -55,7 +51,7 @@ class NewWebsite(osv.Model):
                     if x<res[0]:
                         EXP[str(exp.google_id)] = str(res[1])
                         break
-        request.context['EXP'] = EXP
+        request.context['website_version_experiment'] = EXP
      
 
         request.context['website_id'] = website.id

@@ -24,9 +24,6 @@ class ViewVersion(osv.Model):
             ids=[ids]
         
         snapshot_id=context.get('snapshot_id')
-        # if 827 in ids:
-        #     from pudb import set_trace; set_trace()
-
         if snapshot_id and not context.get('mykey') and not toggle:
             ctx = dict(context, mykey=True)
             snap = self.pool['website_version.snapshot']
@@ -143,11 +140,7 @@ class ViewVersion(osv.Model):
     def toggle(self, cr, uid, ids, context=None):
         """ Switches between enabled and disabled statuses
         """
-        #if not context.get('snapshot_id'):
         for view in self.browse(cr, uid, ids, context=dict(context or {}, active_test=False)):
-            # if context.get('website_id'):
-            #     all_id = self.search(cr, uid, [('key','=',view.key),'|',('website_id','=',context.get('website_id')),('website_id','=',False)], context=dict(context or {}, active_test=False))
-            # else:
             all_id = self.search(cr, uid, [('key','=',view.key)], context=dict(context or {}, active_test=False))
             for v in self.browse(cr, uid, all_id, context=dict(context or {}, active_test=False)):
                 v.write({'active': not v.active}, toggle=True)

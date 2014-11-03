@@ -4,7 +4,7 @@
     
     var website=openerp.website;
     var QWeb = openerp.qweb;
-    website.add_template_file('/website_version/static/src/xml/all_versions.xml');
+    website.add_template_file('/website_version/static/src/xml/version_templates.xml');
     
     website.EditorVersion = openerp.Widget.extend({
         start: function() {
