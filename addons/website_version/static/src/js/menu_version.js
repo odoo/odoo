@@ -226,7 +226,26 @@
                     else{
                         openerp.jsonRpc( '/website_version/set_google_access', 'call', {'ga_key':ga_key, 'view_id':view_id, 'client_id':client_id, 'client_secret':client_secret}).then(function (result) {
                             var website_id = $('html').attr('data-website-id');
-                            window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
+                            //window.location.href ='/web#id='+website_id+'&view_type=form&model=website&action=website_version.action_website_view';
+                            var context = website.get_context();
+                            openerp.jsonRpc( '/website_version/google_access', 'call', {
+                                fromurl: window.location.href,
+                                local_context: context
+                            }).done(function(o) {
+                                if (o.status === "need_auth") {
+                                    //alert(_t("You will be redirected to Google to authorize access to your Analytics Account!"));
+                                    self.wizard = $(openerp.qweb.render("website_version.message",{message:"You will be redirected to Google to authorize access to your Analytics Account!"}));
+                                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                                    self.wizard.on('click','.confirm', function(){
+                                        window.location.href = o.url;
+                                    });
+                                }
+                                else if (o.status === "need_config_from_admin"){
+                                  if (confirm(_t("The Google Management API key needs to be configured before you can use it, do you want to do it now?"))) {
+                                      window.location.href = o.action;
+                                  }
+                                }
+                            }).always(function(o) { $('button.GoogleAccess').prop('disabled', false); });
                         });
                     }
                 });
