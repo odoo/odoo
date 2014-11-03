@@ -51,8 +51,8 @@
                 <data>
                     <xpath expr="//group[@name='parent']" position="inside">
                         <group name="account_property" string="Account Properties" colspan="2">
-                            <field name="property_account_income_categ" domain="[('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_account_income_categ" domain="[('type', '!=', 'consolidation')]"/>
+                            <field name="property_account_expense_categ" domain="[('type', '!=', 'consolidation')]"/>
                         </group>
                     </xpath>
                 </data>

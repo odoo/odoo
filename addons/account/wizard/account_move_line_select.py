@@ -11,7 +11,7 @@ class account_move_line_select(models.TransientModel):
     def open_window(self):
         fiscalyear_obj = self.env['account.fiscalyear']
 
-        context = self._context
+        context = dict(self._context or {})
         if not context.get('fiscalyear'):
             fiscalyears = fiscalyear_obj.search([('state', '=', 'draft')])
         else:

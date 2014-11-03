@@ -7,8 +7,9 @@ class account_state_open(models.TransientModel):
 
     @api.multi
     def change_inv_state(self):
-        active_ids = self._context.get('active_ids')
-        if isinstance(active_ids, list):
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', [])
+        if active_ids:
             invoice = self.env['account.invoice'].browse(active_ids[0])
             if invoice.reconciled:
                 raise Warning(_('Invoice is already reconciled.'))

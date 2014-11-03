@@ -24,8 +24,9 @@ class validate_account_move_lines(models.TransientModel):
 
     @api.multi
     def validate_move_lines(self):
+        context = dict(self._context or {})
         move_ids = []
-        data_line = self.env['account.move.line'].browse(self._context['active_ids'])
+        data_line = self.env['account.move.line'].browse(context['active_ids'])
         for line in data_line:
             if line.move_id.state=='draft':
                 move_ids.append(line.move_id.id)

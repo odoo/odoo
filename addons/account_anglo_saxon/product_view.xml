@@ -9,7 +9,7 @@
                 <field name="property_account_expense" position="after">
                     <label string="" colspan="2"/>
                     <field name="purchase_ok" invisible="1"/>
-                    <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
+                    <field name="property_account_creditor_price_difference" domain="[('type', '!=', 'consolidation')]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" />
                     <newline/>
                 </field>
             </field>
@@ -22,7 +22,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='property_account_income_categ']" position="before">
-                        <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','consolidation')]"/>
+                        <field name="property_account_creditor_price_difference_categ" domain="[('type', '!=', 'consolidation')]"/>
                     </xpath>
                 </data>
             </field>

@@ -18,8 +18,9 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
+        context = dict(self._context or {})
         res = super(account_move_line_reconcile, self).default_get(fields)
-        data = self.trans_rec_get(self._context['active_ids'])
+        data = self.trans_rec_get(context.get('active_ids', []))
         if 'trans_nbr' in fields:
             res.update({'trans_nbr':data['trans_nbr']})
         if 'credit' in fields:
@@ -32,10 +33,11 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.multi
     def trans_rec_get(self):
+        context = dict(self._context or {})
         credit = debit = 0
         account_id = False
         count = 0
-        for line in self.env['account.move.line'].browse(self._context['active_ids']):
+        for line in self.env['account.move.line'].browse(context.get('active_ids', [])):
             if not line.reconcile_id and not line.reconcile_id.id:
                 count += 1
                 credit += line.credit
@@ -61,12 +63,13 @@ class account_move_line_reconcile(models.TransientModel):
         period_id = False
         journal_id= False
         account_id = False
+        context = dict(self._context or {})
 
         date = time.strftime('%Y-%m-%d')
         ids = self.env['account.period'].find(dt=date)
         if ids:
             period_id = ids[0]
-        self.env['account.move.line'].reconcile(self._context['active_ids'], 'manual', account_id,
+        self.env['account.move.line'].reconcile(context.get('active_ids', []), 'manual', account_id,
                                         period_id, journal_id)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -108,7 +111,7 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
 
     @api.multi
     def trans_rec_reconcile(self):
-        context = self._context.copy()
+        context = dict(self._context or {})
         data = self.read()[0]
         account_id = data['writeoff_acc_id'][0]
         context['date_p'] = data['date_p']
@@ -118,11 +121,11 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
             context['analytic_id'] = data['analytic_id'][0]
         if context['date_p']:
             date = context['date_p']
-        ids = self.env['account.period'].with_context(context).find(dt=date)
+        periods = self.env['account.period'].with_context(context).find(dt=date)
         if ids:
-            period_id = ids[0]
+            period_id = periods[0]
 
-        self.env['account.move.line'].with_context(context).reconcile(self._context['active_ids'], 'manual', account_id,
+        self.env['account.move.line'].with_context(context).reconcile(context.get('active_ids', []), 'manual', account_id,
                 period_id, journal_id)
         return {'type': 'ir.actions.act_window_close'}
 

@@ -53,8 +53,9 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        context = dict(self._context or {})
         res = super(account_common_report, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
-        if self._context.get('active_model', False) == 'account.account':
+        if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='chart_account_id']")
             for node in nodes:
@@ -104,10 +105,11 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def _get_fiscalyear(self):
+        context = dict(self._context or {})
         now = time.strftime('%Y-%m-%d')
         company_id = False
-        ids = self._context.get('active_ids', [])
-        if ids and self._context.get('active_model') == 'account.account':
+        ids = context.get('active_ids', [])
+        if ids and context.get('active_model') == 'account.account':
             company_id = self.env['account.account'].browse(ids[0]).company_id.id
         else:  # use current company id
             company_id = self.env.user.company_id.id
@@ -142,15 +144,16 @@ class account_common_report(models.TransientModel):
 
     @api.multi
     def check_report(self):
+        context = dict(self._context or {})
         data = {}
-        data['ids'] = self._context.get('active_ids', [])
-        data['model'] = self._context.get('active_model', 'ir.ui.menu')
+        data['ids'] = context.get('active_ids', [])
+        data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'])[0]
         for field in ['fiscalyear_id', 'chart_account_id', 'period_from', 'period_to']:
             if isinstance(data['form'][field], tuple):
                 data['form'][field] = data['form'][field][0]
         used_context = self._build_contexts(data)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
-        data['form']['used_context'] = dict(used_context, lang=self._context.get('lang', 'en_US'))
+        data['form']['used_context'] = dict(used_context, lang = context.get('lang', 'en_US'))
         return self._print_report(data)
 

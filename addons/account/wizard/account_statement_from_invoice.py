@@ -12,7 +12,8 @@ class account_statement_from_invoice_lines(models.TransientModel):
 
     @api.multi
     def populate_statement(self):
-        statement_id = self._context.get('statement_id', False)
+        context = dict(self._context or {})
+        statement_id = context.get('statement_id', False)
         if not statement_id:
             return {'type': 'ir.actions.act_window_close'}
         if not self.line_ids:
@@ -23,7 +24,7 @@ class account_statement_from_invoice_lines(models.TransientModel):
 
         # for each selected move lines
         for line in self.line_ids:
-            ctx = self._context.copy()
+            ctx = context
             #  take the date for computation of currency => use payment date
             ctx['date'] = time.strftime('%Y-%m-%d')
             amount = 0.0
@@ -40,7 +41,6 @@ class account_statement_from_invoice_lines(models.TransientModel):
                 amount = CurrencyObj.with_context(ctx).compute(line.invoice.currency_id.id,
                     statement.currency.id, amount)
 
-            context = self._context.copy()
             context.update({'move_line_ids': [line.id],
                             'invoice_id': line.invoice.id})
 

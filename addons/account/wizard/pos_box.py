@@ -14,8 +14,9 @@ class CashBox(models.TransientModel):
 
     @api.multi
     def run(self):
-        active_model = self._context.get('active_model', False) or False
-        active_ids = self._context.get('active_ids', []) or []
+        context = dict(self._context or {})
+        active_model = context.get('active_model', False)
+        active_ids = context.get('active_ids', [])
 
         records = self.env[active_model].browse(active_ids)
 

@@ -182,10 +182,9 @@ class account_invoice_refund(models.TransientModel):
                      (inv.type == 'in_refund') and 'action_invoice_tree2' or \
                      (inv.type == 'out_invoice') and 'action_invoice_tree3' or \
                      (inv.type == 'in_invoice') and 'action_invoice_tree4'
-            str1 = 'account.%s' %(var)
             result = self.env.ref('account.%s' %(xml_id))
 
-            result = act_obj.read([result])[0]
+            result = result.read()[0]
             invoice_domain = eval(result['domain'])
             invoice_domain.append(('id', 'in', created_inv))
             result['domain'] = invoice_domain

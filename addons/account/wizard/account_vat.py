@@ -18,8 +18,9 @@ class account_vat_declaration(models.TransientModel):
 
     @api.multi
     def create_vat(self):
+        context = dict(self._context or {})
         datas = {
-         'ids': self._context.get('active_ids', []),
+         'ids': context.get('active_ids', []),
          'model': 'account.tax.code',
          'form': self.read()[0]
         }

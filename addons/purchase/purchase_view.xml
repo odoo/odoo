@@ -615,7 +615,7 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="property_account_expense" position="replace" >
-                     <field name="property_account_expense" domain="[('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
+                     <field name="property_account_expense" domain="[('type', '!=', 'consolidation')]" attrs="{'readonly': [('purchase_ok', '=', 0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>

@@ -42,30 +42,24 @@ class account_fiscalyear_close(models.TransientModel):
             obj_acc_move_line.invalidate_cache(cr, uid, ['reconcile_id'], ids, context=context)
             return r_id
 
-        obj_acc_fiscalyear = self.env['account.fiscalyear']
         obj_acc_move = self.env['account.move']
         obj_acc_move_line = self.env['account.move.line']
         obj_acc_journal_period = self.env['account.journal.period']
 
-        data = self.browse()
-
-        fy_id = data[0].fy_id.id
-
         cr = self._cr
-        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0].fy2_id.id),))
+        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(self.fy2_id.id),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
-        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
+        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(self.fy_id.id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         if not fy_period_set or not fy2_period_set:
             raise Warning(_('The periods to generate opening entries cannot be found.'))
 
-        period = self.env['account.period'].browse(data[0].period_id.id)
-        new_fyear = obj_acc_fiscalyear.browse(data[0].fy2_id.id)
-        old_fyear = obj_acc_fiscalyear.browse(fy_id)
+        period = self.period_id
+        new_fyear = self.fy2_id
+        old_fyear = self.fy_id
 
-        new_journal = data[0].journal_id.id
-        new_journal = self.env['account.journal'].browse(new_journal)
+        new_journal = self.journal_id
         company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
@@ -194,7 +188,7 @@ class account_fiscalyear_close(models.TransientModel):
         """
         query_2nd_part = ""
         query_2nd_part_args = []
-        ctx = {'fiscalyear': fy_id}
+        ctx = {'fiscalyear': self.fy_id.id}
         for account in self.env['account.account'].with_context(ctx).browse(account_ids):
             company_currency_id = self.env.user.company_id.currency_id
             if not company_currency_id.is_zero(abs(account.balance)):
@@ -203,7 +197,7 @@ class account_fiscalyear_close(models.TransientModel):
                 query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
                        account.balance < 0 and -account.balance or 0.0,
-                       data[0].report_name,
+                       self.report_name,
                        period.date_start,
                        move_id.id,
                        new_journal.id,
@@ -228,7 +222,7 @@ class account_fiscalyear_close(models.TransientModel):
             reconcile_id.write({'create_date': new_fyear.date_start})
 
         #create the journal.period object and link it to the old fiscalyear
-        new_period = data[0].period_id.id
+        new_period = self.period_id.id
         ids = obj_acc_journal_period.search([('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
         if not ids:
             ids = [obj_acc_journal_period.create(cr, uid, {
@@ -239,7 +233,7 @@ class account_fiscalyear_close(models.TransientModel):
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_id = %s ' \
                     'WHERE id = %s', (ids.ids[0], old_fyear.id))
-        obj_acc_fiscalyear.invalidate_cache(['end_journal_id'], [old_fyear.id])
+        self.env['account.fiscalyear'].invalidate_cache(['end_journal_id'], [old_fyear.id])
 
         return {'type': 'ir.actions.act_window_close'}
 

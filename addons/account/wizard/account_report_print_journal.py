@@ -17,10 +17,11 @@ class account_print_journal(models.TransientModel):
         used to set the domain on 'journal_ids' field: we exclude or only propose the journals of type 
         sale/purchase (+refund) accordingly to the presence of the key 'sale_purchase_only' in the context.
         '''
+        context = dict(self._context or {})
         res = super(account_print_journal, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
 
-        if self._context.get('sale_purchase_only'):
+        if context.get('sale_purchase_only'):
             domain ="[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
         else:
             domain ="[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
@@ -32,9 +33,10 @@ class account_print_journal(models.TransientModel):
 
     @api.multi
     def _print_report(self, data):
+        context = dict(self._context or {})
         data = self.pre_print_report(data)
         data['form'].update(self.read(['sort_selection'])[0])
-        if self._context.get('sale_purchase_only'):
+        if context.get('sale_purchase_only'):
             return self.env['report'].get_action([], 'account.report_salepurchasejournal', data=data)
         else:
             return self.env['report'].get_action([], 'account.report_journal', data=data)
