@@ -127,7 +127,7 @@ class crm_lead(format_address, osv.osv):
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
         if options is None: options = {}
         search_domain = []
-        team_id = self._resolve_section_id_from_context(cr, uid, context=context)
+        team_id = self._resolve_team_id_from_context(cr, uid, context=context)
         if team_id:
             search_domain += [('team_ids', '=', team_id)]
         type = self._resolve_type_from_context(cr, uid, context=context)

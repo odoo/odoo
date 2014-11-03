@@ -100,6 +100,7 @@ class project_issue(osv.Model):
         return None
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
+        if options is None: options = {}
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         search_domain = []
         if project_id:
@@ -108,7 +109,7 @@ class project_issue(osv.Model):
             search_domain = [('case_default', '=', True)]
         options.update({
             'display_empty_columns':"stage_id",
-            'domain': 
+            'domain': search_domain
         })
         return super(project_issue, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, options=options)
 

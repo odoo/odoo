@@ -682,7 +682,7 @@ class task(osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         search_domain = []
         if project_id:
-            if groupby[0] == 'user_id':
+            if 'user_id' in groupby:
                 ids = self.pool.get('project.project').read(cr, uid, project_id, ['members'], context=context)['members']
                 search_domain = [('id','in',ids)]
             else:
