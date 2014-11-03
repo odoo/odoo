@@ -1,4 +1,4 @@
-.. _guides/workflows:
+.. _reference/workflows:
 
 Workflows
 =========

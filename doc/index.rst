@@ -21,8 +21,6 @@ The documentation is currently organized in four sections:
 
 * :doc:`tutorials`, aimed at introducing the primary areas of developing Odoo
   modules
-* :doc:`guides`, didactic documents covering more specific and specialized
-  areas of Odoo, trying to solve more specific problems
 * :doc:`reference`, which ought be the complete and canonical documentation
   for Odoo subsystems
 * :doc:`modules`, documenting useful specialized modules and integration
@@ -36,7 +34,6 @@ The documentation is currently organized in four sections:
     :hidden:
 
     tutorials
-    guides
     reference
     modules
 
