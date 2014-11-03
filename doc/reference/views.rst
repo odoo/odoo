@@ -26,8 +26,7 @@ otherwise)
     ``priority`` also defines the order of application during :ref:`view
     inheritance <reference/views/inheritance>`
 ``arch``
-    the description of the view's layout, see
-    :ref:`reference/views/architecture`
+    the description of the view's layout
 ``groups_id``
     :class:`~openerp.fields.Many2many` field to the groups allowed to view/use
     the current view
@@ -110,25 +109,10 @@ the matched node should be altered:
 
 A view's specs are applied sequentially.
 
-.. _reference/views/architecture:
-
-Architecture structures
-=======================
-
-Although they are all expressed as XML and have common points (most commonly
-the presence of ``<field>`` elements), each view has its own ``arch``
-structure with a specific root elements, semantics and affordances.
-
-Most views accept the ``create``, ``edit`` and ``delete`` attributes on their
-root element, when applicable this is used to disable the corresponding action
-from the view (hide the relevant buttons or avoid displaying an interface to
-perform it). May be set to ``true`` or ``false``. Setting them to ``true``
-will override their auto-generation from access-rights.
-
 .. _reference/views/list:
 
 Lists
------
+=====
 
 The root element of list views is ``<tree>``\ [#treehistory]_. The list view's
 root can have the following attributes:
@@ -295,14 +279,14 @@ Possible children elements of the list view are:
 .. _reference/views/form:
 
 Forms
------
+=====
 
 Form views are used to display the data from a single record. Their root
 element is ``<form>``. They are composed of regular HTML_ with additional
 structural and semantic components.
 
 Structural components
-'''''''''''''''''''''
+---------------------
 
 Structural components provide structure or "visual" features with little
 logic. They are used as elements or sets of elements in form views.
@@ -348,7 +332,7 @@ logic. They are used as elements or sets of elements in form views.
   itself, generally used to display workflow buttons and status widgets
 
 Semantic components
-'''''''''''''''''''
+-------------------
 
 Semantic components tie into and allow interaction with the Odoo
 system. Available semantic components are:
@@ -440,7 +424,7 @@ system. Available semantic components are:
 .. _reference/views/graph:
 
 Graphs
-------
+======
 
 The graph view is used to visualize aggregations over a number of records or
 record groups. Its root element is ``<graph>`` which can take the following
@@ -483,7 +467,7 @@ following attributes:
 .. _reference/views/graph/functions:
 
 Grouping function
-'''''''''''''''''
+-----------------
 
 Field names in graph views can be postfixed with a grouping function using the
 form :samp:`{field_name}:{function}`. As of 8.0, only date and datetime fields
@@ -494,7 +478,7 @@ fields are grouped month-wise.
 .. _reference/views/kanban:
 
 Kanban
-------
+======
 
 The kanban view is a `kanban board`_ visualisation: it displays records as
 "cards", halfway between a :ref:`list view <reference/views/list>` and a
@@ -590,7 +574,7 @@ Possible children of the view element are:
        * kanban structures/widgets (vignette, details, ...)
 
 Javascript API
-''''''''''''''
+--------------
 
 .. js:class:: KanbanRecord
 
@@ -630,7 +614,7 @@ Javascript API
 .. _reference/views/calendar:
 
 Calendar
---------
+========
 
 Calendar views display records as events in a daily, weekly or monthly
 calendar. Their root element is ``<calendar>``. Available attributes on the
@@ -685,7 +669,7 @@ calendar view are:
 .. _reference/views/gantt:
 
 Gantt
------
+=====
 
 Gantt views appropriately display Gantt charts (for scheduling).
 
@@ -724,7 +708,7 @@ take the following attributes:
 .. _reference/views/diagram:
 
 Diagram
--------
+=======
 
 The diagram view can be used to display directed graphs of records. The root
 element is ``<diagram>`` and takes no attributes.
@@ -768,7 +752,7 @@ Possible children of the diagram view are:
 .. _reference/views/search:
 
 Search
-------
+======
 
 Search views are a break from previous view types in that they don't display
 *content*: although they apply to a specific model, they are used to filter
@@ -895,7 +879,7 @@ Possible children elements of the search view are:
 .. _reference/views/search/defaults:
 
 Search defaults
-'''''''''''''''
+---------------
 
 Search fields and filters can be configured through the action's ``context``
 using :samp:`search_default_{name}` keys. For fields, the value should be the
@@ -913,7 +897,7 @@ will automatically enable the ``bar`` filter and search the ``foo`` field for
 .. _reference/views/qweb:
 
 QWeb
-----
+====
 
 QWeb views are standard :ref:`reference/qweb` templates inside a view's
 ``arch``. They don't have a specific root element.
