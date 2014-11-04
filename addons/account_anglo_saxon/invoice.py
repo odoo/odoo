@@ -174,6 +174,7 @@ class account_invoice_line(osv.osv):
                         'taxes':i_line.invoice_line_tax_id,
                     },
                 ]
+        return []
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
