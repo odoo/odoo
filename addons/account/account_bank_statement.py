@@ -134,9 +134,8 @@ class account_bank_statement(models.Model):
         """
         ctx = dict(self._context or {})
         ctx['company_id'] = self.company_id.id
-        period_id = self.env['account.period'].with_context(ctx).find(dt=self.date)
-        if period_id:
-            self.period_id = period_id[0]
+        periods = self.env['account.period'].with_context(ctx).find(dt=self.date)
+        self.period_id = periods and periods[0] or False
             #todo: update period_id in context
             #context = dict(self._context, period_id=pids[0])
 

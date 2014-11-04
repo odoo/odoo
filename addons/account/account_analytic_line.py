@@ -103,13 +103,13 @@ class account_analytic_line(models.Model):
         }
 
     @api.v8
-    @api.onchange('product_id','product_uom_id')
+    @api.onchange('product_id', 'product_uom_id')
     def on_change_unit_amount(self):
         product_price_type_obj = self.env['product.price.type']
 
         journal_id = self.journal_id
         if not journal_id:
-            journal_id = self.env['account.analytic.journal'].search([('type','=','purchase')], limit=1)
+            journal_id = self.env['account.analytic.journal'].search([('type', '=', 'purchase')], limit=1)
         if not journal_id or not self.product_id:
             return {}
 

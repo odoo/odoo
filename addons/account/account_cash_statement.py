@@ -91,7 +91,7 @@ class account_cash_statement(models.Model):
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
-        result = super(account_cash_statement, self).onchange_journal_id()
+        super(account_cash_statement, self).onchange_journal_id()
 
         if self.journal_id:
             statement = self.search(
@@ -101,12 +101,10 @@ class account_cash_statement(models.Model):
             )
             opening_details_ids = self._get_cash_open_box_lines(self.journal_id.id)
             if opening_details_ids:
-                result['value']['opening_details_ids'] = opening_details_ids
+                self.opening_details_ids = opening_details_ids
 
             if statement:
-                result.setdefault('value', {}).update({'last_closing_balance' : statement.balance_end_real})
-
-        return result
+                self.last_closing_balance = statement.balance_end_real
 
     total_entry_encoding = fields.Float(compute='_get_sum_entry_encoding', string="Total Transactions", store=True,
         help="Total of cash transaction lines.")
