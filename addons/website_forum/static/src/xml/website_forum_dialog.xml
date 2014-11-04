@@ -1,0 +1,37 @@
+<!-- Share Dialog -->
+<templates>
+    <t t-name="share_dialog">
+        <div class="modal fade" id="share_dialog_box" tabindex="-1" role="dialog" aria-labelledby="shareDialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header btn-primary">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title text-center" id="share_dialog_title">Thank you for answering <t t-esc="type"/> !</h4>
+                    </div>
+                    <div class="modal-body">
+                        <t t-if="type == 'question'">
+                            <t t-set="is_question" t-value="'true'"/>
+                            On average <t t-esc="percentage"/> % of the <b>questions shared on social networks</b> get an answer within <t t-esc="average"/> hours and questions shared on two social networks <b>have <t t-esc="probability"/>% more chance to get an answer </b>than not shared questions.
+                        </t>
+                        <t t-if="type == 'answer'">
+                            <t t-set="is_question" t-value="'false'"/>
+                            By sharing your answer, you will get <t t-esc="karma"/> additional karma points if your answer is selected as the right one. <a t-attf-href='/forum/#{forum_id}/faq/'> See what you can do with karma.</a>
+                        </t>
+                        <br />
+                        <br />
+                        <p><strong class="text-center"> Share on: </strong></p>
+                        <div id="share_buttons row span12" style="text-align: center">
+                            <t t-foreach="['twitter', 'facebook', 'linkedin']" t-as="media">
+                                <a style="cursor: pointer"  t-att-data-shared="'false'" t-attf-class="fa-stack fa-lg share" t-attf-data-media="#{media}" t-attf-data-question="#{is_question}" t-attf-data-forum="#{forum_id}" t-attf-data-dialog="'true'" t-attf-data-id="'false'" t-attf-data-author="'true'" t-attf-data-website_name="#{website_name}">
+                                    <span class="fa fa-square fa-stack-2x"></span>
+                                    <span t-attf-class="#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
+

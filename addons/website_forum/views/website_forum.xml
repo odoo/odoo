@@ -38,6 +38,14 @@
     </xpath>
 </template>
 
+<template id="opengraph_tags">
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" t-attf-content="#{description}"/>
+    <meta property="og:title" t-attf-content="#{title}"/>
+    <meta property="og:url" t-att-content="url_for(request.httprequest.base_url)"/>
+    <meta property="og:image" t-att-content="url_for(request.httprequest.host_url + 'logo')"/>
+</template>
+
 <!-- helper -->
 <template id="link_button">
     <form method="POST" t-att-action="url">
@@ -46,9 +54,52 @@
     </form>
 </template>
 
+<!-- Share page for Opengraph Scrapper -->
+<template id="answer_share">
+    <t t-call="website_forum.opengraph_tags">
+        <t t-if="not answer">
+            <t t-set="title" t-value="'Can you help me answering this question ? ' + question.name"/>
+            <t t-set="description" t-value="question.plain_content[0:100] if question.plain_content else ' '"/>
+        </t>
+        <t t-if="answer">
+            <t t-if="is_dialog">
+                <t t-set="title" t-value="'I just posted an answer to the following question : ' + question.name "/>
+            </t>
+            <t t-if="is_author">
+                <t t-set="title" t-value="'I posted an answer to the following question : ' + question.name "/>
+            </t>
+            <t t-if="not is_dialog and not is_author">
+                <t t-set="title" t-value="question.name"/>
+            </t>
+            <t t-set="description" t-value="answer.plain_content[0:100] if answer.plain_content else ' '"/>
+        </t>
+    </t>
+    <script type="text/javascript">
+        <t t-if="not answer">
+            window.location.href = window.location.href.replace('/dialog', '');
+        </t>
+        <t t-if="answer">
+            window.location.href = window.location.href.substring(0, window.location.href.indexOf('/answer/'))
+        </t>
+    </script>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
+        <t t-set="head">
+            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
+            <script type="text/javascript">
+                CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
+                ,['Outdent','Indent','Link','Unlink','Image'],] ;
+            </script>
+            <t t-if="question">
+                <t t-call="website_forum.opengraph_tags">
+                    <t t-set="title" t-value="question.name"/>
+                    <t t-set="description" t-value="question.plain_content[0:100] if question.plain_content else ' '"/>
+                </t>
+            </t>
+        </t>
         <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
             <div class="container">
                 <div t-field="forum.introduction_message"/>
@@ -104,6 +155,12 @@
         <div id="wrap" class="container">
             <div class="row">
                 <div class="col-sm-9">
+                    <t t-if="promote_sharing">
+                        <div id="promote_sharing" t-attf-data-content = "#share#{ question._name.replace('.','') + '-' + str(question.id) }" class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <div id="promote_sharing_body"><p>The question is no longer part of the top list. Share it on the social networks in order to improve the chances to get an answer.</p></div>
+                        </div>
+                    </t>
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                         <div t-field="notification.body"/>
@@ -440,8 +497,8 @@
             <li>Avoid unnecessary introductions (Hi,... Please... Thanks...),</li>
             <li>Provide enough details and, if possible, give an example.</li>
         </ul>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/new" method="post" role="form" class="tag_text">
-            <input type="text" name="post_name" required="True" t-attf-value="#{post_name}"
+        <form t-attf-data-website_name="#{website.name}" t-attf-data-target="/forum/#{ slug(forum) }/question/new" method="post" role="form" class="tag_text">
+            <input type="text" name="post_name" id="question_name_ask" required="True" t-attf-value="#{post_name}"
                 class="form-control mb16" placeholder="Your Question Title..."/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" required="True" id="content" class="form-control load_editor">
@@ -454,6 +511,30 @@
                 id="btn_ask_your_question" t-att-data-karma="forum.karma_ask">Post Your Question</button>
         </form>
     </t>
+</template>
+
+<!-- Share Popover -->
+<template id="share">
+    <div class="row clearfix">
+        <div class="col-xs-4 col-xs-offset-8">
+            <div class="css_editable_mode_hidden">
+                <div t-attf-id="share#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse share_buttons oe_comment_grey">
+                    <t t-if="request.uid == object.create_uid.id">
+                        <t t-set="is_author" t-value="'true'"/>
+                    </t>
+                    <t t-if="request.uid != object.create_uid.id">
+                        <t t-set="is_author" t-value="'false'"/>
+                    </t>
+                    <t t-foreach="['twitter', 'facebook', 'linkedin']" t-as="media">
+                        <a style="cursor: pointer" t-att-data-shared="request.registry['forum.post'].is_shared(request.cr, request.uid, id, media, context=request.context)" t-attf-class="fa-stack fa-lg share" t-attf-data-media="#{media}" t-attf-data-question="#{is_question}" t-attf-data-forum="#{forum.id}" data-dialog="false" t-attf-data-id="#{object.id}" t-attf-data-author="#{is_author}" t-attf-data-website_name="#{website.name}">
+                            <span class="fa fa-square fa-stack-2x"></span>
+                            <span t-attf-class="#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- Edition: edit a post -->
@@ -541,7 +622,7 @@
         - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
         - it really helps to select the best questions and answers!
     </p>
-    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" role="form">
+    <form t-attf-data-website_name="#{website.name}" t-attf-data-target="/forum/#{ slug(forum) }/#{slug(question)}/reply" id="forum_post_answer" method="post" role="form">
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"/>
         <button t-attf-class="btn btn-primary mt16 #{not question.can_answer and 'karma_required' or ''}"
@@ -586,10 +667,10 @@
             <div t-attf-class="col-md-10 #{not question.active and 'alert alert-danger' or ''}">
                 <h1 class="mt0">
                     <t t-if="question.type == 'link'">
-                        <a t-att-href="question.content_link" t-raw="question.name"/>
+                        <a t-att-href="question.content_link" id="question_name" t-raw="question.name"/>
                     </t>
                     <t t-if="question.type in ('question', 'discussion')">
-                        <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
+                        <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" id="question_name" t-field="question.name"/>
                     </t>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
@@ -631,6 +712,11 @@
                                     Comment
                                 </a>
                             </li>
+                            <t t-if="request.uid != request.website.user_id.id">
+                                <li>
+                                    <a style="cursor: pointer" data-toggle="popover" class="share_link fa fa-share" t-attf-data-target="#share#{question._name.replace('.','') + '-' + str(question.id)}" data-container="body" data-placement="bottom"> Share</a>
+                                </li>
+                            </t>
                             <li t-if="question.state != 'close'">
                                 <t t-call="website_forum.link_button">
                                     <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
@@ -700,6 +786,12 @@
                 <t t-call="website_forum.post_comment">
                     <t t-set="object" t-value="question"/>
                 </t>
+                <t t-if="request.uid != request.website.user_id.id">
+                    <t t-call="website_forum.share">
+                        <t t-set="object" t-value="question"/>
+                        <t t-set="is_question" t-value="'true'"/>
+                    </t>
+                </t>
             </div>
         </div>
         <hr/>
@@ -742,6 +834,11 @@
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
+                    <t t-if="request.uid != request.website.user_id.id">
+                        <li>
+                            <a style="cursor: pointer" data-toggle="popover" class="share_link fa fa-share" t-attf-data-target="#share#{answer._name.replace('.','') + '-' + str(answer.id)}" data-container="body" data-placement="bottom"> Share</a>
+                        </li>
+                    </t>
                     <li t-if="question.type != 'question' and not answer.parent_id or answer.parent_id and not answer.parent_id.parent_id">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
@@ -807,6 +904,12 @@
                     <t t-set="answer" t-value="child_answer"/>
                 </t>
             </div>
+            <t t-if="request.uid != request.website.user_id.id">
+                <t t-call="website_forum.share">
+                    <t t-set="object" t-value="answer"/>
+                    <t t-set="is_question" t-value="'false'"/>
+                </t>
+            </t>
         </div>
     </div>
 </template>

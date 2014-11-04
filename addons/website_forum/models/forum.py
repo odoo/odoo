@@ -10,8 +10,10 @@ from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import Warning
 from openerp.osv import osv, fields
+from lxml import etree
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp import models, api, _
 
 
 class KarmaError(Forbidden):
@@ -30,6 +32,62 @@ class Forum(osv.Model):
         forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
             self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+    def _get_forum_ids_from_share(self, cr, uid, ids, context=None):
+        res = {}
+        for shared in self.pool['forum.post.share'].browse(cr, uid, ids, context=context):
+            res[shared.post_id.forum_id.id] = True
+        return res.keys()
+
+    def _get_forum_ids_from_post(self, cr, uid, ids, context=None):
+        res = {}
+        for post in self.pool['forum.post'].browse(cr, uid, ids, context=context):
+            res[post.forum_id.id] = True
+        return res.keys()
+
+    def _get_percentage_of_shared_questions(self, cr, uid, ids, fields_name, arg, context=None):
+        res = {}
+        Post = self.pool['forum.post']
+        question_domain = [('forum_id', 'in', ids), ('active', '=', True), ('parent_id', '=', False)]
+        questions = Post.read_group(cr, uid, question_domain, fields=['forum_id'], groupby=['forum_id'], orderby='forum_id', context=context)
+        shared_questions = Post.read_group(cr, uid, question_domain + [('share_ids', '!=', False)], fields=['forum_id'], groupby=['forum_id'], orderby='forum_id', context=context)
+        for (total_questions, total_shared_questions) in zip(questions, shared_questions):
+            res[total_questions['forum_id'][0]] = round((float(total_shared_questions['forum_id_count']) / float(total_questions['forum_id_count']))* 100)
+        return res
+
+    def _get_probability_of_shared_questions(self, cr, uid, ids, fields_name, arg, context=None):
+        res = {}
+        total_multiple_shared_questions = dict.fromkeys(ids, 0)
+        total_shared_questions = dict.fromkeys(ids, 0)
+        domain = [('active', '=', True), ('parent_id', '=', False), ('share_ids', '!=', False),
+                    ('forum_id', 'in', ids), ('child_count', '!=', 0)]
+        posts = self.pool['forum.post'].search_read(cr, uid, domain,['id', 'forum_id'], context=context)
+        for post in posts:
+            result = self.pool['forum.post.share'].read_group(cr, uid, [('post_id', '=', post['id'])], fields=['media'], groupby=['media'], limit=2, context=context)
+            total_multiple_shared_questions[post['forum_id'][0]] += 1 if len(result) > 1 else 0
+            total_shared_questions[post['forum_id'][0]] += 1
+        for forum_id in ids:
+            try:
+                res[forum_id] = round((float(total_multiple_shared_questions[forum_id])/float(total_shared_questions[forum_id])) * 100)
+            except ZeroDivisionError:
+                res[forum_id] = 0
+        return res
+
+    def _get_average_responce_time(self, cr, uid, ids, fields_name, arg, context=None):
+        res = {}
+        Post = self.pool['forum.post']
+        times = dict.fromkeys(ids, dict({'sum':0, 'n':0}))
+        domain = [('forum_id', 'in', ids), ('parent_id', '=', False), ('active', '=', True),
+                    ('child_count', '!=', 0),('share_ids', '!=', False)]
+        posts = Post.search_read(cr, uid, domain, ['min_response_time', 'forum_id'], context=context)
+        for post in posts:
+            times[post['forum_id'][0]]['sum'] += post['min_response_time']
+            times[post['forum_id'][0]]['n'] += 1
+        for id in ids:
+            try:
+                res[id] = round((float(times[id]['sum']) / float(times[id]['n'])) / 3600)
+            except ZeroDivisionError:
+                res[id] = 0
+        return res
 
     _columns = {
         'name': fields.char('Forum Name', required=True, translate=True),
@@ -49,6 +107,28 @@ class Forum(osv.Model):
         'allow_link': fields.boolean('Links', help="When clicking on the post, it redirects to an external link"),
         'allow_question': fields.boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones."),
         'allow_discussion': fields.boolean('Discussions'),
+        # share
+        'percentage_shared_questions' : fields.function(_get_percentage_of_shared_questions,
+            string="Percentage of shared questions", type="integer",
+        ),
+        'probability_shared_questions' : fields.function(_get_probability_of_shared_questions,
+            string="Probability of questions which are shared on two social networks", type="integer",
+            store = {
+                'forum.post.share' : (
+                    _get_forum_ids_from_share,
+                    ['post_id'],
+                    10)
+            }
+        ),
+        'average_response_time' : fields.function(_get_average_responce_time,
+            string="Average responcetime of questions shared and got the responce", type="float",
+            store = {
+                'forum.post' : (
+                    _get_forum_ids_from_post,
+                    ['min_response_time'],
+                    10)
+            }
+        ),
         # karma generation
         'karma_gen_question_new': fields.integer('Asking a question'),
         'karma_gen_question_upvote': fields.integer('Question upvoted'),
@@ -148,6 +228,15 @@ class Post(osv.Model):
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
+
+    def _get_plain_content(self, cr, uid, ids, fields_name, arg, context=None):
+        res = {}
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.content:
+                res[post.id] = etree.tostring(etree.fromstring('<p>' + post.content + '</p>'), method='text')
+            else:
+                res[post.id] = False
+        return res
 
     def _get_post_relevancy(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
@@ -258,6 +347,7 @@ class Post(osv.Model):
     _columns = {
         'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
+        'plain_content': fields.function(_get_plain_content, string="Plaintext content", type="text"),
         'content': fields.html('Content'),
         'content_link': fields.char('URL', help="URL of Link Articles"),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
@@ -323,6 +413,9 @@ class Post(osv.Model):
                 'forum.post': (_get_post_from_hierarchy, ['parent_id', 'child_ids', 'is_correct'], 10),
             }
         ),
+        # share
+        'share_ids' : fields.one2many('forum.post.share', 'post_id', 'Shared Posts'),
+        'min_response_time' : fields.integer('Shortest response time in seconds'),
         # closing
         'closed_reason_id': fields.many2one('forum.post.reason', 'Reason'),
         'closed_uid': fields.many2one('res.users', 'Closed by', select=1),
@@ -359,7 +452,13 @@ class Post(osv.Model):
         'vote_ids': list(),
         'favourite_ids': list(),
         'child_ids': list(),
+        'min_response_time': 0,
     }
+
+    def is_shared(self, cr, uid, post_id, media, context=None):
+        domain = [('post_id', '=', post_id), ('media', '=', media), ('create_uid', '=', uid)]
+        total_shared = self.pool['forum.post.share'].search_count(cr, uid, domain, context=context)
+        return 'false' if total_shared == 0 else 'true'
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -568,6 +667,17 @@ class Post(osv.Model):
                 raise KarmaError('Not enough karma to comment')
         return super(Post, self).message_post(cr, uid, thread_id, type=type, subtype=subtype, context=context, **kwargs)
 
+
+class PostShare(models.Model):
+    _name = "forum.post.share"
+    _description = "Post Shared on Social network"
+    media = openerp.fields.Selection([
+        ('facebook', 'Facebook'),
+        ('linkedin', 'Linked-IN'),
+        ('twitter', 'Twitter')
+        ], string="Media", required=False, help="This field allows to destinguish the Post shared on which social media.")
+    post_id = openerp.fields.Many2one('forum.post', string="Post",
+            help="This field allows to take the reference of Post shared by user.")
 
 class PostReason(osv.Model):
     _name = "forum.post.reason"

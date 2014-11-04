@@ -1,5 +1,120 @@
+function open_share_dialog(social_network, text_to_share, url) {
+    'use strict';
+    var social_networks = {
+        'facebook': ['https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '600', '750'],
+        'twitter': ['https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&amp;text=' + encodeURIComponent(text_to_share), '300', '600'],
+        'linkedin': ['https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(text_to_share) + '&summary=Odoo Forum&source=Odoo forum', '500', '600'],
+    };
+    if (_.contains(_.keys(social_networks),  social_network)) {
+        window.open(social_networks[social_network][0], '', 'menubar=no, toolbar=no, resizable=yes, scrollbar=yes, height=' + social_networks[social_network][1] + ', width=' + social_networks[social_network][2]);
+    }
+}
+
+function updateDatabase( button, post_id, media) {
+    "use strict";
+    if (button.data('shared') === false) {
+        openerp.jsonRpc('/forum/' + button.data('forum') + '/' + post_id + '/share', 'call', {'media' : media}).then(function () {
+            button.data('shared', true);
+        });
+    }
+}
+
+function redirect_user(form, type, Qweb) {
+    "use strict";
+    var text, post_id, _t = openerp._t, redirect_url, data;
+    $.post(form.data("target"), form.serializeArray(), function (result) {
+        post_id = (result.answer_id) ? result.answer_id : result.question_id, redirect_url = "/forum/" + result.forum_id + "/question/" + result.question_id;
+        if(type === 'question') {
+            data = {'type' : type, 'forum_id' : result.forum_id , 'website_name' : form.data('website_name'), 'percentage' : result.stat_data[result.forum_id].percentage, 'average' : result.stat_data[result.forum_id].average, 'probability' : result.stat_data[result.forum_id].probability};
+        } else if(type === 'answer') {
+            data = {'type' : type, 'forum_id' : result.forum_id , 'website_name' : form.data('website_name'), 'karma' : result.karma};
+        }
+        $('body').append($.parseHTML(Qweb.render('share_dialog', data)));
+        $('#share_dialog_box').data({"url" : redirect_url, "post_id" : post_id}).on('hidden.bs.modal', function () {
+            window.location = redirect_url;
+        }).modal("show");
+    }, 'json');
+}
+
 $(document).ready(function () {
+    var Qweb = openerp.qweb;
+    Qweb.add_template('/website_forum/static/src/xml/website_forum_dialog.xml');
     if ($('.website_forum').length){
+        if ($("#promote_sharing").length) {
+            $("#promote_sharing_body").append($($("#promote_sharing").data("content")).clone());
+            $("#promote_sharing_body > " + $("#promote_sharing").data("content")).addClass("text-center").removeClass("collapse oe_comment_grey");
+        }
+
+        $('body').on('click', '.share', function() {
+            var media = $(this).data('media'), question = $(this).data('question'), dialog = $(this).data('dialog'),
+                url = location.origin, post_id = (dialog) ? $("#share_dialog_box").data('post_id') : $(this).data("id"), text_to_share='';
+            if(question) {
+                if(dialog) {
+                    url = url + $('#share_dialog_box').data('url');
+                    data={
+                        'twitter' : [url, $('#question_name_ask').val() + ' #' + $(this).data('website_name') + ' #question ' + url],
+                        'facebook' : [url + '/dialog', ''],
+                        'linkedin' : [url ,$('#question_name_ask').val() + ' : ' + url]
+                    }
+                } else {
+                    url = url + location.pathname;
+                    data={
+                        'twitter' : [url, $('#question_name').text() + ' #' + $(this).data('website_name') + ' #question ' + url],
+                        'facebook' : [($(this).data("author")) ? url + "/dialog" : url, ''],
+                        'linkedin' : [url, $('#question_name').text() + ' : ' + url],
+                    }
+                }
+            } else {
+                var hash_tag = (dialog) ? "#answered" : ($(this).data("author")) ? "#answered" : "#answer";
+                    url = url + location.pathname;
+                if(dialog) {
+                    data={
+                        'facebook' : [url + '/answer/' + post_id + '/dialog/no_author', ''],
+                        'linkedin' : [url, 'Find my answer for '],
+                    }
+                } else {
+                    data={
+                       'facebook' : [($(this).data("author")) ? url + '/answer/' + post_id + '/no_dialog/author' : url + '/answer/' + post_id + '/no_dialog/no_author', ''],
+                       'linkedin' : [url, ($(this).data("author")) ? 'Find my answer for ' : 'Find an interesting answer to '],
+                    }
+                }
+                 data['twitter'] = [url, $('#question_name').text().replace('?', '') + '? ' + hash_tag + ' #' + $(this).data('website_name') + ' ' + url],
+                 data['linkedin'][1] = data['linkedin'][1] + $('#question_name').text() + ' on ' + url;
+            }
+            open_share_dialog(media, data[media][1], data[media][0]);
+            updateDatabase($(this), post_id, media);
+        });
+
+        $(":not(li .share_link)").click(function () {
+            $("li .share_link").popover("hide");
+        });
+
+        $("li .share_link").click(function (e) {
+            e.stopPropagation();
+        });
+
+        $("li .share_link").each(function () {
+            var target = $(this).data('target');
+            $(this).popover({
+                html : true,
+                content : function() {
+                    return $(target).html();
+                }
+            });
+        });
+
+        $(".tag_text").submit(function (event) {
+            event.preventDefault();
+            CKEDITOR.instances['content'].destroy();
+            redirect_user($(this), 'question', Qweb);
+        });
+
+        $("#forum_post_answer").submit(function (event) {
+            event.preventDefault();
+            CKEDITOR.instances[$(this).children('.load_editor').attr('id')].destroy();
+            redirect_user($(this), 'answer', Qweb);
+        });
+
         $('.karma_required').on('click', function (ev) {
             var karma = $(ev.currentTarget).data('karma');
             if (karma) {
@@ -146,12 +261,6 @@ $(document).ready(function () {
             }
         });
 
-        if($('input.load_tags').length){
-            var tags = $("input.load_tags").val();
-            $("input.load_tags").val("");
-            set_tags(tags);
-        };
-
         function set_tags(tags) {
             $("input.load_tags").textext({
                 plugins: 'tags focus autocomplete ajax',
@@ -209,7 +318,11 @@ $(document).ready(function () {
                 }
             });
         }
-
+        if($('input.load_tags').length){
+            var tags = $("input.load_tags").val();
+            $("input.load_tags").val("");
+            set_tags(tags);
+        };
         if ($('textarea.load_editor').length) {
             $('textarea.load_editor').each(function () {
                 if (this['id']) {
