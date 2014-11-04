@@ -294,7 +294,16 @@ openerp.pos_loyalty = function(instance){
         },
         export_for_printing: function(){
             var json = _super.prototype.export_for_printing.apply(this,arguments);
-            json.loyalty_points = this.get_new_points();
+            if (this.pos.loyalty && this.get_client()) {
+                json.loyalty = {
+                    rounding:     this.pos.loyalty.rounding || 1,
+                    name:         this.pos.loyalty.name,
+                    client:       this.get_client().name,
+                    points_won  : this.get_won_points(),
+                    points_spent: this.get_spent_points(),
+                    points_total: this.get_new_total_points(), 
+                };
+            }
             return json;
         },
         export_as_JSON: function(){

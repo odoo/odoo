@@ -675,7 +675,7 @@
 
             <!-- Orderlines -->
 
-            <div line-ratio='0.6'>
+            <div class='orderlines' line-ratio='0.6'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                     <t t-if='simple'>
@@ -727,7 +727,7 @@
             <!-- Total -->
 
             <line><right>--------</right></line>
-            <line size='double-height'>
+            <line class='total' size='double-height'>
                 <left><pre>        TOTAL</pre></left>
                 <right><value><t t-esc='receipt.total_with_tax' /></value></right>
             </line>
@@ -766,6 +766,8 @@
                 </t>
             </t>
 
+            <div class='before-footer' />
+
             <!-- Footer -->
             <t t-if='receipt.footer_xml'>
                 <t t-raw='receipt.footer_xml' />
@@ -777,6 +779,8 @@
                 <br/>
                 <br/>
             </t>
+
+            <div class='after-footer' />
 
             <br/>
             <div font='b'>

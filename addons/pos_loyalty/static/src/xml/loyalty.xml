@@ -40,6 +40,31 @@
         </t>
     </t>
 
+    <t t-extend="XmlReceipt">
+        <t t-jquery='.before-footer' t-operation='append'>
+            <t t-if='receipt.loyalty'>
+                <div class='loyalty' value-decimals='2' value-autoint='on'>
+                    <div>--------------------------------</div>
+                    <br/>
+                    <div size='double-height'><t t-esc='receipt.loyalty.name'/></div>
+                    <br />
+                    <div><t t-esc='receipt.loyalty.client' /></div>
+                    <br/>
+                    <t t-if='receipt.loyalty.points_won'>
+                        <line><left>Points Won</left><right><value><t t-esc='receipt.loyalty.points_won' /></value></right></line>
+                    </t>
+                    <t t-if='receipt.loyalty.points_spent'>
+                        <line><left>Points Spent</left><right><value><t t-esc='receipt.loyalty.points_spent' /></value></right></line>
+                    </t>
+                    <t t-if='receipt.loyalty.points_total'>
+                        <line><left>Total Points</left><right><value><t t-esc='receipt.loyalty.points_total' /></value></right></line>
+                    </t>
+                    <br />
+                </div>
+            </t>
+        </t>
+    </t>
+
     <t t-extend='ClientDetails'>
         <t t-jquery='.client-details-right' t-operation='prepend'>
             <div class='client-detail'>
