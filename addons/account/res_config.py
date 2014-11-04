@@ -273,22 +273,20 @@ class account_config_settings(models.TransientModel):
 
     @api.onchange('sale_tax_rate')
     def onchange_tax_rate(self):
-        return {'value': {'purchase_tax_rate': self.sale_tax_rate or False}}
+        self.purchase_tax_rate = self.sale_tax_rate or False
 
     @api.onchange('group_multi_currency')
     def onchange_multi_currency(self):
-        res = {}
         if not self.group_multi_currency:
-            res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
-        return res
+            self.income_currency_exchange_account_id = False
+            self.expense_currency_exchange_account_id = False
 
     @api.onchange('date_start')
     def onchange_start_date(self):
         if self.start_date:
             start_date = datetime.datetime.strptime(self.start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
-        return {}
+            self.date_stop = end_date.strftime('%Y-%m-%d')
 
     @api.multi
     def open_company_form(self):
@@ -369,7 +367,4 @@ class account_config_settings(models.TransientModel):
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
-            return {'value': {
-                'module_account_accountant': True,
-                }}
-        return {}
+            self.module_account_accountant = True

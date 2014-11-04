@@ -108,8 +108,7 @@ class account_installer(models.TransientModel):
         if self.date_start:
             start_date = datetime.datetime.strptime(self.date_start, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
-        return {}
+            self.date_stop = end_date.strftime('%Y-%m-%d')
 
     @api.multi
     def execute(self):
