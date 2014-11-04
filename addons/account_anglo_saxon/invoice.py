@@ -35,55 +35,9 @@ class account_invoice_line(osv.osv):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         company_currency = inv.company_id.currency_id.id
-        def get_price(cr, uid, inv, company_currency, i_line, price_unit):
-            cur_obj = self.pool.get('res.currency')
-            decimal_precision = self.pool.get('decimal.precision')
-            if inv.currency_id.id != company_currency:
-                price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
-            else:
-                price = price_unit * i_line.quantity
-            return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
-
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id and i_line.product_id.valuation == 'real_time':
-                    # debit account dacc will be the output account
-                    # first check the product, if empty check the category
-                    dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
-                    if not dacc:
-                        dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
-                    # in both cases the credit account cacc will be the expense account
-                    # first check the product, if empty check the category
-                    cacc = i_line.product_id.property_account_expense and i_line.product_id.property_account_expense.id
-                    if not cacc:
-                        cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
-                    if dacc and cacc:
-                        price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
-                        res.append({
-                            'type':'src',
-                            'name': i_line.name[:64],
-                            'price_unit':price_unit,
-                            'quantity':i_line.quantity,
-                            'price':get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                            'account_id':dacc,
-                            'product_id':i_line.product_id.id,
-                            'uos_id':i_line.uos_id.id,
-                            'account_analytic_id': False,
-                            'taxes':i_line.invoice_line_tax_id,
-                            })
-
-                        res.append({
-                            'type':'src',
-                            'name': i_line.name[:64],
-                            'price_unit':price_unit,
-                            'quantity':i_line.quantity,
-                            'price': -1 * get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                            'account_id':cacc,
-                            'product_id':i_line.product_id.id,
-                            'uos_id':i_line.uos_id.id,
-                            'account_analytic_id': False,
-                            'taxes':i_line.invoice_line_tax_id,
-                            })
+                res.extend(self.anglo_saxon_sale_move_lines(cr, uid, i_line.id, context=context))
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id and i_line.product_id.valuation == 'real_time':
@@ -162,6 +116,64 @@ class account_invoice_line(osv.osv):
                 a = fiscal_pool.map_account(cr, uid, fpos, oa)
                 res['value'].update({'account_id':a})
         return res
+
+
+    def anglo_saxon_sale_move_lines(self, cr, uid, line_id, context=None):
+        """Return the move lines for the given line id.
+        """
+        assert isinstance(line_id, (int, long)), "line_id must be an integer id"
+        i_line = self.browse(cr, uid, line_id, context=None)
+        inv = i_line.invoice_id
+        company_currency = inv.company_id.currency_id.id
+        def get_price(cr, uid, inv, company_currency, i_line, price_unit):
+            cur_obj = self.pool.get('res.currency')
+            decimal_precision = self.pool.get('decimal.precision')
+            if inv.currency_id.id != company_currency:
+                price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
+            else:
+                price = price_unit * i_line.quantity
+            return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
+
+        if i_line.product_id and i_line.product_id.valuation == 'real_time':
+            # debit account dacc will be the output account
+            # first check the product, if empty check the category
+            dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
+            if not dacc:
+                dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
+            # in both cases the credit account cacc will be the expense account
+            # first check the product, if empty check the category
+            cacc = i_line.product_id.property_account_expense and i_line.product_id.property_account_expense.id
+            if not cacc:
+                cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
+            if dacc and cacc:
+                price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
+                return [
+                    {
+                        'type':'src',
+                        'name': i_line.name[:64],
+                        'price_unit':price_unit,
+                        'quantity':i_line.quantity,
+                        'price':get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                        'account_id':dacc,
+                        'product_id':i_line.product_id.id,
+                        'uos_id':i_line.uos_id.id,
+                        'account_analytic_id': False,
+                        'taxes':i_line.invoice_line_tax_id,
+                    },
+
+                    {
+                        'type':'src',
+                        'name': i_line.name[:64],
+                        'price_unit':price_unit,
+                        'quantity':i_line.quantity,
+                        'price': -1 * get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                        'account_id':cacc,
+                        'product_id':i_line.product_id.id,
+                        'uos_id':i_line.uos_id.id,
+                        'account_analytic_id': False,
+                        'taxes':i_line.invoice_line_tax_id,
+                    },
+                ]
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
