@@ -719,7 +719,8 @@ class product_product(osv.osv):
 
         res = {}
         product_uom_obj = self.pool.get('product.uom')
-        for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
+        company_id = self.pool['res.users'].read(cr, uid, uid, ['company_id'], context=context)['company_id'][0]
+        for product in self.browse(cr, SUPERUSER_ID, ids, context=dict(context, force_company=company_id)):
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
                 res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
