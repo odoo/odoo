@@ -53,7 +53,7 @@ class stock_partial_move(osv.osv_memory):
             return res
         if 'move_ids' in fields:
             move_ids = self.pool.get('stock.move').browse(cr, uid, move_ids, context=context)
-            moves = [self._partial_move_for(cr, uid, m) for m in move_ids if m.state not in ('done','cancel')]
+            moves = [self._partial_move_for(cr, uid, m, context=context) for m in move_ids if m.state not in ('done','cancel')]
             res.update(move_ids=moves)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
