@@ -103,8 +103,8 @@ Dashboard for CRM will include:
     ],
     'test': [
         'test/crm_access_group_users.yml',
-        #'test/crm_lead_message.yml',
-        #'test/lead2opportunity2win.yml',
+        'test/crm_lead_message.yml',
+        'test/lead2opportunity2win.yml',
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
         'test/crm_lead_cancel.yml',
