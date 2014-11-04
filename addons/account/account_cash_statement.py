@@ -53,7 +53,7 @@ class account_cash_statement(models.Model):
                 'balance_end_real': end,
             }
             res[statement.id] = data
-            super(account_cash_statement, self).write([statement.id], data)
+            super(account_cash_statement, statement).write(data)
         return res
 
     @api.multi

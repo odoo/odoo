@@ -100,12 +100,12 @@ class account_financial_report(models.Model):
         ], string='Display details', default='detail_flat')
     style_overwrite = fields.Selection([
         (0, 'Automatic formatting'),
-        (1,'Main Title 1 (bold, underlined)'),
-        (2,'Title 2 (bold)'),
-        (3,'Title 3 (bold, smaller)'),
-        (4,'Normal Text'),
-        (5,'Italic Text (smaller)'),
-        (6,'Smallest Text'),
+        (1, 'Main Title 1 (bold, underlined)'),
+        (2, 'Title 2 (bold)'),
+        (3, 'Title 3 (bold, smaller)'),
+        (4, 'Normal Text'),
+        (5, 'Italic Text (smaller)'),
+        (6, 'Smallest Text'),
         ], string='Financial Report Style', default=0,
         help="""You can set up here the format you want this record to be displayed. If you leave the automatic formatting, 
         it will be computed based on the financial reports hierarchy (auto-computed field 'level').""")

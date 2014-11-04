@@ -171,7 +171,7 @@ class account_move_line(models.Model):
 
     @api.one
     def on_create_write(self):
-        if not self.id:
+        if not self:
             return []
         return map(lambda x: x.id, self.move_id.line_id)
 

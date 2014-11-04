@@ -49,9 +49,7 @@ class account_bank_statement(models.Model):
     @api.model
     def _get_period(self):
         periods = self.env['account.period'].find()
-        if periods:
-            return periods[0]
-        return False
+        return periods and periods[0] or False
 
     @api.model
     def _compute_default_statement_name(self, journal_id):
@@ -59,7 +57,7 @@ class account_bank_statement(models.Model):
         period = self.env['account.period'].browse(self._get_period())
         context['fiscalyear_id'] = period.fiscalyear_id.id
         journal = self.env['account.journal'].browse(journal_id)
-        return self.env['ir.sequence'].with_context(context).next_by_id(journal.sequence_id.id)
+        return journal.sequence_id.with_context(context).next_by_id()
 
     @api.multi
     @api.depends('journal_id')

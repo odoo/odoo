@@ -85,8 +85,8 @@ class bank(models.Model):
                     'type': 'bank',
                     'company_id': bank.company_id.id,
                     'analytic_journal_id': False,
-                    'default_credit_account_id': acc_bank_id,
-                    'default_debit_account_id': acc_bank_id,
+                    'default_credit_account_id': acc_bank_id.id,
+                    'default_debit_account_id': acc_bank_id.id,
                 }
 
                 bank.journal_id = JournalObj.create(vals_journal)
