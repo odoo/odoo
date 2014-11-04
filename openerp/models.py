@@ -1174,7 +1174,9 @@ class BaseModel(object):
                 'to': index + len(record_span) - 1
             }}
             index += len(record_span)
-    
+    #Will be used in export to xml
+    extract_records = _extract_records
+
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of
