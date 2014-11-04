@@ -1046,6 +1046,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.order_selector = new module.OrderSelectorWidget(this,{});
             this.order_selector.replace(this.$('.placeholder-OrderSelectorWidget'));
 
+            if(this.pos.config.use_proxy){
+                this.proxy_status = new module.ProxyStatusWidget(this,{});
+                this.proxy_status.appendTo(this.$('.pos-rightheader'));
+            }
+
             this.notification = new module.SynchNotificationWidget(this,{});
             this.notification.appendTo(this.$('.pos-rightheader'));
 
@@ -1070,10 +1075,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.close_button.appendTo(this.$('.pos-rightheader'));
 
 
-            if(this.pos.config.use_proxy){
-                this.proxy_status = new module.ProxyStatusWidget(this,{});
-                this.proxy_status.appendTo(this.$('.pos-rightheader'));
-            }
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
