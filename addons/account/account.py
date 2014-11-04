@@ -109,10 +109,22 @@ class account_account_type(models.Model):
         string='Deferral Method', required=True, default='none')
     report_type = fields.Selection([
         ('none','/'),
-        ('income', _('Profit & Loss (Income account)')),
-        ('expense', _('Profit & Loss (Expense account)')),
-        ('asset', _('Balance Sheet (Asset account)')),
-        ('liability', _('Balance Sheet (Liability account)'))
+        ('revenue', _('Revenue (P&L Income account)')),
+        ('sales', _('Sales (P&L Income account)')),
+        ('direct_costs', _('Direct Costs (P&L Cost Of Sales account)')),
+        ('other_income', _('Other Income (P&L Other Income account)')),
+        ('expenses', _('Expenses (P&L Expenses account)')),
+        ('depreciation', _('Depreciation (P&L Expenses account)')),
+        ('overheads', _('Overheads (P&L Expenses account)')),
+        ('current_assets', _('Current Assets (BS Current Assets account)')),
+        ('prepayments', _('Prepayments (BS Current Assets account)')),
+        ('bank_accounts', _('Bank (BS Bank account)')),
+        ('fixed_assets', _('Fixed Assets (BS Fixed Assets account)')),
+        ('non_current_assets', _('Non-Current Assets (BS Non-Current Assets account)')),
+        ('current_liabilities', _('Current Liabilities (BS Current Liabilities account)')),
+        ('liabilities', _('Liabilities (BS Non-Current Liabilities account)')),
+        ('non_current_liabilities', _('Non-Current Liabilities (BS Non-Current Liabilities account)')),
+        ('equity', _('Equity (BS Equity account)')),
         ],
         default='none',string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True)
     type = fields.Selection([
@@ -127,6 +139,13 @@ class account_account_type(models.Model):
         "can have children accounts for multi-company consolidations, payable/receivable are for "\
         "partners accounts (for debit/credit computations).")
     note = fields.Text(string='Description')
+
+
+class account_account_tag(models.Model):
+    _name = 'account.account.tag'
+    _description = 'Account Tag'
+
+    name = fields.Char()
 
 
 #----------------------------------------------------------
@@ -179,6 +198,7 @@ class account_account(models.Model):
     note = fields.Text('Internal Notes')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
+    tag_ids = fields.Many2many('account.account.tag', string='Account tag')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -791,7 +811,6 @@ class account_account_template(models.Model):
         :returns: return acc_template_ref for reference purpose.
         :rtype: dict
         """
-
         company_name = self.env['res.company'].browse(company_id).name
         template = self.env['account.chart.template'].browse(chart_template_id)
         acc_template = self.search([('nocreate', '!=', True), '|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', '=', False)], order='id')
@@ -802,8 +821,8 @@ class account_account_template(models.Model):
 
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits:
-                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            # if code_main > 0 and code_main <= code_digits:
+            #     code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals={
                 'name': company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -964,7 +983,7 @@ class account_tax_template(models.Model):
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
-                'company_id': tax.company_id.id,
+                'company_id': company_id,
                 'children_tax_ids': tax.children_tax_ids,
                 'sequence': tax.sequence,
                 'amount': tax.amount,

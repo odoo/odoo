@@ -28,4 +28,6 @@ import account_aged_partner_balance
 import account_invoice_report
 import account_entries_report
 import account_analytic_entries_report
+import account_report_context_common
 import account_financial_report
+import account_generic_tax_report

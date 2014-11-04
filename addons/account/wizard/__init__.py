@@ -34,7 +34,6 @@ import account_report_partner_ledger
 import account_report_partner_balance
 
 import account_invoice_state
-import account_financial_report
 #TODO: remove this file no moe used
 # also remove related view fiel
 

@@ -13,10 +13,8 @@
                 <field name="sortby" widget="radio"/>
                 <field name="landscape"/>
                 <field name="amount_currency"/>
+                <field name="initial_balance"/>
                 <newline/>
-            </xpath>
-            <xpath expr="//field[@name='filter']" position="after">
-                <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no'))]}"/>
             </xpath>
             </data>
             </field>
