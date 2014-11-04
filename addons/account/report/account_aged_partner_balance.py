@@ -23,12 +23,14 @@ import time
 from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+from openerp import models, fields, api, _
 
 
 class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
-    def __init__(self, cr, uid, name, context):
-        super(aged_trial_report, self).__init__(cr, uid, name, context=context)
+    @api.model
+    def __init__(self, name):
+        super(aged_trial_report, self).__init__(name)
         self.total_account = []
         self.localcontext.update({
             'time': time,
@@ -45,11 +47,12 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             'get_target_move': self._get_target_move,
         })
 
+    @api.multi
     def set_context(self, objects, data, ids, report_type=None):
-        obj_move = self.pool.get('account.move.line')
+        obj_move = self.env['account.move.line']
         ctx = data['form'].get('used_context', {})
         ctx.update({'fiscalyear': False, 'all_fiscalyear': True})
-        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx)
+        self.query = obj_move.with_context(ctx)._query_get(obj='l')
         self.direction_selection = data['form'].get('direction_selection', 'past')
         self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
@@ -61,6 +64,7 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             self.ACCOUNT_TYPE = ['payable','receivable']
         return super(aged_trial_report, self).set_context(objects, data, ids, report_type=report_type)
 
+    @api.multi
     def _get_lines(self, form):
         res = []
         move_state = ['draft','posted']
@@ -237,6 +241,7 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                 totals[str(i)] += float(r[str(i)] or 0.0)
         return res
 
+    @api.multi
     def _get_lines_with_out_partner(self, form):
         res = []
         move_state = ['draft','posted']
@@ -367,18 +372,22 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                 totals[str(i)] += float(r[str(i)] or 0.0)
         return res
 
+    @api.multi
     def _get_total(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
+    @api.multi
     def _get_direction(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
+    @api.multi
     def _get_for_period(self,pos):
         period = self.total_account[int(pos)]
         return period or 0.0
 
+    @api.multi
     def _get_partners(self,data):
         # TODO: deprecated, to remove in trunk
         if data['form']['result_selection'] == 'customer':
