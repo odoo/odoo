@@ -8,7 +8,7 @@ import time
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import osv, expression
+from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
@@ -1421,7 +1421,7 @@ class account_tax_code(models.Model):
                 for x in reads]
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
+        (models.Model._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
 
 def get_precision_tax():
@@ -2038,7 +2038,7 @@ class account_tax_code_template(models.Model):
         return [(record.id, (record.code and record.code + ' - ' or '') + record.name) for record in self]
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
+        (models.Model._check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
     ]
 
 
