@@ -739,6 +739,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         return this.switch_mode(view_type);
     },
     /**
+     * @returns {Number|Boolean} the view id of the given type, false if not found
+     */
+    get_view_id: function(view_type) {
+        return this.views[view_type] && this.views[view_type].view_id || false;
+    },    
+    /**
      * Sets up the current viewmanager's search view.
      *
      * @param {Number|false} view_id the view to use or false for a default one
