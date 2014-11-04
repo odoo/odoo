@@ -1,4 +1,4 @@
-import version
+import ir_ui_view
 import snapshot
 import website
 import experiment

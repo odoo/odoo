@@ -8,7 +8,7 @@ from openerp import tools
 from openerp.osv import osv, fields
 
 
-class ViewVersion(osv.Model):
+class view(osv.Model):
     _inherit = "ir.ui.view"
     
     _columns = {
@@ -41,10 +41,10 @@ class ViewVersion(osv.Model):
                     else:
                         copy_id=self.copy(cr,uid, current.id,{'snapshot_id':snapshot_id, 'website_id':website_id},context=ctx)
                         snap_ids.append(copy_id)
-            super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=ctx)
+            super(view, self).write(cr, uid, snap_ids, vals, context=ctx)
         else:
             ctx = dict(context, mykey=True)
-            super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+            super(view, self).write(cr, uid, ids, vals, context=context)
     
     #To make a snapshot of a snapshot
     def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
@@ -75,7 +75,7 @@ class ViewVersion(osv.Model):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
             [xml_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context)
         else:
-            xml_id = super(ViewVersion, self).get_view_id(cr, uid, xml_id, context=context)
+            xml_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
         return xml_id
 
 
@@ -111,7 +111,7 @@ class ViewVersion(osv.Model):
 
     #To take the right inheriting views
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
-        arch = super(ViewVersion, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
+        arch = super(view, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
         v = self.browse(cr, uid, [view_id],context)[0]
         if context and context.get('website_id') and v.type == 'qweb':
             dico = {}
