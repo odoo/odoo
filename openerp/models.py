@@ -3743,8 +3743,7 @@ class BaseModel(object):
                 cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
-        upd0 = []
-        upd1 = []
+        updates = []            # list of (column, expr) or (column, pattern, value)
         upd_todo = []
         updend = []
         direct = []
@@ -3754,32 +3753,32 @@ class BaseModel(object):
             if ffield and ffield.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, field, ffield.deprecated)
             if field in self._columns:
-                if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
-                    if (not totranslate) or not self._columns[field].translate:
-                        upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
-                        upd1.append(self._columns[field]._symbol_set[1](vals[field]))
+                column = self._columns[field]
+                if hasattr(column, 'selection') and vals[field]:
+                    self._check_selection_field_value(cr, user, field, vals[field], context=context)
+                if column._classic_write and not hasattr(column, '_fnct_inv'):
+                    if (not totranslate) or not column.translate:
+                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
             else:
                 updend.append(field)
-            if field in self._columns \
-                    and hasattr(self._columns[field], 'selection') \
-                    and vals[field]:
-                self._check_selection_field_value(cr, user, field, vals[field], context=context)
 
         if self._log_access:
-            upd0.append('write_uid=%s')
-            upd0.append("write_date=(now() at time zone 'UTC')")
-            upd1.append(user)
+            updates.append(('write_uid', '%s', user))
+            updates.append(('write_date', "(now() at time zone 'UTC')"))
             direct.append('write_uid')
             direct.append('write_date')
 
-        if len(upd0):
+        if updates:
             self.check_access_rule(cr, user, ids, 'write', context=context)
+            query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
+                self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
+            )
+            params = tuple(u[2] for u in updates if len(u) > 2)
             for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
-                           'where id IN %s', upd1 + [sub_ids])
+                cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
@@ -4283,40 +4282,44 @@ class BaseModel(object):
                         for f in value.keys():
                             if f in field_dict[id]:
                                 value.pop(f)
-                    upd0 = []
-                    upd1 = []
+                    updates = []        # list of (column, pattern, value)
                     for v in value:
                         if v not in val:
                             continue
-                        if self._columns[v]._type == 'many2one':
+                        column = self._columns[v]
+                        if column._type == 'many2one':
                             try:
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        upd0.append('"'+v+'"='+self._columns[v]._symbol_set[0])
-                        upd1.append(self._columns[v]._symbol_set[1](value[v]))
-                    upd1.append(id)
-                    if upd0 and upd1:
-                        cr.execute('update "' + self._table + '" set ' + \
-                            ','.join(upd0) + ' where id = %s', upd1)
+                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                    if updates:
+                        query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
+                            self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
+                        )
+                        params = tuple(u[2] for u in updates)
+                        cr.execute(query, params + (id,))
 
             else:
                 for f in val:
+                    column = self._columns[f]
                     # use admin user for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, SUPERUSER_ID, context=context)
+                    result = column.get(cr, self, ids, f, SUPERUSER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
                                 if f in field_dict[r]:
                                     result.pop(r)
                     for id, value in result.items():
-                        if self._columns[f]._type == 'many2one':
+                        if column._type == 'many2one':
                             try:
                                 value = value[0]
                             except:
                                 pass
-                        cr.execute('update "' + self._table + '" set ' + \
-                            '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
+                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
+                            self._table, f,
+                        )
+                        cr.execute(query, (column._symbol_set[1](value), id))
 
         # invalidate and mark new-style fields to recompute
         self.browse(cr, uid, ids, context).modified(fields)
