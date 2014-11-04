@@ -219,8 +219,8 @@ class base_action_rule(osv.osv):
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            model_obj = self.pool[model]
-            if not hasattr(model_obj, 'base_action_ruled'):
+            model_obj = self.pool.get(model)
+            if model_obj and not hasattr(model_obj, 'base_action_ruled'):
                 model_obj.create = self._wrap_create(model_obj.create, model)
                 model_obj.write = self._wrap_write(model_obj.write, model)
                 model_obj.base_action_ruled = True

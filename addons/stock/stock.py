@@ -721,8 +721,8 @@ class stock_picking(osv.osv):
         if ('name' not in default) or (picking_obj.name == '/'):
             seq_obj_name = 'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
-            default['origin'] = ''
-            default['backorder_id'] = False
+            default.setdefault('origin', False)
+            default.setdefault('backorder_id', False)
         if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
         res = super(stock_picking, self).copy(cr, uid, id, default, context)
@@ -1241,7 +1241,7 @@ class stock_picking(osv.osv):
                 partial_data = partial_datas.get('move%s'%(move.id), {})
                 product_qty = partial_data.get('product_qty',0.0)
                 move_product_qty[move.id] = product_qty
-                product_uom = partial_data.get('product_uom',False)
+                product_uom = partial_data.get('product_uom', move.product_uom.id)
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id')
