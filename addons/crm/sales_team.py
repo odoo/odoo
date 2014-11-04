@@ -88,8 +88,11 @@ class crm_team(models.Model):
         self = self.with_context(alias_model_name='crm.lead', alias_parent_model_name=self._name)
         team = super(crm_team, self).create(vals)
         # team = self.browse(cr, uid, team_id, context=context)
-        self.env('mail.alias').write([team.alias_id.id], {'alias_parent_thread_id': team.id, 'alias_defaults': {'team_id': team_id.id, 'type': 'lead'}})
-        return team.id
+
+        # self.pool['mail.alias'].write(self._cr, self._uid, [team.alias_id.id], {'alias_parent_thread_id': team.id, 'alias_defaults': {'team_id': team.id, 'type': 'lead'}}, context=self._context)
+
+        a=team.alias_id.write({'alias_parent_thread_id': team.id, 'alias_defaults': {'team_id': team.id, 'type': 'lead'}})
+        return team
 
     @api.model
     def unlink(self):

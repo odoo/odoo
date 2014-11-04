@@ -33,12 +33,8 @@ class calendar_event(models.Model):
 
     @api.model
     def create(self, vals):
-        
         obj = super(calendar_event, self).create(vals)
         if obj.opportunity_id:
-            
             obj.opportunity_id.log_meeting(obj.name, obj.start, obj.duration)
-        
         return obj
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -55,6 +55,39 @@ class crm_tracking_source(models.Model):
 
     name = fields.Char('Source Name', required=True, translate=True)
 
+class crm_stage(models.Model):
+    """ Model for case stages. This models the main stages of a document
+        management flow. Main CRM objects (leads, opportunities, project
+        issues, ...) will now use only stages, instead of state and stages.
+        Stages are for example used to display the kanban view of records.
+    """
+    _name = "crm.stage"
+    _description = "Stage of case"
+    _rec_name = 'name'
+    _order = "sequence"
+
+    name = fields.Char('Stage Name', required=True, translate=True)
+    sequence = fields.Integer('Sequence', help="Used to order stages. Lower is better.")
+    probability = fields.Float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success",
+        default=0.0)
+    on_change = fields.Boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.",
+        default=True)
+    requirements = fields.Text('Requirements')
+    team_ids = fields.Many2many('crm.team', 'crm_team_stage_rel', 'stage_id', 'team_id', 
+        string='teams',
+        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams.")
+    case_default = fields.Boolean('Default to New Sales Team',
+        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams.",
+        default=True)
+    fold = fields.Boolean('Folded in Kanban View',
+        help='This stage is folded in the kanban view when'
+        'there are no records in that stage to display.',
+        default=False)
+    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
+        string='Type', required=True,
+        help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types.",
+        default='both')
+
 from openerp.osv import osv, fields
 class crm_tracking_mixin(osv.AbstractModel):
     """Mixin class for objects which can be tracked by marketing. """
@@ -89,7 +122,6 @@ class crm_tracking_mixin(osv.AbstractModel):
         return vals
 
     def _get_default_track(self, cr, uid, field, context=None):
-        print"NOT MIGRATE tracking_get_values---------"
         return self.tracking_get_values(cr, uid, {}, context=context).get(field)
 
     _defaults = {
@@ -97,38 +129,4 @@ class crm_tracking_mixin(osv.AbstractModel):
         'campaign_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'campaign_id', ctx),
         'medium_id': lambda self, cr, uid, ctx: self._get_default_track(cr, uid, 'medium_id', ctx),
     }
-
-from openerp import models, fields, _
-class crm_stage(models.Model):
-    """ Model for case stages. This models the main stages of a document
-        management flow. Main CRM objects (leads, opportunities, project
-        issues, ...) will now use only stages, instead of state and stages.
-        Stages are for example used to display the kanban view of records.
-    """
-    _name = "crm.stage"
-    _description = "Stage of case"
-    _rec_name = 'name'
-    _order = "sequence"
-
-    name = fields.Char('Stage Name', required=True, translate=True)
-    sequence = fields.Integer('Sequence', help="Used to order stages. Lower is better.")
-    probability = fields.Float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success",
-        default=0.0)
-    on_change = fields.Boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.",
-        default=True)
-    requirements = fields.Text('Requirements')
-    team_ids = fields.Many2many('crm.team', 'crm_team_stage_rel', 'stage_id', 'team_id', 
-        string='teams',
-        help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams.")
-    case_default = fields.Boolean('Default to New Sales Team',
-        help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams.",
-        default=True)
-    fold = fields.Boolean('Folded in Kanban View',
-        help='This stage is folded in the kanban view when'
-        'there are no records in that stage to display.',
-        default=False)
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ('both', 'Both')],
-        string='Type', required=True,
-        help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types.",
-        default='both')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

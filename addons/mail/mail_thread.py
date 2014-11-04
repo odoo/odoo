@@ -777,7 +777,6 @@ class mail_thread(osv.AbstractModel):
 
         assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
         assert len(route) == 5, 'A route should contain 5 elements: model, thread_id, custom_values, uid, alias record'
-
         message_id = message.get('Message-Id')
         email_from = decode_header(message, 'From')
         author_id = message_dict.get('author_id')
@@ -882,7 +881,7 @@ class mail_thread(osv.AbstractModel):
 
         if not model and not thread_id and not alias and not allow_private:
             return ()
-
+        
         return (model, thread_id, route[2], route[3], route[4])
 
     def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
@@ -1087,7 +1086,6 @@ class mail_thread(osv.AbstractModel):
                 context['thread_model'] = model
                 model_pool = self.pool['mail.thread']
             new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **message_dict)
-
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
@@ -1141,7 +1139,6 @@ class mail_thread(osv.AbstractModel):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:

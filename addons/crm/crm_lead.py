@@ -91,6 +91,7 @@ class crm_lead(format_address, models.Model):
         self = self.with_context(empty_list_help_document_name = _("leads"))
         return super(crm_lead, self).get_empty_list_help(help)
 
+    @api.model
     @api.multi
     def _resolve_team_id_from_context(self):
         """ Returns ID of team based on the value of 'team_id'
@@ -116,7 +117,7 @@ class crm_lead(format_address, models.Model):
     def _get_default_stage_id(self):
         """ Gives default stage_id """
         team_id = self._get_default_team_id()
-        return self.stage_find([], team_id, [('fold', '=', False)])
+        return self.stage_find(team_id, [('fold', '=', False)])
 
     @api.multi
     def _resolve_type_from_context(self):
@@ -334,7 +335,6 @@ class crm_lead(format_address, models.Model):
 
     @api.onchange('user_id')
     def on_change_user(self):
-        print"*/*/*/*/ on_change_user */*/*/ crm_lead.py"
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
         team_id = self._get_default_team_id()
@@ -342,12 +342,10 @@ class crm_lead(format_address, models.Model):
             team_ids = self.env['crm.team'].search(['|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
             if team_ids:
                 team_id = team_ids[0].id
-        print"--team_id : ",team_id
         self.team_id = team_id
-        print"*/*/*/*/ END on_change_user */*/*/ crm_lead.py"
 
     @api.multi
-    def stage_find(self, cases, team_id, domain=None, order='sequence'):
+    def stage_find(self, team_id=False, domain=None, order='sequence'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
@@ -355,19 +353,25 @@ class crm_lead(format_address, models.Model):
               be a default stage; if not set, stages must be default
               stages
         """
-        if isinstance(cases, (int, long)):
-            cases = self.browse(cr, uid, cases, context=context)
+        # leads = self._ids
+
+        # if isinstance(self, (str, int, long)):
+        #     leads = self
+
+        if not team_id:
+            team_id = self.team_id and self.team_id.id or False
+
         # check whether we should try to add a condition on type
         avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all team_ids
         team_ids = set()
         types = ['both']
-        if not cases and self._context.get('default_type'):
+        if not self and self._context.get('default_type'):
             ctx_type = self._context.get('default_type')
             types += [ctx_type]
         if team_id:
             team_ids.add(team_id)
-        for lead in cases:
+        for lead in self:
             if lead.team_id:
                 team_ids.add(lead.team_id.id)
             if lead.type not in types:
@@ -396,7 +400,7 @@ class crm_lead(format_address, models.Model):
         """
         stages_leads = {}
         for lead in self:
-            stage_id = self.stage_find([lead], lead.team_id.id or False, [('probability', '=', 0.0), ('fold', '=', True), ('sequence', '>', 1)])
+            stage_id = lead.stage_find(domain=[('probability', '=', 0.0), ('fold', '=', True), ('sequence', '>', 1)])
             if stage_id:
                 if stages_leads.get(stage_id):
                     stages_leads[stage_id].append(lead.id)
@@ -416,7 +420,7 @@ class crm_lead(format_address, models.Model):
         """
         stages_leads = {}
         for lead in self:
-            stage_id = self.stage_find([lead], lead.team_id.id or False, [('probability', '=', 100.0), ('fold', '=', True)])
+            stage_id = lead.stage_find(domain=[('probability', '=', 100.0), ('fold', '=', True)])
             if stage_id:
                 if stages_leads.get(stage_id):
                     stages_leads[stage_id].append(lead.id)
@@ -459,9 +463,6 @@ class crm_lead(format_address, models.Model):
         :param list opps: list of browse records containing the leads/opps to process
         :return string type: the type of the final element
         """
-        ###print"*/*/*/*/ in _merge_get_result_type */*/*/"
-        ###print"----self : ",self
-        ###print"----opportunities : ",opportunities
         for opp in opportunities:
             if (opp.type == 'opportunity'):
                 return 'opportunity'
@@ -481,8 +482,6 @@ class crm_lead(format_address, models.Model):
         :param list fields: list of leads' fields to process
         :return dict data: contains the merged values
         """
-        print"*/*/*/*/ in merged_data */*/*/"
-        print"----self : ",opportunities
         def _get_first_not_null(attr):
             for opp in opportunities:
                 if hasattr(opp, attr) and bool(getattr(opp, attr)):
@@ -497,10 +496,8 @@ class crm_lead(format_address, models.Model):
             return '\n\n'.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in self if hasattr(opp, attr)]))
         # Process the fields' values
         data = {}
-        print"------------data--------"
         for field_name in fields:
             field_info = self._all_columns.get(field_name)
-            print data
             if field_info is None:
                 continue
             field = field_info.column
@@ -512,8 +509,6 @@ class crm_lead(format_address, models.Model):
                 data[field_name] = _concat_all(field_name)  #not lost
             else:
                 data[field_name] = _get_first_not_null(field_name)  #not lost
-        print"------------data--------"
-        # print data
         # Define the resulting type ('lead' or 'opportunity')
         data['type'] = self._merge_get_result_type(opportunities)
         return data
@@ -556,9 +551,6 @@ class crm_lead(format_address, models.Model):
         """
         Create a message gathering merged leads/opps information.
         """
-        ###print"------- _merge_notify-----------"
-        ###print"----opportunity_id : ",self
-        ###print"----opportunity : ",opportunities
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
         result_type = self._merge_get_result_type(opportunities)
@@ -581,9 +573,6 @@ class crm_lead(format_address, models.Model):
 
     @api.multi
     def _merge_opportunity_history(self, opportunities):
-        ###print"------ _merge_opportunity_history-----"
-        ###print"--opportunity_id : ",self.ids[0]
-        ###print"--opportunities : ",opportunities
         message = self.env['mail.message']
         for opportunity in opportunities:
             for history in opportunity.message_ids:
@@ -596,9 +585,6 @@ class crm_lead(format_address, models.Model):
 
     @api.multi
     def _merge_opportunity_attachments(self, opportunities):
-        ###print"------ _merge_opportunity_attachments-----"
-        ###print"--opportunity_id : ",self
-        ###print"--opportunities : ",opportunities
         attach_obj = self.pool['ir.attachment']
         # return attachments of opportunity
         def _get_attachments(opportunity_id):
@@ -631,7 +617,6 @@ class crm_lead(format_address, models.Model):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
         """
-        ###print"*/*/*/*/*/*/* need to check what is in lead : ",self
         lead = self[0]
         email = lead.partner_id and lead.partner_id.email or lead.email_from
         return self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
@@ -641,8 +626,6 @@ class crm_lead(format_address, models.Model):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
-        #print"***** _get_duplicated_leads_by_emails****cl"
-        #print"----partner_id : ",partner_id
         final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
@@ -655,14 +638,10 @@ class crm_lead(format_address, models.Model):
         domain = partner_match_domain
         if not include_lost:
             domain += final_stage_domain
-        #print"***** _get_duplicated_leads_by_emails****cl"
         return self.search(domain)
 
     @api.multi
     def merge_dependences(self, opportunities):
-        ###print"-----in merge_dependences-----"
-        ###print"--highest : ",self
-        ###print"--opportunities : ",opportunities
         self._merge_notify(opportunities)
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
@@ -678,13 +657,9 @@ class crm_lead(format_address, models.Model):
         :param list ids: leads/opportunities ids to merge
         :return int id: id of the resulting lead/opp
         """
-        print"----user_id : ",user_id
-        print"----team_id : ",team_id
         if len(self) <= 1:
             raise Warning(_('Please select more than one element (lead or opportunity) from the list view.'))
         sequenced_opps = []
-        ###print"*/*/ids : ",self._ids
-        ###print"*/*/opportunities : ",self
 
         # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
         # The confidence level increases with the stage sequence, except when the stage probability is 0.0 (Lost cases)
@@ -696,18 +671,12 @@ class crm_lead(format_address, models.Model):
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
         sequenced_opps.sort(reverse=True)
-        print"----------------sequenced_opps : ",sequenced_opps
         opportunities = map(itemgetter(1), sequenced_opps)
-        ###print"opportunities : ",opportunities
         highest = opportunities[0]
-        ###print"highest : ",highest
         opportunities_rest = opportunities[1:]
-        ###print"opportunities_rest : ",opportunities_rest
         tail_opportunities = opportunities_rest
-        ###print"tail_opportunities : ",tail_opportunities
         fields = list(CRM_LEAD_FIELDS_TO_MERGE)
         merged_data = self._merge_data(opportunities, fields)
-        ###print"merged_data : ",merged_data
         if user_id:
             merged_data['user_id'] = user_id
         if team_id:
@@ -726,8 +695,6 @@ class crm_lead(format_address, models.Model):
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
-        print"--------------------merged_data"
-        print merged_data
         highest.write(merged_data)
         # Delete tail_opportunities 
         # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
@@ -756,7 +723,7 @@ class crm_lead(format_address, models.Model):
             'phone': customer and customer.phone or self.phone,
         }
         if not self.stage_id or self.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find([], team_id, [('type', 'in', ('opportunity', 'both'))])
+            val['stage_id'] = self.stage_find(team_id, domain=[('type', 'in', ('opportunity', 'both'))])
         return val
 
     @api.multi
@@ -772,7 +739,7 @@ class crm_lead(format_address, models.Model):
             vals = lead._convert_opportunity_data(customer, team_id)
             lead.write(vals)
         if user_ids or team_id:
-            self.allocate_salesman(ids, user_ids, team_id)
+            self.allocate_salesman(self._ids, user_ids, team_id)
         return True
 
     @api.multi
@@ -819,6 +786,7 @@ class crm_lead(format_address, models.Model):
             )
         return partner_id
 
+    @api.model
     @api.multi
     def handle_partner_assignation(self, ids, action='create', partner_id=False):
         """
@@ -860,8 +828,9 @@ class crm_lead(format_address, models.Model):
         :param int team_id: salesteam to assign
         :return bool
         """
+        lead_data = self.browse(ids)
         index = 0
-        for lead_id in ids:
+        for lead in lead_data:
             value = {}
             if team_id:
                 value['team_id'] = team_id
@@ -870,7 +839,7 @@ class crm_lead(format_address, models.Model):
                 # Cycle through user_ids
                 index = (index + 1) % len(user_ids)
             if value:
-                self.write(value)
+                lead.write(value)
         return True
 
     @api.multi
@@ -917,8 +886,6 @@ class crm_lead(format_address, models.Model):
     @api.multi
     def redirect_opportunity_view(self):
         models_data = self.env['ir.model.data']
-        print"-****-*-*-*-*-views id  in opp :",self.id
-        print"-****-*-*-*-*-views id  in opp :",self._ids
         # Get opportunity views
         dummy, form_view = models_data.get_object_reference('crm', 'crm_case_form_view_oppor')
         dummy, tree_view = models_data.get_object_reference('crm', 'crm_case_tree_view_oppor')
@@ -938,8 +905,6 @@ class crm_lead(format_address, models.Model):
 
     @api.model
     def create(self, vals):
-        print"*****create*****"
-        print"values : ",vals
         if vals.get('type') and not self._context.get('default_type'):
             self = self.with_context(default_type=vals.get('type'))
         if vals.get('team_id') and not self._context.get('default_team_id'):
@@ -962,14 +927,6 @@ class crm_lead(format_address, models.Model):
             self.onchange_stage_id(vals.get('stage_id'))
         return super(crm_lead, self).write(vals)
 
-    # @api.model
-    # def copy(self, default={}):
-    #     self = self.with_context(default_type=self.type,default_team_id=self.team_id)
-    #     if self.type == 'opportunity':
-    #         default['date_open'] = fields.datetime.now()
-    #     else:
-    #         default['date_open'] = False
-    #     return super(crm_lead, self).copy(default)
     @api.multi
     def copy(self, default={}):
         self = self.with_context(default_type=self.type, default_team_id=self.team_id.id)
@@ -982,8 +939,6 @@ class crm_lead(format_address, models.Model):
     @api.multi
     def redirect_lead_view(self):
         models_data = self.pool['ir.model.data']
-        print"-****-*-*-*-*-views id  in lead :",self.id
-        print"-****-*-*-*-*-views id  in lead :",self._ids
         # Get lead views
         dummy, form_view = models_data.get_object_reference(self._cr, self._uid, 'crm', 'crm_case_form_view_leads')
         dummy, tree_view = models_data.get_object_reference(self._cr, self._uid, 'crm', 'crm_case_tree_view_leads')
@@ -1069,8 +1024,8 @@ class crm_lead(format_address, models.Model):
             pass
         return recipients
 
-    @api.multi
-    def message_new(self, msg, custom_values=None):
+    @api.v7
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
@@ -1085,21 +1040,43 @@ class crm_lead(format_address, models.Model):
             'user_id': False,
         }
         if msg.get('author_id'):
-            partner_rec = self.pool['rec.partner'].browse(self._cr, self._uid, msg.get('author_id'))
-            defaults.update(partner_rec.on_change_partner_id()['value'])
+            defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            defaults['priority'] = msg.get('priority')
+        defaults.update(custom_values)
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+
+    @api.v8
+    @api.multi
+    def message_new(self, msg):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        if custom_values is None:
+            custom_values = {}
+        defaults = {
+            'name':  msg.get('subject') or _("No Subject"),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
+            'partner_id': msg.get('author_id', False),
+            'user_id': False,
+        }
+        if msg.get('author_id'):
+            defaults.update(self.on_change_partner_id(None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
         return super(crm_lead, self).message_new(msg, custom_values=defaults)
 
-    @api.multi
-    def message_update(self, msg, update_vals=None):
+    @api.v7
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway
             through message_process.
             This method updates the document according to the email.
         """
-        if isinstance(self._ids, (str, int, long)):
-            ids = [self._ids]
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
         if update_vals is None: update_vals = {}
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
@@ -1115,7 +1092,29 @@ class crm_lead(format_address, models.Model):
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
-        
+        return super(crm_lead, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
+    @api.v8
+    @api.multi
+    def message_update(self, msg, update_vals=None):
+        """ Overrides mail_thread message_update that is called by the mailgateway
+            through message_process.
+            This method updates the document according to the email.
+        """
+        if update_vals is None: update_vals = {}
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            update_vals['priority'] = msg.get('priority')
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability',
+        }
+        for line in msg.get('body', '').split('\n'):
+            line = line.strip()
+            res = tools.command_re.match(line)
+            if res and maps.get(res.group(1).lower()):
+                key = maps.get(res.group(1).lower())
+                update_vals[key] = res.group(2).lower()
         return super(crm_lead, self).message_update(msg, update_vals=update_vals)
 
     @api.multi

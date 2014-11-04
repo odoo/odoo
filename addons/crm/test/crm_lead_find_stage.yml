@@ -13,20 +13,20 @@
   !python {model: crm.lead}: |
     stage = self.pool.get('crm.stage').search_read(cr,uid,[('sequence','=',1)],['id'],context)[0]
     lead = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [lead], lead.team_id.id or False,[], context)
+    stage_id = self.stage_find(cr, uid , lead.id, lead.team_id.id or False,[], context)
     assert stage_id == stage['id'], "Default stage of lead is incorrect!"
 -
   I change type from lead to opportunity.
 -
   !python {model: crm.lead}: |
-    self.convert_opportunity(cr, uid ,[ref("test_crm_lead_new")], ref("base.res_partner_2"))
+    data = self.convert_opportunity(cr, uid ,[ref("test_crm_lead_new")], ref("base.res_partner_2"))
 -
   Now I check default stage after change type.
 -
   !python {model: crm.lead}: |
     stage = self.pool.get('crm.stage').search_read(cr,uid,[('sequence','=',1)],['id'],context)[0]
     opp = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [opp], opp.team_id.id or False,[], context)
+    stage_id = self.stage_find(cr, uid , opp.id, opp.team_id.id or False,[], context)
     assert stage_id == stage['id'], "Default stage of opportunity is incorrect!"
 -
   Now I change the stage of opportunity to won.
@@ -38,6 +38,6 @@
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [opp], opp.team_id.id or False,[('probability','=',100.0)], context)
+    stage_id = self.stage_find(cr, uid , opp.id, opp.team_id.id or False,[('probability','=',100.0)], context)
     assert stage_id == opp.stage_id.id, "Stage of opportunity is incorrect!"
 

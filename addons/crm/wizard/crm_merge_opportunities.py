@@ -37,16 +37,12 @@ class crm_merge_opportunity(models.TransientModel):
 
     @api.multi
     def action_merge(self):
-        print"****action_merge****crm_merge_opportunity"
         opportunity2merge_ids = self.opportunity_ids
-        print"----opportunity2merge_ids : ",opportunity2merge_ids
         #TODO: why is this passed through the context ?
         self = self.with_context(lead_ids = [opportunity2merge_ids[0].id])
         merge_result = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
         # The newly created lead might be a lead or an opp: redirect toward the right view
         # merge_result = lead_obj.browse(self._cr, self._uid, merge_id, context=self._context)
-        print"----merge_result : ",merge_result
-        print"****end action_merge****crm_merge_opportunity"
         if merge_result.type == 'opportunity':
             return merge_result.redirect_opportunity_view()
         else:
@@ -58,9 +54,7 @@ class crm_merge_opportunity(models.TransientModel):
         Use active_ids from the context to fetch the leads/opps to merge.
         In order to get merged, these leads/opps can't be in 'Dead' or 'Closed'
         """
-        print"****default_get****mo"
         record_ids = self._context.get('active_ids', False)
-        print"----record_ids : ",record_ids
         res = super(crm_merge_opportunity, self).default_get(fields)
         if record_ids:
             opp_ids = []
@@ -70,14 +64,12 @@ class crm_merge_opportunity(models.TransientModel):
                     opp_ids.append(opp.id)
             if 'opportunity_ids' in fields:
                 res.update({'opportunity_ids': opp_ids})
-        print"**** end default_get****mo"
         return res
 
     @api.multi
     def on_change_user(self, user_id, team_id):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        print"**** on_change_user****crm_merge_opportunity"
         if user_id:
             if team_id:
                 user_in_team = self.env['crm.team'].search([('id', '=', team_id), '|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], count=True)
@@ -88,7 +80,6 @@ class crm_merge_opportunity(models.TransientModel):
                 team_ids = self.env['crm.team'].search(['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)])
                 if team_ids:
                     team_id = team_ids[0]
-        print"**** end on_change_user****crm_merge_opportunity"
         return {'value': {'team_id': team_id}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -15,8 +15,9 @@ from openerp.tools import mute_logger
 from .validate_email import validate_email
 
 import openerp
-from openerp.osv import osv, orm
-from openerp.osv import fields
+# from openerp.osv import osv, orm
+# from openerp.osv import fields
+from openerp import models, fields, api, _
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 
@@ -55,7 +56,7 @@ def sanitize_email(email):
 def is_integer_list(ids):
     return all(isinstance(i, (int, long)) for i in ids)
 
-from openerp import models, fields, api, _
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 

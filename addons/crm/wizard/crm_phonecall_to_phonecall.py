@@ -48,7 +48,7 @@ class crm_phonecall2phonecall(models.TransientModel):
     def action_schedule(self):
         value = {}
         phonecall = self.env['crm.phonecall']
-        phonecall_ids = self._context and self._context.get('active_ids') or []
+        phonecall_ids = self._context.get('active_ids',[])
         for this in self:
             phocall_ids = phonecall.schedule_another_phonecall(phonecall_ids, this.date, this.name, \
                     this.user_id and this.user_id.id or False, \
@@ -63,15 +63,15 @@ class crm_phonecall2phonecall(models.TransientModel):
         This function gets default values
         """
         res = super(crm_phonecall2phonecall, self).default_get(fields)
-        record_id = self._context and self._context.get('active_id', False) or False
+        record_id = self._context.get('active_id', False)
         res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         if record_id:
             phonecall = self.env['crm.phonecall'].browse(record_id)
             categ_id = False
-            data_obj = self.env['ir.model.data']
+            data_obj = self.pool['ir.model.data']
             try:
-                res_id = data_obj._get_id('crm', 'categ_phone2')
-                categ_id = data_obj.browse(res_id).res_id
+                res_id = data_obj._get_id(self._cr, self._uid, 'crm', 'categ_phone2')
+                categ_id = data_obj.browse(self._cr, self._uid, res_id, context=self._context).res_id
             except ValueError:
                 pass
 

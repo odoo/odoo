@@ -39,7 +39,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
 
     @api.onchange('action')
     def onchange_action(self):
-        print"*****onchange_action****l2o"
         self.partner_id = False if self.action != 'exist' else self._find_matching_partner()
 
     @api.multi
@@ -47,7 +46,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
         """
         Search for opportunities that have the same partner and that arent done or cancelled
         """
-        print"*****_get_duplicated_leads****l2o"
         data = self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
         return [rec.id for rec in data]
 
@@ -59,7 +57,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
         opportunities links with this partner to merge all information together
         """
         lead_obj = self.pool['crm.lead']
-        print"****default_get****l2o"
         res = super(crm_lead2opportunity_partner, self).default_get(fields)
         if self._context.get('active_id'):
             tomerge = [int(self._context['active_id'])]
@@ -82,8 +79,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
                 res.update({'user_id': lead.user_id.id})
             if lead.team_id:
                 res.update({'team_id': lead.team_id.id})
-            print"----tomerge : ",tomerge
-        print"****end default_get****l2o"
         return res
 
     @api.multi
@@ -132,31 +127,26 @@ class crm_lead2opportunity_partner(models.TransientModel):
         Convert lead to opportunity or merge lead and opportunity and open
         the freshly created opportunity view.
         """
-        print"*****action_apply****l2o"
         lead_obj = self.pool['crm.lead']
-        w = self[0]
-        opp_ids = [o.id for o in w.opportunity_ids]
-        if w.name == 'merge':
+        opp_ids = [o.id for o in self.opportunity_ids]
+        if self.name == 'merge':
             lead_rec = self.opportunity_ids.merge_opportunity()
             lead_res = [lead_rec]
             if lead_rec.type == "lead":
                 # context = dict(context, active_ids=lead_ids)
                 self = self.with_context(active_ids=lead_rec)
-                self._convert_opportunity({'lead_ids': lead_rec, 'user_ids': [w.user_id.id], 'team_id': w.team_id.id})
+                self._convert_opportunity({'lead_ids': lead_rec, 'user_ids': [self.user_id.id], 'team_id': self.team_id.id})
             elif not self._context.get('no_force_assignation') or not lead['user_id']:
-                lead_rec.write({'user_id': w.user_id.id, 'team_id': w.team_id.id})
+                lead_rec.write({'user_id': self.user_id.id, 'team_id': self.team_id.id})
         else:
             lead_ids = self._context.get('active_ids', [])
             lead_res = lead_obj.browse(self._cr, self._uid, lead_ids, self._context)
             self._convert_opportunity({'lead_ids': lead_res, 
-                'user_ids': [self[0].user_id.id], 'team_id': self[0].team_id.id})
-        print"----lead_res : ",lead_res
-        print"*****end action_apply****l2o"
+                'user_ids': [self.user_id.id], 'team_id': self.team_id.id})
         return lead_res[0].redirect_opportunity_view()
 
     @api.multi
     def _convert_opportunity(self, vals):
-        print"*****_convert_opportunity****l2o"
         lead = self.pool['crm.lead']
         res = False
         lead_rec = vals.get('lead_ids', [])
@@ -172,8 +162,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
             leads_to_allocate = [lead_id.id for lead_id in lead_rec]
         if user_ids:
             lead.allocate_salesman(leads_to_allocate, user_ids, team_id=team_id)
-        print"----res : ",res
-        print"***** end _convert_opportunity****l2o"
         return res
 
     @api.multi
@@ -182,7 +170,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
         Create partner based on action.
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
-        print"**** _create_partner****l2o"
         #TODO this method in only called by crm_lead2opportunity_partner
         #wizard and would probably diserve to be refactored or at least
         #moved to a better place
@@ -195,8 +182,6 @@ class crm_lead2opportunity_partner(models.TransientModel):
             partner_id = self._find_matching_partner()
             action = 'create'
         res = lead_obj.handle_partner_assignation(lead.id, action, partner_id)
-        print"----res : ",res
-        print"**** _create_partner****l2o"
         return res.get(lead.id)
 
 class crm_lead2opportunity_mass_convert(models.TransientModel):
@@ -258,22 +243,18 @@ class crm_lead2opportunity_mass_convert(models.TransientModel):
         opportunities, check the salesteam_id and salesmen_ids and update
         the values before calling super.
         """
-
-        data = self[0]
-        salesteam_id = data.team_id and data.team_id.id or False
+        salesteam_id = self.team_id and self.team_id.id or False
         salesmen_ids = []
-        if data.user_ids:
-            salesmen_ids = [x.id for x in data.user_ids]
+        if self.user_ids:
+            salesmen_ids = [x.id for x in self.user_ids]
         vals.update({'user_ids': salesmen_ids, 'team_id': salesteam_id})
         return super(crm_lead2opportunity_mass_convert, self)._convert_opportunity(vals)
 
     @api.multi
     def mass_convert(self):
-        print"****mass_convert****l2o"
         lead_obj = self.pool['crm.lead']
-        data = self[0]
         context=self._context
-        if data.name == 'convert' and data.deduplicate:
+        if self.name == 'convert' and self.deduplicate:
             merged_lead_ids = []
             remaining_lead_ids = []
             lead_selected = self._context.get('active_ids', [])
@@ -291,9 +272,7 @@ class crm_lead2opportunity_mass_convert(models.TransientModel):
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)
             self = self.with_context(active_ids = list(active_ids))
-        self = self.with_context(no_force_assignation = self._context.get('no_force_assignation', not data.force_assignation))
-        print"----active_ids : ",active_ids
-        print"**** end mass_convert****l2o"
+        self = self.with_context(no_force_assignation = self._context.get('no_force_assignation', not self.force_assignation))
         return self.action_apply()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
