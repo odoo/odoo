@@ -19,8 +19,11 @@
                                 <li><a href="#" data-action="master">Master</a></li>
                             </t>
                             <li class="first_divider divider"> </li>
-                            <li><a href="#" data-action="duplicate_version">Duplicate Version</a></li>
+                            <t t-if="website.get_current_version(context=context)[0] == 0 ">
+                                <li><a href="#" data-action="duplicate_version">New Version</a></li>
+                            </t>
                             <t t-if="website.get_current_version(context=context)[0] != 0 ">
+                                <li><a href="#" data-action="duplicate_version">Duplicate Version</a></li>
                                 <li><a href="#" data-action="publish_version" 
                                     t-att-data-version_id="website.get_current_version(context=context)[0]">Publish Version</a>
                                 </li>

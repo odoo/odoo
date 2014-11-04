@@ -24,7 +24,7 @@
             this.$el.find('#version-menu-button').click(function() {
                 var view_id = $('html').attr('data-view-xmlid');
                 openerp.jsonRpc( '/website_version/all_versions', 'call', { 'view_id': view_id }).then(function (result) {
-                    self.$el.find(".version").remove();
+                    self.$el.find(".version_choice").remove();
                     self.$el.find(".first_divider").before(QWeb.render("all_versions", {versions:result}));
 
                 });
@@ -84,8 +84,8 @@
         },
 
         delete_version: function(event) {
-            var version_id = $(event.currentTarget).parent().parent().parent().data("version_id");
-            var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
+            var version_id = $(event.currentTarget).parent().data("version_id");
+            var name = $(event.currentTarget).parent().children(':last-child').html();
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
@@ -112,7 +112,7 @@
 
         publish_version: function(event) {
             var version_id = $('html').data('version_id');
-            var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
+            var name = $(event.currentTarget).parent().parent().parent().children().children(':first-child').html();
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
