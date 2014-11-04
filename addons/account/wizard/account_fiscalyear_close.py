@@ -44,7 +44,6 @@ class account_fiscalyear_close(models.TransientModel):
 
         obj_acc_move = self.env['account.move']
         obj_acc_move_line = self.env['account.move.line']
-        obj_acc_journal_period = self.env['account.journal.period']
 
         cr = self._cr
         cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(self.fy2_id.id),))
@@ -221,19 +220,20 @@ class account_fiscalyear_close(models.TransientModel):
             #set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance
             reconcile_id.write({'create_date': new_fyear.date_start})
 
-        #create the journal.period object and link it to the old fiscalyear
-        new_period = self.period_id.id
-        ids = obj_acc_journal_period.search([('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
-        if not ids:
-            ids = [obj_acc_journal_period.create(cr, uid, {
-                   'name': (new_journal.name or '') + ':' + (period.code or ''),
-                   'journal_id': new_journal.id,
-                   'period_id': period.id
-               })]
-        cr.execute('UPDATE account_fiscalyear ' \
-                    'SET end_journal_id = %s ' \
-                    'WHERE id = %s', (ids.ids[0], old_fyear.id))
-        self.env['account.fiscalyear'].invalidate_cache(['end_journal_id'], [old_fyear.id])
+            # TODO : account_journal_period has been removed
+#         #create the journal.period object and link it to the old fiscalyear
+#         new_period = self.period_id.id
+#         ids = obj_acc_journal_period.search([('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
+#         if not ids:
+#             ids = [obj_acc_journal_period.create(cr, uid, {
+#                    'name': (new_journal.name or '') + ':' + (period.code or ''),
+#                    'journal_id': new_journal.id,
+#                    'period_id': period.id
+#                })]
+#         cr.execute('UPDATE account_fiscalyear ' \
+#                     'SET end_journal_id = %s ' \
+#                     'WHERE id = %s', (ids.ids[0], old_fyear.id))
+#         self.env['account.fiscalyear'].invalidate_cache(['end_journal_id'], [old_fyear.id])
 
         return {'type': 'ir.actions.act_window_close'}
 

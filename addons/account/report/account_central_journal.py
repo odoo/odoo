@@ -62,12 +62,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
             self.query_get_clause = 'AND '
             self.query_get_clause += obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
-            objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        #account_journal_period have been removed
-#         if new_ids:
-#             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
-#             res = self.cr.fetchall()
-#             self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, period_id, journal_id):
@@ -93,18 +87,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = False
 
     def _get_account(self, data):
-        if data['model'] == 'account.journal.period':
-            return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
         return super(journal_print,self)._get_account(data)
 
     def _get_fiscalyear(self, data):
-        if data['model'] == 'account.journal.period':
-            return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
         return super(journal_print,self)._get_fiscalyear(data)
 
     def _display_currency(self, data):
-        if data['model'] == 'account.journal.period':
-            return True
         return data['form']['amount_currency']
 
 
