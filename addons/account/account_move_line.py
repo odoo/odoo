@@ -166,7 +166,7 @@ class account_move_line(models.Model):
                     raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_lines:
                     obj_line.analytic_lines.unlink()
-                vals_line = self._prepare_analytic_line(obj_line)
+                vals_line = obj_line._prepare_analytic_line()
                 self.env['account.analytic.line'].create(vals_line)
 
     @api.one
@@ -177,7 +177,7 @@ class account_move_line(models.Model):
 
     @api.multi
     def _balance(self):
-        c = self._context.copy()
+        c = dict(self._context or {})
         c['initital_bal'] = True
         sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
                     FROM account_move_line l1 LEFT JOIN account_move_line l2
@@ -649,7 +649,7 @@ class account_move_line(models.Model):
                             total += line2.amount_currency
                         else:
                             total += (line2.debit or 0.0) - (line2.credit or 0.0)
-                merges_rec.append(line.reconcile_partial_id.id)
+                merges_rec.append(line.reconcile_partial_id)
             else:
                 unmerge.append(line)
                 if line.account_id.currency_id:
@@ -667,7 +667,8 @@ class account_move_line(models.Model):
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), [line.id for line in merges+unmerge])
         })
-        move_rec_obj.with_context(reconcile_context).reconcile_partial_check([r_id] + merges_rec)
+        recs = [r_id] + merges_rec
+        recs.with_context(reconcile_context).reconcile_partial_check()
         return r_id
 
     @api.multi
