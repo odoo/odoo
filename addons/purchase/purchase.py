@@ -149,7 +149,6 @@ class purchase_order(osv.osv):
         return res and res[0] or False  
 
     def _get_picking_in(self, cr, uid, context=None):
-
         obj_data = self.pool.get('ir.model.data')
         type_obj = self.pool.get('stock.picking.type')
         user_obj = self.pool.get('res.users')
@@ -159,9 +158,11 @@ class purchase_order(osv.osv):
             type = type_obj.browse(cr, uid, pick_type, context=context)
             if type and type.warehouse_id and type.warehouse_id.company_id.id == company_id:
                 return pick_type
-        types = type_obj.search(cr, uid, [('code', '=', 'incoming')], context=context)
+        types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)], context=context)
         if not types:
-            raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
+            types = type_obj.search(cr, uid, [('code', '=', 'incoming'), ('warehouse_id', '=', False)], context=context)
+            if not types:
+                raise osv.except_osv(_('Error!'), _("Make sure you have at least an incoming picking type defined"))
         return types[0]
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):

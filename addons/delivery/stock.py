@@ -172,11 +172,20 @@ class stock_move(osv.osv):
         }
 
     def action_confirm(self, cr, uid, ids, context=None):
+        """
+            Pass the carrier to the picking from the sales order
+            (Should also work in case of Phantom BoMs when on explosion the original move is deleted)
+        """
+        procs_to_check = []
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.carrier_id:
+                procs_to_check += [move.procurement_id]
         res = super(stock_move, self).action_confirm(cr, uid, ids, context=context)
         pick_obj = self.pool.get("stock.picking")
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.picking_id and move.procurement_id and move.procurement_id.sale_line_id and not move.picking_id.carrier_id :
-                pick_obj.write(cr, uid, [move.picking_id.id], {'carrier_id': move.procurement_id.sale_line_id.order_id.carrier_id.id}, context=context)
+        for proc in procs_to_check:
+            pickings = list(set([x.picking_id.id for x in proc.move_ids if x.picking_id and not x.picking_id.carrier_id]))
+            if pickings:
+                pick_obj.write(cr, uid, pickings, {'carrier_id': proc.sale_line_id.order_id.carrier_id.id}, context=context)
         return res
 
 
