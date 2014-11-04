@@ -68,7 +68,7 @@ class account_cash_statement(models.Model):
         company = self.env.user.company_id
         if not company:
             company = self.env['res.company'].search([], limit=1)
-        return company or False
+        return company
 
     @api.multi
     @api.depends('balance_end_real', 'balance_end')
@@ -81,28 +81,22 @@ class account_cash_statement(models.Model):
     def _compute_last_closing_balance(self):
         for statement in self:
             if statement.state == 'draft':
-                statements = self.search(
-                    [('journal_id', '=', statement.journal_id.id), ('state', '=', 'confirm')],
-                    order='create_date desc',
-                    limit=1,
-                )
-                if statements:
-                    statement.last_closing_balance = statements.balance_end_real
+                last_statement = self.search([('journal_id', '=', statement.journal_id.id), ('state', '=', 'confirm')],
+                                            order='create_date desc', limit=1)
+                if last_statement:
+                    statement.last_closing_balance = last_statement.balance_end_real
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         super(account_cash_statement, self).onchange_journal_id()
 
         if self.journal_id:
-            statement = self.search(
-                    [('journal_id', '=', self.journal_id.id), ('state', '=', 'confirm')],
-                    order='create_date desc',
-                    limit=1,
-            )
             opening_details_ids = self._get_cash_open_box_lines(self.journal_id.id)
             if opening_details_ids:
                 self.opening_details_ids = opening_details_ids
 
+            statement = self.search([('journal_id', '=', self.journal_id.id), ('state', '=', 'confirm')],
+                    order='create_date desc', limit=1)
             if statement:
                 self.last_closing_balance = statement.balance_end_real
 
@@ -176,7 +170,6 @@ class account_cash_statement(models.Model):
 
         SequenceObj = self.pool.get('ir.sequence')
         for statement in self:
-            vals = {}
             if not self._user_allow(statement.id):
                 raise Warning(_('You do not have rights to open this %s journal!') % (statement.journal_id.name, ))
 
@@ -186,15 +179,9 @@ class account_cash_statement(models.Model):
                     st_number = SequenceObj.with_context(context).next_by_id(statement.journal_id.sequence_id.id)
                 else:
                     st_number = SequenceObj.with_context(context).next_by_code('account.cash.statement')
-                vals.update({
-                    'name': st_number
-                })
+                statement.name = st_number
 
-            vals.update({
-                'state': 'open',
-            })
-            statement.write(vals)
-        return True
+            statement.state = 'open'
 
     @api.multi
     def statement_close(self, journal_type='bank'):
@@ -215,25 +202,25 @@ class account_cash_statement(models.Model):
 
         TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
 
-        for obj in self:
-            if obj.difference == 0.0:
+        for statement in self:
+            if statement.difference == 0.0:
                 continue
-            elif obj.difference < 0.0:
-                account = obj.journal_id.loss_account_id
+            elif statement.difference < 0.0:
+                account = statement.journal_id.loss_account_id
                 name = _('Loss')
-                if not obj.journal_id.loss_account_id:
-                    raise Warning(_('There is no Loss Account on the journal %s.') % (obj.journal_id.name,))
-            else: # obj.difference > 0.0
-                account = obj.journal_id.profit_account_id
+                if not statement.journal_id.loss_account_id:
+                    raise Warning(_('There is no Loss Account on the journal %s.') % (statement.journal_id.name,))
+            else: # statement.difference > 0.0
+                account = statement.journal_id.profit_account_id
                 name = _('Profit')
-                if not obj.journal_id.profit_account_id:
-                    raise Warning(_('There is no Profit Account on the journal %s.') % (obj.journal_id.name,))
+                if not statement.journal_id.profit_account_id:
+                    raise Warning(_('There is no Profit Account on the journal %s.') % (statement.journal_id.name,))
 
             values = {
-                'statement_id' : obj.id,
-                'journal_id' : obj.journal_id.id,
+                'statement_id' : statement.id,
+                'journal_id' : statement.journal_id.id,
                 'account_id' : account.id,
-                'amount' : obj.difference,
+                'amount' : statement.difference,
                 'name' : name,
             }
             self.env['account.bank.statement.line'].create(values)
@@ -262,4 +249,5 @@ class account_journal_cashbox_line(models.Model):
     _order = 'pieces asc'
 
     pieces = fields.Float(string='Values', digits=dp.get_precision('Account'))
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, index=True, ondelete="cascade")
+    journal_id = fields.Many2one('account.journal', string='Journal', 
+        required=True, index=True, ondelete="cascade")
