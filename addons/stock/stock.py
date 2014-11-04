@@ -467,7 +467,8 @@ class stock_location(osv.osv):
             total = 0.0
             results2 = 0.0
             for r in results:
-                amount = uom_obj._compute_qty(cr, uid, r['product_uom'], r['product_qty'], context.get('uom', False))
+                # ROND down to prevent negative stocks.
+                amount = uom_obj._compute_qty(cr, uid, r['product_uom'], r['product_qty'], context.get('uom', False), to_unit_rounding='DOWN')
                 results2 += amount
                 total += amount
             if total <= 0.0:

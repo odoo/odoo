@@ -159,7 +159,7 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
+    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, to_unit_rounding='UP'):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
         uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
@@ -167,9 +167,12 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit)
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, to_unit_rounding)
 
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, to_unit_rounding='UP',context=None):
+        """
+        :param to_unit_rounding: the rounding method to use: 'HALF-UP' or 'UP' or 'DOWN',
+        """
         if context is None:
             context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
@@ -182,7 +185,9 @@ class product_uom(osv.osv):
         # e.g. with 1 / (1/12) we could get 12.0000048, ceiling to 13! 
         amount = float_round(qty/from_unit.factor, precision_rounding=from_unit.rounding)
         if to_unit:
-            amount = ceiling(amount * to_unit.factor, to_unit.rounding)
+            amount = float_round(amount * to_unit.factor,
+                                 precision_rounding=to_unit.rounding,
+                                 rounding_method=to_unit_rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
