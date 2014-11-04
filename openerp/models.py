@@ -5221,13 +5221,14 @@ class BaseModel(object):
 
     def _mapped_func(self, func):
         """ Apply function `func` on all records in `self`, and return the
-            result as a list or a recordset (if `func` return recordsets).
+            result as a list or a recordset (if `func` returns recordsets).
         """
-        vals = [func(rec) for rec in self]
-        val0 = vals[0] if vals else func(self)
-        if isinstance(val0, BaseModel):
-            return reduce(operator.or_, vals, val0)
-        return vals
+        if self:
+            vals = [func(rec) for rec in self]
+            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+        else:
+            vals = func(self)
+            return vals if isinstance(vals, BaseModel) else []
 
     def mapped(self, func):
         """ Apply `func` on all records in `self`, and return the result as a
@@ -5266,12 +5267,20 @@ class BaseModel(object):
             func = lambda rec: filter(None, rec.mapped(name))
         return self.browse([rec.id for rec in self if func(rec)])
 
-    def sorted(self, key=None):
-        """ Return the recordset `self` ordered by `key` """
+    def sorted(self, key=None, reverse=False):
+        """ Return the recordset `self` ordered by `key`.
+
+            :param key: either a function of one argument that returns a
+                comparison key for each record, or ``None``, in which case
+                records are ordered according the default model's order
+
+            :param reverse: if ``True``, return the result in reverse order
+        """
         if key is None:
-            return self.search([('id', 'in', self.ids)])
+            recs = self.search([('id', 'in', self.ids)])
+            return self.browse(reversed(recs._ids)) if reverse else recs
         else:
-            return self.browse(map(int, sorted(self, key=key)))
+            return self.browse(map(int, sorted(self, key=key, reverse=reverse)))
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
