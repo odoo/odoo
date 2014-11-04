@@ -204,7 +204,10 @@ class ir_model(osv.osv):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
+            # add model in registry
             self.instanciate(cr, user, vals['model'], context)
+            self.pool.setup_models(cr, partial=(not self.pool.ready))
+            # update database schema
             model = self.pool[vals['model']]
             ctx = dict(context,
                 field_name=vals['name'],
@@ -213,7 +216,6 @@ class ir_model(osv.osv):
                 update_custom_fields=True)
             model._auto_init(cr, ctx)
             model._auto_end(cr, ctx) # actually create FKs!
-            self.pool.setup_models(cr, partial=(not self.pool.ready))
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -351,8 +353,11 @@ class ir_model_fields(osv.osv):
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
         if not context.get(MODULE_UNINSTALL_FLAG):
+            # The field we just deleted might have be inherited, and registry is
+            # inconsistent in this case; therefore we reload the registry.
             cr.commit()
-            self.pool.setup_models(cr, partial=(not self.pool.ready))
+            api.Environment.reset()
+            RegistryManager.new(cr.dbname)
             RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -385,8 +390,11 @@ class ir_model_fields(osv.osv):
                     cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
                     self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
 
+                # re-initialize model in registry
                 model.__init__(self.pool, cr)
-                #Added context to _auto_init for special treatment to custom field for select_level
+                self.pool.setup_models(cr, partial=(not self.pool.ready))
+                # update database schema
+                model = self.pool[vals['model']]
                 ctx = dict(context,
                     field_name=vals['name'],
                     field_state='manual',
@@ -394,7 +402,6 @@ class ir_model_fields(osv.osv):
                     update_custom_fields=True)
                 model._auto_init(cr, ctx)
                 model._auto_end(cr, ctx) # actually create FKs!
-                self.pool.setup_models(cr, partial=(not self.pool.ready))
                 RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -413,23 +420,24 @@ class ir_model_fields(osv.osv):
                 if field.serialization_field_id and (field.name != vals['name']):
                     raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
 
-        column_rename = None # if set, *one* column can be renamed here
-        models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
-                             # data to be updated on the orm model
+        # if set, *one* column can be renamed here
+        column_rename = None
+
+        # field patches {model: {field_name: {prop_name: prop_value, ...}, ...}, ...}
+        patches = defaultdict(lambda: defaultdict(dict))
 
         # static table of properties
         model_props = [ # (our-name, fields.prop, set_fn)
             ('field_description', 'string', tools.ustr),
             ('required', 'required', bool),
             ('readonly', 'readonly', bool),
-            ('domain', '_domain', eval),
+            ('domain', 'domain', eval),
             ('size', 'size', int),
             ('on_delete', 'ondelete', str),
             ('translate', 'translate', bool),
-            ('selectable', 'selectable', bool),
-            ('select_level', 'select', int),
+            ('select_level', 'index', lambda x: bool(int(x))),
             ('selection', 'selection', eval),
-            ]
+        ]
 
         if vals and ids:
             checked_selection = False # need only check it once, so defer
@@ -472,14 +480,12 @@ class ir_model_fields(osv.osv):
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
                 if obj is not None:
-                    models_patch.setdefault(obj._name, (obj,[]))
                     # find out which properties (per model) we need to update
-                    for field_name, field_property, set_fn in model_props:
+                    for field_name, prop_name, func in model_props:
                         if field_name in vals:
-                            property_value = set_fn(vals[field_name])
-                            if getattr(obj._columns[item.name], field_property) != property_value:
-                                models_patch[obj._name][1].append((final_name, field_property, property_value))
-                        # our dict is ready here, but no properties are changed so far
+                            prop_value = func(vals[field_name])
+                            if getattr(obj._fields[item.name], prop_name) != prop_value:
+                                patches[obj][final_name][prop_name] = prop_value
 
         # These shall never be written (modified)
         for column_name in ('model_id', 'model', 'state'):
@@ -496,24 +502,29 @@ class ir_model_fields(osv.osv):
             field = obj._pop_field(rename[1])
             obj._add_field(rename[2], field)
 
-        if models_patch:
+        if patches:
             # We have to update _columns of the model(s) and then call their
             # _auto_init to sync the db with the model. Hopefully, since write()
             # was called earlier, they will be in-sync before the _auto_init.
             # Anything we don't update in _columns now will be reset from
             # the model into ir.model.fields (db).
-            ctx = dict(context, select=vals.get('select_level', '0'),
-                       update_custom_fields=True)
+            ctx = dict(context,
+                select=vals.get('select_level', '0'),
+                update_custom_fields=True,
+            )
 
-            for __, patch_struct in models_patch.items():
-                obj = patch_struct[0]
-                # TODO: update new-style fields accordingly
-                for col_name, col_prop, val in patch_struct[1]:
-                    setattr(obj._columns[col_name], col_prop, val)
+            for obj, model_patches in patches.iteritems():
+                for field_name, field_patches in model_patches.iteritems():
+                    # update field properties, and adapt corresponding column
+                    field = obj._fields[field_name]
+                    attrs = dict(field._attrs, **field_patches)
+                    obj._add_field(field_name, field.new(**attrs))
+
+                # update database schema
                 obj._auto_init(cr, ctx)
                 obj._auto_end(cr, ctx) # actually create FKs!
 
-        if column_rename or models_patch:
+        if column_rename or patches:
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             RegistryManager.signal_registry_change(cr.dbname)
 
