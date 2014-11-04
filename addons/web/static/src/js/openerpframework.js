@@ -784,6 +784,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
             return this.$el;
         return this.$el.find(selector);
     },
+    do_show: function () {
+        this.$el.show();
+    },
+    do_hide: function () {
+        this.$el.hide();
+    },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
      * method invocations.

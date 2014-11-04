@@ -5368,7 +5368,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
     },
     new_object: function() {
         if (this.searchview) {
-            this.searchview.hide();
+            this.searchview.do_hide();
         }
         if (this.view_list) {
             this.view_list.do_hide();
