@@ -122,6 +122,7 @@
 
 <template id="group_message">
     <t t-call="website.layout">
+        <t t-set="additional_title"><t t-esc="message.description"/></t>
         <section class="container">
             <div class="row mt8">
                 <ol class="breadcrumb pull-left">
