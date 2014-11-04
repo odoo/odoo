@@ -5,53 +5,94 @@
           <field name="name">Root/View</field>
           <field name="close_method">none</field>
         </record>
+        <record model="account.account.type" id="data_account_type_asset_view">
+          <field name="name">Fixed Assets</field>
+          <field name="close_method">none</field>
+          <field name="report_type">fixed_assets</field>
+        </record>
         <record model="account.account.type" id="data_account_type_receivable">
           <field name="name">Receivable</field>
           <field name="type">receivable</field>
           <field name="close_method">balance</field>
-          <field name="report_type">asset</field>
+          <field name="report_type">prepayments</field>
         </record>
         <record model="account.account.type" id="data_account_type_payable">
           <field name="name">Payable</field>
           <field name="type">payable</field>
           <field name="close_method">balance</field>
-          <field name="report_type">liability</field>
+          <field name="report_type">current_liabilities</field>
         </record>
         <record model="account.account.type" id="data_account_type_bank">
           <field name="name">Bank</field>
           <field name="type">liquidity</field>
           <field name="close_method">balance</field>
-          <field name="report_type">asset</field>
+          <field name="report_type">bank_accounts</field>
         </record>
         <record model="account.account.type" id="data_account_type_cash">
           <field name="name">Cash</field>
           <field name="type">liquidity</field>
           <field name="close_method">balance</field>
-          <field name="report_type">asset</field>
+          <field name="report_type">current_assets</field>
         </record>
-        <record model="account.account.type" id="data_account_type_asset">
-          <field name="name">Asset</field>
+        <record model="account.account.type" id="data_account_type_current_assets">
+          <field name="name">Current Assets</field>
           <field name="type">other</field>
           <field name="close_method">balance</field>
-          <field name="report_type">asset</field>
+          <field name="report_type">current_assets</field>
         </record>
-        <record model="account.account.type" id="data_account_type_liability">
-            <field name="name">Liability</field>
-            <field name="type">other</field>
-            <field name="close_method">balance</field>
-          <field name="report_type">liability</field>
+        <record model="account.account.type" id="data_account_type_prepayments">
+          <field name="name">Prepayments</field>
+          <field name="type">other</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">prepayments</field>
         </record>
-        <record model="account.account.type" id="data_account_type_income">
-          <field name="name">Income</field>
+        <record model="account.account.type" id="data_account_type_fixed_assets">
+          <field name="name">Fixed Assets</field>
+          <field name="type">other</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">fixed_assets</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_current_liabilities">
+          <field name="name">Current Liabilities</field>
+          <field name="type">other</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">current_liabilities</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_other_income">
+          <field name="name">Other Income</field>
           <field name="type">other</field>
           <field name="close_method">none</field>
-          <field name="report_type">income</field>
+          <field name="report_type">other_income</field>
         </record>
-        <record model="account.account.type" id="data_account_type_expense">
-          <field name="name">Expense</field>
+        <record model="account.account.type" id="data_account_type_sales">
+          <field name="name">Sales</field>
           <field name="type">other</field>
           <field name="close_method">none</field>
-          <field name="report_type">expense</field>
+          <field name="report_type">sales</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_revenue">
+          <field name="name">Revenue</field>
+          <field name="type">other</field>
+          <field name="close_method">none</field>
+          <field name="report_type">revenue</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_overheads">
+          <field name="name">Overheads</field>
+          <field name="type">other</field>
+          <field name="close_method">none</field>
+          <field name="report_type">overheads</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_expenses">
+          <field name="name">Expenses</field>
+          <field name="type">other</field>
+          <field name="close_method">none</field>
+          <field name="report_type">expenses</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_direct_costs">
+          <field name="name">Direct Costs</field>
+          <field name="type">other</field>
+          <field name="close_method">none</field>
+          <field name="report_type">direct_costs</field>
         </record>
     </data>
 </openerp>

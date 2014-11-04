@@ -82,6 +82,8 @@ class account_move_line(models.Model):
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
+    debit_cash_basis = fields.Float('Debit with cash basis method', default=0.0)
+    credit_cash_basis = fields.Float('Credit with cash basis method', default=0.0)
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=0,
@@ -122,11 +124,31 @@ class account_move_line(models.Model):
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
+    user_type = fields.Many2one('account.account.type', related='account_id.user_type', string='User Type', index=True, store=True)
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
+
+    def compute_fields(self, field_names):
+        if len(self) == 0:
+            return []
+        select = ','.join(['l.'+k for k in field_names])
+        if 'balance' in field_names:
+            select = select.replace('l.balance', 'COALESCE(SUM(l.debit-l.credit), 0)')
+        sql = "SELECT l.id," + select + \
+                    """ FROM account_move_line l
+                    WHERE """ + \
+                self._query_get() + \
+                " AND l.id IN %s GROUP BY l.id"
+
+        self.env.cr.execute(sql, [tuple(self.ids)])
+        results = self.env.cr.fetchall()
+        results = dict([(k[0], k[1:]) for k in results])
+        for id, l in results.items():
+            results[id] = dict([(field_names[i], k) for i, k in enumerate(l)])
+        return results
 
     @api.multi
     @api.constrains('account_id')
@@ -876,50 +898,56 @@ class account_move_line(models.Model):
 
     @api.model
     def _query_get(self, obj='l'):
-        """ Build SQL query to fetch lines based on obj and context """
-
-        fiscalyear_obj = self.env['account.fiscalyear']
         account_obj = self.env['account.account']
-        fiscalyear_ids = []
         context = dict(self._context or {})
-        initial_bal = context.get('initial_bal', False)
         company_clause = " "
-        query = ''
         if context.get('company_id', False):
             company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
-        if not context.get('fiscalyear', False):
-            if context.get('all_fiscalyear', False):
-                #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
-                fiscalyear_ids = fiscalyear_obj.search([]).ids
-            else:
-                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')]).ids
-        else:
-            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
-            fiscalyear_ids = [context['fiscalyear']]
 
-        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         state = context.get('state', False)
         where_move_state = ''
         where_move_lines_by_date = ''
 
+        bs_types = (
+            'current_assets',
+            'prepayments',
+            'bank_accounts',
+            'fixed_assets',
+            'non_current_assets',
+            'current_liabilities',
+            'liabilities',
+            'non_current_liabilities',
+            'equity',
+        )
+
         if context.get('date_from', False) and context.get('date_to', False):
-            if initial_bal:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+            if context.get('initial_bal', False):
+                dt = context['date_from'][:4] + '-01-01'
+                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '"+context['date_from']+"')" \
+                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE report_type IN "+str(bs_types)+")))"\
+                                           " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +dt+"' AND date <= '"+context['date_from']+"')"
+            elif context.get('closing_bal', False):
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_to']+"')"
+            elif context.get('opening_year_bal', False):
+                dt = context['date_from'][:4] + '-01-01'
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +dt+"')"
+            elif context.get('non_issued', False):
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date > '" +context['date_to']+"')"
             else:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')" \
+                                           " OR ("+obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"'))" \
+                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE report_type IN "+str(bs_types)+")))" \
 
         if state:
             if state.lower() not in ['all']:
-                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
-            #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
-            #so we have to invalidate this query
-            raise Warning(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+                where_move_state = " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
+
+        query = "%s %s" % (where_move_lines_by_date, where_move_state)
 
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
 
-        if context.get('chart_account_id', False):
+        if context.get('chart_account_id', False): #  Deprecated ?
             child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
             if child_ids:
                 query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))

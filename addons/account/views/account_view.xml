@@ -252,6 +252,34 @@
             res_model="account.move.line"
             src_model="account.account"/>
 
+        <act_window
+            id="action_move_line_select_by_type"
+            name="Journal Items"
+            context="{'search_default_user_type': [active_id]}"
+            res_model="account.move.line"
+            src_model="account.account.type"/>
+
+        <act_window
+            id="action_move_line_select_by_partner"
+            name="Journal Items"
+            context="{'search_default_partner_id': [active_id]}"
+            res_model="account.move.line"
+            src_model="res.partner"/>
+
+        <act_window
+            id="act_account_tax_net"
+            name="Net Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_ids': [active_id]}"
+            src_model="account.tax"/>
+
+        <act_window
+            id="act_account_tax_tax"
+            name="Tax Lines"
+            res_model="account.move.line"
+            context="{'search_default_tax_line_id': [active_id]}"
+            src_model="account.tax"/>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -1029,6 +1057,17 @@
                 </graph>
             </field>
         </record>
+        <record id="account_move_line_graph_date" model="ir.ui.view">
+            <field name="name">account.move.line.graph</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="date"/>
+                    <field name="debit" operator="+" widget="monetary"/>
+                    <field name="credit" operator="+" widget="monetary"/>
+                </graph>
+            </field>
+        </record>
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Journal Items</field>
             <field name="model">account.move.line</field>
@@ -1076,6 +1115,14 @@
             <field name="res_model">account.move.line</field>
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="view_id" ref="view_move_line_tree"/>
+        </record>
+
+        <record id="action_move_line_graph" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="account_move_line_graph_date"/>
+            <field name="context">{'search_default_account_id': [active_id]}</field>
+            <field name="res_model">account.move.line</field>
         </record>
 
         <!-- Account.Entry Edition -->
@@ -1911,94 +1958,6 @@
         <menuitem id="menu_account_supplier" name="Suppliers"
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="7"/>
-
-        <!-- Account Reports -->
-        <record id="view_account_financial_report_form" model="ir.ui.view">
-            <field name="name">account.financial.report.form</field>
-            <field name="model">account.financial.report</field>
-            <field name="arch" type="xml">
-                <form string="Account Report">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="parent_id"/>
-                        <field name="sequence"/>
-                        <field name="type"/>
-                        <field name="sign"/>
-                        <field name="style_overwrite"/>
-                    </group>
-                    <notebook attrs="{'invisible': [('type','not in',['accounts','account_type'])]}">
-                        <page string="Report">
-                            <group>
-                                <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>
-                                <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
-                            </group>
-                            <field name="account_ids" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
-                            <field name="account_type_ids" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="view_account_financial_report_tree" model="ir.ui.view">
-            <field name="name">account.financial.report.tree</field>
-            <field name="model">account.financial.report</field>
-            <field name="arch" type="xml">
-                <tree string="Account Report">
-                    <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="type"/>
-                    <field name="account_report_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_account_financial_report_search" model="ir.ui.view">
-            <field name="name">account.financial.report.search</field>
-            <field name="model">account.financial.report</field>
-            <field name="arch" type="xml">
-                <search string="Account Report">
-                    <field name="name" string="Account Report"/>
-                    <field name="type"/>
-                    <field name="account_report_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
-                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="action_account_financial_report_tree" model="ir.actions.act_window">
-            <field name="name">Financial Reports</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.financial.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_financial_report_search"/>
-            <field name="view_id" ref="view_account_financial_report_tree"/>
-        </record>
-        <menuitem id="menu_account_financial_reports_tree" name="Account Reports Types" parent="menu_account_reports" action="action_account_financial_report_tree"/>
-
-        <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
-            <field name="name">account.report.hierarchy</field>
-            <field name="model">account.financial.report</field>
-            <field name="field_parent">children_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Account Reports Hierarchy">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="account_report_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_account_report_tree_hierarchy" model="ir.actions.act_window">
-            <field name="name">Financial Reports Hierarchy</field>
-            <field name="res_model">account.financial.report</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_account_report_tree_hierarchy"/>
-            <field name="domain">[('parent_id','=',False)]</field>
-        </record>
-        <menuitem id="menu_account_report_tree_hierarchy" name="Account Reports Hierarchy"
-                  parent="menu_account_reports" action="action_account_report_tree_hierarchy"/>
 
     </data>
 </openerp>

@@ -1256,4 +1256,42 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
+
+def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
+    """
+        Assuming 'Account' decimal.precision=3:
+            formatLang(value) -> digits=2 (default)
+            formatLang(value, digits=4) -> digits=4
+            formatLang(value, dp='Account') -> digits=3
+            formatLang(value, digits=5, dp='Account') -> digits=5
+    """
+
+    if digits is None:
+        digits = DEFAULT_DIGITS = 2
+        if dp:
+            decimal_precision_obj = env['decimal.precision']
+            digits = decimal_precision_obj.precision_get(dp)
+        elif (hasattr(value, '_field') and isinstance(value._field, (float_field, function_field)) and value._field.digits):
+                digits = value._field.digits[1]
+                if not digits and digits is not 0:
+                    digits = DEFAULT_DIGITS
+
+    if isinstance(value, (str, unicode)) and not value:
+        return ''
+
+    lang = env.user.company_id.partner_id.lang or 'en_US'
+    lang_objs = env['res.lang'].search([('code', '=', lang)])
+    if not lang_objs:
+        lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
+    lang_obj = lang_objs[0]
+
+    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+
+    if currency_obj:
+        if currency_obj.position == 'after':
+            res = '%s %s' % (res, currency_obj.symbol)
+        elif currency_obj and currency_obj.position == 'before':
+            res = '%s %s' % (currency_obj.symbol, res)
+    return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

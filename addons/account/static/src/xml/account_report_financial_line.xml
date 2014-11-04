@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="footNoteTextarea">
+        <div class="mt32 mb32">
+            <label t-att-for="'footnote' + footNoteSeqNum"><t t-esc="footNoteSeqNum"/></label>
+            <textarea t-att-name="'footnote' + footNoteSeqNum" rows='4' class="form-control" placeholder="Insert foot note here"></textarea>
+            <button class="btn btn-primary saveFootNote">Save</button>
+        </div>
+    </t>
+    <t t-name="supFootNoteSeqNum">
+         <sup><b style="position: absolute; margin-top: 6px;"><a t-att-href="'#footnote'+footNoteSeqNum"><t t-esc="footNoteSeqNum"/></a></b></sup>
+    </t>
+    <t t-name="savedFootNote">
+        <p class="footnote" t-att-id="'footnote'+num">
+            <span class='text'><t t-raw="num+'. '+note"/></span>
+            <span style="position: absolute; margin-left: 3px;"><i class="fa fa-pencil-square"></i><i class="fa fa-trash-o"></i> </span>
+        </p>
+    </t>
+    <t t-name="foldable">
+        <span style="position: absolute; margin-left: 3px;" t-att-class="'foldable '+lineId"><i class="fa fa-caret-down"></i></span>
+    </t>
+    <t t-name="unfoldable">
+        <span style="position: absolute; margin-left: 3px;" t-att-class="'unfoldable '+lineId"><i class="fa fa-caret-right"></i></span>
+    </t>
+    <t t-name="pencilIcon">
+        <span style="position: absolute; margin-left: -15px; color: black;"><i class="fa fa-pencil-square"></i></span>
+    </t>
+    <t t-name="trashAndPencilIcon">
+        <span style="position: absolute; margin-left: 3px;"><i class="fa fa-pencil-square"></i><i class="fa fa-trash-o"></i> </span>
+    </t>
+    <t t-name="addSummary">
+        <div class="alert alert-info alert-dismissible addSummary" role="alert">
+            <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
+        </div>
+    </t>
+    <t t-name="editSummary">
+        <label for="summary">Edit summary :</label>
+        <textarea name="summary" rows='4' class="form-control"></textarea>
+        <button class="btn btn-primary saveSummary">Save</button>
+    </t>
+    <t t-name="savedSummary">
+        <div class="alert alert-info alert-dismissible savedSummary" role="alert">
+            <button type="button" class="close closeSummary"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+            <button type="button" class="close"><i style="font-size: 16px;" class="fa fa-pencil"></i> </button>
+            <span><t t-raw="summary" /></span>
+        </div>
+    </t>
+    <t t-name="fiscalYearAlert">
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+            <strong>Warning!</strong> No fiscal year was found. Using the current civil year.
+        </div>
+    </t>
+    <t t-name="editContent"><t t-if="num > 0"><t t-esc="num" />. </t><textarea t-att-name="edit" rows='4' class="form-control"><t t-esc="text" /></textarea><button class="btn btn-primary saveContent">Save</button></t>
+    <t t-name="report_financial_line">
+        <t t-set="column" t-value="0" />
+        <tr t-att-class="l.type + ' ' + l.id">
+            <td>
+                <a t-if="l.type != 'account_id'"><span style="font-style: italic; margin-left: 70px" t-att-class="l.type + ' ' + l.id"><t t-esc="l.name"/></span></a>
+                <div class="dropdown" t-if="l.type == 'account_id'">
+                    <a data-toggle="dropdown">
+                        <span style="font-style: italic; margin-left: 70px" t-att-class="l.type + ' ' + l.id"><t t-esc="l.name"></t></span><span class="caret"></span>
+                    </a>
+                    <t t-if="l.footnotes[column] != undefined">
+                        <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                        <t t-call="supFootNoteSeqNum" />
+                    </t>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="margin-left: 70px">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="to_graph">Graph</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="to_amls">Account Move Lines</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="add_footnote">Add Footnote</a></li>
+                    </ul>
+                </div>
+            </td>
+            <t t-foreach="l.columns" t-as="c">
+                <t t-set="column" t-value="column + 1" />
+                <td class="text-right" style="white-space: nowrap;">
+                    <t t-if="typeof c != 'string'"><span class="annotable" t-att-style="c[1] + 'font-style: italic;'">
+                        <t t-raw="c[0]"/>
+                        <t t-if="l.footnotes[column] != undefined">
+                            <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                            <t t-call="supFootNoteSeqNum" />
+                        </t>
+                    </span></t>
+                    <t t-if="typeof c == 'string'"><span class="annotable" style="font-style: italic;">
+                        <t t-raw="c"/>
+                        <t t-if="l.footnotes[column] != undefined">
+                            <t t-set='footNoteSeqNum' t-value="l.footnotes[column]" />
+                            <t t-call="supFootNoteSeqNum" />
+                        </t>
+                    </span></t>
+                </td>
+            </t>
+        </tr>
+    </t>
+</templates>

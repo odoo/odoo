@@ -1,58 +1,607 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
+        <!-- TAGS FOR CASH FLOW STATEMENT -->
+
+        <record id="account_tag_operating" model="account.account.tag">
+            <field name="name">Operating Activities</field>
+        </record>
+        <record id="account_tag_financing" model="account.account.tag">
+            <field name="name">Financing Activities</field>
+        </record>
+        <record id="account_tag_investing" model="account.account.tag">
+            <field name="name">Investing Activities</field>
+        </record>
+
+
+        <!--
+            Lines
+        -->
+
+        <!-- PROFIT AND LOSS -->
+
+
+        <record id="account_financial_report_net_profit0" model="account.financial.report.line">
+            <field name="name">NET PROFIT</field>
+            <field name="code">NEP</field>
+            <field name="formulas">balance = GRP.balance - LEX.balance; debit = GRP.debit - LEX.debit; credit = GRP.credit - LEX.credit</field>
+            <field name="sequence" eval="1"/>
+        </record>
+
+        <record id="account_financial_report_gross_profit0" model="account.financial.report.line">
+            <field name="name">GROSS PROFIT</field>
+            <field name="code">GRP</field>
+            <field name="formulas">balance = INC.balance - COS.balance; debit = INC.debit - COS.debit; credit = INC.credit - COS.credit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_net_profit0')])]"/>
+            <field name="sequence" eval="1"/>
+        </record>
+
+        <record id="account_financial_report_income0" model="account.financial.report.line">
+            <field name="name">Income</field>
+            <field name="code">INC</field>
+            <field name="formulas">balance = REV.balance + SAL.balance; debit = REV.debit + SAL.debit; credit = REV.credit + SAL.credit</field>
+            <field name="parent_ids" eval="[(4, ref('account_financial_report_gross_profit0'))]"/>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_revenue0" model="account.financial.report.line">
+            <field name="name">Revenue</field>
+            <field name="code">REV</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_income0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'revenue')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_sales0" model="account.financial.report.line">
+            <field name="name">Sales</field>
+            <field name="code">SAL</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_income0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'sales')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="2"/>
+        </record>
+
+        <record id="account_financial_report_cost_sales0" model="account.financial.report.line">
+            <field name="name">Less Cost of Sales</field>
+            <field name="code">COS</field>
+            <field name="formulas">balance = DCO.balance; credit = DCO.credit; debit = DCO.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_gross_profit0')])]"/>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_direct_costs0" model="account.financial.report.line">
+            <field name="name">Direct Costs</field>
+            <field name="code">DCO</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cost_sales0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'direct_costs')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+
+        <record id="account_financial_report_less_expenses0" model="account.financial.report.line">
+            <field name="name">Less Expenses</field>
+            <field name="code">LEX</field>
+            <field name="formulas">balance = EXP.balance + DEP.balance + OVH.balance; credit = EXP.credit + DEP.credit + OVH.credit; debit = EXP.debit + DEP.debit + OVH.credit</field>
+            <field name="parent_ids" eval="[(4, ref('account_financial_report_net_profit0'))]"/>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_expense0" model="account.financial.report.line">
+            <field name="name">Expenses</field>
+            <field name="code">EXP</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_less_expenses0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'expenses')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_depreciation0" model="account.financial.report.line">
+            <field name="name">Depreciation</field>
+            <field name="code">DEP</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_less_expenses0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'depreciation')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_overheads0" model="account.financial.report.line">
+            <field name="name">Overheads</field>
+            <field name="code">OVH</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_less_expenses0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'overheads')]" />
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="3"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+
+
+        <!-- BALANCE SHEET -->
+
+
+        <record id="account_financial_report_balancesheet_line0" model="account.financial.report.line">
+            <field name="name">Balance Sheet</field>
+            <field name="sequence" eval="4"/>
+            <field name="hidden" eval="True"/>
+        </record>
+        <record id="account_financial_report_net_assets0" model="account.financial.report.line">
+            <field name="name">NET ASSETS</field>
+            <field name="code">NA</field>
+            <field name="formulas">balance = TA.balance - L.balance; credit = TA.credit - L.credit; debit = TA.debit - L.debit</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_balancesheet_line0')])]"/>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_total_assets0" model="account.financial.report.line">
+            <field name="name">ASSETS</field>
+            <field name="code">TA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_net_assets0')])]"/>
+            <field name="formulas">balance = CA.balance + BA.balance + FA.balance + PNCA.balance; credit = CA.credit + BA.credit + FA.credit + PNCA.credit; debit = CA.debit + BA.debit + FA.debit + PNCA.debit</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_current_assets_view0" model="account.financial.report.line">
+            <field name="name">Current Assets</field>
+            <field name="code">CA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_total_assets0')])]"/>
+            <field name="formulas">balance = CAS.balance + PRE.balance; credit = CAS.credit + PRE.credit; debit = CAS.debit + PRE.debit</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_current_assets0" model="account.financial.report.line">
+            <field name="name">Current Assets</field>
+            <field name="code">CAS</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_current_assets_view0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'current_assets')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_prepayements0" model="account.financial.report.line">
+            <field name="name">Prepayments</field>
+            <field name="code">PRE</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_current_assets_view0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'prepayments')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="account_financial_report_bank_view0" model="account.financial.report.line">
+            <field name="name">Plus Bank Accounts</field>
+            <field name="code">BA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_total_assets0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'bank_accounts')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="account_financial_report_fixed_assets_view0" model="account.financial.report.line">
+            <field name="name">Plus Fixed Assets</field>
+            <field name="code">FA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_total_assets0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'fixed_assets')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="account_financial_report_non_current_assets_view0" model="account.financial.report.line">
+            <field name="name">Plus Non-current Assets</field>
+            <field name="code">PNCA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_total_assets0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'non_current_assets')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="4"/>
+        </record>
+        <record id="account_financial_report_liabilities_view0" model="account.financial.report.line">
+            <field name="name">LIABILITIES</field>
+            <field name="code">L</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_net_assets0')])]"/>
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = CL.balance + NL.balance; credit = CL.credit + NL.credit; debit = CL.debit + NL.debit</field>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_current_liabilities_view0" model="account.financial.report.line">
+            <field name="name">Current Liabilities</field>
+            <field name="code">CL</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_liabilities_view0')])]"/>
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = CLI.balance; credit = CLI.credit; debit = CLI.debit</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_current_liabilities0" model="account.financial.report.line">
+            <field name="name">Current Liabilities</field>
+            <field name="code">CLI</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_current_liabilities_view0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'current_liabilities')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_non_current_liabilities_view0" model="account.financial.report.line">
+            <field name="name">Non-current Liabilities</field>
+            <field name="code">NL</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_liabilities_view0')])]"/>
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = LIA.balance + NCL.balance; credit = LIA.credit + NCL.credit; debit = LIA.debit + NCL.debit</field>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_liabilities0" model="account.financial.report.line">
+            <field name="name">Liabilities</field>
+            <field name="code">LIA</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_non_current_liabilities_view0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'liabilities')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_non_current_liabilities0" model="account.financial.report.line">
+            <field name="name">Non-current Liabilities</field>
+            <field name="code">NCL</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_non_current_liabilities_view0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', '=', 'non_current_liabilities')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_current_year_earnings0" model="account.financial.report.line">
+            <field name="name">CURRENT YEAR EARNINGS</field>
+            <field name="formulas">balance = GRP.balance - LEX.balance; debit = GRP.debit - LEX.debit; credit = GRP.credit - LEX.credit</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_balancesheet_line0')])]"/>
+        </record>
+
+
+        <!-- CASH SUMMARY -->
+
+        <record id="account_financial_report_cashsummary_line0" model="account.financial.report.line">
+            <field name="name">CASH SUMMARY</field>
+            <field name="sequence" eval="1"/>
+            <field name="hidden" eval="True"/>
+        </record>
+
+        <record id="account_financial_report_cashsummary_net_increase0" model="account.financial.report.line">
+            <field name="name">Net increase in cash and cash equivalents</field>
+            <field name="sequence" eval="1"/>
+            <field name="formulas">balance = OP.balance + FI.balance + IN.balance</field>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_line0')])]"/>
+        </record>
+
+        <record id="account_financial_report_cashsummary_operating0" model="account.financial.report.line">
+            <field name="name">Cash flows from (used in) operating activities</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_net_increase0')])]"/>
+        </record>
+        <record id="account_financial_report_cashsummary_cash_received0" model="account.financial.report.line">
+            <field name="name">Cash receipts from customers</field>
+            <field name="code">CRE</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_operating0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('debit', '>', 0)]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="groupby">user_type</field>
+        </record>
+        <record id="account_financial_report_cashsummary_cash_spent0" model="account.financial.report.line">
+            <field name="name">Cash paid to suppliers and employees</field>
+            <field name="code">CSP</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_operating0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('credit', '>', 0)]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="groupby">user_type</field>
+        </record>
+        <record id="account_financial_report_cashsummary_cash_generated0" model="account.financial.report.line">
+            <field name="name">Cash generated from operations</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_operating0')])]"/>
+            <field name="formulas">balance = CRE.balance - CSP.balance</field>
+        </record>
+        <record id="account_financial_report_cashsummary_operating_domain0" model="account.financial.report.line">
+            <field name="name">Net cash flows from operating activities</field>
+            <field name="code">OP</field>
+            <field name="sequence" eval="4"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_operating0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('account_id.tag_ids', '=', ref('account_tag_operating'))]" />
+            <field name="formulas">balance = sum.balance + CRE.balance - CSP.balance</field>
+            <field name="groupby">account_id</field>
+        </record>
+
+        <record id="account_financial_report_cashsummary_investing0" model="account.financial.report.line">
+            <field name="name">Cash flows from (used in) investing activities</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_net_increase0')])]"/>
+        </record>
+        <record id="account_financial_report_cashsummary_investing_domain0" model="account.financial.report.line">
+            <field name="name">Net cash flows from investing activities</field>
+            <field name="code">IN</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_investing0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('account_id.tag_ids', '=', ref('account_tag_investing'))]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="groupby">account_id</field>
+        </record>
+
+        <record id="account_financial_report_cashsummary_financing0" model="account.financial.report.line">
+            <field name="name">Cash flows from (used in) financing activities</field>
+            <field name="code">FI</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_net_increase0')])]"/>
+        </record>
+        <record id="account_financial_report_cashsummary_financing_domain0" model="account.financial.report.line">
+            <field name="name">Net cash flows from financing activities</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_financing0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('account_id.tag_ids', '=', ref('account_tag_financing'))]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="groupby">account_id</field>
+        </record>
+
+
+        <record id="account_financial_report_cashsummary_opening_balance0" model="account.financial.report.line">
+            <field name="name">Cash and cash equivalents, beginning of year</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_line0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="show_domain" eval="False"/>
+            <field name="opening_year_balance" eval='True'/>
+        </record>
+        <record id="account_financial_report_cashsummary_closing_balance0" model="account.financial.report.line">
+            <field name="name">Cash and cash equivalents, closing balance</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_cashsummary_line0')])]"/>
+            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="show_domain" eval="False"/>
+            <field name="closing_balance" eval='True'/>
+        </record>
+
+        <!--
+            EXECUTIVE SUMMARY
+        -->
+
+        <record id="account_financial_report_executivesummary_line0" model="account.financial.report.line">
+            <field name="name">Executive Summary</field>
+            <field name="sequence" eval="1"/>
+            <field name="hidden" eval="True"/>
+        </record>
+        <record id="account_financial_report_executivesummary_cash0" model="account.financial.report.line">
+            <field name="name">CASH</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_line0')])]"/>
+        </record>
+        <record id="account_financial_report_executivesummary_cash_received0" model="account.financial.report.line">
+            <field name="name">Cash received</field>
+            <field name="code">CR</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_cash0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', 'in', ('cash', 'bank'))]" />
+            <field name="formulas">balance = sum.debit</field>
+            <field name="show_domain" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_cash_spent0" model="account.financial.report.line">
+            <field name="name">Cash spent</field>
+            <field name="code">CS</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_cash0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.report_type', 'in', ('cash', 'bank'))]" />
+            <field name="formulas">balance = sum.credit</field>
+            <field name="show_domain" eval="False"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_cash_surplus0" model="account.financial.report.line">
+            <field name="name">Cash surplus</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_cash0')])]"/>
+            <field name="formulas">balance = CR.balance - CS.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_closing_bank_balance0" model="account.financial.report.line">
+            <field name="name">Closing bank balance</field>
+            <field name="sequence" eval="4"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_cash0')])]"/>
+            <field name="formulas">balance = CR.balance - CS.balance</field>
+            <field name="closing_balance" eval='True'/>
+        </record>
+        <record id="account_financial_report_executivesummary_profitability0" model="account.financial.report.line">
+            <field name="name">PROFITABILITY</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_line0')])]"/>
+        </record>
+        <record id="account_financial_report_executivesummary_income0" model="account.financial.report.line">
+            <field name="name">Income</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_profitability0')])]"/>
+            <field name="formulas">balance = INC.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_direct_costs0" model="account.financial.report.line">
+            <field name="name">Direct costs</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_profitability0')])]"/>
+            <field name="formulas">balance = DCO.balance</field>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_gross_profit0" model="account.financial.report.line">
+            <field name="name">Gross profit</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_profitability0')])]"/>
+            <field name="formulas">balance = GRP.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_expenses0" model="account.financial.report.line">
+            <field name="name">Expenses</field>
+            <field name="sequence" eval="4"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_profitability0')])]"/>
+            <field name="formulas">balance = LEX.balance</field>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_profit0" model="account.financial.report.line">
+            <field name="name">Profit</field>
+            <field name="sequence" eval="5"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_profitability0')])]"/>
+            <field name="formulas">balance = NEP.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_balancesheet0" model="account.financial.report.line">
+            <field name="name">BALANCE SHEET</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_line0')])]"/>
+        </record>
+        <record id="account_financial_report_executivesummary_debtors0" model="account.financial.report.line">
+            <field name="name">Debtors</field>
+            <field name="code">DEB</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_balancesheet0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable')]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="show_domain" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_creditors0" model="account.financial.report.line">
+            <field name="name">Creditors</field>
+            <field name="code">CRE</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_balancesheet0')])]"/>
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'payable')]" />
+            <field name="formulas">balance = sum.balance</field>
+            <field name="show_domain" eval="False"/>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_net_assets0" model="account.financial.report.line">
+            <field name="name">Net assets</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_balancesheet0')])]"/>
+            <field name="formulas">balance = NA.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_performance0" model="account.financial.report.line">
+            <field name="name">PERFORMANCE</field>
+            <field name="sequence" eval="4"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_line0')])]"/>
+        </record>
+        <record id="account_financial_report_executivesummary_gpmargin0" model="account.financial.report.line">
+            <field name="name">Gross profit margin</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_performance0')])]"/>
+            <field name="formulas">balance = GRP.balance / INC.balance</field>
+            <field name="figure_type">percents</field>
+        </record>
+        <record id="account_financial_report_executivesummary_npmargin0" model="account.financial.report.line">
+            <field name="name">Net profit margin</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_performance0')])]"/>
+            <field name="formulas">balance = NEP.balance / INC.balance</field>
+            <field name="figure_type">percents</field>
+        </record>
+        <record id="account_financial_report_executivesummary_return_investment0" model="account.financial.report.line">
+            <field name="name">Return on investment</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_performance0')])]"/>
+            <field name="formulas">balance = NEP.balance / TA.balance</field>
+            <field name="figure_type">percents</field>
+        </record>
+        <record id="account_financial_report_executivesummary_position0" model="account.financial.report.line">
+            <field name="name">POSITION</field>
+            <field name="sequence" eval="5"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_line0')])]"/>
+        </record>
+        <record id="account_financial_report_executivesummary_avdebt0" model="account.financial.report.line">
+            <field name="name">Average debtors days</field>
+            <field name="sequence" eval="1"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_position0')])]"/>
+            <field name="formulas">balance = DEB.balance / INC.balance * NDays</field>
+            <field name="figure_type">no_unit</field>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_avgcre0" model="account.financial.report.line">
+            <field name="name">Average creditors days</field>
+            <field name="sequence" eval="2"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_position0')])]"/>
+            <field name="formulas">balance = CRE.balance / INC.balance * NDays</field>
+            <field name="figure_type">no_unit</field>
+            <field name="green_on_positive" eval="False"/>
+        </record>
+        <record id="account_financial_report_executivesummary_st_cash_forecast0" model="account.financial.report.line">
+            <field name="name">Short term cash forecast</field>
+            <field name="sequence" eval="3"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_position0')])]"/>
+            <field name="formulas">balance = DEB.balance - CRE.balance</field>
+        </record>
+        <record id="account_financial_report_executivesummary_ca_to_l0" model="account.financial.report.line">
+            <field name="name">Current assets to liabilities</field>
+            <field name="sequence" eval="4"/>
+            <field name="parent_ids" eval="[(6, 0, [ref('account_financial_report_executivesummary_position0')])]"/>
+            <field name="formulas">balance = TA.balance / L.balance</field>
+            <field name="figure_type">no_unit</field>
+        </record>
+
+        <!--
+            Aged Payable
+        -->
+
+        <record id="account_financial_report_agedpayable_line0" model="account.financial.report.line">
+            <field name="name">Aged Payable</field>
+            <field name="sequence" eval="1"/>
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'payable'), ('reconciled', '=', False)]" />
+            <field name="groupby">partner_id</field>
+            <field name="formulas">balance = sum.balance</field>
+            <field name="foldable" eval="False"></field>
+        </record>
+
+        <!--
+            Aged Receivable
+        -->
+
+        <record id="account_financial_report_agedreceivable_line0" model="account.financial.report.line">
+            <field name="name">Aged Receivable</field>
+            <field name="sequence" eval="1"/>
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable'), ('reconciled', '=', False)]" />
+            <field name="groupby">partner_id</field>
+            <field name="formulas">balance = sum.balance</field>
+            <field name="foldable" eval="False"></field>
+        </record>
+
         <!-- 
             Financial Reports
         -->
         <record id="account_financial_report_profitandloss0" model="account.financial.report">
             <field name="name">Profit and Loss</field>
-            <field name="sign" eval="-1" />
-            <field name="type">sum</field>
+            <field name="debit_credit" eval="True"/>
+            <field name="line" ref="account_financial_report_net_profit0"/>
+            <field name="report_type">date_range</field>
         </record>
-        <record id="account_financial_report_income0" model="account.financial.report">
-            <field name="name">Income</field>
-            <field name="sign" eval="-1" />
-            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-        <record id="account_financial_report_expense0" model="account.financial.report">
-            <field name="name">Expense</field>
-            <field name="sign" eval="-1" />
-            <field name="parent_id" ref="account_financial_report_profitandloss0"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
-        </record>
-
         <record id="account_financial_report_balancesheet0" model="account.financial.report">
             <field name="name">Balance Sheet</field>
-            <field name="type">sum</field>
+            <field name="debit_credit" eval="True"/>
+            <field name="line" ref="account_financial_report_balancesheet_line0"/>
+            <field name="report_type">no_date_range</field>
+            <field name="offset_level" eval="-1"/>
         </record>
-        <record id="account_financial_report_assets0" model="account.financial.report">
-            <field name="name">Assets</field>
-            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
+        <record id="account_financial_report_cashsummary0" model="account.financial.report">
+            <field name="name">Cash Summary</field>
+            <field name="line" ref="account_financial_report_cashsummary_line0"/>
+            <field name="offset_level" eval="-1"/>
+            <field name="report_type">date_range</field>
         </record>
-        <record id="account_financial_report_liabilitysum0" model="account.financial.report">
-            <field name="name">Liability</field>
-            <field name="parent_id" ref="account_financial_report_balancesheet0"/>
-            <field name="display_detail">no_detail</field>
-            <field name="type">sum</field>
+        <record id="account_financial_report_executivesummary0" model="account.financial.report">
+            <field name="name">Executive Summary</field>
+            <field name="line" ref="account_financial_report_executivesummary_line0"/>
+            <field name="report_type">date_range</field>
         </record>
-        <record id="account_financial_report_liability0" model="account.financial.report">
-            <field name="name">Liability</field>
-            <field name="parent_id" ref="account_financial_report_liabilitysum0"/>
-            <field name="display_detail">detail_with_hierarchy</field>
-            <field name="type">account_type</field>
+        <record id="account_financial_report_agedpayable0" model="account.financial.report">
+            <field name="name">Aged Payable</field>
+            <field name="line" ref="account_financial_report_agedpayable_line0"/>
+            <field name="report_type">date_range_extended</field>
+            <field name="offset_level" eval="2"/>
         </record>
-        <record id="account_financial_report_profitloss_toreport0" model="account.financial.report">
-            <field name="name">Profit (Loss) to report</field>
-            <field name="parent_id" ref="account_financial_report_liabilitysum0"/>
-            <field name="display_detail">no_detail</field>
-            <field name="type">account_report</field>
-            <field name="account_report_id" ref="account_financial_report_profitandloss0"/>
+        <record id="account_financial_report_agedreceivable0" model="account.financial.report">
+            <field name="name">Aged Receivable</field>
+            <field name="line" ref="account_financial_report_agedreceivable_line0"/>
+            <field name="report_type">date_range_extended</field>
+            <field name="offset_level" eval="2"/>
         </record>
     </data>
 </openerp>
-
