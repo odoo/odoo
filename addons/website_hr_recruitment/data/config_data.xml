@@ -17,10 +17,10 @@
             <field name="state">open</field>
         </record>
         <record id="id_form_lead" model="website.form">
-            <field name="model" ref="hr_recruitment.model_hr_applicant" />
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant" />
             <field name="blacklist_field_ids" eval="" />
-            <field name="name">Create a candidature</field>
-            <field name="metadata_field_ref" ref="hr_recruitment.field_hr_applicant_description" />
+            <field name="name">Create an applicant</field>
+            <field name="metadata_field_id" ref="hr_recruitment.field_hr_applicant_description" />
         </record>
     </data>
 </openerp>

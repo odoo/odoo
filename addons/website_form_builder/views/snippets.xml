@@ -6,15 +6,15 @@
 				<li><a href="#snippet_form" data-toggle="tab">Form Fields</a></li>
 			</xpath>	
 
-			<xpath expr="//div[@id='snippet_structure']" position="inside" >
+			<xpath expr="//div[@id='snippet_feature']" position="inside" >
 				<div>
 					<div class="oe_snippet_thumbnail">
 						<img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_block.png"/>
-						<span class="oe_snippet_thumbnail_title">Form Editor</span>
+						<span class="oe_snippet_thumbnail_title">Form Builder</span>
 					</div>
 							<form action="/website_form/crm.lead/" method="post" class="oe_snippet_body editForm form-horizontal mt32" enctype="multipart/form-data">
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="contact_name" class="col-md-3 col-sm-4 control-label">Your Name</label>
+									<label for="contact_name" class="light col-md-3 col-sm-4 control-label">Your Name</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
 											<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
@@ -22,7 +22,7 @@
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="phone" class="col-md-3 col-sm-4 control-label">Phone Number</label>
+									<label for="phone" class="light col-md-3 col-sm-4 control-label">Phone Number</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
 											<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
@@ -30,7 +30,7 @@
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="email_from" class="col-md-3 col-sm-4 control-label">Email</label>
+									<label for="email_from" class="light col-md-3 col-sm-4 control-label">Email</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
 											<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
@@ -38,7 +38,7 @@
 									</div>
 								</div>
 								<div class="form-group form-field form-init" data-form="input">
-									<label for="name" class="col-md-3 col-sm-4 control-label">Subject</label>
+									<label for="name" class="light col-md-3 col-sm-4 control-label">Subject</label>
 									<div class="col-md-7 col-sm-8">
 										<div class="wrap-unwrap">
 											<input type="text" class="form-control form-data" name="name" id="name" placeholder="" />
@@ -74,9 +74,9 @@
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<div class="wrap-unwrap">
-									<input type="text" class="form-control form-data" placeholder="Placeholder Exemple" />
+									<input type="text" class="form-control form-data" placeholder="" />
 								</div>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>
@@ -104,7 +104,7 @@
 							<label for="" class="col-md-3 col-sm-4 control-label">Label</label>
 							<div class="col-md-7 col-sm-8">
 								<textarea  class="form-control form-data" name="" style="min-height: 120px"></textarea>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>
@@ -136,7 +136,7 @@
 										</label>
 									</div>
 								</div>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>
@@ -168,7 +168,7 @@
 										</label>
 									</div>
 								</div>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>
@@ -185,7 +185,7 @@
 									<option value="1">Option 1</option>
 									<option value="2">Option 2</option>
 								</select>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>
@@ -200,7 +200,7 @@
 								<div class="form-control form-data">
 									<textarea class="form-input-search" name="" rows="1"></textarea>
 								</div>
-								<p class="help-block">Help exemple.</p>
+								<p class="help-block"></p>
 								<datalist id="data-list" class="wrap-options">
 									<option value="0">Option 0</option>
 									<option value="1">Option 1</option>
@@ -224,9 +224,9 @@
 											<input type="file" multiple="true" class="form-data"/>
 										</span>
 									</span>
-									<input type="text" class="form-control" placeholder="no file" readonly="true" />
+									<input type="text" class="form-control" placeholder="" readonly="true" />
 								</div>
-								<p class="help-block">Select a file.</p>
+								<p class="help-block"></p>
 							</div>
 						</div>
 					</div>

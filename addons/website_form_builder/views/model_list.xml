@@ -8,9 +8,9 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <tree string="List of models">
-                    <field name="model"/>
+                    <field name="model_id"/>
                     <field name="name"/>
-                    <field name="metadata_field_ref"/>
+                    <field name="metadata_field_id"/>
                 </tree>
             </field>
         </record>
@@ -21,14 +21,18 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Form Builder Module">
+                    <field name="inherited_model_ids" invisible="True"/>
                     <sheet string="Allow a new model for the Form Builder">
                         <group col="4">
-                            <field name="model"/>
-                            <field name="metadata_field_ref" domain="[('model_id', '=', model)]"/>
                             <field name="name" colspan="4"/>
+                            <field name="model_id"/>
+                            <field name="metadata_field_id" domain="[('model_id', '=', model_id), '|', ('ttype', '=', 'char'), ('ttype', '=', 'text')]"/>
                         </group>
                         <group col="4">
-                            <field name="blacklist_field_ids" widget="many2many_tags" colspan="4" domain="[('model_id', '=', model)]"/>
+                            <field name="blacklist_field_ids" widget="many2many_tags" colspan="4"
+                                domain="['|',
+                                        ('model_id', '=', model_id),
+                                        ('model_id', 'in', inherited_model_ids and inherited_model_ids[0] and inherited_model_ids[0][2])]"/>
                         </group>
                     </sheet>
                 </form>
@@ -36,7 +40,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_model_list">
-            <field name="name">action.model_list</field>
+            <field name="name">List of models used by the Form Builder</field>
             <field name="view_id" ref="view_model_list" />
             <field name="res_model">website.form</field>
             <field name="view_type">form</field>
@@ -48,6 +52,6 @@
               </p>
             </field>
         </record>
-        <menuitem name="Website Form" groups="base.group_no_one" id="menu_model_list" parent="base.menu_custom" action="action_model_list"/>
+        <menuitem name="Form Builder" groups="base.group_no_one" id="menu_model_list" parent="website.menu" action="action_model_list"/>
     </data>
 </openerp>

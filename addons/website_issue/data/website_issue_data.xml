@@ -2,10 +2,10 @@
 <openerp>
     <data>
         <record id="id_form_lead" model="website.form">
-            <field name="model" ref="project_issue.model_project_issue" />
+            <field name="model_id" ref="project_issue.model_project_issue" />
             <field name="blacklist_field_ids" eval="" />
-            <field name="name">Create issues</field>
-            <field name="metadata_field_ref" ref="project_issue.field_project_issue_description" />
+            <field name="name">Create an issue</field>
+            <field name="metadata_field_id" ref="project_issue.field_project_issue_description" />
         </record>
     </data>
 </openerp>

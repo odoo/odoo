@@ -15,5 +15,5 @@ OpenERP Contact Form
         'views/website_crm.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }

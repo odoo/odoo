@@ -25,7 +25,6 @@
 			this.notLock = 0;
 			
     		this.fields = {all:{},required:{}};
-            debugger;
     		new openerp.Model(new openerp.Session(),"website.form")
     		.call("get_authorized_fields", [this.ref], {context: website.get_context()}).then(function(data) {
     			var i = 0;
@@ -65,6 +64,7 @@
     	validate: function (DefferedForm) {	
                 var self = this;
 				var model_sel = this.wizard.find('.form-select-action').val();
+
 				this.$target.attr('data-model', model_sel);
 				this.$target.attr('action','/website_form/'+model_sel);
                 this.$target.attr('data-success',this.wizard.find('#success').val());
@@ -90,15 +90,18 @@
     					})
     					.fail(function() {DefferedForm.reject();});
     				}
-    				$('#oe_snippets')   .removeClass('hidden')
-                                        .find('.active')
-                                            .removeClass('active');
 
-                    $('a[href=#snippet_form]').parent()
+                    $('a[href=#snippet_form]')
+                                    .parent()
                                         .addClass('active');
+                    $('button[data-action=snippet]').trigger('click');
+    				self.wizard.modal('hide');
+                    
+                    $('#oe_snippets')   .removeClass('hidden')
+                                        .find('.active')
+                                        .removeClass('active');
                     $('#oe_snippets').find('#snippet_form')
                                         .addClass('active');
-    				self.wizard.modal('hide');
         		});	
     	},
     	organizeForm: function() {
@@ -123,13 +126,13 @@
             var DefFormPopUp = $.Deferred();
             
             new openerp.Model(new openerp.Session(),"website.form")
-    		.call("search_read", [[],['model_name','name']], {context: website.get_context()})
+    		.call("search_read", [[],['model_name','name','metadata_field_name']], {context: website.get_context()})
 
             .then(function(options_list) {
                 console.log(options_list);
     			var options = '';
     			$.each(options_list, function(i,elem) {
-    				options += '<option value="'+elem.model_name+'">'+elem.name+'</option>';
+    				options += '<option value="'+elem.model_name+'" data-default-field="'+elem.metadata_field_name+'">'+elem.name+'</option>';
     			});
     			
     			self.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.modelSelection',{'options': options}));
@@ -540,12 +543,57 @@
 			    this.wizard.find('.form-field-required').prop('checked',field.required);     
 	    },
 	    hiddenLoadData: function() {
+            var field_list = [];
+            var field_label_list = [];
+            var label;
+            //var tags = $.parseJSON(this.$target.find('input').val()) || [];
+            var tagsZone = this.wizard.find('.form-field-value');
+
+            this.$target.closest('form').find('.form-field').each(function(i,elem) {
+                label = $(elem).find('label').html();
+                if(label.length > 1) {
+                    field_label_list.push($(elem).find('.form-data').attr('name'));
+                    field_list.push(label);
+                }
+            });
+          
             this.wizard.find('.field_name').html(_t('Hidden Field'));
 	    	this.getFields(['integer', 'date','char','text','float']);
-	    	this.wizard.find('.form-field-value').val(this.$target.find('.form-data').val());
+	    	
+            
+            tagsZone.textext({
+                plugins : 'tags autocomplete arrow',
+                ext : {
+                    tags: {
+                        renderTag: function(tag) {
+                            var self = this;
+                            var node = $(self.opts('html.tag'));
+                            var value = field_label_list[field_list.indexOf(tag)]
+                            node.find('.text-label').text(tag);
+                            node.data('text-tag', value ? "@"+value : tag);
+                            if(!value) node.find('.text-button').css('background-color','#ffffff');
+                            return node;
+                        }
+                    }   
+                }         
+            })
+            .bind('getSuggestions', function(e, data) {
+                var textext  = $(e.target).textext()[0],
+                query    = (data ? data.query : '') || '';
+                $(this).trigger('setSuggestions',
+                                { result : textext.itemManager().filter(field_list, query) });
+            });
+            /*
+            .bind('ready', function(e,data){
+                $.each(tags, function(i,elem) {
+                    tagsZone.textext()[0].tags().addTags((elem[0] == '@') ? [elem.substring(1)]:[elem]);
+                });
+            });
+*/
 	    	this.wizard.find('.form-field-label').val(this.$target.find('.form-data').prop('name')).parent().parent().addClass('hidden');
 	    	this.wizard.find('.form-field-required').parent().parent().addClass('hidden');
 	    	this.wizard.find('.form-field-help').parent().parent().addClass('hidden');
+           
 	    },
     	inputLoadData: function() {
             this.wizard.find('.field_name').html(_t('Text Field'));
@@ -632,9 +680,10 @@
     	// from data on the wizard assistant
     	//------------------------------------
     	hiddenValidate: function() {
-    			this.$target.find('.form-data').val(this.wizard.find('.form-field-value').val());
+    			this.$target.find('.form-data').val(this.wizard.find('input[type=hidden]').val());
     			this.$target.find('.help-block').html('');
     			this.$target.find('label').html('');
+                debugger;
     	},
     	textareaValidate: function() {
     			this.$target.find('.form-data').prop('placeholder',this.wizard.find('.form-field-placeholder').val());
@@ -732,34 +781,34 @@
     		var field_name; // custom or variable name from model
     		var required;
     		
-    			if(this.wizard.find('.form-field-label').val().length > 0) {
-    				ValidOption = true;
-    				field_name 	= this.wizard.find('.form-select-field').val();
-    				
-	    			// get name/id from label for custom or from field_name;
-	    			name 		= (field_name  == 'custom') ? $.trim(this.wizard.find('.form-field-label').val()) : field_name;
-	    	
-	    			required 	= (this.wizard.find('.form-field-required').is(':checked')) ? true:false;
-	    			help		= this.wizard.find('.form-field-help').val();
-					
-	    			this.$target.find('.form-data').attr('data-field',field_name);	
-	    			this.$target.find('.form-data').attr('id',name); 
-                    
-	    			this.$target.find('.form-data').attr('name',name); 
-                    this.$target.find('.form-data').attr('data-cke-saved-name',name); 
-	    			this.$target.find('.form-data').prop('required',required);
-	    			
-	    			if(help.length > 0) {
-	    				if(this.$target.find('.help-block').length) 	this.$target.find('.help-block').html(help);	
-	    				else 											this.$target.find('.form-data').parent().append('<p class="help-block">'+help+'</p>');	
-	    			}
-	    			else this.$target.find('.help-block').remove();
-	    			
-    				this.$target.find('.control-label').html(this.wizard.find('.form-field-label').val());
-    				$('#oe_snippets').removeClass('hidden');
-    				this.wizard.modal('hide');
-    			}
-    	
+			ValidOption = true;
+			field_name 	= this.wizard.find('.form-select-field').val();
+			
+			// get name/id from label for custom or from field_name;
+			name 		= (field_name  == 'custom') ? $.trim(this.wizard.find('.form-field-label').val()) : field_name;
+	
+			required 	= (this.wizard.find('.form-field-required').is(':checked')) ? true:false;
+			help		= this.wizard.find('.form-field-help').val();
+			
+			this.$target.find('.form-data').attr('data-field',field_name);	
+			this.$target.find('.form-data').attr('id',name); 
+            
+			this.$target.find('.form-data').attr('name',name); 
+            this.$target.find('.form-data').attr('data-cke-saved-name',name); 
+			this.$target.find('.form-data').prop('required',required);
+            if(required)    this.$target.find('label').removeClass('light');
+            else            this.$target.find('label').addClass('light');
+
+			
+			if(help.length > 0) {
+				if(this.$target.find('.help-block').length) 	this.$target.find('.help-block').html(help);	
+				else 											this.$target.find('.form-data').parent().append('<p class="help-block">'+help+'</p>');	
+			}
+			else this.$target.find('.help-block').remove();
+			
+			this.$target.find('.control-label').html(this.wizard.find('.form-field-label').val());
+			$('#oe_snippets').removeClass('hidden');
+			this.wizard.modal('hide');
     	},
     	
     	confirm: function (DefferedForm) {
@@ -775,13 +824,14 @@
     	},
         
         on_prompt: function () {
-
+         
             var fieldWizardTemplate;
             var type = this.$target.attr('data-form');
             
             this.model  = this.$target.closest('form[action*="/website_form/"]').data('model');
             this.fields = (this.$target.closest('form[action*="/website_form/"]').data('fields'));
             
+
             //try to load specific wizard option
             
             try {
@@ -805,7 +855,7 @@
             	this.validate = this.defaultValidate;
             	this.loadData = this.defaultLoadData;
             }
-           
+            
             this.wizard = $(openerp.qweb.render('website.form.editor.wizard.template.default',{subTemplate: fieldWizardTemplate})); 	// Load template
             
             //Load field datas  
@@ -837,6 +887,7 @@
         },
         drop_and_build_snippet: function() {
             var self = this;
+      
             this._super();
             model.init(this.$target.closest('form[action*="/website_form/"]').attr('data-model')).then(function() {
 	            if(!self.$target.hasClass('form-init')){
@@ -846,7 +897,7 @@
 		    });
         },
         start : function () {
-        	
+
             var self = this;
             if(this.$target.data('form') == 'hidden') this.$target.addClass('website-form-editor-hidden-under-edit');
             model.init(this.$target.closest('form[action*="/website_form/"]').attr('data-model'));
@@ -862,9 +913,9 @@
   				this.$target.find('.form-data').html('<textarea class="form-input-search" name="'+name+'" rows="1"></textarea>');
         },
     });
-    
+
     website.EditorBar.include({
-    	save: function () {
+        save: function () {
             console.log(model.fields);
     		$('main form').find('.form-builder-error-message').remove();
     		var required_error = '';

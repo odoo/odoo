@@ -146,7 +146,7 @@ class contactus(http.Controller):
         self._meta      = "Metadata     \n________________________________________________\n\n"     # meta data
         self.error      = None
         self._request   = request
-        id_model        = obj_form.search(request.cr,SUPERUSER_ID,[('model', '=', model),],context=request.context)
+        id_model        = obj_form.search(request.cr,SUPERUSER_ID,[('model_id', '=', model),],context=request.context)
         if not id_model: #if not authorized model
             return request.website.render("website_form_builder.xmlresponse",{'response':False})
         
@@ -157,7 +157,7 @@ class contactus(http.Controller):
 
         formModel = obj_form.browse(request.cr, SUPERUSER_ID, id_model)
 
-        self.field      = formModel.metadata_field_ref.name;
+        self.field      = formModel.metadata_field_id.name;
         self._BLACKLIST = [field.name for field in formModel.blacklist_field_ids]
         self._REQUIRED  = obj_form.get_required(request.cr, SUPERUSER_ID, self._model)
 

@@ -2,10 +2,10 @@
 <openerp>
     <data>
         <record id="id_form_lead" model="website.form">
-            <field name="model" ref="mail.model_mail_mail" />
+            <field name="model_id" ref="mail.model_mail_mail" />
             <field name="blacklist_field_ids" eval="" />
-            <field name="name">Send a E-mail</field>
-            <field name="metadata_field_ref" ref="mail.field_mail_mail_body_html" />
+            <field name="name">Send an E-mail</field>
+            <field name="metadata_field_id" ref="mail.field_mail_mail_body_html" />
         </record>
     </data>
 </openerp>

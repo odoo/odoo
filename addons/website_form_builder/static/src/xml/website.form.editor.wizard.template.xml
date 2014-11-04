@@ -152,12 +152,14 @@
 	<!-- MODAL HIDDEN WIZARD ADD-ON FORM FOR FORM EDITOR -->
 	<t t-name="website.form.editor.wizard.template.hidden">
 		<div>
-			<div class="form-group">
-				<label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Value :</label>
+			<div class="form-group form-composit-value">
+				<label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Composit Value :</label>
 				<div class="col-md-9 col-sm-8">
-					<input type="text" class="form-control form-field-value" id="formFieldEditor-value" />
-				</div>
-			</div>
+					<div class="form-control form-data">
+						<textarea class="form-field-value" id="formFieldEditor-value" row="1"></textarea>
+					</div>
+				</div> 
+			</div> 
 		</div>
 	</t>
 		<!-- MODAL CHECKBOX WIZARD ADD-ON FORM FOR FORM EDITOR -->
@@ -179,7 +181,7 @@
 				</div>	
 			</div>
 			<div class="form-group">
-				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Inline :</label>
+				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
 				<div class="col-md-9 col-sm-8">
 					<input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
 				</div>
@@ -206,7 +208,7 @@
 				</div>	
 			</div>
 			<div class="form-group">
-				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Inline :</label>
+				<label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Horizontal or Vertical :</label>
 				<div class="col-md-9 col-sm-8">
 					<input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
 				</div>
@@ -232,7 +234,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Multiple :</label>
+				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
 				<div class="col-md-9 col-sm-8">
 					<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
 				</div>
@@ -265,7 +267,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Multiple :</label>
+					<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
 					<div class="col-md-9 col-sm-8">
 						<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
 					</div>
@@ -288,7 +290,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Multiple :</label>
+				<label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
 				<div class="col-md-9 col-sm-8">
 					<input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
 				</div>
@@ -360,7 +362,7 @@
 		    	<div class="modal-content">
 		      		<div class="modal-header">
 		        		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
-		        		<h4 class="modal-title">Form is sending &amp;hellip;</h4>
+		        		<h4 class="modal-title">Uploading File &amp;hellip;</h4>
 		      		</div>
 				    <div class="modal-body">
 				        <div class="progress">

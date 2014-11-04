@@ -11,7 +11,10 @@
 
     var getDataForm = {
         	'input[type=text]': 	function($field) {return $field.attr('value') ? _.object([$field.attr('name')], [$field.attr('value')]) : null;},
-        	'input[type=hidden]': 	function($field) {return getDataForm['input[type=text]'].call(this,$field);},
+        	'input[type=hidden]': 	function($field) {
+	           
+        		return getDataForm['input[type=text]'].call(this,$field);
+        	},
         	'textarea': 			function($field) {return getDataForm['input[type=text]'].call(this,$field);},
         	'select': 				function($field) {return getDataForm['input[type=text]'].call(this,$field);},
         	':has(input:checkbox)': function($field) {
@@ -99,8 +102,16 @@
 				var empty_field		= [];
 				var model 			= this.$target.data('model');
 				var args  			= {"context": website.get_context()};
-				var field_value;
 
+				var field_value;
+ 				this.field_label_list = {};
+	            var label;
+	            /*
+	            this.$target.find('.form-field').each(function(i,elem) {
+	                label = $(elem).find('label').html();
+	                if(label.length > 1) this.field_list[label] = $(elem).find('.form-data').attr('name'); 
+	            });
+				*/
 				this.$target.find('.form-data').each(function(i,elem){
 					for (var i in getDataForm) {
 						if($(elem).is(i)) {
@@ -200,10 +211,10 @@
 	});
 	
 	website.snippet.animationRegistry.inputSearch =  website.snippet.Animation.extend({
-		
+
 		selector:'.form-field-search',
 		start: function() { 
-			var plugin_list = (this.$target.find('.form-control').attr('data-multiple') == 'multiple') ? 'tags autocomplete' : 'autocomplete';
+			var plugin_list = (this.$target.find('.form-control').attr('data-multiple') == 'multiple') ? 'tags autocomplete arrow' : 'autocomplete arrow';
 			var list = new Array();
 			var assocList =new Array();
 			
