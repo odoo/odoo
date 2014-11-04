@@ -42,7 +42,7 @@ class account_restart_sequence(osv.osv_memory):
                             updates = {
                                 'name': journal.name + ' ' + fy.name,
                                 'fiscal_ids': [],
-                                'prefix': str(self.pool.get('ir.sequence').browse(cr, uid, sequence).prefix) + '/' + str(fy.code) + '/',
+                                'prefix': str(self.pool.get('ir.sequence').browse(cr, uid, sequence, context=context).prefix) + '/' + str(fy.name) + '/',
                                 }
                             seq = self.pool.get('ir.sequence').copy(cr, uid, sequence, updates)
                             seq_vals = {

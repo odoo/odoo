@@ -754,7 +754,7 @@ class account_journal(osv.osv):
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
         'restart_sequence': fields.boolean('Create a new sequence for each fiscal year'),
-        'refund_sequence': fields.boolean('Add another sequence for refunds'),
+        'refund_sequence': fields.boolean('Use a different sequence for refunds'),
     }
 
     _defaults = {
@@ -763,7 +763,6 @@ class account_journal(osv.osv):
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'restart_sequence': True,
-        'refund_sequence': False,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -826,24 +825,24 @@ class account_journal(osv.osv):
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
             domain = [('company_id', '=', vals['company_id'])]
-        ids = self.pool.get('account.fiscalyear').search(cr, uid, domain)
+        ids = self.pool.get('account.fiscalyear').search(cr, uid, domain, context=context)
         seq_obj = self.pool.get('ir.sequence')
-        main_seq = seq_obj.create(cr, uid, seq)
+        main_seq = seq_obj.create(cr, uid, seq, context=context)
 
         if vals.get('restart_sequence', False):
             seq_fiscalyear_obj = self.pool.get('account.sequence.fiscalyear')
 
             # Creating all the sequences for the fiscal years
-            for fiscalyear in self.pool.get('account.fiscalyear').browse(cr, uid, ids):
+            for fiscalyear in self.pool.get('account.fiscalyear').browse(cr, uid, ids, context=context):
                 seq['name'] = vals['name'] + ' ' + fiscalyear.name
-                seq['prefix'] = prefix + '/' + fiscalyear.code + '/'
-                sequence = seq_obj.create(cr, uid, seq)
+                seq['prefix'] = prefix + '/' + fiscalyear.name + '/'
+                sequence = seq_obj.create(cr, uid, seq, context=context)
                 seq_fy = {
                     'sequence_id': sequence,
                     'sequence_main_id': main_seq,
                     'fiscalyear_id': fiscalyear.id,
                 }
-                seq_fiscalyear_obj.create(cr, uid, seq_fy)
+                seq_fiscalyear_obj.create(cr, uid, seq_fy, context=context)
 
         return main_seq
 
@@ -913,7 +912,7 @@ class account_fiscalyear(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, company_id)', 'The code of the fiscal year must be unique per company !'),
+        ('code_company_uniq', 'unique (name, company_id)', 'The name of the fiscal year must be unique per company !'),
     ]
 
     _order = "date_start, id"

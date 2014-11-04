@@ -36,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Reason', required=True),
        'filter_refund': fields.selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'),('modify', 'Modify: create refund, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
-       'same_journal': fields.boolean(help='If the journal has a refunds sequence we must use the same journal'),
+       'same_journal': fields.boolean(help='Technical field used to hide the journal in case we must use the same for the refunds (it already has a refund sequence given)'),
     }
 
     def _get_same_journal(self, cr, uid, context=None):
