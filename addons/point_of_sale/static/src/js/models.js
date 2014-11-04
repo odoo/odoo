@@ -987,12 +987,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         init_from_JSON: function(json){
             this.amount = json.amount;
             this.cashregister = this.pos.cashregisters_by_id[json.statement_id];
-            this.name = this.cashregister.journal_id[0];
+            this.name = this.cashregister.journal_id[1];
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
             this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
-            this.trigger('change:amount',this);
+            this.trigger('change',this);
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
@@ -1004,7 +1004,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         set_selected: function(selected){
             if(this.selected !== selected){
                 this.selected = selected;
-                this.trigger('change:selected',this);
+                this.trigger('change',this);
             }
         },
         // returns the associated cashregister
@@ -1062,9 +1062,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.name = _t("Order ") + this.uid; 
             }
 
-            this.on('change',              this.save_to_db, this);
-            this.orderlines.on('change',   this.save_to_db, this);
-            this.paymentlines.on('change', this.save_to_db, this);
+            this.on('change',              function(){ this.save_to_db("order:change"); }, this);
+            this.orderlines.on('change',   function(){ this.save_to_db("orderline:change"); }, this);
+            this.orderlines.on('add',      function(){ this.save_to_db("orderline:add"); }, this);
+            this.orderlines.on('remove',   function(){ this.save_to_db("orderline:remove"); }, this);
+            this.paymentlines.on('change', function(){ this.save_to_db("paymentline:change"); }, this);
+            this.paymentlines.on('add',    function(){ this.save_to_db("paymentline:add"); }, this);
+            this.paymentlines.on('remove', function(){ this.save_to_db("paymentline:rem"); }, this);
 
             this.init_locked = false;
             this.save_to_db();
@@ -1104,7 +1108,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var paymentlines = json.statement_ids;
             for (var i = 0; i < paymentlines.length; i++) {
                 var paymentline = paymentlines[i][2];
-                this.paymentlines.add(new module.Paymentline({},{pos: this.pos, json: paymentline}));
+                var newpaymentline = new module.Paymentline({},{pos: this.pos, json: paymentline});
+                this.paymentlines.add(newpaymentline);
+
+                if (i === paymentlines.length - 1) {
+                    this.select_paymentline(newpaymentline);
+                }
             }
         },
         export_as_JSON: function() {
