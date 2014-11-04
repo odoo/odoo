@@ -590,7 +590,7 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                company_id = self.pool['res.users'].read(cr, uid, uid, ['company_id'], context=context)[0]
+                company_id = product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
                 res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
