@@ -19,24 +19,29 @@
         <t t-jquery=".navbar-header form button" t-operation="replace">
             <div class="btn-group">
                 <button type="button" data-action="save" class="btn btn-primary btn-xs">Save</button>
-                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-primary btn-xs dropdown-toggle option_choice" data-toggle="dropdown">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" id="save_as_new_version" data-action="save_as_new_version" 
+                    <li class="first_choice"><a href="#" id="save_as_new_version" data-action="save_as_new_version" 
                         class="btn btn-link btn-xs version">Save as New Version</a>
                     </li>
-                    <li><a href="#" id="save_and_publish" data-action="save_and_publish" 
-                        class="btn btn-link btn-xs version">Save and Publish</a>
-                    </li>
+                    <!-- <li>
+                        <a href="#" id="save_and_publish" data-action="save_and_publish" 
+                            class="btn btn-link btn-xs version">Save and Publish</a>
+                    </li> -->
                 </ul>
             </div>
-
-            <!-- <a href="#" id="master_edit_button" data-action="save_as_draft" class="btn btn-link btn-xs">Save as Draft</a>
-            or -->
             
         </t>
+    </t>
+
+    <t t-name="all_options">    
+        <li class="second_choice">
+            <a href="#" id="save_and_publish" data-action="save_and_publish" 
+                class="btn btn-link btn-xs version"><t t-esc="version"></t></a>
+        </li>
     </t>
 
     <t t-name="experiment_menu">

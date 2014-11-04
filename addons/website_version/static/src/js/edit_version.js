@@ -10,7 +10,7 @@
     website.EditorBar.include({
         start: function() {
             var self = this;
-            $('#save_as_new_version').click(function() {
+            this.$el.on('click', '#save_as_new_version', function() {
                 var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
@@ -42,35 +42,64 @@
                 });
             
             });
-            $('#save_and_publish').click(function() {
+            // $('#save_and_publish').click(function() {
+            //     var version_id = $('html').data('version_id');
+            //     if(version_id)
+            //     {
+            //         var aManualDeferred = $.Deferred();
+            //         aManualDeferred.then(function () {
+            //             self.save_without_reload();
+            //         })
+            //         .then(function () {
+            //             self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish this version."}));
+            //             self.wizard.appendTo($('body')).modal({"keyboard" :true});
+            //             self.wizard.on('click','.confirm', function(){
+            //                 openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id }).then(function (result) {
+            //                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been saved and published."}));
+            //                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
+            //                     self.wizard.on('click','.confirm', function(){
+            //                         location.reload();
+            //                     });
+            //                 });
+            //             });
+            //             self.wizard.on('click','.cancel', function(){
+            //                 location.reload();
+            //             });
+            //         });
+            //         aManualDeferred.resolve();
+            //     }
+            //     else
+            //     {
+            //         self.save();
+            //     }
+
+            // });
+            this.$el.on('click', '#save_and_publish', function() {
                 var version_id = $('html').data('version_id');
                 if(version_id)
                 {
-                    var aManualDeferred = $.Deferred();
-                    aManualDeferred.then(function () {
-                        self.save_without_reload();
-                    })
-                    .then(function () {
-                        self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish this version."}));
-                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                        self.wizard.on('click','.confirm', function(){
-                            openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id }).then(function (result) {
-                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been saved and published."}));
-                                self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                                self.wizard.on('click','.confirm', function(){
-                                    location.reload();
-                                });
-                            });
-                        });
-                        self.wizard.on('click','.cancel', function(){
-                            location.reload();
-                        });
-                    });
-                    aManualDeferred.resolve();
+                    console.log('ok');
+                    self.save();
                 }
                 else
                 {
-                    self.save();
+                    self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish your modifications."}));
+                    self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                    self.wizard.on('click','.confirm', function(){
+                        self.save();
+                    });
+                }
+
+            });
+
+            $('.option_choice').click(function() {
+                self.$el.find(".second_choice").remove();
+                var name = $('#version-menu-button').data('version_name');
+                if(name){
+                    self.$el.find(".first_choice").after(openerp.qweb.render("all_options", {version:'Save on '+name}));
+                }
+                else{
+                    self.$el.find(".first_choice").after(openerp.qweb.render("all_options", {version:'Save and Publish'}));
                 }
 
             });

@@ -5,7 +5,7 @@
         <template id="user_navbar_version" inherit_id="website.layout" groups="base.group_user">
             <xpath expr="//li[contains(@id, 'customize-menu')]" position="before">
                     <li class="dropdown" id="version-menu" groups="base.group_website_designer">
-                        <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-version_id="website.get_current_version(context=context)[0]">
+                        <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-version_id="website.get_current_version(context=context)[0]" t-att-data-version_name="website.get_current_version(context=context)[1]">
                             Version 
                                         <span><t t-esc="website.get_current_version(context=context)[1]"></t></span>
                                     <span class="caret"></span>
