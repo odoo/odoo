@@ -10,10 +10,10 @@
         start: function() {
             var self = this;
 
-            $('html').data('snapshot_id', this.$el.find("#version-menu-button").data("snapshot_id"));
+            $('html').data('version_id', this.$el.find("#version-menu-button").data("version_id"));
             var _get_context = website.get_context;
             website.get_context = function (dict) {
-                return _.extend({ 'snapshot_id': $('html').data('snapshot_id') }, _get_context(dict));
+                return _.extend({ 'version_id': $('html').data('version_id') }, _get_context(dict));
             };
 
             self.$el.on('click', 'a[data-action]', function(ev) {
@@ -23,9 +23,9 @@
 
             this.$el.find('#version-menu-button').click(function() {
                 var view_id = $('html').attr('data-view-xmlid');
-                openerp.jsonRpc( '/website_version/all_snapshots', 'call', { 'view_id': view_id }).then(function (result) {
-                    self.$el.find(".snapshot").remove();
-                    self.$el.find(".first_divider").before(QWeb.render("all_versions", {snapshots:result}));
+                openerp.jsonRpc( '/website_version/all_versions', 'call', { 'view_id': view_id }).then(function (result) {
+                    self.$el.find(".version_choice").remove();
+                    self.$el.find(".first_divider").before(QWeb.render("all_versions", {versions:result}));
 
                 });
                 openerp.jsonRpc( '/website_version/has_experiments', 'call', { 'view_id': view_id }).then(function (result) {
@@ -40,7 +40,7 @@
         },
         
         duplicate_version: function(event) {
-            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            var version_id = $(event.currentTarget).parent().parent().parent().data("version_id");
             var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
@@ -55,7 +55,7 @@
                 default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
             }).then(function (name) {
                 var context = website.get_context();
-                openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'snapshot_id': snapshot_id}).then(function (result) {
+                openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': version_id}).then(function (result) {
 
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
@@ -70,9 +70,9 @@
             });
         },
         
-        change_snapshot: function(event) {
-            var snapshot_id = $(event.target).parent().data("snapshot_id");
-            openerp.jsonRpc( '/website_version/change_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+        change_version: function(event) {
+            var version_id = $(event.target).parent().data("version_id");
+            openerp.jsonRpc( '/website_version/change_version', 'call', { 'version_id':version_id }).then(function (result) {
                     location.reload();
                 });
         },
@@ -83,13 +83,13 @@
                 });
         },
 
-        delete_snapshot: function(event) {
-            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+        delete_version: function(event) {
+            var version_id = $(event.currentTarget).parent().parent().parent().data("version_id");
             var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
-            openerp.jsonRpc( '/website_version/check_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+            openerp.jsonRpc( '/website_version/check_version', 'call', { 'version_id':version_id }).then(function (result) {
                     if (result){
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete the " + name + " version because it is in a running experiment"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
@@ -98,7 +98,7 @@
                         self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to delete the " + name + " version ?"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
-                            openerp.jsonRpc( '/website_version/delete_snapshot', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                            openerp.jsonRpc( '/website_version/delete_version', 'call', { 'version_id':version_id }).then(function (result) {
                                 self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been deleted."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                                 self.wizard.on('click','.confirm', function(){
@@ -111,7 +111,7 @@
         },
 
         publish_version: function(event) {
-            var snapshot_id = $(event.currentTarget).parent().parent().parent().data("snapshot_id");
+            var version_id = $(event.currentTarget).parent().parent().parent().data("version_id");
             var name = $(event.currentTarget).parent().parent().parent().children(':first-child').html();
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
@@ -119,7 +119,7 @@
             self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
-                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id }).then(function (result) {
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
@@ -137,8 +137,8 @@
         create_experiment: function() {
             var self = this;
             var view_id = $('html').attr('data-view-xmlid');
-            openerp.jsonRpc( '/website_version/all_snapshots_all_goals', 'call', { 'view_id': view_id }).then(function (result) {
-                self.wizard = $(openerp.qweb.render("website_version.create_experiment",{snapshots:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
+            openerp.jsonRpc( '/website_version/all_versions_all_goals', 'call', { 'view_id': view_id }).then(function (result) {
+                self.wizard = $(openerp.qweb.render("website_version.create_experiment",{versions:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.draft', function(){
                     self.wizard.find('.message').remove();
@@ -162,7 +162,7 @@
                         check = false;
                     }
                     if(check){
-                        openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
+                        openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'version_ids':result, 'objectives':objectives }).then(function (result) {
 
                             self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is created. Now you can manage this experiment by clicking on Manage A/B tests."}));
                             self.wizard.appendTo($('body')).modal({"keyboard" :true});
@@ -195,7 +195,7 @@
                         check = false;
                     }
                     if(check){
-                        openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'snapshot_ids':result, 'objectives':objectives }).then(function (result) {
+                        openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'version_ids':result, 'objectives':objectives }).then(function (result) {
                             if (result){
                                 self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is launched. Now you can check its statistics by clicking on Statistics."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});

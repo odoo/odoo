@@ -19,7 +19,7 @@
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="website_id"/>
-                    <field name="experiment_snapshot_ids"/>
+                    <field name="experiment_version_ids"/>
                     <field name="color"/>
                     <field name="message_follower_ids"/>
                     <templates>
@@ -92,9 +92,9 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Versions in experiment" colspan="4" >
-                                <field name="experiment_snapshot_ids" colspan="4" context="{'website_id': website_id}">
+                                <field name="experiment_version_ids" colspan="4" context="{'website_id': website_id}">
                                     <tree string="PPP" editable="bottom"> 
-                                        <field name="snapshot_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                                        <field name="version_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                                         <field name="frequency" colspan="4"/>
                                     </tree>
                                 </field>
@@ -141,14 +141,14 @@
             <field name="context">{'search_default_my_exps':1}</field>
         </record> -->
 
-        <record model="ir.ui.view" id="experiment_snapshot_form_view">
-            <field name="name">experiment_snapshot.form</field>
-            <field name="model">website_version.experiment_snapshot</field> 
+        <record model="ir.ui.view" id="experiment_version_form_view">
+            <field name="name">experiment_version.form</field>
+            <field name="model">website_version.experiment_version</field> 
             <field name="arch" type="xml">
                 <form string="Experiment_page Form">
                     <notebook colspan="4">
                         <page string="Features" colspan="4" >
-                            <field name="snapshot_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                            <field name="version_id" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
                             <field name="frequency"/>
                         </page>
                     </notebook>
@@ -156,19 +156,19 @@
             </field>
         </record>
             
-        <record id="action_snapshot" model="ir.actions.act_window">
+        <record id="action_version" model="ir.actions.act_window">
             <field name="name">Versions</field>
-            <field name="res_model">website_version.snapshot</field>
+            <field name="res_model">website_version.version</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <record model="ir.ui.view" id="snapshot_form_view">
-            <field name="name">snapshot.form</field>
-            <field name="model">website_version.snapshot</field> 
+        <record model="ir.ui.view" id="version_form_view">
+            <field name="name">version.form</field>
+            <field name="model">website_version.version</field> 
             <field name="arch" type="xml">
-                <form string="Snapshot Form">
+                <form string="version Form">
                     <sheet string="Snap">
                         <group>
                             <button icon="fa-pencil" name="action_publish" string="Publish" type="object" class="oe_stat_button pull-right" 
@@ -191,11 +191,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="snapshot_tree_view">
-            <field name="name">snapshot.tree</field>
-            <field name="model">website_version.snapshot</field> 
+        <record model="ir.ui.view" id="version_tree_view">
+            <field name="name">version.tree</field>
+            <field name="model">website_version.version</field> 
             <field name="arch" type="xml">
-                <tree string="Snapshot tree">
+                <tree string="version tree">
                     <field name="name" />
                     <field name="website_id" />
                     <field name="create_date" />
@@ -203,11 +203,11 @@
             </field>
         </record>
 
-        <record id="snapshot_search" model="ir.ui.view">
-            <field name="name">snapshot.search</field>
-            <field name="model">website_version.snapshot</field>
+        <record id="version_search" model="ir.ui.view">
+            <field name="name">version.search</field>
+            <field name="model">website_version.version</field>
             <field name="arch" type="xml">
-                <search string="Search Snapshot">
+                <search string="Search version">
                     <field name="website_id"/>
                     <group string="Group By">
                         <filter string="Website" domain="[]" context="{'group_by':'website_id'}"/>
@@ -225,7 +225,7 @@
 
         <menuitem name="Website" id="website_menu" sequence="10" parent="base.marketing_menu" />
         <menuitem action="action_website_view" id="menu_website_view" parent="website_menu"/>
-        <menuitem action="action_snapshot" id="menu_action_snapshot" parent="website_menu" groups="base.group_no_one"/>
+        <menuitem action="action_version" id="menu_action_version" parent="website_menu" groups="base.group_no_one"/>
         <menuitem action="action_experiment" id="menu_action_experiment" parent="website_menu"/>
 
     </data>

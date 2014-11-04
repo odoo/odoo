@@ -2,23 +2,23 @@
 <openerp>
     <data>
 
-        <record id="default_1" model="website_version.snapshot">
+        <record id="default_1" model="website_version.version">
             <field name="name">Default_1</field>
             <field name="website_id" ref="website.default_website"/>
         </record>
 
-        <record id="default_2" model="website_version.snapshot">
+        <record id="default_2" model="website_version.version">
             <field name="name">Default_2</field>
             <field name="website_id" ref="website.website2"/>
         </record>
 
-        <record id="snapshot_localhost" model="website_version.snapshot">
-            <field name="name">Snapshot localhost</field>
+        <record id="version_localhost" model="website_version.version">
+            <field name="name">version localhost</field>
             <field name="website_id" ref="website.default_website"/>
         </record>
 
-        <record id="snapshot_0_0_0_0" model="website_version.snapshot">
-            <field name="name">Snapshot 0.0.0.0</field>
+        <record id="version_0_0_0_0" model="website_version.version">
+            <field name="name">version 0.0.0.0</field>
             <field name="website_id" ref="website.website2"/>
         </record>
 
@@ -26,7 +26,7 @@
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
             <field name="key">website.homepage</field>
-            <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
+            <field name="version_id" ref="version_0_0_0_0"/>
             <field name="website_id" ref="website.website2"/>
             <field name="arch" type="xml">
               <t name="Homepage" priority="29" t-name="website.homepage">
@@ -41,7 +41,7 @@
                           <div class="container">
                             <div class="row content">
                               <div class="carousel-content col-md-6 col-sm-12">
-                                <h2>Snapshot 0.0.0.0</h2>
+                                <h2>version 0.0.0.0</h2>
                                 <h3>Click to customize this text</h3>
                                 <p>
                                   <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
@@ -69,7 +69,7 @@
           <field name="name">Homepage</field>
           <field name="type">qweb</field>
           <field name="key">website.homepage</field>
-          <field name="snapshot_id" ref="snapshot_localhost"/>
+          <field name="version_id" ref="version_localhost"/>
           <field name="website_id" ref="website.default_website"/>
           <field name="arch" type="xml">
             <t name="Homepage" priority="29" t-name="website.homepage">
@@ -84,7 +84,7 @@
                             <div class="container">
                               <div class="row content">
                                 <div class="carousel-content col-md-6 col-sm-12">
-                                  <h2>Snapshot localhost</h2>
+                                  <h2>version localhost</h2>
                                   <h3>Click to customize this text</h3>
                                   <p>
                                     <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
@@ -112,7 +112,7 @@
           <field name="name">Homepage</field>
           <field name="type">qweb</field>
           <field name="key">website.homepage</field>
-          <field name="snapshot_id" ref="default_2"/>
+          <field name="version_id" ref="default_2"/>
           <field name="website_id" ref="website.website2"/>
           <!-- <field name="application">Always applied</field> -->
           <field name="arch" type="xml">

@@ -2,22 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="all_versions">
-        <t t-foreach="snapshots" t-as="item">
-            <li class="snapshot dropdown-submenu version" t-att-data-snapshot_id="item.id">
-                <!-- <a href="#" data-action="delete_snapshot" style="position: absolute; right: 0px;" class="pull-right">
-                    <i class="fa fa-trash-o fa-fw"></i>
-                </a> -->
+        <t t-foreach="versions" t-as="item">
+            <li class="version_choice dropdown-submenu version" t-att-data-version_id="item.id">
                 <t t-if="item.bold == 0 ">
-                    <a tabindex="-1" href="#" data-action="change_snapshot"><t t-esc="item.name"></t> </a>
+                    <a tabindex="-1" href="#" data-action="change_version"><t t-esc="item.name"></t> </a>
                 </t>
                 <t t-if="item.bold == 1 ">
-                    <a tabindex="-1" href="#" data-action="change_snapshot" t-att-data-snapshot_id="item.id"> <b><t 
+                    <a tabindex="-1" href="#" data-action="change_version" t-att-data-version_id="item.id"> <b><t 
                         t-esc="item.name"></t></b> 
                     </a>
                 </t>
                 <ul class="dropdown-menu">
                     <li> <a  href="#" data-action="duplicate_version">duplicate</a></li>
-                    <li> <a  href="#" data-action="delete_snapshot">delete</a></li>
+                    <li> <a  href="#" data-action="delete_version">delete</a></li>
                     <li> <a  href="#" data-action="publish_version">publish as master</a></li>
                 </ul>
             </li>
@@ -67,7 +64,7 @@
                 <h4 class="modal-title">Launch A/B tests</h4>
               </div>
                 <div class="modal-body">
-                    <t t-if="snapshots.length != 0 and config == 1">  
+                    <t t-if="versions.length != 0 and config == 1">  
                         <form id="productForm" class="form-horizontal" role="form">              
                             <div class="form-group form-group">
                                 <label class="col-sm-3 control-label">Experiment Name</label>
@@ -98,7 +95,7 @@
                             </div>
                             
                             <div class="versions">
-                                <t t-foreach="snapshots" t-as="item">  
+                                <t t-foreach="versions" t-as="item">  
                                     <div class="form-group form-group-lg"> 
                                         <div class="col-sm-3"></div>    
                                         <div class="checkbox col-sm-8">
@@ -111,7 +108,7 @@
                             </div>
                         </form>
                     </t>
-                    <t t-if="snapshots.length == 0 and config == 1">
+                    <t t-if="versions.length == 0 and config == 1">
                         <div>
                             <p>You must have at least one version for this page to create a new experiment.</p>
                         </div>
@@ -151,7 +148,7 @@
 
                 </div>
               <div class="modal-footer">
-                <t t-if="snapshots.length != 0 and config == 1"> 
+                <t t-if="versions.length != 0 and config == 1"> 
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary launch">Launch</button>
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">

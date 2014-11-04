@@ -26,8 +26,8 @@
                     default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
                 }).then(function (name) {
                     var context = website.get_context();
-                    openerp.jsonRpc( '/website_version/create_snapshot', 'call', { 'name': name, 'snapshot_id': 0 }).then(function (result) {
-                        $('html').data('snapshot_id', result);
+                    openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': 0 }).then(function (result) {
+                        $('html').data('version_id', result);
                         
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
@@ -43,8 +43,8 @@
             
             });
             $('#save_and_publish').click(function() {
-                var snapshot_id = $('html').data('snapshot_id');
-                if(snapshot_id)
+                var version_id = $('html').data('version_id');
+                if(version_id)
                 {
                     var aManualDeferred = $.Deferred();
                     aManualDeferred.then(function () {
@@ -54,7 +54,7 @@
                         self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish this version."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
-                            openerp.jsonRpc( '/website_version/publish_version', 'call', { 'snapshot_id':snapshot_id }).then(function (result) {
+                            openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id }).then(function (result) {
                                 self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been saved and published."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                                 self.wizard.on('click','.confirm', function(){

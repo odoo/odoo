@@ -1,5 +1,5 @@
 import ir_ui_view
-import snapshot
+import version
 import website
 import experiment
 import ir_qweb

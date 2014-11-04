@@ -131,7 +131,7 @@
                 onload: function () {
                     if (openerp.Tour.getState().mode === "test") {
                         setTimeout(function () {
-                            $('li:has(> a[data-action="change_snapshot"]):last .dropdown-menu').show();
+                            $('li:has(> a[data-action="change_version"]):last .dropdown-menu').show();
                         }, 250);
                     }
                 }
@@ -170,14 +170,14 @@
                 onload: function () {
                     if (openerp.Tour.getState().mode === "test") {
                         setTimeout(function () {
-                            $('li:has(> a[data-action="change_snapshot"]):last .dropdown-menu').show();
+                            $('li:has(> a[data-action="change_version"]):last .dropdown-menu').show();
                         }, 250);
                     }
                 }
             },
             {
                 title:     _t("Delete Version Test"),
-                element:   'li > a[data-action="delete_snapshot"]:last',
+                element:   'li > a[data-action="delete_version"]:last',
                 popover:   { fixed: true },
             },
             {

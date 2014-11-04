@@ -7,15 +7,15 @@ from openerp.osv import osv, fields
 import simplejson
 
 
-class Experiment_snapshot(osv.Model):
-    _name = "website_version.experiment_snapshot"
+class Experiment_version(osv.Model):
+    _name = "website_version.experiment_version"
 
     def _get_index(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for exp_snap in self.browse(cr, uid, ids, context=context):
             exp = exp_snap.experiment_id
             index = 1
-            for x in exp.experiment_snapshot_ids:
+            for x in exp.experiment_version_ids:
                 if x.id == exp_snap.id:
                     break
                 else:
@@ -24,7 +24,7 @@ class Experiment_snapshot(osv.Model):
         return result
     
     _columns = {
-        'snapshot_id': fields.many2one('website_version.snapshot',string="Snapshot_id",required=True ,ondelete='cascade'),
+        'version_id': fields.many2one('website_version.version',string="version_id",required=True ,ondelete='cascade'),
         'experiment_id': fields.many2one('website_version.experiment',string="Experiment_id",required=True,ondelete='cascade'),
         'frequency': fields.selection([('10','Less'),('50','Medium'),('80','More')], 'Frequency'),
         'google_index': fields.function(_get_index,type='integer', string='Google_index'),
@@ -52,7 +52,7 @@ class Experiment(osv.Model):
         result = {}
         for exp in self.browse(cr, uid, ids, context=context):
             result[exp.id] = 0
-            for exp_snap in exp.experiment_snapshot_ids:
+            for exp_snap in exp.experiment_version_ids:
                     result[exp.id] += 1
             #For master
             result[exp.id] += 1
@@ -60,7 +60,7 @@ class Experiment(osv.Model):
 
     _columns = {
         'name': fields.char(string="Title", size=256, required=True),
-        'experiment_snapshot_ids': fields.one2many('website_version.experiment_snapshot', 'experiment_id',string="experiment_snapshot_ids"),
+        'experiment_version_ids': fields.one2many('website_version.experiment_version', 'experiment_id',string="experiment_version_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
         'objectives': fields.many2one('website_version.goals',string="Objective", required=True),
@@ -81,10 +81,10 @@ class Experiment(osv.Model):
         exp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [vals['objectives']],context)[0].google_ref
         exp['status'] = vals['state']
         exp['variations'] =[{'name':'master','url': 'http://localhost/master'}]
-        l =  vals.get('experiment_snapshot_ids')
+        l =  vals.get('experiment_version_ids')
         if l:
             for snap in l:
-                name = self.pool['website_version.snapshot'].browse(cr, uid, [snap[2]['snapshot_id']],context)[0].name
+                name = self.pool['website_version.version'].browse(cr, uid, [snap[2]['version_id']],context)[0].name
                 exp['variations'].append({'name':name, 'url': 'http://localhost/'+name})
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
@@ -95,7 +95,7 @@ class Experiment(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         name = vals.get('name')
         state = vals.get('state')
-        exp_snaps = vals.get('experiment_snapshot_ids')
+        exp_snaps = vals.get('experiment_version_ids')
         obj_metric = vals.get('objectives')
         #some write operation doesn't need to synchronise with Google (frequency or sequence)
         if name or state or exp_snaps or obj_metric:
@@ -133,21 +133,21 @@ class Experiment(osv.Model):
                         raise Warning("You cannot modify a running experiment.")
                     index = 0
                     temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
-                    for exp_s in exp.experiment_snapshot_ids:
+                    for exp_s in exp.experiment_version_ids:
                         for li in exp_snaps:
                             #l[0] == 2 means DELETE(magic number)
                             if not li[0] == 2 and li[1] == exp_s.id:
-                                temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://localhost/'+exp_s.snapshot_id.name})
+                                temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
                         index+=1
                     while index< len(exp_snaps):
-                        snap_id = exp_snaps[index][2]['snapshot_id']
-                        snap_name = self.pool['website_version.snapshot'].browse(cr, uid, [snap_id], context=context)[0].name
+                        snap_id = exp_snaps[index][2]['version_id']
+                        snap_name = self.pool['website_version.version'].browse(cr, uid, [snap_id], context=context)[0].name
                         temp['variations'].append({'name':snap_name, 'url': 'http://localhost/'+snap_name})
                         index+=1
                 else:
                     temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
-                    for exp_s in exp.experiment_snapshot_ids:
-                        temp['variations'].append({'name':exp_s.snapshot_id.name, 'url': 'http://localhost/'+exp_s.snapshot_id.name})
+                    for exp_s in exp.experiment_version_ids:
+                        temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
                 #to check the constraints before to write on the google analytics account 
                 x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
@@ -179,8 +179,8 @@ class Experiment(osv.Model):
         check_a = set()
         check_b = set()
         for exp in exps:
-            for exp_snap in exp.experiment_snapshot_ids:
-                for view in exp_snap.snapshot_id.view_ids:
+            for exp_snap in exp.experiment_version_ids:
+                for view in exp_snap.version_id.view_ids:
                     x = (view.key,view.website_id.id)
                     #the versions in the same experiment can have common keys
                     y = (view.key,view.website_id.id,exp_snap.experiment_id.id)
@@ -193,14 +193,14 @@ class Experiment(osv.Model):
 
     def _check_website(self, cr, uid, ids, context=None):
         for exp in self.browse(cr,uid,ids,context=context):
-            for exp_snap in exp.experiment_snapshot_ids:
-                if not exp_snap.snapshot_id.website_id.id == exp.website_id.id:
+            for exp_snap in exp.experiment_version_ids:
+                if not exp_snap.version_id.website_id.id == exp.website_id.id:
                     return False
         return True
 
     _constraints = [
         (_check_view, 'This experiment contains a view which is already used in another running experience', ['state']),
-        (_check_website, 'This experiment must have versions which are in the same website', ['website_id', 'experiment_snapshot_ids']),
+        (_check_website, 'This experiment must have versions which are in the same website', ['website_id', 'experiment_version_ids']),
     ]
 
     _order = 'sequence'

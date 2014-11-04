@@ -14,14 +14,14 @@ class NewWebsite(osv.Model):
         'google_management_authorization': fields.char('Google authorization')
     }
 
-    def get_current_snapshot(self,cr,uid,context=None):
-        snap = request.registry['website_version.snapshot']
-        snapshot_id=request.context.get('snapshot_id')
+    def get_current_version(self,cr,uid,context=None):
+        snap = request.registry['website_version.version']
+        version_id=request.context.get('version_id')
 
-        if not snapshot_id:
-            request.context['snapshot_id'] = 0
+        if not version_id:
+            request.context['version_id'] = 0
             return (0, '')
-        return snap.name_get(cr, uid, [snapshot_id], context=context)[0];
+        return snap.name_get(cr, uid, [version_id], context=context)[0];
 
     def get_current_website(self, cr, uid, context=None):
 
@@ -37,8 +37,8 @@ class NewWebsite(osv.Model):
             if not str(exp.google_id) in EXP:
                 result=[]
                 pond_sum=0
-                for exp_snap in exp.experiment_snapshot_ids:
-                    result.append([int(exp_snap.frequency)+pond_sum, exp_snap.snapshot_id.id])
+                for exp_snap in exp.experiment_version_ids:
+                    result.append([int(exp_snap.frequency)+pond_sum, exp_snap.version_id.id])
                     pond_sum+=int(exp_snap.frequency)
                 if pond_sum:
                     #by default master has a frequency of 50
@@ -56,10 +56,10 @@ class NewWebsite(osv.Model):
 
         request.context['website_id'] = website.id
 
-        if request.session.get('snapshot_id'):
-            request.context['snapshot_id'] = request.session.get('snapshot_id')
+        if request.session.get('version_id'):
+            request.context['version_id'] = request.session.get('version_id')
         elif request.session.get('master') or self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-            request.context['snapshot_id'] = 0
+            request.context['version_id'] = 0
         else:
             request.context['experiment_id'] = 1
         return website

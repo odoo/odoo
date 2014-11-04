@@ -27,20 +27,20 @@ class QWeb(orm.AbstractModel):
         website_id=context.get('website_id')
         if website_id:
             if 'experiment_id' in context:
-                exp_snap_id = self.pool["website_version.experiment_snapshot"].search(cr, uid, [('snapshot_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
+                exp_snap_id = self.pool["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
                 if exp_snap_id:
-                    exp_snapshot = self.pool["website_version.experiment_snapshot"].browse(cr, uid, [exp_snap_id[0]], context=context)
-                    exp = exp_snapshot.experiment_id
-                    context['snapshot_id'] = int(context.get('website_version_experiment')[str(exp.google_id)])
+                    exp_version = self.pool["website_version.experiment_version"].browse(cr, uid, [exp_snap_id[0]], context=context)
+                    exp = exp_version.experiment_id
+                    context['version_id'] = int(context.get('website_version_experiment')[str(exp.google_id)])
 
-            if 'snapshot_id' in context:
-                snapshot_id=context.get('snapshot_id')
-                if snapshot_id:
-                    id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('snapshot_id', '=', False), ('snapshot_id', '=', snapshot_id), '|',('website_id','=',website_id),('website_id','=',False)], order='website_id, snapshot_id', limit=1, context=context)[0]
+            if 'version_id' in context:
+                version_id=context.get('version_id')
+                if version_id:
+                    id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('version_id', '=', False), ('version_id', '=', version_id), '|',('website_id','=',website_id),('website_id','=',False)], order='website_id, version_id', limit=1, context=context)[0]
                 else:
-                    id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), ('snapshot_id', '=', False), '|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
+                    id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), ('version_id', '=', False), '|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
             else:
-                id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('website_id','=',website_id),('website_id','=',False),('snapshot_id', '=', False)], order='website_id', limit=1, context=context)[0]
+                id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('website_id','=',website_id),('website_id','=',False),('version_id', '=', False)], order='website_id', limit=1, context=context)[0]
 
             
 
