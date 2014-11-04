@@ -21,16 +21,6 @@ class account_cashbox_line(models.Model):
             line.subtotal_opening = line.pieces * line.number_opening
             line.subtotal_closing = line.pieces * line.number_closing
 
-    @api.onchange('number_opening')
-    def on_change_sub_opening(self):
-        """ Compute the subtotal for the opening """
-        self.subtotal_opening = (self.pieces * self.number_opening) or 0.0
-
-    @api.onchange('number_closing')
-    def on_change_sub_closing(self):
-        """ Compute the subtotal for the closing """
-        self.subtotal_closing = (self.pieces * self.number_closing) or 0.0
-
     pieces = fields.Float(string='Unit of Currency', digits=dp.get_precision('Account'))
     number_opening = fields.Integer(string='Number of Units', help='Opening Unit Numbers')
     number_closing = fields.Integer(string='Number of Units', help='Closing Unit Numbers')
