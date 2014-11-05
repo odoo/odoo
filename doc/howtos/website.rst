@@ -9,8 +9,6 @@ Building a website
     * This guide assumes `basic knowledge of Python
       <http://docs.python.org/2/tutorial/>`_
     * This guide assumes an installed Odoo
-    * For production deployment, see the :ref:`dedicated deployment guides
-      <guides/deployment>`
 
 Creating a basic module
 =======================
