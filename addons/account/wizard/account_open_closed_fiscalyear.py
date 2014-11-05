@@ -15,7 +15,5 @@ class account_open_closed_fiscalyear(models.TransientModel):
             raise Warning(_("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
 
         ids_move = self.env['account.move'].search([('journal_id', '=', period_journal.journal_id.id), ('period_id', '=', period_journal.period_id.id)])
-        if ids_move:
-            self._cr.execute('delete from account_move where id IN %s', (tuple(ids_move.ids),))
-            self.invalidate_cache()
+        ids_move.unlink()
         return {'type': 'ir.actions.act_window_close'}

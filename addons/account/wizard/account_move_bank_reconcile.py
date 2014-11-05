@@ -18,7 +18,7 @@ class account_move_bank_reconcile(models.TransientModel):
        @return: dictionary of  Open  account move line   on given journal_id.
         """
         data = self.read()[0]
-        cr.execute('select default_credit_account_id \
+        self._cr.execute('select default_credit_account_id \
                         from account_journal where id=%s', (data['journal_id'],))
         account_id = self._cr.fetchone()[0]
         if not account_id:

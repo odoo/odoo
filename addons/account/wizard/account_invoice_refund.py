@@ -24,12 +24,11 @@ class account_invoice_refund(models.TransientModel):
     def _get_journal(self):
         context = dict(self._context or {})
         inv_type = context.get('type', 'out_invoice')
-        company_id = self.env.user.company_id.id
         type = (inv_type == 'out_invoice') and 'sale_refund' or \
                (inv_type == 'out_refund') and 'sale' or \
                (inv_type == 'in_invoice') and 'purchase_refund' or \
                (inv_type == 'in_refund') and 'purchase'
-        journal = self.env['account.journal'].search([('type', '=', type), ('company_id', '=', company_id)], limit=1)
+        journal = self.env['account.journal'].search([('type', '=', type), ('company_id', '=', self.env.user.company_id.id)], limit=1)
         return journal
 
     @api.model
