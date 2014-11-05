@@ -55,17 +55,17 @@ def ean_checksum(eancode):
     check = int(10 - math.ceil(total % 10.0)) %10
     return check
 
-def check_ean(eancode):
-    """returns True if eancode is a valid ean13 string, or null"""
-    if not eancode:
-        return True
-    if len(eancode) != 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
-    return ean_checksum(eancode) == int(eancode[-1])
+# def check_ean(eancode):
+#     """returns True if eancode is a valid ean13 string, or null"""
+#     if not eancode:
+#         return True
+#     if len(eancode) != 13:
+#         return False
+#     try:
+#         int(eancode)
+#     except:
+#         return False
+#     return ean_checksum(eancode) == int(eancode[-1])
 
 def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
@@ -572,7 +572,7 @@ class product_template(osv.osv):
         'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
-        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='EAN13 Barcode'),
+        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='Barcode'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
     }
 
@@ -922,7 +922,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
-        'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
+        'ean13': fields.char('Barcode', help="International Article Number used for product identification."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -979,13 +979,13 @@ class product_product(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.read(cr, uid, ids, ['ean13'], context=context):
-            if not check_ean(product['ean13']):
-                return False
-        return True
-
-    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
+    # def _check_ean_key(self, cr, uid, ids, context=None):
+    #     for product in self.read(cr, uid, ids, ['ean13'], context=context):
+    #         if not check_ean(product['ean13']):
+    #             return False
+    #     return True
+    #
+    #_constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
