@@ -81,7 +81,7 @@ class TableExporter(http.Controller):
         return bool(request.registry["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)], context=context))
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
-    def publish_version(self, version_id):
+    def publish_version(self, version_id, save_master):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         obj = request.registry['website_version.version']
         version = obj.browse(cr, uid, [int(version_id)],context)[0]
@@ -90,9 +90,16 @@ class TableExporter(http.Controller):
             master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             del_l += master_id
         if del_l:
-            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)        
+            if save_master:
+                check_id = obj.search(cr, uid, [('name','=', 'copy_master_'+version.name),('website_id', '=', version.website_id.id)],context=context)
+                if check_id:
+                    obj.unlink(cr, uid, check_id, context=context)
+                copy_version_id = obj.create(cr, uid, {'name' : 'copy_master_'+version.name, 'website_id' : version.website_id.id}, context=context)
+                for view in request.registry['ir.ui.view'].browse(cr, uid, del_l, context=context):
+                    view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
+            request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)      
         for view in obj.browse(cr, uid, [int(version_id)],context).view_ids:
-            view.copy({'version_id': None})
+            view.copy({'version_id': None}, context=context)
         request.session['version_id'] = 0
         request.session['master'] = 1
         return version.name

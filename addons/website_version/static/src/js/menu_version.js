@@ -116,11 +116,20 @@
             if(name.indexOf("<b>") > -1){
                 name = name.split("<b>")[1].split("</b>")[0];
             }
-            self.wizard = $(openerp.qweb.render("website_version.delete_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
+            self.wizard = $(openerp.qweb.render("website_version.publish_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
-                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id }).then(function (result) {
+                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':false }).then(function (result) {
                         self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published."}));
+                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                        self.wizard.on('click','.confirm', function(){
+                            location.reload();
+                        });
+                    });
+                });
+                self.wizard.on('click','.save', function(){
+                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':true }).then(function (result) {
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published and the master has been saved on a version called copy_master_"+name+"."}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                         self.wizard.on('click','.confirm', function(){
                             location.reload();

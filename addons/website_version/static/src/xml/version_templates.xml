@@ -198,5 +198,21 @@
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
+    </t>
+    <t t-name="website_version.publish_message">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title"><t t-esc="message"></t></h4>
+              </div>  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Publish</button>
+                <button type="button" class="btn btn-primary save" data-dismiss="modal">Publish and Save</button>
+                <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Cancel</a>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </t> 
 </templates>
