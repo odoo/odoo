@@ -4390,7 +4390,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     },
     is_valid: function () {
         var self = this;
-        if (!this.editable()){
+        if (!this.fields_view || !this.editable()){
             return true;
         }
         this.o2m._dirty_flag = true;
