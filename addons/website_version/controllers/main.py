@@ -96,8 +96,6 @@ class TableExporter(http.Controller):
             else:
                 master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', False)],context=context)
                 copy_l+= master_id
-        print del_l
-        print copy_l
         if copy_l:
             if save_master:
                 check_id = obj.search(cr, uid, [('name','=', 'copy_master_'+version.name),('website_id', '=', version.website_id.id)],context=context)
