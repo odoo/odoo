@@ -47,9 +47,10 @@ class TableExporter(http.Controller):
 
     @http.route(['/website_version/check_version'], type = 'json', auth = "user", website = True)
     def check_version(self, version_id):
+        #To check if the version is in a running or paused experiment
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         Exp = request.registry['website_version.experiment']
-        return bool(Exp.search(cr, uid, [('state','=','running'),('experiment_version_ids.version_id', '=', int(version_id))],context=context))
+        return bool(Exp.search(cr, uid, ['|',('state','=','running'),('state','=','paused'),('experiment_version_ids.version_id', '=', int(version_id))],context=context))
     
     @http.route(['/website_version/all_versions'], type = 'json', auth = "public", website = True)
     def get_all_versions(self, view_id):
@@ -86,17 +87,24 @@ class TableExporter(http.Controller):
         obj = request.registry['website_version.version']
         version = obj.browse(cr, uid, [int(version_id)],context)[0]
         del_l = []
+        copy_l = []
         for view in version.view_ids:
             master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
-            del_l += master_id
+            if master_id:
+                del_l += master_id
+                copy_l+= master_id
+            else:
+                master_id = request.registry['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', False)],context=context)
+                copy_l+= master_id
         print del_l
-        if del_l:
+        print copy_l
+        if copy_l:
             if save_master:
                 check_id = obj.search(cr, uid, [('name','=', 'copy_master_'+version.name),('website_id', '=', version.website_id.id)],context=context)
                 if check_id:
                     obj.unlink(cr, uid, check_id, context=context)
                 copy_version_id = obj.create(cr, uid, {'name' : 'copy_master_'+version.name, 'website_id' : version.website_id.id}, context=context)
-                for view in request.registry['ir.ui.view'].browse(cr, uid, del_l, context=context):
+                for view in request.registry['ir.ui.view'].browse(cr, uid, copy_l, context=context):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
             request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)      
         for view in obj.browse(cr, uid, [int(version_id)],context).view_ids:

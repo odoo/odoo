@@ -91,7 +91,7 @@
             }
             openerp.jsonRpc( '/website_version/check_version', 'call', { 'version_id':version_id }).then(function (result) {
                     if (result){
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete the " + name + " version because it is in a running experiment"}));
+                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"You cannot delete the " + name + " version because it is in a running or paused experiment"}));
                         self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     }
                     else{
