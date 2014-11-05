@@ -69,8 +69,8 @@ class account_voucher(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         journal_pool = self.pool.get('account.journal')
         if context.get('invoice_id', False):
-            currency_id = invoice_pool.browse(cr, uid, context['invoice_id'], context=context).currency_id.id
-            journal_id = journal_pool.search(cr, uid, [('currency', '=', currency_id)], limit=1)
+            invoice = invoice_pool.browse(cr, uid, context['invoice_id'], context=context)
+            journal_id = journal_pool.search(cr, uid, [('currency', '=', invoice.currency_id.id), ('company_id', '=', invoice.company_id.id)], limit=1)
             return journal_id and journal_id[0] or False
         if context.get('journal_id', False):
             return context.get('journal_id')
@@ -878,6 +878,14 @@ class account_voucher(osv.osv):
             currency_id = journal.currency.id
         else:
             currency_id = journal.company_id.currency_id.id
+
+        period_pool = self.pool.get('account.period')
+        ctx = context.copy()
+        ctx.update({'company_id' : company_id})
+
+        period_id = period_pool.find(cr, uid, context=ctx)
+        vals['value'].update({'period_id' : period_id})
+
         vals['value'].update({'currency_id': currency_id, 'payment_rate_currency_id': currency_id})
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
@@ -890,6 +898,23 @@ class account_voucher(osv.osv):
             for key in res.keys():
                 vals[key].update(res[key])
         return vals
+
+    def onchange_company(self, cr, uid, ids, partner_id, journal_id, currency_id, company_id, context=None):
+        """
+        If the company changes, check that the journal is in the right company.
+        If not, fetch a new journal.
+        """
+        default = {
+            'value':{},
+        }
+
+        journal_pool = self.pool.get('account.journal')
+        journal = journal_pool.browse(cr, uid, journal_id, context=context)
+
+        if journal.company_id != company_id:
+            journal_id = journal_pool.search(cr, uid, [('company_id', '=', company_id)])
+            default['value']['journal_id'] = journal_id[0]
+        return default
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
         self.signal_workflow(cr, uid, ids, 'proforma_voucher')
