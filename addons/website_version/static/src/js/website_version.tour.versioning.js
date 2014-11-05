@@ -17,6 +17,41 @@
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
             {
+                title:      _t("Click on Version"),
+                content:   _t("You can create a version for every page of your website."),
+                popover:   { fixed: true },
+                element:   'a[id="version-menu-button"]:contains("Version"):first',
+            },
+            {
+                title:     _t("Click on New version"),
+                popover:   { fixed: true },
+                element:   'a[data-action="duplicate_version"]:contains("New Version"):first',
+            },
+            {
+                title:     _t("Give a version name"),
+                content:   _t("Give a clever name to retrieve it easily."),
+                popover:   { fixed: true },
+                waitFor:   '.modal button[type="button"]:contains("Continue")',
+                element:   '.modal input[type="text"]',
+                sampleText: 'Test',
+            },
+            {
+                title:     _t("Validate the version name"),
+                popover:   { fixed: true },
+                element:   '.modal button[type="button"]:contains("Continue")',
+            },
+            {
+                title:     _t("Confirm"),
+                popover:   { fixed: true },
+                waitNot:   '.modal button[type="button"]:contains("Continue")',
+                element:   '.modal button[type="button"]:contains("Ok")',
+            },
+            {
+                title:     _t("You are on your new version"),
+                content:   _t("All the modifications you will do, will be saved in this version."),
+                waitNot:   '.modal button[type="button"]:contains("Ok")',
+            },
+            {
                 title:     _t("Click on Edit"),
                 content:   _t("Every page of your website can be modified through the <i>Edit</i> button."),
                 waitFor:   'button[data-action="edit"]:contains("Edit")',
@@ -77,43 +112,19 @@
                 content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
                 popover:   { fixed: true },
             },
-                    
             {
-                //waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   'button[data-toggle="dropdown"]',
+                waitFor:   '.oe_overlay_options .oe_options:visible',
+                element:   'button[data-action=save]',
                 placement: 'right',
-                title:     _t("Click here"),
+                title:     _t("Save your modifications"),
+                content:   _t("Publish your page by clicking on the <em>'Save'</em> button."),
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'a[data-action="save_as_new_version"]:contains("Save as New Version")',
-                element:   'a[data-action="save_as_new_version"]:contains("Save as New Version")',
-                placement: 'right',
-                title:     _t("Click here"),
-                popover:   { fixed: true },
-            },
-            {
-                title:     _t("Give a version name"),
-                content:   _t("Give a clever name to retrieve it easily."),
-                popover:   { fixed: true },
-                waitFor:   '.modal button[type="button"]:contains("Continue")',
-                element:   '.modal input[type="text"]',
-                sampleText: 'Test' + (new Date().getTime()),
-            },
-            {
-                title:     _t("Validate the version name"),
-                popover:   { fixed: true },
-                element:   '.modal button[type="button"]:contains("Continue")',
-            },
-            {
-                title:     _t("Confirm"),
-                waitNot:   '.modal button[type="button"]:contains("Continue")',
-                element:   '.modal button[type="button"]:contains("Ok")',
-            },
-            {
-                title:     _t("You are on your new version"),
-                content:   _t("All the modifications you will do, will be saved in this version."),
-                waitNot:   '.modal button[type="button"]:contains("Ok")',
+                waitFor:   'button[data-action=save]:not(:visible)',
+                title:     _t("Good Job!"),
+                content:   _t("Well done, you created a version of your homepage."),
+                popover:   { next: _t("Continue") },
             },
 
             //2.
@@ -123,37 +134,33 @@
                 content:   _t("Now we will publish your version in production."),
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
+
             {
                 title:     _t("Click on Version"),
-                element:   'a[id="version-menu-button"]',
-                placement: 'left',
-                content:   _t("Put your mouse on the new version you have just created."),
-                onload: function () {
-                    if (openerp.Tour.getState().mode === "test") {
-                        setTimeout(function () {
-                            $('li:has(> a[data-action="change_version"]):last .dropdown-menu').show();
-                        }, 250);
-                    }
-                }
-            },
-            {
-                title:     _t("Publish version Test"),
-                element:   'li > a[data-action="publish_version"]:last',
-                placement: 'left',
+                element:   'a[id="version-menu-button"]:contains("Version"):first',
                 popover:   { fixed: true },
             },
+
+            {
+                title:     _t("Click on Publish Version"),
+                element:   'a[data-action="publish_version"]:contains("Publish Version"):first',
+                popover:   { fixed: true },
+            },
+
             {
                 title:     _t("Confirm Yes"),
-                waitFor:   '.modal button[type="button"]:contains("Yes")',
-                element:   '.modal button[type="button"]:contains("Yes")',
+                waitFor:   '.modal button[type="button"]:contains("Publish")',
+                element:   '.modal button[type="button"]:contains("Publish")',
                 popover:   { fixed: true },
             },
+
             {
                 title:     _t("Confirm"),
                 waitFor:   '.modal button[type="button"]:contains("Ok")',
                 element:   '.modal button[type="button"]:contains("Ok")',
                 popover:   { fixed: true },
             },
+
 
             //3.
             {
@@ -162,36 +169,33 @@
                 waitNot:   '.modal button[type="button"]:contains("Ok")',
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
+
             {
                 title:     _t("Click on Version"),
-                element:   'a[id="version-menu-button"]',
-                content:   _t("Put your mouse on the new version you have just created."),
+                element:   'a[id="version-menu-button"]:contains("Version"):first',
                 popover:   { fixed: true },
-                onload: function () {
-                    if (openerp.Tour.getState().mode === "test") {
-                        setTimeout(function () {
-                            $('li:has(> a[data-action="change_version"]):last .dropdown-menu').show();
-                        }, 250);
-                    }
-                }
             },
+
             {
                 title:     _t("Delete Version Test"),
                 element:   'li > a[data-action="delete_version"]:last',
                 popover:   { fixed: true },
             },
+
             {
                 title:     _t("Confirm Yes"),
-                waitFor:   '.modal button[type="button"]:contains("Yes")',
-                element:   '.modal button[type="button"]:contains("Yes")',
+                waitFor:   '.modal button[type="button"]:contains("Delete Version")',
+                element:   '.modal button[type="button"]:contains("Delete Version")',
                 popover:   { fixed: true },
             },
+
             {
                 title:     _t("Confirm"),
                 waitFor:   '.modal button[type="button"]:contains("Ok")',
                 element:   '.modal button[type="button"]:contains("Ok")',
                 popover:   { fixed: true },
             },
+
             {
                 title:     _t("Finish"),
                 content:   _t("Felicitation, now you are able to edit and manage your versions."),

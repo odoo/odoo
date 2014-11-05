@@ -41,6 +41,9 @@
         
         duplicate_version: function(event) {
             var version_id = $('html').data('version_id');
+            if(!version_id){
+                version_id = 0;
+            }
             var m_names = new Array("jan", "feb", "mar",
                 "apr", "may", "jun", "jul", "aug", "sep",
                 "oct", "nov", "dec");
@@ -54,6 +57,7 @@
                 input: "Version name" ,
                 default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
             }).then(function (name) {
+                console.log(name);
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': version_id}).then(function (result) {
 
