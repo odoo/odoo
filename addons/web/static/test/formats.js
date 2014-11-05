@@ -167,22 +167,24 @@ openerp.testing.section('web-formats', {
     dependencies: ['web.formats']
 }, function (test) {
     test('ES date format', function (instance) {
+        var old_format = instance.web._t.database.parameters.date_format;
         instance.web._t.database.parameters.date_format = '%a, %Y %b %d';
         var date = instance.web.str_to_date("2009-05-04");
         strictEqual(instance.web.format_value(date, {type:"date"}),
                     'Mon, 2009 May 04');
         strictEqual(instance.web.parse_value('Mon, 2009 May 04', {type: 'date'}),
                     '2009-05-04');
-        instance.web._t.database.parameters.date_format = '%m/%d/%Y';
+        instance.web._t.database.parameters.date_format = old_format;
     });
     test('extended ES date format', function (instance) {
-        instance.web._t.database.parameters.date_format = '%a, %Y.eko %b ren %da';
+        var old_format = instance.web._t.database.parameters.date_format;
+        instance.web._t.database.parameters.date_format = '%a, %Y.eko %b %da';
         var date = instance.web.str_to_date("2009-05-04");
         strictEqual(instance.web.format_value(date, {type:"date"}),
-                    'Mon, 2009.eko May ren 04');
-        strictEqual(instance.web.parse_value('Mon, 2009.eko May ren 04', {type: 'date'}),
+                    'Mon, 2009.eko May 04a');
+        strictEqual(instance.web.parse_value('Mon, 2009.eko May 04a', {type: 'date'}),
                     '2009-05-04');
-        instance.web._t.database.parameters.date_format = '%m/%d/%Y';
+        instance.web._t.database.parameters.date_format = old_format;
     });
 
 });
