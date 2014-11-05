@@ -28,7 +28,7 @@ import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
-from openerp.tools import html_escape as escape
+from openerp.tools import html_escape as escape, which
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -1529,14 +1529,21 @@ class SassStylesheetAsset(PreprocessedCSS):
         return "/*! %s */\n%s" % (self.id, content)
 
     def get_command(self):
-        return ['sass', '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
-               '-r', 'bootstrap-sass']
+        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
+        sass = which('sass', path=os.pathsep.join(defpath))
+        return [sass, '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
+                '-r', 'bootstrap-sass']
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
+        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
+        if os.name == 'nt':
+            lessc = which('lessc.cmd', path=os.pathsep.join(defpath))
+        else:
+            lessc = which('lessc', path=os.pathsep.join(defpath))
         webpath = openerp.http.addons_manifest['web']['addons_path']
         lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
-        return ['lessc', '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
+        return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.
