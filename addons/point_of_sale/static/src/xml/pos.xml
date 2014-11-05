@@ -1066,7 +1066,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>

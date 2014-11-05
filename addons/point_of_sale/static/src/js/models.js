@@ -878,7 +878,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 quantity:           this.get_quantity(),
                 unit_name:          this.get_unit().name,
-                price:              this.get_unit_price(),
+                price:              this.get_unit_display_price(),
                 discount:           this.get_discount(),
                 product_name:       this.get_product().display_name,
                 price_display :     this.get_display_price(),
@@ -897,12 +897,28 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_unit_price: function(){
             return this.price;
         },
+        get_unit_display_price: function(){
+            if (this.pos.config.iface_tax_included) {
+                var quantity = this.quantity;
+                this.quantity = 1.0;
+                var price = this.get_all_prices().priceWithTax;
+                this.quantity = quantity;
+                return price;
+            } else {
+                return this.get_unit_price();
+            }
+        },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
             return  round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
         },
         get_display_price: function(){
             return this.get_base_price();
+            if (this.pos.config.iface_tax_included) {
+                return this.get_all_prices().priceWithTax;
+            } else {
+                return this.get_base_price();
+            }
         },
         get_price_without_tax: function(){
             return this.get_all_prices().priceWithoutTax;
