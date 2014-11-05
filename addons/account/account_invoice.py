@@ -308,6 +308,9 @@ class account_invoice(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
+    partner_shipping_id = fields.Many2one('res.partner', 'Delivery Address',
+        readonly=True, states={'draft': [('readonly', False)], 'sent':
+        [('readonly', False)]}, help="Delivery address for current invoice.")
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)',

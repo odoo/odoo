@@ -260,11 +260,20 @@ class stock_picking(osv.osv):
         else:
             account_id = partner.property_account_payable.id
             payment_term = partner.property_supplier_payment_term.id or False
+        if origin:
+            ids = self.pool.get('stock.picking').search(cr,uid, [('name', '=', origin)], context=context)
+            origin_picking_origin = self.pool.get('stock.picking').browse(cr, uid, ids, context=context).origin
+            if origin_picking_origin:
+                ids = self.pool.get('sale.order').search(cr, uid, [('name', '=', origin_picking_origin)], context=context)
+                picking_origin_so_partner_shipping_id = self.pool.get('sale.order').browse(cr, uid, ids, context=context).partner_shipping_id.id
+            else:
+                picking_origin_so_partner_shipping_id = False
         return {
             'origin': origin,
             'date_invoice': context.get('date_inv', False),
             'user_id': user_id,
             'partner_id': partner.id,
+            'partner_shipping_id': picking_origin_so_partner_shipping_id,
             'account_id': account_id,
             'payment_term': payment_term,
             'type': inv_type,
