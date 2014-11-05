@@ -146,11 +146,10 @@ class hr_timesheet_sheet(osv.osv):
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
     
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        Timesheet = self.pool['hr.analytic.timesheet']
         Attendance = self.pool['hr.attendance']
         return {
             sheet_id: {
-                'timesheet_activity_count': Timesheet.search_count(cr,uid, [('sheet_id','=', sheet_id)], context=context),
+                'timesheet_activity_count': self.pool['account.analytic.line'].search_count(cr,uid, [('sheet_id','=', sheet_id)], context=context),
                 'attendance_count': Attendance.search_count(cr,uid, [('sheet_id', '=', sheet_id)], context=context)
             }
             for sheet_id in ids
@@ -163,7 +162,7 @@ class hr_timesheet_sheet(osv.osv):
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
-        'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'sheet_id',
+        'timesheet_ids' : fields.one2many('account.analytic.line', 'sheet_id',
             'Timesheet lines',
             readonly=True, states={
                 'draft': [('readonly', False)],
@@ -287,7 +286,19 @@ class hr_timesheet_sheet(osv.osv):
         dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
         return dom
 
-
+    
+class account_analytic_account(osv.osv):
+    _inherit = "account.analytic.account"
+    
+    def name_create(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
+        group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
+        if not context.get('default_invoice_on_timesheets') or group_template_required:
+            return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
+    
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
 
@@ -304,21 +315,6 @@ class account_analytic_line(osv.osv):
             return context.get('timesheet_date_from')
         #if we don't get the dates from the timesheet, we return the default value from super()
         return res
-
-class account_analytic_account(osv.osv):
-    _inherit = "account.analytic.account"
-    
-    def name_create(self, cr, uid, name, context=None):
-        if context is None:
-            context = {}
-        group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
-        if not context.get('default_invoice_on_timesheets') or group_template_required:
-            return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
-    
-class hr_timesheet_line(osv.osv):
-    _inherit = "hr.analytic.timesheet"
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -338,20 +334,14 @@ class hr_timesheet_line(osv.osv):
         for ts in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                     SELECT l.id
-                        FROM hr_analytic_timesheet l
-                    INNER JOIN account_analytic_line al
-                        ON (l.line_id = al.id)
-                    WHERE %(date_to)s >= al.date
-                        AND %(date_from)s <= al.date
-                        AND %(user_id)s = al.user_id
+                        FROM account_analytic_line l
+                    WHERE %(date_to)s >= l.date
+                        AND %(date_from)s <= l.date
+                        AND %(user_id)s = l.user_id
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})
             ts_line_ids.extend([row[0] for row in cr.fetchall()])
-        return ts_line_ids
-
-    def _get_account_analytic_line(self, cr, uid, ids, context=None):
-        ts_line_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [('line_id', 'in', ids)])
         return ts_line_ids
 
     _columns = {
@@ -359,13 +349,14 @@ class hr_timesheet_line(osv.osv):
             type='many2one', relation='hr_timesheet_sheet.sheet', ondelete="cascade",
             store={
                     'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
-                    'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
-                    'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
+                    'account.analytic.line': (lambda self,cr,uid,ids,context=None: ids, ['user_id', 'date'], 10),
+                    #'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
                   },
             ),
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
+        print "checking contraints"
         if context is None:
             context = {}
         for timesheet_line in self.browse(cr, uid, ids, context=context):
@@ -373,15 +364,16 @@ class hr_timesheet_line(osv.osv):
                 return False
         return True
 
+    # TODO tac : This function seems conceptually wrong: we can still modify all other fields.
     _constraints = [
         (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
     ]
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        self._check(cr, uid, ids)
-        return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
+    # def unlink(self, cr, uid, ids, *args, **kwargs):
+    #     if isinstance(ids, (int, long)):
+    #         ids = [ids]
+    #     self._check(cr, uid, ids)
+    #     return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
@@ -390,8 +382,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
-        return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
-
+        return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid), context)) for el in account_ids])
 
 
 class hr_attendance(osv.osv):
@@ -545,7 +536,6 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
     }
     _depends = {
         'account.analytic.line': ['date', 'unit_amount'],
-        'hr.analytic.timesheet': ['line_id', 'sheet_id'],
         'hr.attendance': ['action', 'name', 'sheet_id'],
     }
 
@@ -577,15 +567,14 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                     FROM
                         ((
                             select
-                                min(hrt.id) as id,
+                                min(l.id) as id,
                                 l.date::date as name,
                                 s.id as sheet_id,
                                 sum(l.unit_amount) as total_timesheet,
                                 0.0 as total_attendance
                             from
-                                hr_analytic_timesheet hrt
-                                JOIN account_analytic_line l ON l.id = hrt.line_id
-                                LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = hrt.sheet_id
+                                account_analytic_line l
+                                JOIN hr_timesheet_sheet_sheet s ON s.id = l.sheet_id
                             group by l.date::date, s.id
                         ) union (
                             select
@@ -620,26 +609,23 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 
     _depends = {
         'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],
-        'hr.analytic.timesheet': ['line_id'],
         'hr_timesheet_sheet.sheet': ['date_from', 'date_to', 'user_id'],
     }
 
     def init(self, cr):
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
             select
-                min(hrt.id) as id,
+                min(l.id) as id,
                 l.account_id as name,
                 s.id as sheet_id,
                 sum(l.unit_amount) as total,
                 l.to_invoice as invoice_rate
             from
-                hr_analytic_timesheet hrt
-                left join (account_analytic_line l
+                account_analytic_line l
                     LEFT JOIN hr_timesheet_sheet_sheet s
                         ON (s.date_to >= l.date
                             AND s.date_from <= l.date
-                            AND s.user_id = l.user_id))
-                    on (l.id = hrt.line_id)
+                            AND s.user_id = l.user_id)
             group by l.account_id, s.id, l.to_invoice
         )""")
 

@@ -7,9 +7,6 @@ openerp.hr_timesheet_sheet = function(instance) {
         events: {
             "click .oe_timesheet_weekly_account a": "go_to",
         },
-        ignore_fields: function() {
-            return ['line_id'];
-        },
         init: function() {
             this._super.apply(this, arguments);
             var self = this;
@@ -97,9 +94,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             var accounts;
             var account_names;
             var default_get;
-            return this.render_drop.add(new instance.web.Model("hr.analytic.timesheet").call("default_get", [
-                ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount'],
-                new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(result) {
+            return this.render_drop.add(new instance.web.Model("account.analytic.line").call("default_get", [
+                ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount','is_timesheet'],
+                new instance.web.CompoundContext({'user_id': self.get('user_id'), "hr_timesheet" : 1})]).then(function(result) {
                 default_get = result;
                 // calculating dates
                 dates = [];
@@ -122,8 +119,8 @@ openerp.hr_timesheet_sheet = function(instance) {
 
                 var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el) });
 
-                return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
-                    new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
+                return new instance.web.Model("account.analytic.line").call("multi_on_change_account_id", [[], account_ids,
+                    new instance.web.CompoundContext({'user_id': self.get('user_id'), 'hr_timesheet' : 1})]).then(function(accounts_defaults) {
                     accounts = _(accounts).chain().map(function(lines, account_id) {
                         account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
                         // group by days
@@ -141,7 +138,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                                     name: self.description_line,
                                     unit_amount: 0,
                                     date: instance.web.date_to_str(date),
-                                    account_id: account_id,
+                                    account_id: account_id
                                 }));
                             }
                             return day;
@@ -206,8 +203,13 @@ openerp.hr_timesheet_sheet = function(instance) {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                                 var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
                                 var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
-                                self.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
-                                    account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
+                                self.defs.push(new instance.web.Model("account.analytic.line").call("on_change_unit_amount_2", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
+                                    if (typeof res.value != 'undefined') {
+                                        account.days[day_count].lines[0]['amount'] = res.value.amount;
+                                    }
+                                    else{
+                                        account.days[day_count].lines[0]['amount'] = 0;   
+                                    }
                                     self.display_totals();
                                     self.sync();
                                 }));
@@ -260,7 +262,10 @@ openerp.hr_timesheet_sheet = function(instance) {
                     return;
                 }
                 var ops = self.generate_o2m_value();
-                new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], id]).then(function(res) {
+                var ctx = self.view.build_eval_context();
+                // Adding hr_timesheet to context is necessary for on_change_Account_id to work
+                ctx.__contexts[0]['hr_timesheet'] = 1;
+                new instance.web.Model("account.analytic.line").call("on_change_account_id", [[], id, false, ctx ]).then(function(res) {
                     var def = _.extend({}, self.default_get, res.value, {
                         name: self.description_line,
                         unit_amount: 0,
@@ -327,7 +332,6 @@ openerp.hr_timesheet_sheet = function(instance) {
         generate_o2m_value: function() {
             var self = this;
             var ops = [];
-            var ignored_fields = self.ignore_fields();
             _.each(self.accounts, function(account) {
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
@@ -339,8 +343,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                                     tmp[k] = v[0];
                                 }
                             });
-                            // we remove line_id as the reference to the _inherits field will no longer exists
-                            tmp = _.omit(tmp, ignored_fields);
                             ops.push(tmp);
                         }
                     });

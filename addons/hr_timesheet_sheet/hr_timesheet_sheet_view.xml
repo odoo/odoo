@@ -44,7 +44,7 @@
         <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet">
             <field name="context">{'search_default_sheet_id': [active_id]}</field>
             <field name="name">Timesheet Activities</field>
-            <field name="res_model">hr.analytic.timesheet</field>
+            <field name="res_model">account.analytic.line</field>
             <field name="src_model">hr_timesheet_sheet.sheet</field>
         </record>
 
@@ -107,7 +107,7 @@
                             </widget>
                         </page>
                         <page string="Details">
-                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
+                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'hr_timesheet' : 1}" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
@@ -198,7 +198,7 @@
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_to_approve':1}</field>
+            <field name="context">{'search_default_to_approve':1, 'hr_timesheet':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -240,8 +240,8 @@
         -->
 
         <record id="hr_timesheet_line_form" model="ir.ui.view">
-            <field name="name">hr.analytic.timesheet.form</field>
-            <field name="model">hr.analytic.timesheet</field>
+            <field name="name">account.analytic.line.form</field>
+            <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="date" position="after">
@@ -251,8 +251,8 @@
         </record>
 
         <record id="hr_timesheet_line_search" model="ir.ui.view">
-            <field name="name">hr.analytic.timesheet.search</field>
-            <field name="model">hr.analytic.timesheet</field>
+            <field name="name">account.analytic.line.search</field>
+            <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
                 <field name="date" position="before">
@@ -362,7 +362,7 @@
         <field name="view_type">form</field>
         <field name="name">Timesheets</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id , 'hr_timesheet' : 1}</field>
     </record>
          
       <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">

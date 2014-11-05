@@ -88,7 +88,7 @@ msgid "Absent"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_form
 msgid "Accounting"
 msgstr "Contabilidade"
 
@@ -104,12 +104,12 @@ msgid "Analytic Journal"
 msgstr "Livro Analítico"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
+#: field:account.analytic.line,line_id:0
 msgid "Analytic Line"
 msgstr "Linha Analítica"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 msgid "Analytic account"
 msgstr "Conta analítica"
 
@@ -157,14 +157,14 @@ msgid "Costs & Revenues"
 msgstr "Custos & Receitas"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,create_uid:0
+#: field:account.analytic.line,create_uid:0
 #: field:hr.sign.in.project,create_uid:0
 #: field:hr.sign.out.project,create_uid:0
 msgid "Created by"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,create_date:0
+#: field:account.analytic.line,create_date:0
 #: field:hr.sign.in.project,create_date:0
 #: field:hr.sign.out.project,create_date:0
 msgid "Created on"
@@ -198,8 +198,8 @@ msgid "Description"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_form
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_tree
 msgid "Duration"
 msgstr "Duração"
 
@@ -276,7 +276,7 @@ msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
 msgstr ""
@@ -287,7 +287,7 @@ msgid "Group by month of date"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,id:0
+#: field:account.analytic.line,id:0
 #: field:hr.sign.in.project,id:0
 #: field:hr.sign.out.project,id:0
 #: field:hr.timesheet.report,id:0
@@ -302,7 +302,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_form
 msgid "Information"
 msgstr "Informação"
 
@@ -312,14 +312,14 @@ msgid "Journal"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,write_uid:0
+#: field:account.analytic.line,write_uid:0
 #: field:hr.sign.in.project,write_uid:0
 #: field:hr.sign.out.project,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,write_date:0
+#: field:account.analytic.line,write_date:0
 #: field:hr.sign.in.project,write_date:0
 #: field:hr.sign.out.project,write_date:0
 msgid "Last Updated on"
@@ -367,7 +367,7 @@ msgstr ""
 "Você deve associar um diário analítico no formulário do funcionário."
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,partner_id:0
+#: field:account.analytic.line,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -390,8 +390,8 @@ msgid "Present"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_form
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 #: field:hr.employee,product_id:0
 #: field:hr.timesheet.report,product_id:0
 msgid "Product"
@@ -464,7 +464,7 @@ msgid "Time"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 #: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
@@ -479,8 +479,8 @@ msgid "Timesheet Accounts"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_form
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_tree
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
@@ -498,12 +498,12 @@ msgid "Timesheet Line"
 msgstr "Linha de Apontamento de Horas"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
 msgstr ""
 
@@ -514,12 +514,12 @@ msgid "Timesheets"
 msgstr "Apontamento de horas"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_tree
 msgid "Total cost"
 msgstr "Custo total"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_tree
 msgid "Total time"
 msgstr "Tempo total"
 
@@ -542,7 +542,7 @@ msgid "User Error!"
 msgstr "Erro de Usuário!"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
+#: view:account.analytic.line:hr_timesheet.hr_timesheet_line_search
 msgid "Users"
 msgstr "Usuários"
 
