@@ -34,13 +34,12 @@ class account_invoice_line(osv.osv):
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
-        res_copy = [dic.copy() for dic in res]
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self.anglo_saxon_sale_move_lines(cr, uid, i_line.id, res_copy, context=context))
+                res.extend(self.anglo_saxon_sale_move_lines(cr, uid, i_line.id, res, context=context))
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self.anglo_saxon_purchase_move_lines(cr, uid, i_line.id, res_copy, context=context))
+                res.extend(self.anglo_saxon_purchase_move_lines(cr, uid, i_line.id, res, context=context))
         return res
 
 
@@ -70,7 +69,7 @@ class account_invoice_line(osv.osv):
         """Return the additional move lines for sales invoices and refunds.
 
         line_id: The id of the line.  Must be a single integer.
-        res: A copy of the invoice line entries produced so far by the parent move_line_get.
+        res: The move line entries produced so far by the parent move_line_get.
         """
         assert isinstance(line_id, (int, long)), "line_id must be an integer id"
         i_line = self.browse(cr, uid, line_id, context=None)
@@ -132,7 +131,7 @@ class account_invoice_line(osv.osv):
         """Return the additional move lines for purchase invoices and refunds.
 
         line_id: The id of the line.  Must be a single integer.
-        res: A copy of the invoice line entries produced so far by the parent move_line_get.
+        res: The move line entries produced so far by the parent move_line_get.
         """
         assert isinstance(line_id, (int, long)), "line_id must be an integer id"
         i_line = self.browse(cr, uid, line_id, context=None)
