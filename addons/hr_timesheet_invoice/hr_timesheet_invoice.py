@@ -108,27 +108,27 @@ class account_analytic_line(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
-    def _default_journal(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if record_ids:
-            employee = proxy.browse(cr, uid, record_ids[0], context=context)
-            return employee.journal_id and employee.journal_id.id or False
-        return False
+    # def _default_journal(self, cr, uid, context=None):
+    #     proxy = self.pool.get('hr.employee')
+    #     record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+    #     if record_ids:
+    #         employee = proxy.browse(cr, uid, record_ids[0], context=context)
+    #         return employee.journal_id and employee.journal_id.id or False
+    #     return False
 
-    def _default_general_account(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if record_ids:
-            employee = proxy.browse(cr, uid, record_ids[0], context=context)
-            if employee.product_id and employee.product_id.property_account_income:
-                return employee.product_id.property_account_income.id
-        return False
+    # def _default_general_account(self, cr, uid, context=None):
+    #     proxy = self.pool.get('hr.employee')
+    #     record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+    #     if record_ids:
+    #         employee = proxy.browse(cr, uid, record_ids[0], context=context)
+    #         if employee.product_id and employee.product_id.property_account_income:
+    #             return employee.product_id.property_account_income.id
+    #     return False
 
-    _defaults = {
-        'journal_id' : _default_journal,
-        'general_account_id' : _default_general_account,
-    }
+    # _defaults = {
+    #     'journal_id' : _default_journal,
+    #     'general_account_id' : _default_general_account,
+    # }
 
     def write(self, cr, uid, ids, vals, context=None):
         self._check_inv(cr, uid, ids, vals)
@@ -291,24 +291,24 @@ class account_analytic_line(osv.osv):
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-
-
-class hr_analytic_timesheet(osv.osv):
-    _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
-        res = {}
-        if not account_id:
-            return res
-        res.setdefault('value',{})
-        acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
-        st = acc.to_invoice.id
-        res['value']['to_invoice'] = st or False
-        if acc.state=='pending':
-            res['warning'] = {
-                'title': 'Warning',
-                'message': 'The analytic account is in pending state.\nYou should not work on this account !'
-            }
-        return res
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, context=None):
+        print "debug trace , ctx : " , context
+        if context and "hr_timesheet" in context:
+            res = {}
+            if not account_id:
+                return res
+            res.setdefault('value',{})
+            acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+            st = acc.to_invoice.id
+            res['value']['to_invoice'] = st or False
+            if acc.state=='pending':
+                res['warning'] = {
+                    'title': 'Warning',
+                    'message': 'The analytic account is in pending state.\nYou should not work on this account !'
+                }
+            elif acc.state == 'close' or acc.state == 'cancelled':
+                raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+            return res    
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"

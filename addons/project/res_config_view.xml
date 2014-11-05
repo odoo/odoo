@@ -57,7 +57,7 @@
                                 <label for="time_unit"/>
                                 <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
                             </div>
-                            <div>
+                            <div attrs="{'invisible': [('module_project_timesheet','=',False)]}">
                                 <field name="group_tasks_work_on_tasks" class="oe_inline"/>
                                 <label for="group_tasks_work_on_tasks" />
                             </div>

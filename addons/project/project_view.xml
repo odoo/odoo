@@ -156,10 +156,6 @@
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                         context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="planned_hours" widget="float_time"
-                                        groups="project.group_time_work_estimation_tasks"/>
-                                <field name="effective_hours" widget="float_time"
-                                        groups="project.group_time_work_estimation_tasks"/>
                                 <field name="resource_calendar_id"
                                         groups="project.group_time_work_estimation_tasks"/>
                             </group>
@@ -228,10 +224,6 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
                     <field name="parent_id" string="Parent" invisible="1"/>
-                    <field name="planned_hours" widget="float_time"/>
-                    <field name="total_hours" widget="float_time"/>
-                    <field name="effective_hours" widget="float_time"/>
-                    <field name="progress_rate" widget="progressbar"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -242,8 +234,6 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey">
-                    <field name="effective_hours"/>
-                    <field name="planned_hours"/>
                     <field name="name"/>
                     <field name="members"/>
                     <field name="use_tasks"/>
@@ -295,8 +285,17 @@
                                             <span>No activity yet, click to enter in the project.</span>
                                         </div>
                                     </div>
-                                    <div class="oe_margin_top_8 oe_kanban_project_avatars">
-                                        <t t-foreach="record.members.raw_value.slice(0,12)" t-as="member">
+                                    <div class="row oe_margin_top_8 oe_kanban_project_list">
+                                        <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
+                                    </div>
+                                    <div class="row oe_margin_top_8 oe_kanban_footer_left">
+                                        <span t-if="record.date.raw_value">
+                                            <i class="fa fa-calendar"/>
+                                            <field name="date"/>
+                                        </span>
+                                    </div>
+                                    <div class="row oe_margin_top_8 oe_kanban_project_avatars">
+                                        <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
@@ -344,35 +343,6 @@
             <field name="view_id" ref="view_project"/>
         </record>
 
-        <record id="view_task_work_form" model="ir.ui.view">
-            <field name="name">project.task.work.form</field>
-            <field name="model">project.task.work</field>
-            <field name="arch" type="xml">
-                <form string="Task Work">
-                    <group col="4">
-                        <field colspan="4" name="name"/>
-                        <field name="hours" widget="float_time"/>
-                        <field name="date"/>
-                        <field name="user_id" options='{"no_open": True}' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_partner_manager', 'project.group_project_user']}"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_task_work_tree" model="ir.ui.view">
-            <field name="name">project.task.work.tree</field>
-            <field name="model">project.task.work</field>
-            <field name="arch" type="xml">
-                <tree editable="top" string="Task Work">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="hours" widget="float_time"/>
-                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- Task -->
 
         <record id="view_task_form2" model="ir.ui.view">
@@ -406,36 +376,16 @@
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
-                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
+                                    on_change="onchange_planned(planned_hours)"/>
                         </group>
                         <group>
                             <field name="date_deadline"/>
                             <field name="categ_ids" widget="many2many_tags"/>
-                            <field name="progress" widget="progressbar"
-                                groups="project.group_time_work_estimation_tasks"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Description">
+                        <page name="description_page" string="Description">
                             <field name="description" type="html"/>
-                            <field name="work_ids" groups="project.group_tasks_work_on_tasks">
-                                <tree string="Task Work" editable="top">
-                                    <field name="name"/>
-                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
-                                    <field name="date"/>
-                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
-                                </tree>
-                            </field>
-                            <group>
-                             <group class="oe_subtotal_footer oe_right" name="project_hours" groups="project.group_time_work_estimation_tasks">
-                                <field name="effective_hours" widget="float_time"/>
-                                <label for="remaining_hours" string="Remaining" groups="project.group_time_work_estimation_tasks"/>
-                                <div>
-                                    <field name="remaining_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
-                                </div>
-                                <field name="total_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
-                             </group>
-                            </group>
                             <div class="oe_clear"/>
                         </page>
                         <page string="Delegation" groups="project.group_delegate_task">
@@ -445,13 +395,10 @@
                             <field name="parent_ids"/>
                             <separator string="Delegated tasks"/>
                             <field name="child_ids">
-                                <tree string="Delegated tasks">
+                                <tree name="delegated_task" string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="stage_id"/>
-                                    <field name="effective_hours" widget="float_time"/>
-                                    <field name="progress" widget="progressbar"/>
-                                    <field name="remaining_hours" widget="float_time"/>
                                     <field name="date_deadline"/>
                                 </tree>
                             </field>
@@ -561,15 +508,11 @@
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="total_hours" invisible="1"/>
                     <field name="planned_hours" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
-                    <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
                     <field name="date_start" groups="base.group_no_one"/>
                     <field name="date_end" groups="base.group_no_one"/>
-                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                 </tree>
             </field>
         </record>

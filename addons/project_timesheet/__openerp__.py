@@ -37,12 +37,12 @@ with the effect of creating, editing and deleting either ways.
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
+        'report/project_report_view.xml',
         'project_timesheet_view.xml',
     ],
     'demo': ['project_timesheet_demo.xml'],
     'test': [
         'test/worktask_entry_to_timesheetline_entry.yml',
-        'test/work_timesheet.yml',
     ],
     'installable': True,
     'auto_install': True,

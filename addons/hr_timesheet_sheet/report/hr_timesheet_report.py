@@ -63,7 +63,7 @@ class hr_timesheet_report(osv.osv):
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (aal.sheet_id=htss.id)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,
