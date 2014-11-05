@@ -260,8 +260,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.no_result();
                 return false;
             }
-            var remaining = groups.length - 1,
-                groups_array = [];
+            self.nb_records = 0;
+            var groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
                 var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
@@ -270,16 +270,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
                 }
                 return def.then(function(records) {
+                        self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
-                        if (self.dataset.index >= records.length){
-                            self.dataset.index = self.dataset.size() ? 0 : null;
-                        }
-                        if (!remaining--) {
-                            return self.do_add_groups(groups_array);
-                        }
                 });
-            }));
+            })).then(function () {
+                if (self.dataset.index >= self.nb_records){
+                    self.dataset.index = self.dataset.size() ? 0 : null;
+                }
+                return self.do_add_groups(groups_array);
+            });
         });
     },
     do_process_dataset: function() {

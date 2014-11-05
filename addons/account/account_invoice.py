@@ -831,7 +831,7 @@ class account_invoice(osv.osv):
             for tax in inv.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
                 tax_key.append(key)
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
@@ -1761,9 +1761,9 @@ class account_invoice_tax(osv.osv):
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
 
                 # If the taxes generate moves on the same financial account as the invoice line
-                # and no default analytic account is defined at the tax level, propagate the 
+                # and no default analytic account is defined at the tax level, propagate the
                 # analytic account from the invoice line to the tax line. This is necessary
-                # in situations were (part of) the taxes cannot be reclaimed, 
+                # in situations were (part of) the taxes cannot be reclaimed,
                 # to ensure the tax move is allocated to the proper analytic account.
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id

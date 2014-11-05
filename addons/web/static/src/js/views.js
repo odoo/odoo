@@ -333,12 +333,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         var inline = action.target === 'inline' || action.target === 'inlineview';
+        var form = _.str.startsWith(action.view_mode, 'form');
         action.flags = _.defaults(action.flags || {}, {
             views_switcher : !popup && !inline,
             search_view : !popup && !inline,
             action_buttons : !popup && !inline,
             sidebar : !popup && !inline,
-            pager : !popup && !inline,
+            pager : (!popup || !form) && !inline,
             display_title : !popup,
             search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
         });
