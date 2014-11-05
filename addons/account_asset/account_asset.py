@@ -399,7 +399,7 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
+            depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
             ctx = dict(context, account_period_prefer_normal=True)
             period_ids = period_obj.find(cr, uid, depreciation_date, context=ctx)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -431,7 +431,7 @@ class account_asset_depreciation_line(osv.osv):
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
-                'date': line.depreciation_date,
+                'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
                 'name': asset_name,
@@ -446,7 +446,7 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
-                'date': line.depreciation_date,
+                'date': depreciation_date,
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
