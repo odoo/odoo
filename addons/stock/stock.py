@@ -1447,11 +1447,7 @@ class stock_picking(osv.osv):
 
     def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, visible_op_ids, context=None):
         '''This function is called each time there barcode scanner reads an input'''
-        lot_obj = self.pool.get('stock.production.lot')
-        package_obj = self.pool.get('stock.quant.package')
-        product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
-        stock_location_obj = self.pool.get('stock.location')
         answer = {'filter_loc': False, 'operation_id': False}
 
         # Barcode Nomenclatures
@@ -1461,45 +1457,52 @@ class stock_picking(osv.osv):
             return answer # TODO: return specific error?
         else:
             barcode_nom = rec.barcode_nomenclature_id
-        parse_result = barcode_nom.parse_ean(barcode_str)
+        parsed_result = barcode_nom.parse_ean(barcode_str)
 
-        #check if the barcode is a weighted barcode
-        if parse_result['type'] == 'weight':
-            matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', parse_result['base_code']), ('default_code', '=', barcode_str)], context=context)
+        #check if the barcode is a weighted barcode or simply a product
+        if parsed_result['type'] in ['weight', 'product', 'package']:
+            weight=-1
+            if parsed_result['type'] == 'weight':
+                domain = ['|', ('ean13', '=', parsed_result['base_code']), ('default_code', '=', barcode_str)]
+                weight=parsed_result['value']
+                obj = self.pool.get('product.product')
+                id_in_operation = 'product_id'
+            elif parsed_result['type'] == 'product':
+                domain = ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)]
+                obj = self.pool.get('product.product')
+                id_in_operation = 'product_id'
+            else:
+                domain = [('name', '=', barcode_str)]
+                obj = self.pool.get('stock.quant.package')
+                id_in_operation = 'package_id'
+
+            matching_product_ids = obj.search(cr, uid, domain, context=context)
             if matching_product_ids:
-                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, weight=parse_result['value'], increment=True, context=context)
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [(id_in_operation, '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, weight=weight, increment=True, context=context)
                 answer['operation_id'] = op_id
                 return answer
-            else:
-                print "Weighted barcode but product not found" #TODO: what to do here?
-
-        #check if the barcode correspond to a location
-        matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
-        if matching_location_ids:
-            #if we have a location, return immediatly with the location name
-            location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
-            answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
-            answer['filter_loc_id'] = matching_location_ids[0]
-            return answer
-        #check if the barcode correspond to a product
-        matching_product_ids = product_obj.search(cr, uid, ['|', ('ean13', '=', barcode_str), ('default_code', '=', barcode_str)], context=context)
-        if matching_product_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', matching_product_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
+                  
         #check if the barcode correspond to a lot
-        matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
-        if matching_lot_ids:
-            lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
-        #check if the barcode correspond to a package
-        matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
-        if matching_package_ids:
-            op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
-            answer['operation_id'] = op_id
-            return answer
+        elif parsed_result['type'] == 'lot':
+            lot_obj = self.pool.get('stock.production.lot')
+            matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+            if matching_lot_ids:
+                lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
+                op_id = stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], filter_visible=True, visible_op_ids=visible_op_ids, increment=True, context=context)
+                answer['operation_id'] = op_id
+                return answer
+            
+        #check if the barcode correspond to a location
+        elif parsed_result['type'] == 'location':
+            stock_location_obj = self.pool.get('stock.location')
+            matching_location_ids = stock_location_obj.search(cr, uid, [('loc_barcode', '=', barcode_str)], context=context)
+            if matching_location_ids:
+                #if we have a location, return immediatly with the location name
+                location = stock_location_obj.browse(cr, uid, matching_location_ids[0], context=None)
+                answer['filter_loc'] = stock_location_obj._name_get(cr, uid, location, context=None)
+                answer['filter_loc_id'] = matching_location_ids[0]
+                return answer
+            
         return answer
 
 
@@ -2282,7 +2285,6 @@ class stock_move(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         """ Process completely the moves given as ids and if all moves are done, it will finish the picking.
         """
-        print "Action done"
         context = context or {}
         picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
@@ -3927,6 +3929,7 @@ class stock_pack_operation(osv.osv):
                 op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
                 self.write(cr, uid, [pack_op.id], {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
             processed_ids.append(op)
+        print "Nb processed: " + str(len(processed_ids))
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
     def create_and_assign_lot(self, cr, uid, id, name, context=None):
@@ -3972,8 +3975,8 @@ class stock_pack_operation(osv.osv):
             op_obj = self.browse(cr, uid, operation_id, context=context)
             qty = op_obj.qty_done
             if increment:
-                if weight == -1: # button + pressed
-                    if op_obj.product_qty != qty:
+                if weight == -1: # increment by 1
+                    if qty < op_obj.product_qty:
                         qty = min(qty+1, op_obj.product_qty);
                     else:
                         qty += 1
@@ -3996,7 +3999,7 @@ class stock_pack_operation(osv.osv):
                 'product_qty': 0,
                 'location_id': picking.location_id.id, 
                 'location_dest_id': picking.location_dest_id.id,
-                'qty_done': weight,
+                'qty_done': weight if weight != -1 else 1,
                 }
             for key in domain:
                 var_name, dummy, value = key

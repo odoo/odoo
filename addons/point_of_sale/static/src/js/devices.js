@@ -501,7 +501,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        // returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
+        // returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
         ean_checksum: function(ean){
             var code = ean.split('');
             if(code.length !== 13){
@@ -542,6 +542,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // - base_code : the barcode with all the encoding parts set to zero; the one put on
         //               the product in the backend
         parse_barcode: function(barcode){
+            console.log("Parse barcode");
             var self = this;
             var parsed_result = {
                 encoding: '',
@@ -552,6 +553,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             };
             
             if (!this.pos.nomenclature) {
+                console.log("no nomenclature");
                 return parsed_result;
             }
 
@@ -645,9 +647,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     parsed_result.type      = rules[i].type;
                     parsed_result.value     = get_value(barcode,rules[i].pattern);
                     parsed_result.base_code = get_basecode(barcode,rules[i].pattern,parsed_result.encoding);
+                    console.log(parsed_result);
                     return parsed_result;
                 }
             }
+            console.log(parsed_result);
             return parsed_result;
         },
         

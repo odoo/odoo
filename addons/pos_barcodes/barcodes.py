@@ -37,7 +37,7 @@ class barcode_nomenclature(osv.osv):
         'rule_ids':        fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
     }
 
-    # returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
+    # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
     def ean_checksum(self, ean):
         code = list(ean)
         if len(code) != 13:
@@ -53,82 +53,106 @@ class barcode_nomenclature(osv.osv):
         total = oddsum * 3 + evensum
         return int((10 - total % 10) % 10)
         
-    # Returns true if the ean is a valid EAN codebar number by checking the control digit.
-    # ean must be a string
-    def check_ean(self, ean):
-        return re.match(re.compile('\d+$'), ean) and (self.ean_checksum(ean) == int(ean[len(ean)-1]))
-
     # Returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
     def sanitize_ean(self, ean):
         ean = ean[0:13]
         ean = ean + (13-len(ean))*'0'
         return ean[0:12] + str(self.ean_checksum(ean))
 
-    # Attempts to interpret an ean (string encoding an ean)
-    # It will check its validity then return an object containing various
-    # information about the ean.
+    # Attempts to interpret an barcode (string encoding a barcode)
+    # It will return an object containing various information about the barcode.
     # most importantly : 
-    #  - code    : the ean
-    #  - type   : the type of the ean: 
-    #     'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'error'
+    #  - code    : the barcode
+    #  - type   : the type of the barcode: 
+    #      'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'lot' | 
+    #            'package' | 'location' | 'error'
     #  - value  : if the id encodes a numerical value, it will be put there
-    #  - base_code : the ean code with all the encoding parts set to zero; the one put on
+    #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
-    def parse_ean(self, ean):
-        parse_result = {'encoding': 'ean13', 'type': 'error', 'code': ean, 'base_code': ean, 'value': 0}
-
-        rules = []
-        for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'sequence': rule.sequence, 'pattern': rule.pattern})
+    def parse_ean(self, barcode):
+        parsed_result = {
+            'encoding': '', 
+            'type': 'error', 
+            'code': barcode, 
+            'base_code': barcode, 
+            'value': 0}
         
-        if not self.check_ean(ean):
-            return parse_result
-
-        def is_number(char):
-            n = ord(char)
-            return n >= 48 and n <= 57
-
-        def match_pattern(ean,pattern):
+        def match_pattern(barcode,pattern):
+            if(len(barcode) < len(pattern.replace('{','').replace('}',''))):
+                return False # match of this pattern is impossible
+            numerical_content  = False
+            j=0
             for i in range(len(pattern)):
                 p = pattern[i]
-                e = ean[i]
-                if is_number(p) and p != e:
+                if p == '{' or p == '}':
+                    numerical_content = not numerical_content
+                    continue
+
+                if not numerical_content and p != '*' and p != barcode[j]:
                     return False
+                j+=1
             return True
 
-        def get_value(ean,pattern):
+        def get_value(barcode,pattern):
             value = 0
             decimals = 0
+            numerical_content = False
+            j = 0
             for i in range(len(pattern)):
                 p = pattern[i]
-                v = int(ean[i])
+                if not numerical_content and p != "{":
+                    j+=1
+                    continue
+                elif p == "{":
+                    numerical_content = True
+                    continue
+                elif p == "}":
+                    break;
+
+                v = int(barcode[j])
                 if p == 'N':
                     value *= 10
                     value += v
                 elif p == 'D':  #FIXME precision ....
                     decimals += 1
                     value += v * pow(10,-decimals)
+                j+=1
             return value
 
-        def get_basecode(ean,pattern):
+        def get_basecode(barcode,pattern,encoding):
             base = ''
+            numerical_content = False
+            j = 0
             for i in range(len(pattern)):
                 p = pattern[i]
-                v = ean[i]
-                if p == '*' or is_number(p):
-                    base += v
-                else:
+                if p == '{' or p == '}':
+                    numerical_content = not numerical_content
+                    continue
+
+                if numerical_content:
                     base += '0'
-            return self.sanitize_ean(base)
+                else:
+                    base += barcode[j]
+                j+=1
+
+            for i in range(j, len(barcode)): # Read the rest of the barcode
+                base += barcode[i]
+            if encoding == "ean13":
+                base = self.sanitize_ean(base)
+            return base
+
+        rules = []
+        for rule in self.rule_ids:
+            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern})
 
         for rule in rules:
-            if match_pattern(ean, rule['pattern']):
-                parse_result['type'] = rule['type']
-                parse_result['value'] = get_value(ean, rule['pattern'])
-                parse_result['base_code'] = get_basecode(ean, rule['pattern'])
-                return parse_result
-
-        return parse_result
+            if match_pattern(barcode, rule['pattern']):
+                parsed_result['encoding'] = rule['encoding']
+                parsed_result['type'] = rule['type']
+                parsed_result['value'] = get_value(barcode, rule['pattern'])
+                parsed_result['base_code'] = get_basecode(barcode, rule['pattern'], parsed_result['encoding'])
+                return parsed_result
+        return parsed_result
 
 class barcode_rule(osv.osv):
     _name = 'barcode.rule'
