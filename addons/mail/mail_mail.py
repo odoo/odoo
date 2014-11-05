@@ -73,7 +73,7 @@ class mail_mail(osv.Model):
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
-        if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
+        if context and context.get('default_type') and context.get('default_type') not in self._fields['type'].selection:
             context = dict(context, default_type=None)
         return super(mail_mail, self).default_get(cr, uid, fields, context=context)
 
@@ -298,10 +298,20 @@ class mail_mail(osv.Model):
                         subtype='html',
                         subtype_alternative='plain',
                         headers=headers)
-                    res = ir_mail_server.send_email(cr, uid, msg,
+                    try:
+                        res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
-
+                    except AssertionError as error:
+                        if error.message == ir_mail_server.NO_VALID_RECIPIENT:
+                            # No valid recipient found for this particular
+                            # mail item -> ignore error to avoid blocking
+                            # delivery to next recipients, if any. If this is
+                            # the only recipient, the mail will show as failed.
+                            _logger.warning("Ignoring invalid recipients for mail.mail %s: %s",
+                                            mail.message_id, email.get('email_to'))
+                        else:
+                            raise
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True

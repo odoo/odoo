@@ -65,9 +65,9 @@ render_html method.  Classically, this method returns a call to the original
             report_obj = self.env['report']
             report = report_obj._get_report_from_name('<<module.reportname>>')
             docargs = {
-                'doc_ids': ids,
+                'doc_ids': self._ids,
                 'doc_model': report.model,
-                'docs': self.env[report.model].browse(ids),
+                'docs': self,
             }
             return report_obj.render('<<module.reportname>>', docargs)
 

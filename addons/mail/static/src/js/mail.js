@@ -880,7 +880,7 @@ openerp.mail = function (session) {
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
                 self.id = false;
                 // insert the message on dom after this message
-                self.parent_thread.switch_new_message( data, self.$el.parent() );
+                self.parent_thread.switch_new_message(data, self.$el);
                 self.animated_destroy(200);
             });
 

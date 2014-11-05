@@ -334,6 +334,7 @@ class BaseModel(object):
     # This is similar to _inherit_fields but:
     # 1. includes self fields,
     # 2. uses column_info instead of a triple.
+    # Warning: _all_columns is deprecated, use _fields instead
     _all_columns = {}
 
     _table = None
@@ -475,7 +476,7 @@ class BaseModel(object):
         # basic setup of field
         field.set_class_name(cls, name)
 
-        if field.store:
+        if field.store or field.column:
             cls._columns[name] = field.to_column()
         else:
             # remove potential column that may be overridden by field
@@ -1141,22 +1142,23 @@ class BaseModel(object):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
-        # Fake columns to avoid special cases in extractor
-        columns[None] = fields.char('rec_name')
-        columns['id'] = fields.char('External ID')
-        columns['.id'] = fields.integer('Database ID')
+        from openerp.fields import Char, Integer
+        fields = dict(self._fields)
+        # Fake fields to avoid special cases in extractor
+        fields[None] = Char('rec_name')
+        fields['id'] = Char('External ID')
+        fields['.id'] = Integer('Database ID')
 
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)
-        is_relational = lambda field: columns[field]._type in ('one2many', 'many2many', 'many2one')
+        is_relational = lambda field: fields[field].relational
         get_o2m_values = itemgetter_tuple(
             [index for index, field in enumerate(fields_)
-                  if columns[field[0]]._type == 'one2many'])
+                   if fields[field[0]].type == 'one2many'])
         get_nono2m_values = itemgetter_tuple(
             [index for index, field in enumerate(fields_)
-                  if columns[field[0]]._type != 'one2many'])
+                   if fields[field[0]].type != 'one2many'])
         # Checks if the provided row has any non-empty non-relational field
         def only_o2m_values(row, f=get_nono2m_values, g=get_o2m_values):
             return any(g(row)) and not any(f(row))
@@ -1180,12 +1182,11 @@ class BaseModel(object):
             for relfield in set(
                     field[0] for field in fields_
                              if is_relational(field[0])):
-                column = columns[relfield]
                 # FIXME: how to not use _obj without relying on fields_get?
-                Model = self.pool[column._obj]
+                Model = self.pool[fields[relfield].comodel_name]
 
                 # get only cells for this sub-field, should be strictly
-                # non-empty, field path [None] is for name_get column
+                # non-empty, field path [None] is for name_get field
                 indices, subfields = zip(*((index, field[1:] or [None])
                                            for index, field in enumerate(fields_)
                                            if field[0] == relfield))
@@ -1215,13 +1216,13 @@ class BaseModel(object):
         """
         if context is None: context = {}
         Converter = self.pool['ir.fields.converter']
-        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
         Translation = self.pool['ir.translation']
+        fields = dict(self._fields)
         field_names = dict(
             (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
                                          context.get('lang'))
-                 or column.string))
-            for f, column in columns.iteritems())
+                 or field.string))
+            for f, field in fields.iteritems())
 
         convert = Converter.for_model(cr, uid, self, context=context)
 
@@ -1654,7 +1655,7 @@ class BaseModel(object):
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
+        """ search(args[, offset=0][, limit=None][, order=None])
 
         Searches for records based on the ``args``
         :ref:`search domain <reference/orm/domains>`.
@@ -1664,9 +1665,6 @@ class BaseModel(object):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
-        :param bool count: if ``True``, the call should return the number of
-                           records matching ``args`` rather than the records
-                           themselves.
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
@@ -1950,7 +1948,7 @@ class BaseModel(object):
             order_field = order_split[0]
             if order_field in groupby_fields:
 
-                if self._all_columns[order_field.split(':')[0]].column._type == 'many2one':
+                if self._fields[order_field.split(':')[0]].type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
@@ -1972,7 +1970,7 @@ class BaseModel(object):
             field name, type, time informations, qualified name, ...
         """
         split = gb.split(':')
-        field_type = self._all_columns[split[0]].column._type
+        field_type = self._fields[split[0]].type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
@@ -2119,7 +2117,7 @@ class BaseModel(object):
             assert gb in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
             groupby_def = self._columns.get(gb) or (self._inherit_fields.get(gb) and self._inherit_fields.get(gb)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
-            if not (gb in self._all_columns):
+            if not (gb in self._fields):
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(gb,))
@@ -2128,11 +2126,12 @@ class BaseModel(object):
             f for f in fields
             if f not in ('id', 'sequence')
             if f not in groupby_fields
-            if f in self._all_columns
-            if self._all_columns[f].column._type in ('integer', 'float')
-            if getattr(self._all_columns[f].column, '_classic_write')]
+            if f in self._fields
+            if self._fields[f].type in ('integer', 'float')
+            if getattr(self._fields[f].base_field.column, '_classic_write')
+        ]
 
-        field_formatter = lambda f: (self._all_columns[f].column.group_operator or 'sum', self._inherits_join_calc(f, query), f)
+        field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
@@ -2983,6 +2982,12 @@ class BaseModel(object):
                 if not partial:
                     raise
 
+        # update columns (fields may have changed), and column_infos
+        for name, field in self._fields.iteritems():
+            if field.column:
+                self._columns[name] = field.to_column()
+        self._inherits_reload()
+
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
         for field in self._fields.itervalues():
@@ -3503,7 +3508,7 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
+        result_store = self._store_get_values(cr, uid, ids, self._fields.keys(), context)
 
         # for recomputing new-style fields
         recs = self.browse(cr, uid, ids, context)
@@ -3650,7 +3655,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
@@ -3738,43 +3743,42 @@ class BaseModel(object):
                 cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
-        upd0 = []
-        upd1 = []
+        updates = []            # list of (column, expr) or (column, pattern, value)
         upd_todo = []
         updend = []
         direct = []
         totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
         for field in vals:
-            field_column = self._all_columns.get(field) and self._all_columns.get(field).column
-            if field_column and field_column.deprecated:
-                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, field_column.deprecated)
+            ffield = self._fields.get(field)
+            if ffield and ffield.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, ffield.deprecated)
             if field in self._columns:
-                if self._columns[field]._classic_write and not (hasattr(self._columns[field], '_fnct_inv')):
-                    if (not totranslate) or not self._columns[field].translate:
-                        upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
-                        upd1.append(self._columns[field]._symbol_set[1](vals[field]))
+                column = self._columns[field]
+                if hasattr(column, 'selection') and vals[field]:
+                    self._check_selection_field_value(cr, user, field, vals[field], context=context)
+                if column._classic_write and not hasattr(column, '_fnct_inv'):
+                    if (not totranslate) or not column.translate:
+                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
             else:
                 updend.append(field)
-            if field in self._columns \
-                    and hasattr(self._columns[field], 'selection') \
-                    and vals[field]:
-                self._check_selection_field_value(cr, user, field, vals[field], context=context)
 
         if self._log_access:
-            upd0.append('write_uid=%s')
-            upd0.append("write_date=(now() at time zone 'UTC')")
-            upd1.append(user)
+            updates.append(('write_uid', '%s', user))
+            updates.append(('write_date', "(now() at time zone 'UTC')"))
             direct.append('write_uid')
             direct.append('write_date')
 
-        if len(upd0):
+        if updates:
             self.check_access_rule(cr, user, ids, 'write', context=context)
+            query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
+                self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
+            )
+            params = tuple(u[2] for u in updates if len(u) > 2)
             for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
-                           'where id IN %s', upd1 + [sub_ids])
+                cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
@@ -3951,7 +3955,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.store or field.inherited:
+                if field.column or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
@@ -4278,40 +4282,44 @@ class BaseModel(object):
                         for f in value.keys():
                             if f in field_dict[id]:
                                 value.pop(f)
-                    upd0 = []
-                    upd1 = []
+                    updates = []        # list of (column, pattern, value)
                     for v in value:
                         if v not in val:
                             continue
-                        if self._columns[v]._type == 'many2one':
+                        column = self._columns[v]
+                        if column._type == 'many2one':
                             try:
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        upd0.append('"'+v+'"='+self._columns[v]._symbol_set[0])
-                        upd1.append(self._columns[v]._symbol_set[1](value[v]))
-                    upd1.append(id)
-                    if upd0 and upd1:
-                        cr.execute('update "' + self._table + '" set ' + \
-                            ','.join(upd0) + ' where id = %s', upd1)
+                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                    if updates:
+                        query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
+                            self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
+                        )
+                        params = tuple(u[2] for u in updates)
+                        cr.execute(query, params + (id,))
 
             else:
                 for f in val:
+                    column = self._columns[f]
                     # use admin user for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, SUPERUSER_ID, context=context)
+                    result = column.get(cr, self, ids, f, SUPERUSER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
                                 if f in field_dict[r]:
                                     result.pop(r)
                     for id, value in result.items():
-                        if self._columns[f]._type == 'many2one':
+                        if column._type == 'many2one':
                             try:
                                 value = value[0]
                             except:
                                 pass
-                        cr.execute('update "' + self._table + '" set ' + \
-                            '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
+                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
+                            self._table, f,
+                        )
+                        cr.execute(query, (column._symbol_set[1](value), id))
 
         # invalidate and mark new-style fields to recompute
         self.browse(cr, uid, ids, context).modified(fields)
@@ -4333,7 +4341,7 @@ class BaseModel(object):
         domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._all_columns and (active_test and context.get('active_test', True)):
+        if 'active' in self._fields and active_test and context.get('active_test', True):
             if domain:
                 # the item[0] trick below works for domain items and '&'/'|'/'!'
                 # operators too
@@ -4595,6 +4603,8 @@ class BaseModel(object):
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
+        whitelist = set(name for name, field in self._fields.iteritems() if not field.inherited)
+
         def blacklist_given_fields(obj):
             # blacklist the fields that are given by inheritance
             for other, field_to_other in obj._inherits.items():
@@ -4602,19 +4612,19 @@ class BaseModel(object):
                 if field_to_other in default:
                     # all the fields of 'other' are given by the record: default[field_to_other],
                     # except the ones redefined in self
-                    blacklist.update(set(self.pool[other]._all_columns) - set(self._columns))
+                    blacklist.update(set(self.pool[other]._fields) - whitelist)
                 else:
                     blacklist_given_fields(self.pool[other])
             # blacklist deprecated fields
-            for name, field in obj._columns.items():
+            for name, field in obj._fields.iteritems():
                 if field.deprecated:
                     blacklist.add(name)
 
         blacklist_given_fields(self)
 
 
-        fields_to_copy = dict((f,fi) for f, fi in self._all_columns.iteritems()
-                                     if fi.column.copy
+        fields_to_copy = dict((f,fi) for f, fi in self._fields.iteritems()
+                                     if fi.copy
                                      if f not in default
                                      if f not in blacklist)
 
@@ -4625,19 +4635,18 @@ class BaseModel(object):
             raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         res = dict(default)
-        for f, colinfo in fields_to_copy.iteritems():
-            field = colinfo.column
-            if field._type == 'many2one':
+        for f, field in fields_to_copy.iteritems():
+            if field.type == 'many2one':
                 res[f] = data[f] and data[f][0]
-            elif field._type == 'one2many':
-                other = self.pool[field._obj]
+            elif field.type == 'one2many':
+                other = self.pool[field.comodel_name]
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
                 lines = [other.copy_data(cr, uid, line_id, context=context) for line_id in sorted(data[f])]
                 # the lines are duplicated using the wrong (old) parent, but then
                 # are reassigned to the correct one thanks to the (0, 0, ...)
                 res[f] = [(0, 0, line) for line in lines if line]
-            elif field._type == 'many2many':
+            elif field.type == 'many2many':
                 res[f] = [(6, 0, data[f])]
             else:
                 res[f] = data[f]
@@ -4655,16 +4664,14 @@ class BaseModel(object):
         seen_map[self._name].append(old_id)
 
         trans_obj = self.pool.get('ir.translation')
-        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        fields = self.fields_get(cr, uid, context=context)
 
-        for field_name, field_def in fields.items():
+        for field_name, field in self._fields.iteritems():
             # removing the lang to compare untranslated values
             context_wo_lang = dict(context, lang=None)
             old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
             # we must recursively copy the translations for o2o and o2m
-            if field_def['type'] == 'one2many':
-                target_obj = self.pool[field_def['relation']]
+            if field.type == 'one2many':
+                target_obj = self.pool[field.comodel_name]
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
                 old_children = sorted(r.id for r in old_record[field_name])
@@ -4672,7 +4679,7 @@ class BaseModel(object):
                 for (old_child, new_child) in zip(old_children, new_children):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
-            elif field_def.get('translate'):
+            elif getattr(field, 'translate', False):
                 if field_name in self._columns:
                     trans_name = self._name + "," + field_name
                     target_id = new_id
@@ -4796,13 +4803,14 @@ class BaseModel(object):
         :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
         """
 
-        field = self._all_columns.get(field_name)
-        field = field.column if field else None
-        if not field or field._type != 'many2many' or field._obj != self._name:
+        field = self._fields.get(field_name)
+        if not (field and field.type == 'many2many' and
+                field.comodel_name == self._name and field.store):
             # field must be a many2many on itself
             raise ValueError('invalid field_name: %r' % (field_name,))
 
-        query = 'SELECT distinct "%s" FROM "%s" WHERE "%s" IN %%s' % (field._id2, field._rel, field._id1)
+        query = 'SELECT distinct "%s" FROM "%s" WHERE "%s" IN %%s' % \
+                    (field.column2, field.relation, field.column1)
         ids_parent = ids[:]
         while ids_parent:
             ids_parent2 = []
@@ -4982,7 +4990,7 @@ class BaseModel(object):
                 result, record_ids = [], list(command[2])
 
         # read the records and apply the updates
-        other_model = self.pool[self._all_columns[field_name].column._obj]
+        other_model = self.pool[self._fields[field_name].comodel_name]
         for record in other_model.read(cr, uid, record_ids, fields=fields, context=context):
             record.update(updates.get(record['id'], {}))
             result.append(record)
@@ -5213,13 +5221,14 @@ class BaseModel(object):
 
     def _mapped_func(self, func):
         """ Apply function `func` on all records in `self`, and return the
-            result as a list or a recordset (if `func` return recordsets).
+            result as a list or a recordset (if `func` returns recordsets).
         """
-        vals = [func(rec) for rec in self]
-        val0 = vals[0] if vals else func(self)
-        if isinstance(val0, BaseModel):
-            return reduce(operator.or_, vals, val0)
-        return vals
+        if self:
+            vals = [func(rec) for rec in self]
+            return reduce(operator.or_, vals) if isinstance(vals[0], BaseModel) else vals
+        else:
+            vals = func(self)
+            return vals if isinstance(vals, BaseModel) else []
 
     def mapped(self, func):
         """ Apply `func` on all records in `self`, and return the result as a
@@ -5258,12 +5267,20 @@ class BaseModel(object):
             func = lambda rec: filter(None, rec.mapped(name))
         return self.browse([rec.id for rec in self if func(rec)])
 
-    def sorted(self, key=None):
-        """ Return the recordset `self` ordered by `key` """
+    def sorted(self, key=None, reverse=False):
+        """ Return the recordset `self` ordered by `key`.
+
+            :param key: either a function of one argument that returns a
+                comparison key for each record, or ``None``, in which case
+                records are ordered according the default model's order
+
+            :param reverse: if ``True``, return the result in reverse order
+        """
         if key is None:
-            return self.search([('id', 'in', self.ids)])
+            recs = self.search([('id', 'in', self.ids)])
+            return self.browse(reversed(recs._ids)) if reverse else recs
         else:
-            return self.browse(map(int, sorted(self, key=key)))
+            return self.browse(map(int, sorted(self, key=key, reverse=reverse)))
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """

@@ -460,7 +460,7 @@
     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-        <input type="radio" name="product_id" class="js_product_change" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
+        <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
         <span t-esc="variant_id.name_get()[0][1]"/>
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
@@ -683,15 +683,15 @@
                                   <div class="text-muted" t-field="line.name"/>
                               </td>
                               <td class="text-center" name="price">
-                                <t t-if="(compute_currency(line.product_id.lst_price) - line.price_unit) &gt; 0.01">
+                                <t t-if="(line.price_unit - line.price_reduce) &gt; 1">
                                   <del class="text-danger" style="white-space: nowrap;"
-                                    t-field="line.product_id.lst_price" t-field-options='{
+                                    t-field="line.price_unit" t-field-options='{
                                         "widget": "monetary",
                                         "from_currency": "website.currency_id",
                                         "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                                     }'/>&amp;nbsp;
                                 </t>
-                                <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
+                                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
                                      "widget": "monetary",
                                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                                  }'/>
@@ -882,7 +882,7 @@
                       <input type="text" name="city" class="form-control" t-att-value="checkout.get('city')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="zip">Zip / Postal Code</label>
+                      <label class="control-label" for="zip" style="font-weight: normal">Zip / Postal Code</label>
                       <input type="text" name="zip" class="form-control" t-att-value="checkout.get('zip')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
@@ -921,7 +921,7 @@
                                 t-att-data-shipping_country_id="shipping.country_id and shipping.country_id.id"
                                 ><t t-esc="', '.join('\n'.join(shipping.name_get()[0][1].split(',')).split('\n')[1:])"/></option>
                           </t>
-                          <option value="-1">-- Create a new address --</option>
+                          <option value="-1" t-att-selected="error and len(error) > 0 and shipping_id == -1">-- Create a new address --</option>
                       </select>
                   </div>
               </div>
@@ -946,12 +946,12 @@
                       <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="shipping_zip">Zip / Postal Code</label>
+                      <label class="control-label" for="shipping_zip" style="font-weight: normal">Zip / Postal Code</label>
                       <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_country_id">Country</label>
-                      <select name="shipping_country_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
+                      <select name="shipping_country_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else ''">
                           <option value="">Country...</option>
                           <t t-foreach="countries or []" t-as="country">
                               <option t-att-value="country.id" t-att-selected="country.id == checkout.get('shipping_country_id')"><t t-esc="country.name"/></option>

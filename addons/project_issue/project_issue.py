@@ -272,7 +272,7 @@ class project_issue(osv.Model):
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_issue_work, ['hours'], 10),
             }),
     }
@@ -535,7 +535,7 @@ class project_project(osv.Model):
         if use_tasks and not use_issues:
             values['alias_model'] = 'project.task'
         elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issues'
+            values['alias_model'] = 'project.issue'
         return {'value': values}
 
     def create(self, cr, uid, vals, context=None):
