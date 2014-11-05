@@ -275,6 +275,7 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get('activities');
             var activity_models = activity_collection.models;
             for (var i = 0; i < activity_models.length; i++) {
+                //TODO: Export only those row which has been modified i.e. having some command, so sync data do not need to sync all data 
                 records.push(activity_models[i].export_as_JSON());
             }
             var momObj = new moment();

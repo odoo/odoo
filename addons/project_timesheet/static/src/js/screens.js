@@ -645,9 +645,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             var project_activity_data = {};
             //$form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
-            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100));
+            project_activity_data['unit_amount'] = (parseInt(this.$("#hours").val()) + ((((parseInt(this.$("#minutes").val()) * 100) / 60))/100)) || 0;
             project_activity_data['project_id'] = [self.project_m2o.get("value"), self.project_m2o.get("display_string")];
-            project_activity_data['task_id'] = [self.task_m2o.get("value"), self.task_m2o.get("display_string")];
+            project_activity_data['task_id'] = self.task_m2o.get("value") ? ([self.task_m2o.get("value"), self.task_m2o.get("display_string")]) : false;
             project_activity_data['name'] = this.$("#name").val();
             return project_activity_data;
         },
@@ -722,16 +722,18 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super();
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
-            this.project_m2o.$el.find("textarea").on("change", this, function() {
-                this.task_m2o.set({display_string: false, value: false});
-                this.task_m2o.display_string(false);
-            });
             this.project_m2o.on("change:value", this, function() {
+                console.log("Inside project m2o value changed :::: ");
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
             this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", label: "Task", id_for_input: "task_id"});
             this.task_m2o.appendTo(this.$el.find(".task_m2o"));
+            console.log("project m2o before change bind ::: ", this.project_m2o.$el.find("textarea"));
+            this.project_m2o.$el.find("textarea").on("change", function() {
+                self.task_m2o.set({display_string: false, value: false});
+                self.task_m2o.display_string(false);
+            });
         },
         hide: function() {
             if(this.activity_list) {
@@ -765,7 +767,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             var $duration_field = this.$el.find(".pt_duration input");
             _.each($duration_field, function(input) {
-                if(!$(input).val() || (typeof parseInt($(input).val()) !== 'number' || isNaN(parseInt($(input).val())))) {
+                if($(input).val() && (typeof parseInt($(input).val()) !== 'number' || isNaN(parseInt($(input).val())))) {
                     $(input).addClass("pt_invalid");
                     validity = false;
                 }
@@ -800,8 +802,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity,.pt_btn_add_activity").toggleClass("o_hidden");
             self.$el.find(".pt_add_activity_title,.pt_edit_activity_title").toggleClass("o_hidden");
-            this.task_m2o.set({"effective_readonly": true});
-            this.project_m2o.set({"effective_readonly": true});
+            //this.task_m2o.set({"effective_readonly": true});
+            //this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":

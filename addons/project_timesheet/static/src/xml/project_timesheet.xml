@@ -122,7 +122,7 @@
     <t t-name="FieldMany2One">
         <t>
             <div class="pt_m2o">
-                <t t-if="!widget.get('effective_readonly')">
+                <!-- <t t-if="!widget.get('effective_readonly')"> -->
                     <div>
                         <t t-esc="widget.label"></t>
                     </div>
@@ -130,12 +130,13 @@
                         t-att-id="widget.id_for_input"
                         t-attf-class="form-control #{widget.classname}"
                         t-att-placeholder="widget.placeholder"></textarea>
-                </t>
+                <!-- </t>
                 <t t-if="widget.get('effective_readonly')">
                     <span t-att-id="widget.id_for_input"
                           t-attf-class="form-control #{widget.classname}"
                           t-att-placeholder="widget.placeholder"></span>
                 </t>
+                -->
              </div>
          </t>
     </t>

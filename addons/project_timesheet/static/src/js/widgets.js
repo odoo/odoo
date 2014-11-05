@@ -90,6 +90,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                     autocomplete: {
                         selectFromDropdown: function() {
                             this.trigger('hideDropdown');
+                            self.$input.trigger('change');
                             var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                             var data = self.search_result[index];
                             if (data.id) {
