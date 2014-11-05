@@ -278,11 +278,12 @@ then change the list of model to link to our new controller:
 
 .. patch::
 
-You can now visit each teacher's page. Try adding blocks to a teacher's page
-to write his biography, then go to an other teacher's page… your biography
-is shared between all teachers, because blocks are added to the *template*,
-and the *biography* template is shared between all teachers, when one page
-is edited they're all edited at the same time.
+Restart Odoo and upgrade the module, then you can visit each teacher's page. 
+As an exercise, try adding blocks to a teacher's page to write a biography, 
+then go to another teacher's page and so forth. You will discover, that your biography 
+is shared between all teachers, because blocks are added to the *template*, and the 
+*biography* template is  shared between all teachers, when one page is edited 
+they're all edited at the same time.
 
 Field edition
 =============
