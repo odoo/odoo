@@ -431,7 +431,7 @@ class account_asset_depreciation_line(osv.osv):
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
-                'date': depreciation_date,
+                'date': line.depreciation_date,
             })
             move_line_obj.create(cr, uid, {
                 'name': asset_name,
@@ -446,7 +446,7 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
-                'date': depreciation_date,
+                'date': line.depreciation_date,
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
