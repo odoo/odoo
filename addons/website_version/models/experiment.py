@@ -42,7 +42,7 @@ class Goals(osv.Model):
         'google_ref': fields.char(string="Reference Google", size=256, required=True),        
     }
 
-EXPERIMENT_STATES = [('draft','Draft'),('running','Running'),('ended','Ended')]
+EXPERIMENT_STATES = [('running','Running'),('paused','Paused'),('ended','Ended')]
 
 class Experiment(osv.Model):
     _name = "website_version.experiment"
@@ -71,7 +71,7 @@ class Experiment(osv.Model):
     }
 
     _defaults = {
-        'state': 'draft',
+        'state': 'running',
         'sequence': 1,
     }
 
@@ -93,67 +93,27 @@ class Experiment(osv.Model):
         return super(Experiment, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        name = vals.get('name')
+        li = vals.get('experiment_version_ids')
+        if li:
+            for l in li:
+                #l[0] is the magic number
+                if not l[0] == 1:
+                    raise Warning("You cannot modify the number of versions.")
         state = vals.get('state')
-        exp_snaps = vals.get('experiment_version_ids')
-        obj_metric = vals.get('objectives')
-        #some write operation doesn't need to synchronise with Google (frequency or sequence)
-        if name or state or exp_snaps or obj_metric:
-            for exp in self.browse(cr, uid, ids, context=context):
-                if exp.state == 'ended':
-                    raise Warning("You cannot modify an ended experiment.")
+        for exp in self.browse(cr, uid, ids, context=context):
+            if state and exp.state == 'ended':
+                raise Warning("You cannot modify an ended experiment.")
+            elif state == 'ended':
                 #temp is the data to send to Googe
                 temp={}
-                if name:
-                    temp['name'] = name
-                else:
-                    temp['name'] = exp.name
-                if state:
-                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
-                    if len(current[1]["variations"]) == 1:
-                        raise Warning("You must define at least one version in your experiment.")
-                    if not current[1].get("objectiveMetric"):
-                        raise Warning("You must define at least one goal for this experiment in your Google Analytics account before moving its state.")
-                    if current[1]["status"] == 'RUNNING' and state == 'draft' :
-                        raise Warning("You cannot modify a running experiment.")
-                    if state == 'ended' and not current[1]["status"] == 'RUNNING':
-                        raise Warning("Your experiment must be running to be ended.")
-                    if current[1]["status"] == 'ENDED':
-                        raise Warning("You cannot modify the state of an ended experiement.")
-                    temp['status'] = state
-                else:
-                    temp['status'] = exp.state
-                if obj_metric:
-                    current = self.pool['google.management'].get_experiment_info(cr, uid, exp.google_id, exp.website_id.id, context=None)
-                    if current[1]["status"] in ('RUNNING','ENDED'):
-                        raise Warning("You cannot modify the objective of an ended or running experiment.")
-                    temp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [obj_metric],context)[0].google_ref
-                if exp_snaps:
-                    if exp.state == 'running':
-                        raise Warning("You cannot modify a running experiment.")
-                    index = 0
-                    temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
-                    for exp_s in exp.experiment_version_ids:
-                        for li in exp_snaps:
-                            #l[0] == 2 means DELETE(magic number)
-                            if not li[0] == 2 and li[1] == exp_s.id:
-                                temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
-                        index+=1
-                    while index< len(exp_snaps):
-                        snap_id = exp_snaps[index][2]['version_id']
-                        snap_name = self.pool['website_version.version'].browse(cr, uid, [snap_id], context=context)[0].name
-                        temp['variations'].append({'name':snap_name, 'url': 'http://localhost/'+snap_name})
-                        index+=1
-                else:
-                    temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
-                    for exp_s in exp.experiment_version_ids:
-                        temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
+                temp['name'] = exp.name
+                temp['status'] = state
+                temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
+                for exp_s in exp.experiment_version_ids:
+                    temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
                 #to check the constraints before to write on the google analytics account 
-                x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
-                self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=None)
-        else:
-            x = super(Experiment, self).write(cr, uid, ids, vals, context=context)
-        return x
+                self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=context)
+        return super(Experiment, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for exp in self.browse(cr, uid, ids, context=context):

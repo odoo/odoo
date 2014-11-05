@@ -70,7 +70,7 @@
             <field name="arch" type="xml">
                 <form string="Experiment Form">
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,running,ended" clickable="True"/>
+                        <field name="state" widget="statusbar" statusbar_visible="running,paused,ended" clickable="True"/>
                     </header>
                     <sheet string="Exp">
                         <button icon="fa-line-chart" name="website_version.action_analytic" String="Statistics" action="action" 
@@ -78,15 +78,15 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" readonly="1"/>
                             </h1>
                         </div>
                         <group col="4">
-                            <field name="website_id"/>
+                            <field name="website_id" readonly="1"/>
                             <field name="google_id" readonly="1" groups="base.group_no_one"/>
                             <label for="objectives"/>
                             <div>
-                                <field name="objectives" class="oe_inline" widget="selection"/>
+                                <field name="objectives" class="oe_inline" widget="selection" readonly="1"/>
                                 <button name="update_goals" string="(Sync)" type="object" context="{'website_id': website_id}" class="oe_link oe_edit_only"/>
                             </div>
                         </group>
@@ -94,7 +94,7 @@
                             <page string="Versions in experiment" colspan="4" >
                                 <field name="experiment_version_ids" colspan="4" context="{'website_id': website_id}">
                                     <tree string="PPP" editable="bottom"> 
-                                        <field name="version_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4"/>
+                                        <field name="version_id" string="Versions" domain="[('website_id','=',context.get('website_id'))]" colspan="4" readonly="1"/>
                                         <field name="frequency" colspan="4"/>
                                     </tree>
                                 </field>

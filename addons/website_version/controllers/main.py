@@ -78,7 +78,7 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         v = request.registry['ir.ui.view'].browse(cr, uid, [int(view_id)],context)[0]
         website_id = context.get('website_id')
-        return bool(request.registry["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id),'|',('experiment_id.state','=','draft'),('experiment_id.state','=','running')], context=context))
+        return bool(request.registry["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)], context=context))
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
     def publish_version(self, version_id):
