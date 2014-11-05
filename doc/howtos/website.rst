@@ -304,10 +304,10 @@ interfaces. Change the *person* template to use ``t-field``:
 
 .. patch::
 
-Restart Odoo, there is now a placeholder under the teacher's name and a new
-zone for blocks in :guilabel:`Edit` mode. Content dropped there is stored in
-the correspoding teacher's ``biography`` field, and thus specific to that
-teacher.
+Restart Odoo and upgrade the modile, there is now a placeholder under the 
+teacher's name and a new zone for blocks in :guilabel:`Edit` mode. Content
+dropped there is stored in the correspoding teacher's ``biography`` field,
+and thus specific to that teacher.
 
 The teacher's name is also editable, and when saved the change is visible on
 the index page.
