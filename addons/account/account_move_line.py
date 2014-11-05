@@ -177,14 +177,14 @@ class account_move_line(models.Model):
 
     @api.multi
     def _balance(self):
-        c = dict(self._context or {})
-        c['initital_bal'] = True
+        context = dict(self._context or {})
+        context['initital_bal'] = True
         sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
                     FROM account_move_line l1 LEFT JOIN account_move_line l2
                     ON (l1.account_id = l2.account_id
                       AND l2.id <= l1.id
                       AND """ + \
-                self.with_context(c)._query_get(obj='l2') + \
+                self.with_context(context)._query_get(obj='l2') + \
                 ") WHERE l1.id IN %s GROUP BY l1.id"
 
         self._cr.execute(sql, [tuple(self.ids)])
@@ -203,15 +203,17 @@ class account_move_line(models.Model):
 
     @api.multi
     def _balance_search(self, args, domain=None):
-        if not args:
-            return []
-        where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
-        cursor.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
-                     GROUP BY id, debit, credit having '+where)
-        res = cursor.fetchall()
-        if not res:
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+        result = []
+        if args:
+            where = ' AND '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
+            self._cr.execute('SELECT id, SUM(debit-credit) FROM account_move_line \
+                         GROUP BY id, debit, credit having '+where)
+            data = self._cr.fetchall()
+            if data:
+                result = [('id', 'in', [x[0] for x in data])]
+            else:
+                result = [('id', '=', '0')]
+        return result
 
     @api.multi
     @api.depends('reconcile_id','reconcile_partial_id')
@@ -305,28 +307,24 @@ class account_move_line(models.Model):
 
     @api.model
     def _get_date(self):
-        dt = time.strftime('%Y-%m-%d')
+        date = time.strftime('%Y-%m-%d')
         context = dict(self._context or {})
         if context.get('journal_id') and context.get('period_id'):
-            self._cr.execute('SELECT date FROM account_move_line ' \
-                    'WHERE journal_id = %s AND period_id = %s ' \
-                    'ORDER BY id DESC limit 1',
-                    (context['journal_id'], context['period_id']))
-            res = self._cr.fetchone()
-            if res:
-                dt = res[0]
+            line = self.search([('journal_id', '=', context['journal_id']),('period_id', '=', context['period_id'])], order='id desc', limit=1)
+            if line:
+                date = line.date
             else:
                 period = self.env['account.period'].browse(context['period_id'])
-                dt = period.date_start
-        return dt
+                date = period.date_start
+        return date
 
     @api.model
     def _get_currency(self):
+        currency = False
         context = dict(self._context or {})
-        if not context.get('journal_id', False):
-            return False
-        cur = self.env['account.journal'].browse(context['journal_id']).currency
-        return cur
+        if context.get('journal_id', False):
+            currency = self.env['account.journal'].browse(context['journal_id']).currency
+        return currency
 
     @api.model
     def _get_period(self):
@@ -456,57 +454,44 @@ class account_move_line(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        val = {}
-        val['date_maturity'] = False
+        self.date_maturity = False
 
-        if not self.partner_id:
-            return {'value':val}
-        date = self.date
-        if not date:
-            date = datetime.now().strftime('%Y-%m-%d')
-        jt = self.journal_id.type
-
-        payment_term_id = False
-        if jt and jt in ('purchase', 'purchase_refund') and self.partner_id.property_supplier_payment_term:
-            payment_term_id = self.partner_id.property_supplier_payment_term.id
-        elif jt and self.partner_id.property_payment_term:
-            payment_term_id = self.partner_id.property_payment_term.id
-        if payment_term_id:
-            res = self.env['account.payment.term'].compute(payment_term_id, 100, date)
-            if res:
-                val['date_maturity'] = res[0][0]
-        if not self.account_id:
-            id1 = self.partner_id.property_account_payable.id
-            id2 =  self.partner_id.property_account_receivable.id
-            if jt:
-                if jt in ('sale', 'purchase_refund'):
-                    val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id2)
-                elif jt in ('purchase', 'sale_refund'):
-                    val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id1)
-                elif jt in ('general', 'bank', 'cash'):
+        if self.partner_id:
+            date = self.date or datetime.now().strftime('%Y-%m-%d')
+            journal_type = self.journal_id.type
+    
+            payment_term_id = False
+            if journal_type in ('purchase', 'purchase_refund') and self.partner_id.property_supplier_payment_term:
+                payment_term_id = self.partner_id.property_supplier_payment_term.id
+            elif self.partner_id.property_payment_term:
+                payment_term_id = self.partner_id.property_payment_term.id
+            if payment_term_id:
+                res = self.env['account.payment.term'].compute(payment_term_id, 100, date)
+                if res:
+                    self.date_maturity = res[0][0]
+            if not self.account_id:
+                account_payable = self.partner_id.property_account_payable.id
+                account_receivable =  self.partner_id.property_account_receivable.id
+                if journal_type in ('sale', 'purchase_refund'):
+                    self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_receivable)
+                elif journal_type in ('purchase', 'sale_refund'):
+                    self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_payable)
+                elif journal_type in ('general', 'bank', 'cash'):
                     if self.partner_id.customer:
-                        val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id2)
+                        self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_receivable)
                     elif self.partner_id.supplier:
-                        val['account_id'] = self.partner_id and self.partner_id.property_account_position.map_account(id1)
-                if val.get('account_id', False):
-                    d = self.onchange_account_id(account_id = val['account_id'], partner_id = self.partner_id.id)
-                    val.update(d['value'])
-        return {'value':val}
+                        self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_payable)
+                if self.account_id:
+                    self.onchange_account_id()
 
     # Need some guidance to get rid of this
-    @api.multi
-    def onchange_account_id(self, account_id=False, partner_id=False):
-        val = {}
-        if account_id:
-            res = self.env['account.account'].browse(account_id)
-            tax_ids = res.tax_ids
-            if tax_ids and partner_id:
-                part = self.env['res.partner'].browse(partner_id)
-                tax_id = self.env['account.fiscal.position'].map_tax(part and part.property_account_position or False, tax_ids)[0]
+    @api.onchange('account_id')
+    def onchange_account_id(self):
+        if self.account_id:
+            if self.account_id.tax_ids and self.partner_id:
+                self.account_tax_id = self.env['account.fiscal.position'].map_tax(self.partner_id and self.partner_id.property_account_position or False, self.account_id.tax_ids)[0]
             else:
-                tax_id = tax_ids and tax_ids[0].id or False
-            val['account_tax_id'] = tax_id
-        return {'value': val}
+                self.account_tax_id = self.account_id.tax_ids and self.account_id.tax_ids[0].id or False
     #
     # type: the type if reconciliation (no logic behind this field, for info)
     #
