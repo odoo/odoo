@@ -4,10 +4,535 @@
 ORM
 ===
 
+Recordsets
+==========
+
+.. versionadded:: 8.0
+
+Interaction with models and records is performed through recordsets, a sorted
+set of records of the same model.
+
+Methods defined on a model are executed on a recordset, and their ``self`` is
+a recordset::
+
+    class AModel(Model):
+        _name = 'a.model'
+        def a_method(self):
+            # self can be anywhere between 0 records and all records in the
+            # database
+            self.do_operation()
+
+Iterating on a recordset will yield new sets of *a single record*
+("singletons"), much like iterating on a Python string yields strings of a
+single characters::
+
+        def do_operation(self):
+            print self # => a.model(1, 2, 3, 4, 5)
+            for record in self:
+                print record # => a.model(1), then a.model(2), then a.model(3), ...
+
+Field access
+------------
+
+Recordsets provide an "Active Record" interface: model fields can be read and
+written directly from the record, but only on singletons (single-record
+recordsets). Setting a field's value triggers an update to the database::
+
+    >>> record.name
+    Example Name
+    >>> record.company_id.name
+    Company Name
+    >>> record.name = "Bob"
+
+Trying to read or write a field on multiple records will raise an error.
+
+Accessing a relational field (:class:`~openerp.fields.Many2one`,
+:class:`~openerp.fields.One2many`, :class:`~openerp.fields.Many2many`)
+*always* returns a recordset, empty if the field is not set.
+
+.. danger::
+
+    each assignment to a field triggers a database update, when setting
+    multiple fields at the same time or setting fields on multiple records
+    (to the same value), use :meth:`~openerp.models.Model.write`::
+
+        # 3 * len(records) database updates
+        for record in records:
+            record.a = 1
+            record.b = 2
+            record.c = 3
+
+        # len(records) database updates
+        for record in records:
+            record.write({'a': 1, 'b': 2, 'c': 3})
+
+        # 1 database update
+        records.write({'a': 1, 'b': 2, 'c': 3})
+
+Set operations
+--------------
+
+Recordsets are immutable, but sets of the same model can be conbined using
+various set operations, returning new recorsets. Set operations do *not*
+preserve order.
+
+.. addition preserves order but can introduce duplicates
+
+* ``record in set`` returns whether ``record`` (which must be a 1-element
+  recordset) is present in ``set``. ``record not in set`` is the inverse
+  operation
+* ``set1 | set2`` returns the union of the two recordsets, a new recordset
+  containing all records present in either source
+* ``set1 & set2`` returns the intersection of two recordsets, a new recordset
+  containing only records present in both sources
+* ``set1 - set2`` returns a new recordset containing only records of ``set1``
+  which are *not* in ``set2``
+
+Other recordset operations
+--------------------------
+
+Recordsets are iterable so the usual Python tools are available for
+transformation (:func:`python:map`, :func:`python:sorted`,
+:func:`~python:itertools.ifilter`, ...) however these returns either a
+:class:`python:list` or an :term:`python:iterator`, removing the ability to
+call methods on their result, or to use set operations.
+
+Recordsets therefore provide these operations returning recordsets themselves
+(when possible):
+
+:meth:`~openerp.models.Model.filtered`
+    returns a recordset containing only records satisfying the provided
+    predicate function. The predicate can also be a string to filter by a
+    field being true or false::
+
+        # only keep records whose company is the current user's
+        records.filtered(lambda r: r.company_id == user.company_id)
+
+        # only keep records whose partner is a company
+        records.filtered("partner_id.is_company")
+
+:meth:`~openerp.models.Model.sorted`
+    returns a recordset sorted by the provided key function. If no key
+    is provided, use the model's default sort order::
+
+        # sort records by name
+        records.sorted(key=lambda r: r.name)
+
+:meth:`~openerp.models.Model.mapped`
+    applies the provided function to each record in the recordset, returns
+    a recordset if the results are recordsets. The provided function can be
+    a string to get field values::
+
+        # returns a list of names
+        records.mapped('name')
+
+        # returns a recordset of partners
+        record.mapped('partner_id')
+
+        # returns the union of all partner banks, with duplicates removed
+        record.mapped('partner_id.bank_ids')
+
+Environment
+===========
+
+The :class:`~openerp.api.Environment` stores various contextual data used by
+the ORM: the database cursor (for database queries), the current user
+(for access rights checking) and the current context (storing arbitrary
+metadata). The environment also stores caches.
+
+All recordsets have an environment, which is immutable, can be accessed
+using :attr:`~openerp.models.Model.env` and gives access to the current user
+(:attr:`~openerp.api.Environment.user`), the cursor
+(:attr:`~openerp.api.Environment.cr`) or the context
+(:attr:`~openerp.api.Environment.context`)::
+
+    >>> records.env
+    <Environment object ...>
+    >>> records.env.user
+    res.user(3)
+    >>> records.env.cr
+    <Cursor object ...)
+
+When creating a recordset from an other recordset, the environment is
+inherited. The environment can be used to get an empty recordset in an
+other model, and query that model::
+
+    >>> self.env['res.partner']
+    res.partner
+    >>> self.env['res.partner'].search([['is_company', '=', True], ['customer', '=', True]])
+    res.partner(7, 18, 12, 14, 17, 19, 8, 31, 26, 16, 13, 20, 30, 22, 29, 15, 23, 28, 74)
+
+Altering the environment
+------------------------
+
+The environment can be customized from a recordset. This returns a new
+version of the recordset using the altered environment.
+
+:meth:`~openerp.models.Model.sudo`
+    creates a new environment with the provided user set, uses the
+    administrator if none is provided (to bypass access rights/rules in safe
+    contexts), returns a copy of the recordset it is called on using the
+    new environment::
+
+        # create partner object as administrator
+        env['res.partner'].sudo().create({'name': "A Partner"})
+
+        # list partners visible by the "public" user
+        public = env.ref('base.public_user')
+        env['res.partner'].sudo(public).search([])
+
+:meth:`~openerp.models.Model.with_context`
+    #. can take a single positional parameter, which replaces the current
+       environment's context
+    #. can take any number of parameters by keyword, which are added to either
+       the current environment's context or the context set during step 1
+
+    ::
+
+        # look for partner, or create one with specified timezone if none is
+        # found
+        env['res.partner'].with_context(tz=a_tz).find_or_create(email_address)
+
+:meth:`~openerp.models.Model.with_env`
+    replaces the existing environment entirely
+
+Common ORM methods
+==================
+
+.. maybe these clarifications/examples should be in the APIDoc?
+
+:meth:`~openerp.models.Model.search`
+    Takes a :ref:`search domain <reference/orm/domains>`, returns a recordset
+    of matching records. Can return a subset of matching records (``offset``
+    and ``limit`` parameters) and be ordered (``order`` parameter)::
+
+        >>> # searches the current model
+        >>> self.search([('is_company', '=', True), ('customer', '=', True)])
+        res.partner(7, 18, 12, 14, 17, 19, 8, 31, 26, 16, 13, 20, 30, 22, 29, 15, 23, 28, 74)
+        >>> self.search([('is_company', '=', True)])[0].name
+        'Agrolait'
+
+    Does not use its recordset.
+
+    .. tip:: to just check if any record matches a domain, or count the number
+             of records which do, use
+             :meth:`~openerp.models.Model.search_count`
+:meth:`~openerp.models.Model.create`
+    Takes a number of field values, and returns a recordset containing the
+    record created::
+
+        >>> self.create({'name': "New Name"})
+        res.partner(78)
+
+    Does not use its recordset.
+:meth:`~openerp.models.Model.write`
+    Takes a number of field values, writes them to all the records in its
+    recordset. Does not return anything::
+
+        self.write({'name': "Newer Name"})
+
+:meth:`~openerp.models.Model.browse`
+    Takes a database id or a list of ids and returns a recordset, useful when
+    record ids are obtained from outside Odoo (e.g. round-trip through
+    external system) or :ref:`when calling methods in the old API
+    <reference/orm/oldapi>`::
+
+        >>> self.browse([7, 18, 12])
+        res.partner(7, 18, 12])
+
+:meth:`~openerp.models.Model.exists`
+    Returns a new recordset containing only the records which exist in the
+    database. Can be used to check whether a record (e.g. obtained externally)
+    still exists::
+
+        if not record.exists():
+            raise Exception("The record has been deleted")
+
+    or after calling a method which could have removed some records::
+
+        records.may_remove_some()
+        # only keep records which were not deleted
+        records = records.exists()
+
+:meth:`~openerp.api.Environment.ref`
+    Environment method returning the record matching a provided
+    :term:`external id`::
+
+        >>> env.ref('base.group_public')
+        res.groups(2)
+
+:meth:`~openerp.models.Model.ensure_one`
+    checks that the recordset is a singleton (only contains a single record),
+    raises an error otherwise::
+
+        records.ensure_one()
+        # is equivalent to but clearer than:
+        assert len(records) == 1, "Expected singleton"
+
+Creating Models
+===============
+
+Model fields are defined as attributes on the model itself::
+
+    from openerp import models, fields
+    class AModel(Model):
+        _name = 'a.model.name'
+
+        field1 = fields.Char()
+
+.. warning:: this means you can not define a field and a method with the same
+             name, they will conflict
+
+By default, the field's label (user-visible name) is a capitalized version of
+the field name, this can be overridden with the ``string`` parameter::
+
+        field2 = fields.Integer(string="an other field")
+
+For the various field types and parameters, see :ref:`the fields reference
+<reference/orm/fields>`.
+
+Default values are defined as parameters on fields, either a value::
+
+    a_field = fields.Char(default="a value")
+
+or a function called to compute the default value, which should return that
+value::
+
+    a_field = fields.Char(default=compute_default_value)
+    def compute_default_value(self):
+        return self.get_value()
+
+Computed fields
+---------------
+
+Fields can be computed (instead of read straight from the database) using the
+``compute`` parameter. **It must assign the computed value to the field**. If
+it uses the values of other *fields*, it should specify those fields using
+:func:`~openerp.api.depends`::
+
+    from openerp import api
+    total = fields.Float(compute='_compute_total')
+
+    @api.depends('value', 'tax')
+    def _compute_total(self):
+        for record in self:
+            record.total = record.value + record.value * record.tax
+
+* dependencies can be dotted paths when using sub-fields::
+
+    @api.depends('line_ids.value')
+    def _compute_total(self):
+        for record in self:
+            record.total = sum(line.value for line in record.line_ids)
+
+* computed fields are not stored by default, they are computed and
+  returned when requested. Setting ``store=True`` will store them in the
+  database and automatically enable searching
+* searching on a computed field can also be enabled by setting the ``search``
+  parameter. The value is a method name returning a
+  :ref:`reference/orm/domains`::
+
+    upper_name = field.Char(compute='_compute_upper', search='_search_upper')
+
+    def _search_upper(self, operator, value):
+        if operator == 'like':
+            operator = 'ilike'
+        return [('name', operator, value)]
+
+* to allow *setting* values on a computed field, use the ``inverse``
+  parameter. It is the name of a function reversing the computation and
+  setting the relevant fields::
+
+    document = fields.Char(compute='_get_document', inverse='_set_document')
+
+    def _get_document(self):
+        for record in self:
+            with open(record.get_document_path) as f:
+                record.document = f.read()
+    def _set_document(self):
+        for record in self:
+            if not record.document: continue
+            with open(record.get_document_path()) as f:
+                f.write(record.document)
+
+* multiple fields can be computed at the same time by the same method, just
+  use the same method on all fields and set all of them::
+
+    discount_value = fields.Float(compute='_apply_discount')
+    total = fields.Float(compute='_apply_discount')
+
+    @depends('value', 'discount')
+    def _apply_discount(self):
+        for record in self:
+            # compute actual discount from discount percentage
+            discount = self.value * self.discount
+            self.discount_value = discount
+            self.total = self.value - discount
+
+Related fields
+''''''''''''''
+
+A special case of computed fields are *related* (proxy) fields, which provide
+the value of a sub-field on the current record. They are defined by setting
+the ``related`` parameter and like regular computed fields they can be
+stored::
+
+    nickname = fields.Char(related='user_id.partner_id.name', store=True)
+
+onchange: updating UI on the fly
+--------------------------------
+
+When a user changes a field's value in a form (but hasn't saved the form yet),
+it can be useful to automatically update other fields based on that value
+e.g. updating a final total when the tax is changed or a new invoice line is
+added.
+
+* computed fields are automatically checked and recomputed, they do not need
+  an ``onchange``
+* for non-computed fields, the :func:`~openerp.api.onchange` decorator is used
+  to provide new field values::
+
+    @api.onchange('field1', 'field2') # if these fields are changed, call method
+    def check_change(self):
+        if self.field1 < self.field2:
+            self.field3 = True
+
+  the changes performed during the method are then sent to the client program
+  and become visible to the user
+
+.. _reference/orm/oldapi:
+
+Old API compatibility
+---------------------
+
+Odoo is currently transitioning from an older (less regular) API, it can be
+necessary to manually bridge from one to the other manually:
+
+* RPC layers (both XML-RPC and JSON-RPC) are expressed in terms of the old
+  API, methods expressed purely in the new API are not available over RPC
+* overridable methods may be called from older pieces of code still written
+  in the old API style
+
+The big differences between the old and new APIs are:
+
+* values of the :class:`~openerp.api.Environment` (cursor, user id and
+  context) are passed explicitly to methods instead
+* record data (:attr:`~openerp.models.Model.ids`) are passed explicitly to
+  methods, and possibly not passed at all
+* methods tend to work on lists of ids instead of recordsets
+
+By default, methods are assumed to use the new API style and are not callable
+from the old API style.
+
+.. tip:: calls from the new API to the old API are bridged
+    :class: aphorism
+
+    when using the new API style, calls to methods defined using the old API
+    are automatically converted on-the-fly, there should be no need to do
+    anything special::
+
+        >>> # method in the old API style
+        >>> def old_method(self, cr, uid, ids, context=None):
+        ...    print ids
+
+        >>> # method in the new API style
+        >>> def new_method(self):
+        ...     # system automatically infers how to call the old-style
+        ...     # method from the new-style method
+        ...     self.old_method()
+
+        >>> env[model].browse([1, 2, 3, 4]).new_method()
+        [1, 2, 3, 4]
+
+Two decorators can expose a new-style method to the old API:
+
+:func:`~openerp.api.model`
+    the method is exposed as not using ids, its recordset will generally be
+    empty. Its "old API" signature is ``cr, uid, *arguments, context``::
+
+        @api.model
+        def some_method(foo):
+            pass
+        # can be called as
+        old_style_model.some_method(cr, uid, a_value, context=context)
+
+:func:`~openerp.api.multi`
+    the method is exposed as taking a list of ids (possibly empty), its
+    "old API" signature is ``cr, uid, ids, *arguments, context``::
+
+        @api.multi
+        def some_method(foo):
+            pass
+        # can be called as
+        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
+
+Because new-style APIs tend to return recordsets and old-style APIs tend to
+return lists of ids, there is also a decorator managing this:
+
+:func:`~openerp.api.returns`
+    the function is assumed to return a recordset, the first parameter should
+    be the name of the recordset's model or ``self`` (for the current model).
+
+    No effect if the method is called in new API style, but transforms the
+    recordset into a list of ids when called from the old API style::
+
+        >>> @api.multi
+        ... @api.returns('self')
+        ... def some_method():
+        ...     return self
+        >>> new_style_model = env['a.model'].browse(1, 2, 3)
+        >>> new_style_model.some_method()
+        a.model(1, 2, 3)
+        >>> old_style_model = pool['a.model']
+        >>> old_style_model.some_method(cr, uid, [1, 2, 3], context=context)
+        [1, 2, 3]
+
+Porting from the old API
+------------------------
+
+* methods still written in the old API should be automatically bridged by the
+  ORM, no need to switch to the old API, just call them as if they were a new
+  API method
+* ``search`` returns a recordset, no point in e.g. browsing its result
+* ``fields.related`` and ``fields.function`` are replaced by using a normal
+  field type with either a ``related`` or a ``compute`` parameter
+* ``depends`` on field compute methods *must be correct*, it must list *all*
+  the fields and sub-fields which the compute method uses. It is better to
+  have too many dependencies (will recompute the field in cases where that is
+  not needed) than not enough (will forget to recompute the field and then
+  values will be incorrect)
+* *remove* all ``onchange`` methods on computed fields. Computed fields are
+  automatically re-computed when one of their dependencies is changed, and
+  that is used to auto-generate ``onchange`` by the client
+* the decorators :func:`~openerp.api.model` and :func:`~openerp.api.multi`
+  are for correct interface *when calling from* the old API, for internal
+  or pure new-api (e.g. compute) they are useless
+* remove the ``_default`` dict, replace by ``default=`` parameter on
+  corresponding fields
+* if a field's ``string`` is the titlecased version of the field name::
+
+    name = fields.Char(string="Name")
+
+  it is useless and should be removed
+* ``multi`` is removed, just use the same ``compute`` methods on all fields
+* provide ``compute``, ``inverse`` and ``search`` methods by name (as a
+  string), this makes them overridable automatically (removes the need for
+  an intermediate "trampoline" function)
+* double check that all fields and methods have different names, there is no
+  warning in case of collision (because Python handles it before we can do
+  anything)
+* the normal new-api import is ``from openerp import fields, models``. If
+  compatibility decorators are necessary, use ``from openerp import api,
+  fields, models``
+* avoid ``@api.one``, it probably does not do what you expect
+* remove any explicit definition of ``create_uid``, ``create_date``,
+  ``write_uid`` and ``write_date`` fields: they are now created as regular
+  legitimate fields, and can be read and written as any other field
+
 .. _reference/orm/model:
 
-Model
-=====
+Model Reference
+===============
 
 .. - can't get autoattribute to import docstrings, so use regular attribute
    - no autoclassmethod
@@ -121,7 +646,7 @@ Model
     .. automethod:: exists
     .. automethod:: filtered
     .. automethod:: sorted
-    .. automethod:: update
+    .. automethod:: mapped
 
     .. rubric:: Environment swapping
 
