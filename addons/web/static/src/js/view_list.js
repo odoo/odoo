@@ -171,7 +171,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var context = _.extend({}, record.attributes, {
             uid: this.session.uid,
-            current_date: new Date().toString('yyyy-MM-dd')
+            current_date: moment().format('YYYY-MM-DD')
             // TODO: time, datetime, relativedelta
         });
         var i;

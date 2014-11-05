@@ -8,8 +8,8 @@
                     <th class="oe_timesheet_first_col"> </th>
                     <t t-foreach="widget.dates" t-as="date">
                         <th t-att-class="'oe_timesheet_weekly_date_head' + (Date.compare(date, Date.today()) === 0 ? ' oe_timesheet_weekly_today' : '')">
-                            <t t-esc="date.toString('ddd')"/><br />
-                            <t t-esc="date.toString('MMM d')"/>
+                            <t t-esc="moment(date).format('ddd')"/><br />
+                            <t t-esc="moment(date).format('MMM d')"/>
                         </th>
                     </t>
                     <th class="oe_timesheet_weekly_date_head">Total</th>

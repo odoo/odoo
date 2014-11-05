@@ -174,10 +174,10 @@
                                         <div class="oe_module_icon">
                                             <div class="oe_event_date_thumb oe_event_date"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
                                             <div class="oe_event_date_thumb oe_event_month_year">
-                                                <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
+                                                <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
                                                 <t t-esc="record.date_begin.raw_value.getFullYear()"/>
                                             </div>
-                                            <div class="oe_event_date_thumb oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
+                                            <div class="oe_event_date_thumb oe_event_time"><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -185,9 +185,9 @@
                                         <div>
                                             <small>
                                                 <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
-                                                <i class="fa fa-clock-o" t-att-title="record.date_begin.raw_value.toString('hh:mm tt')"/>
-                                                <b>From</b> <t t-esc="record.date_begin.raw_value.toString('MM/dd/yyyy')"/>
-                                                <b>To</b> <t t-esc="record.date_end.raw_value.toString('MM/dd/yyyy')"/>
+                                                <i class="fa fa-clock-o" t-att-title="moment(record.date_begin.raw_value).format('LT')"/>
+                                                <b>From</b> <t t-esc="moment(record.date_begin.raw_value).format('L')"/>
+                                                <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('LT')"/>
                                             </small>
                                         </div>
                                         <h4>

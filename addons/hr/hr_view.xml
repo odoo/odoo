@@ -170,7 +170,7 @@
                                 <ul>
                                     <li id="last_login">
                                         <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
-                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                              <t t-esc="moment(record.last_login.raw_value).format('LT')"/>
                                         </span>
                                     </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>

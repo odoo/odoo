@@ -1103,7 +1103,7 @@
                 <t t-if="widget.order.get_client()">
                     <i class='fa fa-user'/>
                 </t>
-                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + widget.order.get('creationDate').toString('t')"/>
+                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + moment(widget.order.get('creationDate')).format('LT')"/>
             </t>
             <t t-if='!widget.selected'>
                 <span class='order-sequence'>
@@ -1122,8 +1122,7 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.get('name')"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
