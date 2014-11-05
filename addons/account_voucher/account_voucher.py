@@ -53,13 +53,6 @@ class account_voucher(osv.osv):
             context = {}
         return context.get('type', False)
 
-    def _get_period(self, cr, uid, context=None):
-        if context is None: context = {}
-        if context.get('period_id', False):
-            return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
-        return periods and periods[0] or False
-
     def _make_journal_search(self, cr, uid, ttype, context=None):
         journal_pool = self.pool.get('account.journal')
         return journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
@@ -305,7 +298,7 @@ class account_voucher(osv.osv):
             domain=[('type','=','cr')], context={'default_type':'cr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'line_dr_ids':fields.one2many('account.voucher.line','voucher_id','Debits',
             domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
-        'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_account': fields.date('Account Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Notes', readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.function(_get_journal_currency, type='many2one', relation='res.currency', string='Currency', readonly=True, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -352,7 +345,7 @@ class account_voucher(osv.osv):
         'currency_help_label': fields.function(_fnct_currency_help_label, type='text', string="Helping Sentence", help="This sentence helps you to know how to specify the payment rate by giving you the direct effect it has"), 
     }
     _defaults = {
-        'period_id': _get_period,
+        'date_account': fields.date.context_today,
         'partner_id': _get_partner,
         'journal_id':_get_journal,
         'currency_id': _get_currency,
@@ -830,14 +823,10 @@ class account_voucher(osv.osv):
             context ={}
         res = {'value': {}}
         #set the period of the voucher
-        period_pool = self.pool.get('account.period')
         currency_obj = self.pool.get('res.currency')
         ctx = context.copy()
         ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
         voucher_currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
-        pids = period_pool.find(cr, uid, date, context=ctx)
-        if pids:
-            res['value'].update({'period_id':pids[0]})
         if payment_rate_currency_id:
             ctx.update({'date': date})
             payment_rate = 1.0
@@ -1000,7 +989,7 @@ class account_voucher(osv.osv):
                 'account_id': voucher.account_id.id,
                 'move_id': move_id,
                 'journal_id': voucher.journal_id.id,
-                'period_id': voucher.period_id.id,
+                'date_account': voucher.date_account,
                 'partner_id': voucher.partner_id.id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': (sign * abs(voucher.amount) # amount < 0 for refunds
@@ -1027,7 +1016,6 @@ class account_voucher(osv.osv):
                 raise osv.except_osv(_('Configuration Error !'),
                     _('Please activate the sequence of selected journal !'))
             c = dict(context)
-            c.update({'fiscalyear_id': voucher.period_id.fiscalyear_id.id})
             name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id, context=c)
         else:
             raise osv.except_osv(_('Error!'),
@@ -1043,7 +1031,7 @@ class account_voucher(osv.osv):
             'narration': voucher.narration,
             'date': voucher.date,
             'ref': ref,
-            'period_id': voucher.period_id.id,
+            'date_account': voucher.date_account,
         }
         return move
 
@@ -1080,7 +1068,7 @@ class account_voucher(osv.osv):
             account_currency_id = company_currency <> current_currency and current_currency or False
         move_line = {
             'journal_id': line.voucher_id.journal_id.id,
-            'period_id': line.voucher_id.period_id.id,
+            'date_account': line.voucher_id.date_account,
             'name': _('change')+': '+(line.name or '/'),
             'account_id': line.account_id.id,
             'move_id': move_id,
@@ -1094,7 +1082,7 @@ class account_voucher(osv.osv):
         }
         move_line_counterpart = {
             'journal_id': line.voucher_id.journal_id.id,
-            'period_id': line.voucher_id.period_id.id,
+            'date_account': line.voucher_id.date_account,
             'name': _('change')+': '+(line.name or '/'),
             'account_id': account_id.id,
             'move_id': move_id,
@@ -1176,7 +1164,7 @@ class account_voucher(osv.osv):
                 currency_rate_difference = 0.0
             move_line = {
                 'journal_id': voucher.journal_id.id,
-                'period_id': voucher.period_id.id,
+                'date_account': voucher.date_account,
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
@@ -1245,7 +1233,7 @@ class account_voucher(osv.osv):
                 # Change difference entry in voucher currency
                 move_line_foreign_currency = {
                     'journal_id': line.voucher_id.journal_id.id,
-                    'period_id': line.voucher_id.period_id.id,
+                    'date_account': line.voucher_id.date_account,
                     'name': _('change')+': '+(line.name or '/'),
                     'account_id': line.account_id.id,
                     'move_id': move_id,
@@ -1385,7 +1373,7 @@ class account_voucher(osv.osv):
             reconcile = False
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
+                    reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_date=voucher.date_account, writeoff_journal_id=voucher.journal_id.id)
         return True
 
 class account_voucher_line(osv.osv):

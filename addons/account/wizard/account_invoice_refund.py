@@ -13,7 +13,7 @@ class account_invoice_refund(models.TransientModel):
 
     date = fields.Date(string='Date', help='This date will be used as the invoice date for credit note and period will be chosen accordingly!',
         default=lambda *a: time.strftime('%Y-%m-%d'))
-    period = fields.Many2one('account.period', string='Force period')
+    date_account = fields.Date(string='Account Date', default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Refund Journal', default=lambda self: self._get_journal(),
         help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.')
     description = fields.Char(string='Reason', required=True, default=lambda self: self._get_reason())
@@ -73,7 +73,7 @@ class account_invoice_refund(models.TransientModel):
         for form in self:
             created_inv = []
             date = False
-            period = False
+            date_account = False
             description = False
             company = self.env.user.company_id
             journal_id = form.journal_id.id
@@ -82,32 +82,16 @@ class account_invoice_refund(models.TransientModel):
                     raise Warning(_('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise Warning(_('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
-                if form.period.id:
-                    period = form.period.id
+                if form.date_account:
+                    date_account = form.date_account
                 else:
-                    period = inv.period_id and inv.period_id.id or False
+                    date_account = inv.date_account or False
 
                 if not journal_id:
                     journal_id = inv.journal_id.id
 
                 if form.date:
                     date = form.date
-                    if not form.period.id:
-                            cr.execute("select name from ir_model_fields \
-                                            where model = 'account.period' \
-                                            and name = 'company_id'")
-                            result_query = cr.fetchone()
-                            if result_query:
-                                cr.execute("""select p.id from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
-                                    and date(%s) between p.date_start AND p.date_stop and y.company_id = %s limit 1""", (date, company.id,))
-                            else:
-                                cr.execute("""SELECT id
-                                        from account_period where date(%s)
-                                        between date_start AND  date_stop  \
-                                        limit 1 """, (date,))
-                            res = cr.fetchone()
-                            if res:
-                                period = res[0]
                 else:
                     date = inv.date_invoice
                 if form.description:
@@ -115,10 +99,10 @@ class account_invoice_refund(models.TransientModel):
                 else:
                     description = inv.name
 
-                if not period:
-                    raise Warning(_('No period found on the invoice.'))
+                if not date_account:
+                    raise Warning(_('No period date found on the invoice.'))
 
-                refund = inv.refund(date, period, description, journal_id)
+                refund = inv.refund(date, period_date, description, journal_id)
                 refund.write({'date_due': date, 'check_total': inv.check_total})
                 refund.button_compute()
 
@@ -137,7 +121,7 @@ class account_invoice_refund(models.TransientModel):
                             to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
                     for account in to_reconcile_ids:
                         account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
-                                        writeoff_period_id=period,
+                                        writeoff_period_date=date_account,
                                         writeoff_journal_id = inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
                                         )
@@ -148,7 +132,7 @@ class account_invoice_refund(models.TransientModel):
                                     'partner_insite', 'partner_contact',
                                     'partner_ref', 'payment_term', 'account_id',
                                     'currency_id', 'invoice_line', 'tax_line',
-                                    'journal_id', 'period_id'], context=context)
+                                    'journal_id', 'date_account'], context=context)
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line'])
@@ -162,7 +146,7 @@ class account_invoice_refund(models.TransientModel):
                             'number': False,
                             'invoice_line': invoice_lines,
                             'tax_line': tax_lines,
-                            'period_id': period,
+                            'date_account': date_account,
                             'name': description
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',

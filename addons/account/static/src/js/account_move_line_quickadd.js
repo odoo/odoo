@@ -12,7 +12,7 @@ openerp.account.quickadd = function (instance) {
             this.journals = [];
             this.periods = [];
             this.current_journal = null;
-            this.current_period = null;
+            this.current_period_date = null;
             this.default_period = null;
             this.default_journal = null;
             this.current_journal_type = null;
@@ -30,7 +30,7 @@ openerp.account.quickadd = function (instance) {
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
             this.$el.parent().find('.oe_account_select_period').change(function() {
-                    self.current_period = this.value === '' ? null : parseInt(this.value);
+                    self.current_period_date = this.value === '' ? null : parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
             this.on('edit:after', this, function () {
@@ -42,15 +42,12 @@ openerp.account.quickadd = function (instance) {
                 self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
             });
             var mod = new instance.web.Model("account.move.line", self.dataset.context, self.dataset.domain);
-            defs.push(mod.call("default_get", [['journal_id','period_id'],self.dataset.context]).then(function(result) {
-                self.current_period = result['period_id'];
+            defs.push(mod.call("default_get", [['journal_id','date_account'],self.dataset.context]).then(function(result) {
+                self.current_period_date = result['date_account'];
                 self.current_journal = result['journal_id'];
             }));
             defs.push(mod.call("list_journals", []).then(function(result) {
                 self.journals = result;
-            }));
-            defs.push(mod.call("list_periods", []).then(function(result) {
-                self.periods = result;
             }));
             return $.when(tmp, defs);
         },
@@ -79,17 +76,17 @@ openerp.account.quickadd = function (instance) {
                 o = new Option(self.periods[i][1], self.periods[i][0]);
                 self.$el.parent().find('.oe_account_select_period').append(o);
             }    
-            self.$el.parent().find('.oe_account_select_period').val(self.current_period).attr('selected',true);
+            self.$el.parent().find('.oe_account_select_period').val(self.current_period_date).attr('selected',true);
             return self.search_by_journal_period();
         },
         search_by_journal_period: function() {
             var self = this;
             var domain = [];
             if (self.current_journal !== null) domain.push(["journal_id", "=", self.current_journal]);
-            if (self.current_period !== null) domain.push(["period_id", "=", self.current_period]);
+            if (self.current_period_date !== null) domain.push(["date_account", "=", self.current_period_date]);
             self.last_context["journal_id"] = self.current_journal === null ? false : self.current_journal;
-            if (self.current_period === null) delete self.last_context["period_id"];
-            else self.last_context["period_id"] =  self.current_period;
+            if (self.current_period_date === null) delete self.last_context["date_account"];
+            else self.last_context["date_account"] =  self.current_period_date;
             self.last_context["journal_type"] = self.current_journal_type;
             self.last_context["currency"] = self.current_journal_currency;
             self.last_context["analytic_journal_id"] = self.current_journal_analytic;

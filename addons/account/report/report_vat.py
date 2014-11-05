@@ -30,20 +30,10 @@ class tax_report(report_sxw.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         res = {}
-        self.period_ids = []
-        period_obj = self.pool.get('account.period')
+        self.date_account = time.strftime("%Y/%m/%d")
         self.display_detail = data['form']['display_detail']
         res['periods'] = ''
         res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
-
-        if data['form'].get('period_from', False) and data['form'].get('period_to', False):
-            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
-            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
-            for period in periods_l:
-                if res['periods'] == '':
-                    res['periods'] = period['name']
-                else:
-                    res['periods'] += ", "+ period['name']
         return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
@@ -56,8 +46,6 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             'get_lines': self._get_lines,
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
-            'get_start_period': self.get_start_period,
-            'get_end_period': self.get_end_period,
             'get_basedon': self._get_basedon,
         })
 
@@ -65,18 +53,15 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         return form['form']['based_on']
 
     def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
-        period_list = self.period_ids
-        res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
-        if period_list:
-            res = self._add_codes(based_on, res, period_list, context=context)
+        date_account = self.date_account
+        res = self._get_codes(based_on, company_id, parent, level, date_account, context=context)
+        if date_account:
+            res = self._add_codes(based_on, res, date_account, context=context)
         else:
             self.cr.execute ("select id from account_fiscalyear")
             fy = self.cr.fetchall()
-            self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
-            periods = self.cr.fetchall()
-            for p in periods:
-                period_list.append(p[0])
-            res = self._add_codes(based_on, res, period_list, context=context)
+            date_account = time.strftime("%Y/%m/%d")
+            res = self._add_codes(based_on, res, date_account, context=context)
 
         i = 0
         top_result = []
@@ -93,7 +78,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
+            res_general = self._get_general(res[i][1].id, date_account, company_id, based_on, context=context)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -104,12 +89,12 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             i+=1
         return top_result
 
-    def _get_general(self, tax_code_id, period_list, company_id, based_on, context=None):
+    def _get_general(self, tax_code_id, date_account, company_id, based_on, context=None):
         if not self.display_detail:
             return []
         res = []
         obj_account = self.pool.get('account.account')
-        periods_ids = tuple(period_list)
+        date_account = date_account
         if based_on == 'payments':
             self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
                         SUM(line.debit) AS debit, \
@@ -128,11 +113,11 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND move.id = line.move_id \
-                        AND line.period_id IN %s \
+                        AND line.date_account IN %s \
                         AND ((invoice.state = %s) \
                             OR (invoice.id IS NULL))  \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, periods_ids, 'paid',))
+                        company_id, date_account, 'paid',))
 
         else:
             self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
@@ -148,10 +133,10 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         AND line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
-                        AND line.period_id IN %s\
+                        AND line.date_account = %s\
                         AND account.active \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, periods_ids,))
+                        company_id, date_account,))
         res = self.cr.dictfetchall()
 
         i = 0
@@ -160,7 +145,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
+    def _get_codes(self, based_on, company_id, parent=False, level=0, date_account=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
         ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
 
@@ -171,19 +156,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
         return res
 
-    def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
+    def _add_codes(self, based_on, account_list=None, date_account=None, context=None):
         if account_list is None:
             account_list = []
-        if period_list is None:
-            period_list = []
+        if date_account is None:
+            date_account = time.strftime("%Y/%m/%d")
         res = []
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
             ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
             sum_tax_add = 0
-            for period_ind in period_list:
-                for code in obj_tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
-                    sum_tax_add = sum_tax_add + code.sum_period
+            for code in obj_tc.browse(self.cr, self.uid, ids, {'date_account':date_account,'based_on': based_on}):
+                sum_tax_add = sum_tax_add + code.sum_period
 
             code.sum_period = sum_tax_add
 

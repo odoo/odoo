@@ -39,27 +39,29 @@ class account_followup_stat(osv.osv):
         'credit':fields.float('Credit', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'blocked': fields.boolean('Blocked', readonly=True),
-        'period_id': fields.many2one('account.period', 'Period', readonly=True),
+        'date_account': fields.date('Account Date', readonly=True),
     }
     _order = 'date_move'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False):
         for arg in args:
-            if arg[0] == 'period_id' and arg[2] == 'current_year':
+            if arg[0] == 'date_account' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
-                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                args.append(['period_id','in',ids])
+                # TODO account.period is now removed
+                # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                # args.append(['period_id','in',ids])
                 args.remove(arg)
         return super(account_followup_stat, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
     def read_group(self, cr, uid, domain, *args, **kwargs):
         for arg in domain:
-            if arg[0] == 'period_id' and arg[2] == 'current_year':
+            if arg[0] == 'date_account' and arg[2] == 'current_year':
                 current_year = self.pool.get('account.fiscalyear').find(cr, uid)
-                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                domain.append(['period_id','in',ids])
+                # TODO account.period is now removed
+                # ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                # domain.append(['period_id','in',ids])
                 domain.remove(arg)
         return super(account_followup_stat, self).read_group(cr, uid, domain, *args, **kwargs)
 
@@ -79,7 +81,7 @@ class account_followup_stat(osv.osv):
                     sum(l.debit - l.credit) AS balance,
                     l.company_id AS company_id,
                     l.blocked as blocked,
-                    l.period_id AS period_id
+                    l.date_account AS date_account
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
@@ -89,7 +91,7 @@ class account_followup_stat(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
-                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id
+                    l.id, l.partner_id, l.company_id, l.blocked, l.date_account
             )""")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

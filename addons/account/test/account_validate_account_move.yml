@@ -16,7 +16,6 @@
 -
   !record {model: account.move, id: account_move_0}:
     date: !eval time.strftime('%Y-%m-%d')
-    period_id: account.period_6
     journal_id: account.bank_journal
     line_id:
       - account_id: account.cash
@@ -37,12 +36,12 @@
     import time
     date = self._get_date(cr, uid, {
       'journal_id': 1, 
-      'period_id': 6,}) 
+      'date_account': time.strftime("%Y/%m/%d"),}) 
     partner = self.onchange_partner_id(cr, uid, [], False, ref('base.res_partner_12'), ref('account.cash'), debit=0, credit=2000, date=date, journal=False)
     account = self.onchange_account_id(cr, uid, [], account_id=ref('account.a_recv'), partner_id= ref('base.res_partner_12'))
     vals = {
         'journal_id': ref('account.bank_journal'),
-        'period_id': ref('account.period_6'),
+        'date_account': time.strftime("%Y/%m/%d"),
         'ref': '2011010',
         'tax_code_id': ref('account_tax_code_0'),
         'tax_amount': 0.0,
@@ -83,10 +82,6 @@
     journal_ids:
       - bank_journal
       - check_journal
-    period_ids:
-      - period_6
-      - period_7
-      - period_8
 -
   I click on validate Button
 -

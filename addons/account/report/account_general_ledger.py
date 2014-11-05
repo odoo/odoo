@@ -82,8 +82,6 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_account': self._get_account,
-            'get_start_period': self.get_start_period,
-            'get_end_period': self.get_end_period,
             'get_filter': self._get_filter,
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
@@ -164,8 +162,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         else:
             sql_sort='l.date, l.move_id'
         sql = """
-            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
-            m.name AS move_name, m.id AS mmove_id,per.code as period_code,
+            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.date_account AS ldate_account, l.partner_id AS lpartner_id,
+            m.name AS move_name, m.id AS mmove_id,
             c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
@@ -174,7 +172,6 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             LEFT JOIN res_currency c on (l.currency_id=c.id)
             LEFT JOIN res_partner p on (l.partner_id=p.id)
             LEFT JOIN account_invoice i on (m.id =i.move_id)
-            LEFT JOIN account_period per on (per.id=l.period_id)
             JOIN account_journal j on (l.journal_id=j.id)
             WHERE %s AND m.state IN %s AND l.account_id = %%s ORDER by %s
         """ %(self.query, tuple(move_state), sql_sort)
@@ -184,8 +181,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
-                '' AS move_name, '' AS mmove_id, '' AS period_code,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS ldate_account, '' AS lpartner_id,
+                '' AS move_name, '' AS mmove_id,
                 '' AS currency_code,
                 NULL AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,

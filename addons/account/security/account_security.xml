@@ -54,13 +54,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="period_comp_rule" model="ir.rule">
-        <field name="name">Period multi-company</field>
-        <field name="model_id" ref="model_account_period"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <record id="fiscal_year_comp_rule" model="ir.rule">
         <field name="name">Fiscal year multi-company</field>
         <field name="model_id" ref="model_account_fiscalyear"/>

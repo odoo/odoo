@@ -16,13 +16,13 @@ class account_move_line_select(models.TransientModel):
             fiscalyears = fiscalyear_obj.search([('state', '=', 'draft')])
         else:
             fiscalyears = fiscalyear_obj.browse([context.get('fiscalyear')])
-
-        period_ids = []
-        if fiscalyears:
-            for fiscalyear in fiscalyears:
-                for period in fiscalyear.period_ids:
-                    period_ids.append(period.id)
-            domain = str(('period_id', 'in', period_ids))
+        # TODO now account.period is removed
+        # period_ids = []
+        # if fiscalyears:
+        #     for fiscalyear in fiscalyears:
+        #         for period in fiscalyear.period_ids:
+        #             period_ids.append(period.id)
+        #     domain = str(('period_id', 'in', period_ids))
 
         result = self.env.ref('account', 'action_move_line_tree1')
         result = result.read()[0]
@@ -36,6 +36,6 @@ class account_move_line_select(models.TransientModel):
             acc_data = self.env['account.account'].browse(context['active_id']).child_consol_ids
             if acc_data:
                 result['context'].update({'consolidate_children': True})
-        result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
+        # result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 

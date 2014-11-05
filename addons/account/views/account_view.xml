@@ -9,8 +9,6 @@
             <field name="arch" type="xml">
                 <form string="Fiscal year">
                 <header>
-                    <button name="create_period" states="draft" string="Create Monthly Periods" type="object" class="oe_highlight"/>
-                    <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" nolabel="1" />
                 </header>
                     <group>
@@ -22,20 +20,9 @@
                         <group>
                             <field name="date_start"/>
                             <field name="date_stop"/>
+                            <field name="freeze_date"/>
                         </group>
                     </group>
-                    <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
-                        <form string="Period">
-                            <group col="4">
-                                <field name="name"/>
-                                <field name="code"/>
-                                <field name="date_start"/>
-                                <field name="date_stop"/>
-                                <field name="special"/>
-                                <field name="state" invisible="1"/>
-                            </group>
-                        </form>
-                    </field>
                 </form>
             </field>
         </record>
@@ -84,80 +71,8 @@
               </p>
             </field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration" sequence="1" />
+        <menuitem id="next_id_23" name="Fiscal Years" parent="account.menu_finance_configuration" sequence="1" />
         <menuitem id="menu_action_account_fiscalyear" action="action_account_fiscalyear" parent="next_id_23"/>
-
-        <!-- Period -->
-        <record id="view_account_period_form" model="ir.ui.view">
-            <field name="name">account.period.form</field>
-            <field name="model">account.period</field>
-            <field name="arch" type="xml">
-                <form string="Account Period">
-                    <header>
-                        <button string="Close Period" name="%(account.action_account_period_close)d" type="action" class="oe_highlight" states="draft"/>
-                        <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                    </header>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="fiscalyear_id" widget="selection"/>
-                            <label for="date_start" string="Duration"/>
-                            <div>
-                                <field name="date_start" class="oe_inline" nolabel="1"/> -
-                                <field name="date_stop" nolabel="1" class="oe_inline"/>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="code"/>
-                            <field name="special"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="view_account_period_tree" model="ir.ui.view">
-            <field name="name">account.period.tree</field>
-            <field name="model">account.period</field>
-            <field name="arch" type="xml">
-              <tree colors="blue:state == 'draft';gray:state == 'done' " string="Period">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <field name="special"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_account_period_search" model="ir.ui.view">
-            <field name="name">account.period.search</field>
-            <field name="model">account.period</field>
-            <field name="arch" type="xml">
-                <search string="Search Period">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Period"/>
-                    <filter string="To Close" name="draft" domain="[('state','=','draft')]" icon="terp-dialog-close"/>
-                </search>
-            </field>
-        </record>
-        <record id="action_account_period" model="ir.actions.act_window">
-            <field name="name">Periods</field>
-            <field name="res_model">account.period</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_draft': 1}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a fiscal period.
-              </p><p>
-                An accounting period typically is a month or a quarter. It
-                usually corresponds to the periods of the tax declaration.
-              </p>
-            </field>
-        </record>
-        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23"/>
 
         <!-- Accounts -->
         <record id="view_account_form" model="ir.ui.view">
@@ -498,7 +413,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
-                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="Account Date" context="{'group_by': 'date_account'}" icon="terp-go-month"/>
                     </group>
                 </search>
             </field>
@@ -511,7 +426,7 @@
                 <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statement">
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
@@ -530,12 +445,12 @@
                     <field name="date"/>
                     <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
-                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="Account Date" context="{'group_by': 'date_account'}" icon="terp-go-month"/>
                     </group>
                 </search>
             </field>
@@ -576,7 +491,7 @@
                             <label for="date" string="Date / Period"/>
                             <div>
                                 <field name="date" class="oe_inline"/>
-                                <field name="period_id" class="oe_inline"/>
+                                <field name="date_account" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                             <field name="currency" invisible="1"/>
@@ -829,7 +744,7 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="date"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="amount" sum="Total Amount"/>
@@ -878,7 +793,6 @@
                 <tree string="Account Tax Code" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sum_period"/>
                     <field name="sum"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -901,7 +815,6 @@
                             <field name="sign"/>
                         </group>
                         <group string="Statistics">
-                            <field name="sum_period"/>
                             <field name="sum"/>
                         </group>
                     </group>
@@ -1090,7 +1003,7 @@
                             </group>
                             <group>
                                 <field name="journal_id"/>
-                                <field name="period_id"/>
+                                <field name="date_account"/>
                                 <field name="company_id" required="1" groups="base.group_multi_company"/>
                             </group>
                         </group>
@@ -1156,7 +1069,7 @@
                                 <field name="name"/>
                                 <field name="date"/>
                                 <field name="journal_id" readonly="False"/>
-                                <field name="period_id" readonly="False"/>
+                                <field name="date_account" readonly="False"/>
                                 <field name="account_id" domain="[('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
                                 <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                                 <newline/>
@@ -1197,7 +1110,7 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
                     <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="date_account" options='{"no_open":True}' invisible="context.get('date_account',False)"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -1248,12 +1161,12 @@
                     <field name="account_id"/>
                     <field name="partner_id"/>
                     <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
-                    <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
+                    <field name="date_account" context="{'date_account':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
                     <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Account"  icon="terp-folder-green" context="{'group_by':'account_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Account Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_account'}"/>
                     </group>
                 </search>
             </field>
@@ -1302,7 +1215,7 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="account_id"/>
-                    <field name="period_id" invisible="1"/>
+                    <field name="date_account" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="reconcile_partial_id"/>
                     <field name="state" invisible="1"/>
@@ -1338,7 +1251,7 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="date"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="amount" sum="Total Amount"/>
@@ -1364,7 +1277,7 @@
                     <group>
                         <group>
                             <field name="journal_id"/>
-                            <field name="period_id"/>
+                            <field name="date_account"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
                             <field name="partner_id" invisible="1"/>
                         </group>
@@ -1386,7 +1299,7 @@
                                         <field name="partner_id"/>
 
                                         <field name="journal_id"/>
-                                        <field name="period_id"/>
+                                        <field name="date_account"/>
                                         <field name="company_id" required="1" groups="base.group_multi_company"/>
                                     </group>
                                     <notebook colspan="4">
@@ -1480,12 +1393,12 @@
                     <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('to_check','=',True)]" help="Journal Entries to Review"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Account Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_account'}"/>
                         <filter string="Entries Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Month"/>
                     </group>
                 </search>
@@ -2056,7 +1969,7 @@
                 <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state == 'open'" string="Statement">
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="period_id"/>
+                    <field name="date_account"/>
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
@@ -2095,7 +2008,7 @@
                         <group>
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="closing_date" readonly="1"/>
-                            <field name="period_id" class="oe_inline"/>
+                            <field name="date_account" class="oe_inline"/>
                             <field name="currency" invisible="1"/>
                             <field name="cash_control" invisible="1"/>
                         </group>

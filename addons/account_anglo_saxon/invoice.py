@@ -177,8 +177,8 @@ class account_invoice_line(osv.osv):
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _prepare_refund(self, cr, uid, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
-        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, period_id,
+    def _prepare_refund(self, cr, uid, invoice, date=None, date_account=None, description=None, journal_id=None, context=None):
+        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date_account,
                                                                     description, journal_id, context=context)
         if invoice.type == 'in_invoice':
             fiscal_position = self.pool.get('account.fiscal.position')

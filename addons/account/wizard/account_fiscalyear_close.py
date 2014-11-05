@@ -16,7 +16,7 @@ class account_fiscalyear_close(models.TransientModel):
                              string='New Fiscal Year', required=True)
     journal_id = fields.Many2one('account.journal', string='Opening Entries Journal', domain=[('type', '=', 'situation')], required=True,
         help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.')
-    period_id = fields.Many2one('account.period', string='Opening Entries Period', required=True)
+    date_account = fields.Date(string='Opening Entries Account Date', required=True, default=fields.Date.context_today)
     report_name = fields.Char(string='Name of new entries', required=True, help="Give name of the new entries",
         default=lambda self: _('End of Fiscal Year Entry'))
 
@@ -46,15 +46,8 @@ class account_fiscalyear_close(models.TransientModel):
         obj_acc_move_line = self.env['account.move.line']
 
         cr = self._cr
-        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(self.fy2_id.id),))
-        fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
-        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(self.fy_id.id),))
-        fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
-        if not fy_period_set or not fy2_period_set:
-            raise Warning(_('The periods to generate opening entries cannot be found.'))
-
-        period = self.period_id
+        date_account = self.date_account
         new_fyear = self.fy2_id
         old_fyear = self.fy_id
 
@@ -67,7 +60,7 @@ class account_fiscalyear_close(models.TransientModel):
             raise Warning(_('The journal must have centralized counterpart without the Skipping draft state option checked.'))
 
         #delete existing move and move lines if any
-        move_ids = obj_acc_move.search([('journal_id', '=', new_journal.id), ('period_id', '=', period.id)])
+        move_ids = obj_acc_move.search([('journal_id', '=', new_journal.id), ('date_account', '=', date_account)])
         if move_ids:
             move_line_ids = obj_acc_move_line.search([('move_id', 'in', move_ids.ids)])
             move_line_ids._remove_move_reconcile(opening_reconciliation=True)
@@ -83,8 +76,8 @@ class account_fiscalyear_close(models.TransientModel):
         vals = {
             'name': '/',
             'ref': '',
-            'period_id': period.id,
-            'date': period.date_start,
+            'date_account': date_account,
+            'date': date_account,
             'journal_id': new_journal.id,
         }
         move_id = obj_acc_move.create(vals)
@@ -105,7 +98,7 @@ class account_fiscalyear_close(models.TransientModel):
                      name, create_uid, create_date, write_uid, write_date,
                      statement_id, journal_id, currency_id, date_maturity,
                      partner_id, blocked, credit, state, debit,
-                     ref, account_id, period_id, date, move_id, amount_currency,
+                     ref, account_id, date_account, date, move_id, amount_currency,
                      quantity, product_id, company_id)
                   (SELECT name, create_uid, create_date, write_uid, write_date,
                      statement_id, %s,currency_id, date_maturity, partner_id,
@@ -114,7 +107,7 @@ class account_fiscalyear_close(models.TransientModel):
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + '''
-                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
+                     AND reconcile_id IS NULL)''', (new_journal.id, date_account, date_account, move_id.id, tuple(account_ids),))
 
             #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
@@ -123,21 +116,21 @@ class account_fiscalyear_close(models.TransientModel):
                      name, create_uid, create_date, write_uid, write_date,
                      statement_id, journal_id, currency_id, date_maturity,
                      partner_id, blocked, credit, state, debit,
-                     ref, account_id, period_id, date, move_id, amount_currency,
+                     ref, account_id, date_account, date, move_id, amount_currency,
                      quantity, product_id, company_id)
                   (SELECT
                      b.name, b.create_uid, b.create_date, b.write_uid, b.write_date,
                      b.statement_id, %s, b.currency_id, b.date_maturity,
                      b.partner_id, b.blocked, b.credit, 'draft', b.debit,
-                     b.ref, b.account_id, %s, (%s) AS date, %s, b.amount_currency,
+                     b.ref, b.account_id, (%s) AS date, %s, b.amount_currency,
                      b.quantity, b.product_id, b.company_id
                      FROM account_move_line b
                      WHERE b.account_id IN %s
                        AND b.reconcile_id IS NOT NULL
-                       AND b.period_id IN ('''+fy_period_set+''')
+                       AND b.date_account = ('''+date_account+''')
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
-                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
+                                          WHERE a.date_account = ('''+date_account+''')))''', (new_journal.id, date_account, move_id.id, tuple(account_ids),))
             self.invalidate_cache()
 
         #2. report of the accounts with defferal method == 'detail'
@@ -157,16 +150,16 @@ class account_fiscalyear_close(models.TransientModel):
                      name, create_uid, create_date, write_uid, write_date,
                      statement_id, journal_id, currency_id, date_maturity,
                      partner_id, blocked, credit, state, debit,
-                     ref, account_id, period_id, date, move_id, amount_currency,
+                     ref, account_id, date_account, date, move_id, amount_currency,
                      quantity, product_id, company_id)
                   (SELECT name, create_uid, create_date, write_uid, write_date,
                      statement_id, %s,currency_id, date_maturity, partner_id,
                      blocked, credit, 'draft', debit, ref, account_id,
-                     %s, (%s) AS date, %s, amount_currency, quantity, product_id, company_id
+                    (%s) AS date, %s, amount_currency, quantity, product_id, company_id
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + ''')
-                     ''', (new_journal.id, period.id, period.date_start, move_id.id, tuple(account_ids),))
+                     ''', (new_journal.id, date_account, move_id.id, tuple(account_ids),))
             self.invalidate_cache()
 
         #3. report of the accounts with defferal method == 'balance'
@@ -182,7 +175,7 @@ class account_fiscalyear_close(models.TransientModel):
 
         query_1st_part = """
                 INSERT INTO account_move_line (
-                     debit, credit, name, date, move_id, journal_id, period_id,
+                     debit, credit, name, date, move_id, journal_id, date_account,
                      account_id, currency_id, amount_currency, company_id, state) VALUES
         """
         query_2nd_part = ""
@@ -197,10 +190,9 @@ class account_fiscalyear_close(models.TransientModel):
                 query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
                        account.balance < 0 and -account.balance or 0.0,
                        self.report_name,
-                       period.date_start,
+                       date_account,
                        move_id.id,
                        new_journal.id,
-                       period.id,
                        account.id,
                        account.currency_id and account.currency_id.id or None,
                        account.foreign_balance if account.currency_id else 0.0,
@@ -214,7 +206,7 @@ class account_fiscalyear_close(models.TransientModel):
         move_id.validate()
 
         #reconcile all the move.line of the opening move
-        ids = obj_acc_move_line.search([('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
+        ids = obj_acc_move_line.search([('journal_id', '=', new_journal.id)])
         if ids:
             reconcile_id = _reconcile_fy_closing(self._cr, self._uid, ids.ids, context=self._context)
             #set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance

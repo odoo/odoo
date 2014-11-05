@@ -72,7 +72,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-11-01' %(datetime.now().year)"
-    period_id: account.period_1
+    date_account: !eval time.strftime("%Y/%m/%d")
     invoice_line:
       - account_id: account.a_expense
         name: '[PCSC234] PC Assemble SC234'
@@ -115,7 +115,7 @@
     journal_id: bank_journal_USD
     name: 'Payment: Case Basic SUPPLIER USD/USD'
     partner_id: base.res_partner_19
-    period_id: account.period_12
+    date_account: !eval time.strftime("%Y/%m/%d")
     date: !eval time.strftime("%Y-12-01")
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense

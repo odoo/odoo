@@ -15,8 +15,8 @@ class accounting_report(models.TransientModel):
     fiscalyear_id_cmp = fields.Many2one('account.fiscalyear', string='Fiscal Year', help='Keep empty for all open fiscal year')
     filter_cmp = fields.Selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], string='Filter by',
         default='filter_no', required=True)
-    period_from_cmp = fields.Many2one('account.period', string='Start Period')
-    period_to_cmp = fields.Many2one('account.period', string='End Period')
+    period_from_cmp = fields.Date(string='Start Period', default=fields.Date.context_today)
+    period_to_cmp = fields.Date(string='End Period', default=fields.Date.context_today)
     date_from_cmp = fields.Date(string='Start Date')
     date_to_cmp = fields.Date(string='End Date')
     debit_credit = fields.Boolean(string='Display Debit/Credit Columns',

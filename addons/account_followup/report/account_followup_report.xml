@@ -20,7 +20,7 @@
                 <search string="Follow-ups Sent">
                     <field name="date_move"/>
                     <field name="date_move_last"/>
-                    <filter string="This Fiscal year" name="fiscalyear" domain="[('period_id','in','current_year')]"
+                    <filter string="This Fiscal year" name="fiscalyear" domain="[('date_account','in','current_year')]"
                         help="Follow-up Entries with period in current year"/>
                     <separator/>
                     <filter string="Not Litigation" domain="[('blocked','=', False)]"

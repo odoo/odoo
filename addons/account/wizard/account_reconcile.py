@@ -60,10 +60,8 @@ class account_move_line_reconcile(models.TransientModel):
     @api.multi
     def trans_rec_reconcile_full(self):
         date = time.strftime('%Y-%m-%d')
-        period_ids = self.env['account.period'].find(dt=date)
-        period_id = period_ids and period_ids[0] or False
         move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
-        move_lines.reconcile('manual', writeoff_period_id=period_id)
+        move_lines.reconcile('manual', writeoff_period_date=move_lines.date)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -108,11 +106,7 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
         context['comment'] = self.comment
         if self.analytic_id:
             context['analytic_id'] = self.analytic_id.id
-        periods = self.env['account.period'].with_context(context).find(dt=context.get('date_p'))
-        period_id = periods and periods[0] or False
-
         move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
         move_lines.with_context(context).reconcile('manual', self.writeoff_acc_id.id,
-                period_id, self.journal_id.id)
+                move_lines.date, self.journal_id.id)
         return {'type': 'ir.actions.act_window_close'}
-

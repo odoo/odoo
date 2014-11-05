@@ -45,7 +45,6 @@ class partner_vat(osv.osv_memory):
     _name = "partner.vat"
 
     def get_partner(self, cr, uid, ids, context=None):
-        obj_period = self.pool.get('account.period')
         obj_partner = self.pool.get('res.partner')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
@@ -58,7 +57,9 @@ class partner_vat(osv.osv_memory):
             company_id = context['company_id']
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
+        # TODO: account.period has been removed
+        # period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
+        period_ids = []
         if not period_ids:
              raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
 
@@ -73,16 +74,16 @@ class partner_vat(osv.osv_memory):
                       LEFT JOIN account_tax_code c ON l.tax_code_id = c.id
                       WHERE c.code IN ('00','01','02','03','45','49')
                       AND l.partner_id IN %s
-                      AND l.period_id IN %s
+                      AND l.date_account = %s
                       GROUP BY l.partner_id, p.name, p.vat) AS sub1
                 LEFT JOIN (SELECT l2.partner_id, SUM(CASE WHEN c2.code ='64' THEN -l2.tax_amount ELSE l2.tax_amount END) as vat_amount
                       FROM account_move_line l2
                       LEFT JOIN account_tax_code c2 ON l2.tax_code_id = c2.id
                       WHERE c2.code IN ('54','64')
                       AND l2.partner_id IN %s
-                      AND l2.period_id IN %s
+                      AND l2.date_account = %s
                       GROUP BY l2.partner_id) AS sub2 ON sub1.partner_id = sub2.partner_id
-                    """,(tuple(partner_ids),tuple(period_ids),tuple(partner_ids),tuple(period_ids)))
+                    """,(tuple(partner_ids),date_account,tuple(partner_ids),date_account))
         for record in cr.dictfetchall():
             record['vat'] = record['vat'].replace(' ','').upper()
             if record['turnover'] >= data['limit_amount']:

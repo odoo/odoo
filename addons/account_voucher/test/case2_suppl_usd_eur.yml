@@ -45,7 +45,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
-    period_id: account.period_1
+    date_account: !eval time.strftime("%Y/%m/%d")
     invoice_line:
       - account_id: account.a_expense
         name: '[PCSC234] PC Assemble SC234'
@@ -80,7 +80,7 @@
     company_id: base.main_company
     currency_id: base.USD
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
-    period_id: account.period_2
+    date_account: !eval time.strftime("%Y/%m/%d")
     type : in_invoice
     invoice_line:
       - account_id: account.a_expense
@@ -123,7 +123,7 @@
     journal_id: bank_journal_EUR
     name: 'First payment: Case 2 SUPPL USD/EUR',
     partner_id: base.res_partner_19
-    period_id: account.period_3
+    date_account: !eval time.strftime("%Y/%m/%d")
     date: !eval time.strftime("%Y-03-01")
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense
@@ -230,7 +230,7 @@
     company_id: base.main_company
     journal_id: bank_journal_USD
     partner_id: base.res_partner_19
-    period_id: account.period_3
+    date_account: !eval time.strftime("%Y/%m/%d")
     date: !eval time.strftime("%Y-04-01")
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense

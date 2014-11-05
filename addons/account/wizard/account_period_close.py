@@ -18,11 +18,11 @@ class account_period_close(models.TransientModel):
         for form in self:
             if form.sure:
                 for id in self._context['active_ids']:
-                    account_move = self.env['account.move'].search([('period_id', '=', id), ('state', '=', 'draft')], limit=1)
+                    account_move = self.env['account.move'].search([('date_account', '<=', fields.Date.context_today), ('state', '=', 'draft')], limit=1)
                     if account_move:
                         raise Warning(_('In order to close a period, you must first post related journal entries.'))
-
-                    period = self.env['account.period'].browse(id)
-                    period.state = 'done'
+                    # account.period has been removed
+                    # period = self.env['account.period'].browse(id)
+                    # period.state = 'done'
 
         return {'type': 'ir.actions.act_window_close'}

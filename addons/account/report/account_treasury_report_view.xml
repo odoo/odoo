@@ -8,7 +8,7 @@
             <tree string="Treasury Analysis" create="false">
                 <field name="date" invisible="1"/>
                 <field name="fiscalyear_id"/>
-                <field name="period_id"/>
+                <field name="date_account"/>
                 <field name="debit"/>
                 <field name="credit"/>
                 <field name="balance"/>
@@ -23,7 +23,7 @@
          <field name="model">account.treasury.report</field>
          <field name="arch" type="xml">
              <graph string="Treasury Analysis" type="pivot">
-                <field name="period_id" type="row"/>
+                <field name="date_account" type="row"/>
                 <field name="debit" type="measure"/>
                 <field name="credit" type="measure"/>
                 <field name="balance" type="measure"/>
@@ -36,7 +36,7 @@
         <field name="arch" type="xml">
             <search string="Treasury Analysis">
                 <field name="fiscalyear_id"/>
-                <field name="period_id"/>
+                <field name="date_account"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="1" string="Group By">
                     <filter string="Month" context="{'group_by':'date:month'}"/>

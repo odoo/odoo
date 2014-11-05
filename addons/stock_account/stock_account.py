@@ -29,15 +29,14 @@ _logger = logging.getLogger(__name__)
 class stock_inventory(osv.osv):
     _inherit = "stock.inventory"
     _columns = {
-        'period_id': fields.many2one('account.period', 'Force Valuation Period', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
+        'date_account': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
     }
-
     def post_inventory(self, cr, uid, inv, context=None):
         if context is None:
             context = {}
         ctx = context.copy()
-        if inv.period_id:
-            ctx['force_period'] = inv.period_id.id
+        if inv.date_account:
+            ctx['force_period_date'] = inv.date_account
         return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
 
@@ -236,10 +235,10 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, move.date, context=context)[0])
+            date_account= context.get('force_period_date', move.date)
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
-                                      'period_id': period_id,
+                                      'date_account': date_account,
                                       'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 

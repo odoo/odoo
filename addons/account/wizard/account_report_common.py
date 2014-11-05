@@ -28,8 +28,8 @@ class account_common_report(models.TransientModel):
         help='Keep empty for all open fiscal year', default=lambda self: self._get_fiscalyear())
     filter = fields.Selection([('filter_no', 'Do not apply filter'), ('filter_date', 'Filter by date'), ('filter_period', 'Filter by period')], 
         string='Filter by', required=True, default='filter_no')
-    period_from = fields.Many2one('account.period', string='Start Period')
-    period_to = fields.Many2one('account.period', string='End Period')
+    period_from = fields.Date(string='Start Period', default=fields.Date.context_today)
+    period_to = fields.Date(string='End Period', default=fields.Date.context_today)
     journal_ids = fields.Many2many('account.journal', string='Journals', required=True, 
         default=lambda self: self._get_all_journal())
     date_from = fields.Date(string='Start Date')
@@ -44,10 +44,11 @@ class account_common_report(models.TransientModel):
             company_id = wiz.company_id.id
             if wiz.fiscalyear_id and company_id != wiz.fiscalyear_id.company_id.id:
                 raise Warning(_('The fiscalyear, periods or chart of account chosen have to belong to the same company.'))
-            if wiz.period_from and company_id != wiz.period_from.company_id.id:
-                raise Warning(_('The fiscalyear, periods or chart of account chosen have to belong to the same company.'))
-            if wiz.period_to and company_id != wiz.period_to.company_id.id:
-                raise Warning(_('The fiscalyear, periods or chart of account chosen have to belong to the same company.'))
+            #
+            # if wiz.period_from and company_id != wiz.period_from.company_id.id:
+            #     raise Warning(_('The fiscalyear, periods or chart of account chosen have to belong to the same company.'))
+            # if wiz.period_to and company_id != wiz.period_to.company_id.id:
+            #     raise Warning(_('The fiscalyear, periods or chart of account chosen have to belong to the same company.'))
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -65,35 +66,10 @@ class account_common_report(models.TransientModel):
 
     @api.onchange('filter', 'fiscalyear_id')
     def onchange_filter(self):
-        period_from, period_to, date_from, date_to = False, False, False, False
+        date_from, date_to = False, False
         if self.filter == 'filter_date':
             date_from = time.strftime('%Y-01-01')
             date_to = time.strftime('%Y-%m-%d')
-        if self.filter == 'filter_period' and self.fiscalyear_id:
-            self._cr.execute('''
-                SELECT * FROM (SELECT p.id
-                               FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
-                               WHERE f.id = %s
-                               AND p.special = false
-                               ORDER BY p.date_start ASC, p.special ASC
-                               LIMIT 1) AS period_start
-                UNION ALL
-                SELECT * FROM (SELECT p.id
-                               FROM account_period p
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
-                               WHERE f.id = %s
-                               AND p.date_start < NOW()
-                               AND p.special = false
-                               ORDER BY p.date_stop DESC
-                               LIMIT 1) AS period_stop''', (self.fiscalyear_id, self.fiscalyear_id))
-            periods =  [i[0] for i in self._cr.fetchall()]
-            if periods and len(periods) > 1:
-                period_from = periods[0]
-                period_to = periods[1]
-
-        self.period_from = period_from
-        self.period_to = period_to
         self.date_from = date_from
         self.date_to = date_to
 

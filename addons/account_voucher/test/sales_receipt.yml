@@ -16,7 +16,7 @@
         amount: 30000.0
         type: cr
     partner_id: base.res_partner_19
-    period_id: account.period_9
+    date_account: !eval time.strftime("%Y/%m/%d")
     type: sale
     
 -
@@ -50,6 +50,7 @@
   I create and post a voucher payment of amount 30000.0 for the partner Seagate
 -
   !python {model: account.voucher}: |
+    import time
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
     res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
@@ -59,7 +60,7 @@
         'company_id': ref('base.main_company'),
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
-        'period_id': ref('account.period_8'),
+        'date_account': time.strftime("%Y/%m/%d"),
         'type': 'receipt',
     }
     if not res['value']['line_cr_ids']:

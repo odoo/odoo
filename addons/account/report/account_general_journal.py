@@ -69,15 +69,15 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def periods(self, journal_period_objs):
         dic = {}
         def filter_unique(o):
-            key = o.period_id.id
+            key = o.date_account
             res = key in dic
             if not res:
                 dic[key] = True
             return not res
         filtered_objs = filter(filter_unique, journal_period_objs)
-        return map(lambda x: x.period_id, filtered_objs)
+        return map(lambda x: x.date_account, filtered_objs)
 
-    def lines(self, period_id):
+    def lines(self, date_account):
         if not self.journal_ids:
             return []
         move_state = ['draft','posted']
@@ -89,9 +89,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
-                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
+                        'WHERE am.state IN %s AND l.date_account=%s AND l.journal_id IN %s ' + self.query_get_clause + ' '
                         'GROUP BY j.id, j.code, j.name, l.amount_currency, c.symbol, l.currency_id ',
-                        (tuple(move_state), period_id, tuple(self.journal_ids)))
+                        (tuple(move_state), date_account, tuple(self.journal_ids)))
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
@@ -113,7 +113,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def _display_currency(self, data):
         return data['form']['amount_currency']
 
-    def _sum_debit_period(self, period_id, journal_id=False):
+    def _sum_debit_period(self, date_account, journal_id=False):
         if journal_id:
             journals = [journal_id]
         else:
@@ -125,12 +125,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             move_state = ['posted']
         self.cr.execute('SELECT SUM(l.debit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.date_account=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ' \
                         'AND l.state<>\'draft\'',
-                        (tuple(move_state), period_id, tuple(journals)))
+                        (tuple(move_state), date_account, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit_period(self, period_id, journal_id=None):
+    def _sum_credit_period(self, date_account, journal_id=None):
         if journal_id:
             journals = [journal_id]
         else:
@@ -142,9 +142,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return 0.0
         self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l '
                         'LEFT JOIN account_move am ON (l.move_id=am.id) '
-                        'WHERE am.state IN %s AND l.period_id=%s AND l.journal_id IN %s '+ self.query_get_clause + ' ' \
+                        'WHERE am.state IN %s AND l.date_account=%s AND l.journal_id IN %s '+ self.query_get_clause + ' ' \
                         'AND l.state<>\'draft\'',
-                        (tuple(move_state), period_id, tuple(journals)))
+                        (tuple(move_state), date_account, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
 

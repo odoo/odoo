@@ -34,8 +34,8 @@
                                 <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
                                 <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
                                 <p t-if="data['form']['filter'] == 'filter_period'">
-                                    Start Period: <span t-esc="get_start_period(data)"/>
-                                    End Period: <span t-esc="get_end_period(data)"/>
+                                    Start Period: <span/>
+                                    End Period: <span/>
                                 </p>
                                 <p t-if="data['form']['filter'] == 'filter_date'">
                                     Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />

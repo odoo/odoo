@@ -19,7 +19,6 @@ class account_move_line(models.Model):
     @api.model
     def _query_get(self, obj='l'):
         fiscalyear_obj = self.env['account.fiscalyear']
-        fiscalperiod_obj = self.env['account.period']
         account_obj = self.env['account.account']
         fiscalyear_ids = []
         context = dict(self._context or {})
@@ -51,26 +50,6 @@ class account_move_line(models.Model):
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-        if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
-            if initial_bal:
-                period_company_id = fiscalperiod_obj.browse(context['period_from']).company_id.id
-                first_period = fiscalperiod_obj.search([('company_id', '=', period_company_id)], order='date_start', limit=1)
-                context['periods'] = fiscalperiod_obj.build_ctx_periods(first_period.id, context['period_from'])
-            else:
-                context['periods'] = fiscalperiod_obj.build_ctx_periods(context['period_from'], context['period_to'])
-        if context.get('periods', False):
-            if initial_bal:
-                query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
-                periods = fiscalperiod_obj.search([('id', 'in', context['periods'])], order='date_start', limit=1)
-                if periods:
-                    ids = ','.join([str(x) for x in context['periods']])
-                    query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, periods.date_start, ids, where_move_state, where_move_lines_by_date)
-            else:
-                ids = ','.join([str(x) for x in context['periods']])
-                query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
-        else:
-            query = obj+".state != 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
-
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
@@ -259,8 +238,8 @@ class account_move_line(models.Model):
         help="The optional other currency if it is a multi-currency entry.")
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=lambda self: self._get_journal, required=True, index=True, store=True)
-    period_id = fields.Many2one('account.period', related='move_id.period_id', string='Period',
-        default=lambda self: self._get_period, required=True, index=True, store=True)
+    date_account = fields.Date(string='Account Date',
+        required=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
@@ -292,13 +271,10 @@ class account_move_line(models.Model):
     def _get_date(self):
         date = time.strftime('%Y-%m-%d')
         context = dict(self._context or {})
-        if context.get('journal_id') and context.get('period_id'):
-            line = self.search([('journal_id', '=', context['journal_id']),('period_id', '=', context['period_id'])], order='id desc', limit=1)
+        if context.get('journal_id') and context.get('date_account'):
+            line = self.search([('journal_id', '=', context['journal_id']),('date_account', '=', context['date_account'])], order='id desc', limit=1)
             if line:
                 date = line.date
-            else:
-                period = self.env['account.period'].browse(context['period_id'])
-                date = period.date_start
         return date
 
     @api.model
@@ -308,17 +284,6 @@ class account_move_line(models.Model):
         if context.get('journal_id', False):
             currency = self.env['account.journal'].browse(context['journal_id']).currency
         return currency
-
-    @api.model
-    def _get_period(self):
-        """
-        Return  default account period value
-        """
-        context = dict(self._context or {})
-        if context.get('period_id', False):
-            return context['period_id']
-        periods = self.env['account.period'].find()
-        return periods and periods[0] or False
 
     @api.model
     def _get_journal(self):
@@ -345,9 +310,6 @@ class account_move_line(models.Model):
 
     def _auto_init(self, cr, context=None):
         res = super(account_move_line, self)._auto_init(cr, context=context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
@@ -371,7 +333,7 @@ class account_move_line(models.Model):
     @api.constrains('company_id')
     def _check_company_id(self):
         for line in self:
-            if line.company_id != line.account_id.company_id or line.company_id != line.period_id.company_id:
+            if line.company_id != line.account_id.company_id:
                 raise Warning(_('Account and Period must belong to the same company.'))
 
     @api.multi
@@ -379,8 +341,8 @@ class account_move_line(models.Model):
     def _check_date(self):
         for line in self:
             if line.journal_id.allow_date:
-                if not time.strptime(line.date[:10],'%Y-%m-%d') >= time.strptime(line.period_id.date_start, '%Y-%m-%d') or not time.strptime(line.date[:10], '%Y-%m-%d') <= time.strptime(line.period_id.date_stop, '%Y-%m-%d'):
-                    raise Warning(_('The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.'))
+                if not self.env['account.fiscalyear'].search([('date_start', '>=', line.date), ('date_stop', '>=', line.date)]):
+                    raise Warning(_('The date of your Journal Entry is not in the defined fiscalyear! You should change the date or remove this constraint from the journal.'))
 
     @api.multi
     @api.constrains('currency_id')
@@ -482,8 +444,9 @@ class account_move_line(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         context = self._context
-        if context.get('fiscalyear'):
-            args.append(('period_id.fiscalyear_id', '=', context.get('fiscalyear', False)))
+        if context.get('fiscalyear_id'):
+            fiscalyear = self.env['account.fiscalyear'].browse(fiscalyear_id)
+            args.append(('date', '>=', fiscalyear.date_start), ('date', '<=', fiscalyear.date_stop))
         if context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.list_partners_to_reconcile()
@@ -525,7 +488,6 @@ class account_move_line(models.Model):
                 'account_type': line.account_id.type,
                 'date_maturity': line.date_maturity,
                 'date': line.date,
-                'period_name': line.period_id.name,
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
@@ -585,7 +547,7 @@ class account_move_line(models.Model):
         return partners.name_get()
 
     @api.multi
-    def reconcile_partial(self, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
+    def reconcile_partial(self, type='auto', writeoff_acc_id=False, writeoff_period_date=False, writeoff_journal_id=False):
         move_rec_obj = self.env['account.move.reconcile']
         merges = []
         unmerge = []
@@ -624,7 +586,7 @@ class account_move_line(models.Model):
                     total += (line.debit or 0.0) - (line.credit or 0.0)
         if currency_id.is_zero(total):
             for line in merges+unmerge:
-                res = line.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
+                res = line.reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_period_date=writeoff_period_date, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.
@@ -638,7 +600,7 @@ class account_move_line(models.Model):
         return r_id
 
     @api.multi
-    def reconcile(self, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
+    def reconcile(self, type='auto', writeoff_acc_id=False, writeoff_period_date=False, writeoff_journal_id=False):
         unrec_lines = filter(lambda x: not x['reconcile_id'], self)
         credit = debit = 0.0
         currency = 0.0
@@ -741,12 +703,12 @@ class account_move_line(models.Model):
 
             
             writeoff_move_id = self.env['account.move'].create({
-                'period_id': writeoff_period_id,
+                'date_account': fields.Date.context_today(self),
                 'journal_id': writeoff_journal_id,
                 'company_id': writeoff_journal_id and self.env['account.journal'].browse(writeoff_journal_id).company_id.id or False,
                 'date': date,
                 'state': 'draft',
-                'line_id': writeoff_lines
+                'line_id': writeoff_lines,
             })
 
             writeoff_line_ids = self.search([('move_id', '=', writeoff_move_id.id), ('account_id', '=', account_id)]).ids
@@ -783,38 +745,20 @@ class account_move_line(models.Model):
             if res:
                 res = _('Entries: ')+ (res[0] or '')
             return res
-        if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
+        if (not context.get('journal_id', False)) or (not context.get('date_account', False)):
             return False
         if context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
         self._cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
         j = self._cr.fetchone()[0] or ''
-        self._cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
-        p = self._cr.fetchone()[0] or ''
-        if j or p:
-            return j + (p and (':' + p) or '')
+        if j:
+            return j
         return False
-
-    @api.onchange('date')
-    def onchange_date(self):
-        """
-        Returns a dict that contains new values and context
-        @param date: latest value from user input for field date
-        """
-        res = {}
-        pids = self.env['account.period'].find(self.date)
-        if pids:
-            res['period_id'] = pids[0]
-            context = dict(self._context or {}, period_id = pids[0])
-        return {
-            'value':res,
-            'context':context,
-        }
 
     @api.model
     def _check_moves(self):
         # use the first move ever created for this journal and period
-        self._cr.execute('SELECT id, state, name FROM account_move WHERE journal_id = %s AND period_id = %s ORDER BY id limit 1', (self._context['journal_id'],self._context['period_id']))
+        self._cr.execute('SELECT id, state, name FROM account_move WHERE journal_id = %s AND date_account = %s ORDER BY id limit 1', (self._context['journal_id'],self._context['date_account']))
         res = self._cr.fetchone()
         if res:
             if res[1] != 'draft':
@@ -855,7 +799,7 @@ class account_move_line(models.Model):
         for line in self:
             moves.add(line.move_id)
             context['journal_id'] = line.journal_id.id
-            context['period_id'] = line.period_id.id
+            context['date_account'] = line.date
             result = super(account_move_line, line).with_context(context).unlink()
         moves = list(moves)
         if check and moves:
@@ -869,7 +813,7 @@ class account_move_line(models.Model):
         if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['deprecated'])['deprecated']:
             raise Warning(_('You cannot use deprecated account.'))
         if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
+            if ('account_id' in vals) or ('journal_id' in vals) or ('date_account' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check()
 
         todo_date = None
@@ -884,11 +828,11 @@ class account_move_line(models.Model):
                    ctx['journal_id'] = line.move_id.journal_id.id
                 else:
                     ctx['journal_id'] = line.journal_id.id
-            if not ctx.get('period_id'):
+            if not ctx.get('date_account'):
                 if line.move_id:
-                    ctx['period_id'] = line.move_id.period_id.id
+                    ctx['date_account'] = line.move_id.date_account
                 else:
-                    ctx['period_id'] = line.period_id.id
+                    ctx['date_account'] = line.date_account
             #Check for centralisation
             journal = self.env['account.journal'].with_context(ctx).browse(ctx['journal_id'])
             if journal.centralisation:
@@ -905,7 +849,7 @@ class account_move_line(models.Model):
         return result
 
     @api.model
-    def _update_journal_check(self, journal_id, period_id):
+    def _update_journal_check(self, journal_id, date_account):
         #account_journal_period have been removed
 #         self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
 #         result = self._cr.fetchall()
@@ -931,9 +875,9 @@ class account_move_line(models.Model):
                 raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
                 raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            t = (line.journal_id.id, line.period_id.id)
+            t = (line.journal_id.id, line.date_account)
             if t not in done:
-                self._update_journal_check(line.journal_id.id, line.period_id.id)
+                self._update_journal_check(line.journal_id.id, line.date_account)
                 done[t] = True
         return True
 
@@ -953,25 +897,22 @@ class account_move_line(models.Model):
             raise Warning(_('You cannot use deprecated account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
-        if 'period_id' in vals and vals['period_id']:
-            context['period_id'] = vals['period_id']
+        if 'date_account' in vals and vals['date_account']:
+            context['date_account'] = vals['date_account']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = MoveObj.browse(vals['move_id'])
             context['journal_id'] = m.journal_id.id
-            context['period_id'] = m.period_id.id
+            context['date_account'] = m.date_account
         #we need to treat the case where a value is given in the context for period_id as a string
-        if 'period_id' in context and not isinstance(context.get('period_id', ''), (int, long)):
-            period_candidate_ids = self.env['account.period'].name_search(name=context.get('period_id',''))
-            if len(period_candidate_ids) != 1:
-                raise Warning(_('No period found or more than one period found for the given date.'))
-            context['period_id'] = period_candidate_ids[0][0]
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-        self.with_context(context)._update_journal_check(context['journal_id'], context['period_id'])
+        if 'date_account' not in context:
+            context['date_account'] = fields.Date.context_today(self)
+        self.with_context(context)._update_journal_check(context['journal_id'], context['date_account'])
         move_id = vals.get('move_id', False)
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
-        vals['period_id'] = vals.get('period_id') or context.get('period_id')
+        vals['date_account'] = vals.get('date_account') or context.get('date_account')
         vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
             if journal.centralisation:
@@ -984,7 +925,7 @@ class account_move_line(models.Model):
                     #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
-                        'period_id': context['period_id'],
+                        'date_account': context['date_account'],
                         'journal_id': context['journal_id']
                     }
                     if vals.get('ref', ''):
@@ -1018,7 +959,6 @@ class account_move_line(models.Model):
                     account.currency_id.id, vals.get('debit', 0.0) - vals.get('credit', 0.0))
         if not ok:
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
-
         result = super(account_move_line, self).create(vals)
         # CREATE Taxes
         if vals.get('account_tax_id', False):
@@ -1095,11 +1035,6 @@ class account_move_line(models.Model):
             if journal.entry_posted and tmp:
                 move.with_context(context).button_validate()
         return result
-
-    @api.model
-    def list_periods(self):
-        periods = self.env['account.period'].search([])
-        return periods.name_get()
 
     @api.model
     def list_journals(self):

@@ -55,16 +55,12 @@ class account_bank_statement_import(osv.TransientModel):
             raise osv.except_osv(_('Error!'), _("Following problem has been occurred while importing your file, Please verify the file is proper or not.\n\n %s" % e.message))
         st_start_date = ofx.account.statement.start_date or False
         st_end_date = ofx.account.statement.end_date or False
-        period_obj = self.pool.get('account.period')
-        if st_end_date:
-            period_ids = period_obj.find(cr, uid, st_end_date, context=context)
-        else:
-            period_ids = period_obj.find(cr, uid, st_start_date, context=context)
+
         vals_bank_statement = {
             'name': ofx.account.routing_number,
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
-            'period_id': period_ids and period_ids[0] or False,
+            'date_account': fields.date.context_today or False,
             'journal_id': journal_id
         }
         vals_bank_statement.update({'line_ids': line_ids})

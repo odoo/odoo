@@ -41,7 +41,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
     _columns = {
         'name': fields.char('File Name'),
-        'period_id': fields.many2one('account.period','Period', required=True),
+        'date_account': fields.date('Account Date', required=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', readonly=True),
         'file_save': fields.binary('Save File'),
@@ -68,7 +68,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
     def create_xml(self, cr, uid, ids, context=None):
         obj_tax_code = self.pool.get('account.tax.code')
-        obj_acc_period = self.pool.get('account.period')
         obj_user = self.pool.get('res.users')
         obj_partner = self.pool.get('res.partner')
         mod_obj = self.pool.get('ir.model.data')
@@ -91,22 +90,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id','child_of',data_tax.tax_code_id.id), ('company_id','=',obj_company.id)], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
-        ctx['period_id'] = data['period_id'][0]
+        ctx['date_account'] = data['date_account']
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         default_address = obj_partner.address_get(cr, uid, [obj_company.partner_id.id])
         default_address_id = default_address.get("default", obj_company.partner_id.id)
         address_id= obj_partner.browse(cr, uid, default_address_id, context)
 
-        account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
         issued_by = vat_no[:2]
         comments = data['comments'] or ''
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
-
-        starting_month = account_period.date_start[5:7]
-        ending_month = account_period.date_stop[5:7]
-        quarter = str(((int(starting_month) - 1) / 3) + 1)
+        # TODO account_period now removed
+        # starting_month = account_period.date_start[5:7]
+        # ending_month = account_period.date_stop[5:7]
+        # quarter = str(((int(starting_month) - 1) / 3) + 1)
 
         if not address_id.email:
             raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
@@ -126,7 +124,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                         'send_ref': send_ref,
                         'quarter': quarter,
                         'month': starting_month,
-                        'year': str(account_period.date_stop[:4]),
+                        # 'year': str(account_period.date_stop[:4]),
                         'client_nihil': (data['client_nihil'] and 'YES' or 'NO'),
                         'ask_restitution': (data['ask_restitution'] and 'YES' or 'NO'),
                         'ask_payment': (data['ask_payment'] and 'YES' or 'NO'),

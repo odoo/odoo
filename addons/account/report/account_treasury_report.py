@@ -23,7 +23,7 @@ class account_treasury_report(models.Model):
         return res
 
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscalyear', readonly=True)
-    period_id = fields.Many2one('account.period', string='Period', readonly=True)
+    date_account = fields.Date(string='Account Date', readonly=True, default=fields.Date.context_today)
     debit = fields.Float(string='Debit', readonly=True)
     credit = fields.Float(string='Credit', readonly=True)
     balance = fields.Float(string='Balance', readonly=True)
@@ -39,21 +39,20 @@ class account_treasury_report(models.Model):
         cr.execute("""
             create or replace view account_treasury_report as (
             select
-                p.id as id,
-                p.fiscalyear_id as fiscalyear_id,
-                p.id as period_id,
+                l.date as date_account,
+                fs.id as fiscalyear_id,
                 sum(l.debit) as debit,
                 sum(l.credit) as credit,
                 sum(l.debit-l.credit) as balance,
-                p.date_start as date,
+                l.date as date,
                 am.company_id as company_id
             from
                 account_move_line l
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
-                left join account_period p on (am.period_id=p.id)
+                left join account_fiscalyear fs on (l.date >= fs.date_start and l.date <= fs.date_stop)
             where l.state != 'draft'
               and a.type = 'liquidity'
-            group by p.id, p.fiscalyear_id, p.date_start, am.company_id
+            group by fs.id, l.date, am.company_id
             )
         """)

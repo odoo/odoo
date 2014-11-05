@@ -43,9 +43,8 @@ class account_bank_statement_import(osv.TransientModel):
                     continue
                 if line[0] == 'D':  # date of transaction
                     vals_line['date'] = dateutil.parser.parse(line[1:], fuzzy=True).date()
-                    if vals_line.get('date') and not vals_bank_statement.get('period_id'):
-                        period_ids = self.pool.get('account.period').find(cr, uid, vals_line['date'], context=context)
-                        vals_bank_statement.update({'period_id': period_ids and period_ids[0] or False})
+                    if vals_line.get('date') and not vals_bank_statement.get('date_account'):
+                        vals_bank_statement.update({'date_account': vals_line['date'] or False})
                 elif line[0] == 'T':  # Total amount
                     total += float(line[1:].replace(',', ''))
                     vals_line['amount'] = float(line[1:].replace(',', ''))

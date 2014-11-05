@@ -42,6 +42,7 @@
   I will create and post an account voucher of amount 450.0 for the partner Seagate.
 -
   !python {model: account.voucher}: |
+    import time
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
     voucher = self.recompute_voucher_lines(cr, uid, [], ref("base.res_partner_19"), journal_id, 450.0, ref('base.EUR'), 'receipt', False)
@@ -53,7 +54,7 @@
         'company_id': ref('base.main_company'),
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
-        'period_id': ref('account.period_8'),
+        'date_account': time.strftime("%Y/%m/%d")
         'type': 'receipt',
     }
     if not res['value']['line_cr_ids']:

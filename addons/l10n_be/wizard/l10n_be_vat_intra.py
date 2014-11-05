@@ -56,7 +56,7 @@ class partner_vat_intra(osv.osv_memory):
       YYYY stands for the year (4 positions).
     '''
     ),
-        'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
+        'date_account': fields.date('Date Account', help = 'Select here the period(s) you want to include in your intracom declaration'),
         'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('Reference', help="Reference given by the Representative of the sending company."),
@@ -180,9 +180,9 @@ class partner_vat_intra(osv.osv_memory):
                       LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
                       WHERE t.code IN %s
-                       AND l.period_id IN %s
+                       AND l.date_account = %s
                        AND t.company_id = %s
-                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, tuple([p.id for p in wiz_data.period_ids]), data_company.id))
+                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, wiz_data.date_account, data_company.id))
 
         p_count = 0
 

@@ -18,8 +18,8 @@ if res[0]['balance']!=0.0 and res[0]['balance'] is not None:
   result.append(res)
 ]]></field>
     </record>
-
-    <record model="accounting.assert.test" id="account_test_02">
+    <!-- TODO account.period has been removed -->
+    <!-- <record model="accounting.assert.test" id="account_test_02">
         <field name="sequence">2</field>
         <field name="name">Test 2: Opening a fiscal year</field>
         <field name="desc">Check if the balance of the new opened fiscal year matches with last year's balance</field>
@@ -35,25 +35,25 @@ if (rec2[0]['credit_last_fyear']-rec[0]['credit_new_fyear']!=0) or (rec2[0]['deb
    result.append(rec2[0])
 
 ]]></field>
-    </record>
+    </record> -->
 
     <record model="accounting.assert.test" id="account_test_03">
         <field name="sequence">3</field>
         <field name="name">Test 3: Movement lines</field>
         <field name="desc">Check if movement lines are balanced and have the same date and period</field>
-        <field name="code_exec"><![CDATA[order_columns=['am_date','ml_date','am.period_id','ml.period_id','am.id']
+        <field name="code_exec"><![CDATA[order_columns=['am_date','ml_date','am.date_account','ml.date_account','am.id']
 sql="""SELECT
   am.id as move_id,
   sum(debit)-sum(credit) as balance,
-  am.period_id,
-  ml.period_id,
+  am.date_account,
+  ml.date_account,
   am.date as am_date,
   ml.date as ml_date
 FROM account_move am, account_move_line ml
 WHERE
   ml.move_id = am.id
-GROUP BY am.name, am.id, am.state, am.period_id, ml.period_id,am.period_id, ml.period_id,am.date, ml.date
-HAVING abs(sum(ml.debit-ml.credit)) <> 0 or am.period_id!=ml.period_id or (am.date!=ml.date)
+GROUP BY am.name, am.id, am.state, am.date_account, ml.date_account,am.date_account, ml.date_account,am.date, ml.date
+HAVING abs(sum(ml.debit-ml.credit)) <> 0 or am.date_account!=ml.date_account or (am.date!=ml.date)
 """
 cr.execute(sql)
 res = cr.dictfetchall()
@@ -72,7 +72,7 @@ result = res
 cr.execute("SELECT distinct reconcile_id from account_move_line where reconcile_id is not null")
 rec_ids = cr.dictfetchall()
 for record in rec_ids :
-  cr.execute("SELECT distinct r.name,r.id from account_journal j,account_period p, account_move_reconcile r,account_move m, account_move_line ml where m.journal_id=j.id and m.period_id=p.id and ml.reconcile_id=%s and ml.move_id=m.id and ml.reconcile_id=r.id group by r.id,r.name having sum(ml.debit)-sum(ml.credit)<>0", (record['reconcile_id'],))
+  cr.execute("SELECT distinct r.name,r.id from account_journal j,account_period p, account_move_reconcile r,account_move m, account_move_line ml where m.journal_id=j.id and m.date_account=p.id and ml.reconcile_id=%s and ml.move_id=m.id and ml.reconcile_id=r.id group by r.id,r.name having sum(ml.debit)-sum(ml.credit)<>0", (record['reconcile_id'],))
   reconcile_ids=cr.dictfetchall()
   if reconcile_ids:
     res.append(', '.join(["Reconcile name: %(name)s, id=%(id)s " % r for r in reconcile_ids]))
@@ -154,8 +154,8 @@ if result:
     result.insert(0,_('* Unbalanced bank statement that need to be checked: '))
 ]]></field>
     </record>
-
-    <record model="accounting.assert.test" id="account_test_08">
+    <!-- TODO account.period has been removed -->
+    <!-- <record model="accounting.assert.test" id="account_test_08">
         <field name="sequence">10</field>
         <field name="name">Test 9 : Accounts and partners on account moves</field>
         <field name="desc">Check that general accounts and partners on account moves are active</field>
@@ -167,6 +167,6 @@ result = res
 if result:
   result.insert(0,_('* Here is the list of inactive partners and movement lines that are not correct: '))
 ]]></field>
-    </record>
+    </record> -->
 </data>
 </openerp>

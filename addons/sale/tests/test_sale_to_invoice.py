@@ -33,7 +33,7 @@ class TestSale(TestMail):
     def test_sale_to_invoice(self):
         """ Testing for invoice create,validate and pay with invoicing and payment user."""
         cr, uid = self.cr, self.uid   
-        
+        import time
         # Usefull models
         data_obj = self.registry('ir.model.data')
         user_obj = self.registry('res.users')
@@ -51,7 +51,7 @@ class TestSale(TestMail):
         account_id = data_obj.get_object_reference(cr, uid, 'account', 'cash')[1]
         company_id = data_obj.get_object_reference(cr, uid, 'base', 'main_company')[1]
         journal_id = data_obj.get_object_reference(cr, uid, 'account', 'bank_journal')[1]
-        period_id = data_obj.get_object_reference(cr, uid, 'account', 'period_8')[1]
+        date_account = time.strftime("%Y/%m/%d")
         
         # In order to test, I create new user and applied Invoicing & Payments group.
         user_id = user_obj.create(cr, uid, {
@@ -99,7 +99,7 @@ class TestSale(TestMail):
             'company_id': company_id,
             'journal_id': journal_id,
             'partner_id': partner_id,
-            'period_id': period_id,
+            'date_account': date_account,
             'type': 'receipt',
         })
         assert voucher_id,"Voucher will not created."

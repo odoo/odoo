@@ -20,7 +20,7 @@ class account_entries_report(models.Model):
     balance = fields.Float(string='Balance', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     amount_currency = fields.Float(string='Amount Currency', digits=dp.get_precision('Account'), readonly=True)
-    period_id = fields.Many2one('account.period', string='Period', readonly=True)
+    date_account = fields.Date(string='Acount Date', readonly=True, default=fields.Date.context_today)
     account_id = fields.Many2one('account.account', string='Account', readonly=True, domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', readonly=True)
@@ -52,17 +52,15 @@ class account_entries_report(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         fiscalyear_obj = self.env['account.fiscalyear']
-        period_obj = self.env['account.period']
+        current_year = fiscalyear_obj.find()
+        fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
         for arg in args:
-            if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = period_obj.find()[0]
-                args.append(['period_id', 'in', [current_period]])
+            if arg[0] == 'date_account' and arg[2] == 'current_period':
+                args.append(['date_account', 'in', [current_period]])
                 break
-            elif arg[0] == 'period_id' and arg[2] == 'current_year':
-                current_year = fiscalyear_obj.find()
-                fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
-                args.append(['period_id','in',fiscalyear])
-        for a in [['period_id', 'in', 'current_year'], ['period_id', 'in', 'current_period']]:
+            elif arg[0] == 'date_account' and arg[2] == 'current_year':
+                args.append(['date_account','=',fiscalyear.date_start])
+        for a in [['date_account', '=', fiscalyear.date_start], ['date_account', '=', fiscalyear.date_start]]:
             if a in args:
                 args.remove(a)
         return super(account_entries_report, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
@@ -70,14 +68,12 @@ class account_entries_report(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fiscalyear_obj = self.env['account.fiscalyear']
-        period_obj = self.env['account.period']
-        if self._context.get('period', False) == 'current_period':
-            current_period = period_obj.find()[0]
-            domain.append(['period_id','in',[current_period]])
+        current_year = fiscalyear_obj.find()
+        fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
+        if self._context.get('date_account', False) == 'current_period':
+            domain.append(['date_account','=',[current_period]])
         elif self._context.get('year', False) == 'current_year':
-            current_year = fiscalyear_obj.find()
-            fiscalyear = fiscalyear_obj.browse(current_year).period_fiscalyear
-            domain.append(['period_id', 'in', fiscalyear])
+            domain.append(['date_account', '=', fiscalyear.date_start])
         return super(account_entries_report, self).read_group(domain=domain, fields=fields, groupby=groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def init(self, cr):
@@ -98,8 +94,8 @@ class account_entries_report(models.Model):
                 l.product_uom_id as product_uom_id,
                 am.company_id as company_id,
                 am.journal_id as journal_id,
-                p.fiscalyear_id as fiscalyear_id,
-                am.period_id as period_id,
+                f.id as fiscalyear_id,
+                am.date_account as date_account,
                 l.account_id as account_id,
                 l.analytic_account_id as analytic_account_id,
                 a.type as type,
@@ -115,7 +111,7 @@ class account_entries_report(models.Model):
                 account_move_line l
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
-                left join account_period p on (am.period_id=p.id)
+                left join account_fiscalyear f on (f.state = 'draft')
                 where l.state != 'draft'
             )
         """)

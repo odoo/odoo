@@ -136,7 +136,7 @@ class stock_landed_cost(osv.osv):
     def _create_account_move(self, cr, uid, cost, context=None):
         vals = {
             'journal_id': cost.account_journal_id.id,
-            'period_id': self.pool.get('account.period').find(cr, uid, cost.date, context=context)[0],
+            'period_date': cost.date,
             'date': cost.date,
             'ref': cost.name
         }

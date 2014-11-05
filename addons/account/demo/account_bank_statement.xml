@@ -4,7 +4,6 @@
         <!-- A bank statement -->
         <record id="demo_bank_statement_1" model="account.bank.statement">
             <field name="journal_id" ref="account.bank_journal"/>
-            <field name="period_id" ref="account.period_5"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="name">BNK/2014/001</field>

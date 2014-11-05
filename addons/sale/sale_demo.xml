@@ -395,10 +395,9 @@ Thanks!</field>
             <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_1')]"/>
             <!-- pay_amount = -->            <value eval="1850"/>
             <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- date_account = -->            <value eval="time.strftime('%Y-%m-%d')"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
             <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
             <!-- context = -->              <value eval="{}"/>
             <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
@@ -429,10 +428,9 @@ Thanks!</field>
             <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
             <!-- pay_amount = -->            <value eval="500"/>
             <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
-            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- date_account = -->            <value eval="time.strftime('%Y-%m-%d')"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
             <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
-            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
             <!-- context = -->              <value eval="{}"/>
             <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>

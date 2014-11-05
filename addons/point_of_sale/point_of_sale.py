@@ -996,7 +996,6 @@ class pos_order(osv.osv):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
-        account_period_obj = self.pool.get('account.period')
         account_tax_obj = self.pool.get('account.tax')
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
@@ -1046,7 +1045,6 @@ class pos_order(osv.osv):
                 # if have_to_group_by:
 
                 sale_journal_id = order.sale_journal.id
-                period = account_period_obj.find(cr, uid, context=dict(context or {}, company_id=current_company.id))[0]
 
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
@@ -1055,7 +1053,7 @@ class pos_order(osv.osv):
                     'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
                     'journal_id' : sale_journal_id,
-                    'period_id' : period,
+                    'date_account' : fields.Date.context_today,
                     'move_id' : move_id,
                     'company_id': current_company.id,
                 })

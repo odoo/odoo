@@ -26,25 +26,19 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     _name = "asset.depreciation.confirmation.wizard"
     _description = "asset.depreciation.confirmation.wizard"
     _columns = {
-       'period_id': fields.many2one('account.period', 'Period', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
+       'date_account': fields.date('Account Date', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets"),
     }
    
-    def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
-        if periods:
-            return periods[0]
-        return False
- 
     _defaults = {
-        'period_id': _get_period,
+        'date_account': fields.date.context_today,
     }
 
     def asset_compute(self, cr, uid, ids, context):
         ass_obj = self.pool.get('account.asset.asset')
         asset_ids = ass_obj.search(cr, uid, [('state','=','open')], context=context)
         data = self.browse(cr, uid, ids, context=context)
-        period_id = data[0].period_id.id
-        created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, period_id, context=context)
+        date_account = data[0].date_account
+        created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, date_account, context=context)
         return {
             'name': _('Created Asset Moves'),
             'view_type': 'form',

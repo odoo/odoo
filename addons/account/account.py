@@ -295,14 +295,10 @@ class account_account(models.Model):
         if not journal:
             raise Warning(_("You need an Opening journal with centralisation checked to set the initial balance."))
  
-        period = self.env['account.period'].search([('special', '=', True), ('company_id', '=', self.company_id.id)], limit=1)
-        if not period:
-            raise Warning(_("There is no opening/closing period defined, please create one to set the initial balance."))
- 
         move_obj = self.env['account.move.line']
         move = move_obj.search([
             ('journal_id', '=', journal.id),
-            ('period_id', '=', period.id),
+            ('date_account', '=', date_account),
             ('account_id', '=', self.id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
@@ -317,7 +313,6 @@ class account_account(models.Model):
                 'name': _('Opening Balance'),
                 'account_id': self.id,
                 'journal_id': journal.id,
-                'period_id': period.id,
                 name: value,
                 nameinv: 0.0
             })
@@ -626,51 +621,16 @@ class account_fiscalyear(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     date_start = fields.Date(string='Start Date', required=True)
     date_stop = fields.Date(string='End Date', required=True)
-    period_ids = fields.One2many('account.period', 'fiscalyear_id', string='Periods')
     state = fields.Selection([('draft','Open'), ('done','Closed')], string='Status', readonly=True, copy=False, default='draft')
     end_journal_id = fields.Many2one('account.journal', 'End of Year Entries Journal',
         readonly=True, copy=False)
+    freeze_date = fields.Date(string='Freeze Date')
 
     @api.one
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop < self.date_start:
             raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
-
-    @api.multi
-    def create_period3(self):
-        return self.create_period(3)
-
-    @api.multi
-    #TO FIX: When this method is called by clicking 'Create Monthly Periods' button, 'interval' parameter gets wrong value.
-    # interval = {'lang': 'en_US', 'tz': 'Europe/Brussels', 'uid': 1}
-    def create_period(self, interval=1):
-        PeriodObj = self.env['account.period']
-        for fy in self:
-            ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
-            PeriodObj.create({
-                    'name':  "%s %s" % (_('Opening Period'), ds.strftime('%Y')),
-                    'code': ds.strftime('00/%Y'),
-                    'date_start': ds,
-                    'date_stop': ds,
-                    'special': True,
-                    'fiscalyear_id': fy.id,
-                })
-            while ds.strftime('%Y-%m-%d') < fy.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
-
-                if de.strftime('%Y-%m-%d') > fy.date_stop:
-                    de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
-
-                PeriodObj.create({
-                    'name': ds.strftime('%m/%Y'),
-                    'code': ds.strftime('%m/%Y'),
-                    'date_start': ds.strftime('%Y-%m-%d'),
-                    'date_stop': de.strftime('%Y-%m-%d'),
-                    'fiscalyear_id': fy.id,
-                })
-                ds = ds + relativedelta(months=interval)
-        return True
 
     @api.model
     def find(self, dt=None, exception=True):
@@ -699,130 +659,6 @@ class account_fiscalyear(models.Model):
         return recs.ids
 
 
-class account_period(models.Model):
-    _name = "account.period"
-    _description = "Account period"
-    _order = "date_start, special desc"
-
-    name = fields.Char(string='Period Name', required=True)
-    code = fields.Char(string='Code', size=12)
-    special = fields.Boolean(string='Opening/Closing Period', help="These periods can overlap.")
-    date_start = fields.Date(string='Start of Period', required=True, states={'done': [('readonly', True)]})
-    date_stop = fields.Date(string='End of Period', required=True, states={'done': [('readonly', True)]})
-    fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', required=True, states={'done': [('readonly', True)]}, index=True)
-    state = fields.Selection([('draft', 'Open'), ('done', 'Closed')], string='Status', readonly=True, copy=False, default='draft',
-        help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.')
-    company_id = fields.Many2one('res.company', related='fiscalyear_id.company_id', string='Company', store=True, readonly=True)
-
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
-    ]
-
-    @api.one
-    @api.constrains('date_start', 'date_stop')
-    def _check_duration(self):
-        if self.date_stop < self.date_start:
-            raise Warning(_('Error!\nThe duration of the Period(s) is/are invalid.'))
-
-    @api.one
-    @api.constrains('fiscalyear_id', 'date_start', 'date_stop')
-    def _check_year_limit(self):
-        if not self.special:
-
-            if self.fiscalyear_id.date_stop < self.date_stop or \
-               self.fiscalyear_id.date_stop < self.date_start or \
-               self.fiscalyear_id.date_start > self.date_start or \
-               self.fiscalyear_id.date_start > self.date_stop:
-                raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
-    
-            periods = self.search([('date_stop', '>=', self.date_start), ('date_start', '<=', self.date_stop),
-                ('special', '=', False), ('id', '!=', self.id)])
-            for period in periods:
-                if period.fiscalyear_id.company_id.id == self.fiscalyear_id.company_id.id:
-                    raise Warning(_('Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.'))
-
-    @api.model
-    def next(self, period, step):
-        periods = self.search([('date_start', '>', period.date_start)])
-        if len(periods) >= step:
-            return periods[step-1]
-        return False
-
-    @api.model
-    def find(self, dt=None):
-        if not dt:
-            dt = fields.Date.context_today(self)
-        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if self._context.get('company_id', False):
-            args.append(('company_id', '=', self._context['company_id']))
-        else:
-            company_id = self.env.user.company_id.id
-            args.append(('company_id', '=', company_id))
-        result = []
-        if self._context.get('account_period_prefer_normal', True):
-            # look for non-special periods first, and fallback to all if no result is found
-            result = self.search(args + [('special', '=', False)])
-        if not result:
-            result = self.search(args)
-        if not result:
-            action = self.env.ref('account.action_account_period')
-            msg = _('No accounting period is covering this date: %s.') % dt
-            raise RedirectWarning(msg, action, _('Configure Periods Now'))
-        return result.ids
-
-    @api.multi
-    def action_draft(self):
-        mode = 'draft'
-        for period in self:
-            if period.fiscalyear_id.state == 'done':
-                raise Warning(_('You can not re-open a period which belongs to closed fiscal year'))
-        #self._cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(self.ids),))
-        self._cr.execute('update account_period set state=%s where id in %s', (mode, tuple(self.ids),))
-        self.invalidate_cache()
-        return True
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        recs = self.search(expression.AND([domain, args]), limit=limit)
-        return recs.name_get()
-
-    @api.multi
-    def write(self, vals):
-        if 'company_id' in vals:
-            move_lines = self.env['account.move.line'].search([('period_id', 'in', self.ids)], limit=1)
-            if move_lines:
-                raise Warning(_('This journal already contains items for this period, therefore you cannot modify its company field.'))
-        return super(account_period, self).write(vals)
-
-    @api.model
-    def build_ctx_periods(self, period_from_id, period_to_id):
-        if period_from_id == period_to_id:
-            return [period_from_id]
-        period_from = self.browse(period_from_id)
-        period_date_start = period_from.date_start
-        company1_id = period_from.company_id.id
-        period_to = self.browse(period_to_id)
-        period_date_stop = period_to.date_stop
-        company2_id = period_to.company_id.id
-        if company1_id != company2_id:
-            raise Warning(_('You should choose the periods that belong to the same company.'))
-        if period_date_start > period_date_stop:
-            raise Warning(_('Start period should precede then end period.'))
-
-        # /!\ We do not include a criterion on the company_id field below, to allow producing consolidated reports
-        # on multiple companies. It will only work when start/end periods are selected and no fiscal year is chosen.
-
-        #for period from = january, we want to exclude the opening period (but it has same date_from, so we have to check if period_from is special or not to include that clause or not in the search).
-        if period_from.special:
-            return self.search([('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
-        return self.search([('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
-
-
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------
@@ -842,11 +678,6 @@ class account_move(models.Model):
                 name = move.name
             result.append((move.id, name))
         return result
-
-    @api.model
-    def _get_period(self):
-        period_ids = self.env['account.period'].find()
-        return period_ids and period_ids[0] or False
 
     @api.multi
     @api.depends('line_id')
@@ -880,8 +711,8 @@ class account_move(models.Model):
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
-    period_id = fields.Many2one('account.period', string='Period', required=True, states={'posted': [('readonly', True)]},
-        default=lambda self: self._get_period())
+    date_account = fields.Date(string='Account Date', required=True, states={'posted': [('readonly', True)]},
+        default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
@@ -904,11 +735,11 @@ class account_move(models.Model):
         help="This is a field only used for internal purpose and shouldn't be displayed")
 
     @api.one
-    @api.constrains('period_id', 'journal_id')
+    @api.constrains('date_account', 'journal_id')
     def _check_centralisation(self):
         if self.journal_id.centralisation:
             moves = self.search([
-                ('period_id', '=', self.period_id.id),
+                ('date_account', '=', self.date_account),
                 ('journal_id', '=', self.journal_id.id),
                 ])
             if len(moves) > 1:
@@ -931,7 +762,7 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        ctx = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+                        ctx = {'fiscalyear_id': self.env['account.fiscalyear'].search([('date_start', '>=', move.date_account)])}
                         new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
@@ -987,24 +818,28 @@ class account_move(models.Model):
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
                 context['journal_id'] = vals['journal_id']
-            if 'period_id' in vals:
+            if 'date_account' in vals:
                 for l in vals['line_id']:
                     if not l[0]:
-                        l[2]['period_id'] = vals['period_id']
-                context['period_id'] = vals['period_id']
+                        l[2]['date_account'] = vals['date_account']
+                context['date_account'] = vals['date_account']
             else:
-                default_period = self.with_context(context)._get_period()
+                default_date_account = fields.Date.context_today(self)
                 for l in vals['line_id']:
                     if not l[0]:
-                        l[2]['period_id'] = default_period
-                context['period_id'] = default_period
+                        l[2]['date_account'] = default_date_account
+                context['date_account'] = default_date_account
 
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id'] if 'period_id' in vals else self.with_context(context)._get_period()
+            c['date_account'] = vals['date_account'] if 'date_account' in vals else fields.Date.context_today(self)
             c['journal_id'] = vals['journal_id']
             if 'date' in vals: c['date'] = vals['date']
             self.with_context(c)
+            if not vals['date_account']:
+                vals.update(date_account = fields.Date.context_today(self)) 
+            if not vals['journal_id']:
+                vals.update(journal_id = self.env['ir.model.data'].xmlid_to_res_id('account.bank_journal')) 
             result = super(account_move, self).create(vals)
             tmp = result.with_context(context).validate()
             journal = self.env['account.journal'].with_context(context).browse(vals['journal_id'])
@@ -1025,7 +860,7 @@ class account_move(models.Model):
             move_lines = move.line_id
             ctx = dict(context)
             ctx['journal_id'] = move.journal_id.id
-            ctx['period_id'] = move.period_id.id
+            ctx['date_account'] = move.date_account
             move_lines.with_context(ctx)._update_check()
             move_lines.with_context(ctx).unlink()
             toremove.append(move)
@@ -1067,7 +902,8 @@ class account_move(models.Model):
         if res:
             line_id = res[0]
         else:
-            context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
+            context.update({'journal_id': move.journal_id.id, 'date_account': move.date_account}
+                )
             line_id = account_move_line_obj.with_context(context).create({
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
@@ -1075,8 +911,8 @@ class account_move(models.Model):
                 'account_id': account_id,
                 'move_id': move.id,
                 'journal_id': move.journal_id.id,
-                'period_id': move.period_id.id,
-                'date': move.period_id.date_stop,
+                'date_account': move.date_account,
+                'date': date_account,
                 'debit': 0.0,
                 'credit': 0.0,
             })
@@ -1108,7 +944,7 @@ class account_move(models.Model):
                     self._cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
                     account_move_line_obj.with_context(context).invalidate_cache(['amount_currency', 'account_id'], [res[0]])
                 else:
-                    context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
+                    context.update({'journal_id': move.journal_id.id, 'date_account': move.date_account})
                     line_id = account_move_line_obj.with_context(context).create({
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
@@ -1116,8 +952,8 @@ class account_move(models.Model):
                         'account_id': account_id,
                         'move_id': move.id,
                         'journal_id': move.journal_id.id,
-                        'period_id': move.period_id.id,
-                        'date': move.period_id.date_stop,
+                        'date_account': move.date_account,
+                        'date': move.date_account,
                         'debit': 0.0,
                         'credit': 0.0,
                         'currency_id': row['currency_id'],
@@ -1354,29 +1190,13 @@ class account_tax_code(models.Model):
         where = ''
         where_params = ()
         if fiscalyear_id:
-            pids = []
-            for fy in fiscalyear_id:
-                pids += map(lambda x: str(x.id), FiscalyearObj.browse(fy).period_ids)
-            if pids:
-                where = ' AND line.period_id IN %s AND move.state IN %s '
-                where_params = (tuple(pids), move_state)
+            for fiscalyear in FiscalyearObj.browse(fiscalyear_id):
+                date_start = fiscalyear.date_start
+                date_stop = fiscalyear.date_stop
+                where = ' AND line.date_account >= %s AND line.date_account <= %s AND move.state IN %s '
+                where_params = (date_start, date_stop, move_state)
         self._sum(name='sum', where=where, where_params=where_params)
 
-    @api.multi
-    def _sum_period(self):
-        if not self.ids:
-            return True
-        move_state = ('posted', )
-        if self._context.get('state', False) == 'all':
-            move_state = ('draft', 'posted', )
-        if self._context.get('period_id', False):
-            period_id = self._context['period_id']
-        else:
-            period_id = self.env['account.period'].find()
-            if not period_id:
-                return dict.fromkeys(ids, 0.0)
-            period_id = period_id[0]
-        self._sum(name='sum_period', where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
@@ -1387,7 +1207,6 @@ class account_tax_code(models.Model):
     code = fields.Char(string='Case Code', size=64)
     info = fields.Text(string='Description')
     sum = fields.Float(compute='_sum_year', string='Year Sum')
-    sum_period = fields.Float(compute='_sum_period', string='Period Sum')
     parent_id = fields.Many2one('account.tax.code', string='Parent Code', index=True)
     child_ids = fields.One2many('account.tax.code', 'parent_id', string='Child Codes')
     line_ids = fields.One2many('account.move.line', 'tax_code_id', string='Lines')
