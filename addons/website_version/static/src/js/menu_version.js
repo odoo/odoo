@@ -162,7 +162,7 @@
                     }
                     var objectives = self.wizard.find('.box').val();
                     var check = true;
-                    if (name =='' || name == null){
+                    if (name.length == 0){
                         self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
                         check = false;
                     }
@@ -184,7 +184,7 @@
             
                 self.wizard.on('click','.launch', function(){
                     self.wizard.find('.message').remove();
-                    var name = $('.name').val();
+                    var name = self.wizard.find('.name').val();
                     var tab = self.wizard.find('.version');
                     var result = [];
                     var i;
@@ -195,7 +195,7 @@
                     }
                     var objectives = self.wizard.find('.box').val();
                     var check = true;
-                    if (name =='' || name == null){
+                    if (name.length == 0){
                         self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
                         check = false;
                     }
@@ -225,10 +225,10 @@
                 });
                 self.wizard.on('click','.validate', function(){
                     var website_id = $('html').attr('data-website-id');
-                    var ga_key = $('.ga_key').val();
-                    var view_id = $('.view_id').val();
-                    var client_id = $('.client_id').val();
-                    var client_secret = $('.client_secret').val();
+                    var ga_key = self.wizard.find('.ga_key').val();
+                    var view_id = self.wizard.find('.view_id').val();
+                    var client_id = self.wizard.find('.client_id').val();
+                    var client_secret = self.wizard.find('.client_secret').val();
                     if(ga_key.length == 0 || view_id.length == 0 || client_id.length == 0 || client_secret.length == 0){
                         self.wizard.find(".configure_ab").after("<p class='message' style='color : red'> *You must fill all the fields.</p>");
                     }
