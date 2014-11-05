@@ -56,7 +56,7 @@ _LOCALE2WIN32 = {
     'ar_SA': 'Arabic_Saudi Arabia',
     'eu_ES': 'Basque_Spain',
     'be_BY': 'Belarusian_Belarus',
-    'bs_BA': 'Serbian (Latin)',
+    'bs_BA': 'Bosnian_Bosnia and Herzegovina',
     'bg_BG': 'Bulgarian_Bulgaria',
     'ca_ES': 'Catalan_Spain',
     'hr_HR': 'Croatian_Croatia',

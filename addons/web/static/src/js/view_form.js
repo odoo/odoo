@@ -3891,7 +3891,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     },
     is_valid: function () {
         var self = this;
-        if (!this.editable()){
+        if (!this.fields_view || !this.editable()){
             return true;
         }
         this.o2m._dirty_flag = true;
@@ -3899,7 +3899,9 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         return _.every(this.records.records, function(record){
             r = record;
             _.each(self.editor.form.fields, function(field){
+                field._inhibit_on_change_flag = true;
                 field.set_value(r.attributes[field.name]);
+                field._inhibit_on_change_flag = false;
             });
             return _.every(self.editor.form.fields, function(field){
                 field.process_modifiers();

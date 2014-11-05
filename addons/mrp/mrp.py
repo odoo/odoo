@@ -991,6 +991,8 @@ class mrp_production(osv.osv):
             'state': 'waiting',
             'company_id': production.company_id.id,
         }
+        if production.move_prod_id:
+            production.move_prod_id.write({'location_id': destination_location_id})
         move_id = stock_move.create(cr, uid, data, context=context)
         production.write({'move_created_ids': [(6, 0, [move_id])]}, context=context)
         return move_id
