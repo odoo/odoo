@@ -677,7 +677,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var self = this;
             var code = "";
             var timeStamp  = 0;
-            var onlynumbers = true;
             var timeout = null;
 
             this.handler = function(e){
@@ -689,15 +688,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
                 if(timeStamp + 50 < new Date().getTime()){
                     code = "";
-                    onlynumbers = true;
                 }
 
                 timeStamp = new Date().getTime();
                 clearTimeout(timeout);
-
-                if( e.which < 48 || e.which >= 58 ){ // not a number
-                    onlynumbers = false;
-                }
 
                 code += String.fromCharCode(e.which);
 
@@ -710,7 +704,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         self.scan(code);
                     }
                     code = "";
-                    onlynumbers = true;
                 },100);
             };
 
