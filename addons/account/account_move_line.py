@@ -787,8 +787,10 @@ class account_move_line(models.Model):
         for id in ids:
             workflow.trg_trigger(self._uid, 'account.move.line', id, self._cr)
 
-        if self.partner_id and not self.partner_id.has_something_to_reconcile():
-            self.partner_id.mark_as_reconciled()
+        #To FIX: Here 'self.partner_id' doesn't work and it gives Expected singleton error.
+        partner = self[0].partner_id
+        if partner and not partner.has_something_to_reconcile():
+            partner.mark_as_reconciled()
         return r_id
 
     @api.one
