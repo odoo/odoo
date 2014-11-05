@@ -322,21 +322,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             },
         }, {
             model: 'barcode.rule',
-            fields: ['name','sequence','type','pattern'],
+            fields: ['name','sequence','type','encoding','pattern'],
             domain: function(self){ return [['barcode_nomenclature_id','=',self.nomenclature ? self.nomenclature.id : 0]]; },
             loaded: function(self,rules){
                 if (self.nomenclature) {
                     rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
                     self.nomenclature.rules = rules;
-                    for (var i = 0; i < rules.length; i++) {
+                    /*for (var i = 0; i < rules.length; i++) {
                         var pattern = rules[i].pattern;
                         pattern = pattern.replace(/[x\*]/gi,'x');
                         
                         while (pattern.length < 12) {
-                            pattern += 'x';
+                            pattern += '';
                         }
                         rules[i].pattern = pattern;
-                    }
+                    }*/
                 }
             },
         }, {
@@ -719,11 +719,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         scan_product: function(parsed_code){
             var self = this;
             var selectedOrder = this.get_order();
-            if(parsed_code.encoding === 'ean13'){
+            //if(parsed_code.encoding === 'barcode'){
                 var product = this.db.get_product_by_ean13(parsed_code.base_code);
-            }else if(parsed_code.encoding === 'reference'){
+            /*}else if(parsed_code.encoding === 'reference'){
                 var product = this.db.get_product_by_reference(parsed_code.code);
-            }
+            }*/
 
             if(!product){
                 return false;

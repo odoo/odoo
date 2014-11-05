@@ -473,17 +473,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
        
-        // when an ean is scanned and parsed, the callback corresponding
-        // to its type is called with the parsed_ean as a parameter. 
-        // (parsed_ean is the result of parse_ean(ean)) 
+        // when a barcode is scanned and parsed, the callback corresponding
+        // to its type is called with the parsed_barcode as a parameter. 
+        // (parsed_barcode is the result of parse_barcode(barcode)) 
         // 
-        // callbacks is a Map of 'actions' : callback(parsed_ean)
+        // callbacks is a Map of 'actions' : callback(parsed_barcode)
         // that sets the callback for each action. if a callback for the
         // specified action already exists, it is replaced. 
         // 
         // possible actions include : 
         // 'product' | 'cashier' | 'client' | 'discount' 
-    
         set_action_callback: function(action, callback){
             if(arguments.length == 2){
                 this.action_callback[action] = callback;
@@ -501,6 +500,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 this.action_callback[action] = undefined;
             }
         },
+
         // returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
         ean_checksum: function(ean){
             var code = ean.split('');
@@ -519,11 +519,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             total = oddsum * 3 + evensum;
             return Number((10 - total % 10) % 10);
         },
-        // returns true if the ean is a valid EAN codebar number by checking the control digit.
-        // ean must be a string
-        check_ean: function(ean){
-            return /^\d+$/.test(ean) && this.ean_checksum(ean) === Number(ean[ean.length-1]);
-        },
+
         // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
         sanitize_ean:function(ean){
             ean = ean.substr(0,13);
@@ -533,63 +529,80 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             return ean.substr(0,12) + this.ean_checksum(ean);
         },
-        
-        // attempts to interpret an ean (string encoding an ean)
-        // it will check its validity then return an object containing various
-        // information about the ean.
+                
+        // attempts to interpret a barcode (string encoding a barcode Code-128)
+        // it will return an object containing various information about the barcode.
         // most importantly : 
-        // - code    : the ean
-        // - type   : the type of the ean: 
-        //      'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'error'
+        // - code    : the barcode
+        // - type   : the type of the barcode: 
+        //      'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'lot' | 
+        //            'package' | 'location' | 'error'
         //
-        // - value  : if the id encodes a numerical value, it will be put there
-        // - base_code : the ean code with all the encoding parts set to zero; the one put on
+        // - value  : if the barcode encodes a numerical value, it will be put there
+        // - base_code : the barcode with all the encoding parts set to zero; the one put on
         //               the product in the backend
-
-        parse_ean: function(ean){
+        parse_barcode: function(barcode){
             var self = this;
-            var parse_result = {
-                encoding: 'ean13',
+            var parsed_result = {
+                encoding: '',
                 type:'error',  
-                code:ean,
-                base_code: ean,
+                code:barcode,
+                base_code: barcode,
                 value: 0,
             };
             
             if (!this.pos.nomenclature) {
-                return parse_result;
+                return parsed_result;
             }
 
-            if (!this.check_ean(ean)){
-                return parse_result;
-            }
+            // The barcode can contain any alphanumerical character, including ( and )
+            /*if (!/^[A-Za-z0-9()]+$/.test(barcode)){
+                return parsed_result;
+            }*/
 
-            function is_number(char){
-                var n = char.charCodeAt(0);
-                return n >= 48 && n <= 57;
-            }
-
-            function match_pattern(ean,pattern){
-                for(var i = 0; i < pattern.length; i++){
+            function match_pattern(barcode,pattern){
+                if(barcode.length < pattern.replace(/[{}]/g, '').length){
+                    return false; // Match of this pattern is impossible
+                }
+                var numerical_content = false; // Used to detect when we are between { }
+                for(var i = 0, j = 0; i < pattern.length; i++, j++){
                     var p = pattern[i];
-                    var e = ean[i];
-                    if( is_number(p) && p !== e ){
+                    if(p === "{" || p === "}"){
+                        numerical_content = !numerical_content;
+                        j--;
+                        continue;
+                    }
+                    
+                    if(!numerical_content && p !== '*' && p !== barcode[j]){
                         return false;
                     }
                 }
                 return true;
             }
             
-            function get_value(ean,pattern){
+            function get_value(barcode,pattern){
                 var value = 0;
                 var decimals = 0;
-                for(var i = 0; i < pattern.length; i++){
+                var numerical_content = false;
+                for(var i = 0, j = 0; i < pattern.length; i++, j++){
                     var p = pattern[i];
-                    var v = parseInt(ean[i]);
-                    if( p === 'N'){
+                    if(!numerical_content && p !== "{"){
+                        continue;
+                    }
+                    else if(p === "{"){
+                        numerical_content = true;
+                        j--;
+                        continue;
+                    }
+                    else if(p === "}"){
+                        break;
+                    }
+
+                    var v = parseInt(barcode[j]);
+                    if(p === 'N'){
                         value *= 10;
                         value += v;
-                    }else if( p === 'D'){   // FIXME precision ....
+                    }else if(p === 'D'){   // FIXME precision ....
                         decimals += 1;
                         value += v * Math.pow(10,-decimals);
                     }
@@ -597,65 +610,58 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 return value;
             }
 
-            function get_basecode(ean,pattern){
+            function get_basecode(barcode,pattern,encoding){
                 var base = '';
-                for(var i = 0; i < pattern.length; i++){
+                var numerical_content = false;
+                for(var i = 0, j = 0; i < pattern.length; i++, j++){
                     var p = pattern[i];
-                    var v = ean[i];
-                    if( p === 'x'  || is_number(p)){
-                        base += v;
-                    }else{
+                    if(p === "{" || p === "}"){
+                        numerical_content = !numerical_content;
+                        j--;
+                        continue;
+                    }
+
+                    if(numerical_content){
                         base += '0';
                     }
+                    else{
+                        base += barcode[j];
+                    }
                 }
-                return self.sanitize_ean(base);
+                for(i=j; i<barcode.length; i++){ // Read the rest of the barcode
+                    base += barcode[i];
+                }
+                if(encoding == "ean13"){
+                    base = self.sanitize_ean(base);
+                }
+                return base;
             }
 
             var rules = this.pos.nomenclature.rules;
 
             for (var i = 0; i < rules.length; i++) {
-                if (match_pattern(ean,rules[i].pattern)) {
-                    parse_result.type      = rules[i].type;
-                    parse_result.value     = get_value(ean,rules[i].pattern);
-                    parse_result.base_code = get_basecode(ean,rules[i].pattern);
-                    return parse_result;
+                if (match_pattern(barcode,rules[i].pattern)) {
+                    parsed_result.encoding  = rules[i].encoding;
+                    parsed_result.type      = rules[i].type;
+                    parsed_result.value     = get_value(barcode,rules[i].pattern);
+                    parsed_result.base_code = get_basecode(barcode,rules[i].pattern,parsed_result.encoding);
+                    return parsed_result;
                 }
             }
-
-            return parse_result;
+            return parsed_result;
         },
         
         scan: function(code){
-            if(code.length < 3){
-                return;
-            }else if(code.length === 13 && this.check_ean(code)){
-                var parse_result = this.parse_ean(code);
-            }else if(code.length === 12 && this.check_ean('0'+code)){
-                // many barcode scanners strip the leading zero of ean13 barcodes.
-                // This is because ean-13 are UCP-A with an additional zero at the beginning,
-                // so by stripping zeros you get retrocompatibility with UCP-A systems.
-                var parse_result = this.parse_ean('0'+code);
-            }else if(this.pos.db.get_product_by_reference(code)){
-                var parse_result = {
-                    encoding: 'reference',
-                    type: 'product',
-                    code: code,
-                };
-            }else{
-                var parse_result = {
-                    encoding: 'error',
-                    type: 'error',
-                    code: code,
-                };
-            }
-
-            if(parse_result.type in {'product':'', 'weight':'', 'price':'', 'discount':''}){    //ean is associated to a product
+            var parsed_result = this.parse_barcode(code);
+            
+            if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
                 if(this.action_callback['product']){
-                    this.action_callback['product'](parse_result);
+                    this.action_callback['product'](parsed_result);
                 }
-            }else{
-                if(this.action_callback[parse_result.type]){
-                    this.action_callback[parse_result.type](parse_result);
+            }
+            else{
+                if(this.action_callback[parsed_result.type]){
+                    this.action_callback[parsed_result.type](parsed_result);
                 }
             }
         },
@@ -696,7 +702,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 // Internal Ref 5449 vs EAN13 5449000...
 
                 timeout = setTimeout(function(){
-                    self.scan(code);
+                    if(code.length >= 3){
+                        self.scan(code);
+                    }
                     code = "";
                     onlynumbers = true;
                 },100);

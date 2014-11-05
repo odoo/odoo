@@ -233,7 +233,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
 
             this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
-
             this.pos.barcode_reader.set_action_callback({
                 'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
                 'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,

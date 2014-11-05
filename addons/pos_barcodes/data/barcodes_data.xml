@@ -8,8 +8,9 @@
         <record id="barcode_rule_product" model="barcode.rule">
             <field name="name">Product Barcodes</field>
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
-            <field name="sequence">60</field>
+            <field name="sequence">90</field>
             <field name="type">product</field>
+            <field name="encoding">ean13</field>
             <field name="pattern">*</field>
         </record>
 
@@ -18,23 +19,26 @@
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
             <field name="sequence">50</field>
             <field name="type">cashier</field>
+            <field name="encoding">any</field>
             <field name="pattern">041</field>
         </record>
 
         <record id="barcode_rule_client" model="barcode.rule">
-            <field name="name">Client Barcodes</field>
+            <field name="name">Customer Barcodes</field>
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
             <field name="sequence">40</field>
             <field name="type">client</field>
+            <field name="encoding">any</field>
             <field name="pattern">042</field>
         </record>
 
-        <record id="barcode_rule_weight" model="barcode.rule">
-            <field name="name">Weight Barcodes</field>
+        <record id="barcode_rule_weight_three_dec" model="barcode.rule">
+            <field name="name">Weight Barcodes 3 Decimals</field>
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
-            <field name="sequence">30</field>
+            <field name="sequence">36</field>
             <field name="type">weight</field>
-            <field name="pattern">21*****NNDDD*</field>
+            <field name="encoding">ean13</field>
+            <field name="pattern">21*****{NNDDD}*</field>
         </record>
 
         <record id="barcode_rule_discount" model="barcode.rule">
@@ -42,15 +46,44 @@
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
             <field name="sequence">20</field>
             <field name="type">discount</field>
-            <field name="pattern">22********NN*</field>
+            <field name="encoding">any</field>
+            <field name="pattern">22{NN}*</field>
         </record>
 
-        <record id="barcode_rule_price" model="barcode.rule">
-            <field name="name">Price Barcodes</field>
+        <record id="barcode_rule_price_two_dec" model="barcode.rule">
+            <field name="name">Price Barcodes 2 Decimals</field>
             <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
-            <field name="sequence">10</field>
+            <field name="sequence">14</field>
             <field name="type">price</field>
-            <field name="pattern">23*****NNNDD*</field>
+            <field name="encoding">ean13</field>
+            <field name="pattern">23*****{NNNDD}*</field>
+        </record>
+
+        <record id="barcode_rule_package" model="barcode.rule">
+            <field name="name">Package barcodes</field>
+            <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
+            <field name="sequence">70</field>
+            <field name="type">package</field>
+            <field name="encoding">any</field>
+            <field name="pattern">PACK*</field>
+        </record>
+
+        <record id="barcode_rule_lot" model="barcode.rule">
+            <field name="name">Lot barcodes</field>
+            <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
+            <field name="sequence">80</field>
+            <field name="type">lot</field>
+            <field name="encoding">any</field>
+            <field name="pattern">10*</field>
+        </record>
+
+        <record id="barcode_rule_location" model="barcode.rule">
+            <field name="name">Location barcodes</field>
+            <field name="barcode_nomenclature_id" ref="default_barcode_nomenclature"/>
+            <field name="sequence">60</field>
+            <field name="type">location</field>
+            <field name="encoding">any</field>
+            <field name="pattern">414*</field>
         </record>
     </data>
 </openerp>		
