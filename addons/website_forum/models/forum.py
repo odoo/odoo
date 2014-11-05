@@ -328,7 +328,7 @@ class Post(models.Model):
                 # TODO: in master, consider making this a tunable karma parameter
                 post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * -5)
 
-        self.sudo().write({'state': 'active'}}
+        self.sudo().write({'state': 'active'})
 
     @api.multi
     def close(self, reason_id):
