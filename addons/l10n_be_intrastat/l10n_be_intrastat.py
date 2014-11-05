@@ -78,12 +78,15 @@ class product_category(osv.osv):
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
     }
 
-    def get_intrastat_recursively(self, cr, uid, id, context=None):
-        category = self.browse(cr, uid, id, context=context)
+    def get_intrastat_recursively(self, cr, uid, category, context=None):
+        """ Recursively search in categories to find an intrastat code id
+
+        :param category : Browse record of a category
+        """
         if category.intrastat_id:
             res = category.intrastat_id.id
         elif category.parent_id:
-            res = self.get_intrastat_recursively(cr, uid, category.parent_id.id, context=context)
+            res = self.get_intrastat_recursively(cr, uid, category.parent_id, context=context)
         else:
             res = None
         return res
@@ -94,11 +97,13 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     def get_intrastat_recursively(self, cr, uid, id, context=None):
+        """ Recursively search in categories to find an intrastat code id
+        """
         product = self.browse(cr, uid, id, context=context)
         if product.intrastat_id:
             res = product.intrastat_id.id
         elif product.categ_id:
-            res = self.pool['product.category'].get_intrastat_recursively(cr, uid, product.categ_id.id, context=context)
+            res = self.pool['product.category'].get_intrastat_recursively(cr, uid, product.categ_id, context=context)
         else:
             res = None
         return res

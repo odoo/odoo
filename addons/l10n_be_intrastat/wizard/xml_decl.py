@@ -230,30 +230,21 @@ class xml_decl(osv.TransientModel):
             exreg = None
             if invoiceline.invoice_id.type in ('in_invoice', 'in_refund'):
                 #comes from purchase
-                if invoiceline.invoice_id.origin:
-                    po_ids = purchaseorder_mod.search(cr, SUPERUSER_ID, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
-                    if po_ids and po_ids[0]:
-                        purchaseorder = purchaseorder_mod.browse(cr, SUPERUSER_ID, po_ids[0])
-                        region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, purchaseorder.location_id.id, context=context)
-                        if region_id:
-                            exreg = region_mod.browse(cr, uid, region_id).code
+                poline_ids = self.pool['purchase.order.line'].search(cr, uid, [('invoice_lines', 'in', invoiceline.id)], context=context)
+                if poline_ids:
+                    purchaseorder = self.pool['purchase.order.line'].browse(cr, uid, poline_ids[0], context=context).order_id
+                    region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, purchaseorder.location_id.id, context=context)
+                    if region_id:
+                        exreg = region_mod.browse(cr, uid, region_id).code
             elif invoiceline.invoice_id.type in ('out_invoice', 'out_refund'):
                 #comes from sales
-                if invoiceline.invoice_id.origin:
-                    so_ids = saleorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
-                    if so_ids and so_ids[0]:
-                        saleorder = saleorder_mod.browse(cr, uid, so_ids[0], context=context)
-                        if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
-                            exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
-                    else:
-                        #search on deliveries
-                        delivery_ids = picking_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]), context=context)
-                        if delivery_ids and delivery_ids[0]:
-                            delivery = picking_mod.browse(cr, uid, delivery_ids[0], context=context)
-                            if delivery and delivery.location_id and delivery.location_id[0]:
-                                region_id = warehouse_mod.get_regionid_from_locationid(cr, uid, delivery.location_id[0].id, context=context)
-                                if region_id:
-                                    exreg = region_mod.browse(cr, uid, region_id).code
+                soline_ids = self.pool['sale.order.line'].search(cr, uid, [('invoice_lines', 'in', invoiceline.id)], context=context)
+                if soline_ids:
+                    saleorder = self.pool['sale.order.line'].browse(cr, uid, soline_ids[0], context=context).order_id
+                    import pudb
+                    pudb.set_trace()
+                    if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
+                        exreg = region_mod.browse(cr, uid, saleorder.warehouse_id.region_id.id, context=context).code
 
             if not exreg:
                 if company.region_id:
