@@ -23,7 +23,7 @@ class account_common_report(models.TransientModel):
 
     chart_account_id = fields.Many2one('account.account', string='Chart of Account', 
         help='Select Charts of Accounts', default=lambda self: self._get_account(),
-        required=True, domain = [('parent_id','=',False), ('deprecated', '=', False)])
+        required=True, domain = [('deprecated', '=', False)])
     company_id = fields.Many2one('res.company', related='chart_account_id.company_id',
         string='Company', readonly=True, default=lambda self: self.env['res.company']._company_default_get('account.common.report'))
     fiscalyear_id = fields.Many2one('account.fiscalyear', string='Fiscal Year', 
@@ -100,7 +100,7 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def _get_account(self):
-        account = self.env['account.account'].search([('parent_id', '=', False), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        account = self.env['account.account'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
         return account
 
     @api.model
