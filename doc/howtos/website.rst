@@ -359,10 +359,10 @@ Let's create a menu for our model:
 .. patch::
 
 then accessing http://localhost:8069/web/ in the top left should be a menu
-:guilabel:`Academy` (which is selected by default, as it is the first menu),
-selected by default and having opened a listing of teachers. From the listing
-it is possible to :guilabel:`Create` new teacher records, and to switch to
-the "form" by-record view.
+:guilabel:`Academy`, which is selected by default, as it is the first menu, 
+and having opened a listing of teachers. From the listing it is possible to
+:guilabel:`Create` new teacher records, and to switch to the "form" 
+by-record view.
 
 If there is no definition of how to present records (a
 :ref:`view <reference/views>`) Odoo will automatically create a basic one
