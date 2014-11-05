@@ -2,6 +2,38 @@
 <openerp>
     <data>
 
+        <!-- TO REMOVE: Once task 'Remove worklogs 8846' is merged -->
+        <record model="ir.ui.view" id="view_task_form2_inherited">
+            <field name="name">project.task.form.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="arch" type="xml">
+                <field name="categ_ids" position="after">
+                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="progress" widget="progressbar"
+                                groups="project.group_time_work_estimation_tasks"/>
+                </field>
+                <xpath expr="//notebook/page[@string='Description']" position="inside">
+                    <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id}">
+                        <tree editable="top" string="Timesheet Activities">
+                            <field name="date" on_change="on_change_date(date)"/>
+                            <field name="user_id" required="1"/>
+                            <field name="name"/>
+                            <field name="account_id" on_change="on_change_account_id(account_id)"/>
+                            <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
+                            <field name="to_invoice"/>
+                            <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
+                            <field name="journal_id" invisible="1"/>
+                            <field name="amount" sum="Total cost" invisible="1"/>
+                            <field name="general_account_id" invisible="1"/>
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>

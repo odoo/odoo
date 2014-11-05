@@ -154,6 +154,7 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             var self = this;
             var def = $.Deferred();
             var data;
+            console.log("this.model is ::: ", this.model);
             if(this.model) {
                 data = this.model.name_search(term);
             }

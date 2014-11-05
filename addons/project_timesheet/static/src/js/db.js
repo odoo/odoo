@@ -46,7 +46,7 @@ function odoo_project_timesheet_db(project_timesheet) {
         add_activity: function(activity) {
             activity_id = activity.id;
             var activities = this.load("activities", []);
-            // if the order was already stored, we overwrite its data
+            // if the data was already stored, we overwrite its data
             for(var i = 0, len = activities.length; i < len; i++) {
                 if(activities[i].id === activity_id) {
                     if (!activities[i].command)

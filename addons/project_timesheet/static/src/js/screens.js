@@ -480,8 +480,11 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return this.project_timesheet_model.get_pending_records();
         },
         get_total: function() {
+            if (!this.activity_list.get_total()) {
+                return;
+            }
             var duration = this.activity_list.get_total().split(":");
-            return _.str.sprintf("%sh %smin", duration[0], duration[1]);
+            return _.str.sprintf("%sh %smin", duration[0], (duration[1] || 0));
         },
         get_current_UTCDate: function() {
             var d = new Date();
@@ -659,6 +662,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //project_activity_data['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix); //Activity New ID
             project_activity_data['id'] = this.project_timesheet_db.get_unique_id();
             project_activity_data['command'] = 0; //By default command = 0, activity which is to_create
+            console.log("project_activity_data is ::: ", project_activity_data);
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -670,7 +674,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var project_activity_data = this.get_form_data();
             console.log("project_activity_data is inside edit ::: ", project_activity_data);
             project_activity_data['id'] = this.current_id; //Activity Existing ID
-            project_activity_data['command'] = 1;
+            if (!(this.project_timesheet_db.virtual_id_regex.test(project_activity_data['id']))) {
+                project_activity_data['command'] = 1;
+            }
             this.project_timesheet_model.add_activity(project_activity_data);
             this.project_timesheet_model.add_project(project_activity_data);
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
@@ -697,21 +703,30 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             $form_data = this.$el.find("input,textarea").filter(function() {return $(this).val() != "";});
             $form_data.val('');
-            this.$el.find(".pt_activity_body h4,.pt_btn_add_activity").removeClass("o_hidden");
+            this.$el.find(".pt_btn_add_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_remove_activity").addClass("o_hidden");
             if(!this.$el.find(".pt_btn_edit_activity").hasClass("o_hidden")) {
                 this.$el.find(".pt_btn_edit_activity").addClass("o_hidden");
             }
+            if(!this.$el.find(".pt_edit_activity_title").hasClass("o_hidden")) {
+                this.$el.find(".pt_add_activity_title").removeClass("o_hidden");
+                this.$el.find(".pt_edit_activity_title").addClass("o_hidden");
+            }
             $form_data.removeData();
-            this.activity_list = new project_timesheet.ActivityListView();
-            this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
-            this.activity_list.$el.find(".activity_row").on('click', this.on_click_row);
+            if (this.project_timesheet_model.get("activities").length) {
+                this.$el.find(".pt_activity_body h4").removeClass("o_hidden");
+                this.activity_list = new project_timesheet.ActivityListView();
+                this.activity_list.appendTo(this.$el.find(".pt_activity_body"));
+                this.activity_list.$el.find(".activity_row").on('click', this.on_click_row);
+            }
             this._super();
             //Need to create instance of many2one in show method, because when autocomplete input is hidden, and show again it throws event binding error, we need to develop destroy_content in many2one widget and need to call when screen is hidden, need to bind events of many2one in show screen
             this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project pt_required", label: "Project", id_for_input: "project_id"});
             this.project_m2o.$el.find("textarea").on("change", this, function() {
                 this.task_m2o.set({display_string: false, value: false});
                 this.task_m2o.display_string(false);
+            });
+            this.project_m2o.on("change:value", this, function() {
                 this.set_project_model();
             });
             this.project_m2o.appendTo(this.$el.find(".project_m2o"));
@@ -761,6 +776,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var project_id = this.project_m2o.get('value');
             var projects_collection = this.project_timesheet_model.get('projects');
             var project_model = projects_collection.get(project_id);
+            console.log("Inside set_project_model ::: ", project_model);
             this.task_m2o.model = project_model;
         },
         format_duration: function(field_val) {
@@ -783,6 +799,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_activity_body h4").addClass("o_hidden");
             self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity,.pt_btn_add_activity").toggleClass("o_hidden");
+            self.$el.find(".pt_add_activity_title,.pt_edit_activity_title").toggleClass("o_hidden");
             this.task_m2o.set({"effective_readonly": true});
             this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
@@ -950,26 +967,26 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 view: "stackedBar",
                 container: "pt_chart",
                 value: "#unit_amount#",
-                label: "#unit_amount#"+"h",
+                label: "#unit_amount#",
                 color: "#a24689",
                 width: 25,
                 //gradient:"falling",
                 tooltip: {
-                    template:"#unit_amount#"+"h", 
+                    template:"#unit_amount#", 
                 },
                 xAxis: {
-                    title: "Days",
+                    //title: "Days",
                     template: "#day#",
                     lines: false
                 },
-                yAxis: {
-                    title: "Hours",
-                    start: 0,
+                //yAxis: {
+                //    title: "Hours",
+                //    start: 0,
                     // step:5,
                     // end:24
-                },
+                //},
                 legend: {
-                    values: [{text:"Compeleted Activities",color:"#a24689"},{text:"Undefined activities",color:"#ffcc00"}],
+                    values: [{text:"Validated Activities",color:"#a24689"},{text:"Undefined activities",color:"#ffcc00"}],
                     valign: "top",
                     align: "center",
                     width: 110,
@@ -994,6 +1011,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return bar_chart;
         },
         prepare_data: function() {
+            var self = this;
             var date_groups;
             var activities = _.clone(this.project_timesheet_db.load("activities"));
             var date_activities = {};
@@ -1019,6 +1037,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                         date_activities[key] = group;
                     }
                 });
+                var formatted_unit_amount = self.format_duration(date_activities[key]['unit_amount']);
+                date_activities[key]['unit_amount'] = formatted_unit_amount ? (formatted_unit_amount[0]+"h" +(formatted_unit_amount[1] && formatted_unit_amount[1]+"min" || "0min")) : 0;
             });
             var week_groups = _.groupBy(_.toArray(date_activities), function(activity) {
                 return moment(activity.date).week();
@@ -1029,7 +1049,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return week_wise_activities;
         },
         draw_chart: function(chart, graph_data) {
-            console.log("Inside draw_chart ::: ");
+            console.log("Inside draw_chart ::: ", graph_data);
+            
             var week_total = 0;
             var table_data = {};
             _.each(graph_data, function(record) {week_total += record.unit_amount;});

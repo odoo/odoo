@@ -234,6 +234,13 @@ class project_work(osv.osv):
 class task(osv.osv):
     _inherit = "project.task"
 
+    #TO REMOVE: Once task 'Remove worklogs 8846' is merged
+    _columns = {
+        'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'task_id', 'Timesheets'),
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id',
+                    type='many2one', relation='account.analytic.account',string='Analytic Account', store=True),
+    }
+
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
             if task_obj.work_ids:
@@ -326,6 +333,8 @@ class account_analytic_line(osv.osv):
 class hr_analytic_timesheet(osv.Model):
     _inherit = 'hr.analytic.timesheet'
     _description = 'hr analytic timesheet'
+
+    #TO REMOVE: Once task 'Remove worklogs 8846' is merged
     _columns = {
         'task_id' : fields.many2one('project.task', 'Task'),
     }
@@ -360,9 +369,14 @@ class hr_analytic_timesheet(osv.Model):
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
+    """
+    TO Improve: We will fetch last 30 days data, and we will return last 30 day's line even if it has task_id avaialble or not, we will add project_id based on analytic account
+    We will add only those lines which matches analytic account of some project
+    """
     def load_data(self, cr, uid, domain=None, fields=None, context=None):
         activities = []
         analytic_lines = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
+        print "\n\nanalytic_lines are ::: ", analytic_lines
         tasks = [x['task_id'] for x in analytic_lines]
         task_ids = list(set([x[0] for x in tasks if not isinstance(x, bool)]))
         accounts = [x['account_id'] for x in analytic_lines]
