@@ -931,7 +931,7 @@ class Contact(orm.AbstractModel):
         if not value_rec:
             return None
         value_rec = value_rec.sudo().with_context(show_address=True)
-        value = value_rec.display_name
+        value = value_rec.name_get()[0][1]
 
         val = {
             'name': value.split("\n")[0],
