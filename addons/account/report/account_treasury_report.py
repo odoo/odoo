@@ -20,37 +20,36 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
 import openerp.addons.decimal_precision as dp
+from openerp import models, fields, api, _
 
-class account_treasury_report(osv.osv):
+class account_treasury_report(models.Model):
     _name = "account.treasury.report"
     _description = "Treasury Analysis"
     _auto = False
 
-    def _compute_balances(self, cr, uid, ids, field_names, arg=None, context=None,
-                  query='', query_params=()):
-        all_treasury_lines = self.search(cr, uid, [], context=context)
-        all_companies = self.pool.get('res.company').search(cr, uid, [], context=context)
+    @api.multi
+    @api.depends('company_id', 'balance')
+    def _compute_balances(self):
+        all_treasury_lines = self.search([])
+        all_companies = self.env['res.company'].search([])
         current_sum = dict((company, 0.0) for company in all_companies)
         res = dict((id, dict((fn, 0.0) for fn in field_names)) for id in all_treasury_lines)
-        for record in self.browse(cr, uid, all_treasury_lines, context=context):
-            res[record.id]['starting_balance'] = current_sum[record.company_id.id] 
+        for record in self.browse(all_treasury_lines):
+            res[record.id]['starting_balance'] = current_sum[record.company_id.id]
             current_sum[record.company_id.id] += record.balance
             res[record.id]['ending_balance'] = current_sum[record.company_id.id]
         return res    
 
-    _columns = {
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscalyear', readonly=True),
-        'period_id': fields.many2one('account.period', 'Period', readonly=True),
-        'debit': fields.float('Debit', readonly=True),
-        'credit': fields.float('Credit', readonly=True),
-        'balance': fields.float('Balance', readonly=True),
-        'date': fields.date('Beginning of Period Date', readonly=True),
-        'starting_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), string='Starting Balance', multi='balance'),
-        'ending_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), string='Ending Balance', multi='balance'),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-    }
+    fiscalyear_id = fields.Many2one('account.fiscalyear', 'Fiscalyear', readonly=True)
+    period_id = fields.Many2one('account.period', 'Period', readonly=True)
+    debit = fields.Float('Debit', readonly=True)
+    credit = fields.Float('Credit', readonly=True)
+    balance = fields.Float('Balance', readonly=True)
+    date = fields.Date('Beginning of Period Date', readonly=True)
+    starting_balance = fields.Float(compute=_compute_balances, digits_compute=dp.get_precision('Account'), string='Starting Balance', multi='balance')
+    ending_balance = fields.Float(compute=_compute_balances, digits_compute=dp.get_precision('Account'), string='Ending Balance', multi='balance')
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
 
     _order = 'date asc'
 

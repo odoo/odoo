@@ -20,89 +20,87 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
 import openerp.addons.decimal_precision as dp
+from openerp import models, fields, api, _
 
-class account_entries_report(osv.osv):
+class account_entries_report(models.Model):
     _name = "account.entries.report"
     _description = "Journal Items Analysis"
     _auto = False
     _rec_name = 'date'
-    _columns = {
-        'date': fields.date('Effective Date', readonly=True),  # TDE FIXME master: rename into date_effective
-        'date_created': fields.date('Date Created', readonly=True),
-        'date_maturity': fields.date('Date Maturity', readonly=True),
-        'ref': fields.char('Reference', readonly=True),
-        'nbr': fields.integer('# of Items', readonly=True),
-        'debit': fields.float('Debit', readonly=True),
-        'credit': fields.float('Credit', readonly=True),
-        'balance': fields.float('Balance', readonly=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
-        'period_id': fields.many2one('account.period', 'Period', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)]),
-        'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=True),
-        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True),
-        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
-        'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
-        'partner_id': fields.many2one('res.partner','Partner', readonly=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),  # TDE FIXME master: rename into product_quantity
-        'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
-        'type': fields.selection([
-            ('receivable', 'Receivable'),
-            ('payable', 'Payable'),
-            ('cash', 'Cash'),
-            ('view', 'View'),
-            ('consolidation', 'Consolidation'),
-            ('other', 'Regular'),
-            ('closed', 'Closed'),
-        ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
-            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
-            "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-    }
+    
+    date = fields.Date('Effective Date', readonly=True)  # TDE FIXME master: rename into date_effective
+    date_created = fields.Date('Date Created', readonly=True)
+    date_maturity = fields.Date('Date Maturity', readonly=True)
+    ref = fields.Char('Reference', readonly=True)
+    nbr = fields.Integer('# of Items', readonly=True)
+    debit = fields.Float('Debit', readonly=True)
+    credit = fields.Float('Credit', readonly=True)
+    balance = fields.Float('Balance', readonly=True)
+    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
+    amount_currency = fields.Float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True)
+    period_id = fields.Many2one('account.period', 'Period', readonly=True)
+    account_id = fields.Many2one('account.account', 'Account', readonly=True, domain=[('deprecated', '=', False)])
+    journal_id = fields.Many2one('account.journal', 'Journal', readonly=True)
+    fiscalyear_id = fields.Many2one('account.fiscalyear', 'Fiscal Year', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', readonly=True)
+    move_state = fields.Selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True)
+    move_line_state = fields.Selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True)
+    reconcile_id = fields.Many2one('account.move.reconcile', 'Reconciliation number', readonly=True)
+    partner_id = fields.Many2one('res.partner','Partner', readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
+    quantity = fields.Float('Products Quantity', digits=(16,2), readonly=True)  # TDE FIXME master: rename into product_quantity
+    user_type = fields.Many2one('account.account.type', 'Account Type', readonly=True)
+    type = fields.Selection([
+        ('receivable', 'Receivable'),
+        ('payable', 'Payable'),
+        ('cash', 'Cash'),
+        ('view', 'View'),
+        ('consolidation', 'Consolidation'),
+        ('other', 'Regular'),
+        ('closed', 'Closed'),
+    ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
+        "special effects in Odoo: view can not have entries, consolidation are accounts that "\
+        "can have children accounts for multi-company consolidations, payable/receivable are for "\
+        "partners accounts (for debit/credit computations), closed for depreciated accounts.")
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    
 
     _order = 'date desc'
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        period_obj = self.pool.get('account.period')
+    @api.model
+    def search(self):
+        fiscalyear_obj = self.env['account.fiscalyear']
+        period_obj = self.env['account.period']
         for arg in args:
             if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = period_obj.find(cr, uid, context=context)[0]
+                current_period = period_obj.with_context(context).find()[0]
                 args.append(['period_id','in',[current_period]])
                 break
             elif arg[0] == 'period_id' and arg[2] == 'current_year':
-                current_year = fiscalyear_obj.find(cr, uid)
-                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                current_year = fiscalyear_obj.find()
+                ids = fiscalyear_obj.read([current_year], ['period_ids'])[0]['period_ids']
                 args.append(['period_id','in',ids])
         for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
             if a in args:
                 args.remove(a)
-        return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
-            context=context, count=count)
+        return super(account_entries_report, self).with_context(context).search()
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False,lazy=True):
-        if context is None:
-            context = {}
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        period_obj = self.pool.get('account.period')
-        if context.get('period', False) == 'current_period':
-            current_period = period_obj.find(cr, uid, context=context)[0]
+    @api.model
+    def read_group(self):
+        fiscalyear_obj = self.env['account.fiscalyear']
+        period_obj = self.env['account.period']
+        if self._context.get('period', False) == 'current_period':
+            current_period = period_obj.find()[0]
             domain.append(['period_id','in',[current_period]])
-        elif context.get('year', False) == 'current_year':
-            current_year = fiscalyear_obj.find(cr, uid)
-            ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+        elif self._context.get('year', False) == 'current_year':
+            current_year = fiscalyear_obj.find()
+            ids = fiscalyear_obj.read([current_year], ['period_ids'])[0]['period_ids']
             domain.append(['period_id','in',ids])
         else:
             domain = domain
-        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby,lazy)
+        return super(account_entries_report, self).with_context(context).read_group()
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

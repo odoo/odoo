@@ -20,29 +20,29 @@
 ##############################################################################
 
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp import models, fields, api, _
 
-class analytic_entries_report(osv.osv):
+class analytic_entries_report(models.Model):
     _name = "analytic.entries.report"
     _description = "Analytic Entries Statistics"
     _auto = False
-    _columns = {
-        'date': fields.date('Date', readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
-        'name': fields.char('Description', size=64, readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=False),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, domain=[('deprecated', '=', False)]),
-        'journal_id': fields.many2one('account.analytic.journal', 'Journal', required=True),
-        'move_id': fields.many2one('account.move.line', 'Move', required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'amount': fields.float('Amount', readonly=True),
-        'unit_amount': fields.integer('Unit Amount', readonly=True),
-        'nbr': fields.integer('# Entries', readonly=True),  # TDE FIXME master: rename into nbr_entries
-    }
+    
+    date = fields.Date(string='Date', readonly=True)
+    user_id = fields.Many2one('res.users', 'User',readonly=True)
+    name = fields.Char('Description', size=64, readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Partner')
+    company_id = fields.Many2one('res.company', 'Company', required=True)
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True)
+    account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=False)
+    general_account_id = fields.Many2one('account.account', 'Financial Account', required=True, domain=[('deprecated', '=', False)])
+    journal_id = fields.Many2one('account.analytic.journal', 'Journal', required=True)
+    move_id = fields.Many2one('account.move.line', 'Move', required=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_uom_id = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
+    amount = fields.Float('Amount', readonly=True)
+    unit_amount = fields.Integer('Unit Amount', readonly=True)
+    nbr = fields.Integer('# Entries', readonly=True)  # TDE FIXME master: rename into nbr_entries
+    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'analytic_entries_report')
         cr.execute("""
