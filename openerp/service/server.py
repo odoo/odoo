@@ -478,6 +478,8 @@ class PreforkServer(CommonServer):
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
+        if pid == self.long_polling_pid:
+            self.long_polling_pid = None
         if pid in self.workers:
             _logger.debug("Worker (%s) unregistered", pid)
             try:
