@@ -377,7 +377,7 @@ class res_users(osv.osv):
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
-        for k in self._all_columns.keys():
+        for k in self._fields:
             if k.startswith('context_'):
                 context_key = k[8:]
             elif k in ['lang', 'tz']:

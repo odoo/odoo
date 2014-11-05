@@ -178,6 +178,7 @@ class _column(object):
             ('groups', self.groups),
             ('change_default', self.change_default),
             ('deprecated', self.deprecated),
+            ('group_operator', self.group_operator),
             ('size', self.size),
             ('ondelete', self.ondelete),
             ('translate', self.translate),
@@ -746,31 +747,32 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the model has on delete cascade, just delete the row
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, [act[1]], context=context)
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # table of the field (parent_model in case of inherit)
-                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field = obj.pool[self._obj]._fields[self._fields_id]
+                field_model = field.base_field.model_name
                 field_table = obj.pool[field_model]._table
                 cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
-                reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                inverse_field = obj._fields.get(self._fields_id)
+                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
                 domain = self._domain(obj) if callable(self._domain) else self._domain
                 extra_domain = domain or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
-                if reverse_rel.column.ondelete == "cascade":
+                if inverse_field.ondelete == "cascade":
                     obj.unlink(cr, user, ids_to_unlink, context=context)
                 else:
                     obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
@@ -1292,6 +1294,7 @@ class function(_column):
 
     def to_field_args(self):
         args = super(function, self).to_field_args()
+        args['store'] = bool(self.store)
         if self._type in ('float',):
             args['digits'] = self.digits_compute or self.digits
         elif self._type in ('selection', 'reference'):
@@ -1610,12 +1613,12 @@ class property(function):
 
         res = {id: {} for id in ids}
         for prop_name in prop_names:
-            column = obj._all_columns[prop_name].column
+            field = obj._fields[prop_name]
             values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if column._type == 'many2one':
+            if field.type == 'many2one':
                 # name_get the non-null values as SUPERUSER_ID
                 vals = sum(set(filter(None, values.itervalues())),
-                           obj.pool[column._obj].browse(cr, uid, [], context=context))
+                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
                 vals_name = dict(vals.sudo().name_get()) if vals else {}
                 for id, value in values.iteritems():
                     ng = False

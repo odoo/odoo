@@ -108,42 +108,41 @@ class account_invoice(models.Model):
         'state', 'currency_id', 'invoice_line.price_subtotal',
         'move_id.line_id.account_id.type',
         'move_id.line_id.amount_residual',
+        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
+        'move_id.line_id.reconcile_id',
         'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
         'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
     )
+    # An invoice's residual amount is the sum of its unreconciled move lines and,
+    # for partially reconciled move lines, their residual amount divided by the
+    # number of times this reconciliation is used in an invoice (so we split
+    # the residual amount between all invoice)
     def _compute_residual(self):
-        nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
+        # Each partial reconciliation is considered only once for each invoice it appears into,
+        # and its residual amount is divided by this number of invoices
+        partial_reconciliations_done = []
         for line in self.sudo().move_id.line_id:
-            if line.account_id.type in ('receivable', 'payable'):
-                if line.currency_id == self.currency_id:
-                    self.residual += line.amount_residual_currency
-                else:
-                    # ahem, shouldn't we use line.currency_id here?
-                    from_currency = line.company_id.currency_id.with_context(date=line.date)
-                    self.residual += from_currency.compute(line.amount_residual, self.currency_id)
-                # we check if the invoice is partially reconciled and if there
-                # are other invoices involved in this partial reconciliation
+            if line.account_id.type not in ('receivable', 'payable'):
+                continue
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in partial_reconciliations_done:
+                continue
+            # Get the correct line residual amount
+            if line.currency_id == self.currency_id:
+                line_amount = line.currency_id and line.amount_residual_currency or line.amount_residual
+            else:
+                from_currency = line.company_id.currency_id.with_context(date=line.date)
+                line_amount = from_currency.compute(line.amount_residual, self.currency_id)
+            # For partially reconciled lines, split the residual amount
+            if line.reconcile_partial_id:
+                partial_reconciliation_invoices = set()
                 for pline in line.reconcile_partial_id.line_partial_ids:
                     if pline.invoice and self.type == pline.invoice.type:
-                        nb_inv_in_partial_rec += 1
-                        # store the max invoice id as for this invoice we will
-                        # make a balance instead of a simple division
-                        max_invoice_id = max(max_invoice_id, pline.invoice.id)
-        if nb_inv_in_partial_rec:
-            # if there are several invoices in a partial reconciliation, we
-            # split the residual by the number of invoices to have a sum of
-            # residual amounts that matches the partner balance
-            new_value = self.currency_id.round(self.residual / nb_inv_in_partial_rec)
-            if self.id == max_invoice_id:
-                # if it's the last the invoice of the bunch of invoices
-                # partially reconciled together, we make a balance to avoid
-                # rounding errors
-                self.residual = self.residual - ((nb_inv_in_partial_rec - 1) * new_value)
-            else:
-                self.residual = new_value
-        # prevent the residual amount on the invoice to be less than 0
+                        partial_reconciliation_invoices.update([pline.invoice.id])
+                line_amount = self.currency_id.round(line_amount / len(partial_reconciliation_invoices))
+                partial_reconciliations_done.append(line.reconcile_partial_id.id)
+            self.residual += line_amount
         self.residual = max(self.residual, 0.0)
 
     @api.one

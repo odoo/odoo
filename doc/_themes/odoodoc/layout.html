@@ -34,8 +34,8 @@
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
                  main_navbar=False, titles_only=False) }}
       {% if github_link %}
-        <p><a href="{{ github_link() }}" class="github">
-          View on GitHub
+        <p><a href="{{ github_link(mode='edit') }}" class="github">
+          Edit on GitHub
         </a></p>
       {% endif %}
     </div>
@@ -55,7 +55,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="http://odoo.com" class="o_logo navbar-brand">
+      <a href="{{ pathto(master_doc) }}" class="o_logo navbar-brand">
         <span class="o_logo_main">odoo</span><span class="o_logo_app">doc</span>
       </a>
       {% if versions %}
@@ -86,9 +86,9 @@
           {%- if show_copyright %}
             <li>
               {%- if hasdoc('copyright') %}
-                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
               {%- else %}
-                {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}
+                {% trans copyright=copyright|e %}&copy; Copyright <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
               {%- endif %}
             </li>
           {%- endif %}

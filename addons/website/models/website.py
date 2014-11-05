@@ -560,7 +560,7 @@ class website(osv.osv):
 
         ids = Model.search(cr, uid,
                            [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._all_columns:
+        if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
         if not ids:

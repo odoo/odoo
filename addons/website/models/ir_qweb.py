@@ -101,12 +101,12 @@ class Field(orm.AbstractModel):
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context, context=None):
         if options is None: options = {}
-        column = record._model._all_columns[field_name].column
-        attrs = [('data-oe-translate', 1 if column.translate else 0)]
+        field = record._model._fields[field_name]
+        attrs = [('data-oe-translate', 1 if getattr(field, 'translate', False) else 0)]
 
         placeholder = options.get('placeholder') \
                    or source_element.get('placeholder') \
-                   or getattr(column, 'placeholder', None)
+                   or getattr(field, 'placeholder', None)
         if placeholder:
             attrs.append(('placeholder', placeholder))
 
@@ -120,7 +120,7 @@ class Field(orm.AbstractModel):
     def value_from_string(self, value):
         return value
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         return self.value_from_string(element.text_content().strip())
 
     def qweb_object(self):
@@ -136,7 +136,7 @@ class Float(orm.AbstractModel):
     _name = 'website.qweb.field.float'
     _inherit = ['website.qweb.field', 'ir.qweb.field.float']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         lang = self.user_lang(cr, uid, context=context)
 
         value = element.text_content().strip()
@@ -167,7 +167,7 @@ class Date(orm.AbstractModel):
             qweb_context, context=None)
         return itertools.chain(attrs, [('data-oe-original', record[field_name])])
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         value = element.text_content().strip()
         if not value: return False
 
@@ -198,7 +198,7 @@ class DateTime(orm.AbstractModel):
             ('data-oe-original', value)
         ])
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         if context is None: context = {}
         value = element.text_content().strip()
         if not value: return False
@@ -229,16 +229,17 @@ class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
     _inherit = ['website.qweb.field', 'ir.qweb.field.text']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         return html_to_text(element)
 
 class Selection(orm.AbstractModel):
     _name = 'website.qweb.field.selection'
     _inherit = ['website.qweb.field', 'ir.qweb.field.selection']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
+        record = self.browse(cr, uid, [], context=context)
         value = element.text_content().strip()
-        selection = column.reify(cr, uid, model, column, context=context)
+        selection = field.get_description(record.env)['selection']
         for k, v in selection:
             if isinstance(v, str):
                 v = ustr(v)
@@ -252,11 +253,11 @@ class ManyToOne(orm.AbstractModel):
     _name = 'website.qweb.field.many2one'
     _inherit = ['website.qweb.field', 'ir.qweb.field.many2one']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         # FIXME: layering violations all the things
         Model = self.pool[element.get('data-oe-model')]
-        M2O = self.pool[column._obj]
-        field = element.get('data-oe-field')
+        M2O = self.pool[field.comodel_name]
+        field_name = element.get('data-oe-field')
         id = int(element.get('data-oe-id'))
         # FIXME: weird things are going to happen for char-type _rec_name
         value = html_to_text(element)
@@ -264,16 +265,16 @@ class ManyToOne(orm.AbstractModel):
         # if anything blows up, just ignore it and bail
         try:
             # get parent record
-            [obj] = Model.read(cr, uid, [id], [field])
+            [obj] = Model.read(cr, uid, [id], [field_name])
             # get m2o record id
-            (m2o_id, _) = obj[field]
+            (m2o_id, _) = obj[field_name]
             # assume _rec_name and write directly to it
             M2O.write(cr, uid, [m2o_id], {
                 M2O._rec_name: value
             }, context=context)
         except:
             logger.exception("Could not save %r to m2o field %s of model %s",
-                             value, field, Model._name)
+                             value, field_name, Model._name)
 
         # not necessary, but might as well be explicit about it
         return None
@@ -282,7 +283,7 @@ class HTML(orm.AbstractModel):
     _name = 'website.qweb.field.html'
     _inherit = ['website.qweb.field', 'ir.qweb.field.html']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         content = []
         if element.text: content.append(element.text)
         content.extend(html.tostring(child)
@@ -311,7 +312,7 @@ class Image(orm.AbstractModel):
             cr, uid, field_name, record, options,
             source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+    def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
         if options is None: options = {}
         aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
         classes = ' '.join(itertools.imap(escape, aclasses))
@@ -322,11 +323,12 @@ class Image(orm.AbstractModel):
             max_size = '%sx%s' % (max_width, max_height)
 
         src = self.pool['website'].image_url(cr, uid, record, field_name, max_size)
-        img = '<img class="%s" src="%s"/>' % (classes, src)
+        img = '<img class="%s" src="%s" style="%s"/>' % (classes, src, options.get('style', ''))
         return ir_qweb.HTMLSafe(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
-    def from_html(self, cr, uid, model, column, element, context=None):
+
+    def from_html(self, cr, uid, model, field, element, context=None):
         url = element.find('img').get('src')
 
         url_object = urlparse.urlsplit(url)
@@ -398,7 +400,7 @@ class Monetary(orm.AbstractModel):
     _name = 'website.qweb.field.monetary'
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         lang = self.user_lang(cr, uid, context=context)
 
         value = element.find('span').text.strip()
@@ -421,7 +423,7 @@ class Duration(orm.AbstractModel):
             qweb_context, context=None)
         return itertools.chain(attrs, [('data-oe-original', record[field_name])])
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         value = element.text_content().strip()
 
         # non-localized value
@@ -442,7 +444,7 @@ class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
+    def from_html(self, cr, uid, model, field, element, context=None):
         return None
 
 class QwebView(orm.AbstractModel):

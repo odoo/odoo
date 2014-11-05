@@ -1391,15 +1391,15 @@
             <t t-foreach="values" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
-                    <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
+                    <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="#{file.name || file.filename}">
                         <span class="oe_fileuploader_in_process">...Upload in progress...</span>
                         <t t-raw="file.name || file.filename"/>
                     </span>
-                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="{file.id}">[</a>
+                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="#{file.id}">[</a>
                     </t>
                 </div>
             </t>
@@ -1408,7 +1408,7 @@
             <t t-foreach="widget.get('value')" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div>
-                    <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                 </div>

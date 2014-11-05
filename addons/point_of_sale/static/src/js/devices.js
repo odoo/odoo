@@ -415,9 +415,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                             send_printing_job();
                         },function(error){
                             if (error) {
-                                self.pos.pos_widget.screen_selector.show_popup('error',{
-                                    'message': _t('PosBox Printing Error'),
-                                    'comment': _t("The receipt could not be printed. The software installed on the posbox is probably out of date. Please refer to the software instructions in the posbox manual or contact the customer support"),
+                                self.pos.pos_widget.screen_selector.show_popup('error-traceback',{
+                                    'message': _t('Printing Error: ') + error.data.message,
+                                    'comment': error.data.debug,
                                 });
                                 return;
                             }

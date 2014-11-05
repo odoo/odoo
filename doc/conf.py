@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'odoo'
-copyright = u'2014, OpenERP s.a.'
+copyright = u'OpenERP S.A.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

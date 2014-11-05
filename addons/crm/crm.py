@@ -79,21 +79,22 @@ class crm_tracking_mixin(osv.AbstractModel):
         return [('utm_campaign', 'campaign_id'), ('utm_source', 'source_id'), ('utm_medium', 'medium_id')]
 
     def tracking_get_values(self, cr, uid, vals, context=None):
-        for key, field in self.tracking_fields():
-            column = self._all_columns[field].column
-            value = vals.get(field) or (request and request.httprequest.cookies.get(key))  # params.get should be always in session by the dispatch from ir_http
-            if column._type in ['many2one'] and isinstance(value, basestring):  # if we receive a string for a many2one, we search / create the id
+        for key, fname in self.tracking_fields():
+            field = self._fields[fname]
+            value = vals.get(fname) or (request and request.httprequest.cookies.get(key))  # params.get should be always in session by the dispatch from ir_http
+            if field.type == 'many2one' and isinstance(value, basestring):
+                # if we receive a string for a many2one, we search/create the id
                 if value:
-                    Model = self.pool[column._obj]
+                    Model = self.pool[field.comodel_name]
                     rel_id = Model.name_search(cr, uid, value, context=context)
                     if rel_id:
                         rel_id = rel_id[0][0]
                     else:
                         rel_id = Model.create(cr, uid, {'name': value}, context=context)
-                vals[field] = rel_id
-            # Here the code for others cases that many2one
+                vals[fname] = rel_id
             else:
-                vals[field] = value
+                # Here the code for others cases that many2one
+                vals[fname] = value
         return vals
 
     def _get_default_track(self, cr, uid, field, context=None):

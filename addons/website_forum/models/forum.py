@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import logging
 import math
 import uuid
 from werkzeug.exceptions import Forbidden
@@ -13,6 +14,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import Warning
 
+_logger = logging.getLogger(__name__)
 
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
@@ -313,9 +315,35 @@ class Post(models.Model):
         return res
 
     @api.multi
+    def reopen(self):
+        if any(post.parent_id or post.state != 'close' for post in self):
+            return False
+
+        reason_offensive = self.env.ref('website_forum.reason_7')
+        reason_spam = self.env.ref('website_forum.reason_8')
+        for post in self:
+            if post.closed_reason_id in (reason_offensive, reason_spam):
+                _logger.info('Upvoting user <%s>, reopening spam/offensive question',
+                             post.create_uid.login)
+                # TODO: in master, consider making this a tunable karma parameter
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * -5)
+
+        self.sudo().write({'state': 'active'}}
+
+    @api.multi
     def close(self, reason_id):
         if any(post.parent_id for post in self):
             return False
+
+        reason_offensive = self.env.ref('website_forum.reason_7').id
+        reason_spam = self.env.ref('website_forum.reason_8').id
+        if reason_id in (reason_offensive, reason_spam):
+            for post in self:
+                _logger.info('Downvoting user <%s> for posting spam/offensive contents',
+                             post.create_uid.login)
+                # TODO: in master, consider making this a tunable karma parameter
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
+
         self.write({
             'state': 'close',
             'closed_uid': self._uid,
