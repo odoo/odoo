@@ -15,7 +15,6 @@ class account_period_close(models.TransientModel):
         """
         This function close period
          """
-        mode = 'done'
         for form in self:
             if form.sure:
                 for id in self._context['active_ids']:
@@ -23,8 +22,7 @@ class account_period_close(models.TransientModel):
                     if account_move:
                         raise Warning(_('In order to close a period, you must first post related journal entries.'))
 
-#                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-                    self._cr.execute('update account_period set state=%s where id=%s', (mode, id))
-                    self.invalidate_cache()
+                    period = self.env['account.period'].browse(id)
+                    period.state = 'done'
 
         return {'type': 'ir.actions.act_window_close'}

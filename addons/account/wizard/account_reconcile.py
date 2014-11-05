@@ -59,18 +59,11 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.multi
     def trans_rec_reconcile_full(self):
-        date = False
-        period_id = False
-        journal_id= False
-        account_id = False
-        context = dict(self._context or {})
-
         date = time.strftime('%Y-%m-%d')
-        ids = self.env['account.period'].find(dt=date)
-        if ids:
-            period_id = ids[0]
-        self.env['account.move.line'].reconcile(context.get('active_ids', []), 'manual', account_id,
-                                        period_id, journal_id)
+        period_ids = self.env['account.period'].find(dt=date)
+        period_id = period_ids and period_ids[0] or False
+        move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
+        move_lines.reconcile('manual', writeoff_period_id=period_id)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -90,15 +83,14 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
 
     @api.multi
     def trans_rec_addendum(self):
-        model_data_ids = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('name', '=', 'account_move_line_reconcile_writeoff')])
-        resource_id = model_data_ids.read(fields=['res_id'])[0]['res_id']
+        model_data_id = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('name', '=', 'account_move_line_reconcile_writeoff')], limit=1)
         return {
             'name': _('Reconcile Writeoff'),
             'context': self._context,
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move.line.reconcile.writeoff',
-            'views': [(resource_id, 'form')],
+            'views': [(model_data_id.res_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
@@ -112,20 +104,15 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
     @api.multi
     def trans_rec_reconcile(self):
         context = dict(self._context or {})
-        data = self.read()[0]
-        account_id = data['writeoff_acc_id'][0]
-        context['date_p'] = data['date_p']
-        journal_id = data['journal_id'][0]
-        context['comment'] = data['comment']
-        if data['analytic_id']:
-            context['analytic_id'] = data['analytic_id'][0]
-        if context['date_p']:
-            date = context['date_p']
-        periods = self.env['account.period'].with_context(context).find(dt=date)
-        if ids:
-            period_id = periods[0]
+        context['date_p'] = self.date_p
+        context['comment'] = self.comment
+        if self.analytic_id:
+            context['analytic_id'] = self.analytic_id.id
+        periods = self.env['account.period'].with_context(context).find(dt=context.get('date_p'))
+        period_id = periods and periods[0] or False
 
-        self.env['account.move.line'].with_context(context).reconcile(context.get('active_ids', []), 'manual', account_id,
-                period_id, journal_id)
+        move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
+        move_lines.with_context(context).reconcile('manual', self.writeoff_acc_id.id,
+                period_id, self.journal_id.id)
         return {'type': 'ir.actions.act_window_close'}
 

@@ -15,9 +15,8 @@ class account_move_line_reconcile_select(models.TransientModel):
         @return: dictionary of  Open  account move line window for reconcile on given account id
 
          """
-        data = self.read()[0]
         return {
-            'domain': "[('account_id', '=', %d), ('reconcile_id', '=', False), ('state', '!=', 'draft')]" % data['account_id'],
+            'domain': "[('account_id', '=', %d), ('reconcile_id', '=', False), ('state', '!=', 'draft')]" % self.account_id.id,
             'name': _('Reconciliation'),
             'view_type': 'form',
             'view_mode': 'tree,form',

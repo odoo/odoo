@@ -12,7 +12,7 @@
                 <field name="sort_selection" widget="radio"/>
                 <field name="amount_currency"/>
                 <newline/>
-                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4" invisible="1"/>
+                <field name="filter" colspan="4" invisible="1"/>
                 <separator string="Periods"  colspan="4"/>
                 <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" required="1" colspan="4"/>
                 <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" required="1" colspan="4"/>

@@ -10,16 +10,14 @@ class account_common_report(models.TransientModel):
     _name = "account.common.report"
     _description = "Account Common Report"
 
-    @api.multi
-    def onchange_chart_id(self, chart_account_id=False):
-        res = {}
-        if chart_account_id:
-            company_id = self.env['account.account'].browse(chart_account_id).company_id.id
+    @api.onchange('chart_account_id')
+    def onchange_chart_id(self):
+        if self.chart_account_id:
             now = time.strftime('%Y-%m-%d')
-            domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
+            domain = [('company_id', '=', self.chart_account_id.company_id.id), ('date_start', '<', now), ('date_stop', '>', now)]
             fiscalyear = self.env['account.fiscalyear'].search(domain, limit=1)
-            res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyear and fiscalyear.id or False}
-        return res
+            self.fiscalyear_id = fiscalyear and fiscalyear.id or False
+            self.company_id = self.chart_account_id.company_id.id
 
     chart_account_id = fields.Many2one('account.account', string='Chart of Account', 
         help='Select Charts of Accounts', default=lambda self: self._get_account(),
@@ -65,15 +63,13 @@ class account_common_report(models.TransientModel):
             res['arch'] = etree.tostring(doc)
         return res
 
-    @api.multi
-    def onchange_filter(self, filter='filter_no', fiscalyear_id=False):
-        res = {'value': {}}
-        if filter == 'filter_no':
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
-        if filter == 'filter_date':
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
-        if filter == 'filter_period' and fiscalyear_id:
-            start_period = end_period = False
+    @api.onchange('filter', 'fiscalyear_id')
+    def onchange_filter(self):
+        period_from, period_to, date_from, date_to = False, False, False, False
+        if self.filter == 'filter_date':
+            date_from = time.strftime('%Y-01-01')
+            date_to = time.strftime('%Y-%m-%d')
+        if self.filter == 'filter_period' and self.fiscalyear_id:
             self._cr.execute('''
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
@@ -90,18 +86,20 @@ class account_common_report(models.TransientModel):
                                AND p.date_start < NOW()
                                AND p.special = false
                                ORDER BY p.date_stop DESC
-                               LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
+                               LIMIT 1) AS period_stop''', (self.fiscalyear_id, self.fiscalyear_id))
             periods =  [i[0] for i in self._cr.fetchall()]
             if periods and len(periods) > 1:
-                start_period = periods[0]
-                end_period = periods[1]
-            res['value'] = {'period_from': start_period, 'period_to': end_period, 'date_from': False, 'date_to': False}
-        return res
+                period_from = periods[0]
+                period_to = periods[1]
+
+        self.period_from = period_from
+        self.period_to = period_to
+        self.date_from = date_from
+        self.date_to = date_to
 
     @api.model
     def _get_account(self):
-        account = self.env['account.account'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
-        return account
+        return self.env['account.account'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     @api.model
     def _get_fiscalyear(self):

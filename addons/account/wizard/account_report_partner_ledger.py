@@ -19,14 +19,13 @@ class account_partner_ledger(models.TransientModel):
         help="It adds the currency column on report if the currency differs from the company currency.")
     journal_ids = fields.Many2many('account.journal', 'account_partner_ledger_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
-    @api.multi
-    def onchange_filter(self, filter='filter_no', fiscalyear_id=False):
-        res = super(account_partner_ledger, self).onchange_filter(filter=filter, fiscalyear_id=fiscalyear_id)
-        if filter in ['filter_no', 'unreconciled']:
-            if filter == 'unreconciled':
-                res['value'].update({'fiscalyear_id': False})
-            res['value'].update({'initial_balance': False, 'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False})
-        return res
+    @api.onchange('filter', 'fiscalyear_id')
+    def onchange_filter(self):
+        res = super(account_partner_ledger, self).onchange_filter()
+        if self.filter in ['filter_no', 'unreconciled']:
+            if self.filter == 'unreconciled':
+                self.fiscalyear_id = False
+            self.initial_balance = False
 
     @api.multi
     def _print_report(self, data):

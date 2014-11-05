@@ -16,12 +16,10 @@ class account_report_general_ledger(models.TransientModel):
         string='Sort by', required=True, default='sort_date')
     journal_ids = fields.Many2many('account.journal', 'account_report_general_ledger_journal_rel', 'account_id', 'journal_id', string='Journals', required=True)
 
-    @api.multi
-    def onchange_fiscalyear(self, fiscalyear=False):
-        res = {}
-        if not fiscalyear:
-            res['value'] = {'initial_balance': False}
-        return res
+    @api.onchange('fiscalyear_id')
+    def onchange_fiscalyear(self):
+        if not self.fiscalyear_id:
+            self.initial_balance = False
 
     @api.multi
     def _print_report(self, data):
