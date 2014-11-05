@@ -57,7 +57,18 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
+        company_id = context.get('company_id', False)
+
+        if not company_id:
+            journal_pool = self.pool.get('account.journal')
+            journal_id = self._get_journal(cr, uid, context)
+            company_id = journal_pool.browse(cr, uid, journal_id).company_id
+            ctx = context.copy()
+            ctx.update({'company_id': company_id.id})
+        else:
+            ctx = context
+
+        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):
@@ -608,7 +619,10 @@ class account_voucher(osv.osv):
         else:
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
 
+        company_id = partner.company_id
+
         res['value']['account_id'] = account_id
+        res['value']['company_id'] = company_id
         return res
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=None):
@@ -865,6 +879,8 @@ class account_voucher(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
         account_id = journal.default_credit_account_id or journal.default_debit_account_id
+        company_id = account_id.company_id
+
         tax_id = False
         if account_id and account_id.tax_ids:
             tax_id = account_id.tax_ids[0].id
@@ -879,6 +895,12 @@ class account_voucher(osv.osv):
         else:
             currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id, 'payment_rate_currency_id': currency_id})
+        vals['value'].update({'company_id': company_id})
+
+        ctx = context.copy()
+        ctx.update({'company_id' : company_id.id})
+        period_id = self._get_period(cr, uid, context=ctx)
+        vals['value'].update({'period_id': period_id})
         #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
         #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
         #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
