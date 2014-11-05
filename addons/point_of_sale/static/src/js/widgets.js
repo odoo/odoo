@@ -927,7 +927,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     window.screen.availHeight > window.innerHeight    )){
                     self.screen_selector.show_popup('fullscreen');
                 }
-                self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
+                self.loading_hide();
 
                 self.pos.push_order();
 
@@ -967,13 +967,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         loading_progress: function(fac){
             this.$('.loader .loader-feedback').removeClass('oe_hidden');
-            this.$('.loader .progress').css({'width': ''+Math.floor(fac*100)+'%'});
+            this.$('.loader .progress').removeClass('oe_hidden').css({'width': ''+Math.floor(fac*100)+'%'});
         },
         loading_message: function(msg,progress){
             this.$('.loader .loader-feedback').removeClass('oe_hidden');
             this.$('.loader .message').text(msg);
-            if(typeof progress !== 'undefined'){
+            if (typeof progress !== 'undefined') {
                 this.loading_progress(progress);
+            } else {
+                this.$('.loader .progress').addClass('oe_hidden');
             }
         },
         loading_skip: function(callback){
@@ -985,6 +987,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }else{
                 this.$('.loader .button.skip').addClass('oe_hidden');
             }
+        },
+        loading_hide: function(){
+            this.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
+        },
+        loading_show: function(){
+            this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
         },
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
@@ -1161,25 +1169,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         close: function() {
             var self = this;
+            self.loading_show();
+            self.loading_message(_t('Closing ...'));
 
-            function close(){
-                self.pos.push_order().then(function(){
-                    return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
-                        window.location = '/web#action=' + res[0]['res_id'];
-                    });
+            self.pos.push_order().then(function(){
+                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(function(res) {
+                    window.location = '/web#action=' + res[0]['res_id'];
                 });
-            }
-
-            var draft_order = _.find( self.pos.get('orders').models, function(order){
-                return order.get_orderlines().length !== 0 && order.get_paymentlines().length === 0;
             });
-            if(draft_order){
-                if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
-                    close();
-                }
-            }else{
-                close();
-            }
+
         },
         destroy: function() {
             this.pos.destroy();
