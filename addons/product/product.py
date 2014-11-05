@@ -1179,19 +1179,19 @@ class product_packaging(osv.osv):
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
-        'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
+        'ean' : fields.char('Barcode', help="The Barcode of the package unit."),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
     }
 
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for pack in self.browse(cr, uid, ids, context=context):
-            if not check_ean(pack.ean):
-                return False
-        return True
+    # def _check_ean_key(self, cr, uid, ids, context=None):
+    #     for pack in self.browse(cr, uid, ids, context=context):
+    #         if not check_ean(pack.ean):
+    #             return False
+    #     return True
 
-    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
+    # _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
