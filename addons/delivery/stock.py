@@ -170,6 +170,15 @@ class stock_move(osv.osv):
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
 
+    def action_confirm(self, cr, uid, ids, context=None):
+        res = super(stock_move, self).action_confirm(cr, uid, ids, context=context)
+        pick_obj = self.pool.get("stock.picking")
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id and move.procurement_id and move.procurement_id.sale_line_id and not move.picking_id.carrier_id :
+                pick_obj.write(cr, uid, [move.picking_id.id], {'carrier_id': move.procurement_id.sale_line_id.order_id.carrier_id.id}, context=context)
+        return res
+
+
     def _get_default_uom(self, cr, uid, context=None):
         uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
         return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
