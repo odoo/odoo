@@ -25,6 +25,7 @@ class accounting_report(models.TransientModel):
     @api.model
     def _get_account_report(self):
         # TODO deprecate this it doesnt work in web
+        context = dict(self._context or {})
         report = False
         if context.get('active_id'):
             menu = self.env['ir.ui.menu'].browse(context.get('active_id')).name
