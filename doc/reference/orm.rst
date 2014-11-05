@@ -93,7 +93,7 @@ Other recordset operations
 
 Recordsets are iterable so the usual Python tools are available for
 transformation (:func:`python:map`, :func:`python:sorted`,
-:func:`~python:itertools.ifilter`, ...) however these returns either a
+:func:`~python:itertools.ifilter`, ...) however these return either a
 :class:`python:list` or an :term:`python:iterator`, removing the ability to
 call methods on their result, or to use set operations.
 
