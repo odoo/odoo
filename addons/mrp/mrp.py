@@ -1053,6 +1053,8 @@ class mrp_production(osv.osv):
             'production_id': production.id,
             'origin': production.name,
         }
+        if production.move_prod_id:
+            production.move_prod_id.write({'location_id': destination_location_id})
         move_id = stock_move.create(cr, uid, data, context=context)
         #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
         #is 1 element long, so we can take the first.
