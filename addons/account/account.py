@@ -914,6 +914,7 @@ class account_move(models.Model):
 
     @api.multi
     def post(self):
+        SequenceObj = self.env['ir.sequence']
         invoice = self._context.get('invoice', False)
         valid_moves = self.validate()
 
@@ -929,7 +930,7 @@ class account_move(models.Model):
                 else:
                     if journal.sequence_id:
                         ctx = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = journal.sequence_id.with_context(ctx).next_by_id()
+                        new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
 
