@@ -27,10 +27,13 @@ class QWeb(orm.AbstractModel):
         website_id=context.get('website_id')
         if website_id:
             if 'experiment_id' in context:
-                exp_snap_id = self.pool["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
-                if exp_snap_id:
-                    exp_version = self.pool["website_version.experiment_version"].browse(cr, uid, [exp_snap_id[0]], context=context)
+                #Is there a version which have the view.key == id_or_xml_id and which is in a running experiment?
+                exp_ver_id = self.pool["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', id_or_xml_id),('experiment_id.state','=','running'),('experiment_id.website_id.id','=',website_id)], context=context)
+                if exp_ver_id:
+                    #If yes take the first because there is no overlap between running experiments.
+                    exp_version = self.pool["website_version.experiment_version"].browse(cr, uid, [exp_ver_id[0]], context=context)
                     exp = exp_version.experiment_id
+                    #We set the google_id as key in the dictionnary to avoid problem when reinitializating the db, exp.google_id is unique
                     context['version_id'] = int(context.get('website_version_experiment')[str(exp.google_id)])
 
             if 'version_id' in context:
