@@ -209,9 +209,9 @@ Common ORM methods
 .. maybe these clarifications/examples should be in the APIDoc?
 
 :meth:`~openerp.models.Model.search`
-    Takes a :ref:`search domain <reference/orm/domains>`, returns a recordset
-    of matching records. Can return a subset of matching records (``offset``
-    and ``limit`` parameters) and be ordered (``order`` parameter)::
+   Takes a :ref:`search domain <reference/orm/domains>`, returns a recordset
+   of matching records. Can return a subset of matching records (``offset``
+   and ``limit`` parameters) and be ordered (``order`` parameter)::
 
         >>> # searches the current model
         >>> self.search([('is_company', '=', True), ('customer', '=', True)])
