@@ -36,10 +36,10 @@ class account_invoice_line(osv.osv):
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self._anglo_saxon_sale_move_lines(cr, uid, i_line.id, res, context=context))
+                res.extend(self._anglo_saxon_sale_move_lines(cr, uid, i_line, res, context=context))
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line.id, res, context=context))
+                res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
         return res
 
 
@@ -65,20 +65,18 @@ class account_invoice_line(osv.osv):
         return res
 
 
-    def _anglo_saxon_sale_move_lines(self, cr, uid, line_id, res, context=None):
+    def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for sales invoices and refunds.
 
-        line_id: The id of the line.  Must be a single integer.
+        i_line: An account.invoice.line object.
         res: The move line entries produced so far by the parent move_line_get.
         """
-        assert isinstance(line_id, (int, long)), "line_id must be an integer id"
-        i_line = self.browse(cr, uid, line_id, context=None)
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
         def get_price(cr, uid, inv, company_currency, i_line, price_unit):
             cur_obj = self.pool.get('res.currency')
             decimal_precision = self.pool.get('decimal.precision')
-            if inv.currency_id.id != company_currency:
+           if inv.currency_id.id != company_currency:
                 price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
             else:
                 price = price_unit * i_line.quantity
@@ -127,14 +125,12 @@ class account_invoice_line(osv.osv):
         return []
 
 
-    def _anglo_saxon_purchase_move_lines(self, cr, uid, line_id, res, context=None):
+    def _anglo_saxon_purchase_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for purchase invoices and refunds.
 
-        line_id: The id of the line.  Must be a single integer.
+        i_line: An account.invoice.line object.
         res: The move line entries produced so far by the parent move_line_get.
         """
-        assert isinstance(line_id, (int, long)), "line_id must be an integer id"
-        i_line = self.browse(cr, uid, line_id, context=None)
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
