@@ -51,4 +51,4 @@ class account_aged_trial_balance(models.TransientModel):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
-        return self.env['report'].get_action([], 'account.report_agedpartnerbalance', data=data)
+        return self.env['report'].get_action(self.env['account.aged.trial.balance'], 'account.report_agedpartnerbalance', data=data)

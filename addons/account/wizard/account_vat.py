@@ -33,4 +33,4 @@ class account_vat_declaration(models.TransientModel):
         taxcode = self.env['account.tax.code'].browse(taxcode_id)
         datas['form']['company_id'] = taxcode.company_id.id
 
-        return self.pool['report'].get_action([], 'account.report_vat', data=datas)
+        return self.pool['report'].get_action(self.env['account.vat.declaration'], 'account.report_vat', data=datas)

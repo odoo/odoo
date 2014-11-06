@@ -64,6 +64,6 @@ class accounting_report(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data['form'].update(self.read(['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter','target_move'])[0])
-        return self.env['report'].get_action([], 'account.report_financial', data=data)
+        return self.env['report'].get_action(self.env['accounting.report'], 'account.report_financial', data=data)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

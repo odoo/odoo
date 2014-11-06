@@ -37,6 +37,6 @@ class account_print_journal(models.TransientModel):
         data = self.pre_print_report(data)
         data['form'].update(self.read(['sort_selection'])[0])
         if context.get('sale_purchase_only'):
-            return self.env['report'].get_action([], 'account.report_salepurchasejournal', data=data)
+            return self.env['report'].get_action(self.env['account.print.journal'], 'account.report_salepurchasejournal', data=data)
         else:
-            return self.env['report'].get_action([], 'account.report_journal', data=data)
+            return self.env['report'].get_action(self.env['account.print.journal'], 'account.report_journal', data=data)

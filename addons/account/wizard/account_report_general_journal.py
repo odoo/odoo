@@ -11,4 +11,4 @@ class account_general_journal(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        return self.env['report'].get_action([], 'account.report_generaljournal', data=data)
+        return self.env['report'].get_action(self.env['account.general.journal'], 'account.report_generaljournal', data=data)

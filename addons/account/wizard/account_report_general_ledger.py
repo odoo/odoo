@@ -31,6 +31,6 @@ class account_report_general_ledger(models.TransientModel):
         if data['form']['landscape'] is False:
             data['form'].pop('landscape')
 
-        return self.env['report'].get_action([], 'account.report_generalledger', data=data)
+        return self.env['report'].get_action(self.env['account.report.general.ledger'], 'account.report_generalledger', data=data)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

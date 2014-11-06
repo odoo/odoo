@@ -11,5 +11,5 @@ class account_balance_report(models.TransientModel):
     @api.multi
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        return self.env['report'].get_action([], 'account.report_trialbalance', data=data)
+        return self.env['report'].get_action(self.env['account.balance.report'], 'account.report_trialbalance', data=data)
 
