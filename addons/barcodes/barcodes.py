@@ -157,10 +157,6 @@ class barcode_nomenclature(osv.osv):
 class barcode_rule(models.Model):
     _name = 'barcode.rule'
     _order = 'sequence asc'
-
-    def _get_type_selection(self, cr, uid, context=None):
-        # return [('product','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier'),('location','Location'),('lot','Lot'),('package','Package')]
-        return [('product','Unit Product')]
         
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
@@ -172,7 +168,6 @@ class barcode_rule(models.Model):
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
         #'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode'),      
     }
-    #type = openerp.fields.Selection([('product','Unit Product')],'Type', required=True)
 
     _defaults = {
         'type': 'product',
