@@ -72,8 +72,8 @@ Accessing a relational field (:class:`~openerp.fields.Many2one`,
 Set operations
 --------------
 
-Recordsets are immutable, but sets of the same model can be conbined using
-various set operations, returning new recorsets. Set operations do *not*
+Recordsets are immutable, but sets of the same model can be combined using
+various set operations, returning new recordsets. Set operations do *not*
 preserve order.
 
 .. addition preserves order but can introduce duplicates
