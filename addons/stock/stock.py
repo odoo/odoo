@@ -1332,6 +1332,7 @@ class stock_picking(osv.osv):
 
     @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):
+        print "DO TRANSFER"
         """
             If no pack operation, we do simple action_done of the picking
             Otherwise, do the pack operations
@@ -1340,6 +1341,7 @@ class stock_picking(osv.osv):
             context = {}
         stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
+            print picking
             if not picking.pack_operation_ids:
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
@@ -3929,7 +3931,6 @@ class stock_pack_operation(osv.osv):
                 op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
                 self.write(cr, uid, [pack_op.id], {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
             processed_ids.append(op)
-        print "Nb processed: " + str(len(processed_ids))
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
     def create_and_assign_lot(self, cr, uid, id, name, context=None):

@@ -23,23 +23,23 @@
 {
     'name': 'Advanced Barcodes',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': '',
     'sequence': 6,
-    'summary': 'Advanced Barcode Setup for the Point of Sale',
+    'summary': 'Advanced Barcode Setup',
     'description': """
 
 =======================
 
-This module unlocks several advanced barcode features for the point of sale:
+This module unlocks several advanced barcode features:
 
 - Barcode aliases allows you to identify the same product with different barcodes
-- Barcode patterns to identify customers, employees, weighted, discounted, and custom priced products
+- Barcode patterns to identify e.g. customers, employees, weighted, discounted and custom priced products
 - Unlimited barcode patterns and definitions. 
 
 """,
     'author': 'OpenERP SA',
     'depends': [],
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': '',
     'data': [
         'data/barcodes_data.xml',
         'barcodes_view.xml',
