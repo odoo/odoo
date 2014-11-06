@@ -2308,7 +2308,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set, 'currency_id': currency_id})
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                chart_ids = self._get_chart_parent_ids(self.chart_template_id.id)
+                chart_ids = self._get_chart_parent_ids(self.chart_template_id)
                 base_tax_domain = [('chart_template_id', 'in', chart_ids), ('parent_id', '=', False)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale', 'all'))]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('purchase', 'all'))]
