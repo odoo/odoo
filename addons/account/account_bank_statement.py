@@ -469,7 +469,9 @@ class account_bank_statement_line(osv.osv):
         st_lines_left = []
         for st_line in self.browse(cr, uid, st_lines):
             counterpart = self.get_unambiguous_reconciliation_proposition(cr, uid, st_line, context=context)
-            if counterpart:
+            counterpart_amount = sum(line['debit'] for line in counterpart) - sum(line['credit'] for line in counterpart)
+            st_line_amount = st_line.amount_currency if st_line.currency_id else st_line.amount
+            if counterpart and counterpart_amount == st_line_amount:
                 for move_line_dict in counterpart:
                     # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
                     # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
@@ -491,7 +493,7 @@ class account_bank_statement_line(osv.osv):
         for st_line in st_lines_left:
             if st_line.name and not st_line.partner_id.id:
                 additional_domain = [('ref', '=', st_line.name)]
-                match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, limit=2, additional_domain=additional_domain, overlook_partner=True)
+                match_ids = self.get_move_lines_for_bank_reconciliation(cr, uid, st_line, limit=1, additional_domain=additional_domain, overlook_partner=True)
                 if match_ids and match_ids[0]['partner_id']:
                     self.write(cr, uid, st_line.id, {'partner_id': match_ids[0]['partner_id']}, context=context)
 
@@ -585,8 +587,7 @@ class account_bank_statement_line(osv.osv):
         return data
 
     def get_unambiguous_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
-        """ Returns move lines that constitute the best guess to reconcile a statement line.
-            The unambiguous parameter is used to reconcile the statement line without user intervention (eg. when importing a statement) """
+        """ Returns move lines that can without doubt be used to reconcile a statement line """
         if excluded_ids is None:
             excluded_ids = []
 
@@ -684,18 +685,32 @@ class account_bank_statement_line(osv.osv):
         if additional_domain is None:
             additional_domain = []
 
-        # ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])
-        additional_domain += ['|', ('reconcile_id', '=', False), '&', ('statement_id', '=', False), ('journal_id.type', 'in', ['sale','sale_refund','purchase','purchase_refund'])]
-        if st_line.partner_id.id or overlook_partner:
-            additional_domain += [('account_id.type', 'in', ['payable', 'receivable'])]
-            if not overlook_partner:
-                additional_domain += [('partner_id', '=', st_line.partner_id.id)]
-        else:
-            additional_domain += [('account_id.reconcile', '=', True)] # ('account_id.type', '=', 'other')
-            if str:
-                additional_domain += [('partner_id.name', 'ilike', str)]
+        def AND(a, b):
+            if not a or not b:
+                return a and a or b
+            else:
+                return ['&'] + a + b
+        def OR(a, b):
+            if not a or not b:
+                return a and a or b
+            else:
+                return ['|'] + a + b
 
-        return additional_domain
+        # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
+        domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])]
+
+        domain_reconciliation = [('reconcile_id', '=', False)]
+        domain_all = []
+        if st_line.partner_id.id or overlook_partner:
+            domain_reconciliation = AND(domain_reconciliation, [('account_id.type', 'in', ['payable', 'receivable'])])
+            if not overlook_partner:
+                domain_all = AND(domain_all, [('partner_id', '=', st_line.partner_id.id)])
+        else:
+            domain_reconciliation = AND(domain_reconciliation, [('account_id.reconcile', '=', True)])
+            if str:
+                domain_all = AND(domain_all, [('partner_id.name', 'ilike', str)])
+
+        return AND(additional_domain, AND(domain_all, OR(domain_rapprochement, domain_reconciliation)))
 
     def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False, context=None):
         """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
@@ -908,5 +923,9 @@ class account_bank_statement_line(osv.osv):
     _defaults = {
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
+    # Note : ideally the constraint should be on unique_import_id and statement_id.account_id
+    _sql_constraints = [
+        ('unique_import_id', 'unique (bank_account_id, unique_import_id)', 'A bank account\'s transactions can be imported only once !')
+    ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

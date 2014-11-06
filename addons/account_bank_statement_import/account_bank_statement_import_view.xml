@@ -8,19 +8,11 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Import Bank Statements" version="7.0">
-                    <group>
-                        <group>
-                            <field name="data_file"/>
-                            <field name="hide_journal_field" invisible="1"/>
-                            <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'invisible': [('hide_journal_field', '=', True)]}" context="{'default_type':'bank'}"/>
-                        </group>
-                        <group>
-                            <b colspan="2"> How to import your bank statement :</b>
-                            <label string= "1. Download your bank statements from your bank website." colspan="2"/>
-                            <label string= "2. Make sure you have installed the right module to support the file format." colspan="2"/>
-                            <label string= "3. Select the file, the journal and click 'Import'." colspan="2"/>
-                        </group>
-                    </group>
+                    <field name="data_file"/>
+                    <br/><br/><b> How to import your bank statement :</b>
+                    <br/><label string= "1. Download your bank statements from your bank website."/>
+                    <br/><label string= "2. Make sure you have installed the right module to support the file format."/>
+                    <br/><label string= "3. Select the file, the journal and click 'Import'."/>
                     <footer>
                         <button name="parse_file" string="_Import" type="object" class="oe_highlight"/>
                         or

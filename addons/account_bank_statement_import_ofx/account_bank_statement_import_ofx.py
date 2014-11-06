@@ -59,7 +59,7 @@ class account_bank_statement_import(osv.TransientModel):
                     'unique_import_id': transaction.id,
                 }
                 total_amt += float(transaction.amount)
-                line_ids.append((0, 0, vals_line))
+                line_ids.append(vals_line)
         except Exception, e:
             raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
         account_number = ofx.account.number

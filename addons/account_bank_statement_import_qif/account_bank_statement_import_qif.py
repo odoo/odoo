@@ -60,7 +60,7 @@ class account_bank_statement_import(osv.TransientModel):
                 elif line[0] == 'M':  # Memo
                     vals_line['name'] = 'name' in vals_line and vals_line['name'] + ': ' + line[1:] or line[1:]
                 elif line[0] == '^':  # end of item
-                    line_ids.append((0, 0, vals_line))
+                    line_ids.append(vals_line)
                     vals_line = {}
                 elif line[0] == '\n':
                     line_ids = []

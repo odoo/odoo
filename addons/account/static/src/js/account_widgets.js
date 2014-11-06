@@ -225,16 +225,9 @@ openerp.account = function (instance) {
             });
         },
 
-        displayNotifications: function(notifications, speed) {
-            speed = speed === undefined ? this.aestetic_animation_speed : speed;
-            for (var i=0; i<notifications.length; i++) {
-                var $notification = $(QWeb.render("reconciliation_notification", {
-                    type: notifications[i].type,
-                    message: notifications[i].message,
-                    details: notifications[i].details,
-                })).hide();
-                $notification.appendTo(this.$(".notification_area")).slideDown(speed);
-            }
+        do_show: function() {
+            this._super();
+            // TODO : find out if (parts of) the widget needs to be reloaded
         },
 
         doActionClickHandler: function(e) {
@@ -253,25 +246,51 @@ openerp.account = function (instance) {
         },
 
         presetConfigCreateClickHandler: function() {
-            this.action_manager.do_action({
-                name: "Operation Templates",
-                res_model: "account.operation.template",
-                views: [[false, 'form']],
-                type: 'ir.actions.act_window',
-                view_type: "form",
-                view_mode: "form"
-            });
+            var self = this;
+            // Fetch the ID of an action that will be pushed in the URL
+            // If the page is reloaded, this action will be loaded  
+            new instance.web.Model("ir.model.data")
+                .call("get_object_reference", ['account', 'action_account_operation_template'])
+                .then(function (result) {
+                    self.action_manager.do_action({
+                        name: "Operation Templates",
+                        res_model: "account.operation.template",
+                        views: [[false, 'form']],
+                        type: 'ir.actions.act_window',
+                        view_type: "form",
+                        view_mode: "form",
+                        action: result[1]
+                    });
+                });
         },
 
         presetConfigEditClickHandler: function() {
-            this.action_manager.do_action({
-                name: "Operation Templates",
-                res_model: "account.operation.template",
-                views: [[false, 'list'], [false, 'form']],
-                type: 'ir.actions.act_window',
-                view_type: "list",
-                view_mode: "list"
-            });
+            var self = this;
+            new instance.web.Model("ir.model.data")
+                .call("get_object_reference", ['account', 'action_account_operation_template'])
+                .then(function (result) {
+                    self.action_manager.do_action({
+                        name: "Operation Templates",
+                        res_model: "account.operation.template",
+                        views: [[false, 'list'], [false, 'form']],
+                        type: 'ir.actions.act_window',
+                        view_type: "list",
+                        view_mode: "list",
+                        action: result[1]
+                    });
+                });
+        },
+
+        displayNotifications: function(notifications, speed) {
+            speed = speed === undefined ? this.aestetic_animation_speed : speed;
+            for (var i=0; i<notifications.length; i++) {
+                var $notification = $(QWeb.render("reconciliation_notification", {
+                    type: notifications[i].type,
+                    message: notifications[i].message,
+                    details: notifications[i].details,
+                })).hide();
+                $notification.appendTo(this.$(".notification_area")).slideDown(speed);
+            }
         },
     
         keyboardShortcutsHandler: function(e) {
@@ -1385,16 +1404,23 @@ openerp.account = function (instance) {
             });
         },
 
-        // TODO : https://www.odoo.com/web#id=10409&view_type=form&model=project.task&action=333&active_id=133
         goBackToStatementsTreeView: function() {
             var self = this;
             new instance.web.Model("ir.model.data")
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    self.action_manager.do_action(action_id, {
-                        clear_breadcrumbs: true
+                    var breadcrumbs = self.action_manager.get_widgets();
+                    var widget = _.find(breadcrumbs, function(widget){
+                        return widget.action && widget.action.id === action_id;
                     });
+                    if (widget) {
+                        self.action_manager.select_widget(widget, 0);
+                    } else {
+                        self.action_manager.do_action(action_id, {
+                            clear_breadcrumbs: true
+                        });
+                    }
                 });
         },
     
@@ -2397,6 +2423,7 @@ openerp.account = function (instance) {
             return self.model_aml
                 .call("get_reconciliation_proposition", [self.data.account_id, self.data.partner_id || undefined])
                 .then(function(lines) {
+                    _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                     self.set("mv_lines_selected", lines);
                 });
         },

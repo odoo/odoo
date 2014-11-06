@@ -267,7 +267,7 @@ class account_bank_statement_import(osv.TransientModel):
                         'bank_account_id': bank_account_id,
                         'unique_import_id': line['transactionRef'],
                     }
-                    statement_line.append((0, 0, line_data))
+                    statement_line.append(line_data)
             if statement['coda_note'] != '':
                 statement_data.update({'coda_note': statement['coda_note']})
             statement_data.update({'journal_id': journal_id.id, 'line_ids': statement_line})
