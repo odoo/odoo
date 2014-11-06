@@ -82,7 +82,9 @@
         <field name="domain_force">['|',
                                         ('project_id.privacy_visibility', 'in', ['public', 'employees']),
                                         '&amp;',
-                                            ('project_id.privacy_visibility', '=', 'followers'),
+                                            '|',
+                                                ('project_id', '=', False),
+                                                ('project_id.privacy_visibility', '=', 'followers'),
                                             ('message_follower_ids', 'in', [user.partner_id.id]),
                                     ]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
