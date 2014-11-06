@@ -397,6 +397,9 @@ added.
   the changes performed during the method are then sent to the client program
   and become visible to the user
 
+Both computed fields and new-API onchanges are automatically called by the
+client without having to add them in views.
+
 .. _reference/orm/oldapi:
 
 Old API compatibility
