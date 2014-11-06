@@ -26,7 +26,7 @@ class account_financial_report(models.Model):
         for id in self.ids:
             res.append(id)
             ids2 = self.search([('parent_id', '=', id)], order='sequence ASC')
-            res += self._get_children_by_order(ids2)
+            res += ids2._get_children_by_order()
         return res
 
     @api.multi
@@ -52,8 +52,8 @@ class account_financial_report(models.Model):
             elif report.type == 'account_type':
                 # it's the sum the leaf accounts with such an account type
                 report_types = [x.id for x in report.account_type_ids]
-                account_ids = AccountObj.search([('user_type','in', report_types), ('type','!=','view')])
-                for a in AccountObj.browse(account_ids):
+                account_ids = AccountObj.search([('user_type', 'in', report_types), ('type', '!=', 'view')])
+                for a in account_ids:
                     for field in field_names:
                         res[report.id][field] += getattr(a, field)
             elif report.type == 'account_report' and report.account_report_id:

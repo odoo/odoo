@@ -96,7 +96,6 @@ class account_move_line(models.Model):
            context then the returned amount will be in company currency.
         """
         context = dict(self._context or {})
-        CurrencyObj = self.env['res.currency']
         for move_line in self:
             move_line.amount_residual = 0.0
             move_line.amount_residual_currency = 0.0
@@ -124,8 +123,8 @@ class account_move_line(models.Model):
                     else:
                         if move_line.currency_id:
                             context_unreconciled.update({'date': payment_line.date})
-                            amount_in_foreign_currency = CurrencyObj.with_context(context_unreconciled).compute(
-                                                                            move_line.company_id.currency_id.id, move_line.currency_id.id, 
+                            amount_in_foreign_currency = move_line.company_id.currency_id.with_context(context_unreconciled).compute(
+                                                                            move_line.currency_id.id, 
                                                                             (payment_line.debit - payment_line.credit), round=False)
                             move_line_total += amount_in_foreign_currency
                         else:
@@ -523,7 +522,6 @@ class account_move_line(models.Model):
         """
         if not self:
             return []
-        CurrencyObj = self.env['res.currency']
         company_currency = self.env.user.company_id.currency_id
         rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_aml', self._context)
         reconcile_partial_ids = []  # for a partial reconciliation, take only one line
@@ -569,8 +567,8 @@ class account_move_line(models.Model):
                     ctx = context.copy()
                     if target_date:
                         ctx.update({'date': target_date})
-                    debit = CurrencyObj.with_context(ctx).compute(target_currency.id, company_currency.id, debit)
-                    credit = CurrencyObj.with_context(ctx).compute(target_currency.id, company_currency.id, credit)
+                    debit = target_currency.with_context(ctx).compute(company_currency.id, debit)
+                    credit = target_currency.with_context(ctx).compute(company_currency.id, credit)
                     amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
 
             ret_line['credit'] = credit
@@ -658,7 +656,6 @@ class account_move_line(models.Model):
 
     @api.multi
     def reconcile(self, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
-        partner_obj = self.env['res.partner']
         unrec_lines = filter(lambda x: not x['reconcile_id'], self)
         credit = debit = 0.0
         currency = 0.0
@@ -870,24 +867,24 @@ class account_move_line(models.Model):
     def unlink(self, check=True):
         self._update_check()
         result = False
-        move_ids = set()
-        context = self._context.copy()
+        moves = set()
+        context = dict(self._context or {})
         for line in self:
-            move_ids.add(line.move_id.id)
+            moves.add(line.move_id)
             context['journal_id'] = line.journal_id.id
             context['period_id'] = line.period_id.id
-            result = super(account_move_line, self).with_context(context).unlink([line.id])
-        move_ids = list(move_ids)
-        if check and move_ids:
-            self.env['account.move'].with_context(context).validate(move_ids)
+            result = super(account_move_line, line).with_context(context).unlink()
+        moves = list(moves)
+        if check and moves:
+            moves.with_context(context).validate()
         return result
 
     @api.multi
     def write(self, vals, check=True, update_check=True):
         if vals.get('account_tax_id', False):
             raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
-        if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['active'])['active']:
-            raise Warning(_('You cannot use an inactive account.'))
+        if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['deprecated'])['deprecated']:
+            raise Warning(_('You cannot use deprecated account.'))
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check()
@@ -898,7 +895,7 @@ class account_move_line(models.Model):
             del vals['date']
 
         for line in self:
-            ctx = self._context.copy()
+            ctx = dict(self._context or {})
             if not ctx.get('journal_id'):
                 if line.move_id:
                    ctx['journal_id'] = line.move_id.journal_id.id
@@ -1034,8 +1031,8 @@ class account_move_line(models.Model):
                 ctx = {}
                 if 'date' in vals:
                     ctx['date'] = vals['date']
-                vals['amount_currency'] = self.env['res.currency'].with_context(ctx).compute(account.company_id.currency_id.id,
-                    account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0))
+                vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(
+                    account.currency_id.id, vals.get('debit', 0.0) - vals.get('credit', 0.0))
         if not ok:
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
@@ -1072,7 +1069,7 @@ class account_move_line(models.Model):
                                 newvals['credit'] = abs(tax['price_unit'])
                             else:
                                 newvals['debit'] = tax['price_unit']
-                        self.with_context(context).write([result], newvals)
+                        result.with_context(context).write(newvals)
                 else:
                     data = {
                         'move_id': vals['move_id'],
