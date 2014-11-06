@@ -1768,7 +1768,7 @@ class account_invoice_tax(osv.osv):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
