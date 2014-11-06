@@ -81,7 +81,7 @@ class account_move_line(models.Model):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
 
         if context.get('chart_account_id', False):
-            child_ids = account_obj._get_children_and_consol([context['chart_account_id']])
+            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
