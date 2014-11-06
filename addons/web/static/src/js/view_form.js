@@ -4389,28 +4389,25 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.o2m.trigger_on_change();
     },
     is_valid: function () {
-        var editor = this.editor;
-        var form = editor.form;
-        // If no edition is pending, the listview can not be invalid (?)
-        if (!editor.record) {
-            return true;
-        }
-        // If the form has not been modified, the view can only be valid
-        // NB: is_dirty will also be set on defaults/onchanges/whatever?
-        // oe_form_dirty seems to only be set on actual user actions
-        if (!form.$el.is('.oe_form_dirty')) {
+        var self = this;
+        if (!this.fields_view || !this.editable()){
             return true;
         }
         this.o2m._dirty_flag = true;
-
-        // Otherwise validate internal form
-        return _(form.fields).chain()
-            .invoke(function () {
-                this._check_css_flags();
-                return this.is_valid();
-            })
-            .all(_.identity)
-            .value();
+        var r;
+        return _.every(this.records.records, function(record){
+            r = record;
+            _.each(self.editor.form.fields, function(field){
+                field._inhibit_on_change_flag = true;
+                field.set_value(r.attributes[field.name]);
+                field._inhibit_on_change_flag = false;
+            });
+            return _.every(self.editor.form.fields, function(field){
+                field.process_modifiers();
+                field._check_css_flags();
+                return field.is_valid();
+            });
+        });
     },
     do_add_record: function () {
         if (this.editable()) {
@@ -5767,7 +5764,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -5782,8 +5779,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    start: function() {
-        this._super(this);
+    initialize_content: function() {
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     // WARNING: duplicated in 4 other M2M widgets

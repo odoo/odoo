@@ -7,10 +7,12 @@ $('.oe_website_sale').each(function () {
         var value = +$shippingDifferent.val();
         var data = $shippingDifferent.find("option:selected").data();
         var $snipping = $(".js_shipping", oe_website_sale);
-        var $inputs = $snipping.find("input,select");
+        var $inputs = $snipping.find("input");
+        var $selects = $snipping.find("select");
 
         $snipping.toggle(!!value);
         $inputs.attr("readonly", value <= 0 ? null : "readonly" ).prop("readonly", value <= 0 ? null : "readonly" );
+        $selects.attr("disabled", value <= 0 ? null : "disabled" ).prop("disabled", value <= 0 ? null : "disabled" );
 
         $inputs.each(function () {
             $(this).val( data[$(this).attr("name")] || "" );

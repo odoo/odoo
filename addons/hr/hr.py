@@ -347,8 +347,8 @@ class hr_employee(osv.osv):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+        for name, field in self._fields.items():
+            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
 

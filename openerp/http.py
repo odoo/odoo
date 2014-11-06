@@ -494,7 +494,7 @@ class JsonRequest(WebRequest):
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
-           to abitrary responses. Anything returned (except None) will
+           to arbitrary responses. Anything returned (except None) will
            be used as response."""
         try:
             return super(JsonRequest, self)._handle_exception(exception)

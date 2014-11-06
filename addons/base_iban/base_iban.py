@@ -177,7 +177,7 @@ class res_partner_bank(osv.osv):
         'iban': fields.related('acc_number', string='IBAN', size=34, readonly=True, help="International Bank Account Number", type="char"),
     }
     _constraints = [
-        (check_iban, _construct_constraint_msg, ["iban"]),
+        (check_iban, _construct_constraint_msg, ["iban", "acc_number", "state"]),
         (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['bic'])
     ]
 

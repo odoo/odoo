@@ -1006,6 +1006,10 @@ class pos_order(osv.osv):
     def create_account_move(self, cr, uid, ids, context=None):
         return self._create_account_move_line(cr, uid, ids, None, None, context=context)
 
+    def _prepare_analytic_account(self, cr, uid, line, context=None):
+        '''This method is designed to be inherited in a custom module'''
+        return False
+
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
@@ -1154,6 +1158,7 @@ class pos_order(osv.osv):
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
                     'account_id': income_account,
+                    'analytic_account_id': self._prepare_analytic_account(cr, uid, line, context=context),
                     'credit': ((amount>0) and amount) or 0.0,
                     'debit': ((amount<0) and -amount) or 0.0,
                     'tax_code_id': tax_code_id,

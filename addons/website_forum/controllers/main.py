@@ -286,7 +286,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
-        request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'state': 'active'}, context=request.context)
+        request.registry['forum.post'].reopen(request.cr, request.uid, [question.id], context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)

@@ -17,19 +17,25 @@ class test_inherits(common.TransactionCase):
 
     def test_field_extension(self):
         """ check the extension of a field in an inherited model """
-        # the field mother.name should inherit required=True, and have "Bar" as
-        # a default value
         mother = self.env['test.inherit.mother']
+        daughter = self.env['test.inherit.daughter']
+
+        # the field mother.name must have required=True and "Bar" as default
         field = mother._fields['name']
         self.assertTrue(field.required)
-
         self.assertEqual(field.default(mother), "Bar")
-        self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
         self.assertEqual(mother._defaults.get('name'), "Bar")
+        self.assertEqual(mother.default_get(['name']), {'name': "Bar"})
 
-        # the field daughter.template_id should inherit
-        # model_name='test.inherit.mother', string='Template', required=True
-        daughter = self.env['test.inherit.daughter']
+        # the field daughter.name must have required=False and "Baz" as default
+        field = daughter._fields['name']
+        self.assertFalse(field.required)
+        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(daughter._defaults.get('name'), "Baz")
+        self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
+
+        # the field daughter.template_id should have
+        # comodel_name='test.inherit.mother', string='Template', required=True
         field = daughter._fields['template_id']
         self.assertEqual(field.comodel_name, 'test.inherit.mother')
         self.assertEqual(field.string, "Template")

@@ -590,7 +590,9 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                res[product.id] = product.sudo()[ptype]
+                company_id = product.env.user.company_id.id
+                product = product.with_context(force_company=company_id)
+                res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -1117,6 +1119,34 @@ class product_product(osv.osv):
 
     def need_procurement(self, cr, uid, ids, context=None):
         return False
+
+    def _compute_uos_qty(self, cr, uid, ids, uom, qty, uos, context=None):
+        '''
+        Computes product's invoicing quantity in UoS from quantity in UoM.
+        Takes into account the
+        :param uom: Source unit
+        :param qty: Source quantity
+        :param uos: Target UoS unit.
+        '''
+        if not uom or not qty or not uos:
+            return qty
+        uom_obj = self.pool['product.uom']
+        product_id = ids[0] if isinstance(ids, (list, tuple)) else ids
+        product = self.browse(cr, uid, product_id, context=context)
+        if isinstance(uos, (int, long)):
+            uos = uom_obj.browse(cr, uid, uos, context=context)
+        if isinstance(uom, (int, long)):
+            uom = uom_obj.browse(cr, uid, uom, context=context)
+        if product.uos_id:  # Product has UoS defined
+            # We cannot convert directly between units even if the units are of the same category
+            # as we need to apply the conversion coefficient which is valid only between quantities
+            # in product's default UoM/UoS
+            qty_default_uom = uom_obj._compute_qty_obj(cr, uid, uom, qty, product.uom_id)  # qty in product's default UoM
+            qty_default_uos = qty_default_uom * product.uos_coeff
+            return uom_obj._compute_qty_obj(cr, uid, product.uos_id, qty_default_uos, uos)
+        else:
+            return uom_obj._compute_qty_obj(cr, uid, uom, qty, uos)
+
 
 
 class product_packaging(osv.osv):
