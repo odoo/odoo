@@ -577,6 +577,8 @@ Porting from the old API
   Non-stored computed fields created using the new API style are *not*
   available in :attr:`~openerp.models.Model._columns` and can only be
   inspected through :attr:`~openerp.models.Model._fields`
+* reassigning ``self`` in a method is probably unnecessary and may break
+  translation introspection
 
 .. _reference/orm/oldapi/bridging:
 
