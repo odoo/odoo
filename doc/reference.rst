@@ -20,3 +20,4 @@ Reference
 
     reference/reports
     reference/workflows
+    reference/cdn
