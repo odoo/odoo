@@ -311,7 +311,7 @@ class account_bank_statement(models.Model):
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
-        balance_start = self.journal_id._compute_balance_end_real()
+        balance_start = self._compute_balance_end_real(self.journal_id.id)
         currency = self.journal_id.currency or self.journal_id.company_id.currency_id
         self.balance_start = balance_start
         self.company_id = self.journal_id.company_id.id
