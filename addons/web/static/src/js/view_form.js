@@ -5458,11 +5458,9 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
     start: function() {
-        this._super(this);
+        this._super();
+        instance.web.form.ReinitializeFieldMixin.start.call(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
-        this.on("change:effective_readonly", this, function () {
-            this.render_value();
-        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
