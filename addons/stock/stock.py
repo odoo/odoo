@@ -24,10 +24,11 @@ from dateutil import relativedelta
 import json
 import time
 
+import openerp
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-from openerp import SUPERUSER_ID, api
+from openerp import SUPERUSER_ID, api, models
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
 import logging
@@ -1332,7 +1333,6 @@ class stock_picking(osv.osv):
 
     @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):
-        print "DO TRANSFER"
         """
             If no pack operation, we do simple action_done of the picking
             Otherwise, do the pack operations
@@ -1341,7 +1341,6 @@ class stock_picking(osv.osv):
             context = {}
         stock_move_obj = self.pool.get('stock.move')
         for picking in self.browse(cr, uid, picking_ids, context=context):
-            print picking
             if not picking.pack_operation_ids:
                 self.action_done(cr, uid, [picking.id], context=context)
                 continue
@@ -4314,5 +4313,14 @@ class stock_picking_type(osv.osv):
         'warehouse_id': _default_warehouse,
         'active': True,
     }
+
+class barcode_rule(models.Model):
+    _inherit = 'barcode.rule'
+
+    type = openerp.fields.Selection(selection_add=[
+                                                    ('location','Location'),
+                                                    ('lot','Lot'),
+                                                    ('package','Package')
+                                                ])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -51,6 +51,7 @@ Main Features
     'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',
+        #'data/default_barcode_patterns.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_box.xml',

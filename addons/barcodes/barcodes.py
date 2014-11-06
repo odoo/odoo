@@ -23,7 +23,7 @@ import logging
 import re
 
 import openerp
-from openerp import tools
+from openerp import tools, models, fields
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -154,19 +154,25 @@ class barcode_nomenclature(osv.osv):
                 return parsed_result
         return parsed_result
 
-class barcode_rule(osv.osv):
+class barcode_rule(models.Model):
     _name = 'barcode.rule'
     _order = 'sequence asc'
+
+    def _get_type_selection(self, cr, uid, context=None):
+        # return [('product','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier'),('location','Location'),('lot','Lot'),('package','Package')]
+        return [('product','Unit Product')]
+        
     _columns = {
         'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
         'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
         'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
         #'encoding': fields.selection([('any','Any'),('ean13','EAN-13'),('ean8','EAN-8'),('codabar','Codabar'),('upca','UPC-A'),('upce','UPC-E')],'Encoding',help='This rule will apply only if the barcode is encoded with the specified encoding'),
         'encoding': fields.selection([('any','Any'),('ean13','EAN-13')],'Encoding',required=True,help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        'type':     fields.selection([('product','Unit Product'),('weight','Weighted Product'),('price','Priced Product'),('discount','Discounted Product'),('client','Client'),('cashier','Cashier'),('location','Location'),('lot','Lot'),('package','Package')],'Type', required=True),
+        'type':     fields.selection([('product','Unit Product')],'Type', required=True),
         'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern"),
         #'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode'),      
     }
+    #type = openerp.fields.Selection([('product','Unit Product')],'Type', required=True)
 
     _defaults = {
         'type': 'product',

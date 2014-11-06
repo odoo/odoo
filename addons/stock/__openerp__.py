@@ -66,6 +66,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_location_demo_cpu3.yml',
     ],
     'data': [
+        #'data/default_barcode_patterns.xml',
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'stock_data.xml',
