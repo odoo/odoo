@@ -76,7 +76,7 @@ class account_invoice_line(osv.osv):
         def get_price(cr, uid, inv, company_currency, i_line, price_unit):
             cur_obj = self.pool.get('res.currency')
             decimal_precision = self.pool.get('decimal.precision')
-           if inv.currency_id.id != company_currency:
+            if inv.currency_id.id != company_currency:
                 price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
             else:
                 price = price_unit * i_line.quantity
