@@ -415,6 +415,12 @@ added.
   even if there are function fields or explicit onchange depending on that
   field.
 
+.. note::
+
+    ``onchange`` methods work on virtual records assignment on these records
+    is not written to the database, just used to know which value to send back
+    to the client
+
 .. _reference/orm/oldapi:
 
 Old API compatibility
