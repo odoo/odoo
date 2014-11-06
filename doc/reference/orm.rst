@@ -12,6 +12,9 @@ Recordsets
 Interaction with models and records is performed through recordsets, a sorted
 set of records of the same model.
 
+.. warning:: contrary to what the name implies, it is currently possible for
+             recordsets to contain duplicates. This may change in the future.
+
 Methods defined on a model are executed on a recordset, and their ``self`` is
 a recordset::
 
