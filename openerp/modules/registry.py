@@ -164,8 +164,9 @@ class Registry(Mapping):
 
         # do the actual setup from a clean state
         self._m2m = {}
+        context = {'_setup_fields_partial': partial}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
+            model._setup_fields(cr, SUPERUSER_ID, context=context)
 
     def clear_caches(self):
         """ Clear the caches

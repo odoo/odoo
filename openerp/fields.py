@@ -426,6 +426,7 @@ class Field(object):
         # put invalidation triggers on model dependencies
         for dep_model_name, field_names in model._depends.iteritems():
             dep_model = env[dep_model_name]
+            dep_model._setup_fields()
             for field_name in field_names:
                 field = dep_model._fields[field_name]
                 field._triggers.add((self, None))
@@ -444,8 +445,8 @@ class Field(object):
         recs = env[self.model_name]
         fields = []
         for name in self.related:
+            recs._setup_fields()
             field = recs._fields[name]
-            field.setup(env)
             recs = recs[name]
             fields.append(field)
 
@@ -551,6 +552,7 @@ class Field(object):
         env = model.env
         head, tail = path1[0], path1[1:]
 
+        model._setup_fields()
         if head == '*':
             # special case: add triggers on all fields of model (except self)
             fields = set(model._fields.itervalues()) - set([self])
@@ -562,8 +564,6 @@ class Field(object):
                 _logger.debug("Field %s is recursively defined", self)
                 self.recursive = True
                 continue
-
-            field.setup(env)
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
@@ -1648,7 +1648,9 @@ class One2many(_RelationalMulti):
 
         if self.inverse_name:
             # link self to its inverse field and vice-versa
-            invf = env[self.comodel_name]._fields[self.inverse_name]
+            comodel = env[self.comodel_name]
+            comodel._setup_fields()
+            invf = comodel._fields[self.inverse_name]
             # In some rare cases, a `One2many` field can link to `Int` field
             # (res_model/res_id pattern). Only inverse the field if this is
             # a `Many2one` field.
