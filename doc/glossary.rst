@@ -13,6 +13,9 @@
         ``account.invoice_graph``). From within a module, the
         :samp:`{module}.` prefix can be left out.
 
+        Sometimes referred to as "xml id" or ``xml_id`` as XML-based
+        :ref:`reference/data` make extensive use of them.
+
     format string
         inspired by `jinja variables`_, format strings allow more easily
         mixing literal content and computed content (expressions): content
