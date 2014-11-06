@@ -118,12 +118,11 @@ class account_invoice_refund(models.TransientModel):
                 if not period:
                     raise Warning(_('No period found on the invoice.'))
 
-                refund_id = inv.refund(date, period, description, journal_id)
-                refund = inv_obj.browse(refund_id[0])
+                refund = inv.refund(date, period, description, journal_id)
                 refund.write({'date_due': date, 'check_total': inv.check_total})
                 refund.button_compute()
 
-                created_inv.append(refund_id[0])
+                created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):
                     movelines = inv.move_id.line_id
                     to_reconcile_ids = {}
@@ -133,7 +132,6 @@ class account_invoice_refund(models.TransientModel):
                         if line.reconcile_id:
                             line.reconcile_id.unlink()
                     refund.signal_workflow('invoice_open')
-                    refund = inv_obj.browse(refund_id[0])
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_ids[tmpline.account_id.id].append(tmpline.id)
