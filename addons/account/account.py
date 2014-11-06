@@ -642,6 +642,8 @@ class account_fiscalyear(models.Model):
         return self.create_period(3)
 
     @api.multi
+    #TO FIX: When this method is called by clicking 'Create Monthly Periods' button, 'interval' parameter gets wrong value.
+    # interval = {'lang': 'en_US', 'tz': 'Europe/Brussels', 'uid': 1}
     def create_period(self, interval=1):
         PeriodObj = self.env['account.period']
         for fy in self:
@@ -2306,7 +2308,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             res['value'].update({'complete_tax_set': self.chart_template_id.complete_tax_set, 'currency_id': currency_id})
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                chart_ids = self.chart_template_id._get_chart_parent_ids()
+                chart_ids = self._get_chart_parent_ids(self.chart_template_id.id)
                 base_tax_domain = [('chart_template_id', 'in', chart_ids), ('parent_id', '=', False)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale', 'all'))]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('purchase', 'all'))]
