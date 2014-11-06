@@ -397,8 +397,16 @@ added.
   the changes performed during the method are then sent to the client program
   and become visible to the user
 
-Both computed fields and new-API onchanges are automatically called by the
-client without having to add them in views.
+* Both computed fields and new-API onchanges are automatically called by the
+  client without having to add them in views
+* It is possible to suppress the trigger from a specific field by adding
+  ``on_change="0"`` in a view::
+
+    <field name="name" on_change="0"/>
+
+  will not trigger any interface update when the field is edited by the user,
+  even if there are function fields or explicit onchange depending on that
+  field.
 
 .. _reference/orm/oldapi:
 
