@@ -168,6 +168,7 @@ class account_cash_statement(models.Model):
     def button_open(self):
         """ Changes statement state to Running."""
 
+        SequenceObj = self.env['ir.sequence']
         for statement in self:
             if not self._user_allow(statement.id):
                 raise Warning(_('You do not have rights to open this %s journal!') % (statement.journal_id.name, ))
@@ -175,9 +176,9 @@ class account_cash_statement(models.Model):
             if statement.name and statement.name == '/':
                 context = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                 if statement.journal_id.sequence_id:
-                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
+                    st_number = SequenceObj.with_context(context).next_by_id(statement.journal_id.sequence_id.id)
                 else:
-                    st_number = self.env['ir.sequence'].with_context(context).next_by_code('account.cash.statement')
+                    st_number = SequenceObj.with_context(context).next_by_code('account.cash.statement')
                 statement.name = st_number
 
             statement.state = 'open'
