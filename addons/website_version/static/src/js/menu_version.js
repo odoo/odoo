@@ -57,14 +57,13 @@
                 input: "Version name" ,
                 default :(curr_date + " " + m_names[curr_month] + " " + curr_year),
             }).then(function (name) {
-                console.log(name);
                 var context = website.get_context();
                 openerp.jsonRpc( '/website_version/create_version', 'call', { 'name': name, 'version_id': version_id}).then(function (result) {
 
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     self.wizard.on('click','.confirm', function(){
-                        location.reload();
+                        window.location.href = '/\?enable_editor/';
                     });
                 }).fail(function(){
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"This name already exists."}));
@@ -123,22 +122,35 @@
             self.wizard = $(openerp.qweb.render("website_version.publish_message",{message:"Are you sure you want to publish the " + name + " version ?"}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                 self.wizard.on('click','.confirm', function(){
-                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':false }).then(function (result) {
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published."}));
-                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                        self.wizard.on('click','.confirm', function(){
-                            location.reload();
+                    self.wizard.find('.message').remove();
+                    var check = self.wizard.find('.o_check').is(':checked');
+                    var copy_master_name = self.wizard.find('.name').val();
+                    if(check){
+                        if(copy_master_name.length == 0){
+                            self.wizard.find(".name").parent().after("<p class='message' style='color : red'> *This field is required</p>");
+                        }
+                        else{
+                            openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':true, 'copy_master_name':copy_master_name}).then(function (result) {
+                                self.wizard = $(openerp.qweb.render("website_version.dialogue",{message:"The " + result + " version has been published", dialogue:"The master has been saved on a new version called "+copy_master_name+"."}));
+                                self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                                self.wizard.on('click','.confirm', function(){
+                                    location.reload();
+                                });
+                            });
+                        }
+                    }
+                    else{
+                        openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':false, 'copy_master_name':""}).then(function (result) {
+                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published."}));
+                            self.wizard.appendTo($('body')).modal({"keyboard" :true});
+                            self.wizard.on('click','.confirm', function(){
+                                location.reload();
+                            });
                         });
-                    });
+                    }
                 });
-                self.wizard.on('click','.save', function(){
-                    openerp.jsonRpc( '/website_version/publish_version', 'call', { 'version_id':version_id, 'save_master':true }).then(function (result) {
-                        self.wizard = $(openerp.qweb.render("website_version.message",{message:"The " + result + " version has been published and the master has been saved on a version called copy_master_"+name+"."}));
-                        self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                        self.wizard.on('click','.confirm', function(){
-                            location.reload();
-                        });
-                    });
+                self.wizard.on('click','.o_check', function(){
+                    self.wizard.find('.name').prop('disabled',!self.wizard.find('.o_check').is(':checked'));
                 });
         },
 
@@ -153,38 +165,6 @@
             openerp.jsonRpc( '/website_version/all_versions_all_goals', 'call', { 'view_id': view_id }).then(function (result) {
                 self.wizard = $(openerp.qweb.render("website_version.create_experiment",{versions:result.tab_snap, goals:result.tab_goal, config:result.check_conf}));
                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                self.wizard.on('click','.draft', function(){
-                    self.wizard.find('.message').remove();
-                    var name = self.wizard.find('.name').val();
-                    var tab = self.wizard.find('.version');
-                    var result = [];
-                    var i;
-                    for (i = 0; i < tab.length; i++) {
-                        if ($(tab[i]).is(':checked')) {
-                            result.push($(tab[i]).attr('data-version_id'));
-                        }
-                    }
-                    var objectives = self.wizard.find('.box').val();
-                    var check = true;
-                    if (name.length == 0){
-                        self.wizard.find(".name").after("<p class='message' style='color : red'> *This field is required</p>");
-                        check = false;
-                    }
-                    if (result.length == 0 && check){
-                        self.wizard.find(".versions").after("<p class='message' style='color : red'> *You must select at least one version which is not Master</p>");
-                        check = false;
-                    }
-                    if(check){
-                        openerp.jsonRpc( '/website_version/create_experiment', 'call', { 'name':name, 'version_ids':result, 'objectives':objectives }).then(function (result) {
-
-                            self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is created. Now you can manage this experiment by clicking on Manage A/B tests."}));
-                            self.wizard.appendTo($('body')).modal({"keyboard" :true});
-                            self.wizard.on('click','.confirm', function(){
-                                location.reload();
-                            });
-                        });
-                    }
-                });
             
                 self.wizard.on('click','.launch', function(){
                     self.wizard.find('.message').remove();
@@ -209,8 +189,8 @@
                     }
                     if(check){
                         openerp.jsonRpc( '/website_version/launch_experiment', 'call', { 'name':name, 'version_ids':result, 'objectives':objectives }).then(function (result) {
-                            if (result){
-                                self.wizard = $(openerp.qweb.render("website_version.message",{message:"Your " + name + " experiment is launched. Now you can check its statistics by clicking on Statistics."}));
+                            if (result[0]){
+                                self.wizard = $(openerp.qweb.render("website_version.dialogue",{message:"Your " + name + " experiment is created.", dialogue:" Now you can manage this experiment by clicking on Manage A/B tests."}));
                                 self.wizard.appendTo($('body')).modal({"keyboard" :true});
                                 self.wizard.on('click','.confirm', function(){
                                     location.reload();
@@ -218,7 +198,7 @@
 
                             }
                             else{
-                                self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your " + name + " experiment cannot be launched because this experiment contains a view which is already used in another running experiment. But you can create a draft of this experiment.</p>");
+                                self.wizard.find(".versions").after("<p class='message' style='color : red'> *Your " + name + " experiment cannot be launched because this experiment contains a view which is already used in the running " + result[1] + " experiment.</p>");
                             }
                         });
                     }

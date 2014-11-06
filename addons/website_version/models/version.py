@@ -38,7 +38,7 @@ class version(osv.Model):
             version = self.browse(cr, uid, [version_id],context)[0]
             del_l = []
             for view in version.view_ids:
-                #To delete and replace views which are in the website
+                #To delete and replace views which are in the website( in fact with website_id)
                 master_id = self.pool['ir.ui.view'].search(cr, uid, [('key','=',view.key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
                 del_l += master_id
             if del_l:

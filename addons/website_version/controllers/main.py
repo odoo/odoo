@@ -82,7 +82,7 @@ class TableExporter(http.Controller):
         return bool(request.registry["website_version.experiment_version"].search(cr, uid, [('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)], context=context))
 
     @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
-    def publish_version(self, version_id, save_master):
+    def publish_version(self, version_id, save_master, copy_master_name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         obj = request.registry['website_version.version']
         version = obj.browse(cr, uid, [int(version_id)],context)[0]
@@ -98,10 +98,10 @@ class TableExporter(http.Controller):
                 copy_l+= master_id
         if copy_l:
             if save_master:
-                check_id = obj.search(cr, uid, [('name','=', 'copy_master_'+version.name),('website_id', '=', version.website_id.id)],context=context)
+                check_id = obj.search(cr, uid, [('name','=', copy_master_name),('website_id', '=', version.website_id.id)],context=context)
                 if check_id:
                     obj.unlink(cr, uid, check_id, context=context)
-                copy_version_id = obj.create(cr, uid, {'name' : 'copy_master_'+version.name, 'website_id' : version.website_id.id}, context=context)
+                copy_version_id = obj.create(cr, uid, {'name' : copy_master_name, 'website_id' : version.website_id.id}, context=context)
                 for view in request.registry['ir.ui.view'].browse(cr, uid, copy_l, context=context):
                     view.copy({'version_id': copy_version_id, 'website_id' : version.website_id.id})
             request.registry['ir.ui.view'].unlink(cr, uid, del_l, context=context)      
@@ -202,15 +202,15 @@ class TableExporter(http.Controller):
             for exp_snap in exp.experiment_version_ids:
                 for view in exp_snap.version_id.view_ids:
                     if view.key in version_keys:
-                        return False           
-        return True
+                        return (False,exp.name)           
+        return (True,"")
 
     @http.route(['/website_version/launch_experiment'], type = 'json', auth = "public", website = True)
     def launch_experiment(self, name, version_ids, objectives):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         tab = []
         check = self.check_view(version_ids)
-        if check:
+        if check[0]:
             for x in version_ids:
                 tab.append([0, False, {'frequency': '50', 'version_id': int(x)}])
             vals = {'name':name, 'google_id': False, 'state': 'running', 'website_id':context.get('website_id'), 'experiment_version_ids':tab, 'objectives': int(objectives)}
