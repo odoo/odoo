@@ -551,6 +551,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 return;
             }
             _(_.keys(values)).each(function(key){
+                record.set(key + '__display',false);
                 record.set(key, values[key], {silent: true});
             });
             record.trigger('change', record);
