@@ -24,24 +24,25 @@ class view(osv.Model):
             ids=[ids]
         
         version_id=context.get('version_id')
+        #toggle is true when changing active field 
         if version_id and not context.get('mykey') and not toggle:
             ctx = dict(context, mykey=True)
             snap = self.pool['website_version.version']
             version=snap.browse(cr, uid, [version_id], context=ctx)[0]
             website_id=version.website_id.id
-            snap_ids = []
+            version_view_ids = []
             for current in self.browse(cr, uid, ids, context=context):
                 #check if current is in version
                 if current.version_id.id == version_id:
-                    snap_ids.append(current.id)
+                    version_view_ids.append(current.id)
                 else:
                     new_id = self.search(cr, uid, [('website_id', '=', website_id),('version_id', '=', version_id), ('key', '=', current.key)], context=context)
                     if new_id:
-                        snap_ids.append(new_id[0])
+                        version_view_ids.append(new_id[0])
                     else:
                         copy_id=self.copy(cr,uid, current.id,{'version_id':version_id, 'website_id':website_id},context=ctx)
-                        snap_ids.append(copy_id)
-            super(view, self).write(cr, uid, snap_ids, vals, context=ctx)
+                        version_view_ids.append(copy_id)
+            super(view, self).write(cr, uid, version_view_ids, vals, context=ctx)
         else:
             ctx = dict(context, mykey=True)
             super(view, self).write(cr, uid, ids, vals, context=context)
