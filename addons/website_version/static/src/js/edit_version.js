@@ -63,10 +63,10 @@
                 self.$el.find(".second_choice").remove();
                 var name = $('#version-menu-button').data('version_name');
                 if(name){
-                    self.$el.find(".first_choice").after(openerp.qweb.render("all_options", {version:'Save on '+name}));
+                    self.$el.find(".first_choice").before(openerp.qweb.render("all_options", {version:'Save on '+name}));
                 }
                 else{
-                    self.$el.find(".first_choice").after(openerp.qweb.render("all_options", {version:'Save and Publish'}));
+                    self.$el.find(".first_choice").before(openerp.qweb.render("all_options", {version:'Save and Publish'}));
                 }
 
             });

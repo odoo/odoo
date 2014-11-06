@@ -63,7 +63,7 @@
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"You are actually working on "+name+ " version."}));
                     self.wizard.appendTo($('body')).modal({"keyboard" :true});
                     self.wizard.on('click','.confirm', function(){
-                        window.location.href = '/\?enable_editor/';
+                        window.location.href = '\?enable_editor';
                     });
                 }).fail(function(){
                     self.wizard = $(openerp.qweb.render("website_version.message",{message:"This name already exists."}));
