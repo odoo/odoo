@@ -434,7 +434,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
             });
             this.$el.find(".pt_stat").on("click", function() {
-                self.project_timesheet_widget.screen_selector.set_current_screen("stat", {}, {}, false, true);
+                self.project_timesheet_widget.screen_selector.set_current_screen("stat", {}, {}, true, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
@@ -851,6 +851,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $(".pt_btn_cancel").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity");
             });
+            this.$el.find(".pt_btn_logout").on("click", this.on_logout);
         },
         renderElement: function() {
             this.replaceElement(QWeb.render(this.template, {widget: this, project_timesheet: project_timesheet}));
@@ -896,6 +897,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 self.on_sync();
             });
         },
+        on_logout: function() {
+            console.log("Inside Logout :::: ");
+        },
         on_sync: function() {
             var self = this;
             this.project_timesheet_model.save_to_server().then(function() { //May be user always
@@ -938,29 +942,27 @@ function odoo_project_timesheet_screens(project_timesheet) {
         show: function() {
             var self = this;
             this._super();
+            this.bar_chart = this.prepare_graph();
+            this.graph_data = this.prepare_data();
+            if (this.graph_data.length && this.graph_data[this.week_index].length) {
+                this.draw_chart(this.bar_chart, (this.graph_data[this.week_index] || []));
+            } else {
+                this.$el.html(QWeb.render('EmptyStatistic', {widget: this}));
+            }
             this.$el.find(".pt_back").on("click", function() {
-                console.log("Insife backkkk ");
                 self.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
             });
             this.$el.find(".pt_sync").on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("sync");
             });
-            this.bar_chart = this.prepare_graph();
-            this.graph_data = this.prepare_data();
-            console.log("graph_data is ::: ", this.graph_data);
-            if (this.graph_data.length && this.graph_data[this.week_index].length) {
-                this.draw_chart(this.bar_chart, this.graph_data[this.week_index]);
-            }
         },
         hide: function() {
             this._super();
-            console.log("this.bar_chart is :: ", this.bar_chart);
             if (this.bar_chart) {
                 this.bar_chart.clearAll();
                 this.bar_chart.clearCanvas();
                 this.bar_chart = {};
                 this.$(".dhx_chart_legend").remove(); //Hack: forcefully remove legend also when graph is navigate is we are going to redraw whole graph again
-                console.log("Inside iffff ", this.bar_chart);
             }
         },
         prepare_graph: function() {
@@ -968,13 +970,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var bar_chart =  new dhtmlXChart({
                 view: "stackedBar",
                 container: "pt_chart",
-                value: "#unit_amount#",
-                label: "#unit_amount#",
+                value: "#unit_amount_duration#",
+                label: "#unit_amount_duration#",
                 color: "#a24689",
                 width: 25,
                 //gradient:"falling",
                 tooltip: {
-                    template:"#unit_amount#", 
+                    template:"#unit_amount_duration#",
                 },
                 xAxis: {
                     //title: "Days",
@@ -1020,6 +1022,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.map(activities, function(activity) {
                 delete activity.id;
                 delete activity.name;
+                activity.date = moment(activity.date).format("YYYY-MM-DD");
             });
             date_groups = _.groupBy(activities, function(activity) {
                 return moment(activity.date).format("YYYY-MM-DD");
@@ -1035,12 +1038,12 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     } else {
                         group['unallocated'] = 0;
                         group['unit_amount'] = parseFloat((group.unit_amount).toFixed(2));
-                        group['day'] = moment(group.date).format("ddd MM");
+                        group['day'] = moment(group.date).format("ddd DD");
                         date_activities[key] = group;
                     }
                 });
                 var formatted_unit_amount = self.format_duration(date_activities[key]['unit_amount']);
-                date_activities[key]['unit_amount'] = formatted_unit_amount ? (formatted_unit_amount[0]+"h" +(formatted_unit_amount[1] && formatted_unit_amount[1]+"min" || "0min")) : 0;
+                date_activities[key]['unit_amount_duration'] = formatted_unit_amount ? (formatted_unit_amount[0]+"h" +(formatted_unit_amount[1] && formatted_unit_amount[1]+"min" || "0min")) : 0;
             });
             var week_groups = _.groupBy(_.toArray(date_activities), function(activity) {
                 return moment(activity.date).week();
@@ -1051,10 +1054,36 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return week_wise_activities;
         },
         draw_chart: function(chart, graph_data) {
-            console.log("Inside draw_chart ::: ", graph_data);
-            
+            var self = this;
+            var week_dates = [];
             var week_total = 0;
             var table_data = {};
+            console.log("Inside draw_chart ::: ", graph_data);
+            //To add missing dates, we will add dummy records for missing dates, so that graph shows all days on X-axis
+            if (graph_data.length) {
+                var week_day = moment(graph_data[0].date).weekday();
+                _.map(_.range(week_day, 0, -1), function(count) { week_dates.push(moment().weekday(count).format("YYYY-MM-DD")); });
+                _.map(_.range(week_day+1, 7, 1), function(count) { week_dates.push(moment().weekday(count).format("YYYY-MM-DD")); });
+                _.each(graph_data, function(record) {
+                    var index = _.indexOf(week_dates, record.date);
+                    if (index != -1) {
+                        week_dates.splice(index, 1);
+                    }
+                });
+                _.each(week_dates, function(date) {
+                    var dummy_data = {
+                        day: moment(date).format("ddd DD"),
+                        date: date,
+                        unit_amount: 0,
+                        unallocated: 0,
+                        project_id: false,
+                        unit_amount_duration: 0,
+                    };
+                    graph_data.push(dummy_data);
+                });
+                graph_data = _.sortBy(graph_data, function(record) {return record.date;});
+            }
+
             _.each(graph_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
             this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], (formatted_value[1] || 0)));
@@ -1073,6 +1102,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     }
                 });
             });
+            console.log("Before rendering actual data :::: ", this.$el.find(".pt_stat_table"), table_data);
             this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
             chart.parse(graph_data,"json");
         },
@@ -1095,7 +1125,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     this.week_index = this.graph_data.length-1;
                 }
             }
-            this.draw_chart(this.bar_chart, this.graph_data[this.week_index]);
+            this.draw_chart(this.bar_chart, (this.graph_data[this.week_index] || []));
         },
         get_pending_lines: function() {
             return this.project_timesheet_model.get_pending_records();

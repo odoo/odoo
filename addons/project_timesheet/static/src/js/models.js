@@ -147,7 +147,15 @@ function odoo_project_timesheet_models(project_timesheet) {
                 callback_function();
                 self.load_server_data().done(function() {
                     self.load_stored_data();
-                    self.ready.resolve();
+                    new project_timesheet.Model(project_timesheet.session, "ir.model.data")
+                    .call("get_object_reference", ['hr_timesheet', 'menu_hr_timesheet_report_all'])
+                    .then(function (result) {
+                        console.log("Result of get_object_reference is :::: ", result);
+                        if (result) {
+                            self.reporting_menu_src = project_timesheet.session.origin + "/web?#menu_id=" + result[1];
+                        }
+                        self.ready.resolve();
+                    });
                 });
             }).fail(function() {
                 self.load_stored_data();
