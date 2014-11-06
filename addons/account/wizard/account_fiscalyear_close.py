@@ -94,7 +94,7 @@ class account_fiscalyear_close(models.TransientModel):
             SELECT a.id
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
-            WHERE a.deprecated
+            WHERE a.deprecated = 'f'
               AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'unreconciled', ))
@@ -145,7 +145,7 @@ class account_fiscalyear_close(models.TransientModel):
             SELECT a.id
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
-            WHERE a.deprecated
+            WHERE a.deprecated = 'f'
               AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'detail', ))
@@ -174,7 +174,7 @@ class account_fiscalyear_close(models.TransientModel):
             SELECT a.id
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
-            WHERE a.deprecated
+            WHERE a.deprecated = 'f'
               AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'balance', ))
