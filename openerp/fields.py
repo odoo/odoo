@@ -623,7 +623,8 @@ class Field(object):
 
     def _description_string(self, env):
         if self.string and env.lang:
-            name = "%s,%s" % (self.model_name, self.name)
+            field = self.base_field
+            name = "%s,%s" % (field.model_name, field.name)
             trans = env['ir.translation']._get_source(name, 'field', env.lang)
             return trans or self.string
         return self.string

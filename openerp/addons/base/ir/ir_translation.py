@@ -400,7 +400,7 @@ class ir_translation(osv.osv):
         main_lang = 'en_US'
         translatable_fields = []
         for k, f in trans_model._fields.items():
-            if f.translate:
+            if getattr(f, 'translate', False):
                 if f.inherited:
                     parent_id = trans_model.read(cr, uid, [id], [f.related[0]], context=context)[0][f.related[0]][0]
                     translatable_fields.append({'name': k, 'id': parent_id, 'model': f.base_field.model})
@@ -434,7 +434,7 @@ class ir_translation(osv.osv):
         if field:
             f = trans_model._fields[field]
             action['context'] = {
-                'search_default_name': "%s,%s" % (f.base_field.model, field)
+                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
             }
         return action
 
