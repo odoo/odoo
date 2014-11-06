@@ -212,9 +212,7 @@ Common ORM methods
         >>> self.search([('is_company', '=', True)], limit=1).name
         'Agrolait'
 
-    Does not use its recordset.
-
-    .. tip:: to just check if any record matches a domain, or count the number
+   .. tip:: to just check if any record matches a domain, or count the number
              of records which do, use
              :meth:`~openerp.models.Model.search_count`
 :meth:`~openerp.models.Model.create`
@@ -224,7 +222,6 @@ Common ORM methods
         >>> self.create({'name': "New Name"})
         res.partner(78)
 
-    Does not use its recordset.
 :meth:`~openerp.models.Model.write`
     Takes a number of field values, writes them to all the records in its
     recordset. Does not return anything::
