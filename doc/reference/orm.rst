@@ -579,6 +579,24 @@ Porting from the old API
   inspected through :attr:`~openerp.models.Model._fields`
 * reassigning ``self`` in a method is probably unnecessary and may break
   translation introspection
+* :class:`~openerp.api.Environment` objects rely on some threadlocal state,
+  which has to be set up before using them. It is necessary to do so using the
+  :meth:`openerp.api.Environment.manage` context manager when trying to use
+  the new API in contexts where it hasn't been set up yet, such as new threads
+  or a Python interactive environment::
+
+    >>> from openerp import api, modules
+    >>> r = modules.registry.RegistryManager.get('test')
+    >>> cr = r.cursor()
+    >>> env = api.Environment(cr, 1, {})
+    Traceback (most recent call last):
+      ...
+    AttributeError: environments
+    >>> with api.Environment.manage():
+    ...     env = api.Environment(cr, 1, {})
+    ...     print env['res.partner'].browse(1)
+    ...
+    res.partner(1,)
 
 .. _reference/orm/oldapi/bridging:
 
