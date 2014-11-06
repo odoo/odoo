@@ -209,7 +209,7 @@ Common ORM methods
         >>> # searches the current model
         >>> self.search([('is_company', '=', True), ('customer', '=', True)])
         res.partner(7, 18, 12, 14, 17, 19, 8, 31, 26, 16, 13, 20, 30, 22, 29, 15, 23, 28, 74)
-        >>> self.search([('is_company', '=', True)])[0].name
+        >>> self.search([('is_company', '=', True)], limit=1).name
         'Agrolait'
 
     Does not use its recordset.
