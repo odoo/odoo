@@ -99,6 +99,8 @@ class ir_sequence(openerp.osv.osv.osv):
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
         'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
+        'use_date_range': openerp.osv.fields.boolean('Use subsequences per date_range'),
+        'date_range_ids': openerp.osv.fields.one2many('ir.sequence.date_range', 'sequence_main_id', 'Subsequences'),
     }
     _defaults = {
         'implementation': 'standard',
@@ -234,11 +236,13 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    def _next(self, cr, uid, ids, context=None):
+    def _next_do(self, cr, uid, ids, context=None):
         if not ids:
             return False
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            return [ids]
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
@@ -259,6 +263,43 @@ class ir_sequence(openerp.osv.osv.osv):
         except ValueError:
             raise osv.except_osv(_('Warning'), _('Invalid prefix or suffix for sequence \'%s\'') % (seq.get('name')))
         return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
+
+    def _create_date_range_seq(self, cr, uid, ids, date, context=None):
+        for seq in self.browse(cr, uid, ids, context):
+            year = date[0:4]
+            date_from = '{}-01-01'.format(year)
+            date_to = '{}-12-31'.format(year)
+            for line in seq.date_range_ids:
+                if line.date_from < date_to and line.date_from > date:
+                    date_to = line.date_from
+                elif line.date_to > date_from and line.date_to < date:
+                    date_from = line.date_to
+            vals = self.read(cr, uid, seq.id, context=context)
+            if 'date_range_ids' in vals:
+                del vals['date_range_ids']
+            if 'use_date_range' in vals:
+                del vals['use_date_range']
+            vals['date_from'] = date_from
+            vals['date_to'] = date_to
+            vals['sequence_main_id'] = seq.id
+            for key in vals:
+                if isinstance(vals[key], tuple) and isinstance(vals[key][0], int):
+                    vals[key] = vals[key][0]
+            return self.pool.get('ir.sequence.date_range').create(cr, uid, vals, context=context)
+
+    def _next(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for seq in self.browse(cr, uid, ids, context):
+            if seq.use_date_range:
+                dt = context.get('date', openerp.osv.fields.date.today())
+                for line in seq.date_range_ids:
+                    if line.date_from < dt and line.date_to > dt:
+                        return self.pool.get('ir.sequence.date_range')._next(cr, uid, line.id, context)
+                seq_date_id = self._create_date_range_seq(cr, uid, seq.id, dt, context=context)
+                return self.pool.get('ir.sequence.date_range')._next(cr, uid, seq_date_id, context=context)
+            else:
+                return self._next_do(cr, uid, ids, context=context)
 
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
@@ -307,5 +348,20 @@ class ir_sequence(openerp.osv.osv.osv):
         """
         return self.get_id(cr, uid, code, 'code', context)
 
+
+class ir_sequence_date_range(openerp.osv.osv.osv):
+    _name = 'ir.sequence.date_range'
+    _order = 'name'
+    _inherit = 'ir.sequence'
+
+    _columns = {
+        'date_from': openerp.osv.fields.date('From', required=True),
+        'date_to': openerp.osv.fields.date('To', required=True),
+        'sequence_main_id': openerp.osv.fields.many2one("ir.sequence", 'Main Sequence',
+                                                        required=True, ondelete='cascade'),
+    }
+
+    def _next(self, cr, uid, ids, context=None):
+        return self._next_do(cr, uid, ids, context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

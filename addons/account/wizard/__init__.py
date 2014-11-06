@@ -42,7 +42,6 @@ import account_fiscalyear_close
 import account_fiscalyear_close_state
 import account_vat
 import account_open_closed_fiscalyear
-import account_restart_sequence
 
 import account_invoice_state
 import account_chart
