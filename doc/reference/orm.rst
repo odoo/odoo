@@ -123,8 +123,12 @@ Recordsets therefore provide these operations returning recordsets themselves
 
 :meth:`~openerp.models.Model.mapped`
     applies the provided function to each record in the recordset, returns
-    a recordset if the results are recordsets. The provided function can be
-    a string to get field values::
+    a recordset if the results are recordsets::
+
+        # returns a list of summing two fields for each record in the set
+        records.mapped(lambda r: r.field1 + r.field2)
+
+    The provided function can be a string to get field values::
 
         # returns a list of names
         records.mapped('name')
