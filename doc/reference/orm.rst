@@ -568,6 +568,15 @@ Porting from the old API
 
   .. danger:: using these decorators makes methods extremely difficult to
               override and harder to understand and document
+* uses of :attr:`~openerp.models.Model._columns` or
+  :attr:`~openerp.models.Model._all_columns` should be replaced by
+  :attr:`~openerp.models.Model._fields`, which provides access to instances of
+  new-style :class:`openerp.fields.Field` instances (rather than old-style
+  :class:`openerp.osv.fields._column`).
+
+  Non-stored computed fields created using the new API style are *not*
+  available in :attr:`~openerp.models.Model._columns` and can only be
+  inspected through :attr:`~openerp.models.Model._fields`
 
 .. _reference/orm/oldapi/bridging:
 
