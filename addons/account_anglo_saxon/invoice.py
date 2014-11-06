@@ -36,10 +36,10 @@ class account_invoice_line(osv.osv):
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self.anglo_saxon_sale_move_lines(cr, uid, i_line.id, res, context=context))
+                res.extend(self._anglo_saxon_sale_move_lines(cr, uid, i_line.id, res, context=context))
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                res.extend(self.anglo_saxon_purchase_move_lines(cr, uid, i_line.id, res, context=context))
+                res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line.id, res, context=context))
         return res
 
 
@@ -65,7 +65,7 @@ class account_invoice_line(osv.osv):
         return res
 
 
-    def anglo_saxon_sale_move_lines(self, cr, uid, line_id, res, context=None):
+    def _anglo_saxon_sale_move_lines(self, cr, uid, line_id, res, context=None):
         """Return the additional move lines for sales invoices and refunds.
 
         line_id: The id of the line.  Must be a single integer.
@@ -127,7 +127,7 @@ class account_invoice_line(osv.osv):
         return []
 
 
-    def anglo_saxon_purchase_move_lines(self, cr, uid, line_id, res, context=None):
+    def _anglo_saxon_purchase_move_lines(self, cr, uid, line_id, res, context=None):
         """Return the additional move lines for purchase invoices and refunds.
 
         line_id: The id of the line.  Must be a single integer.
