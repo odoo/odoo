@@ -127,7 +127,7 @@ class ir_sequence(openerp.osv.osv.osv):
                 CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
                 ON ir_sequence (code, (COALESCE(company_id,-1)))""")
 
-    def _create_sequence(self, cr, id, number_increment, number_next):
+    def _create_sequence(self, cr, uid, id, number_increment, number_next, seq_date_id=False):
         """ Create a PostreSQL sequence.
 
         There is no access rights check.
@@ -135,10 +135,13 @@ class ir_sequence(openerp.osv.osv.osv):
         if number_increment == 0:
              raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
-        sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
+        if seq_date_id:
+            sql = "CREATE SEQUENCE ir_sequence_%03d_%03d INCREMENT BY %%s START WITH %%s" % (id, seq_date_id)
+        else:
+            sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
         cr.execute(sql, (number_increment, number_next))
 
-    def _drop_sequence(self, cr, ids):
+    def _drop_sequence(self, cr, uid, ids):
         """ Drop the PostreSQL sequence if it exists.
 
         There is no access rights check.
@@ -147,13 +150,18 @@ class ir_sequence(openerp.osv.osv.osv):
         ids = ids if isinstance(ids, (list, tuple)) else [ids]
         assert all(isinstance(i, (int, long)) for i in ids), \
             "Only ids in (int, long) allowed."
-        names = ','.join('ir_sequence_%03d' % i for i in ids)
+        names =[]
+        for id in ids:
+            for seq_date_id in self.browse(cr, uid, id).date_range_ids:
+                names.append('ir_sequence_%03d_%03d' % (id, seq_date_id))
+            names.append('ir_sequence_%03d' % id)
+        names = ','.join(names)
 
         # RESTRICT is the default; it prevents dropping the sequence if an
         # object depends on it.
         cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
-    def _alter_sequence(self, cr, id, number_increment, number_next=None):
+    def _alter_sequence(self, cr, uid, id, number_increment, number_next=None, seq_date_id=False):
         """ Alter a PostreSQL sequence.
 
         There is no access rights check.
@@ -161,7 +169,11 @@ class ir_sequence(openerp.osv.osv.osv):
         if number_increment == 0:
              raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
-        seq_name = 'ir_sequence_%03d' % (id,)
+        if seq_date_id:
+            assert isinstance(seq_date_id, (int, long))
+            seq_name = 'ir_sequence_%03d_%03d' % (id, seq_date_id)
+        else:
+            seq_name = 'ir_sequence_%03d' % (id,)
         cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
         if not cr.fetchone():
             # sequence is not created yet, we're inside create() so ignore it, will be set later
@@ -182,7 +194,7 @@ class ir_sequence(openerp.osv.osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         super(ir_sequence, self).unlink(cr, uid, ids, context)
-        self._drop_sequence(cr, ids)
+        self._drop_sequence(cr, uid, ids)
         return True
 
     def write(self, cr, uid, ids, values, context=None):
@@ -201,17 +213,17 @@ class ir_sequence(openerp.osv.osv.osv):
                     # Implementation has NOT changed.
                     # Only change sequence if really requested.
                     if row['number_next'] != n:
-                        self._alter_sequence(cr, row['id'], i, n)
+                        self._alter_sequence(cr, uid, row['id'], i, n)
                     else:
                         # Just in case only increment changed
-                        self._alter_sequence(cr, row['id'], i)
+                        self._alter_sequence(cr, uid, row['id'], i)
                 else:
                     self._drop_sequence(cr, row['id'])
             else:
                 if new_implementation in ('no_gap', None):
                     pass
                 else:
-                    self._create_sequence(cr, row['id'], i, n)
+                    self._create_sequence(cr, uid, row['id'], i, n)
 
         return True
 
@@ -236,7 +248,7 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    def _next_do(self, cr, uid, ids, context=None):
+    def _next_do(self, cr, uid, ids, seq_date_id=False, context=None):
         if not ids:
             return False
         if context is None:
@@ -247,15 +259,32 @@ class ir_sequence(openerp.osv.osv.osv):
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         sequences = self.read(cr, uid, ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
-        preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
-        seq = preferred_sequences[0] if preferred_sequences else sequences[0]
+        if seq_date_id:#if we have a seq_date_id it is not possible to have many ids
+            assert len(ids) == 1
+            seq = sequences[0]
+        else:
+            preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
+            seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
-            cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
+            if seq_date_id:
+                assert isinstance(seq_date_id, (int, long))
+                sql = "SELECT nextval('ir_sequence_%03d_%03d')" % (seq['id'], seq_date_id)
+            else:
+                sql = "SELECT nextval('ir_sequence_%03d')" % seq['id']
+            cr.execute(sql)
             seq['number_next'] = cr.fetchone()
         else:
-            cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
-            cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
-            self.invalidate_cache(cr, uid, ['number_next'], [seq['id']], context=context)
+            if seq_date_id:
+                model_name = 'ir_sequence_date_range'
+                model_obj = self.pool.get('ir_sequence_date_range')
+                id = seq_date_id
+            else:
+                model_name = 'ir_sequence'
+                model_obj = self
+                id = seq['id']
+            cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT", (model_name, id))
+            cr.execute("UPDATE %s SET number_next=number_next+number_increment WHERE id=%s ", (model_name, id))
+            model_obj.invalidate_cache(cr, uid, ['number_next'], [id], context=context)
         d = self._interpolation_dict()
         try:
             interpolated_prefix = self._interpolate(seq['prefix'], d)
@@ -274,18 +303,14 @@ class ir_sequence(openerp.osv.osv.osv):
                     date_to = line.date_from
                 elif line.date_to > date_from and line.date_to < date:
                     date_from = line.date_to
-            vals = self.read(cr, uid, seq.id, context=context)
-            if 'date_range_ids' in vals:
-                del vals['date_range_ids']
-            if 'use_date_range' in vals:
-                del vals['use_date_range']
+            vals = []
             vals['date_from'] = date_from
             vals['date_to'] = date_to
             vals['sequence_main_id'] = seq.id
-            for key in vals:
-                if isinstance(vals[key], tuple) and isinstance(vals[key][0], int):
-                    vals[key] = vals[key][0]
-            return self.pool.get('ir.sequence.date_range').create(cr, uid, vals, context=context)
+            id = self.pool.get('ir.sequence.date_range').create(cr, uid, vals, context=context)
+            if seq.implementation == 'standard':
+                self._create_sequence(cr, seq.id, seq.number_increment, seq.number_next, seq_date_id=id)
+            return id
 
     def _next(self, cr, uid, ids, context=None):
         if context is None:
@@ -293,11 +318,14 @@ class ir_sequence(openerp.osv.osv.osv):
         for seq in self.browse(cr, uid, ids, context):
             if seq.use_date_range:
                 dt = context.get('date', openerp.osv.fields.date.today())
+                seq_date_id = False
                 for line in seq.date_range_ids:
                     if line.date_from < dt and line.date_to > dt:
-                        return self.pool.get('ir.sequence.date_range')._next(cr, uid, line.id, context)
-                seq_date_id = self._create_date_range_seq(cr, uid, seq.id, dt, context=context)
-                return self.pool.get('ir.sequence.date_range')._next(cr, uid, seq_date_id, context=context)
+                        seq_date_id = line.id
+                        break
+                if not seq_date_id:
+                    seq_date_id = self._create_date_range_seq(cr, uid, seq.id, dt, context=context)
+                return self._next_do(cr, uid, seq.id, seq_date_id=seq_date_id, context=context)
             else:
                 return self._next_do(cr, uid, ids, context=context)
 
@@ -352,16 +380,13 @@ class ir_sequence(openerp.osv.osv.osv):
 class ir_sequence_date_range(openerp.osv.osv.osv):
     _name = 'ir.sequence.date_range'
     _order = 'name'
-    _inherit = 'ir.sequence'
 
     _columns = {
         'date_from': openerp.osv.fields.date('From', required=True),
         'date_to': openerp.osv.fields.date('To', required=True),
         'sequence_main_id': openerp.osv.fields.many2one("ir.sequence", 'Main Sequence',
                                                         required=True, ondelete='cascade'),
+        'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
     }
-
-    def _next(self, cr, uid, ids, context=None):
-        return self._next_do(cr, uid, ids, context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
