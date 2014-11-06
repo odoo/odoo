@@ -57,7 +57,7 @@ class view(osv.Model):
         for view in version.view_ids:
             copy_id=self.copy(cr,uid,view.id,{'version_id':new_version_id},context=ctx)
 
-    #To publish a master view
+    #To publish a view
     def action_publish(self,cr,uid,ids,context=None):
         if context is None:
             context = {}
@@ -65,6 +65,7 @@ class view(osv.Model):
         view_id = context.get('active_id')
         view = self.browse(cr, uid, [view_id],context)[0]
         key = view.key
+        #To check if the view is in a version
         if view.website_id and view.version_id:
             master_id = self.search(cr, uid, [('key','=',key),('version_id', '=', False),('website_id', '=', view.website_id.id)],context=context)
             if master_id:
@@ -115,15 +116,21 @@ class view(osv.Model):
         arch = super(view, self).get_inheriting_views_arch(cr, uid, view_id, model, context=context)
         v = self.browse(cr, uid, [view_id],context)[0]
         if context and context.get('website_id') and v.type == 'qweb':
+            #dico to collect the right ids according to the key
             dico = {}
+            #To create a dico called view_arch where v(key) is the id and a the arch(value)
             view_arch = dict([(v, a) for a, v in arch])
             keys = self.read(cr, uid, view_arch.keys(), ['key','version_id','website_id'], context)
             for k in keys:
+                #The view to take depends of the context
                 if context.get('version_id'):
+                    #first take the view which is in the same version
                     if k['version_id'] and k['version_id'][0] == context.get('version_id'):
                         dico[k['key']] = k['id']
+                    #if the view.key is not in the dico and the view is in the same website
                     elif k['version_id'] == False and k['website_id'] and k['website_id'][0] == context.get('website_id') and not dico.get(k['key']):
                         dico[k['key']] = k['id']
+                    #if the view.key is not in the dico
                     elif k['version_id'] == False and k['website_id'] == False and not dico.get(k['key']):
                         dico[k['key']] = k['id']
                 else:
@@ -133,11 +140,13 @@ class view(osv.Model):
                         dico[k['key']] = k['id']
             result = []
             for x in arch:
+                #x[1] is the id
                 if x[1] in dico.values():
                     result.append(x)
             return result
         return arch 
 
+    #To active or desactive the right views according to the key
     def toggle(self, cr, uid, ids, context=None):
         """ Switches between enabled and disabled statuses
         """
