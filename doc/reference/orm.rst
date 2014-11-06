@@ -623,6 +623,26 @@ decorating the old-style method:
 * dual implementations using :func:`~openerp.api.v7` and
   :func:`~openerp.api.v8` will be ignored as they provide their own "bridging"
 
+Low-level SQL
+-------------
+
+The :attr:`~openerp.api.Environment.cr` attribute on environments is the
+cursor for the current database transaction and allows executing SQL directly,
+either for queries which are difficult to express using the ORM (e.g. complex
+joins) or for performance reasons::
+
+    self.env.cr.execute("some_sql", param1, param2, param3)
+
+Because models use the same cursor and the :class:`~openerp.api.Environment`
+holds various caches, these caches must be invalidated when *altering* the
+database in raw SQL, or further uses of models may become incoherent. It is
+necessary to clear caches when using ``CREATE``, ``UPDATE`` or ``DELETE`` in
+SQL, but not ``SELECT`` (which simply reads the database).
+
+Clearing caches can be performed using the
+:meth:`~openerp.api.Environment.invalidate_all` method of the
+:class:`~openerp.api.Environment` object.
+
 .. _reference/orm/model:
 
 Model Reference
