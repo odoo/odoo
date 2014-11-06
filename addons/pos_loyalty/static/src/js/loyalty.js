@@ -174,7 +174,7 @@ openerp.pos_loyalty = function(instance){
                         if (reward.type === 'gift') {
                             points += round_pr(line.get_quantity() * reward.point_cost, rounding);
                         } else if (reward.type === 'discount') {
-                            points += round_pr(-line.get_price_with_tax() * reward.point_cost, rounding);
+                            points += round_pr(-line.get_display_price() * reward.point_cost, rounding);
                         }
                     }
                 }
