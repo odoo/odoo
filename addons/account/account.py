@@ -166,7 +166,7 @@ class account_account(models.Model):
             ids = super(account_account, self).search(args, offset, limit,
                 order, count=count)
             for consolidate_child in self.browse(context['account_id']).child_consol_ids:
-                ids.append(consolidate_child.id)
+                ids.append(consolidate_child)
             return ids
 
         return super(account_account, self).search(args, offset, limit,
@@ -260,7 +260,7 @@ class account_account(models.Model):
                         if child.company_id.currency_id.id == current.company_id.currency_id.id:
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
-                            sums[current.id][fn] += self.env['res.currency'].compute(child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn])
+                            sums[current.id][fn] += child.company_id.currency_id.compute(current.company_id.currency_id.id, sums[child.id][fn])
  
                 # as we have to relay on values computed before this is calculated separately than previous fields
                 if current.currency_id and current.exchange_rate and \
@@ -919,7 +919,6 @@ class account_move(models.Model):
 
         if not valid_moves:
             raise Warning(_('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
-        SequenceObj = self.env['ir.sequence']
         for move in self.browse(valid_moves):
             if move.name =='/':
                 new_name = False
@@ -930,7 +929,7 @@ class account_move(models.Model):
                 else:
                     if journal.sequence_id:
                         ctx = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = SequenceObj.with_context(ctx).next_by_id(journal.sequence_id.id)
+                        new_name = journal.sequence_id.with_context(ctx).next_by_id()
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
 
@@ -1032,8 +1031,8 @@ class account_move(models.Model):
             ctx['period_id'] = move.period_id.id
             move_lines.with_context(ctx)._update_check()
             move_lines.with_context(ctx).unlink()
-            toremove.append(move.id)
-        result = super(account_move, self).with_context(ctx).unlink(toremove)
+            toremove.append(move)
+        result = super(account_move, toremove).with_context(ctx).unlink()
         return result
 
     @api.one

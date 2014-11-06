@@ -42,8 +42,8 @@ class account_installer(models.TransientModel):
             charts = dict()
 
         # Looking for the module with the 'Account Charts' category
-        category_name, category_id = self.env['ir.model.data'].get_object_reference('base', 'module_category_localization_account_charts')
-        recs = ModuleObj.search([('category_id', '=', category_id)])
+        category_id = self.env.ref('base.module_category_localization_account_charts')
+        recs = ModuleObj.search([('category_id', '=', category_id.id)])
         if recs:
             charts.update((m.name, m.shortdesc) for m in recs)
 
@@ -133,11 +133,11 @@ class account_installer(models.TransientModel):
                         'date_stop': res.date_stop,
                         'company_id': res.company_id.id
                     }
-                    fiscal_id = fy_obj.create(vals)
+                    fiscal_year = fy_obj.create(vals)
                     if res.period == 'month':
-                        fy_obj.create_period([fiscal_id])
+                        fiscal_year.create_period()
                     elif res.period == '3months':
-                        fy_obj.create_period3([fiscal_id])
+                        fiscal_year.create_period3()
 
     @api.multi
     def modules_to_install(self):

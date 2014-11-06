@@ -30,5 +30,5 @@ class ir_sequence(models.Model):
         for seq in self:
             for line in seq.fiscal_ids:
                 if line.fiscalyear_id.id == context.get('fiscalyear_id'):
-                    return super(ir_sequence, self)._next([line.sequence_id.id])
+                    return super(ir_sequence, line.sequence_id)._next()
         return super(ir_sequence, self)._next()

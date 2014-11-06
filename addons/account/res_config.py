@@ -9,10 +9,10 @@ from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp import models, fields, api, _
 
+
 class account_config_settings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
-
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
@@ -314,8 +314,7 @@ class account_config_settings(models.TransientModel):
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id:
             assert self.expects_chart_of_accounts and not self.has_chart_of_accounts
-            wizard = self.env['wizard.multi.charts.accounts']
-            wizard_id = wizard.create({
+            wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'code_digits': self.code_digits or 6,
@@ -326,14 +325,14 @@ class account_config_settings(models.TransientModel):
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
             }, context)
-            wizard.execute([wizard_id])
+            wizard.execute()
 
     @api.multi
     def set_fiscalyear(self):
         """ create a fiscal year for the given company (if necessary) """
         if self.has_chart_of_accounts or self.chart_template_id:
-            FiscalyearObj = self.env['account.fiscalyear']
-            fiscalyear_count = FiscalyearObj.search_count(
+            FiscalYearObj = self.env['account.fiscalyear']
+            fiscalyear_count = FiscalYearObj.search_count(
                 [('date_start', '<=', self.date_start), ('date_stop', '>=', self.date_stop),
                  ('company_id', '=', self.company_id.id)])
             if not fiscalyear_count:
@@ -348,11 +347,11 @@ class account_config_settings(models.TransientModel):
                     'date_stop': self.date_stop,
                     'company_id': self.company_id.id,
                 }
-                fiscalyear_id = FiscalyearObj.create(vals)
+                fiscalyear = FiscalYearObj.create(vals)
                 if self.period == 'month':
-                    FiscalyearObj.create_period([fiscalyear_id])
+                    fiscalyear.create_period()
                 elif self.period == '3months':
-                    FiscalyearObj.create_period3([fiscalyear_id])
+                    fiscalyear.create_period3()
 
     @api.model
     def get_default_dp(self, fields):
