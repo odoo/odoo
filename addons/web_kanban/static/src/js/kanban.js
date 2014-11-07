@@ -217,7 +217,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var form = am.dialog_widget.views.form.controller;
         form.on("on_button_cancel", am.dialog, am.dialog.close);
         form.on('record_created', self, function(r) {
-            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).done(function(new_record) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).read_ids([r], ['display_name']).done(function(new_record) {
                 am.dialog.close();
                 var domain = self.dataset.domain.slice(0);
                 domain.push([self.group_by, '=', new_record[0][0]]);
@@ -266,9 +266,50 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_groups: function(groups) {
         var self = this;
+
+        // Check in the arch the fields to fetch on the stage to get tooltips data.
+        // Fetching data is done in batch for all stages, to avoid doing multiple
+        // calls. The first naive implementation of group_by_tooltip made a call
+        // for each displayed stage and was quite limited.
+        // Data for the group tooltip (group_by_tooltip) and to display stage-related
+        // legends for kanban state management (states_legend) are fetched in
+        // one call.
+        var group_by_fields_to_read = [];
+        var recurse = function(node) {
+            if (node.tag === "field" && node.attrs && node.attrs.options) {
+                var options = instance.web.py_eval(node.attrs.options);
+                var states_fields_to_read = _.map(
+                    options && options.states_legend || {},
+                    function (value, key, list) { return value; });
+                var tooltip_fields_to_read = _.map(
+                    options && options.group_by_tooltip || {},
+                    function (value, key, list) { return key; });
+                group_by_fields_to_read = _.union(
+                    group_by_fields_to_read,
+                    states_fields_to_read,
+                    tooltip_fields_to_read);
+            }
+            _.each(node.children, function(child) {
+                recurse(child);
+            });
+        };
+        recurse(this.fields_view.arch);
+        var group_ids = _.map(groups, function (elem) { return elem.attributes.value[0]});
+        if (group_ids && group_by_fields_to_read) {
+            var group_data = new instance.web.DataSet(this, this.group_by_field.relation).read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read));
+        }
+        else { var group_data = $.Deferred().resolve({}); }
+        
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
-        return this.add_group_mutex.exec(function() {
+        return $.when(group_data).then(function (results) {
+            _.each(results, function (group_by_data) {
+                var group = _.find(groups, function (elem) {return elem.attributes.value[0] == group_by_data.id});
+                if (group) {
+                    group.values = group_by_data;
+                }
+            });
+        }).done( function () {return self.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
@@ -300,7 +341,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     self.trigger('kanban_groups_processed');
                 });
             });
-        });
+        })});
     },
     do_process_dataset: function() {
         var self = this;
@@ -583,8 +624,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.dataset = dataset;
         this.dataset_offset = 0;
         this.aggregates = {};
-        this.value = this.title = null;
+        this.value = this.title = this.values = null;
         if (this.group) {
+            this.values = group.values;
             this.value = group.get('value');
             this.title = group.get('value');
             if (this.value instanceof Array) {
@@ -621,7 +663,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
     },
     start: function() {
-        var self = this;
+        var self = this,
+            def = this._super();
         if (! self.view.group_by) {
             self.$el.addClass("oe_kanban_no_group");
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, {}, false)
@@ -678,39 +721,37 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             }
         });
         this.is_started = true;
-        var def_tooltip = this.fetch_tooltip();
-        return $.when(def_tooltip);
+        this.fetch_tooltip();
+        return def;
     },
+    /* 
+     * Form the tooltip, based on optional group_by_tooltip on the grouping field.
+     * This function goes through the arch of the view, finding the declaration
+     * of the field used to group. If group_by_tooltip is defined, use the previously
+     * computed values of the group to form the tooltip. */
     fetch_tooltip: function() {
+        var self = this;
         if (! this.group)
-            return;
-        var field_name = this.view.group_by;
-        var field = this.view.group_by_field;
-        var field_desc = null;
+            return;        
+        var options = null;
         var recurse = function(node) {
-            if (node.tag === "field" && node.attrs.name === field_name) {
-                field_desc = node;
+            if (node.tag === "field" && node.attrs.name == self.view.group_by) {
+                options = instance.web.py_eval(node.attrs.options || '{}');
                 return;
             }
             _.each(node.children, function(child) {
-                if (field_desc === null)
-                    recurse(child);
+                recurse(child);
             });
         };
         recurse(this.view.fields_view.arch);
-        if (! field_desc)
-            return;
-        var options = instance.web.py_eval(field_desc.attrs.options || '{}')
-        if (! options.tooltip_on_group_by)
-            return;
-
-        var self = this;
-        if (this.value) {
-            return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
-                    .filter([["id", "=", this.value]]).first().then(function(res) {
-                self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip();
-            });
+        if (options && options.group_by_tooltip) {
+            this.tooltip = _.union(
+                [this.title],
+                _.map(
+                    options.group_by_tooltip,
+                    function (key, value, list) { return self.values[value] || ''; })
+            ).join('\n\n');
+            this.$(".oe_kanban_group_title_text").attr("title", this.tooltip || this.title || "");
         }
     },
     compute_cards_auto_height: function() {
@@ -1332,12 +1373,17 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
+        var self = this;
         var data = [];
         _.map(this.field.selection || [], function(res) {
             var value = {
                 'name': res[0],
                 'tooltip': res[1],
                 'state_name': res[1],
+            }
+            var leg_opt = self.options && self.options.states_legend || null;
+            if (leg_opt && leg_opt[res[0]] && self.parent.group.values && self.parent.group.values[leg_opt[res[0]]]) {
+                value['state_name'] = self.parent.group.values[leg_opt[res[0]]];
             }
             if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
             else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
