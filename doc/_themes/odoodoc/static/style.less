@@ -469,7 +469,7 @@ div.section > h2 {
   padding: 4px;
 
   font-size: 75%;
-  // code block lines should not wrap
+  // don't break lines within words
   word-break: normal;
   word-wrap: normal;
 }
@@ -594,6 +594,11 @@ td.field-body {
         width: 0;
         border-left: 1px solid @gray-light;
       }
+    }
+
+    .highlight pre {
+      // but allow additional line-breaks between "words" to avoid overflow
+      white-space: pre-wrap;
     }
   }
 
