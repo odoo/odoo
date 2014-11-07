@@ -10,17 +10,18 @@ import simplejson
 class Experiment_version(osv.Model):
     _name = "website_version.experiment_version"
 
+    #To get the index of the version of an experiment(Google analytics needs this information)
     def _get_index(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        for exp_snap in self.browse(cr, uid, ids, context=context):
-            exp = exp_snap.experiment_id
+        for exp_ver in self.browse(cr, uid, ids, context=context):
+            exp = exp_ver.experiment_id
             index = 1
             for x in exp.experiment_version_ids:
-                if x.id == exp_snap.id:
+                if x.id == exp_ver.id:
                     break
                 else:
                     index+=1
-            result[exp_snap.id] = index
+            result[exp_ver.id] = index
         return result
     
     _columns = {
@@ -34,6 +35,7 @@ class Experiment_version(osv.Model):
         'frequency': '50',
     }
 
+#This model allow to define the Google analytics goals in a experiment
 class Goals(osv.Model):
     _name = "website_version.goals"
     
@@ -52,7 +54,7 @@ class Experiment(osv.Model):
         result = {}
         for exp in self.browse(cr, uid, ids, context=context):
             result[exp.id] = 0
-            for exp_snap in exp.experiment_version_ids:
+            for exp_ver in exp.experiment_version_ids:
                     result[exp.id] += 1
             #For master
             result[exp.id] += 1
@@ -81,10 +83,11 @@ class Experiment(osv.Model):
         exp['objectiveMetric'] = self.pool['website_version.goals'].browse(cr, uid, [vals['objectives']],context)[0].google_ref
         exp['status'] = vals['state']
         exp['variations'] =[{'name':'master','url': 'http://localhost/master'}]
-        l =  vals.get('experiment_version_ids')
-        if l:
-            for snap in l:
-                name = self.pool['website_version.version'].browse(cr, uid, [snap[2]['version_id']],context)[0].name
+        version_list =  vals.get('experiment_version_ids')
+        if version_list:
+            for version in version_list:
+                name = self.pool['website_version.version'].browse(cr, uid, [version[2]['version_id']],context)[0].name
+                #We must give a URL for each version in the experiment
                 exp['variations'].append({'name':name, 'url': 'http://localhost/'+name})
         google_id = self.pool['google.management'].create_an_experiment(cr, uid, exp, vals['website_id'], context=context)
         if not google_id:
@@ -109,8 +112,8 @@ class Experiment(osv.Model):
                 temp['name'] = exp.name
                 temp['status'] = state
                 temp['variations'] = [{'name':'master','url': 'http://localhost/master'}]
-                for exp_s in exp.experiment_version_ids:
-                    temp['variations'].append({'name':exp_s.version_id.name, 'url': 'http://localhost/'+exp_s.version_id.name})
+                for exp_v in exp.experiment_version_ids:
+                    temp['variations'].append({'name':exp_v.version_id.name, 'url': 'http://localhost/'+exp_v.version_id.name})
                 #to check the constraints before to write on the google analytics account 
                 self.pool['google.management'].update_an_experiment(cr, uid, temp, exp.google_id, exp.website_id.id, context=context)
         return super(Experiment, self).write(cr, uid, ids, vals, context=context)
@@ -139,11 +142,11 @@ class Experiment(osv.Model):
         check_a = set()
         check_b = set()
         for exp in exps:
-            for exp_snap in exp.experiment_version_ids:
-                for view in exp_snap.version_id.view_ids:
+            for exp_ver in exp.experiment_version_ids:
+                for view in exp_ver.version_id.view_ids:
                     x = (view.key,view.website_id.id)
                     #the versions in the same experiment can have common keys
-                    y = (view.key,view.website_id.id,exp_snap.experiment_id.id)
+                    y = (view.key,view.website_id.id,exp_ver.experiment_id.id)
                     if x in check_a and not y in check_b:
                         return False
                     else:
@@ -153,8 +156,8 @@ class Experiment(osv.Model):
 
     def _check_website(self, cr, uid, ids, context=None):
         for exp in self.browse(cr,uid,ids,context=context):
-            for exp_snap in exp.experiment_version_ids:
-                if not exp_snap.version_id.website_id.id == exp.website_id.id:
+            for exp_ver in exp.experiment_version_ids:
+                if not exp_ver.version_id.website_id.id == exp.website_id.id:
                     return False
         return True
 
