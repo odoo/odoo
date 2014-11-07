@@ -104,50 +104,58 @@ class project_work(osv.osv):
         res['general_account_id'] = acc_id
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
-
-    def create(self, cr, uid, vals, *args, **kwargs):
+    
+    def create_anlytic_entries(self, cr, uid, vals, context):
+        """Create the hr analytic timesheet from project task work"""
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
-
+        
         vals_line = {}
+        timeline_id = False
+        acc_id = False
+        
+        task_obj = task_obj.browse(cr, uid, vals['task_id'])
+        result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
+        vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
+        vals_line['user_id'] = vals['user_id']
+        vals_line['product_id'] = result['product_id']
+        vals_line['date'] = vals['date'][:10]
+        
+        # Calculate quantity based on employee's product's uom
+        vals_line['unit_amount'] = vals['hours']
+    
+        default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+        if result['product_uom_id'] != default_uom:
+            vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+        acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or acc_id
+        if acc_id:
+            vals_line['account_id'] = acc_id
+            res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
+            if res.get('value'):
+                vals_line.update(res['value'])
+            vals_line['general_account_id'] = result['general_account_id']
+            vals_line['journal_id'] = result['journal_id']
+            vals_line['amount'] = 0.0
+            vals_line['product_uom_id'] = result['product_uom_id']
+            amount = vals_line['unit_amount']
+            prod_id = vals_line['product_id']
+            unit = False
+            timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
+    
+            # Compute based on pricetype
+            amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
+                prod_id, amount, False, unit, vals_line['journal_id'], context=context)
+            if amount_unit and 'amount' in amount_unit.get('value',{}):
+                updv = { 'amount': amount_unit['value']['amount'] }
+                timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
+        
+        return timeline_id
+
+    def create(self, cr, uid, vals, *args, **kwargs):
         context = kwargs.get('context', {})
         if not context.get('no_analytic_entry',False):
-            task_obj = task_obj.browse(cr, uid, vals['task_id'])
-            result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
-            vals_line['user_id'] = vals['user_id']
-            vals_line['product_id'] = result['product_id']
-            vals_line['date'] = vals['date'][:10]
-
-            # Calculate quantity based on employee's product's uom
-            vals_line['unit_amount'] = vals['hours']
-
-            default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
-            if result['product_uom_id'] != default_uom:
-                vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-            acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or False
-            if acc_id:
-                vals_line['account_id'] = acc_id
-                res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
-                if res.get('value'):
-                    vals_line.update(res['value'])
-                vals_line['general_account_id'] = result['general_account_id']
-                vals_line['journal_id'] = result['journal_id']
-                vals_line['amount'] = 0.0
-                vals_line['product_uom_id'] = result['product_uom_id']
-                amount = vals_line['unit_amount']
-                prod_id = vals_line['product_id']
-                unit = False
-                timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
-
-                # Compute based on pricetype
-                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
-                    prod_id, amount, False, unit, vals_line['journal_id'], context=context)
-                if amount_unit and 'amount' in amount_unit.get('value',{}):
-                    updv = { 'amount': amount_unit['value']['amount'] }
-                    timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
-                vals['hr_analytic_timesheet_id'] = timeline_id
+            vals['hr_analytic_timesheet_id'] = self.create_anlytic_entries(cr, uid, vals, context=context)
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -236,6 +244,7 @@ class task(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+            
         if vals.get('project_id',False) or vals.get('name',False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
@@ -247,6 +256,12 @@ class task(osv.osv):
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
                         if not task_work.hr_analytic_timesheet_id:
+                        # Case 609481, when project is empty while creating Task, Later Task is modified by adding Project creating hr analytic line
+                            if acc_id :
+                               vals_line.update({'name' : task_work.name, 'user_id' : task_work.user_id.id,'date' : task_work.date[:10],'account_id': acc_id,
+                                                  'hours' : task_work.hours, 'task_id' : task_obj.id})
+                               timeline_id = task_work_obj.create_anlytic_entries(cr, uid, vals_line, context)
+                               task_work_obj.write(cr, uid, task_work.id, {'hr_analytic_timesheet_id' : timeline_id}, context) 
                             continue
                         line_id = task_work.hr_analytic_timesheet_id.id
                         if vals.get('project_id',False):
