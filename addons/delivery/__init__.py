@@ -21,6 +21,7 @@
 
 import delivery
 import partner
+import procurement
 import sale
 import stock
 

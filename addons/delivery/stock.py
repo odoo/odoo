@@ -178,5 +178,12 @@ class stock_move(osv.osv):
         'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
 
+    def _prepare_picking_assign(self, cr, uid, move, context=None):
+        '''Copy carrier_id from procurement.group to stock.picking'''
+        res = super(stock_move, self)._prepare_picking_assign(
+            cr, uid, move, context=context)
+        res.update({
+            'carrier_id': move.group_id and move.group_id.carrier_id.id or False})
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
